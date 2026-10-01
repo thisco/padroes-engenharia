@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Prática",
+  "description": "Frontmatter de praticas/<faixa>/<ID>.md (spec §6.1). Domínio, momento e formato do ID são conferidos pelo validador contra esquemas/espinha.yml.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "titulo", "dominio", "subdominio", "momento", "forca", "mecanismo", "status",
+    "aplica", "ferramentas", "referencias", "relacionadas", "dono", "revisado_em", "revisar_ate"
+  ],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "titulo": {"type": "string", "minLength": 1},
+    "dominio": {"type": "string", "minLength": 1},
+    "subdominio": {"type": ["string", "null"], "minLength": 1},
+    "momento": {"type": "string", "minLength": 1},
+    "forca": {"enum": ["bloqueia", "pede-aprovacao", "avisa", "orienta"]},
+    "mecanismo": {"type": ["string", "null"], "minLength": 1},
+    "status": {"enum": ["adotar", "experimentar", "avaliar", "evitar"]},
+    "aplica": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z]+:[A-Za-z0-9._/-]+$"}
+    },
+    "ferramentas": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["claude-code", "codex", "kiro", "antigravity", "copilot"]}
+    },
+    "referencias": {"$ref": "#/$defs/ids_referencia", "minItems": 1},
+    "mapeia": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9.-]+:[A-Za-z0-9.-]+$"}
+    },
+    "relacionadas": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "casos": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "dono": {"$ref": "#/$defs/slug"},
+    "revisado_em": {"$ref": "#/$defs/data"},
+    "revisar_ate": {"$ref": "#/$defs/data"}
+  },
+  "$defs": {
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "ids_referencia": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/slug"}
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Domínio",
+  "description": "praticas/<faixa>/_dominio.md (spec §6.4). A pasta precisa ser uma faixa de esquemas/espinha.yml, e o grupo, o da faixa.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["titulo", "grupo", "descricao"],
+  "properties": {
+    "titulo": {"type": "string", "minLength": 1},
+    "grupo": {"type": "string", "minLength": 1},
+    "descricao": {"type": "string", "minLength": 1},
+    "steering": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "skills": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "referencias": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Conceito",
+  "description": "conceitos/<slug>.md (spec §6.4): uma peça de um dos dois ninhos (spec §4.3).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "titulo", "ninho", "peca", "definicao", "onde_mora", "quando_entra", "erro_comum", "referencias"
+  ],
+  "properties": {
+    "titulo": {"type": "string", "minLength": 1},
+    "ninho": {"enum": ["agente-de-codigo", "ia-no-produto"]},
+    "peca": {"$ref": "#/$defs/slug"},
+    "definicao": {"type": "string", "minLength": 1},
+    "onde_mora": {"type": "string", "minLength": 1},
+    "quando_entra": {"type": "string", "minLength": 1},
+    "erro_comum": {"type": "string", "minLength": 1},
+    "praticas": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+    "referencias": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/slug"}
+    },
+    "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+  }
+}

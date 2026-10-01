@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Registro de verificação",
+  "description": "verificacoes/<ID-ou-slug>.yaml (spec §11.2). A presença de revisao_adversarial, a cobertura das citações e a ausência de nao-confirmada são conferidas pelo validador (R-VERIFICACAO).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["conteudo", "verificado_em", "verificador", "afirmacoes"],
+  "properties": {
+    "conteudo": {"type": "string", "minLength": 1},
+    "verificado_em": {"$ref": "#/$defs/data"},
+    "verificador": {"type": "string", "minLength": 1},
+    "afirmacoes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["texto", "ref", "localizacao", "resultado"],
+        "properties": {
+          "texto": {"type": "string", "minLength": 1},
+          "ref": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+          "localizacao": {"type": "string", "minLength": 1},
+          "resultado": {"enum": ["confirmada", "parcial", "nao-confirmada"]},
+          "nota": {"type": "string"}
+        }
+      }
+    },
+    "revisao_adversarial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revisor", "data", "achados"],
+      "properties": {
+        "revisor": {"type": "string", "minLength": 1},
+        "data": {"$ref": "#/$defs/data"},
+        "achados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["afirmacao", "problema", "tratamento"],
+            "properties": {
+              "afirmacao": {"type": "string", "minLength": 1},
+              "problema": {"type": "string", "minLength": 1},
+              "tratamento": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  }
+}

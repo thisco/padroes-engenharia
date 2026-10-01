@@ -1,0 +1,96 @@
+import json
+
+import pytest
+from jsonschema import Draft202012Validator
+
+from portal.gerador.carregar import Conteudo, Repositorio
+from portal.gerador.erros import Erro
+from portal.gerador.esquemas import (
+    ESQUEMAS,
+    carregar_validador,
+    validar_instancia,
+    validar_repositorio,
+)
+from tests import fabrica
+
+PASTA = fabrica.RAIZ / "esquemas"
+
+VALIDOS = {
+    "pratica": fabrica.meta_pratica,
+    "referencia": fabrica.meta_referencia,
+    "dominio": fabrica.meta_dominio,
+    "conceito": fabrica.meta_conceito,
+    "guia": fabrica.meta_guia,
+    "caso": fabrica.meta_caso,
+    "pagina": fabrica.meta_pagina,
+    "verificacao": fabrica.meta_verificacao,
+    "catalogo": fabrica.meta_catalogo,
+}
+
+
+def test_os_nove_esquemas_existem_e_sao_draft_2020_12():
+    assert sorted(p.name for p in PASTA.glob("*.schema.json")) == sorted(
+        f"{nome}.schema.json" for nome in ESQUEMAS
+    )
+    for nome in ESQUEMAS:
+        esquema = json.loads((PASTA / f"{nome}.schema.json").read_text(encoding="utf-8"))
+        assert esquema["$schema"] == "https://json-schema.org/draft/2020-12/schema"
+        Draft202012Validator.check_schema(esquema)
+
+
+@pytest.mark.parametrize("nome", ESQUEMAS)
+def test_instancia_da_fabrica_e_valida(nome):
+    assert validar_instancia(VALIDOS[nome](), carregar_validador(PASTA, nome), "x") == []
+
+
+@pytest.mark.parametrize(
+    ("nome", "alteracao", "campo"),
+    [
+        ("pratica", {"forca": "impede"}, "forca"),
+        ("pratica", {"revisado_em": "01/10/2026"}, "revisado_em"),
+        ("pratica", {"referencias": []}, "referencias"),
+        ("pratica", {"campo_novo": 1}, "frontmatter"),
+        ("referencia", {"tipo": "blog"}, "tipo"),
+        ("referencia", {"id": "Com_Maiuscula"}, "id"),
+        ("referencia", {"verificacao": "talvez"}, "verificacao"),
+        ("dominio", {"descricao": ""}, "descricao"),
+        ("conceito", {"ninho": "outro"}, "ninho"),
+        ("guia", {"tempo_leitura": 0}, "tempo_leitura"),
+        ("caso", {"origem": {"repo": "x", "commit": "nao-hex"}}, "origem.commit"),
+        ("pagina", {"titulo": 3}, "titulo"),
+        ("verificacao", {"afirmacoes": []}, "afirmacoes"),
+        ("catalogo", {"versao": "v1"}, "versao"),
+    ],
+)
+def test_instancia_invalida_aponta_o_campo(nome, alteracao, campo):
+    erros = validar_instancia(VALIDOS[nome](**alteracao), carregar_validador(PASTA, nome), "a.md")
+    assert erros, "o schema deveria reprovar"
+    assert {e.regra for e in erros} == {"R-ESQUEMA"}
+    assert campo in {e.campo for e in erros}
+
+
+def test_campo_obrigatorio_ausente_sai_no_frontmatter():
+    meta = fabrica.meta_pratica()
+    del meta["titulo"]
+    (erro,) = validar_instancia(meta, carregar_validador(PASTA, "pratica"), "p.md")
+    assert erro == Erro("p.md", "frontmatter", "R-ESQUEMA", "'titulo' is a required property")
+
+
+def test_junta_todos_os_erros_de_um_arquivo_em_ordem_estavel():
+    meta = fabrica.meta_pratica(forca="impede", status="talvez")
+    erros = validar_instancia(meta, carregar_validador(PASTA, "pratica"), "p.md")
+    assert [e.campo for e in erros] == ["forca", "status"]
+
+
+def test_valida_cada_conteudo_pelo_schema_do_seu_tipo():
+    repo = Repositorio.de(
+        [
+            fabrica.pratica(),
+            fabrica.referencia(fabrica.meta_referencia(tipo="blog")),
+            Conteudo("skill", "skills/x/SKILL.md", {"qualquer": "coisa"}, ""),
+        ]
+    )
+    erros = validar_repositorio(repo, PASTA)
+    assert [(e.arquivo, e.campo, e.regra) for e in erros] == [
+        ("referencias/ref-forte.yaml", "tipo", "R-ESQUEMA")
+    ]

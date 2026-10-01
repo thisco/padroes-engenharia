@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Caso",
+  "description": "casos/<slug>.md (spec §6.4). Todo número tem valor, data e fonte; a origem fixa repositório e commit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["titulo", "origem", "periodo", "numeros", "referencias"],
+  "properties": {
+    "titulo": {"type": "string", "minLength": 1},
+    "origem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "commit"],
+      "properties": {
+        "repo": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"}
+      }
+    },
+    "periodo": {"type": "string", "minLength": 1},
+    "numeros": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["descricao", "valor", "data", "fonte"],
+        "properties": {
+          "descricao": {"type": "string", "minLength": 1},
+          "valor": {"type": ["number", "string"]},
+          "data": {"$ref": "#/$defs/data"},
+          "fonte": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "referencias": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+    },
+    "revisado_em": {"$ref": "#/$defs/data"}
+  },
+  "$defs": {
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  }
+}
