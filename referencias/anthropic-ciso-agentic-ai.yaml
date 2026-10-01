@@ -1,0 +1,10 @@
+id: anthropic-ciso-agentic-ai
+titulo: "Zero risk isn't the job: a CISO's guide to agentic AI"
+organizacao: Anthropic
+url: https://claude.com/blog/ciso-guide-to-agentic-ai
+tipo: vendor
+verificado_em: 2026-10-01
+verificacao: V
+localizacao: "abertura (adoção paralela sem telemetria) e 'Four questions to assess agentic AI risk', pergunta 2"
+dominios: [ia-no-produto, seguranca]
+notas: null

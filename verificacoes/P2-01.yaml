@@ -1,0 +1,28 @@
+conteudo: P2-01
+verificado_em: 2026-10-01
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a chave virtual permite acompanhar o gasto e controlar o acesso a modelos"
+    ref: litellm-virtual-keys
+    localizacao: "abertura da página"
+    resultado: confirmada
+  - texto: "o gasto é acompanhado por chave, por usuário e por time"
+    ref: litellm-virtual-keys
+    localizacao: "'Spend Tracking'"
+    resultado: confirmada
+  - texto: "o gateway de IA autentica e autoriza o acesso, monitora e registra as interações e gerencia tokens e cotas entre aplicações"
+    ref: azure-apim-ai-gateway
+    localizacao: "'Why use an AI gateway?'"
+    resultado: confirmada
+  - texto: "proibir gera adoção paralela, sem telemetria e sem como desligar"
+    ref: anthropic-ciso-agentic-ai
+    localizacao: "parágrafo de abertura"
+    resultado: confirmada
+  - texto: "toda ação acontece sob alguma identidade, e é preciso saber de quem"
+    ref: anthropic-ciso-agentic-ai
+    localizacao: "'Four questions to assess agentic AI risk', pergunta 2"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: 2026-10-01
+  achados: []

@@ -1,0 +1,10 @@
+id: spec-kit
+titulo: Spec Kit
+organizacao: GitHub
+url: https://github.com/github/spec-kit
+tipo: vendor
+verificado_em: 2026-10-01
+verificacao: V
+localizacao: "README, seções 'Choose your process', 'Spec-Driven Development' e 'Bug fixing'"
+dominios: [construir-com-ia]
+notas: "README da branch main; o texto muda com as versões do projeto."

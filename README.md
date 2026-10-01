@@ -6,24 +6,24 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## O que há aqui
 
-- 0 prática(s) na espinha de 12 domínios × 4 momentos; 48 das 48 células a definir (`ROTEAMENTO.md`).
-- 0 referência(s), cada uma conferida na fonte, e 6 skill(s) publicada(s).
+- 3 prática(s) na espinha de 12 domínios × 4 momentos; 45 das 48 células a definir (`ROTEAMENTO.md`).
+- 10 referência(s), cada uma conferida na fonte, e 6 skill(s) publicada(s).
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
 |---|---|---|
-| Guia | Construir com IA (`construir-com-ia`) | 0 |
+| Guia | Construir com IA (`construir-com-ia`) | 1 |
 | Desenho | Arquitetura e padrões de projeto (`arquitetura`) | 0 |
 | Desenho | Contratos de API (`contratos-api`) | 0 |
 | Desenho | Frontend e UX (`frontend-ux`) | 0 |
-| Dados | Dados e migrations (`dados-migrations`) | 0 |
+| Dados | Dados e migrations (`dados-migrations`) | 1 |
 | Dados | Privacidade e LGPD (`privacidade-lgpd`) | 0 |
 | Entrega e operação | Qualidade e BDD (`qualidade-bdd`) | 0 |
 | Entrega e operação | Infra e IaC (`infra-iac`) | 0 |
 | Entrega e operação | CI/CD (`ci-cd`) | 0 |
 | Entrega e operação | Observabilidade e operação (`observabilidade`) | 0 |
 | Entrega e operação | Segurança (`seguranca`) | 0 |
-| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 0 |
+| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 1 |
 
 ## Como contribuir
 

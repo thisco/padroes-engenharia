@@ -1,0 +1,11 @@
+id: sdd-scaffold-verificar-pr
+titulo: "scripts/verificar_pr.py do sdd-scaffold"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py
+tipo: interno
+versao: "1.6.1"
+verificado_em: 2026-10-01
+verificacao: V
+localizacao: "docstring (severidade BLOQUEIA), regex MIGRATION e função analisar()"
+dominios: [dados-migrations, ci-cd]
+notas: "É o mecanismo declarado em DAD-01 (componentes.yml fixa a versão 1.6.1)."

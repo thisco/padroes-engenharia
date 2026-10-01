@@ -1,0 +1,32 @@
+conteudo: DAD-01
+verificado_em: 2026-10-01
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "migration já aplicada não é editada; corrige-se com uma migration corretiva incremental"
+    ref: migrations-reversiveis
+    localizacao: "SKILL.md, regra 3"
+    resultado: confirmada
+  - texto: "quem já rodou a versão anterior fica com um estado que o código não descreve"
+    ref: migrations-reversiveis
+    localizacao: "SKILL.md, regra 3"
+    resultado: confirmada
+  - texto: "toda mudança de banco é um script de migration versionado com o código, e cada mudança é tão pequena quanto possível"
+    ref: fowler-evodb
+    localizacao: "'All database changes are migrations' e 'Jen implements a new story' ('make each database change as small as possible')"
+    resultado: confirmada
+  - texto: "o Flyway grava o checksum ao executar a migration, e o validate falha quando o checksum local difere do aplicado"
+    ref: flyway-validate
+    localizacao: "seção 'Description'"
+    resultado: confirmada
+  - texto: "o verificador de PR bloqueia a alteração de migration que já existe na base e pede migration corretiva incremental"
+    ref: sdd-scaffold-verificar-pr
+    localizacao: "docstring e função analisar()"
+    resultado: confirmada
+  - texto: "migration é todo arquivo sob migration/, migrations/ ou alembic/"
+    ref: sdd-scaffold-verificar-pr
+    localizacao: "constante MIGRATION = (^|/)(migrations?|alembic)/"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: 2026-10-01
+  achados: []

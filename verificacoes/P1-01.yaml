@@ -1,0 +1,36 @@
+conteudo: P1-01
+verificado_em: 2026-10-01
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "Tier 0: sem efeito observável em runtime; Tier 1: correção localizada ou ajuste em até ~3 arquivos, sem mudança de contrato; Tier 2: feature, componente novo, contrato, schema ou infraestrutura"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 0, passo 4, tabela de tiers"
+    resultado: confirmada
+  - texto: "na dúvida entre dois tiers, fica-se com o mais alto"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 0, passo 4"
+    resultado: confirmada
+  - texto: "Tier 0 vai ao encerramento; Tier 1 tem plano leve; Tier 2 passa por spec, gate, checkpoint, plano, TDD e revisão adversarial"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Matriz tier → fases'"
+    resultado: confirmada
+  - texto: "a fase 0 lê constituição e memória, reformula o pedido em uma frase, usa os critérios do repositório ou os defaults e anuncia o tier com justificativa de uma linha"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 0, passos 1 a 4"
+    resultado: confirmada
+  - texto: "Tier 0 ou 1 com impacto estrutural é abortado, reclassificado como Tier 2 e recomeça pela matriz"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 0, passo 5 'Escalação obrigatória'"
+    resultado: confirmada
+  - texto: "o Spec Kit leva a feature por especificação, plano técnico e tarefas antes da implementação e tem um processo de correção de bug que dispensa o fluxo de feature"
+    ref: spec-kit
+    localizacao: "README, 'Spec-Driven Development' e 'Bug fixing' ('No SDD feature workflow is required first')"
+    resultado: confirmada
+  - texto: "trabalhar em lotes pequenos é uma das sete capacidades que ampliam o benefício da IA"
+    ref: dora-ai-capabilities
+    localizacao: "página do relatório (sete capacidades); capacidade 'Working in small batches'"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: 2026-10-01
+  achados: []

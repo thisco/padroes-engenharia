@@ -1,0 +1,10 @@
+id: azure-apim-ai-gateway
+titulo: AI gateway capabilities in Azure API Management
+organizacao: Microsoft Learn
+url: https://learn.microsoft.com/en-us/azure/api-management/genai-gateway-capabilities
+tipo: vendor
+verificado_em: 2026-10-01
+verificacao: V
+localizacao: "seção 'Why use an AI gateway?'"
+dominios: [ia-no-produto]
+notas: null
