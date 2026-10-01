@@ -7,7 +7,7 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 ## O que há aqui
 
 - 0 prática(s) na espinha de 12 domínios × 4 momentos; 48 das 48 células a definir (`ROTEAMENTO.md`).
-- 0 referência(s), cada uma conferida na fonte, e 0 skill(s) publicada(s).
+- 0 referência(s), cada uma conferida na fonte, e 5 skill(s) publicada(s).
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
