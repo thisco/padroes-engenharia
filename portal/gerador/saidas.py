@@ -512,3 +512,134 @@ def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
             for s in repo.skills
         ],
     }
+
+
+# roteamento.json, ROTEAMENTO.md e README.md (Tarefa 26) ------------------------------------
+#
+# ROTEAMENTO.md e README.md também vão para a raiz do repositório (scripts/gerar.py) e são
+# comparados com ela (R-GERADO-DIVERGENTE). Por isso não levam commit, data nem url_base, e
+# citam caminhos em código, não links: o mesmo texto vale no repositório e em public/.
+
+AVISO_GERADO = "Gerado por `python scripts/gerar.py`; não edite à mão."
+
+ROTEIRO = (
+    "- **v0.2:** preencher as células a definir, priorizadas pelo relatório de avisos; "
+    "tema escuro.",
+    "- **v1:** o `sdd-scaffold` passa a buscar a constituição e as skills no portal; "
+    "`instructions/` e `adaptadores/` por ferramenta.",
+    "- **v1.x:** `pacotes/` por perfil de projeto; `motores/` no monorepo, se a titularidade "
+    "permitir.",
+    "- **v2:** servidor MCP de busca de práticas e RAG dos padrões pelo gateway.",
+)
+
+
+def dados_roteamento(site: Site) -> dict[str, Any]:
+    """`roteamento.json` (spec §7.3): as 48 células na ordem da espinha, com `estado` ok ou
+    a-definir, a força máxima, a união de `aplica` e as práticas com o caminho do `.md`."""
+    return {
+        "nome": site.nome,
+        "versao": site.versao,
+        "url_base": site.url_base,
+        "momentos": [
+            {"slug": m.slug, "titulo": m.titulo, "fases": list(m.fases)}
+            for m in site.espinha.momentos
+        ],
+        "faixas": [
+            {"slug": f.slug, "titulo": f.titulo, "grupo": f.grupo, "prefixos": list(f.prefixos)}
+            for f in site.espinha.faixas
+        ],
+        "celulas": [
+            {
+                "dominio": c.dominio,
+                "momento": c.momento,
+                "estado": c.estado,
+                "forca_max": c.forca_max,
+                "aplica": c.aplica,
+                "praticas": [
+                    {
+                        "id": p.chave,
+                        "titulo": p.meta["titulo"],
+                        "forca": p.meta["forca"],
+                        "status": p.meta["status"],
+                        "mecanismo": p.meta.get("mecanismo"),
+                        "aplica": list(p.meta.get("aplica") or []),
+                        "md": para_md(caminho_de(p)),
+                    }
+                    for p in c.praticas
+                ],
+            }
+            for c in site.catalogo.celulas
+        ],
+    }
+
+
+def roteamento_md(site: Site) -> str:
+    momentos = site.espinha.momentos
+    matriz = [
+        "| Domínio | " + " | ".join(m.titulo for m in momentos) + " |",
+        "|---" * (len(momentos) + 1) + "|",
+    ]
+    for faixa in site.espinha.faixas:
+        celulas = [
+            ", ".join(
+                f"{p.chave} ({ROTULO_FORCA[p.meta['forca']]})"
+                for p in site.catalogo.celula(faixa.slug, m.slug).praticas
+            )
+            or "a definir"
+            for m in momentos
+        ]
+        matriz.append(f"| {faixa.titulo} (`{faixa.slug}`) | " + " | ".join(celulas) + " |")
+    praticas = ["| ID | Título | Força | Status | Aplica |", "|---|---|---|---|---|"]
+    for p in site.catalogo.praticas.values():
+        aplica = ", ".join(f"`{a}`" for a in p.meta.get("aplica") or []) or "nada"
+        praticas.append(
+            f"| {p.chave} | {_celula(p.meta['titulo'])} | {ROTULO_FORCA[p.meta['forca']]} | "
+            f"{p.meta['status']} | {aplica} |"
+        )
+    total = len(site.catalogo.praticas)
+    return _juntar(
+        "# Roteamento das práticas",
+        f"> {AVISO_GERADO} {site.nome} v{site.versao}: {total} prática(s); "
+        f"{celulas_a_definir(site)} das 48 células a definir.",
+        "Ache a linha do domínio da mudança e a coluna do momento e leia as práticas da célula. "
+        "No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal "
+        "publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.",
+        "## Matriz\n\n" + "\n".join(matriz),
+        "## Práticas\n\n" + ("\n".join(praticas) if total else "Ainda não há prática publicada."),
+    )
+
+
+def readme_md(site: Site) -> str:
+    total = len(site.catalogo.praticas)
+    linhas = ["| Grupo | Domínio | Práticas |", "|---|---|---|"]
+    for faixa in site.espinha.faixas:
+        n = len(site.catalogo.praticas_do_dominio(faixa.slug))
+        linhas.append(f"| {faixa.grupo} | {faixa.titulo} (`{faixa.slug}`) | {n} |")
+    return _juntar(
+        f"# {site.nome}",
+        f"> Portal de padrões de engenharia de {site.organizacao}, com IA como guia. "
+        f"Versão {site.versao}.",
+        f"{AVISO_GERADO} O validador reprova se este arquivo divergir do gerado.",
+        "## O que há aqui\n\n"
+        f"- {total} prática(s) na espinha de 12 domínios × 4 momentos; "
+        f"{celulas_a_definir(site)} das 48 células a definir (`ROTEAMENTO.md`).\n"
+        f"- {len(site.repo.referencias)} referência(s), cada uma conferida na fonte, e "
+        f"{len(site.repo.skills)} skill(s) publicada(s).\n"
+        "- O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.\n\n"
+        + "\n".join(linhas),
+        "## Como contribuir\n\n"
+        "1. Leia `AGENTS.md`. Todo conteúdo passa pela skill "
+        "`skills/curadoria-de-pratica/SKILL.md`.\n"
+        "2. Prepare o ambiente: `python3 -m venv .venv` e "
+        "`.venv/bin/python -m pip install -r requirements-dev.txt`.\n"
+        "3. Valide: `python scripts/validar.py` (0 sem erro, 1 com erro de validação, "
+        "2 em erro interno).\n"
+        "4. Gere: `python scripts/gerar.py --saida public`, que também regrava este README e o "
+        "`ROTEAMENTO.md`.\n"
+        "5. Veja: `python -m http.server -d public 8000` e abra http://localhost:8000.",
+        "## Para agentes\n\n"
+        "O portal publica `llms.txt`, `llms-full.txt`, `catalogo.json`, `roteamento.json`, "
+        "`.well-known/skills/index.json` e um `.md` gêmeo de cada página. A página "
+        "`para-agentes.html` traz o bloco para o `AGENTS.md` do seu projeto.",
+        "## Roteiro\n\nO que vem depois da v0 não ganha pasta vazia:\n\n" + "\n".join(ROTEIRO),
+    )
