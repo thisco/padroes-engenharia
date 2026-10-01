@@ -1,0 +1,36 @@
+# Níveis de risco da mudança (spec §12.3). A MR declara o nível no template Curadoria.
+# As aprovações do nível alto são exigidas pela seção [Motor e governança][2] do CODEOWNERS.
+# Se o plano da instância GitLab não aplicar aprovação por seção, a regra fica documentada
+# aqui e é conferida na revisão da MR.
+niveis:
+  baixo:
+    descricao: texto ou link de conteúdo existente
+    aprovacoes: 1
+    aprovador: um dono do conteúdo no CODEOWNERS
+  medio:
+    descricao: conteúdo novo, ou mudança de status para adotar
+    aprovacoes: 1
+    aprovador: o dono do domínio (seção da faixa no CODEOWNERS)
+  alto:
+    descricao: o motor, os contratos e a própria governança
+    aprovacoes: 2
+    aprovador: dois donos da seção [Motor e governança] do CODEOWNERS
+    # Os seis primeiros são os do §12.3; os quatro últimos mudam a governança (princípio 8
+    # da constituição: a governança não se autoedita).
+    caminhos:
+      - esquemas/
+      - scripts/
+      - portal/
+      - .gitlab-ci.yml
+      - constituicao/
+      - skills/
+      - AGENTS.md
+      - CODEOWNERS
+      - niveis-de-risco.yml
+      - componentes.yml
+
+# SemVer do portal (spec §12.3); a versão mora em portal/config.yml.
+semver:
+  major: mudança de schema em esquemas/ ou ID retirado
+  minor: conteúdo novo
+  patch: texto e links

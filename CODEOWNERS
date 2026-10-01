@@ -1,0 +1,68 @@
+# Donos do código e do conteúdo (spec §12.3), na sintaxe do GitLab:
+# https://docs.gitlab.com/user/project/codeowners/reference/
+#
+# PENDÊNCIA: @nuarq é o handle provisório do grupo dono. Confirme o handle real ao criar o
+# projeto no GitLab Serpro e troque em todas as linhas.
+#
+# Cada seção é avaliada à parte. [Nome][2] exige duas aprovações: é o nível alto de
+# niveis-de-risco.yml. Se o plano da instância não aplicar aprovação por seção, a regra
+# fica documentada e é conferida na revisão.
+
+[Repositório] @nuarq
+*
+
+[Motor e governança][2] @nuarq
+/esquemas/
+/scripts/
+/portal/
+/.gitlab-ci.yml
+/constituicao/
+/skills/
+/AGENTS.md
+/CODEOWNERS
+/niveis-de-risco.yml
+/componentes.yml
+
+[Construir com IA] @nuarq
+/praticas/construir-com-ia/
+
+[Arquitetura e padrões de projeto] @nuarq
+/praticas/arquitetura/
+
+[Contratos de API] @nuarq
+/praticas/contratos-api/
+
+[Frontend e UX] @nuarq
+/praticas/frontend-ux/
+
+[Dados e migrations] @nuarq
+/praticas/dados-migrations/
+
+[Privacidade e LGPD] @nuarq
+/praticas/privacidade-lgpd/
+
+[Qualidade e BDD] @nuarq
+/praticas/qualidade-bdd/
+
+[Infra e IaC] @nuarq
+/praticas/infra-iac/
+
+[CI/CD] @nuarq
+/praticas/ci-cd/
+
+[Observabilidade e operação] @nuarq
+/praticas/observabilidade/
+
+[Segurança] @nuarq
+/praticas/seguranca/
+
+[Aplicações que consomem modelos e agentes próprios] @nuarq
+/praticas/ia-no-produto/
+
+[Conteúdo transversal] @nuarq
+/paginas/
+/conceitos/
+/guias/
+/casos/
+/referencias/
+/verificacoes/
