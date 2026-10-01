@@ -1,0 +1,4 @@
+# Dependências de desenvolvimento e CI, em versão exata.
+-r requirements.txt
+pytest==9.1.1
+ruff==0.16.10

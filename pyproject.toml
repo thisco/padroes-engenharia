@@ -1,0 +1,13 @@
+# Configuração de ferramentas do padroes-engenharia.
+# A versão do portal mora em portal/config.yml; aqui ficam só pytest e ruff.
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

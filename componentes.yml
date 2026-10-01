@@ -1,0 +1,12 @@
+# Componentes externos com versão fixada (spec §6.6 e R20).
+# Um mecanismo externo de prática usa a forma <componente>:<caminho>@<versao>,
+# e a versão precisa ser igual à fixada aqui. Atualizar = mudar aqui e conferir os mecanismos.
+componentes:
+  sdd-scaffold:
+    repo: https://github.com/thisco/sdd-scaffold
+    versao: "1.6.1"
+    commit: a8ebdf3c6734f11f6763c182b2325fe227216b65
+  sdd-lifecycle:
+    repo: https://github.com/thisco/sdd-lifecycle
+    versao: "2.0.0"
+    commit: 1726652171f249bdaf86d7dcb6da23a1b7ae990b
