@@ -1,0 +1,79 @@
+{# Componentes do tema (spec §9.2). Importe com: {% import "componentes.html" as c %} #}
+
+{% macro chip_forca(forca) -%}
+<span class="ef {{ forca }}">{{ ROTULO_FORCA[forca] }}</span>
+{%- endmacro %}
+
+{% macro barra_forca(contagem) -%}
+{% set total = contagem.values() | sum %}
+<svg class="barra-forca" role="img" aria-label="{{ descrever_forcas(contagem) }}" viewBox="0 0 100 4" preserveAspectRatio="none">
+{% if total == 0 %}
+<rect class="nenhuma" x="0" y="0" width="100" height="4"/>
+{% else %}
+{% set ns = namespace(x=0) %}
+{% for forca in ORDEM_FORCA if contagem[forca] %}
+<rect class="{{ forca }}" x="{{ ns.x | round(3) }}" y="0" width="{{ (100 * contagem[forca] / total) | round(3) }}" height="4"/>
+{% set ns.x = ns.x + 100 * contagem[forca] / total %}
+{% endfor %}
+{% endif %}
+</svg>
+<p class="legenda">{{ descrever_forcas(contagem) }}</p>
+{%- endmacro %}
+
+{% macro ninho(destaque=None) -%}
+{% set p = NINHOS["agente-de-codigo"].pecas %}
+<figure class="ninho">
+  <div class="cx agente{{ classe_peca('agente', destaque) }}"><b>{{ p.agente }}</b>
+    <div class="cx harness{{ classe_peca('harness', destaque) }}"><b>{{ p.harness }}</b>
+      <div class="linha">
+        <div class="cx sessao{{ classe_peca('sessao', destaque) }}"><b>{{ p.sessao }}</b>
+          <div class="cx modelo{{ classe_peca('modelo', destaque) }}"><b>{{ p.modelo }}</b></div>
+        </div>
+        <div class="cx subagente{{ classe_peca('subagente', destaque) }}"><b>{{ p.subagente }}</b></div>
+      </div>
+      <div class="exec">
+        <div class="cx skill{{ classe_peca('skill', destaque) }}"><b>{{ p.skill }}</b></div>
+        <div class="cx mcp{{ classe_peca('mcp', destaque) }}"><b>{{ p.mcp }}</b></div>
+        <div class="cx hook{{ classe_peca('hook', destaque) }}"><b>{{ p.hook }}</b></div>
+      </div>
+    </div>
+    <div class="cx memoria{{ classe_peca('memoria', destaque) }}"><b>{{ p.memoria }}</b></div>
+  </div>
+  <figcaption>{{ descrever_ninho("agente-de-codigo", destaque) }}</figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro ninho_produto(destaque=None) -%}
+{% set p = NINHOS["ia-no-produto"].pecas %}
+<figure class="ninho">
+  <div class="cx aplicacao"><b>Aplicação ou agente próprio</b>
+    <div class="cx nivel-de-agencia{{ classe_peca('nivel-de-agencia', destaque) }}"><b>{{ p["nivel-de-agencia"] }}</b></div>
+  </div>
+  <div class="fluxo" aria-hidden="true">↓</div>
+  <div class="cx chave-virtual{{ classe_peca('chave-virtual', destaque) }}"><b>{{ p["chave-virtual"] }}</b></div>
+  <div class="fluxo" aria-hidden="true">↓</div>
+  <div class="cx gateway{{ classe_peca('gateway', destaque) }}"><b>{{ p.gateway }}</b>
+    <div class="exec">
+      <div class="cx guardrail{{ classe_peca('guardrail', destaque) }}"><b>{{ p.guardrail }}</b></div>
+      <div class="cx catalogo-de-modelos{{ classe_peca('catalogo-de-modelos', destaque) }}"><b>{{ p["catalogo-de-modelos"] }}</b></div>
+    </div>
+  </div>
+  <div class="fluxo" aria-hidden="true">↓</div>
+  <div class="cx modelos"><b>Modelos</b></div>
+  <div class="cx eval{{ classe_peca('eval', destaque) }}"><b>{{ p.eval }}</b></div>
+  <figcaption>{{ descrever_ninho("ia-no-produto", destaque) }}</figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro lista_referencias(referencias) -%}
+{% if referencias %}
+<ol class="refs">
+{% for r in referencias %}
+  <li id="ref-{{ r.chave }}"><span class="n">[{{ loop.index }}]</span> <a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a>
+    <small>{{ r.meta.organizacao }} · {{ ROTULO_TIPO_REFERENCIA[r.meta.tipo] }} · <span class="marca-v">[{{ r.meta.verificacao }}]</span> verificada em {{ r.meta.verificado_em }} · {{ r.meta.localizacao }}</small></li>
+{% endfor %}
+</ol>
+{% else %}
+<p class="vazia">Sem referências.</p>
+{% endif %}
+{%- endmacro %}

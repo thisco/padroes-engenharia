@@ -158,9 +158,9 @@ p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70
 .lado section { margin-top: 22px; }
 .lado section:first-child { margin-top: 0; }
 .lado ul { margin: 0; padding-left: 18px; font-size: 14px; }
-ol.refs { margin: 0; padding: 0; list-style: none; counter-reset: ref; }
-ol.refs li { counter-increment: ref; border-top: 1px solid var(--regra); padding: 8px 0 8px 30px; position: relative; font-size: 14px; }
-ol.refs li::before { content: "[" counter(ref) "]"; position: absolute; left: 0; font-family: var(--mono); font-size: 12px; color: var(--tinta-2); }
+ol.refs { margin: 0; padding: 0; list-style: none; }
+ol.refs li { border-top: 1px solid var(--regra); padding: 8px 0 8px 32px; position: relative; font-size: 14px; }
+ol.refs li .n { position: absolute; left: 0; font-family: var(--mono); font-size: 12px; color: var(--tinta-2); }
 ol.refs li:target { background: var(--gov-claro); }
 ol.refs a { font-weight: 600; text-decoration: none; }
 ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12px; }
@@ -196,10 +196,10 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho .exec .cx { border: 1px solid var(--gov); background: var(--branco); }
 .ninho .hook, .ninho .guardrail { border: 2px solid var(--gov); }
 .ninho .memoria, .ninho .eval { background: var(--tinta); color: var(--papel); margin-top: 8px; }
-.ninho .memoria code { background: rgba(255, 255, 255, .1); color: var(--sobre-escuro-2); margin: 2px 4px 0 0; display: inline-block; }
 .ninho .fluxo { margin: 6px 0; text-align: center; color: var(--tinta-2); font-size: 12px; }
-.ninho .apaga { opacity: .35; }
-.ninho .alvo { opacity: 1; outline: 3px solid var(--gov); outline-offset: 2px; animation: destaque 1.2s ease-out 1; }
+.ninho .cx.apaga { border-color: var(--regra); background: transparent; color: var(--tinta-2); }
+.ninho .cx.memoria.apaga, .ninho .cx.eval.apaga { background: var(--papel-2); }
+.ninho .alvo { outline: 3px solid var(--gov); outline-offset: 2px; animation: destaque 1.2s ease-out 1; }
 .ninho figcaption { margin-top: 10px; font-size: 13px; color: var(--tinta-2); }
 @keyframes destaque { from { box-shadow: 0 0 0 10px var(--gov-claro); } to { box-shadow: 0 0 0 0 transparent; } }
 

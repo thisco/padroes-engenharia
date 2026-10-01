@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ titulo }} · {{ site.nome }}</title>
+<meta name="description" content="{{ descricao }}">
+<link rel="stylesheet" href="{{ raiz }}vendor/fonts/fonts.css">
+<link rel="stylesheet" href="{{ raiz }}tema/tema.css">
+<link rel="alternate" type="text/markdown" href="{{ md }}">
+<script src="{{ raiz }}tema/busca.js" defer></script>
+</head>
+<body>
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<header class="barra">
+  <a class="marca" href="{{ raiz }}index.html">{{ site.nome }} · {{ site.organizacao }}</a>
+  <nav class="nav" aria-label="Navegação principal">
+{% for grupo, itens in nav %}
+    <span class="grupo"><span>{{ grupo }}</span>
+{% for item in itens %}
+{% if item.href %}
+      <a href="{{ raiz }}{{ item.href }}"{% if item.atual %} aria-current="page"{% endif %}>{{ item.titulo }}</a>
+{% else %}
+      <span class="em-breve" title="ainda não publicada">{{ item.titulo }}</span>
+{% endif %}
+{% endfor %}
+    </span>
+{% endfor %}
+    <a class="ag" href="{{ raiz }}para-agentes.html"{% if caminho == "para-agentes.html" %} aria-current="page"{% endif %}>para agentes</a>
+  </nav>
+  <div class="busca" role="search">
+    <label class="vh" for="busca">Buscar no portal</label>
+    <input id="busca" type="search" placeholder="Buscar práticas, IDs e referências" autocomplete="off" data-indice="{{ raiz }}busca.json" data-raiz="{{ raiz }}">
+    <ul id="busca-resultados" aria-live="polite"></ul>
+  </div>
+</header>
+<main id="conteudo" class="folha">
+{% block conteudo %}{% endblock %}
+</main>
+<footer class="rodape">
+  <span>{{ site.nome }} v{{ site.versao }} · commit <code>{{ site.commit_curto }}</code> · {{ site.data }}</span>
+  <a href="{{ md }}">esta página em Markdown</a>
+</footer>
+</body>
+</html>
