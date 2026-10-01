@@ -1,0 +1,229 @@
+/* Tema "prancheta" do portal (spec §9): um único CSS, sem recurso externo.
+   A paleta carrega a tese: azul sólido é o que impede; âmbar tracejado é o que orienta.
+   Texto pequeno nunca usa --tinta-3 nem --ambar (≈3:1 sobre --papel): use --tinta-2 e
+   --ambar-texto. Os pares de texto e fundo estão em contraste.yml, conferidos por teste. */
+
+:root {
+  --papel: #E8EDF2;
+  --papel-2: #DDE4EC;
+  --tinta: #0A1A2F;
+  --tinta-2: #43556B;
+  --tinta-3: #7A8A9D;
+  --regra: #C3CDD8;
+  --gov: #1351B4;
+  --gov-claro: #D3E0F5;
+  --ambar: #B06F12;
+  --ambar-claro: #F3E3C6;
+  --ambar-texto: #8A6220;
+  --erro: #B8452E;
+  --branco: #FFFFFF;
+  --harness: #F4F7FB;
+  --sobre-escuro: #B8C6D6;
+  --sobre-escuro-2: #E3EAF2;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--papel); color: var(--tinta); }
+body {
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--gov); }
+a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--gov);
+  outline-offset: 2px;
+}
+code, pre, .id, .mono { font-family: var(--mono); font-variant-ligatures: none; }
+code { font-size: 13px; background: rgba(10, 26, 47, .06); padding: 1px 5px; border-radius: 2px; }
+pre { font-size: 13px; overflow-x: auto; }
+h1, h2, h3 { letter-spacing: -.02em; }
+.vh {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+.pular { position: absolute; left: -9999px; }
+.pular:focus { left: 12px; top: 8px; background: var(--branco); color: var(--tinta); padding: 6px 10px; }
+
+/* barra de navegação */
+.barra {
+  display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; justify-content: space-between;
+  padding: 12px 32px; border-bottom: 2px solid var(--tinta); font-size: 14px;
+}
+.marca { color: var(--tinta); font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
+.nav { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; }
+.nav .grupo { display: flex; gap: 12px; align-items: baseline; }
+.nav .grupo > span:first-child { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); }
+.nav a { color: var(--tinta-2); text-decoration: none; }
+.nav a:hover { color: var(--tinta); }
+.nav a[aria-current="page"] { color: var(--tinta); font-weight: 600; border-bottom: 2px solid var(--gov); }
+.nav .em-breve { color: var(--tinta-2); font-style: italic; }
+.nav a.ag {
+  font-family: var(--mono); font-size: 12px; color: var(--tinta);
+  border: 1px solid var(--tinta); padding: 2px 8px; border-radius: 2px;
+}
+.busca { position: relative; }
+.busca input {
+  font: inherit; font-size: 13px; width: 260px; padding: 5px 8px;
+  border: 1px solid var(--tinta-2); border-radius: 2px; background: var(--branco); color: var(--tinta);
+}
+.busca ul {
+  position: absolute; right: 0; z-index: 5; width: 420px; max-height: 60vh; overflow-y: auto;
+  margin: 4px 0 0; padding: 0; list-style: none; background: var(--branco); border: 1px solid var(--regra);
+}
+.busca ul:empty { display: none; }
+.busca li a { display: block; padding: 6px 10px; color: var(--tinta); text-decoration: none; font-size: 13px; }
+.busca li a:hover, .busca li a:focus-visible { background: var(--gov-claro); }
+.busca li small { display: block; color: var(--tinta-2); font-size: 12px; }
+
+/* folha, topo e seções */
+.folha { max-width: 1240px; margin: 0 auto; padding: 32px 32px 24px; }
+.topo {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: end;
+  padding-bottom: 20px; border-bottom: 2px solid var(--tinta);
+}
+.topo h1 { margin: 0; font-size: 44px; line-height: 1; letter-spacing: -.035em; font-weight: 800; }
+.topo p { margin: 0; font-size: 16px; color: var(--tinta-2); max-width: 60ch; }
+.trilha { font-size: 13px; color: var(--tinta-2); margin-bottom: 10px; }
+.trilha a { color: var(--tinta-2); }
+section { margin-top: 28px; }
+section > h2 { margin: 0 0 6px; font-size: 22px; }
+p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70ch; }
+.duas { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 32px; }
+
+/* passos numerados do how-to */
+.passos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 20px; border-top: 1px solid var(--regra); }
+.passo { padding: 14px 16px 14px 0; margin-right: 16px; border-right: 1px solid var(--regra); }
+.passo:last-child { border-right: none; }
+.passo .n {
+  display: inline-block; width: 24px; height: 24px; line-height: 21px; text-align: center;
+  font-family: var(--mono); font-size: 12px; border: 1.5px solid var(--tinta); margin-bottom: 6px;
+}
+.passo b { display: block; font-size: 16px; }
+.passo p { margin: 4px 0 0; font-size: 13px; color: var(--tinta-2); }
+.passo a { display: inline-block; margin-top: 6px; font-size: 13px; }
+
+/* chips: força, status, ferramentas e ID */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; font-size: 12px; }
+.ef, .st, .fe { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 12px; text-decoration: none; }
+.ef.bloqueia { background: var(--gov); color: var(--branco); border: 1.5px solid var(--gov); }
+.ef.pede-aprovacao { border: 1.5px solid var(--gov); color: var(--gov); background: var(--branco); }
+.ef.avisa { border: 1.5px solid var(--ambar); color: var(--ambar-texto); background: var(--branco); }
+.ef.orienta { border: 1.5px dashed var(--ambar); color: var(--ambar-texto); background: var(--branco); }
+.st { border: 1px solid var(--tinta); color: var(--tinta); font-weight: 600; }
+.fe { border: 1px solid var(--regra); color: var(--tinta-2); }
+.id {
+  font-size: 13px; font-weight: 600; color: var(--gov); border: 1.5px solid var(--gov);
+  padding: 1px 7px; border-radius: 2px; margin-right: 10px; vertical-align: middle;
+}
+
+/* matriz da espinha */
+.matriz { width: 100%; border-collapse: collapse; font-size: 13px; }
+.matriz th, .matriz td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
+.matriz thead th { border-bottom: 2px solid var(--tinta); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+.matriz thead th small { display: block; text-transform: none; letter-spacing: 0; color: var(--tinta-2); font-family: var(--mono); }
+.matriz th[scope="row"] a { color: var(--tinta); font-weight: 600; text-decoration: none; }
+.matriz tr.grupo th { background: var(--papel-2); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-2); }
+.matriz td .ef { margin: 0 4px 4px 0; }
+.vazia { color: var(--tinta-2); font-style: italic; font-size: 12px; }
+.mini td { padding: 3px 6px; }
+.q { display: inline-block; width: 11px; height: 11px; vertical-align: -1px; }
+.q.bloqueia, .q.pede-aprovacao { background: var(--gov); }
+.q.avisa { background: var(--ambar-claro); border: 1.5px solid var(--ambar); }
+.q.orienta { border: 1.5px dashed var(--ambar); }
+.q.vazia { border: 1px solid var(--regra); background: repeating-linear-gradient(135deg, transparent 0 2px, var(--regra) 2px 3px); }
+.legenda { font-size: 12px; color: var(--tinta-2); margin-top: 8px; }
+
+/* bloco escuro: memória e "para agentes" */
+.disco { background: var(--tinta); color: var(--papel); padding: 16px 18px; border-radius: 3px; }
+.disco h2 { margin: 0; font-size: 18px; color: var(--papel); }
+.disco p { margin: 4px 0 10px; font-size: 13px; color: var(--sobre-escuro); }
+.disco pre {
+  margin: 0; font-size: 12px; line-height: 1.55; white-space: pre-wrap; color: var(--sobre-escuro-2);
+  background: rgba(255, 255, 255, .07); padding: 10px 12px; border-left: 3px solid var(--gov);
+}
+.disco code { background: rgba(255, 255, 255, .1); color: var(--sobre-escuro-2); }
+.disco a { color: var(--sobre-escuro-2); }
+
+/* página de prática e de conteúdo: texto + lateral */
+.corpo { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 40px; margin-top: 20px; }
+.texto { max-width: 72ch; }
+.texto h2 { font-size: 20px; margin: 26px 0 6px; padding-top: 12px; border-top: 1px solid var(--regra); }
+.texto h2:first-child { margin-top: 0; border-top: 2px solid var(--tinta); }
+.texto table { border-collapse: collapse; font-size: 14px; }
+.texto th, .texto td { border-bottom: 1px solid var(--regra); padding: 4px 8px; text-align: left; }
+.lado h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); }
+.lado section { margin-top: 22px; }
+.lado section:first-child { margin-top: 0; }
+.lado ul { margin: 0; padding-left: 18px; font-size: 14px; }
+ol.refs { margin: 0; padding: 0; list-style: none; counter-reset: ref; }
+ol.refs li { counter-increment: ref; border-top: 1px solid var(--regra); padding: 8px 0 8px 30px; position: relative; font-size: 14px; }
+ol.refs li::before { content: "[" counter(ref) "]"; position: absolute; left: 0; font-family: var(--mono); font-size: 12px; color: var(--tinta-2); }
+ol.refs li:target { background: var(--gov-claro); }
+ol.refs a { font-weight: 600; text-decoration: none; }
+ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12px; }
+.marca-v { font-family: var(--mono); font-size: 11px; border: 1px solid var(--tinta-2); color: var(--tinta-2); padding: 0 4px; border-radius: 2px; }
+.campos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14px; }
+.campos dt { color: var(--tinta-2); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; padding-top: 2px; }
+.campos dd { margin: 0; }
+
+/* tabelas de evidência densa */
+.tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
+.tabela thead th { border-bottom: 2px solid var(--tinta); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--tinta-2); }
+.filtros { display: flex; flex-wrap: wrap; gap: 12px 20px; font-size: 13px; margin: 8px 0 14px; }
+.filtros select { font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
+
+/* barra de força de um domínio */
+.barra-forca { display: block; width: 100%; max-width: 480px; height: 12px; }
+.barra-forca .bloqueia, .barra-forca .pede-aprovacao { fill: var(--gov); }
+.barra-forca .avisa { fill: var(--ambar-claro); stroke: var(--ambar); stroke-width: .6; }
+.barra-forca .orienta { fill: var(--branco); stroke: var(--ambar); stroke-width: .6; stroke-dasharray: 1.5 1; }
+.barra-forca .nenhuma { fill: var(--papel-2); }
+
+/* ninhos: caixas aninhadas com a peça em destaque */
+.ninho { margin: 0; font-size: 13px; }
+.ninho .cx { border-radius: 3px; padding: 10px 12px; }
+.ninho .cx > b { display: block; font-size: 14px; margin-bottom: 6px; }
+.ninho .agente, .ninho .aplicacao { border: 2px solid var(--tinta); }
+.ninho .harness, .ninho .gateway { border: 2px solid var(--gov); background: var(--harness); margin-top: 6px; }
+.ninho .linha { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 8px; }
+.ninho .sessao, .ninho .subagente, .ninho .chave-virtual, .ninho .nivel-de-agencia { border: 2px dashed var(--ambar); background: var(--branco); }
+.ninho .modelo, .ninho .modelos { border: 1px solid var(--tinta-2); background: var(--branco); text-align: center; }
+.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.ninho .exec .cx { border: 1px solid var(--gov); background: var(--branco); }
+.ninho .hook, .ninho .guardrail { border: 2px solid var(--gov); }
+.ninho .memoria, .ninho .eval { background: var(--tinta); color: var(--papel); margin-top: 8px; }
+.ninho .memoria code { background: rgba(255, 255, 255, .1); color: var(--sobre-escuro-2); margin: 2px 4px 0 0; display: inline-block; }
+.ninho .fluxo { margin: 6px 0; text-align: center; color: var(--tinta-2); font-size: 12px; }
+.ninho .apaga { opacity: .35; }
+.ninho .alvo { opacity: 1; outline: 3px solid var(--gov); outline-offset: 2px; animation: destaque 1.2s ease-out 1; }
+.ninho figcaption { margin-top: 10px; font-size: 13px; color: var(--tinta-2); }
+@keyframes destaque { from { box-shadow: 0 0 0 10px var(--gov-claro); } to { box-shadow: 0 0 0 0 transparent; } }
+
+/* rodapé */
+.rodape {
+  max-width: 1240px; margin: 32px auto 0; padding: 12px 32px 28px; border-top: 1px solid var(--regra);
+  display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; font-size: 12px; color: var(--tinta-2);
+}
+.rodape a { color: var(--tinta-2); }
+
+/* uma animação no máximo, desligada sem movimento e na impressão */
+@media (prefers-reduced-motion: reduce) {
+  .ninho .alvo { animation: none; }
+}
+@media print {
+  .ninho .alvo { animation: none; }
+  .barra, .busca, .filtros { display: none; }
+  body { background: var(--branco); }
+}
+@media (max-width: 900px) {
+  .folha { padding: 24px 18px; }
+  .topo, .duas, .corpo { grid-template-columns: 1fr; gap: 20px; }
+  .topo h1 { font-size: 34px; }
+  .passos { grid-template-columns: 1fr 1fr; }
+  .ninho .linha, .ninho .exec { grid-template-columns: 1fr; }
+  .busca input, .busca ul { width: 100%; }
+}

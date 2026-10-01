@@ -1,0 +1,25 @@
+# Pares de cor usados em texto pequeno no tema (spec §9.3; WCAG 2.2, critério 1.4.3).
+# tests/unidade/test_contraste.py lê os tokens do :root de tema.css, calcula a razão de
+# contraste de cada par e reprova o que ficar abaixo do mínimo. Toda cor usada em `color:` no
+# tema precisa aparecer aqui como texto de algum par.
+minimo: 4.5
+pares:
+  - {texto: tinta, fundo: papel}
+  - {texto: tinta, fundo: papel-2}
+  - {texto: tinta, fundo: branco}
+  - {texto: tinta, fundo: gov-claro}
+  - {texto: tinta, fundo: harness}
+  - {texto: tinta-2, fundo: papel}
+  - {texto: tinta-2, fundo: papel-2}
+  - {texto: tinta-2, fundo: branco}
+  - {texto: tinta-2, fundo: gov-claro}
+  - {texto: gov, fundo: papel}
+  - {texto: gov, fundo: branco}
+  - {texto: gov, fundo: harness}
+  - {texto: gov, fundo: gov-claro}
+  - {texto: ambar-texto, fundo: papel}
+  - {texto: ambar-texto, fundo: branco}
+  - {texto: branco, fundo: gov}
+  - {texto: papel, fundo: tinta}
+  - {texto: sobre-escuro, fundo: tinta}
+  - {texto: sobre-escuro-2, fundo: tinta}
