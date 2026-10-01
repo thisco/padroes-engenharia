@@ -441,3 +441,40 @@ def _problemas_do_registro(v: Conteudo, c: Conteudo, citados: list[str]) -> list
         valor = "revisao_adversarial ausente"
         erros.append(Erro(v.caminho_relativo, "revisao_adversarial", codigos.R_VERIFICACAO, valor))
     return erros
+
+
+# AGENTS.md e constituição (spec §8; §12.1, bloqueio 12) ---------------------------------------
+
+LIMITE_AGENTS = 30 * 1024
+INICIO_CONSTITUICAO = re.compile(r"<!--\s*constituicao:inicio\s+(?P<versao>[\w.\-]+)\s*-->")
+FIM_CONSTITUICAO = "<!-- constituicao:fim -->"
+
+
+@regra
+def regra_agents(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """`AGENTS.md` existe, tem menos de 30 KB e traz, entre os marcadores, a constituição
+    idêntica (após strip) a `constituicao/<versao>.md`."""
+    caminho = contexto.raiz / "AGENTS.md"
+    if not caminho.is_file():
+        return [Erro("AGENTS.md", "arquivo", codigos.R_AGENTS, "ausente")]
+    erros: list[Erro] = []
+    dados = caminho.read_bytes()
+    if len(dados) >= LIMITE_AGENTS:
+        valor = f"{len(dados)} bytes; o limite é {LIMITE_AGENTS}"
+        erros.append(Erro("AGENTS.md", "tamanho", codigos.R_AGENTS, valor))
+    texto = dados.decode("utf-8", errors="replace")
+    inicio = INICIO_CONSTITUICAO.search(texto)
+    if inicio is None or FIM_CONSTITUICAO not in texto[inicio.end() :]:
+        valor = "marcadores <!-- constituicao:inicio <versao> --> e <!-- constituicao:fim -->"
+        erros.append(Erro("AGENTS.md", "constituicao", codigos.R_AGENTS, f"faltam {valor}"))
+        return erros
+    versao = inicio["versao"]
+    bloco = texto[inicio.end() :].split(FIM_CONSTITUICAO, 1)[0]
+    canonica = contexto.raiz / "constituicao" / f"{versao}.md"
+    if not canonica.is_file():
+        valor = f"constituicao/{versao}.md não existe"
+        erros.append(Erro("AGENTS.md", "constituicao", codigos.R_AGENTS, valor))
+    elif bloco.strip() != canonica.read_text(encoding="utf-8").strip():
+        valor = f"o bloco inline difere de constituicao/{versao}.md"
+        erros.append(Erro("AGENTS.md", "constituicao", codigos.R_AGENTS, valor))
+    return erros
