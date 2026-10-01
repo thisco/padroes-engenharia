@@ -381,3 +381,63 @@ def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
             valor = "encontradas: " + (" | ".join(titulos) or "nenhuma")
             erros.append(Erro(p.caminho_relativo, "corpo", codigos.R_SECOES, valor))
     return erros
+
+
+# Registro de verificação (spec §11.2; §12.1, bloqueio 7) --------------------------------------
+
+
+@regra
+def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Todo conteúdo com referências tem `verificacoes/<chave>.yaml` válido e em dia.
+
+    O registro não é anterior a `revisado_em`, tem ao menos uma afirmação para cada id citado
+    no corpo, nenhuma afirmação `nao-confirmada` e a `revisao_adversarial` registrada.
+    Registro sem conteúdo correspondente também reprova: quase sempre é ID digitado errado.
+    """
+    erros: list[Erro] = []
+    conteudos = {c.chave: c for c in repo.markdown()}
+    registros: dict[str, Conteudo] = {}
+    for v in repo.verificacoes:
+        alvo = _texto(v.meta, "conteudo")
+        if alvo is None:
+            continue
+        registros.setdefault(alvo, v)
+        if alvo not in conteudos:
+            valor = f"{alvo}: nenhum conteúdo com essa chave"
+            erros.append(Erro(v.caminho_relativo, "conteudo", codigos.R_VERIFICACAO, valor))
+    for chave, c in conteudos.items():
+        citados = extrair(c.corpo)
+        if not citados and not _lista(c.meta, "referencias"):
+            continue
+        v = registros.get(chave)
+        if v is None:
+            valor = f"sem registro em verificacoes/{chave}.yaml"
+            erros.append(Erro(c.caminho_relativo, "verificacao", codigos.R_VERIFICACAO, valor))
+            continue
+        erros += _problemas_do_registro(v, c, citados)
+    return erros
+
+
+def _problemas_do_registro(v: Conteudo, c: Conteudo, citados: list[str]) -> list[Erro]:
+    erros: list[Erro] = []
+    verificado_em = _texto(v.meta, "verificado_em")
+    revisado_em = _texto(c.meta, "revisado_em")
+    if verificado_em and revisado_em and verificado_em < revisado_em:
+        valor = f"{verificado_em} é anterior ao revisado_em {revisado_em} de {c.caminho_relativo}"
+        erros.append(Erro(v.caminho_relativo, "verificado_em", codigos.R_VERIFICACAO, valor))
+    bruto = v.meta.get("afirmacoes")
+    afirmacoes = [a for a in bruto if isinstance(a, dict)] if isinstance(bruto, list) else []
+    cobertas = {a.get("ref") for a in afirmacoes}
+    for id_ in citados:
+        if id_ not in cobertas:
+            valor = f"nenhuma afirmação conferida para [ref:{id_}]"
+            erros.append(Erro(v.caminho_relativo, "afirmacoes", codigos.R_VERIFICACAO, valor))
+    for i, afirmacao in enumerate(afirmacoes):
+        if afirmacao.get("resultado") == "nao-confirmada":
+            campo = f"afirmacoes.{i}.resultado"
+            valor = f"nao-confirmada: {afirmacao.get('texto')}"
+            erros.append(Erro(v.caminho_relativo, campo, codigos.R_VERIFICACAO, valor))
+    if not isinstance(v.meta.get("revisao_adversarial"), dict):
+        valor = "revisao_adversarial ausente"
+        erros.append(Erro(v.caminho_relativo, "revisao_adversarial", codigos.R_VERIFICACAO, valor))
+    return erros
