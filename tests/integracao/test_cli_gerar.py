@@ -1,8 +1,11 @@
 """CLI scripts/gerar.py: commit e data do build, cópia para a raiz e códigos de saída 0, 1 e 2."""
 
 import os
+import shutil
 import subprocess
 import sys
+
+import pytest
 
 from scripts import gerar as cli
 from tests import fabrica
@@ -22,6 +25,7 @@ def test_source_date_epoch_tem_precedencia_e_e_utc(tmp_path):
     assert cli.descobrir_data(tmp_path, ambiente) == "2026-10-01"
 
 
+@pytest.mark.skipif(shutil.which("git") is None, reason="a imagem python:3.12-slim não tem git")
 def test_sem_ambiente_usa_o_ultimo_commit_do_git(tmp_path):
     data = "2026-10-01T12:00:00Z"
     ambiente = {**os.environ, "GIT_AUTHOR_DATE": data, "GIT_COMMITTER_DATE": data}
