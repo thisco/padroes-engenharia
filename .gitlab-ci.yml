@@ -1,0 +1,152 @@
+# Pipeline do portal (spec §12.2): validar → testar → seguranca → gerar → publicar.
+# Bloqueios do §12.1: validar.py (1–8, 10 e 12), determinismo (9), gitleaks (11).
+# Avisos do §12.1: job agendado `avisos`, que nunca bloqueia.
+# O job `pages` publica no GitLab Pages só na branch padrão; `pacote` anexa o site em tar.gz
+# a cada tag v* (spec §7.4).
+
+stages:
+  - validar
+  - testar
+  - seguranca
+  - gerar
+  - publicar
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
+
+default:
+  image: python:3.12-slim
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+# Base dos jobs do Python: dependências fixadas e nada em pipeline agendado.
+.python:
+  cache:
+    key:
+      files:
+        - requirements-dev.txt
+    paths:
+      - .cache/pip
+  before_script:
+    - python -m pip install --quiet -r requirements-dev.txt
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success
+
+validar:
+  extends: .python
+  stage: validar
+  script:
+    - python scripts/validar.py
+
+testes:
+  extends: .python
+  stage: testar
+  script:
+    - python -m pytest -q --junitxml=relatorio-testes.xml
+  artifacts:
+    when: always
+    reports:
+      junit: relatorio-testes.xml
+
+lint:
+  extends: .python
+  stage: testar
+  script:
+    - ruff check --extend-exclude .cache .
+    - ruff format --check --extend-exclude .cache .
+
+determinismo:
+  extends: .python
+  stage: testar
+  script:
+    - python scripts/gerar.py --saida /tmp/build-a --url-base "$CI_PAGES_URL"
+    - python scripts/gerar.py --saida /tmp/build-b --url-base "$CI_PAGES_URL"
+    - diff -r /tmp/build-a /tmp/build-b
+
+gitleaks:
+  stage: seguranca
+  image:
+    name: zricethezav/gitleaks:v8.30.1
+    entrypoint: [""]
+  variables:
+    GIT_DEPTH: "0"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - when: on_success
+  script:
+    - git config --global --add safe.directory "$CI_PROJECT_DIR"
+    - |
+      if [ -n "$CI_MERGE_REQUEST_DIFF_BASE_SHA" ]; then
+        gitleaks git --redact --verbose --log-opts="$CI_MERGE_REQUEST_DIFF_BASE_SHA..$CI_COMMIT_SHA" .
+      else
+        gitleaks git --redact --verbose .
+      fi
+
+gerar:
+  extends: .python
+  stage: gerar
+  script:
+    - python scripts/gerar.py --saida public --url-base "$CI_PAGES_URL"
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 week
+
+pages:
+  stage: publicar
+  needs:
+    - job: gerar
+      artifacts: true
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - test -f public/index.html
+    - test -f public/llms.txt
+  artifacts:
+    paths:
+      - public
+
+pacote:
+  stage: publicar
+  needs:
+    - job: gerar
+      artifacts: true
+  rules:
+    - if: $CI_COMMIT_TAG =~ /^v/
+  script:
+    - VERSAO=$(python -c 'import json; print(json.load(open("public/catalogo.json"))["versao"])')
+    - test "$CI_COMMIT_TAG" = "v$VERSAO"
+    - tar -czf "padroes-engenharia-$CI_COMMIT_TAG.tar.gz" -C public .
+  artifacts:
+    name: "padroes-engenharia-$CI_COMMIT_TAG"
+    paths:
+      - padroes-engenharia-$CI_COMMIT_TAG.tar.gz
+    expire_in: never
+
+avisos:
+  extends: .python
+  stage: validar
+  before_script:
+    - python -m pip install --quiet -r requirements.txt
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  allow_failure: true
+  script:
+    - python scripts/checar_links.py --relatorio relatorio-avisos.md
+  artifacts:
+    when: always
+    paths:
+      - relatorio-avisos.md
+    expire_in: 30 days
