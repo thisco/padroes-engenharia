@@ -7,6 +7,7 @@ lista completa de referências com URL (spec §6.2 e §7.3).
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -422,3 +423,29 @@ def llms_full(site: Site, paginas: list[Pagina]) -> str:
         for p in sorted(paginas, key=lambda p: ordem[p.secao])
     ]
     return cabecalho + "".join(f"\n---\n\n{bloco}" for bloco in blocos)
+
+
+# Busca offline (Tarefa 24) ------------------------------------------------------------------
+
+
+def para_json(dados: object) -> str:
+    """JSON determinístico: chaves ordenadas, UTF-8 legível, 2 espaços e quebra final."""
+    return json.dumps(dados, sort_keys=True, ensure_ascii=False, indent=2) + "\n"
+
+
+def indice_busca(site: Site, paginas: list[Pagina]) -> list[dict[str, str]]:
+    """O que `busca.js` filtra: título, caminho, seção e descrição de cada página e referência."""
+    itens = [
+        {"titulo": p.titulo, "url": p.caminho, "secao": p.secao, "descricao": p.descricao}
+        for p in paginas
+    ]
+    itens += [
+        {
+            "titulo": f"{r.chave} · {r.meta['titulo']}",
+            "url": caminho_de(r),
+            "secao": "Referências",
+            "descricao": str(r.meta["organizacao"]),
+        }
+        for r in site.repo.referencias
+    ]
+    return itens
