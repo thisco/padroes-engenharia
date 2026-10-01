@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a> › <a href="{{ raiz }}espinha.html#momento-{{ momento.slug }}">{{ momento.titulo }}</a></p>
+<div class="topo">
+  <h1><span class="id">{{ p.chave }}</span>{{ p.meta.titulo }}</h1>
+  <div class="chips" aria-label="Força, status e ferramentas">
+    {{ c.chip_forca(p.meta.forca) }}
+    <span class="st">{{ p.meta.status }}</span>
+{% if p.meta.subdominio %}
+    <span class="fe">{{ ROTULO_SUBDOMINIO[p.meta.subdominio] }}</span>
+{% endif %}
+{% for ferramenta in p.meta.ferramentas %}
+    <span class="fe">{{ ROTULO_FERRAMENTA[ferramenta] }}</span>
+{% endfor %}
+  </div>
+</div>
+<div class="corpo">
+  <article class="texto" aria-label="Prática {{ p.chave }}">
+{{ corpo | safe }}
+  </article>
+  <aside class="lado" aria-label="Referências e vínculos">
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+    <section>
+      <h2>Mecanismo</h2>
+{% if p.meta.mecanismo %}
+      <p><code>{{ p.meta.mecanismo }}</code></p>
+{% else %}
+      <p class="vazia">Sem mecanismo: a prática orienta, não impede.</p>
+{% endif %}
+    </section>
+{% if p.meta.aplica %}
+    <section>
+      <h2>Aplica</h2>
+      <ul>
+{% for item in p.meta.aplica %}
+{% if item.startswith("skill:") and item[6:] in skills %}
+        <li><a href="{{ raiz }}.well-known/skills/{{ item[6:] }}/SKILL.md"><code>{{ item }}</code></a></li>
+{% else %}
+        <li><code>{{ item }}</code></li>
+{% endif %}
+{% endfor %}
+      </ul>
+    </section>
+{% endif %}
+{% if relacionadas %}
+    <section><h2>Relacionadas</h2><ul>{% for r in relacionadas %}<li><a href="{{ raiz }}{{ caminho_de(r) }}">{{ r.chave }} · {{ r.meta.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if conceitos %}
+    <section><h2>Conceitos</h2><ul>{% for item in conceitos %}<li><a href="{{ raiz }}{{ caminho_de(item) }}">{{ item.meta.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+    <section>
+      <h2>Dono e revisão</h2>
+      <dl class="campos"><dt>Dono</dt><dd>{{ p.meta.dono }}</dd><dt>Revisada em</dt><dd>{{ p.meta.revisado_em }}</dd><dt>Revisar até</dt><dd>{{ p.meta.revisar_ate }}</dd></dl>
+    </section>
+  </aside>
+</div>
+{% endblock %}

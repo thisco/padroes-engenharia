@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }} <span class="marca-v">[V]</span> o conteúdo foi lido na fonte primária; <span class="marca-v">[S]</span> só em fonte secundária.</p>
+</div>
+<div class="filtros" id="filtros-referencias" hidden>
+  <label>Tipo <select data-filtro="tipo"><option value="">todos</option>{% for tipo, nome in ROTULO_TIPO_REFERENCIA.items() %}<option value="{{ tipo }}">{{ nome }}</option>{% endfor %}</select></label>
+  <label>Domínio <select data-filtro="dominios"><option value="">todos</option>{% for f in site.espinha.faixas %}<option value="{{ f.slug }}">{{ f.titulo }}</option>{% endfor %}</select></label>
+  <label>Verificação <select data-filtro="verificacao"><option value="">todas</option><option value="V">[V]</option><option value="S">[S]</option></select></label>
+</div>
+{% for tipo, nome in ROTULO_TIPO_REFERENCIA.items() if por_tipo[tipo] %}
+<section aria-label="{{ nome }}">
+  <h2>{{ nome }}</h2>
+  <table class="tabela">
+    <thead><tr><th scope="col">ID</th><th scope="col">Referência</th><th scope="col">Verificação</th><th scope="col">Citada por</th></tr></thead>
+    <tbody>
+{% for r in por_tipo[tipo] %}
+      <tr id="{{ r.chave }}" data-tipo="{{ tipo }}" data-dominios="{{ r.meta.get('dominios', []) | join(' ') }}" data-verificacao="{{ r.meta.verificacao }}">
+        <td><code>{{ r.chave }}</code></td>
+        <td><a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a><span class="ref-meta">{{ r.meta.organizacao }} · {{ r.meta.localizacao }}</span></td>
+        <td><span class="marca-v">[{{ r.meta.verificacao }}]</span> {{ r.meta.verificado_em }}</td>
+        <td>{% for item in site.catalogo.citado_por(r.chave) %}<a href="{{ raiz }}{{ caminho_de(item) }}">{{ rotulo(item) }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+</section>
+{% else %}
+<p class="vazia">Ainda não há referências.</p>
+{% endfor %}
+{% endblock %}

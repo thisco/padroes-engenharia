@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }}</p>
+</div>
+{% if corpo %}
+<section class="texto" aria-label="Como usar">{{ corpo | safe }}</section>
+{% endif %}
+<div class="duas">
+  <section aria-label="Índices para máquina">
+    <h2>Índices para máquina</h2>
+    <p class="lead">Toda página HTML tem um <code>.md</code> gêmeo no mesmo caminho.</p>
+    <ul class="praticas">
+{% for caminho_indice, nota in indices %}
+      <li><a href="{{ raiz }}{{ caminho_indice }}"><code>/{{ caminho_indice }}</code></a> <span class="ref-meta">{{ nota }}</span></li>
+{% endfor %}
+    </ul>
+  </section>
+  <section class="disco" aria-label="Bloco para o AGENTS.md">
+    <h2>Bloco para o AGENTS.md do projeto</h2>
+    <p>Copie para o AGENTS.md do seu repositório.</p>
+    <pre>{{ bloco }}</pre>
+  </section>
+</div>
+<section aria-label="Roteamento">
+  <h2>Roteamento</h2>
+  <p class="lead">Células com prática publicada. As outras {{ a_definir }} estão a definir; as 48 estão em <a href="{{ raiz }}roteamento.json"><code>roteamento.json</code></a>.</p>
+{% if celulas %}
+  <table class="tabela">
+    <thead><tr><th scope="col">Domínio</th><th scope="col">Momento</th><th scope="col">Práticas</th><th scope="col">Força máxima</th><th scope="col">Aplica</th></tr></thead>
+    <tbody>
+{% for celula in celulas %}
+      <tr>
+        <td>{{ site.espinha.faixa(celula.dominio).titulo }}</td>
+        <td>{{ site.espinha.momento(celula.momento).titulo }}</td>
+        <td>{% for p in celula.praticas %}<a href="{{ raiz }}{{ para_md(caminho_de(p)) }}">{{ p.chave }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
+        <td>{{ c.chip_forca(celula.forca_max) }}</td>
+        <td>{% for item in celula.aplica %}<code>{{ item }}</code> {% endfor %}</td>
+      </tr>
+{% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="vazia">Ainda não há prática publicada.</p>
+{% endif %}
+</section>
+{% endblock %}

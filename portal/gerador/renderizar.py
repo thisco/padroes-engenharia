@@ -192,6 +192,7 @@ def criar_ambiente(raiz: Path) -> Environment:
         NINHOS=NINHOS,
         ORDEM_FORCA=ORDEM_FORCA,
         caminho_de=caminho_de,
+        para_md=para_md,
         classe_peca=classe_peca,
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
@@ -448,4 +449,163 @@ def html_guias(site: Site) -> str:
         "Guias e casos",
         descricao="Guias passo a passo e casos reais com números datados.",
         listas=listas_guias(site),
+    )
+
+
+# Páginas de conteúdo, referências e "Para agentes" (Tarefa 21) -------------------------------
+
+TRILHAS = {"conceito": "Conceitos", "guia": "Guias", "caso": "Casos", "pagina": ""}
+
+# Índices para máquina publicados pelo build (spec §7.3): caminho e o que contém.
+INDICES = (
+    ("roteamento.json", "as 48 células com práticas, aplica e força máxima"),
+    ("ROTEAMENTO.md", "o mesmo roteamento em Markdown"),
+    ("llms.txt", "todas as páginas, no formato llms.txt"),
+    ("llms-full.txt", "todo o conteúdo concatenado"),
+    ("catalogo.json", "todos os itens com metadados, versão e commit"),
+    ("esquemas/catalogo.schema.json", "o JSON Schema do catálogo"),
+    (".well-known/skills/index.json", "as skills publicadas, com sha256 de cada arquivo"),
+)
+
+
+def rotulo(conteudo: Conteudo) -> str:
+    """Como um conteúdo aparece num link curto: o ID da prática, senão o título."""
+    if conteudo.tipo == "pratica":
+        return conteudo.chave
+    return str(conteudo.meta.get("titulo", conteudo.chave))
+
+
+def constituicoes(site: Site) -> list[str]:
+    """Os arquivos `constituicao/padrao-v*.md` publicados, em ordem."""
+    return [
+        f"constituicao/{arquivo.name}"
+        for arquivo in sorted((site.raiz / "constituicao").glob("padrao-v*.md"))
+    ]
+
+
+def descricao_de(site: Site, conteudo: Conteudo) -> str:
+    """Resumo de uma linha do conteúdo, usado no topo da página, no llms.txt e na busca."""
+    meta = conteudo.meta
+    if conteudo.tipo == "pratica":
+        faixa = site.espinha.faixa(meta["dominio"])
+        momento = site.espinha.momento(meta["momento"])
+        return (
+            f"{ROTULO_FORCA[meta['forca']]} · {meta['status']} · "
+            f"{faixa.titulo if faixa else meta['dominio']} · "
+            f"{momento.titulo if momento else meta['momento']}"
+        )
+    if conteudo.tipo == "conceito":
+        return str(meta["definicao"])
+    if conteudo.tipo == "guia":
+        return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
+    if conteudo.tipo == "caso":
+        return f"Caso de {meta['origem']['repo']}, {meta['periodo']}."
+    return str(meta.get("descricao") or "")
+
+
+def campos_de(conteudo: Conteudo) -> list[tuple[str, str]]:
+    """A ficha lateral de conceito, guia e caso (spec §6.4)."""
+    meta = conteudo.meta
+    campos: list[tuple[str, str]] = []
+    if conteudo.tipo == "conceito":
+        campos = [
+            ("Ninho", NINHOS[meta["ninho"]]["titulo"]),
+            ("Onde mora", meta["onde_mora"]),
+            ("Quando entra", meta["quando_entra"]),
+            ("Erro comum", meta["erro_comum"]),
+        ]
+    elif conteudo.tipo == "guia":
+        campos = [("Público", meta["publico"]), ("Leitura", f"{meta['tempo_leitura']} min")]
+        if meta.get("pre_requisitos"):
+            campos.append(("Pré-requisitos", "; ".join(meta["pre_requisitos"])))
+    elif conteudo.tipo == "caso":
+        origem = meta["origem"]
+        campos = [
+            ("Origem", f"{origem['repo']} @ {origem['commit']}"),
+            ("Período", meta["periodo"]),
+        ]
+    if meta.get("revisado_em"):
+        campos.append(("Revisado em", meta["revisado_em"]))
+    return campos
+
+
+def ligadas_de(site: Site, conteudo: Conteudo) -> list[dict[str, str]]:
+    """Práticas citadas pelo conceito (`praticas`) ou pelo guia (`relacionados`)."""
+    ids = conteudo.meta.get("praticas") or conteudo.meta.get("relacionados") or []
+    praticas = [site.catalogo.pratica(i) for i in ids]
+    return [
+        {"titulo": f"{p.chave} · {p.meta['titulo']}", "href": caminho_de(p)} for p in praticas if p
+    ]
+
+
+def html_pratica(site: Site, pratica: Conteudo) -> str:
+    return renderizar(
+        site,
+        "pratica.html",
+        caminho_de(pratica),
+        titulo=f"{pratica.chave} · {pratica.meta['titulo']}",
+        descricao=descricao_de(site, pratica),
+        p=pratica,
+        faixa=site.espinha.faixa(pratica.meta["dominio"]),
+        momento=site.espinha.momento(pratica.meta["momento"]),
+        corpo=corpo_html(pratica),
+        referencias=site.catalogo.referencias_de(pratica),
+        relacionadas=site.catalogo.relacionadas(pratica.chave),
+        conceitos=site.catalogo.conceitos_da_pratica(pratica.chave),
+        skills={s.chave for s in site.repo.skills},
+    )
+
+
+def html_conteudo(site: Site, conteudo: Conteudo) -> str:
+    """Conceito, guia, caso ou página especial, no template genérico."""
+    ninhos = []
+    if conteudo.tipo == "conceito":
+        ninhos = [(conteudo.meta["ninho"], conteudo.meta["peca"])]
+    return pagina_generica(
+        site,
+        caminho_de(conteudo),
+        conteudo.meta["titulo"],
+        descricao=descricao_de(site, conteudo),
+        trilha=TRILHAS[conteudo.tipo],
+        ninhos=ninhos,
+        corpo=corpo_html(conteudo),
+        campos=campos_de(conteudo),
+        ligadas=ligadas_de(site, conteudo),
+        referencias=site.catalogo.referencias_de(conteudo),
+        numeros=conteudo.meta.get("numeros", []) if conteudo.tipo == "caso" else [],
+    )
+
+
+def html_referencias(site: Site) -> str:
+    por_tipo = {
+        tipo: [r for r in site.repo.referencias if r.meta.get("tipo") == tipo]
+        for tipo in ROTULO_TIPO_REFERENCIA
+    }
+    return renderizar(
+        site,
+        "referencias.html",
+        "referencias.html",
+        titulo="Referências",
+        descricao="Toda afirmação do portal cita uma destas referências, conferida na fonte.",
+        por_tipo=por_tipo,
+        rotulo=rotulo,
+    )
+
+
+def html_para_agentes(site: Site) -> str:
+    pagina = site.pagina("para-agentes")
+    return renderizar(
+        site,
+        "para_agentes.html",
+        "para-agentes.html",
+        titulo="Para agentes",
+        descricao=(
+            "Como o agente de outro projeto usa o portal: consulta o roteamento pelo momento e "
+            "pelo domínio da mudança, lê as práticas indicadas em Markdown e cita os IDs."
+        ),
+        corpo=corpo_html(pagina) if pagina else "",
+        indices=list(INDICES) + [(c, "a constituição canônica") for c in constituicoes(site)],
+        bloco=bloco_agents(site),
+        celulas=[c for c in site.catalogo.celulas if c.estado == "ok"],
+        a_definir=celulas_a_definir(site),
     )
