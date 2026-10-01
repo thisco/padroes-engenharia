@@ -41,12 +41,17 @@ def test_externo_pega_link_script_import_e_url_do_css(tmp_path):
         "<script src=//cdn.exemplo/x.js></script>\n"
         '<style>@import url("http://fontes.exemplo/f.css");</style>\n',
     )
-    escrever(tmp_path, "tema/tema.css", "body { background: url(https://img.exemplo/f.png); }\n")
+    escrever(
+        tmp_path,
+        "tema/tema.css",
+        '@import "//fontes.exemplo/f.css";\nbody { background: url(https://img.exemplo/f.png); }\n',
+    )
     assert varrer_externos(tmp_path) == [
         Erro("a/pagina.html", "linha 2", "R-EXTERNO", '<link rel="stylesheet" href="https://'),
         Erro("a/pagina.html", "linha 4", "R-EXTERNO", "<script src=//"),
         Erro("a/pagina.html", "linha 5", "R-EXTERNO", '@import url("http://'),
-        Erro("tema/tema.css", "linha 1", "R-EXTERNO", "url(https://"),
+        Erro("tema/tema.css", "linha 1", "R-EXTERNO", '@import "//'),
+        Erro("tema/tema.css", "linha 2", "R-EXTERNO", "url(https://"),
     ]
 
 

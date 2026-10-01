@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts import gerar
 from tests import fabrica
 
 Mutar = Callable[[str, str, str], None]
@@ -78,3 +79,12 @@ def mutar(repo_minimo: Path) -> Mutar:
         caminho.write_text(texto.replace(antigo, novo, 1), encoding="utf-8")
 
     return _mutar
+
+
+@pytest.fixture
+def repo_gerado(repo_minimo: Path, tmp_path: Path) -> Path:
+    """O `repo_minimo` com README.md e ROTEAMENTO.md na raiz, como o `gerar.py` deixa."""
+    argumentos = ["--raiz", str(repo_minimo), "--saida", str(tmp_path / "gerado")]
+    argumentos += ["--commit", fabrica.COMMIT, "--data", "2026-10-01"]
+    assert gerar.main(argumentos) == 0
+    return repo_minimo

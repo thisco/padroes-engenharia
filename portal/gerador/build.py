@@ -20,15 +20,16 @@ from portal.gerador.saidas import emitir
 # Gerados que também vivem na raiz do repositório (gravados por scripts/gerar.py).
 ARQUIVOS_DA_RAIZ = ("README.md", "ROTEAMENTO.md")
 
-_IMPORT = r"@import\s+(?:url\(\s*)?[\"']?\s*(?:https?:)?//"
+# No CSS, `@import url(...)` já cai no padrão de `url(...)`; o de `@import` pega só a forma
+# com aspas, para não contar o mesmo recurso duas vezes.
 EXTERNOS = {
     ".html": (
         re.compile(r"<link\b[^>]*\bhref\s*=\s*[\"']?\s*(?:https?:)?//", re.I),
         re.compile(r"<script\b[^>]*\bsrc\s*=\s*[\"']?\s*(?:https?:)?//", re.I),
-        re.compile(_IMPORT, re.I),
+        re.compile(r"@import\s+(?:url\(\s*)?[\"']?\s*(?:https?:)?//", re.I),
     ),
     ".css": (
-        re.compile(_IMPORT, re.I),
+        re.compile(r"@import\s+[\"']\s*(?:https?:)?//", re.I),
         re.compile(r"url\(\s*[\"']?\s*(?:https?:)?//", re.I),
     ),
 }

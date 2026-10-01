@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Valida o repositório de padrões de engenharia (spec §12.1, bloqueios 1–7 e 12).
+"""Valida o repositório de padrões de engenharia (spec §12.1, bloqueios 1–8, 10 e 12).
 
 Uso: python scripts/validar.py [--raiz CAMINHO]
 
-Imprime todos os erros, um por linha, no formato `arquivo:campo: regra (valor)`.
+Roda `validar_tudo` e, se ele passar, um build numa pasta temporária, que confere recurso
+externo no site gerado (R-EXTERNO) e se `README.md` e `ROTEAMENTO.md` da raiz são iguais aos
+gerados (R-GERADO-DIVERGENTE). Imprime todos os erros, um por linha, no formato
+`arquivo:campo: regra (valor)`.
 Saída: 0 sem erro · 1 erro de validação · 2 erro interno (exceção não prevista).
 """
 
@@ -11,19 +14,56 @@ from __future__ import annotations
 
 import argparse
 import sys
+import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
-from portal.gerador.erros import Erro  # noqa: E402
+from portal.gerador.build import ARQUIVOS_DA_RAIZ, construir  # noqa: E402
+from portal.gerador.erros import R_GERADO_DIVERGENTE, Erro  # noqa: E402
 from portal.gerador.regras import validar_tudo  # noqa: E402
+from portal.gerador.renderizar import carregar_config  # noqa: E402
+
+# README.md e ROTEAMENTO.md não dependem de commit nem de data; o build de conferência usa
+# valores fixos para não depender do git.
+COMMIT_NEUTRO = "0" * 40
+DATA_NEUTRA = "1970-01-01"
 
 
 def coletar_erros(raiz: Path) -> list[Erro]:
-    """Erros que bloqueiam a MR. A parte 2 do plano soma aqui a checagem do build."""
-    return validar_tudo(raiz)
+    """Erros que bloqueiam a MR: os de `validar_tudo` e, se não houver, os do build."""
+    erros = validar_tudo(raiz)
+    if erros:
+        return erros
+    return checar_build(raiz)
+
+
+def checar_build(raiz: Path) -> list[Erro]:
+    """Gera numa pasta temporária: R-EXTERNO vem do build; R-GERADO-DIVERGENTE, da comparação."""
+    config = carregar_config(raiz)
+    with tempfile.TemporaryDirectory() as temporaria:
+        saida = Path(temporaria) / "public"
+        erros = construir(
+            raiz,
+            saida,
+            versao=config["versao"],
+            commit=COMMIT_NEUTRO,
+            data=DATA_NEUTRA,
+            url_base=config["url_base"],
+        )
+        if erros:
+            return erros
+        for nome in ARQUIVOS_DA_RAIZ:
+            atual = raiz / nome
+            if not atual.is_file():
+                valor = "ausente; rode python scripts/gerar.py"
+                erros.append(Erro(nome, "arquivo", R_GERADO_DIVERGENTE, valor))
+            elif atual.read_bytes() != (saida / nome).read_bytes():
+                valor = "difere do gerado; rode python scripts/gerar.py"
+                erros.append(Erro(nome, "conteudo", R_GERADO_DIVERGENTE, valor))
+    return erros
 
 
 def main(argv: list[str] | None = None) -> int:

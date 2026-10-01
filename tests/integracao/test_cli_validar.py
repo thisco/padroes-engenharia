@@ -18,8 +18,8 @@ def executar(*argumentos):
     )
 
 
-def test_sai_0_no_repo_minimo(repo_minimo):
-    resultado = executar("--raiz", str(repo_minimo))
+def test_sai_0_no_repo_minimo(repo_gerado):
+    resultado = executar("--raiz", str(repo_gerado))
     assert resultado.returncode == 0, resultado.stdout + resultado.stderr
     assert resultado.stdout == "validação ok: nenhum erro.\n"
 
@@ -56,5 +56,5 @@ def test_main_converte_excecao_imprevista_em_2(monkeypatch, capsys, repo_minimo)
     assert capsys.readouterr().err == "erro interno: RuntimeError: falha simulada\n"
 
 
-def test_coletar_erros_e_o_contrato_de_validar_tudo(repo_minimo):
-    assert cli.coletar_erros(repo_minimo) == []
+def test_coletar_erros_e_o_contrato_de_validar_tudo(repo_gerado):
+    assert cli.coletar_erros(repo_gerado) == []
