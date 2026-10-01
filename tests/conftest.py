@@ -88,3 +88,46 @@ def repo_gerado(repo_minimo: Path, tmp_path: Path) -> Path:
     argumentos += ["--commit", fabrica.COMMIT, "--data", "2026-10-01"]
     assert gerar.main(argumentos) == 0
     return repo_minimo
+
+
+def _com_registro(raiz: Path, relativo: str, meta: dict, corpo: str, chave: str) -> None:
+    escrever(raiz, relativo, f"---\n{_yaml(meta)}---\n\n{corpo}")
+    escrever(raiz, f"verificacoes/{chave}.yaml", _yaml(fabrica.meta_verificacao(conteudo=chave)))
+
+
+@pytest.fixture
+def repo_exemplo(repo_minimo: Path) -> Path:
+    """O `repo_minimo` com um conteúdo de cada tipo: domínio, três práticas (uma `bloqueia`
+    com mecanismo externo e uma de `ia-no-produto`), conceito, guia, caso, página e skill,
+    todos com registro de verificação. É o repositório de exemplo do §13 da spec."""
+    raiz = repo_minimo
+    escrever(
+        raiz,
+        "praticas/construir-com-ia/_dominio.md",
+        f"---\n{_yaml(fabrica.meta_dominio())}---\n\nComo o time conduz a mudança.\n",
+    )
+    dad = fabrica.meta_pratica(
+        id="DAD-01",
+        titulo="Migration já aplicada não se edita",
+        dominio="dados-migrations",
+        momento="antes-do-merge",
+        forca="bloqueia",
+        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.6.1",
+    )
+    _com_registro(raiz, "praticas/dados-migrations/DAD-01.md", dad, fabrica.CORPO_PRATICA, "DAD-01")
+    p2 = fabrica.meta_pratica(
+        id="P2-01", dominio="ia-no-produto", subdominio="apps", relacionadas=["P1-01"]
+    )
+    _com_registro(raiz, "praticas/ia-no-produto/P2-01.md", p2, fabrica.CORPO_PRATICA, "P2-01")
+    citacao = "Afirmação conferida na fonte [ref:ref-forte].\n"
+    _com_registro(raiz, "conceitos/harness.md", fabrica.meta_conceito(), citacao, "harness")
+    _com_registro(raiz, "guias/do-zero.md", fabrica.meta_guia(), citacao, "do-zero")
+    _com_registro(raiz, "casos/sgd.md", fabrica.meta_caso(), citacao, "sgd")
+    _com_registro(raiz, "paginas/o-problema.md", fabrica.meta_pagina(), citacao, "o-problema")
+    escrever(
+        raiz,
+        "skills/curadoria-de-pratica/SKILL.md",
+        "---\nname: curadoria-de-pratica\n"
+        "description: Use quando criar ou alterar conteúdo do portal.\n---\n\n# Curadoria\n",
+    )
+    return raiz
