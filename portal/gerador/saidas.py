@@ -7,6 +7,7 @@ lista completa de referências com URL (spec §6.2 e §7.3).
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -643,3 +644,63 @@ def readme_md(site: Site) -> str:
         "`para-agentes.html` traz o bloco para o `AGENTS.md` do seu projeto.",
         "## Roteiro\n\nO que vem depois da v0 não ganha pasta vazia:\n\n" + "\n".join(ROTEIRO),
     )
+
+
+# Skills, constituição, arquivos estáticos e a emissão completa (Tarefa 27) ------------------
+
+# (pasta de origem no repositório, pasta de destino no site, padrões copiados)
+ESTATICOS = (
+    ("portal/tema", "tema", ("*.css", "*.js")),
+    ("portal/vendor/fonts", "vendor/fonts", ("*.ttf", "*.css", "*.md", "*.txt")),
+)
+
+
+def indice_skills(site: Site) -> dict[str, Any]:
+    """`.well-known/skills/index.json` no formato do Backstage
+    (`{"skills": [{"name", "description", "files"}]}`) mais o sha256 de cada arquivo."""
+    skills = []
+    for s in site.repo.skills:
+        dados = (site.raiz / s.caminho_relativo).read_bytes()
+        skills.append(
+            {
+                "name": s.meta["name"],
+                "description": s.meta["description"],
+                "files": ["SKILL.md"],
+                "sha256": {"SKILL.md": hashlib.sha256(dados).hexdigest()},
+            }
+        )
+    return {"skills": skills}
+
+
+def copiar(origem: Path, destino: Path) -> None:
+    """Copia só os bytes (sem data nem permissão), para o build ser reprodutível."""
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    destino.write_bytes(origem.read_bytes())
+
+
+def emitir(site: Site, saida: Path) -> list[Pagina]:
+    """Grava em `saida` todas as saídas do §7.2 e do §7.3 e devolve as páginas."""
+    paginas = montar_paginas(site)
+    escrever_paginas(saida, paginas)
+    textos = {
+        "llms.txt": llms_txt(site, paginas),
+        "llms-full.txt": llms_full(site, paginas),
+        "busca.json": para_json(indice_busca(site, paginas)),
+        "catalogo.json": para_json(dados_catalogo(site, paginas)),
+        "roteamento.json": para_json(dados_roteamento(site)),
+        "ROTEAMENTO.md": roteamento_md(site),
+        "README.md": readme_md(site),
+        ".well-known/skills/index.json": para_json(indice_skills(site)),
+    }
+    for relativo, texto in textos.items():
+        escrever(saida, relativo, texto)
+    for s in site.repo.skills:
+        copiar(site.raiz / s.caminho_relativo, saida / ".well-known/skills" / s.chave / "SKILL.md")
+    copiar(site.raiz / "esquemas/catalogo.schema.json", saida / "esquemas/catalogo.schema.json")
+    for constituicao in constituicoes(site):
+        copiar(site.raiz / constituicao, saida / constituicao)
+    for origem, destino, padroes in ESTATICOS:
+        for padrao in padroes:
+            for arquivo in sorted((site.raiz / origem).glob(padrao)):
+                copiar(arquivo, saida / destino / arquivo.name)
+    return paginas
