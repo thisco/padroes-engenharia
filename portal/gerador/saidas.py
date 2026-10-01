@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+from typing import Any
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.renderizar import (
@@ -449,3 +450,65 @@ def indice_busca(site: Site, paginas: list[Pagina]) -> list[dict[str, str]]:
         for r in site.repo.referencias
     ]
     return itens
+
+
+# catalogo.json (Tarefa 25) -----------------------------------------------------------------
+
+SLUG_DA_PAGINA = {"index.html": "como-fazer", "dominios/index.html": "dominios"}
+
+
+def _item(slug: str, titulo: str, caminho: str, meta: dict[str, Any] | None = None) -> dict:
+    return {**(meta or {}), "slug": slug, "titulo": titulo, "url": caminho, "md": para_md(caminho)}
+
+
+def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
+    """`catalogo.json` (spec §7.3): todo item com os metadados completos, mais versão e commit.
+
+    O formato é o de `esquemas/catalogo.schema.json`, publicado junto; os testes validam.
+    """
+    repo = site.repo
+    conteudo_por_caminho = {caminho_de(c): c for c in repo.paginas}
+    dominios = []
+    for faixa in site.espinha.faixas:
+        dominio = site.catalogo.dominio(faixa.slug)
+        meta = {
+            **(dominio.meta if dominio else {}),
+            "grupo": faixa.grupo,
+            "prefixos": list(faixa.prefixos),
+            "subdominios": list(faixa.subdominios),
+        }
+        dominios.append(_item(faixa.slug, faixa.titulo, f"dominios/{faixa.slug}.html", meta))
+    especiais = []
+    for p in paginas:
+        if p.secao != "Páginas":
+            continue
+        slug = SLUG_DA_PAGINA.get(p.caminho, PurePosixPath(p.caminho).stem)
+        conteudo = conteudo_por_caminho.get(p.caminho)
+        especiais.append(_item(slug, p.titulo, p.caminho, conteudo.meta if conteudo else None))
+    return {
+        "nome": site.nome,
+        "versao": site.versao,
+        "commit": site.commit,
+        "data": site.data,
+        "url_base": site.url_base,
+        "praticas": [
+            {**p.meta, "url": caminho_de(p), "md": para_md(caminho_de(p))}
+            for p in site.catalogo.praticas.values()
+        ],
+        "referencias": [dict(r.meta) for r in repo.referencias],
+        "dominios": dominios,
+        "conceitos": [
+            _item(c.chave, c.meta["titulo"], caminho_de(c), c.meta) for c in repo.conceitos
+        ],
+        "guias": [_item(c.chave, c.meta["titulo"], caminho_de(c), c.meta) for c in repo.guias],
+        "casos": [_item(c.chave, c.meta["titulo"], caminho_de(c), c.meta) for c in repo.casos],
+        "paginas": especiais,
+        "skills": [
+            {
+                "name": s.meta["name"],
+                "description": s.meta["description"],
+                "url": f".well-known/skills/{s.chave}/SKILL.md",
+            }
+            for s in repo.skills
+        ],
+    }
