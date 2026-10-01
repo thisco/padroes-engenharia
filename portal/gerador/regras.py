@@ -14,8 +14,10 @@ from __future__ import annotations
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any
+from urllib.parse import urlsplit
 
 from portal.gerador import erros as codigos
 from portal.gerador.carregar import (
@@ -26,6 +28,7 @@ from portal.gerador.carregar import (
     carregar_componentes,
     carregar_ids_retirados,
 )
+from portal.gerador.citacoes import extrair
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.esquemas import validar_repositorio
@@ -175,3 +178,88 @@ def regra_ids(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[E
             valor = f"{alvo}; o arquivo se chama {_nome(v)}.yaml"
             erros.append(Erro(v.caminho_relativo, "conteudo", codigos.R_ID_ARQUIVO, valor))
     return erros
+
+
+# Referências e citações (spec §6.2 e §6.3; §12.1, bloqueios 3 e 6) ----------------------------
+
+DATA = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
+
+
+@regra
+def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Todo `[ref:id]` e todo item de `referencias:` existe, e os dois conjuntos são iguais.
+
+    Confere também os vínculos internos: `relacionadas` e `casos` da prática e `praticas` do
+    conceito apontam para conteúdo que existe.
+    """
+    erros: list[Erro] = []
+    ids_referencia = {r.chave for r in repo.referencias}
+    ids_pratica = {p.chave for p in repo.praticas}
+    slugs_caso = {c.chave for c in repo.casos}
+    for c in repo.markdown():
+        citados = set(extrair(c.corpo))
+        declarados = set(_lista(c.meta, "referencias"))
+        for id_ in sorted(citados | declarados):
+            if id_ not in ids_referencia:
+                erros.append(
+                    Erro(c.caminho_relativo, "referencias", codigos.R_REF_INEXISTENTE, id_)
+                )
+        partes = []
+        if citados - declarados:
+            partes.append("citadas e não declaradas: " + ", ".join(sorted(citados - declarados)))
+        if declarados - citados:
+            partes.append("declaradas e não citadas: " + ", ".join(sorted(declarados - citados)))
+        if partes:
+            valor = "; ".join(partes)
+            erros.append(Erro(c.caminho_relativo, "referencias", codigos.R_REF_CONJUNTO, valor))
+    vinculos = [(p, "relacionadas", ids_pratica) for p in repo.praticas]
+    vinculos += [(p, "casos", slugs_caso) for p in repo.praticas]
+    vinculos += [(c, "praticas", ids_pratica) for c in repo.conceitos]
+    for conteudo, campo, existentes in vinculos:
+        for alvo in _lista(conteudo.meta, campo):
+            if alvo not in existentes:
+                erros.append(
+                    Erro(conteudo.caminho_relativo, campo, codigos.R_REF_INEXISTENTE, alvo)
+                )
+    return erros
+
+
+@regra
+def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """URL `https://` válida e datas de calendário reais em cada referência.
+
+    A presença de `verificado_em` e `verificacao` é exigida pelo schema (R-ESQUEMA).
+    """
+    erros: list[Erro] = []
+    for r in repo.referencias:
+        url = _texto(r.meta, "url")
+        if url is not None and not url_https_valida(url):
+            erros.append(Erro(r.caminho_relativo, "url", codigos.R_REFERENCIA, url))
+        for campo in ("publicado_em", "verificado_em"):
+            valor = _texto(r.meta, campo)
+            if valor is not None and _data_impossivel(valor):
+                erros.append(Erro(r.caminho_relativo, campo, codigos.R_REFERENCIA, valor))
+    return erros
+
+
+def url_https_valida(url: str) -> bool:
+    """`https://` com host que tem domínio (contém ponto) e sem espaço em lugar nenhum."""
+    if any(caractere.isspace() for caractere in url):
+        return False
+    try:
+        partes = urlsplit(url)
+        host = partes.hostname or ""
+    except ValueError:
+        return False
+    return partes.scheme == "https" and "." in host.strip(".")
+
+
+def _data_impossivel(texto: str) -> bool:
+    """Texto no formato YYYY-MM-DD que não é uma data do calendário (ex.: 2026-02-30)."""
+    if not DATA.match(texto):
+        return False
+    try:
+        date.fromisoformat(texto)
+    except ValueError:
+        return True
+    return False
