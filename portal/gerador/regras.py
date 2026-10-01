@@ -478,3 +478,36 @@ def regra_agents(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         valor = f"o bloco inline difere de constituicao/{versao}.md"
         erros.append(Erro("AGENTS.md", "constituicao", codigos.R_AGENTS, valor))
     return erros
+
+
+# Skills (spec §10 e §11.1; formato Agent Skills) ----------------------------------------------
+
+NOME_SKILL = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+SKILLS_NASCIDAS_AQUI = frozenset({"curadoria-de-pratica"})
+
+
+@regra
+def regra_skills(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """`skills/<pasta>/SKILL.md`: `name` igual à pasta, em `[a-z0-9-]` com até 64 caracteres;
+    `description` com 1 a 1024 caracteres; `PROCEDENCIA.md` ao lado, salvo nas skills que
+    nascem neste repositório."""
+    erros: list[Erro] = []
+    for s in repo.skills:
+        pasta = _pasta(s)
+        nome = s.meta.get("name")
+        if nome != pasta:
+            valor = f"{nome!r} difere da pasta {pasta}"
+            erros.append(Erro(s.caminho_relativo, "name", codigos.R_SKILL, valor))
+        if not isinstance(nome, str) or len(nome) > 64 or not NOME_SKILL.match(nome):
+            valor = f"{nome!r}: use [a-z0-9-], sem hífen nas pontas, até 64 caracteres"
+            erros.append(Erro(s.caminho_relativo, "name", codigos.R_SKILL, valor))
+        descricao = s.meta.get("description")
+        if not isinstance(descricao, str) or not descricao.strip() or len(descricao) > 1024:
+            tamanho = len(descricao) if isinstance(descricao, str) else 0
+            valor = f"{tamanho} caracteres; esperado de 1 a 1024"
+            erros.append(Erro(s.caminho_relativo, "description", codigos.R_SKILL, valor))
+        procedencia = contexto.raiz / "skills" / pasta / "PROCEDENCIA.md"
+        if pasta not in SKILLS_NASCIDAS_AQUI and not procedencia.is_file():
+            valor = "cópia sem PROCEDENCIA.md (repositório, versão, commit e origem)"
+            erros.append(Erro(f"skills/{pasta}/PROCEDENCIA.md", "arquivo", codigos.R_SKILL, valor))
+    return erros
