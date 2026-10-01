@@ -263,3 +263,91 @@ def _data_impossivel(texto: str) -> bool:
     except ValueError:
         return True
     return False
+
+
+# Força, mecanismo e status (spec §6.5, regras 4 e 5; §6.6; §12.1, bloqueios 4 e 5) -----------
+
+MECANISMO_EXTERNO = re.compile(
+    r"^(?P<componente>[a-z0-9][a-z0-9-]*):(?P<caminho>[^@\s]+)@(?P<versao>[^@\s]+)$"
+)
+TIPOS_FORTES = frozenset({"normativo", "vendor", "padrao-aberto"})
+ID_NO_TEXTO = re.compile(r"\b[A-Z][A-Z0-9]*-[0-9]{2}\b")
+
+
+@regra
+def regra_mecanismo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Força acima de `orienta` exige mecanismo; todo mecanismo declarado precisa resolver.
+
+    Formas aceitas: caminho de arquivo dentro do repositório, ou
+    `<componente>:<caminho>@<versao>` com componente e versão iguais aos de `componentes.yml`.
+    """
+    erros: list[Erro] = []
+    for p in repo.praticas:
+        forca = _texto(p.meta, "forca")
+        mecanismo = _texto(p.meta, "mecanismo")
+        if mecanismo is None:
+            if forca is not None and forca != "orienta":
+                valor = f"força {forca} sem mecanismo"
+                erros.append(Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO, valor))
+            continue
+        problema = _problema_do_mecanismo(mecanismo, contexto)
+        if problema:
+            valor = f"{mecanismo}: {problema}"
+            erros.append(Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO, valor))
+    return erros
+
+
+def _problema_do_mecanismo(mecanismo: str, contexto: Contexto) -> str:
+    externo = MECANISMO_EXTERNO.match(mecanismo)
+    if externo:
+        componente = contexto.componentes.get(externo["componente"])
+        if componente is None:
+            return "componente fora de componentes.yml"
+        if externo["versao"] != componente.versao:
+            return f"versão diferente da fixada ({componente.versao})"
+        return ""
+    raiz = contexto.raiz.resolve()
+    alvo = (raiz / mecanismo).resolve()
+    if not alvo.is_relative_to(raiz):
+        return "caminho fora do repositório"
+    if not alvo.is_file():
+        return "caminho inexistente"
+    return ""
+
+
+@regra
+def regra_adotar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """`adotar` exige uma referência forte ([V] e tipo normativo, vendor ou padrao-aberto)
+    ou um caso interno existente em `casos/`, citado no campo `casos`."""
+    erros: list[Erro] = []
+    referencias = {r.chave: r.meta for r in repo.referencias}
+    slugs_caso = {c.chave for c in repo.casos}
+    for p in repo.praticas:
+        if _texto(p.meta, "status") != "adotar":
+            continue
+        fortes = [
+            id_
+            for id_ in _lista(p.meta, "referencias")
+            if referencias.get(id_, {}).get("tipo") in TIPOS_FORTES
+            and referencias.get(id_, {}).get("verificacao") == "V"
+        ]
+        casos = [slug for slug in _lista(p.meta, "casos") if slug in slugs_caso]
+        if not fortes and not casos:
+            valor = "adotar sem referência forte [V] nem caso interno"
+            erros.append(Erro(p.caminho_relativo, "status", codigos.R_ADOTAR, valor))
+    return erros
+
+
+@regra
+def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """`evitar` descreve um anti-padrão e o corpo cita, pelo ID, a prática que o substitui."""
+    erros: list[Erro] = []
+    ids_pratica = {p.chave for p in repo.praticas}
+    for p in repo.praticas:
+        if _texto(p.meta, "status") != "evitar":
+            continue
+        substitutas = set(ID_NO_TEXTO.findall(p.corpo)) & (ids_pratica - {p.chave})
+        if not substitutas:
+            valor = "o corpo não cita o ID de uma prática existente que substitui esta"
+            erros.append(Erro(p.caminho_relativo, "status", codigos.R_EVITAR, valor))
+    return erros
