@@ -11,8 +11,9 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
-from portal.gerador.carregar import Conteudo
+from portal.gerador.carregar import Conteudo, Repositorio
 from portal.gerador.espinha import Espinha, carregar_espinha
+from portal.gerador.renderizar import Site, montar_site
 
 RAIZ = Path(__file__).resolve().parent.parent
 COMMIT = "0123456789abcdef0123456789abcdef01234567"
@@ -251,3 +252,15 @@ def caso(
 def skill(pasta: str, meta: dict[str, Any] | None = None) -> Conteudo:
     meta = {"name": pasta, "description": "Use quando houver teste."} if meta is None else meta
     return Conteudo("skill", f"skills/{pasta}/SKILL.md", meta, "# Skill\n")
+
+
+def site(*conteudos: Conteudo, **build: str) -> Site:
+    """Um `Site` com os templates e o tema reais e só os conteúdos dados (para testes)."""
+    parametros = {
+        "versao": "0.1.0",
+        "commit": COMMIT,
+        "data": "2026-10-01",
+        "url_base": "https://portal.exemplo",
+    }
+    parametros.update(build)
+    return montar_site(RAIZ, repo=Repositorio.de(conteudos), **parametros)

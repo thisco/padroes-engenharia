@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from portal.gerador.carregar import Conteudo, Repositorio
+from portal.gerador.carregar import Conteudo
 from portal.gerador.renderizar import (
     NINHOS,
     caminho_de,
@@ -13,38 +13,29 @@ from portal.gerador.renderizar import (
     corpo_html,
     descrever_forcas,
     descrever_ninho,
-    montar_site,
     para_md,
     renderizar,
 )
 from tests import fabrica
 
 
-def site(*conteudos, **build):
-    parametros = {
-        "versao": "0.1.0",
-        "commit": fabrica.COMMIT,
-        "data": "2026-10-01",
-        "url_base": "https://portal.exemplo",
-    }
-    parametros.update(build)
-    return montar_site(fabrica.RAIZ, repo=Repositorio.de(conteudos), **parametros)
-
-
 def macro(nome):
-    return getattr(site().ambiente.get_template("componentes.html").module, nome)
+    return getattr(fabrica.site().ambiente.get_template("componentes.html").module, nome)
 
 
 def test_config_e_identidade_do_site():
     assert carregar_config(fabrica.RAIZ)["nome"] == "Padrões de Engenharia"
-    s = site()
+    s = fabrica.site()
     assert (s.nome, s.organizacao, s.commit_curto) == (
         "Padrões de Engenharia",
         "NUARQ · Serpro",
         "0123456",
     )
     assert s.url("llms.txt") == "https://portal.exemplo/llms.txt"
-    assert site(url_base="https://portal.exemplo/").url("a.md") == "https://portal.exemplo/a.md"
+    assert (
+        fabrica.site(url_base="https://portal.exemplo/").url("a.md")
+        == "https://portal.exemplo/a.md"
+    )
 
 
 def test_caminhos_pelo_id_e_md_gemeo():
@@ -56,19 +47,19 @@ def test_caminhos_pelo_id_e_md_gemeo():
     assert caminho_de(pagina) == "o-problema.html"
     assert caminho_de(como_fazer) == "index.html"
     assert para_md("praticas/P1-01.html") == "praticas/P1-01.md"
-    s = site(fabrica.pratica(), pagina)
+    s = fabrica.site(fabrica.pratica(), pagina)
     assert {"index.html", "praticas/P1-01.html", "o-problema.html"} <= s.caminhos()
     assert len([c for c in s.caminhos() if c.startswith("dominios/")]) == 13
 
 
 def test_ambiente_escapa_html_e_mantem_a_quebra_final():
-    modelo = site().ambiente.from_string("{{ x }}\n")
+    modelo = fabrica.site().ambiente.from_string("{{ x }}\n")
     assert modelo.render(x="<b>") == "&lt;b&gt;\n"
-    assert site().ambiente.autoescape("pagina.html") is True
+    assert fabrica.site().ambiente.autoescape("pagina.html") is True
 
 
 def test_base_tem_lang_md_gemeo_links_relativos_e_rodape():
-    html = renderizar(site(), "base.html", "praticas/P1-01.html", titulo="P1-01")
+    html = renderizar(fabrica.site(), "base.html", "praticas/P1-01.html", titulo="P1-01")
     assert '<html lang="pt-BR">' in html
     assert '<link rel="alternate" type="text/markdown" href="P1-01.md">' in html
     assert 'href="../tema/tema.css"' in html
@@ -78,14 +69,14 @@ def test_base_tem_lang_md_gemeo_links_relativos_e_rodape():
 
 
 def test_navegacao_em_tres_grupos_sem_link_para_pagina_que_nao_existe():
-    html = renderizar(site(), "base.html", "espinha.html", titulo="Espinha")
+    html = renderizar(fabrica.site(), "base.html", "espinha.html", titulo="Espinha")
     grupos = re.findall(r'<span class="grupo"><span>([^<]+)</span>', html)
     assert grupos == ["Entender", "Fazer", "Consultar"]
     assert '<span class="em-breve" title="ainda não publicada">O problema</span>' in html
     assert '<a href="espinha.html" aria-current="page">Espinha</a>' in html
     assert '<a class="ag" href="para-agentes.html">para agentes</a>' in html
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
-    html = renderizar(site(pagina), "base.html", "espinha.html", titulo="Espinha")
+    html = renderizar(fabrica.site(pagina), "base.html", "espinha.html", titulo="Espinha")
     assert '<a href="o-problema.html">O problema</a>' in html
 
 

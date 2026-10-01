@@ -12,7 +12,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoes
 
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import numerar
-from portal.gerador.espinha import Espinha, carregar_espinha
+from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 
@@ -281,3 +281,171 @@ def corpo_html(conteudo: Conteudo) -> str:
     """O corpo do conteúdo em HTML, com cada `[ref:id]` trocado por um link numerado."""
     texto, _ = numerar(conteudo.corpo)
     return para_html(texto)
+
+
+# Páginas da espinha e de listagem (Tarefa 20) -----------------------------------------------
+
+DESCRICAO_INICIO = (
+    "Como construir com IA no departamento, do primeiro pedido ao merge: um ciclo em quatro "
+    "momentos e as práticas de cada domínio para cada momento."
+)
+
+
+def bloco_agents(site: Site) -> str:
+    """O bloco do §7.3 para o AGENTS.md de outro projeto, com a URL base e a versão do portal."""
+    return (
+        "## Padrões do departamento\n"
+        f"Antes de uma spec de Tier 2, consulte {site.url('roteamento.json')}\n"
+        "pelo momento e domínio da mudança e leia as práticas indicadas (.md).\n"
+        "Cite os IDs das práticas aplicadas na spec e no plano.\n"
+        f"Versão adotada: padroes-engenharia v{site.versao}\n"
+    )
+
+
+def celulas_a_definir(site: Site) -> int:
+    return sum(1 for c in site.catalogo.celulas if c.estado == "a-definir")
+
+
+def descricao_dominio(site: Site, faixa: Faixa) -> str:
+    dominio = site.catalogo.dominio(faixa.slug)
+    if dominio is not None and dominio.meta.get("descricao"):
+        return str(dominio.meta["descricao"])
+    prefixos = ", ".join(faixa.prefixos)
+    return f"Faixa do grupo {faixa.grupo} na espinha, com IDs de prefixo {prefixos}."
+
+
+def pagina_generica(site: Site, caminho: str, titulo: str, **contexto: Any) -> str:
+    """`pagina.html` com os campos opcionais vazios por padrão."""
+    vazios: dict[str, Any] = {
+        "trilha": "",
+        "ninhos": [],
+        "listas": [],
+        "corpo": "",
+        "campos": [],
+        "ligadas": [],
+        "referencias": [],
+        "numeros": [],
+    }
+    vazios.update(contexto)
+    return renderizar(site, "pagina.html", caminho, titulo=titulo, **vazios)
+
+
+def html_inicio(site: Site) -> str:
+    """A página inicial: `paginas/como-fazer.md` se existir; senão, a home mínima do template."""
+    pagina = site.pagina("como-fazer")
+    por_momento = {
+        m.slug: sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
+        for m in site.espinha.momentos
+    }
+    return renderizar(
+        site,
+        "inicio.html",
+        "index.html",
+        titulo=pagina.meta["titulo"] if pagina else site.nome,
+        descricao=(pagina.meta.get("descricao") if pagina else None) or DESCRICAO_INICIO,
+        corpo=corpo_html(pagina) if pagina else "",
+        referencias=site.catalogo.referencias_de(pagina) if pagina else [],
+        praticas_por_momento=por_momento,
+        a_definir=celulas_a_definir(site),
+        bloco=bloco_agents(site),
+    )
+
+
+def html_espinha(site: Site) -> str:
+    return renderizar(
+        site,
+        "espinha.html",
+        "espinha.html",
+        titulo="Espinha",
+        descricao="As 12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD.",
+        a_definir=celulas_a_definir(site),
+    )
+
+
+def html_dominio(site: Site, faixa: Faixa) -> str:
+    dominio = site.catalogo.dominio(faixa.slug)
+    return renderizar(
+        site,
+        "dominio.html",
+        f"dominios/{faixa.slug}.html",
+        titulo=faixa.titulo,
+        descricao=descricao_dominio(site, faixa),
+        faixa=faixa,
+        dominio=dominio,
+        contagem=site.catalogo.contagem_forca(faixa.slug),
+        corpo=corpo_html(dominio) if dominio else "",
+        referencias=site.catalogo.referencias_de(dominio) if dominio else [],
+    )
+
+
+def listas_dominios(site: Site) -> list[dict[str, Any]]:
+    listas = []
+    for grupo in dict.fromkeys(f.grupo for f in site.espinha.faixas):
+        itens = [
+            {
+                "titulo": f.titulo,
+                "href": f"dominios/{f.slug}.html",
+                "nota": f"{len(site.catalogo.praticas_do_dominio(f.slug))} prática(s) · "
+                f"prefixo {', '.join(f.prefixos)}",
+            }
+            for f in site.espinha.faixas
+            if f.grupo == grupo
+        ]
+        listas.append({"titulo": grupo, "itens": itens, "vazio": ""})
+    return listas
+
+
+def listas_conceitos(site: Site) -> list[dict[str, Any]]:
+    return [
+        {
+            "titulo": dados["titulo"],
+            "itens": [
+                {"titulo": c.meta["titulo"], "href": caminho_de(c), "nota": c.meta["definicao"]}
+                for c in site.repo.conceitos
+                if c.meta.get("ninho") == ninho
+            ],
+            "vazio": "Ainda não há conceitos publicados neste ninho.",
+        }
+        for ninho, dados in NINHOS.items()
+    ]
+
+
+def listas_guias(site: Site) -> list[dict[str, Any]]:
+    def itens(conteudos: tuple[Conteudo, ...]) -> list[dict[str, Any]]:
+        return [{"titulo": c.meta["titulo"], "href": caminho_de(c), "nota": ""} for c in conteudos]
+
+    return [
+        {"titulo": "Guias", "itens": itens(site.repo.guias), "vazio": "Ainda não há guias."},
+        {"titulo": "Casos", "itens": itens(site.repo.casos), "vazio": "Ainda não há casos."},
+    ]
+
+
+def html_dominios(site: Site) -> str:
+    return pagina_generica(
+        site,
+        "dominios/index.html",
+        "Domínios",
+        descricao="As 12 faixas da espinha, por grupo.",
+        listas=listas_dominios(site),
+    )
+
+
+def html_conceitos(site: Site) -> str:
+    return pagina_generica(
+        site,
+        "conceitos.html",
+        "Conceitos",
+        descricao="As peças de um agente de código e da IA no produto, uma dentro da outra.",
+        ninhos=[(ninho, None) for ninho in NINHOS],
+        listas=listas_conceitos(site),
+    )
+
+
+def html_guias(site: Site) -> str:
+    return pagina_generica(
+        site,
+        "guias.html",
+        "Guias e casos",
+        descricao="Guias passo a passo e casos reais com números datados.",
+        listas=listas_guias(site),
+    )

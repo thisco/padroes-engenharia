@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}dominios/index.html">Domínios</a> › {{ faixa.grupo }}</p>
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }}</p>
+</div>
+<section aria-label="Força das práticas">
+  {{ c.barra_forca(contagem) }}
+</section>
+<div class="corpo">
+  <div>
+{% for m in site.espinha.momentos %}
+{% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
+    <section aria-label="{{ m.titulo }}">
+      <h2>{{ m.titulo }}</h2>
+{% if celula.praticas %}
+      <ul class="praticas">
+{% for p in celula.praticas %}
+        <li><span class="id">{{ p.chave }}</span><a href="{{ raiz }}{{ caminho_de(p) }}">{{ p.meta.titulo }}</a> {{ c.chip_forca(p.meta.forca) }} <span class="st">{{ p.meta.status }}</span>{% if p.meta.subdominio %} <span class="fe">{{ ROTULO_SUBDOMINIO[p.meta.subdominio] }}</span>{% endif %}</li>
+{% endfor %}
+      </ul>
+{% else %}
+      <p class="vazia">a definir</p>
+{% endif %}
+    </section>
+{% endfor %}
+{% if corpo %}
+    <section class="texto" aria-label="Sobre o domínio">{{ corpo | safe }}</section>
+{% endif %}
+  </div>
+  <aside class="lado" aria-label="Ficha do domínio">
+    <section>
+      <h2>Prefixo de ID</h2>
+      <p>{% for prefixo in faixa.prefixos %}<code>{{ prefixo }}</code>{% if faixa.subdominios %} ({{ ROTULO_SUBDOMINIO[faixa.subdominios[loop.index0]] }}){% endif %}{% if not loop.last %} · {% endif %}{% endfor %}</p>
+    </section>
+{% if dominio and dominio.meta.get("steering") %}
+    <section><h2>Steering</h2><ul>{% for s in dominio.meta.steering %}<li><code>{{ s }}</code></li>{% endfor %}</ul></section>
+{% endif %}
+{% if dominio and dominio.meta.get("skills") %}
+    <section><h2>Skills</h2><ul>{% for s in dominio.meta.skills %}<li><code>{{ s }}</code></li>{% endfor %}</ul></section>
+{% endif %}
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+  </aside>
+</div>
+{% endblock %}

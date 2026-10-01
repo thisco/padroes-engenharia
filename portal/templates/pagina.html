@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+{% if trilha %}
+<p class="trilha">{{ trilha }}</p>
+{% endif %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }}</p>
+</div>
+{% for ninho, destaque in ninhos %}
+<section aria-label="{{ NINHOS[ninho].titulo }}">
+{% if ninho == "agente-de-codigo" %}
+  {{ c.ninho(destaque) }}
+{% else %}
+  {{ c.ninho_produto(destaque) }}
+{% endif %}
+</section>
+{% endfor %}
+{% for lista in listas %}
+<section aria-label="{{ lista.titulo }}">
+  <h2>{{ lista.titulo }}</h2>
+{% if lista.itens %}
+  <ul class="praticas">
+{% for item in lista.itens %}
+    <li><a href="{{ raiz }}{{ item.href }}">{{ item.titulo }}</a>{% if item.nota %} <span class="ref-meta">{{ item.nota }}</span>{% endif %}</li>
+{% endfor %}
+  </ul>
+{% else %}
+  <p class="vazia">{{ lista.vazio }}</p>
+{% endif %}
+</section>
+{% endfor %}
+{% if corpo or campos or referencias %}
+<div class="corpo">
+  <article class="texto" aria-label="{{ titulo }}">
+{{ corpo | safe }}
+{% if numeros %}
+    <table>
+      <thead><tr><th scope="col">Número</th><th scope="col">Valor</th><th scope="col">Data</th><th scope="col">Fonte</th></tr></thead>
+      <tbody>
+{% for n in numeros %}
+        <tr><td>{{ n.descricao }}</td><td>{{ n.valor }}</td><td>{{ n.data }}</td><td>{{ n.fonte }}</td></tr>
+{% endfor %}
+      </tbody>
+    </table>
+{% endif %}
+  </article>
+  <aside class="lado" aria-label="Ficha e referências">
+{% if campos %}
+    <section><h2>Ficha</h2><dl class="campos">{% for rotulo, valor in campos %}<dt>{{ rotulo }}</dt><dd>{{ valor }}</dd>{% endfor %}</dl></section>
+{% endif %}
+{% if ligadas %}
+    <section><h2>Práticas</h2><ul>{% for item in ligadas %}<li><a href="{{ raiz }}{{ item.href }}">{{ item.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+  </aside>
+</div>
+{% endif %}
+{% endblock %}
