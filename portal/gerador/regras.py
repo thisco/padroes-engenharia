@@ -19,6 +19,8 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from urllib.parse import urlsplit
 
+from markdown_it import MarkdownIt
+
 from portal.gerador import erros as codigos
 from portal.gerador.carregar import (
     Componente,
@@ -350,4 +352,32 @@ def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         if not substitutas:
             valor = "o corpo não cita o ID de uma prática existente que substitui esta"
             erros.append(Erro(p.caminho_relativo, "status", codigos.R_EVITAR, valor))
+    return erros
+
+
+# Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
+
+SECOES_PRATICA = ("O que fazer", "Como aparece quando falta", "Como aplicar", "Como verificar")
+_MARKDOWN = MarkdownIt("commonmark")
+
+
+def titulos_h2(corpo: str) -> list[str]:
+    """Títulos de nível 2 do corpo, como o Markdown os entende (ignora `## ` dentro de código)."""
+    tokens = _MARKDOWN.parse(corpo)
+    return [
+        tokens[i + 1].content.strip()
+        for i, token in enumerate(tokens)
+        if token.type == "heading_open" and token.tag == "h2"
+    ]
+
+
+@regra
+def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """O corpo da prática tem exatamente as 4 seções `## ` do §6.1, nesta ordem."""
+    erros: list[Erro] = []
+    for p in repo.praticas:
+        titulos = titulos_h2(p.corpo)
+        if tuple(titulos) != SECOES_PRATICA:
+            valor = "encontradas: " + (" | ".join(titulos) or "nenhuma")
+            erros.append(Erro(p.caminho_relativo, "corpo", codigos.R_SECOES, valor))
     return erros
