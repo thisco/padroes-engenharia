@@ -1,0 +1,2 @@
+# IDs de prática retirados (spec §6.5, regra 2). Um ID por linha, nunca apagar uma linha.
+# Um ID listado aqui não pode voltar a ser usado; retirar um ID é mudança major (spec §12.3).
