@@ -1,0 +1,154 @@
+<style>
+  .pz { --papel:#E8EDF2; --papel-2:#DDE4EC; --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+        --gov:#1351B4; --gov-claro:#D3E0F5; --ambar:#B06F12; --ambar-claro:#F3E3C6; --erro:#B8452E; --verde:#2e8a5f;
+        background:var(--papel); color:var(--tinta); font-family:"Inter",system-ui,sans-serif; font-size:14px; line-height:1.45;
+        border:1px solid var(--regra); border-radius:6px; margin:10px 0 18px; padding:24px 26px; }
+  .pz code { font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-size:11px; background:rgba(10,26,47,.06); padding:1px 4px; border-radius:2px; }
+  .pz h1 { margin:0; font-size:40px; line-height:.98; letter-spacing:-.035em; font-weight:800; }
+  .pz .topo { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:end; padding-bottom:16px; border-bottom:2px solid var(--tinta); }
+  .pz .topo p { margin:0; font-size:15px; color:var(--tinta-2); }
+  .pz h2 { margin:0 0 4px; font-size:20px; letter-spacing:-.02em; }
+  .pz p.lead { margin:0 0 12px; font-size:13px; color:var(--tinta-2); }
+  .pz .duas { display:grid; grid-template-columns:1.25fr 1fr; gap:30px; margin-top:20px; }
+
+  .pz .cx > .rot { display:flex; justify-content:space-between; gap:10px; margin-bottom:7px; font-size:12px; }
+  .pz .cx > .rot b { font-size:14.5px; }
+  .pz .cx > .rot span { color:var(--tinta-2); text-align:right; }
+  .pz .agente { border:2px solid var(--tinta); padding:12px; }
+  .pz .harness { border:2px solid var(--gov); background:#F4F7FB; padding:10px; }
+  .pz .harness > .rot b { color:var(--gov); }
+  .pz .linha { display:grid; grid-template-columns:1fr 36px 140px; gap:6px; align-items:center; }
+  .pz .sessao { border:2px dashed var(--ambar); background:rgba(243,227,198,.35); padding:10px; }
+  .pz .sessao > .rot b { color:var(--ambar); }
+  .pz .ctx { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:7px; }
+  .pz .ctx span { font-size:10.5px; border:1px solid var(--ambar); background:#fff; padding:1px 6px; border-radius:2px; }
+  .pz .ctx span.sd { border-style:dashed; color:var(--ambar); }
+  .pz .modelo { border:1px solid var(--tinta-3); background:#fff; padding:8px; text-align:center; font-size:12px; }
+  .pz .modelo b { display:block; font-size:14px; }
+  .pz .sub { border:1.5px dashed var(--ambar); background:rgba(243,227,198,.35); padding:6px 8px; font-size:11px; margin-bottom:4px; }
+  .pz .sub b { display:block; color:var(--ambar); font-size:12px; }
+  .pz .exec { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:9px; }
+  .pz .ex { border:1px solid var(--gov); background:#fff; padding:6px 8px; font-size:11.5px; }
+  .pz .ex b { display:block; font-size:12px; }
+  .pz .ex small { color:var(--tinta-3); font-size:10.5px; }
+  .pz .ex.mcp { border:2px solid var(--gov); }
+  .pz .ex.hook { background:var(--gov); color:#fff; border-color:var(--gov); }
+  .pz .ex.hook small { color:#D3E0F5; }
+  .pz .trav { margin:9px 0 7px; font-size:12px; font-weight:700; }
+  .pz .disco { background:var(--tinta); color:var(--papel); padding:10px 12px; border-radius:3px; font-size:12px; }
+  .pz .disco b { font-size:14.5px; margin-right:6px; }
+  .pz .disco code { background:rgba(255,255,255,.1); color:#E3EAF2; margin:2px 3px 0 0; display:inline-block; }
+  .pz .disco code.sk { outline:1.5px dashed var(--ambar); }
+
+  .pz .lista { border-top:2px solid var(--tinta); }
+  .pz .c { display:grid; grid-template-columns:96px 1fr; gap:12px; padding:8px 0; border-bottom:1px solid var(--regra); font-size:12.5px; }
+  .pz .c b { font-size:13.5px; }
+  .pz .c .tag { display:inline-block; width:12px; height:12px; margin-right:5px; vertical-align:-1px; }
+  .pz .t-ag { border:2px solid var(--tinta); }
+  .pz .t-ha { border:2px solid var(--gov); }
+  .pz .t-se { border:2px dashed var(--ambar); }
+  .pz .t-mo { border:1px solid var(--tinta-3); background:#fff; }
+  .pz .t-me { background:var(--tinta); }
+  .pz .t-mc { border:2px solid var(--gov); background:#fff; }
+  .pz .t-hk { background:var(--gov); }
+  .pz .t-sk { border:1.5px dashed var(--ambar); background:var(--tinta); }
+  .pz .t-su { border:1.5px dashed var(--ambar); background:var(--ambar-claro); }
+
+  /* detalhe de um conceito */
+  .pz .det { margin-top:22px; border-top:3px solid var(--gov); padding-top:14px; display:grid; grid-template-columns:300px 1fr; gap:26px; }
+  .pz .mini { opacity:1; }
+  .pz .mini .apaga { opacity:.28; }
+  .pz .mini .agente, .pz .mini .harness, .pz .mini .sessao { padding:7px; }
+  .pz .mini .rot { font-size:10.5px !important; margin-bottom:4px !important; }
+  .pz .mini .rot b { font-size:11.5px !important; }
+  .pz .mini .ex { font-size:10.5px; padding:4px 6px; }
+  .pz .mini .ex.alvo { box-shadow:0 0 0 3px var(--gov-claro); }
+  .pz .mini .alvo b { color:var(--gov); }
+  .pz .campos { display:grid; grid-template-columns:150px 1fr; gap:0; font-size:12.5px; border-top:2px solid var(--tinta); }
+  .pz .campos div { padding:6px 0; border-bottom:1px solid var(--regra); }
+  .pz .campos .k { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--tinta-3); padding-top:8px; }
+  .pz .campos a { color:var(--gov); font-weight:600; text-decoration:none; }
+  .pz .ef { font-size:10.5px; padding:1px 6px; border-radius:2px; margin-left:4px; }
+  .pz .ef.b { background:var(--gov); color:#fff; }
+  .pz .ef.o { border:1.5px dashed var(--ambar); color:var(--ambar); }
+  .nota { font-size:.8rem; color:var(--text-secondary); }
+</style>
+
+<h2>Página "Conceitos": um desenho, cada peça explicada</h2>
+<p class="subtitle">O ninho completo à esquerda, com MCP, skills, subagentes e hooks no lugar certo. Cada conceito ganha uma página própria com o mesmo desenho, destacando só a sua peça (exemplo de MCP embaixo).</p>
+
+<div class="pz">
+  <div class="topo"><h1>Conceitos</h1><p>As peças de um agente de código, uma dentro da outra. Saber onde cada peça mora diz onde a regra precisa morar.</p></div>
+
+  <div class="duas">
+    <section aria-label="O ninho completo">
+      <h2>Como o agente funciona</h2>
+      <p class="lead">O harness roda a sessão, e a sessão contém o modelo. Quando a sessão acaba, só continua o que foi gravado.</p>
+      <div class="cx agente">
+        <div class="rot"><b>Agente de código</b><span>modelo e harness trabalhando no seu repositório</span></div>
+        <div class="cx harness">
+          <div class="rot"><b>Harness</b><span>decide o que o modelo vê e o que pode fazer</span></div>
+          <div class="linha">
+            <div class="cx sessao">
+              <div class="rot"><b>Sessão</b><span>uma janela de contexto</span></div>
+              <div class="ctx"><span>prompt de sistema</span><span>AGENTS.md</span><span>descrição das skills</span><span class="sd">corpo da skill, se ativada</span><span>conversa</span><span>resultado das ferramentas</span></div>
+              <div class="modelo"><b>Modelo</b>só produz texto; pede a ação, quem executa é o harness</div>
+            </div>
+            <svg width="36" height="50" viewBox="0 0 36 50" aria-hidden="true"><path d="M2 15h28M24 10l6 5-6 5" fill="none" stroke="#B06F12" stroke-width="1.4"/><path d="M34 36H6M12 31l-6 5 6 5" fill="none" stroke="#B06F12" stroke-width="1.4" stroke-dasharray="3 2"/></svg>
+            <div><div class="sub"><b>Subagente</b>contexto próprio</div><div class="sub"><b>Subagente</b>contexto próprio</div></div>
+          </div>
+          <div class="exec">
+            <div class="ex"><b>Ferramentas nativas</b>ler e editar, shell, busca<small>executa na sua máquina</small></div>
+            <div class="ex mcp"><b>Servidores MCP</b>GitLab, banco, documentação<small>ferramentas externas por protocolo</small></div>
+            <div class="ex hook"><b>Hooks e permissões</b>antes e depois de cada ação<small>código fora do modelo: impede</small></div>
+          </div>
+        </div>
+        <div class="trav">Só atravessa a sessão o que foi gravado.</div>
+        <div class="disco"><b>Memória</b><code>AGENTS.md</code><code>docs/steering/</code><code class="sk">skills/</code><code>docs/adr/</code><code>docs/plans/</code><code>PROJECT_MEMORY.md</code><code>git log</code></div>
+      </div>
+    </section>
+
+    <section aria-label="Os conceitos">
+      <h2>As nove peças</h2>
+      <p class="lead">Cada uma vira página com definição, onde mora, quando entra no contexto, erro comum e referência.</p>
+      <div class="lista">
+        <div class="c"><b><span class="tag t-ag"></span>Agente</b><span>modelo e harness em loop, usando ferramentas até cumprir um objetivo</span></div>
+        <div class="c"><b><span class="tag t-mo"></span>Modelo</b><span>só produz texto; escolha por capacidade, não por marca</span></div>
+        <div class="c"><b><span class="tag t-ha"></span>Harness</b><span>o programa em volta do modelo: Claude Code, Codex, Kiro, Antigravity, Copilot</span></div>
+        <div class="c"><b><span class="tag t-se"></span>Sessão</b><span>uma janela de contexto: enche, é resumida, e some</span></div>
+        <div class="c"><b><span class="tag t-su"></span>Subagente</b><span>outra sessão, com contexto próprio; devolve só o resultado</span></div>
+        <div class="c"><b><span class="tag t-mc"></span>MCP</b><span>protocolo aberto para o harness ligar ferramentas e dados externos</span></div>
+        <div class="c"><b><span class="tag t-sk"></span>Skill</b><span>procedimento em <code>SKILL.md</code>: a descrição entra sempre, o corpo só quando é usado</span></div>
+        <div class="c"><b><span class="tag t-hk"></span>Hook</b><span>código que roda antes ou depois de uma ação; o modelo não argumenta com ele</span></div>
+        <div class="c"><b><span class="tag t-me"></span>Memória</b><span>o que sobrevive porque foi gravado fora da sessão</span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="det" aria-label="Exemplo de página de conceito: MCP">
+    <div class="mini" aria-hidden="true">
+      <div class="cx agente apaga"><div class="rot"><b>Agente de código</b></div></div>
+      <div class="cx harness" style="margin-top:-30px;margin-left:8px;margin-right:8px;background:#F4F7FB">
+        <div class="rot apaga"><b>Harness</b></div>
+        <div class="cx sessao apaga"><div class="rot"><b>Sessão</b></div><div class="modelo" style="font-size:10px;padding:4px">Modelo</div></div>
+        <div class="exec" style="grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:6px">
+          <div class="ex apaga"><b>Nativas</b></div>
+          <div class="ex mcp alvo"><b>MCP</b>você está aqui</div>
+          <div class="ex hook apaga"><b>Hooks</b></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h2>MCP · Model Context Protocol</h2>
+      <p class="lead" style="color:var(--tinta)">Um protocolo aberto para o harness conectar o modelo a ferramentas e dados externos. Para o modelo, uma ferramenta MCP é só mais um pedido de ação; quem executa é o servidor.</p>
+      <div class="campos">
+        <div class="k">onde mora</div><div><code>.mcp.json</code>, <code>.kiro/settings/mcp.json</code>, <code>~/.codex/config.toml</code>: um por harness</div>
+        <div class="k">quando entra</div><div>a lista de ferramentas entra na sessão; o resultado de cada chamada também, e ocupa contexto</div>
+        <div class="k">erro comum</div><div>ligar MCP para tudo, ou servidor aberto por padrão. Resultado de ferramenta é conteúdo não confiável e pode trazer injeção</div>
+        <div class="k">práticas</div><div>P3-04 MCP fechado por padrão <span class="ef b">bloqueia</span> · P1-11 preferir CLI + skill quando bastar <span class="ef o">orienta</span></div>
+        <div class="k">referências</div><div><a href="https://modelcontextprotocol.io/specification/latest">MCP spec 2026-07-28</a> · <a href="https://www.thoughtworks.com/radar">Radar Vol. 34: "MCP by default" em Caution</a> · <a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/">OWASP Agentic Top 10: ASI02 Tool Misuse</a></div>
+      </div>
+    </div>
+  </section>
+</div>
+<p class="nota">Proposta de um segundo ninho, para IA no produto: aplicação ou agente próprio → chave virtual → gateway (identidade, catálogo, orçamento, guardrails, auditoria) → modelos em três camadas. Conceitos: gateway, chave virtual, guardrail, eval, catálogo de modelos, nível de agência.</p>

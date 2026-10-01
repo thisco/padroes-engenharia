@@ -1,0 +1,155 @@
+<style>
+  .pz { --papel:#E8EDF2; --papel-2:#DDE4EC; --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+        --gov:#1351B4; --gov-claro:#D3E0F5; --ambar:#B06F12; --ambar-claro:#F3E3C6;
+        background:var(--papel); color:var(--tinta); font-family:"Inter",system-ui,sans-serif; font-size:14px; line-height:1.45;
+        border:1px solid var(--regra); border-radius:6px; margin:10px 0 26px; overflow:hidden; }
+  .pz code { font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-size:11.5px; background:rgba(10,26,47,.06); padding:1px 5px; border-radius:2px; }
+  .pz .barra { display:flex; justify-content:space-between; align-items:center; padding:10px 28px; border-bottom:2px solid var(--tinta); font-size:13px; }
+  .pz .barra b { letter-spacing:-.01em; }
+  .pz .barra nav span { margin-left:16px; color:var(--tinta-2); }
+  .pz .barra nav span.on { color:var(--tinta); font-weight:600; border-bottom:2px solid var(--gov); }
+  .pz .barra .ag { margin-left:18px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px; border:1px solid var(--tinta); padding:2px 7px; border-radius:2px; }
+  .pz .folha { padding:26px 28px 22px; }
+  .pz .topo { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:end; padding-bottom:18px; border-bottom:2px solid var(--tinta); }
+  .pz .topo h1 { margin:0; font-size:38px; line-height:.98; letter-spacing:-.035em; font-weight:800; max-width:15ch; }
+  .pz .topo p { margin:0; font-size:15px; color:var(--tinta-2); max-width:56ch; }
+  .pz .passos { display:grid; grid-template-columns:repeat(4,1fr); gap:0; margin-top:18px; border-top:1px solid var(--regra); }
+  .pz .passo { padding:12px 14px 12px 0; border-right:1px solid var(--regra); margin-right:14px; }
+  .pz .passo:last-child { border-right:none; }
+  .pz .passo .n { display:inline-block; font-family:"JetBrains Mono",monospace; font-size:11px; border:1.5px solid var(--tinta); width:22px; height:22px; line-height:19px; text-align:center; margin-bottom:6px; }
+  .pz .passo b { display:block; font-size:15px; letter-spacing:-.01em; }
+  .pz .passo p { margin:3px 0 0; font-size:12.5px; color:var(--tinta-2); }
+  .pz .passo .lk { display:block; margin-top:6px; font-size:12px; color:var(--gov); }
+  .pz .duas { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; margin-top:20px; }
+  .pz h2 { margin:0 0 4px; font-size:19px; letter-spacing:-.02em; }
+  .pz p.lead { margin:0 0 10px; font-size:13px; color:var(--tinta-2); }
+  .pz .mini { display:grid; grid-template-columns:120px repeat(4,1fr); font-size:11px; border-top:2px solid var(--tinta); }
+  .pz .mini div { border-bottom:1px solid var(--regra); padding:4px 6px; }
+  .pz .mini .d { font-weight:600; }
+  .pz .mini .g { background:var(--gov-claro); }
+  .pz .mini i { display:inline-block; width:9px; height:9px; margin-right:2px; font-style:normal; }
+  .pz .mini i.b { background:var(--gov); }
+  .pz .mini i.o { border:1.5px dashed var(--ambar); }
+  .pz .mini i.v { border:1px solid var(--regra); background:repeating-linear-gradient(135deg, transparent 0 2px, var(--regra) 2px 3px); }
+  .pz .disco { background:var(--tinta); color:var(--papel); padding:14px 16px; border-radius:3px; }
+  .pz .disco b { font-size:16px; }
+  .pz .disco p { margin:4px 0 8px; font-size:12.5px; color:#B8C6D6; }
+  .pz .disco pre { margin:0; font-family:"JetBrains Mono",monospace; font-size:11px; line-height:1.5; background:rgba(255,255,255,.07); padding:8px 10px; border-left:3px solid var(--gov); white-space:pre-wrap; }
+  .pz .disco .arqs { margin-top:8px; display:flex; flex-wrap:wrap; gap:5px; }
+  .pz .disco code { background:rgba(255,255,255,.1); color:#E3EAF2; }
+
+  /* página de prática */
+  .pz .trilha { font-size:12px; color:var(--tinta-3); margin-bottom:8px; }
+  .pz .id { font-family:"JetBrains Mono",monospace; font-size:12px; font-weight:600; color:var(--gov); border:1.5px solid var(--gov); padding:1px 7px; border-radius:2px; margin-right:8px; vertical-align:middle; }
+  .pz .chips { margin-top:12px; display:flex; gap:6px; flex-wrap:wrap; font-size:11.5px; }
+  .pz .ef { padding:2px 8px; border-radius:2px; }
+  .pz .ef.orienta { border:1.5px dashed var(--ambar); color:var(--ambar); }
+  .pz .ef.bloqueia { background:var(--gov); color:#fff; }
+  .pz .st { border:1px solid var(--tinta); padding:2px 8px; border-radius:2px; font-weight:600; }
+  .pz .fe { border:1px solid var(--regra); padding:2px 8px; border-radius:2px; color:var(--tinta-2); }
+  .pz .corpo { display:grid; grid-template-columns:1.25fr 1fr; gap:34px; margin-top:16px; }
+  .pz .elo { display:grid; grid-template-columns:70px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--regra); }
+  .pz .elo:first-child { border-top:2px solid var(--tinta); }
+  .pz .elo h3 { margin:0; font-size:15px; letter-spacing:-.015em; }
+  .pz .elo p { margin:3px 0 0; font-size:13px; }
+  .pz .elo .sint { color:var(--tinta-2); }
+  .pz .elo.verif { border-top:3px solid var(--gov); background:var(--gov-claro); padding:12px; margin-top:4px; }
+  .pz .elo.verif h3 { color:var(--gov); }
+  .pz .lado h4 { margin:0 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--tinta-2); }
+  .pz .ref { border-top:1px solid var(--regra); padding:7px 0; font-size:12.5px; }
+  .pz .ref a { color:var(--gov); font-weight:600; text-decoration:none; }
+  .pz .ref small { display:block; color:var(--tinta-3); font-size:11px; }
+  .pz .rob { font-family:"JetBrains Mono",monospace; font-size:10px; border:1px solid var(--tinta-3); padding:0 4px; border-radius:2px; margin-right:4px; color:var(--tinta-2); }
+  .pz .bloco { margin-top:14px; font-size:12.5px; border-top:2px solid var(--tinta); padding-top:8px; }
+  .pz .bloco div { padding:3px 0; }
+  .pz .rodape { margin-top:16px; padding-top:8px; border-top:1px solid var(--regra); font-size:11.5px; color:var(--tinta-3); display:flex; justify-content:space-between; }
+  .rotulo { font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-secondary); margin-top:6px; }
+</style>
+
+<h2>Como o portal fica, no tema da NUJOR</h2>
+<p class="subtitle">Duas páginas: o início (how-to + espinha + porta dos agentes) e uma prática. Conteúdo real, mockup de layout.</p>
+
+<div class="rotulo">Página 1 · Início</div>
+<div class="pz">
+  <div class="barra"><b>Padrões de Engenharia · NUARQ</b>
+    <nav><span class="on">Início</span><span>Espinha</span><span>Domínios</span><span>IA no produto</span><span>Guias</span><span>Referências</span><span>Buscar</span><span class="ag">para agentes</span></nav></div>
+  <div class="folha">
+    <div class="topo">
+      <h1>Construir software com IA sem perder a arquitetura</h1>
+      <p>O ciclo SDD de ponta a ponta, com o rigor proporcional ao risco. Cada prática diz o que fazer, com que força é cobrada e onde está a referência.</p>
+    </div>
+    <div class="passos">
+      <div class="passo"><span class="n">1</span><b>Antes de escrever</b><p>Leia a constituição, classifique o tier, escreva a spec.</p><span class="lk">14 práticas →</span></div>
+      <div class="passo"><span class="n">2</span><b>Enquanto escreve</b><p>Plano com checkboxes, branch isolada, teste antes do código.</p><span class="lk">12 práticas →</span></div>
+      <div class="passo"><span class="n">3</span><b>Antes do merge</b><p>Evidência no plano, revisão contra a spec, CI verde.</p><span class="lk">11 práticas →</span></div>
+      <div class="passo"><span class="n">4</span><b>Depois da entrega</b><p>Changelog, memória destilada, bug vira regra.</p><span class="lk">8 práticas →</span></div>
+    </div>
+    <div class="duas">
+      <div>
+        <h2>A espinha</h2>
+        <p class="lead">Domínio × momento. Azul impede, âmbar orienta, hachura é "a definir".</p>
+        <div class="mini">
+          <div></div><div>1</div><div>2</div><div>3</div><div>4</div>
+          <div class="d g">Construir com IA</div><div class="g"><i class="o"></i><i class="b"></i></div><div class="g"><i class="o"></i><i class="o"></i></div><div class="g"><i class="o"></i></div><div class="g"><i class="o"></i></div>
+          <div class="d">Arquitetura</div><div><i class="o"></i><i class="b"></i></div><div><i class="o"></i></div><div><i class="o"></i></div><div><i class="o"></i></div>
+          <div class="d">Contratos de API</div><div><i class="o"></i><i class="b"></i></div><div><i class="o"></i></div><div><i class="v"></i></div><div><i class="v"></i></div>
+          <div class="d">Privacidade e LGPD</div><div><i class="o"></i></div><div><i class="o"></i></div><div><i class="v"></i></div><div><i class="o"></i></div>
+          <div class="d">CI/CD</div><div><i class="v"></i></div><div><i class="o"></i></div><div><i class="b"></i><i class="b"></i></div><div><i class="o"></i></div>
+          <div class="d">IA no produto</div><div><i class="o"></i><i class="o"></i></div><div><i class="b"></i><i class="o"></i></div><div><i class="o"></i><i class="b"></i></div><div><i class="o"></i></div>
+          <div class="d" style="color:var(--tinta-3)">… mais 6</div><div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+      <div class="disco">
+        <b>Para agentes</b>
+        <p>Cole no AGENTS.md do seu projeto. O agente consulta o roteamento pelo momento e domínio da mudança.</p>
+        <pre>## Padrões do departamento
+Antes de uma spec de Tier 2, consulte
+&lt;portal&gt;/roteamento.json e leia as práticas
+indicadas (.md). Cite os IDs na spec e no plano.
+Versão adotada: padroes-engenharia v0.1.0</pre>
+        <div class="arqs"><code>llms.txt</code><code>roteamento.json</code><code>catalogo.json</code><code>.well-known/skills</code><code>pacote offline</code></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rotulo">Página 2 · Uma prática</div>
+<div class="pz">
+  <div class="barra"><b>Padrões de Engenharia · NUARQ</b>
+    <nav><span>Início</span><span class="on">Espinha</span><span>Domínios</span><span>IA no produto</span><span>Guias</span><span>Referências</span><span>Buscar</span><span class="ag">P1-03.md</span></nav></div>
+  <div class="folha">
+    <div class="trilha">Construir com IA › Antes de escrever</div>
+    <div class="topo">
+      <h1><span class="id">P1-03</span>Classificar toda mudança em tier antes de codar</h1>
+      <div>
+        <p>O rigor acompanha o risco: trivial vai direto, estrutural passa por spec, gate e revisão. Na dúvida, o tier mais alto.</p>
+        <div class="chips"><span class="ef orienta">só orienta</span><span class="st">adotar</span><span class="fe">Claude Code</span><span class="fe">Codex</span><span class="fe">Kiro</span><span class="fe">Antigravity</span><span class="fe">Copilot</span></div>
+      </div>
+    </div>
+    <div class="corpo">
+      <div>
+        <div class="elo"><svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M4 32h14V22h14V12h14V4" fill="none" stroke="#1351B4" stroke-width="2"/></svg>
+          <div><h3>O que fazer</h3><p>Na fase 0, anunciar o tier (0 trivial, 1 pequeno, 2 estrutural) com uma linha de justificativa, pelos critérios objetivos do steering de processo.</p></div></div>
+        <div class="elo"><svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 8l18 24M24 8L6 32" stroke="#B8452E" stroke-width="2.5"/><path d="M34 20h20" stroke="#7A8A9D" stroke-width="1.5"/></svg>
+          <div><h3>Como aparece quando falta</h3><p class="sint">"É só um ajustinho" que muda contrato. Ou o contrário: typo afogado em spec, e o time aprende a pular o processo.</p></div></div>
+        <div class="elo"><svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><rect x="6" y="6" width="22" height="28" fill="none" stroke="#0A1A2F" stroke-width="1.5"/><path d="M34 12h20M34 20h16M34 28h18" stroke="#0A1A2F" stroke-width="1.5"/></svg>
+          <div><h3>Como aplicar</h3><p>Skill <code>sdd-lifecycle</code>, fase 0. Critérios em <code>docs/steering/sdd-processo.md</code>. Escalar para Tier 2 ao primeiro sinal de contrato, schema ou infra.</p></div></div>
+        <div class="elo verif"><svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><rect x="6" y="6" width="28" height="28" fill="none" stroke="#1351B4" stroke-width="2.5"/><path d="M12 20l6 6 12-14" fill="none" stroke="#1351B4" stroke-width="2.5"/></svg>
+          <div><h3>Como verificar</h3><p>Hoje nenhum mecanismo confere o tier: a força é "só orienta". Candidato a verificador: o <code>verificar_pr.py</code> exigir o tier no plano.</p></div></div>
+      </div>
+      <div class="lado">
+        <h4>Referências</h4>
+        <div class="ref"><span class="rob">interno</span><a href="https://github.com/thisco/sdd-lifecycle">sdd-lifecycle · Fase 0</a><small>NUARQ · verificado 01/10/2026 [V]</small></div>
+        <div class="ref"><span class="rob">vendor</span><a href="https://github.com/github/spec-kit">GitHub Spec Kit</a><small>GitHub · constituição + spec + plano · [V]</small></div>
+        <div class="ref"><span class="rob">analista</span><a href="https://dora.dev/ai/capabilities-model/">DORA AI Capabilities Model</a><small>Google DORA · 25/11/2025 · lotes pequenos · [V]</small></div>
+        <div class="ref"><span class="rob">analista</span><a href="https://martinfowler.com/articles/exploring-gen-ai.html">Exploring Generative AI · SDD tools</a><small>Thoughtworks · out/2025 · [V]</small></div>
+        <div class="bloco">
+          <div><b>Aplicado por</b> <code>skill:sdd-lifecycle</code> <code>steering:sdd-processo</code></div>
+          <div><b>Relacionadas</b> P1-04 checkpoint da spec · ARQ-01 ADR para mudança destrutiva</div>
+          <div><b>Dono</b> NUARQ · revisada 01/10/2026 · revisar até 01/04/2027</div>
+        </div>
+      </div>
+    </div>
+    <div class="rodape"><span>padroes-engenharia v0.1.0 · commit a1b2c3d</span><span>Versão para agentes: P1-03.md</span></div>
+  </div>
+</div>

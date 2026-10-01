@@ -1,0 +1,150 @@
+<style>
+  .pz { --papel:#E8EDF2; --papel-2:#DDE4EC; --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+        --gov:#1351B4; --gov-claro:#D3E0F5; --ambar:#B06F12; --ambar-claro:#F3E3C6; --erro:#B8452E;
+        background:var(--papel); color:var(--tinta); font-family:"Inter",system-ui,sans-serif; font-size:14px; line-height:1.45;
+        border:1px solid var(--regra); border-radius:6px; margin:10px 0 20px; overflow:hidden; }
+  .pz code { font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-size:11px; background:rgba(10,26,47,.06); padding:1px 4px; border-radius:2px; }
+  .pz .barra { display:flex; justify-content:space-between; align-items:center; padding:10px 28px; border-bottom:2px solid var(--tinta); font-size:13px; }
+  .pz .barra nav span { margin-left:16px; color:var(--tinta-2); }
+  .pz .barra nav span.on { color:var(--tinta); font-weight:600; border-bottom:2px solid var(--gov); }
+  .pz .barra .ag { margin-left:18px; font-family:"JetBrains Mono",monospace; font-size:11px; border:1px solid var(--tinta); padding:2px 7px; border-radius:2px; }
+  .pz .folha { padding:26px 28px 22px; }
+  .pz .topo { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:end; padding-bottom:18px; border-bottom:2px solid var(--tinta); }
+  .pz .topo h1 { margin:0; font-size:44px; line-height:.98; letter-spacing:-.035em; font-weight:800; }
+  .pz .topo p { margin:0; font-size:15px; color:var(--tinta-2); max-width:58ch; }
+  .pz h2 { margin:0 0 4px; font-size:20px; letter-spacing:-.02em; }
+  .pz p.lead { margin:0 0 12px; font-size:13px; color:var(--tinta-2); max-width:70ch; }
+  .pz .bloco1 { display:grid; grid-template-columns:1fr 1fr; gap:36px; margin-top:20px; }
+
+  /* ninho condensado */
+  .pz .caixa .rot { display:flex; justify-content:space-between; gap:10px; margin-bottom:7px; font-size:12px; }
+  .pz .caixa .rot b { font-size:14px; }
+  .pz .caixa .rot span { color:var(--tinta-2); text-align:right; }
+  .pz .agente { border:2px solid var(--tinta); padding:12px; }
+  .pz .harness { border:2px solid var(--gov); background:#F4F7FB; padding:10px; }
+  .pz .harness > .rot b { color:var(--gov); }
+  .pz .sessao { border:2px dashed var(--ambar); background:rgba(243,227,198,.35); padding:10px; }
+  .pz .sessao > .rot b { color:var(--ambar); }
+  .pz .modelo { border:1px solid var(--tinta-3); background:#fff; padding:8px; text-align:center; font-size:12px; }
+  .pz .modelo b { display:block; font-size:14px; }
+  .pz .disco { margin-top:10px; background:var(--tinta); color:var(--papel); padding:10px 12px; border-radius:3px; font-size:12px; }
+  .pz .disco b { font-size:14px; }
+  .pz .disco code { background:rgba(255,255,255,.1); color:#E3EAF2; margin-right:3px; }
+  .pz .trav { margin-top:8px; font-size:12px; }
+
+  /* cadeia */
+  .pz .elo { display:grid; grid-template-columns:90px 1fr; gap:14px; padding:12px 0; border-top:1px solid var(--regra); }
+  .pz .elo:first-child { border-top:2px solid var(--tinta); }
+  .pz .elo h3 { margin:0; font-size:16px; letter-spacing:-.015em; }
+  .pz .elo .def { margin:3px 0 0; font-size:13px; }
+  .pz .elo .sint { margin:5px 0 0; font-size:12px; color:var(--tinta-2); }
+  .pz .causa { padding:1px 0 1px 104px; font-size:11.5px; color:var(--tinta-3); }
+
+  /* disciplinas */
+  .pz .disc { margin-top:24px; }
+  .pz .grade { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:2px solid var(--tinta); }
+  .pz .d { padding:12px 14px 14px 0; border-bottom:1px solid var(--regra); border-right:1px solid var(--regra); margin-right:14px; }
+  .pz .d:nth-child(4n) { border-right:none; margin-right:0; }
+  .pz .d h3 { margin:6px 0 2px; font-size:14.5px; letter-spacing:-.01em; }
+  .pz .d .k { font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--tinta-3); }
+  .pz .d p { margin:2px 0 0; font-size:12px; }
+  .pz .d p.s { color:var(--tinta-2); }
+  .pz .d p.r { margin-top:6px; padding-left:10px; border-left:3px solid var(--gov); }
+  .pz .d .lk { display:block; margin-top:6px; font-size:11.5px; color:var(--gov); }
+
+  /* combinação */
+  .pz .comb { margin-top:22px; border-top:3px solid var(--gov); background:var(--gov-claro); padding:16px 18px; }
+  .pz .comb h2 { color:var(--gov); }
+  .pz .tres { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:10px; }
+  .pz .tres div { font-size:12.5px; }
+  .pz .tres b { display:block; font-size:14px; margin-bottom:2px; }
+  .pz .fluxo { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:14px; }
+  .pz .m { background:#fff; border:1.5px solid var(--gov); padding:7px 9px; font-size:11.5px; }
+  .pz .m b { display:block; font-size:12.5px; }
+  .pz .m span { color:var(--tinta-2); }
+  .pz .comb .lk { display:inline-block; margin-top:12px; font-size:13px; font-weight:600; color:var(--gov); }
+  .pz .rodape { margin-top:16px; padding-top:8px; border-top:1px solid var(--regra); font-size:11.5px; color:var(--tinta-3); display:flex; justify-content:space-between; }
+  .nota { font-size:.8rem; color:var(--text-secondary); }
+</style>
+
+<h2>"O problema": a primeira página do portal</h2>
+<p class="subtitle">Parte da "Conceitos e problemas" da NUJOR e desce por cada disciplina até chegar em como tudo se combina. Mockup com texto de rascunho.</p>
+
+<div class="pz">
+  <div class="barra"><b>Padrões de Engenharia · NUARQ</b>
+    <nav><span class="on">O problema</span><span>Como fazer</span><span>Espinha</span><span>Domínios</span><span>IA no produto</span><span>Guias</span><span>Referências</span><span class="ag">para agentes</span></nav></div>
+  <div class="folha">
+    <div class="topo">
+      <h1>O problema</h1>
+      <p>Agentes escrevem mais rápido do que qualquer time revisa. A velocidade é real e boa. O custo aparece em cada disciplina da engenharia, e nenhuma delas resolve sozinha.</p>
+    </div>
+
+    <div class="bloco1">
+      <section aria-label="Como o agente funciona">
+        <h2>Como o agente funciona</h2>
+        <p class="lead">O harness roda a sessão, e a sessão contém o modelo. Quando a sessão acaba, só continua o que foi gravado.</p>
+        <div class="caixa agente">
+          <div class="rot"><b>Agente de código</b><span>modelo e harness no seu repositório</span></div>
+          <div class="caixa harness">
+            <div class="rot"><b>Harness</b><span>decide o que o modelo vê e o que pode fazer</span></div>
+            <div class="caixa sessao">
+              <div class="rot"><b>Sessão</b><span>uma janela de contexto</span></div>
+              <div class="modelo"><b>Modelo</b>só produz texto; quem executa é o harness</div>
+            </div>
+          </div>
+          <div class="trav"><b>Só atravessa a sessão o que foi gravado.</b></div>
+          <div class="disco"><b>Memória</b> &nbsp;<code>AGENTS.md</code><code>docs/adr/</code><code>docs/plans/</code><code>skills/</code><code>git log</code></div>
+        </div>
+      </section>
+
+      <section aria-label="O que dá errado">
+        <h2>O que dá errado</h2>
+        <p class="lead">Uma causa, duas consequências gerais.</p>
+        <div class="elo"><svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><g fill="none" stroke="#0A1A2F" stroke-width="1.5"><path d="M6 12h70M6 22h96M6 32h58M6 42h84M6 52h66M6 62h100"/></g><path d="M112 6v58" stroke="#B8452E" stroke-width="2" stroke-dasharray="3 3"/></svg>
+          <div><h3>Código rápido</h3><p class="def">Mil linhas nascem em segundos e chegam antes da revisão.</p><p class="sint">Como aparece: código que passa no teste da vez e ninguém sabe por que existe.</p></div></div>
+        <div class="causa">gera</div>
+        <div class="elo"><svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><path d="M4 35 C40 35 60 34 116 10" fill="none" stroke="#1351B4" stroke-width="2"/><path d="M4 35 C40 35 70 36 116 36" fill="none" stroke="#B06F12" stroke-width="2"/><path d="M4 35 C40 35 60 37 116 62" fill="none" stroke="#0A1A2F" stroke-width="2"/><circle cx="4" cy="35" r="3" fill="#0A1A2F"/></svg>
+          <div><h3>Drift</h3><p class="def">Documentação, diagrama e infraestrutura dizem três coisas diferentes.</p></div></div>
+        <div class="causa">e</div>
+        <div class="elo"><svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><path d="M8 36l10 10 20-22" fill="none" stroke="#1351B4" stroke-width="3"/><path d="M52 35h24M70 29l6 6-6 6" fill="none" stroke="#7A8A9D" stroke-width="1.5"/><path d="M90 22l22 26M112 22l-22 26" fill="none" stroke="#B8452E" stroke-width="3"/></svg>
+          <div><h3>Regressão</h3><p class="def">Refazer a mesma coisa de outro jeito e perder o caso de borda que o jeito antigo tratava.</p></div></div>
+        <div class="causa">e chega em cada disciplina ↓</div>
+      </section>
+    </div>
+
+    <section class="disc" aria-label="O problema em cada disciplina">
+      <h2>O problema em cada disciplina</h2>
+      <p class="lead">Cada cartão diz como o problema aparece e o que responde a ele. A resposta é sempre uma prática do portal, com link.</p>
+      <div class="grade">
+        <div class="d"><span class="k">engenharia de software</span><h3>Padrões de projeto</h3><p class="s">Cada sessão reinventa um padrão. O mesmo problema ganha três soluções, e o acoplamento cresce sem ninguém decidir.</p><p class="r">padrões declarados no steering; portas e adaptadores como fronteira; revisão contra a spec</p><span class="lk">Arquitetura e padrões →</span></div>
+        <div class="d"><span class="k">arquitetura</span><h3>Decisão revertida em silêncio</h3><p class="s">O agente contorna um obstáculo e desfaz uma decisão que tinha dono. Microsserviço vira monólito distribuído.</p><p class="r">ADR para mudança destrutiva; C4; drift check entre diagrama, IaC e compose</p><span class="lk">Arquitetura →</span></div>
+        <div class="d"><span class="k">contratos</span><h3>API que quebra quem consome</h3><p class="s">Um campo renomeado "para ficar mais claro" derruba três clientes.</p><p class="r">contrato OpenAPI na spec; quebra exige ADR; teste de contrato</p><span class="lk">Contratos de API →</span></div>
+        <div class="d"><span class="k">design</span><h3>Tela que só tem o caminho feliz</h3><p class="s">Nada sobre carregando, vazio ou erro; cada tela com um estilo.</p><p class="r">os 4 estados de tela; protótipo aprovado antes do código</p><span class="lk">Frontend e UX →</span></div>
+        <div class="d"><span class="k">segurança</span><h3>Superfície que ninguém olhou</h3><p class="s">Segredo em commit, entrada sem validação, dependência que não existe e que alguém pode registrar.</p><p class="r">threat-model em 5 perguntas; gitleaks bloqueia; dependências declaradas e congeladas</p><span class="lk">Segurança →</span></div>
+        <div class="d"><span class="k">dados</span><h3>Dado real onde não devia</h3><p class="s">CPF em fixture, dado pessoal no prompt e no log, migration que não volta.</p><p class="r">classificar o dado; dado sintético; migration reversível</p><span class="lk">Dados e LGPD →</span></div>
+        <div class="d"><span class="k">operação</span><h3>Funciona, mas ninguém vê</h3><p class="s">Sem SLO, sem sinal, sem runbook. O primeiro alerta é o usuário.</p><p class="r">SLO na spec; log estruturado sem dado pessoal; runbook na entrega</p><span class="lk">Observabilidade →</span></div>
+        <div class="d"><span class="k">IA no produto</span><h3>O modelo vira dependência sem governo</h3><p class="s">Chave do provedor no código, custo sem teto, agente com permissão de escrita por padrão.</p><p class="r">gateway e chave virtual; nível de agência; MCP fechado por padrão</p><span class="lk">IA no produto →</span></div>
+      </div>
+    </section>
+
+    <section class="comb" aria-label="Como combinar tudo">
+      <h2>Como combinar tudo</h2>
+      <p class="lead" style="color:var(--tinta)">Nenhuma disciplina resolve sozinha, porque o agente atravessa todas na mesma mudança. A resposta é um ciclo só, em que cada disciplina entra no momento em que é usada.</p>
+      <div class="fluxo">
+        <div class="m"><b>1 · Antes de escrever</b><span>tier, spec, contrato, threat-model, classe do dado</span></div>
+        <div class="m"><b>2 · Enquanto escreve</b><span>plano, branch, TDD, portas e adaptadores, migration reversível</span></div>
+        <div class="m"><b>3 · Antes do merge</b><span>evidência, revisão contra a spec, CI, drift, evals</span></div>
+        <div class="m"><b>4 · Depois da entrega</b><span>changelog, runbook, memória, bug vira regra</span></div>
+      </div>
+      <div class="tres">
+        <div><b>Rigor proporcional ao risco</b>Tier na mudança, escopo no app, nível de agência no agente. Na dúvida, o mais alto.</div>
+        <div><b>Impede ou orienta, declarado</b>Cada prática diz se é código que bloqueia ou texto que orienta. O âmbar é onde a revisão humana olha.</div>
+        <div><b>O repositório é a fonte de verdade</b>Spec, ADR, plano e memória em disco. É o que a próxima sessão, humana ou agente, vai ler.</div>
+      </div>
+      <span class="lk">Ver a espinha completa →</span>
+    </section>
+
+    <div class="rodape"><span>Cada afirmação desta página cita uma referência, como as práticas.</span><span>Versão para agentes: o-problema.md</span></div>
+  </div>
+</div>
+<p class="nota">Texto de rascunho. Os sintomas de segurança e de qualidade de código gerado por IA vão ganhar referência de pesquisa na curadoria (ex.: estudo de pacotes alucinados da USENIX Security 2025, DORA 2024 sobre estabilidade de entrega), a verificar.</p>

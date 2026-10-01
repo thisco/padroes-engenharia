@@ -1,0 +1,85 @@
+<style>
+  .wrap { display:grid; grid-template-columns: 1.15fr 1fr; gap:18px; margin-top:12px; }
+  .arv { font-family: ui-monospace, Menlo, monospace; font-size:.74rem; background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; padding:12px 14px; line-height:1.55; white-space:pre; overflow-x:auto; }
+  .arv .c { color:var(--text-secondary); }
+  .arv .n { color:#2e8a5f; font-weight:700; }
+  .arv .g { color:#B06F12; }
+  .arv .p { color:#1351B4; font-weight:700; }
+  .lado h3 { font-size:.85rem; margin:0 0 6px; }
+  table { width:100%; border-collapse:collapse; font-size:.76rem; background:var(--bg-secondary); margin-bottom:14px; }
+  th, td { border-bottom:1px solid var(--border); padding:5px 7px; text-align:left; vertical-align:top; }
+  th { font-size:.66rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); }
+  td code, p code { font-family: ui-monospace, Menlo, monospace; font-size:.7rem; background:var(--bg-tertiary); padding:0 3px; border-radius:3px; }
+  .fluxo { display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:.74rem; margin-bottom:14px; }
+  .fluxo span { border:1px solid var(--border); border-radius:4px; padding:3px 7px; background:var(--bg-secondary); }
+  .fluxo span.b { border-left:3px solid #1351B4; }
+  .fluxo i { color:var(--text-tertiary); font-style:normal; }
+  .alerta { border-left:4px dashed #B06F12; padding:8px 12px; background:var(--bg-secondary); font-size:.78rem; border-radius:4px; margin-bottom:8px; }
+  .leg { font-size:.72rem; color:var(--text-secondary); margin-top:6px; }
+</style>
+
+<h2>Monorepo no GitLab Serpro, no molde do awesome-copilot</h2>
+<p class="subtitle">Do awesome vem a regra principal: o arquivo com frontmatter é a fonte; README, site, índices e pacotes são gerados e o CI reprova se estiverem velhos. O que acrescentamos está em verde.</p>
+
+<div class="wrap">
+<div class="arv">padroes-engenharia/
+├── AGENTS.md            <span class="c"># como agentes contribuem neste repo</span>
+├── <span class="n">praticas/</span>            <span class="c"># a norma: 1 arquivo por célula da espinha</span>
+│   ├── construir-com-ia/   <span class="c"># P1, o guia</span>
+│   ├── arquitetura/  contratos-api/  frontend-ux/
+│   ├── dados-migrations/  privacidade-lgpd/
+│   ├── qualidade-bdd/  infra-iac/  ci-cd/
+│   ├── observabilidade/  seguranca/
+│   └── ia-no-produto/      <span class="c"># P2 apps · P3 agentes</span>
+├── <span class="n">guias/</span>               <span class="c"># how-to narrativo (Learning Hub do awesome)</span>
+├── <span class="n">constituicao/</span>        <span class="c"># camada 0, versionada</span>
+├── instructions/        <span class="c"># camada 1 reutilizável, por glob</span>
+├── skills/              <span class="c"># camada 2, SKILL.md agentskills.io</span>
+├── agents/              <span class="c"># revisor adversarial, auditor…</span>
+├── hooks/               <span class="c"># controles fora do modelo</span>
+├── pacotes/             <span class="c"># plugins: bundles por perfil de projeto</span>
+├── <span class="n">motores/</span>
+│   ├── sdd-scaffold/       <span class="c"># espelhado para o GitHub público</span>
+│   └── sdd-lifecycle/      <span class="c"># espelhado para o GitHub público</span>
+├── <span class="n">adaptadores/</span>         <span class="c"># gera .claude .codex .kiro .agents .github</span>
+├── <span class="n">referencias/</span>         <span class="c"># registro de links: id, url, robustez, verificado_em</span>
+├── <span class="n">casos/</span>               <span class="c"># SGD, avaliação do gateway</span>
+├── esquemas/            <span class="c"># JSON Schema de cada tipo</span>
+├── portal/              <span class="c"># gerador + tema NUJOR, offline</span>
+├── scripts/             <span class="c"># validar, gerar, checar links</span>
+├── CODEOWNERS · niveis-de-risco.yml
+├── .gitlab-ci.yml       <span class="c"># validar → gerar → pages → espelhar</span>
+└── <span class="g">public/</span>              <span class="c"># gerado, nunca editado → GitLab Pages</span>
+    ├── *.html + *.md gêmeo
+    ├── llms.txt · catalogo.json · roteamento.json
+    └── .well-known/skills/index.json</div>
+
+<div class="lado">
+  <h3>Do awesome-copilot para o nosso</h3>
+  <table>
+    <tr><th>awesome</th><th>aqui</th><th>muda o quê</th></tr>
+    <tr><td>—</td><td><code>praticas/</code></td><td>o awesome cataloga artefatos; nós catalogamos a <b>norma</b> e apontamos o artefato que a aplica</td></tr>
+    <tr><td>Learning Hub</td><td><code>guias/</code></td><td>igual: how-to com pré-requisitos e artigos relacionados</td></tr>
+    <tr><td>instructions</td><td><code>instructions/</code></td><td>entram nos pacotes (lá ficam de fora)</td></tr>
+    <tr><td>skills · agents · hooks</td><td>idem</td><td>+ metadados de governança: dono, status, força, revisão</td></tr>
+    <tr><td>plugins</td><td><code>pacotes/</code></td><td>bundle por perfil (ex.: API hexagonal Python, agente com MCP)</td></tr>
+    <tr><td>só Copilot</td><td><code>adaptadores/</code></td><td>uma fonte, cinco ferramentas</td></tr>
+    <tr><td>risk-tiers.yml</td><td><code>niveis-de-risco.yml</code></td><td>igual: hook, script e MCP exigem 2 aprovações</td></tr>
+    <tr><td>llms.txt parcial</td><td><code>llms.txt</code></td><td>cobre todos os tipos</td></tr>
+  </table>
+
+  <h3>Pipeline</h3>
+  <div class="fluxo">
+    <span class="b">validar frontmatter e IDs</span><i>→</i>
+    <span class="b">referências resolvem</span><i>→</i>
+    <span class="b">índices batem</span><i>→</i>
+    <span>gerar public/</span><i>→</i>
+    <span>Pages interno</span><i>→</i>
+    <span>espelhar motores/</span>
+  </div>
+
+  <div class="alerta"><b>Motores públicos.</b> <code>motores/</code> vira a fonte e é publicado no GitHub por espelhamento de mão única (subtree split). Um check reprova conteúdo do Serpro dentro de <code>motores/</code>. Falta decidir a titularidade: hoje os dois são MIT na sua conta pessoal.</div>
+  <div class="alerta"><b>GitLab muda duas coisas.</b> (1) O scaffold gera <code>.github/workflows/</code>; projetos no GitLab Serpro precisam de um <code>.gitlab-ci.yml</code> equivalente. (2) CODEOWNERS e regras de aprovação por caminho dependem do plano da instância.</div>
+  <p class="leg">Verde: o que não existe no awesome-copilot. Âmbar: saída gerada.</p>
+</div>
+</div>

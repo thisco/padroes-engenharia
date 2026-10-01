@@ -1,0 +1,13 @@
+# Saída do gerador: publicada pelo CI no GitLab Pages, nunca versionada
+public/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Sistema e ferramentas
+.DS_Store
+.superpowers/

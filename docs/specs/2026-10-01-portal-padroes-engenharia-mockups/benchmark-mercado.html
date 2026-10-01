@@ -1,0 +1,82 @@
+<style>
+  .grid3 { display:grid; grid-template-columns: repeat(3,1fr); gap:14px; margin-top:14px; }
+  .bx { background:var(--bg-secondary); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+  .bx h4 { font-size:.95rem; margin-bottom:6px; }
+  .bx .k { font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-secondary); }
+  .bx ul { margin-left:16px; font-size:.82rem; }
+  .bx li { margin-bottom:4px; }
+  .bx a { color:#1351B4; }
+  .muda { margin-top:18px; }
+  .muda table { width:100%; border-collapse:collapse; font-size:.84rem; background:var(--bg-secondary); }
+  .muda th, .muda td { border-bottom:1px solid var(--border); padding:7px 9px; text-align:left; vertical-align:top; }
+  .muda th { font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-secondary); }
+  .muda td.ref { font-size:.76rem; color:var(--text-secondary); }
+  code { font-family: ui-monospace, Menlo, monospace; font-size:.76rem; background:var(--bg-tertiary); padding:0 4px; border-radius:3px; }
+  .destaque { margin-top:16px; border-left:5px solid #1351B4; padding:10px 14px; background:var(--bg-secondary); border-radius:4px; font-size:.86rem; }
+  .destaque.amb { border-left:5px dashed #B06F12; }
+  .escada { display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:8px; }
+  .degrau { border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:.8rem; background:var(--bg-primary); }
+  .degrau b { display:block; color:#1351B4; }
+</style>
+
+<h2>O que o mercado já faz, e o que copiamos</h2>
+<p class="subtitle">~60 projetos pesquisados em 3 frentes. Todos os links estão em <code>docs/research/benchmark-portais-praticas-ia.md</code>.</p>
+
+<div class="grid3">
+  <div class="bx">
+    <span class="k">Setor público</span>
+    <h4>O mais parecido com o nosso</h4>
+    <ul>
+      <li><a href="https://github.com/GSA-TTS/agentic-coding-playbook">GSA-TTS Agentic Coding Playbook</a>: AGENTS.md central + AGENTS.md fino por projeto, <code>llms.txt</code>, <code>status</code>/<code>stale_after</code>, CC0</li>
+      <li><a href="https://minbzk.github.io/Algoritmekader">Algoritmekader (NL)</a>: ID estável (URN) por regra, filtros por fase e papel</li>
+      <li><a href="https://www.digital.gov.au/policy/ai/policy">DTA Austrália</a>: princípio → requisito → recomendação</li>
+      <li><a href="https://www.canada.ca/en/government/system/digital-government/digital-government-innovations/responsible-use-ai/generative-ai.html">Canadá</a>: níveis de autonomia do agente</li>
+    </ul>
+  </div>
+  <div class="bx">
+    <span class="k">Indústria · catálogos</span>
+    <h4>Como servir pessoas e agentes</h4>
+    <ul>
+      <li><a href="https://www.thoughtworks.com/radar">Thoughtworks Radar</a>: Adopt / Trial / Assess / Caution por prática</li>
+      <li><a href="https://backstage.io/docs/ai">Backstage AI</a>: dono, lifecycle e justificativa por item; <code>.well-known/skills</code></li>
+      <li><a href="https://tessl.io/registry">Tessl</a>: aprovação por evidência (eval com e sem a skill)</li>
+      <li><a href="https://handbook.gitlab.com/handbook/engineering/workflow/ai-assisted-development/">GitLab</a>: autoavaliação por repo antes de subir autonomia</li>
+    </ul>
+  </div>
+  <div class="bx">
+    <span class="k">Frameworks · apps e agentes</span>
+    <h4>Como estruturar P2 e P3</h4>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/wellarchitected/latest/agentic-ai-lens/agentic-ai-lens.html">AWS Agentic AI Lens</a>: IDs (<code>AGENTOPS01-BP01</code>) + risco, em JSON</li>
+      <li><a href="https://aws.amazon.com/ai/security/agentic-ai-scoping-matrix/">AWS Scoping Matrices</a>: classificar o escopo antes do controle</li>
+      <li><a href="https://github.com/cosai-oasis/secure-ai-tooling">CoSAI Risk Map</a>: componente → risco → controle, em YAML</li>
+      <li><a href="https://genai.owasp.org/llm-top-10/">OWASP LLM 2026</a> e Agentic Top 10 como mapeamento</li>
+    </ul>
+  </div>
+</div>
+
+<div class="muda">
+  <h3>O que isso muda no desenho</h3>
+  <table>
+    <tr><th>Ideia</th><th>Como entra no portal</th><th>De onde vem</th></tr>
+    <tr><td><b>Rigor proporcional ao risco nos 3 pilares</b></td><td>Cada pilar começa por uma classificação, como o tier do SDD</td><td class="ref">sdd-lifecycle · AWS Scoping Matrix · Canadá · GitLab</td></tr>
+    <tr><td><b>Status por prática</b></td><td>Adotar / Experimentar / Avaliar / Evitar, com data de revisão e validade</td><td class="ref">Radar · GSA <code>stale_after</code> · Backstage lifecycle</td></tr>
+    <tr><td><b>Força por prática</b></td><td>bloqueia / pede aprovação / avisa / só orienta. <b>Nenhum benchmark faz isso</b></td><td class="ref">kit NUJOR (nosso)</td></tr>
+    <tr><td><b>ID estável + mapeamento</b></td><td><code>P2-GW-01</code> → OWASP <code>LLM01:2026</code>, NIST, ISO 42001</td><td class="ref">Algoritmekader · AWS · CoSAI</td></tr>
+    <tr><td><b>Fonte única, vários canais</b></td><td>Markdown com frontmatter → HTML, <code>.md</code> gêmeo, <code>llms.txt</code>, <code>catalogo.json</code>, <code>.well-known/skills</code>; MCP depois</td><td class="ref">GSA · awesome-copilot · Backstage · AWS Agent Toolkit</td></tr>
+    <tr><td><b>Referência obrigatória</b></td><td>Toda prática tem ao menos 1 link com robustez (normativo / vendor / padrão / analista) e marca [verificado]</td><td class="ref">seu pedido · padrão harness-internals</td></tr>
+  </table>
+</div>
+
+<div class="destaque">
+  <b>Uma escada só, três pilares.</b> A mesma lógica do tier aparece no mercado para apps e agentes:
+  <div class="escada">
+    <div class="degrau"><b>P1 · tier da mudança</b>0 trivial · 1 pequeno · 2 estrutural</div>
+    <div class="degrau"><b>P2 · escopo do consumo</b>do app comprado ao modelo próprio</div>
+    <div class="degrau"><b>P3 · nível de agência</b>sem ferramenta → prescrito → supervisionado → autônomo</div>
+  </div>
+</div>
+
+<div class="destaque amb">
+  <b>Diferencial do Serpro:</b> nenhum dos 8 sites de governo testados publica <code>llms.txt</code>, e nenhum framework declara a força de cada prática. As duas coisas já existem no nosso material.
+</div>

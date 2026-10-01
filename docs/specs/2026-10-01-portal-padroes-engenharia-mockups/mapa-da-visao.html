@@ -1,0 +1,128 @@
+<style>
+  .mapa { display:grid; grid-template-columns: 1fr 1.35fr 1fr; gap:18px; align-items:start; margin-top:18px; }
+  .col h3 { font-size:.8rem; letter-spacing:.08em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:8px; }
+  .src { border-left:3px solid var(--border); padding:6px 10px; margin-bottom:6px; background:var(--bg-secondary); border-radius:4px; font-size:.82rem; }
+  .src b { display:block; font-size:.86rem; }
+  .src span { color:var(--text-secondary); }
+  .pilar { border:1px solid var(--border); border-left:5px solid #1351B4; background:var(--bg-secondary); border-radius:6px; padding:10px 12px; margin-bottom:10px; }
+  .pilar.t { border-left-color:#B06F12; border-left-style:dashed; }
+  .pilar h4 { font-size:.95rem; margin-bottom:4px; }
+  .pilar .tag { font-family: ui-monospace, Menlo, monospace; font-size:.72rem; color:#1351B4; }
+  .pilar.t .tag { color:#B06F12; }
+  .pilar ul { margin:4px 0 4px 16px; font-size:.82rem; }
+  .pilar .base { font-size:.75rem; color:var(--text-secondary); }
+  .porta { border:2px solid var(--border); border-radius:8px; padding:10px 12px; margin-bottom:12px; background:var(--bg-secondary); }
+  .porta h4 { font-size:.95rem; margin-bottom:6px; }
+  .porta ol, .porta ul { margin-left:18px; font-size:.82rem; }
+  .porta code, .eixos code { font-family: ui-monospace, Menlo, monospace; font-size:.76rem; background:var(--bg-tertiary); padding:0 4px; border-radius:3px; }
+  .eixos { margin-top:18px; padding:12px 14px; border:1px dashed var(--border); border-radius:8px; font-size:.84rem; background:var(--bg-secondary); }
+  .ef { display:inline-block; font-size:.72rem; padding:1px 7px; border-radius:3px; margin-right:4px; }
+  .ef.b { background:#1351B4; color:#fff; }
+  .ef.p { border:2px solid #1351B4; color:#1351B4; }
+  .ef.a { border:1px solid #1351B4; background:rgba(19,81,180,.12); color:#1351B4; }
+  .ef.o { border:1px dashed #B06F12; color:#B06F12; }
+  .escopo { margin-top:16px; display:grid; grid-template-columns: repeat(4,1fr); gap:10px; }
+  .sub { border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:.8rem; background:var(--bg-secondary); }
+  .sub.v0 { border:2px solid #1351B4; }
+  .sub b { display:block; margin-bottom:2px; }
+  .seta { text-align:center; color:var(--text-tertiary); font-size:1.4rem; }
+</style>
+
+<h2>O mapa da visão: do material lido ao portal</h2>
+<p class="subtitle">Como organizei tudo. Leia da esquerda para a direita e me diga no terminal o que está fora do lugar ou faltando.</p>
+
+<div class="mapa">
+  <div class="col">
+    <h3>Fontes lidas</h3>
+    <div class="src"><b>sdd-scaffold v1.6.1</b><span>constituição, camadas 0–3, 22 garantias, Arquitetura Viva</span></div>
+    <div class="src"><b>sdd-lifecycle</b><span>fases 0–8, tiers 0/1/2, revisão adversarial contra a spec</span></div>
+    <div class="src"><b>Decks eng. IA · jun/jul</b><span>Harness Engineering, 6 padrões de falha, 5 pilares, war stories SGD</span></div>
+    <div class="src"><b>Kit NUJOR · set</b><span>harness por dentro, impede × orienta, 6 camadas de regressão</span></div>
+    <div class="src"><b>Governança IA Multicloud · set</b><span>gateway ponto único, anéis P1–P12, 45 casos avaliados</span></div>
+    <div class="src"><b>SGD Catálogo</b><span>LLM em produção: determinístico → LLM → default seguro</span></div>
+    <div class="src"><b>Pesquisa Anthropic</b><span>400 mil sessões, arquétipos + 6º modo Verificador, Economic Index</span></div>
+    <div class="src"><b>awesome-copilot</b><span>ontologia instructions · skills · agents · hooks · plugins; índices de máquina</span></div>
+    <div class="src"><b>Reunião 08/09</b><span>portal de padrões em Git Pages interno; depois vira base de RAG</span></div>
+  </div>
+
+  <div class="col">
+    <h3>Framework · 3 pilares + 1 transversal</h3>
+    <div class="pilar">
+      <span class="tag">P1</span>
+      <h4>Construir com IA (o DEV)</h4>
+      <ul>
+        <li>SDD com rigor por tier; constituição + steering agnósticos</li>
+        <li>Harness: o que orienta (texto) × o que impede (código fora do modelo)</li>
+        <li>6 camadas contra regressão; 22 garantias com força declarada</li>
+      </ul>
+      <div class="base">base: scaffold · lifecycle · NUJOR · decks jun/jul</div>
+    </div>
+    <div class="pilar">
+      <span class="tag">P2</span>
+      <h4>Aplicações que consomem modelos</h4>
+      <ul>
+        <li>Gateway + chave virtual como caminho padrão; catálogo e roteamento soberano</li>
+        <li>Guardrails/PII pt-BR; LLM fora do request; cascata com default seguro</li>
+        <li>Evals, custo, observabilidade sem dado pessoal</li>
+      </ul>
+      <div class="base">base: SGD em produção · avaliação do gateway · anéis 1–2</div>
+    </div>
+    <div class="pilar">
+      <span class="tag">P3</span>
+      <h4>Agentes próprios que consomem modelos</h4>
+      <ul>
+        <li>Guides · sensors · memória · orquestração (implementador ≠ revisor)</li>
+        <li>MCP fechado por padrão, identidade própria do agente, sandbox, kill switch</li>
+        <li>Somente leitura por padrão; escrita com aprovação humana</li>
+      </ul>
+      <div class="base">base: Anthropic (agentes, guia do CISO) · OWASP Agentic · cenários MCP/A2A</div>
+    </div>
+    <div class="pilar t">
+      <span class="tag">T</span>
+      <h4>Transversal: pessoas, dados e normas</h4>
+      <ul>
+        <li>6 modos de atuação (5 de Cherny + Verificador): modos, não cargos</li>
+        <li>LGPD, Portaria MGI 3.485, PL 2338, NIST AI RMF, ISO 42001, OWASP</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>Portal · duas portas</h3>
+    <div class="porta">
+      <h4>Para pessoas</h4>
+      <ol>
+        <li>Início: how-to de 1 página</li>
+        <li>Pilares → práticas</li>
+        <li>Catálogo aprovado pela engenharia</li>
+        <li>Casos reais (SGD, gateway)</li>
+        <li>Referências e glossário</li>
+      </ol>
+    </div>
+    <div class="porta">
+      <h4>Para agentes</h4>
+      <ul>
+        <li><code>AGENTS.md</code> com tabela de roteamento</li>
+        <li><code>llms.txt</code> + <code>catalogo.json</code></li>
+        <li><code>.md</code> gêmeo de cada página</li>
+        <li><code>SKILL.md</code> instaláveis</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="eixos">
+  <b>Cada prática carrega os mesmos eixos</b> (ontologia, emprestada do kit NUJOR e do awesome-copilot):
+  pilar · tipo (premissa, procedimento, parâmetro, mecanismo, modelo, caso) · fase (antes de escrever → depois da entrega) ·
+  força <span class="ef b">bloqueia</span><span class="ef p">pede aprovação</span><span class="ef a">avisa</span><span class="ef o">só orienta</span> ·
+  status (proposta → aprovada → descontinuada) · ferramentas · fontes marcadas <code>[verificado]</code> <code>[doc oficial]</code> <code>[inferido]</code>
+</div>
+
+<h3 style="margin-top:22px">Escopo: são 4 subsistemas, não 1</h3>
+<p class="subtitle">Para começar simples, proponho tratar como v0 só o primeiro bloco e deixar o resto preparado para crescer.</p>
+<div class="escopo">
+  <div class="sub v0"><b>1 · Framework + portal (v0)</b>conteúdo dos pilares, how-to, páginas HTML navegáveis offline</div>
+  <div class="sub v0"><b>2 · Porta dos agentes (v0)</b>AGENTS.md com roteamento, llms.txt, catalogo.json, .md gêmeos</div>
+  <div class="sub"><b>3 · Catálogo distribuível</b>skills, instructions e plugins instaláveis por ferramenta</div>
+  <div class="sub"><b>4 · Governança de contribuição</b>PR, risco por nível, validadores, re-revisão</div>
+</div>

@@ -1,0 +1,74 @@
+<style>
+  .pz { --papel:#E8EDF2; --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+        --gov:#1351B4; --gov-claro:#D3E0F5; --ambar:#B06F12; --ambar-claro:#F3E3C6; --erro:#B8452E;
+        background:var(--papel); color:var(--tinta); font-family:"Inter",system-ui,sans-serif; font-size:14px; line-height:1.45;
+        border:1px solid var(--regra); border-radius:6px; margin:10px 0 16px; padding:22px 26px; }
+  .pz code { font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-size:11px; background:rgba(10,26,47,.06); padding:1px 4px; border-radius:2px; }
+  .pz h2 { margin:0 0 4px; font-size:21px; letter-spacing:-.02em; }
+  .pz p.lead { margin:0 0 14px; font-size:13px; color:var(--tinta-2); max-width:78ch; }
+  .pz .lista { border-top:2px solid var(--tinta); }
+  .pz .f { display:grid; grid-template-columns:34px minmax(0,1.05fr) minmax(0,1.25fr) minmax(0,1fr); gap:16px; padding:11px 0; border-bottom:1px solid var(--regra); align-items:start; }
+  .pz .f .n { font-family:"JetBrains Mono",monospace; font-size:11px; border:1.5px solid var(--tinta); width:24px; height:24px; line-height:21px; text-align:center; }
+  .pz .f h3 { margin:0; font-size:15px; letter-spacing:-.012em; }
+  .pz .f .apel { font-size:11px; color:var(--tinta-3); font-family:"JetBrains Mono",monospace; }
+  .pz .f .ev { font-size:12.5px; }
+  .pz .f .ev a { color:var(--gov); font-weight:600; text-decoration:none; font-size:11.5px; display:inline-block; margin-top:3px; }
+  .pz .f .ev small { color:var(--tinta-3); font-size:10.5px; margin-left:4px; }
+  .pz .f .r { font-size:12.5px; padding-left:10px; border-left:3px solid var(--gov); }
+  .pz .f .r b { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--gov); }
+  .pz .f.novo { background:linear-gradient(90deg, rgba(79,178,134,.10), transparent 40%); }
+  .pz .f.novo h3::after { content:"novo"; margin-left:6px; font-size:10px; font-weight:600; color:#2e8a5f; border:1px solid #4FB286; border-radius:3px; padding:0 4px; vertical-align:middle; }
+  .pz .cab { display:grid; grid-template-columns:34px minmax(0,1.05fr) minmax(0,1.25fr) minmax(0,1fr); gap:16px; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--tinta-3); padding:0 0 6px; }
+  .pz .corr { margin-top:14px; border-left:4px dashed var(--ambar); background:rgba(243,227,198,.45); padding:9px 12px; font-size:12.5px; }
+  .pz .corr b { color:var(--ambar); }
+  .onde { font-size:.8rem; color:var(--text-secondary); margin-top:4px; }
+</style>
+
+<h2>Nova seção de "O problema": os padrões de falha</h2>
+<p class="subtitle">Os 6 padrões do deck de 10/06, agora com a fonte primária de cada um, mais um sétimo que a OpenAI documenta. Entra entre "O que dá errado" e "O problema em cada disciplina".</p>
+
+<div class="pz">
+  <h2>Como o vibe coding falha, segundo quem constrói os agentes</h2>
+  <p class="lead">Anthropic e OpenAI publicaram o que deu errado quando deixaram agentes construir software sozinhos. Os padrões se repetem, e cada um tem uma resposta que é prática do portal.</p>
+
+  <div class="cab"><span></span><span>padrão de falha</span><span>o que a fonte observou</span><span>o que responde</span></div>
+  <div class="lista">
+    <div class="f"><span class="n">1</span>
+      <div><h3>Tudo de uma vez</h3><span class="apel">"one shot hero"</span></div>
+      <div class="ev">O agente tenta fazer o app inteiro numa sessão, estoura o contexto e deixa a próxima sessão com uma feature pela metade e sem registro.<br><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic · Effective harnesses for long-running agents</a><small>26/11/2025 [V]</small></div>
+      <div class="r"><b>P1 · plano</b>plano com checkboxes; uma tarefa por vez; tier define o tamanho do passo</div></div>
+
+    <div class="f"><span class="n">2</span>
+      <div><h3>Vitória prematura</h3><span class="apel">"declare victory"</span></div>
+      <div class="ev">Uma sessão posterior vê que houve progresso e declara o trabalho concluído.<br><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic · Effective harnesses</a><small>26/11/2025 [V]</small></div>
+      <div class="r"><b>P1 · prova</b>lista de requisitos nasce "falhando"; nada fecha sem evidência colada no plano</div></div>
+
+    <div class="f"><span class="n">3</span>
+      <div><h3>Amnésia entre sessões</h3><span class="apel">"shift change"</span></div>
+      <div class="ev">Cada sessão começa sem memória da anterior, como um turno de engenheiros que não conversam. Para o agente, o que não está no repositório não existe.<br><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic</a> · <a href="https://openai.com/index/harness-engineering/">OpenAI · Harness engineering</a><small>[V]</small></div>
+      <div class="r"><b>P1 · memória</b>AGENTS.md, PROJECT_MEMORY, ADR e plano em disco; retomada lê o git log</div></div>
+
+    <div class="f"><span class="n">4</span>
+      <div><h3>Pronto sem teste de ponta a ponta</h3><span class="apel">"tests not run"</span></div>
+      <div class="ev">O agente marca a feature como pronta depois de teste unitário ou curl, sem perceber que ela não funciona de ponta a ponta.<br><a href="https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents">Anthropic · Effective harnesses</a><small>26/11/2025 [V]</small></div>
+      <div class="r"><b>Qualidade</b>unidade, integração e e2e; o teste roda contra o artefato real</div></div>
+
+    <div class="f"><span class="n">5</span>
+      <div><h3>Quem faz, julga</h3><span class="apel">"agente único"</span></div>
+      <div class="ev">Agentes avaliam o próprio trabalho de forma sistematicamente positiva. Separar quem gera de quem avalia é uma alavanca forte.<br><a href="https://www.anthropic.com/engineering/harness-design-long-running-apps">Anthropic · Harness design for long-running application development</a><small>24/03/2026 [V]</small></div>
+      <div class="r"><b>P1 · revisão</b>revisão adversarial por agente independente, contra a spec e não contra o diff</div></div>
+
+    <div class="f"><span class="n">6</span>
+      <div><h3>Drift acumulado</h3><span class="apel">"AI slop"</span></div>
+      <div class="ev">O agente replica os padrões que já existem no repositório, inclusive os ruins, e isso leva ao drift. O time gastava as sextas-feiras, 20% da semana, limpando.<br><a href="https://openai.com/index/harness-engineering/">OpenAI · Harness engineering</a><small>fev/2026 [V]</small></div>
+      <div class="r"><b>Arquitetura</b>princípios mecânicos e linters; drift check; limpeza recorrente; bug vira regra</div></div>
+
+    <div class="f novo"><span class="n">7</span>
+      <div><h3>Manual gigante</h3><span class="apel">"one big AGENTS.md"</span></div>
+      <div class="ev">Um AGENTS.md enorme ocupa o contexto, apodrece rápido e não dá para verificar. Funcionou tratá-lo como sumário, com cerca de 100 linhas apontando para docs/.<br><a href="https://openai.com/index/harness-engineering/">OpenAI · Harness engineering</a><small>fev/2026 [V]</small></div>
+      <div class="r"><b>P1 · constituição</b>camada 1 pequena; steering sob demanda; CI reprova AGENTS.md acima de 30 KB</div></div>
+  </div>
+
+  <div class="corr"><b>Correção de fonte.</b> O deck de 10/06 atribuía os seis a "OpenAI Harness Engineering · Latent Space 2026". Na fonte primária, 1 a 5 são da Anthropic e 6 é da OpenAI. O número "+5% de desvio por feature" não aparece em nenhuma das duas e sai do portal.</div>
+</div>
+<p class="onde">Os textos são paráfrases. Na página final, cada linha cita o trecho com link e data, e a força da resposta aparece como chip.</p>

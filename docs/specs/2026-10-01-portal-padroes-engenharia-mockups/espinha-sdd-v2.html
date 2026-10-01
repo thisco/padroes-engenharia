@@ -1,0 +1,117 @@
+<style>
+  .faixa { display:grid; grid-template-columns: 175px repeat(4, 1fr); gap:0; margin-top:14px; font-size:.76rem; }
+  .faixa > div { border-bottom:1px solid var(--border); border-right:1px solid var(--border); padding:6px 8px; background:var(--bg-secondary); }
+  .faixa .h { background:var(--bg-tertiary); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
+  .faixa .h small { display:block; text-transform:none; letter-spacing:0; font-weight:400; color:var(--text-secondary); font-family: ui-monospace, Menlo, monospace; font-size:.66rem; }
+  .faixa .dom { font-weight:600; background:var(--bg-primary); }
+  .faixa .dom small { display:block; font-weight:400; color:var(--text-secondary); font-size:.66rem; }
+  .faixa .guia { background:#1351B4; color:#fff; border-color:#0e3f8c; }
+  .faixa .guia small { color:#D3E0F5; }
+  .faixa .guia.cel { background:rgba(19,81,180,.12); color:var(--text-primary); }
+  .faixa .ia { border-top:3px solid #1351B4; }
+  .faixa .novo { box-shadow: inset 4px 0 0 #4FB286; }
+  .faixa .dom.novo::after { content:"novo"; display:inline-block; margin-top:3px; font-size:.62rem; font-weight:600; color:#2e8a5f; border:1px solid #4FB286; border-radius:3px; padding:0 4px; }
+  .i { display:block; padding:2px 6px; margin:2px 0; border-radius:3px; }
+  .i.b { border-left:3px solid #1351B4; background:rgba(19,81,180,.10); }
+  .i.o { border-left:3px dashed #B06F12; background:rgba(176,111,18,.08); }
+  .leg { margin-top:10px; font-size:.76rem; color:var(--text-secondary); }
+  .leg .i { display:inline-block; margin-right:10px; }
+  .grupo { background:var(--bg-tertiary) !important; font-size:.66rem; text-transform:uppercase; letter-spacing:.08em; color:var(--text-secondary); grid-column: 1 / -1; padding:3px 8px !important; }
+</style>
+
+<h2>A espinha do portal · v2 com contratos, observabilidade e LGPD</h2>
+<p class="subtitle">Três faixas novas (marcadas em verde). As faixas ficaram agrupadas para a navegação não virar uma lista de 12 itens.</p>
+
+<div class="faixa">
+  <div class="h">Domínio</div>
+  <div class="h">1 · Antes de escrever<small>fases 0–3</small></div>
+  <div class="h">2 · Enquanto escreve<small>fases 4–6</small></div>
+  <div class="h">3 · Antes do merge<small>fase 7</small></div>
+  <div class="h">4 · Depois da entrega<small>fase 8</small></div>
+
+  <div class="dom guia">Construir com IA<small>o guia principal · P1</small></div>
+  <div class="guia cel"><span class="i o">constituição + memória lidas</span><span class="i o">tier 0/1/2</span><span class="i b">checkpoint humano da spec</span></div>
+  <div class="guia cel"><span class="i o">plano com checkboxes</span><span class="i o">worktree por mudança</span></div>
+  <div class="guia cel"><span class="i o">evidência no plano</span><span class="i o">revisão adversarial contra a spec</span></div>
+  <div class="guia cel"><span class="i o">memória destilada</span></div>
+
+  <div class="grupo">Desenho</div>
+
+  <div class="dom">Arquitetura de software<small>hexagonal · microsserviços · C4 · ADR</small></div>
+  <div><span class="i o">PRD + C4</span><span class="i b">ADR para mudança destrutiva</span></div>
+  <div><span class="i o">portas e adaptadores</span></div>
+  <div><span class="i o">drift diagrama × IaC × compose</span></div>
+  <div><span class="i o">decisão promovida a ADR</span></div>
+
+  <div class="dom novo">Contratos de API<small>OpenAPI · versionamento · teste de contrato</small></div>
+  <div class="novo"><span class="i o">contrato OpenAPI na spec</span><span class="i b">quebra de contrato exige ADR</span></div>
+  <div class="novo"><span class="i o">implementa contra o contrato</span></div>
+  <div class="novo"><span class="i o">diff do contrato detecta quebra</span><span class="i o">teste de contrato</span></div>
+  <div class="novo"><span class="i o">versão semântica e aviso de depreciação</span></div>
+
+  <div class="dom">Frontend e UX<small>4 estados de tela</small></div>
+  <div><span class="i o">protótipo aprovado antes do código</span></div>
+  <div><span class="i o">carregando · vazio · erro · dados</span></div>
+  <div><span class="i o">revisão de PR</span></div>
+  <div><span class="i o">—</span></div>
+
+  <div class="grupo">Dados</div>
+
+  <div class="dom">Dados e migrations<small>reversíveis · expandir/contrair</small></div>
+  <div><span class="i b">mudança de schema exige ADR</span></div>
+  <div><span class="i o">rollback no plano</span></div>
+  <div><span class="i b">migration aplicada não se edita</span></div>
+  <div><span class="i o">—</span></div>
+
+  <div class="dom novo">Privacidade e LGPD<small>classificação · RIPD · dado em prompt</small></div>
+  <div class="novo"><span class="i o">classificar o dado: público, interno, pessoal, sensível</span><span class="i o">RIPD e base legal quando há dado pessoal</span></div>
+  <div class="novo"><span class="i o">minimização</span><span class="i o">dado sintético nos testes</span></div>
+  <div class="novo"><span class="i o">fixture sem dado real</span></div>
+  <div class="novo"><span class="i o">retenção e descarte</span></div>
+
+  <div class="grupo">Entrega e operação</div>
+
+  <div class="dom">Qualidade e BDD<small>testes · prove-it</small></div>
+  <div><span class="i o">aceite em Dado/Quando/Então</span></div>
+  <div><span class="i b">unidade · integração · e2e</span></div>
+  <div><span class="i b">suíte em toda PR</span></div>
+  <div><span class="i o">bug vira regra + teste</span></div>
+
+  <div class="dom">Infra e IaC<small>Docker Compose · OpenTofu</small></div>
+  <div><span class="i o">impacto arquitetural respondido</span></div>
+  <div><span class="i o">ambiente local reproduzível</span></div>
+  <div><span class="i b">instalação congelada</span></div>
+  <div><span class="i o">mapa.yml na mesma PR</span></div>
+
+  <div class="dom">CI/CD<small>Git Actions · gates</small></div>
+  <div><span class="i o">—</span></div>
+  <div><span class="i o">branch feat|fix/data-nome</span></div>
+  <div><span class="i b">lint, testes, gitleaks, constituição</span></div>
+  <div><span class="i o">deploy em homologação</span></div>
+
+  <div class="dom novo">Observabilidade e operação<small>logs · métricas · SLO · runbooks</small></div>
+  <div class="novo"><span class="i o">SLO e sinais na spec</span></div>
+  <div class="novo"><span class="i o">log estruturado sem dado pessoal</span><span class="i o">OpenTelemetry</span></div>
+  <div class="novo"><span class="i o">health check e alerta declarados</span></div>
+  <div class="novo"><span class="i o">runbook atualizado</span><span class="i o">pós-incidente vira regra</span></div>
+
+  <div class="dom">Segurança<small>threat-model · segredos</small></div>
+  <div><span class="i o">5 perguntas na spec</span></div>
+  <div><span class="i o">menor privilégio</span></div>
+  <div><span class="i b">segredo em commit reprova</span></div>
+  <div><span class="i o">incidente vira regra</span></div>
+
+  <div class="grupo">IA no produto</div>
+
+  <div class="dom ia">IA dentro do produto<small>P2 apps · P3 agentes próprios</small></div>
+  <div class="ia"><span class="i o">classificar escopo / nível de agência</span><span class="i o">ameaças OWASP LLM + ASI</span></div>
+  <div class="ia"><span class="i b">gateway + chave virtual</span><span class="i o">evals como teste</span><span class="i o">PII mascarada antes do modelo</span></div>
+  <div class="ia"><span class="i o">evals e red team no CI</span><span class="i b">MCP fechado por padrão</span></div>
+  <div class="ia"><span class="i o">custo e observabilidade</span><span class="i o">prompt como código</span></div>
+</div>
+
+<div class="leg">
+  <span class="i b">impede · bloqueia ou pede aprovação</span>
+  <span class="i o">orienta · avisa ou só orienta</span>
+  Nas faixas novas, só a quebra de contrato herda um mecanismo que já existe (o gate de ADR da sdd-lifecycle). O resto começa como "orienta" até ganhar verificador.
+</div>
