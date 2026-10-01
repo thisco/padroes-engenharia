@@ -1,0 +1,69 @@
+# A espinha do portal (spec §4.1): 12 faixas × 4 momentos do ciclo SDD.
+# Única fonte de slugs, títulos, grupos, prefixos de ID e mapeamento momento → fases.
+# Nenhum outro arquivo repete estes valores; quem precisa deles lê este arquivo.
+#
+# Faixa com subdominios: prefixos[i] vale para subdominios[i].
+faixas:
+  - slug: construir-com-ia
+    titulo: Construir com IA
+    grupo: Guia
+    prefixos: [P1]
+  - slug: arquitetura
+    titulo: Arquitetura e padrões de projeto
+    grupo: Desenho
+    prefixos: [ARQ]
+  - slug: contratos-api
+    titulo: Contratos de API
+    grupo: Desenho
+    prefixos: [API]
+  - slug: frontend-ux
+    titulo: Frontend e UX
+    grupo: Desenho
+    prefixos: [UX]
+  - slug: dados-migrations
+    titulo: Dados e migrations
+    grupo: Dados
+    prefixos: [DAD]
+  - slug: privacidade-lgpd
+    titulo: Privacidade e LGPD
+    grupo: Dados
+    prefixos: [LGPD]
+  - slug: qualidade-bdd
+    titulo: Qualidade e BDD
+    grupo: Entrega e operação
+    prefixos: [QLD]
+  - slug: infra-iac
+    titulo: Infra e IaC
+    grupo: Entrega e operação
+    prefixos: [IAC]
+  - slug: ci-cd
+    titulo: CI/CD
+    grupo: Entrega e operação
+    prefixos: [CICD]
+  - slug: observabilidade
+    titulo: Observabilidade e operação
+    grupo: Entrega e operação
+    prefixos: [OBS]
+  - slug: seguranca
+    titulo: Segurança
+    grupo: Entrega e operação
+    prefixos: [SEG]
+  - slug: ia-no-produto
+    titulo: Aplicações que consomem modelos e agentes próprios
+    grupo: IA no produto
+    prefixos: [P2, P3]
+    subdominios: [apps, agentes]
+
+momentos:
+  - slug: antes-de-escrever
+    titulo: Antes de escrever
+    fases: [0, 1, 2, 3]
+  - slug: enquanto-escreve
+    titulo: Enquanto escreve
+    fases: [4, 5, 6]
+  - slug: antes-do-merge
+    titulo: Antes do merge
+    fases: [7]
+  - slug: depois-da-entrega
+    titulo: Depois da entrega
+    fases: [8]
