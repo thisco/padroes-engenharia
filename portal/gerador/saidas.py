@@ -370,3 +370,55 @@ def md_para_agentes(site: Site) -> str:
         f"## Roteamento\n\nCélulas com prática publicada; as outras {celulas_a_definir(site)} "
         "estão a definir. As 48 estão em [roteamento.json](roteamento.json).\n\n" + roteamento,
     )
+
+
+# llms.txt e llms-full.txt (Tarefa 23) ------------------------------------------------------
+
+
+def llms_txt(site: Site, paginas: list[Pagina]) -> str:
+    """Índice no formato llms.txt (https://llmstxt.org/): H1, resumo em blockquote, detalhes e
+    seções H2 com `- [título](url): descrição`, apontando o `.md` gêmeo de cada página."""
+    linhas = [
+        f"# {site.nome}",
+        "",
+        f"> Portal de padrões de engenharia de {site.organizacao}, com IA como guia. "
+        f"Versão {site.versao}, commit {site.commit}, gerado em {site.data}.",
+        "",
+        "Cada página HTML tem um `.md` gêmeo no mesmo caminho, e os links abaixo apontam para "
+        f"ele. Para achar a prática certa, consulte {site.url('roteamento.json')} pelo domínio e "
+        "pelo momento da mudança e leia as práticas indicadas.",
+        "",
+    ]
+    for secao in SECOES:
+        da_secao = [p for p in paginas if p.secao == secao]
+        if not da_secao:
+            continue
+        linhas += [f"## {secao}", ""]
+        for p in da_secao:
+            item = f"- [{p.titulo}]({site.url(p.caminho_md)})"
+            linhas.append(f"{item}: {p.descricao}" if p.descricao else item)
+        linhas.append("")
+    linhas += [
+        "## Optional",
+        "",
+        f"- [Texto completo]({site.url('llms-full.txt')}): todas as páginas num arquivo só",
+        f"- [Catálogo]({site.url('catalogo.json')}): todos os itens com metadados",
+        f"- [Roteamento]({site.url('roteamento.json')}): as 48 células da espinha",
+        "",
+    ]
+    return "\n".join(linhas)
+
+
+def llms_full(site: Site, paginas: list[Pagina]) -> str:
+    """Todas as páginas em Markdown, na ordem do llms.txt, cada uma com a URL de origem."""
+    cabecalho = (
+        f"# {site.nome}: texto completo\n\n"
+        f"> Versão {site.versao}, commit {site.commit}, gerado em {site.data}. "
+        "Cada seção abaixo é o `.md` gêmeo de uma página, precedido da URL dele.\n"
+    )
+    ordem = {secao: i for i, secao in enumerate(SECOES)}
+    blocos = [
+        f"Fonte: {site.url(p.caminho_md)}\n\n{p.md}"
+        for p in sorted(paginas, key=lambda p: ordem[p.secao])
+    ]
+    return cabecalho + "".join(f"\n---\n\n{bloco}" for bloco in blocos)
