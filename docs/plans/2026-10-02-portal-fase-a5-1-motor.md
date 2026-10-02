@@ -3130,4 +3130,42 @@ A busca por `migracao` só acha a DAD-01 se o texto dela (`resumo` ou corpo) con
 
 ## Revisão adversarial
 
+### Revisão adversarial: 2026-10-02 — achados
+
+Revisor em sessão independente, com modelo de raciocínio potente, que partiu da spec delta,
+fez 40 mutações em cópias do repositório e inspecionou o site no navegador a 400px e a 1440px
+(intervalo `3720de8..d9973cf`). Base confirmada: `validar.py` 0, 517 testes, builds
+determinísticos. Nenhum desvio da spec ficou sem registro nas Evidências.
+
+| # | Severidade | Achado | Tratamento | Commit |
+|---|---|---|---|---|
+| 1 | Crítico | Seletores `.ninho .<peca>` acertavam também o cabeçalho `span.peca`: borda dupla, `linha` sobreposta, rótulos do fluxo cobertos | Seletores só em `.cx.<peca>`; `.peca .linha` em bloco nas caixas estreitas; teste de CSS | `a34ced5` |
+| 2 | Arquitetural, tratado como crítico | `.md` da prática listava `Aplica:` sem URL; skill inexistente em `aplica` saía com `url: null` | `md_pratica` usa `links_da_pratica`; skill ausente reprova (`R-REF-INEXISTENTE`); `repo_minimo` ganha a skill `sdd-lifecycle` | `7abad8e` |
+| 3 | Menor | `[ref:` malformado passava fora do corpo (`resumo`, `linha`, `definicao`, `onde_mora`, `erro_comum`, `objetivo`, `resultado_esperado`, `subtitulo`) | Varredura nos campos de texto | `f5c9d6b` |
+| 4 | Menor | Bloco de código vazio contava como Exemplo | Exige `bloco.texto.strip()` | `f5c9d6b` |
+| 5 | Menor | A trava da isenção só existia no pytest | `carregar_isencoes` só aceita `DAD-01`; `validar` reprova outro ID | `f5c9d6b` |
+| 6 | Menor | `casos/sgd.html` chegava a 406px (SHA de 40 caracteres) | `overflow-wrap: anywhere` em `.campos dd` e `code`; teste de CSS | `712464c` |
+| 7 | Menor | Setas do ninho só em texto | Setas desenhadas em CSS (`→`, `←`, `↑`); teste de estrutura | `0d21ecf` |
+| 8 | Menor | "Ferramentas nativasler e editar" | Espaço entre `<b>` e `.linha`; teste | `712464c` |
+| 9 | Menor | A busca por `migracao` depende da DAD-01 reescrita | Linha no Contrato com a parte 2 e na tabela do plano A.5-2 | `docs: revisão adversarial do A.5-1` |
+
+Achados extras da recaptura de `conceitos.html` a 1440px, tratados com teste: a régua
+`section.lacuna` cortava o `span.linha.lacuna` da peça sem conceito (`fcc0438`) e o grupo do
+menu da página atual abria sozinho sobre o título (`f7cd598`).
+
+### Evidências da verificação depois da revisão
+
+- Venv limpo: `validar.py` 0 (avisos `exemplo` P1-01 e P2-01, `transicao` DAD-01); `pytest -q`:
+  530 passed; `ruff check .`: All checks passed; `ruff format --check .`: 106 files already
+  formatted.
+- Dois `gerar.py --saida` (`/tmp/a5-a` e `/tmp/a5-b`): `diff -r` sem saída; `git status`
+  limpo depois do gerar.
+- Navegador, repositório de exemplo (com conceitos, receita, starter, ferramenta e glossário),
+  14 páginas a 400px e a 1440px: nenhuma com `scrollWidth` maior que a largura (inclui
+  `casos/sgd.html`); a lista da busca fica dentro da tela nas duas larguras; favicon 200.
+- Captura de `conceitos.html` a 1440px: ninho com uma borda por caixa, skill dentro da sessão,
+  hook em azul cheio, setas "delega" e "devolve só o resultado" desenhadas, "Só atravessa a
+  sessão o que foi gravado" com seta, memória escura com os 7 caminhos, "Ferramentas nativas ler
+  e editar" separado, lista "As nove peças" sem linha cortando as linhas.
+
 <!-- PARTE 2 (A.5-2, molde): plano próprio em docs/plans/2026-10-02-portal-fase-a5-2-molde.md -->
