@@ -67,6 +67,7 @@ Tomadas com o dono do projeto em 2026-10-02, ou propostas aqui para o checkpoint
 | D16 | Pesquisa de perfil da Anthropic | **Volta**, como referência curada, usada em O problema (seção "O que as pesquisas medem") e no bloco "Por que isto existe" da Início | Ficar só no benchmark |
 | D17 | Componentes do motor que a revisão da fase A empurrou para o plano B (Cadeia, Planta, ninho fiel) | *P* **Voltam para a fase A** (plano A.5), porque pertencem ao R11 e ao R12 | Adiar para o plano B, como estava |
 | D18 | Itens menores perdidos | *P* Voltam: chip de força na tabela de falhas; subtítulo de cada faixa (`espinha.yml`); campo `resumo` na prática. Descartados com registro: o eixo "tipo" da prática (coberto pela seção Exemplo e pelos tipos novos) e "Conceitos e problemas vira o primeiro guia" (absorvido por O problema). O elo "Garantia de qualidade" da NUJOR fica fora; a cadeia segue o mockup aprovado, com 3 elos | — |
+| D19 | Prompts de exemplo (emenda de 2026-10-02, pedido do dono após a aprovação) | Prompt de exemplo **testado** em toda prática que exige Exemplo (`### Para o agente` → bloco `prompt`) e em toda receita (`## Com o agente`). O prompt é executado em sessão nova de agente e registrado em `execucoes`. O gerador extrai os prompts para uma **Biblioteca de prompts** (`prompts.html` + `prompts.json`), por domínio e momento | Tipo `prompts/` próprio (duplicaria a fonte); prompts sem teste |
 
 ## 3. Mudanças por seção da spec v1.0
 
@@ -432,6 +433,15 @@ execucoes:
 - **R25.** As 3 práticas piloto (P1-01, DAD-01, P2-01) foram reescritas no modelo novo, com
   Exemplo executado, e servem de molde.
 - **R26.** A receita "Ligar o CI do GitLab com as travas" existe, com o job executado (D10).
+- **R27 (D19).** Prompts de exemplo:
+  - **Onde ficam:** o prompt é um bloco cercado com a linguagem `prompt`. Ele fica em
+    `### Para o agente` na prática, onde é obrigatório quando o Exemplo é obrigatório, e em
+    `## Com o agente` na receita, onde é sempre obrigatório.
+  - **Teste:** cada prompt tem uma entrada em `execucoes` com `tipo: prompt`, o harness usado,
+    o resultado e a evidência. O validador reprova prompt sem execução registrada.
+  - **Biblioteca:** o gerador emite `prompts.html`, `prompts.md` e `prompts.json` (id, origem,
+    domínio, momento, texto e URL da origem). A navegação ganha "Prompts" em **Como fazer**, e
+    o `llms.txt` lista a biblioteca.
 
 ### §18 Critérios de aceite (acrescenta)
 
@@ -449,6 +459,8 @@ execucoes:
 - [ ] Nenhum item de navegação aparece sem página.
 - [ ] A 400px, nenhuma página rola na horizontal fora de contêiner com rolagem.
 - [ ] A busca por "migracao" encontra a DAD-01.
+- [ ] As 3 pilotos e a receita do CI têm prompt de exemplo com execução registrada, e todos
+      aparecem em `prompts.html` e em `prompts.json`.
 
 ### §19 Fora de escopo da v0 (altera)
 
