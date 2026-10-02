@@ -33,6 +33,7 @@ R_REF_MALFORMADO = "R-REF-MALFORMADO"
 R_PECA = "R-PECA"
 R_COMPONENTE = "R-COMPONENTE"
 R_EXEMPLO = "R-EXEMPLO"
+R_EXECUCAO = "R-EXECUCAO"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -59,6 +60,7 @@ DESCRICOES: dict[str, str] = {
     R_REF_MALFORMADO: "marcador [ref: que não casa [ref:<id>]",
     R_PECA: "peça de conceito que não existe no ninho declarado",
     R_COMPONENTE: "starter fora de componentes.yml ou com versão ou repo diferente",
+    R_EXECUCAO: "arquivo de exemplos/ sem execução registrada, inseguro ou com sintaxe inválida",
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
 }
 

@@ -14,6 +14,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from portal.gerador.carregar import Conteudo
+from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
     NINHOS,
@@ -193,7 +194,7 @@ def md_pratica(site: Site, p: Conteudo) -> str:
     return _juntar(
         f"# {p.chave} · {m['titulo']}",
         "\n".join(ficha),
-        p.corpo,
+        expandir_inclusoes(p.corpo, site.raiz),
         md_lista_referencias(site, p),
     )
 

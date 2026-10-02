@@ -1765,7 +1765,7 @@ for reformatado, recalcule.)
 - `regra_execucao` (R-EXECUCAO) e o código `R_EXECUCAO`;
 - `corpo_html` e os `.md` gêmeos de prática e receita passam pelo `expandir_inclusoes`.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_regras_execucao.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_regras_execucao.py`)
 
 ```python
 """§11.4: arquivo de exemplos/ só publica com execução registrada e sintaxe válida."""
@@ -1836,9 +1836,9 @@ def test_expandir_inclusoes_vira_bloco_com_linguagem(tmp_path):
     assert expandir_inclusoes("<!-- incluir: ../x -->\n", tmp_path) == "<!-- incluir: ../x -->\n"
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_regras_execucao.py tests/unidade/test_markdown.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_regras_execucao.py tests/unidade/test_markdown.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar.** `regras.py:regra_execucao` (`@regra`), para prática e receita:
+- [x] **Passo 3: Implementar.** `regras.py:regra_execucao` (`@regra`), para prática e receita:
   cada caminho de `exemplos:` passa por `caminho_seguro` ("`<c>`: fora de exemplos/"), existe
   ("`<c>`: inexistente"), tem `checar_sintaxe` vazio ("`<c>`: `<problema>`") e aparece em
   `execucoes[].arquivo` do registro `verificacoes/<chave>.yaml` ("`<c>`: sem execução registrada
@@ -1846,9 +1846,9 @@ def test_expandir_inclusoes_vira_bloco_com_linguagem(tmp_path):
   exemplos/") e está em `exemplos:` ("`<c>`: incluído e não declarado em exemplos"). Campo
   `exemplos`. O registro é lido de `repo.verificacoes` pela chave (sem abrir disco de novo).
 
-- [ ] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
+- [x] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
 
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: exemplo incluído de exemplos/ com execução registrada e sintaxe conferida"`
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: exemplo incluído de exemplos/ com execução registrada e sintaxe conferida"`
 
 ---
 

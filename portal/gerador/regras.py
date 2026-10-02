@@ -37,7 +37,13 @@ from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.esquemas import validar_componentes, validar_repositorio
-from portal.gerador.exemplos import blocos, inclusoes, secoes
+from portal.gerador.exemplos import (
+    blocos,
+    caminho_seguro,
+    checar_sintaxe,
+    inclusoes,
+    secoes,
+)
 from portal.gerador.ninhos import PECAS
 
 
@@ -664,6 +670,52 @@ def regra_exemplo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> li
                     f"arquivo com mais de {LIMITE_BLOCO} linhas mora em exemplos/"
                 )
                 reprovar(c, valor)
+    return erros
+
+
+# Exemplos executados (delta §6.5, regra 7; §11.4; §12.1, bloqueio 14) -------------------------
+
+
+@regra
+def regra_execucao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Todo arquivo de `exemplos/` existe, é seguro, tem sintaxe válida e execução registrada.
+
+    Vale para prática e receita. A inclusão `<!-- incluir: -->` só lê dentro de `exemplos/` e o
+    arquivo incluído precisa estar declarado em `exemplos:`. Nada aqui executa o arquivo.
+    """
+    registros = {_texto(v.meta, "conteudo"): v for v in repo.verificacoes}
+    erros: list[Erro] = []
+    for c in [*repo.praticas, *repo.receitas]:
+        registro = registros.get(c.chave)
+        executados = {
+            e.get("arquivo")
+            for e in (registro.meta.get("execucoes") or [] if registro else [])
+            if isinstance(e, dict)
+        }
+        declarados = _lista(c.meta, "exemplos")
+
+        def reprovar(caminho: str, problema: str, c: Conteudo = c) -> None:
+            valor = f"{caminho}: {problema}"
+            erros.append(Erro(c.caminho_relativo, "exemplos", codigos.R_EXECUCAO, valor))
+
+        for caminho in declarados:
+            alvo = caminho_seguro(contexto.raiz, caminho)
+            if alvo is None:
+                reprovar(caminho, "fora de exemplos/")
+                continue
+            if not alvo.is_file():
+                reprovar(caminho, "inexistente")
+                continue
+            problema = checar_sintaxe(alvo)
+            if problema:
+                reprovar(caminho, problema)
+            if caminho not in executados:
+                reprovar(caminho, f"sem execução registrada em verificacoes/{c.chave}.yaml")
+        for caminho in inclusoes(c.corpo):
+            if caminho_seguro(contexto.raiz, caminho) is None:
+                reprovar(caminho, "inclusão fora de exemplos/")
+            elif caminho not in declarados:
+                reprovar(caminho, "incluído e não declarado em exemplos")
     return erros
 
 

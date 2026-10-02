@@ -7,9 +7,13 @@ de código com a seção e a subseção em que está, `secoes` o texto de cada s
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
 from dataclasses import dataclass
+from pathlib import Path, PurePosixPath
 
+import yaml
 from markdown_it import MarkdownIt
 
 _MARKDOWN = MarkdownIt("commonmark")
@@ -72,3 +76,108 @@ def _titulos_h2(corpo: str) -> list[tuple[list[int], str]]:
 def inclusoes(corpo: str) -> list[str]:
     """Caminhos das diretivas `<!-- incluir: <caminho> -->`, na ordem do corpo."""
     return [m["caminho"] for m in INCLUIR.finditer(corpo)]
+
+
+# Arquivos de `exemplos/`: caminho seguro, linguagem, inclusão e sintaxe (§11.4) ----------------
+
+_LINGUAGENS = {
+    ".yml": "yaml",
+    ".yaml": "yaml",
+    ".sh": "bash",
+    ".py": "python",
+    ".json": "json",
+    ".sql": "sql",
+    ".toml": "toml",
+    ".md": "markdown",
+}
+
+
+def caminho_seguro(raiz: Path, caminho: str) -> Path | None:
+    """O arquivo de `exemplos/` que `caminho` nomeia, ou `None` se ele sai de `raiz/exemplos/`.
+
+    `..`, caminho absoluto e link simbólico para fora reprovam, sem abrir o arquivo.
+    """
+    puro = PurePosixPath(caminho)
+    if puro.is_absolute() or ".." in puro.parts or puro.parts[:1] != ("exemplos",):
+        return None
+    base = (raiz / "exemplos").resolve()
+    alvo = (raiz / caminho).resolve()
+    return alvo if alvo.is_relative_to(base) and alvo != base else None
+
+
+def linguagem_de(caminho: str) -> str:
+    """A linguagem do bloco cercado, pela extensão do arquivo."""
+    return _LINGUAGENS.get(PurePosixPath(caminho).suffix.lower(), "text")
+
+
+def expandir_inclusoes(corpo: str, raiz: Path) -> str:
+    """Troca cada `<!-- incluir: exemplos/... -->` pelo arquivo, num bloco cercado.
+
+    Cerca de 4 crases se o arquivo tem ```; caminho inseguro ou arquivo ilegível fica como está.
+    """
+
+    def trocar(achado: re.Match[str]) -> str:
+        alvo = caminho_seguro(raiz, achado["caminho"])
+        if alvo is None or not alvo.is_file():
+            return achado[0]
+        try:
+            texto = alvo.read_text(encoding="utf-8").replace("\r\n", "\n")
+        except UnicodeDecodeError:
+            return achado[0]
+        cerca = "````" if "```" in texto else "```"
+        fim = "" if texto.endswith("\n") else "\n"
+        return f"{cerca}{linguagem_de(achado['caminho'])}\n{texto}{fim}{cerca}"
+
+    return INCLUIR.sub(trocar, corpo)
+
+
+class _LeitorYaml(yaml.SafeLoader):
+    """`SafeLoader` que aceita tag desconhecida (como `!reference` do GitLab) sem executar nada."""
+
+
+def _tag_desconhecida(loader: yaml.SafeLoader, sufixo: str, no: yaml.Node) -> None:
+    return None
+
+
+_LeitorYaml.add_multi_constructor("!", _tag_desconhecida)
+
+
+def checar_sintaxe(arquivo: Path) -> str:
+    """Vazio se a sintaxe está certa; senão o problema. Nunca executa o arquivo."""
+    try:
+        texto = arquivo.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:
+        return "não está em UTF-8"
+    sufixo = arquivo.suffix.lower()
+    try:
+        if sufixo in (".yml", ".yaml"):
+            list(yaml.load_all(texto, Loader=_LeitorYaml))
+        elif sufixo == ".json":
+            json.loads(texto)
+        elif sufixo == ".py":
+            compile(texto, str(arquivo), "exec")
+        elif sufixo == ".sh":
+            return _checar_shell(arquivo)
+    except yaml.YAMLError as exc:
+        problema = getattr(exc, "problem", None) or str(exc).splitlines()[0]
+        return f"YAML inválido: {problema}"
+    except ValueError as exc:
+        return f"JSON inválido: {exc}"
+    except SyntaxError as exc:
+        return f"Python inválido: {exc.msg} (linha {exc.lineno})"
+    return ""
+
+
+def _checar_shell(arquivo: Path) -> str:
+    try:
+        resultado = subprocess.run(
+            ["bash", "-n", str(arquivo)], capture_output=True, text=True, timeout=10, check=False
+        )
+    except subprocess.TimeoutExpired:
+        return "bash -n excedeu 10 s"
+    except FileNotFoundError:
+        return ""
+    if resultado.returncode != 0:
+        linhas = resultado.stderr.strip().splitlines()
+        return "shell inválido: " + (linhas[0] if linhas else "bash -n falhou")
+    return ""

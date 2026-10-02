@@ -13,6 +13,7 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoes
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
+from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 from portal.gerador.ninhos import NINHOS
@@ -231,9 +232,14 @@ def renderizar(site: Site, template: str, caminho: str, **contexto: Any) -> str:
     )
 
 
-def corpo_html(conteudo: Conteudo) -> str:
-    """O corpo do conteúdo em HTML, com cada `[ref:id]` trocado por um link numerado."""
+def corpo_html(conteudo: Conteudo, raiz: Path | None = None) -> str:
+    """O corpo do conteúdo em HTML, com cada `[ref:id]` trocado por um link numerado.
+
+    Com `raiz`, a prática e a receita trazem os arquivos de `exemplos/` que o corpo inclui.
+    """
     texto, _ = numerar(conteudo.corpo)
+    if raiz is not None and conteudo.tipo in ("pratica", "receita"):
+        texto = expandir_inclusoes(texto, raiz)
     return para_html(texto)
 
 
@@ -522,7 +528,7 @@ def html_pratica(site: Site, pratica: Conteudo) -> str:
         p=pratica,
         faixa=site.espinha.faixa(pratica.meta["dominio"]),
         momento=site.espinha.momento(pratica.meta["momento"]),
-        corpo=corpo_html(pratica),
+        corpo=corpo_html(pratica, site.raiz),
         referencias=site.catalogo.referencias_de(pratica),
         relacionadas=site.catalogo.relacionadas(pratica.chave),
         conceitos=site.catalogo.conceitos_da_pratica(pratica.chave),
