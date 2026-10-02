@@ -68,3 +68,15 @@ def test_lista_de_pecas_uma_linha_por_peca_com_link_so_se_ha_conceito():
     linhas = lista.todos("li", **{"data-peca": True})
     assert len(linhas) == 9
     assert [a.attrs["href"] for a in lista.todos("a")] == ["conceitos/harness.html"]
+
+
+def test_css_dos_ninhos_nao_atinge_o_cabecalho_da_peca():
+    """O cabeçalho `span.peca.<peca>` não pode herdar a borda da caixa `.cx.<peca>`."""
+    import re
+
+    from portal.gerador.ninhos import NINHOS
+
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    pecas = "|".join(p for n in NINHOS.values() for p in n["pecas"])
+    soltos = re.findall(rf"\.ninho(?:\.\w+)? \.(?:{pecas})\b(?!-)", css)
+    assert soltos == [], soltos
