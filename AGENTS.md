@@ -11,8 +11,9 @@ Paradigma: **Spec-Driven Development (SDD)**.
 - **Stack:** Python 3.11+ · PyYAML · markdown-it-py · Jinja2 · jsonschema · pytest · ruff ·
   GitLab CI e GitLab Pages. Site estático, sem servidor.
 - **Idioma:** português do Brasil em conteúdo, código, testes, commits e documentação.
-- **Estado:** fase A da v0 (o motor). Spec em
-  `docs/specs/2026-10-01-portal-padroes-engenharia-design.md`.
+- **Estado:** fase A.5 da v0 (o motor v1.1). Spec em
+  `docs/specs/2026-10-01-portal-padroes-engenharia-design.md`, alterada por
+  `docs/specs/2026-10-02-portal-v1-1-delta.md` (o que o delta não menciona vale como na v1.0).
 
 <!-- constituicao:inicio padrao-v1.0 -->
 ## Princípios inegociáveis
@@ -73,6 +74,10 @@ carregados em todo turno, com a cópia canônica versionada em `docs/constituica
 ```
 praticas/<faixa>/  _dominio.md + <ID>.md, uma prática por arquivo
 conceitos/ guias/ casos/ paginas/   demais conteúdos em Markdown com frontmatter
+receitas/          <slug>.md, como fazer uma coisa concreta, com prompt para o agente
+starters/ ferramentas/   <id>.yml, repositórios-modelo e ferramentas com status
+glossario.yml      termos com definição curta e referência
+exemplos/          <ID-ou-slug>/<arquivo>, arquivos executados que o corpo inclui
 referencias/       <id>.yaml, uma referência por arquivo
 verificacoes/      <ID>.yaml, registro de curadoria de cada conteúdo
 esquemas/          espinha.yml (faixas e momentos), JSON Schema de cada tipo, ids-retirados.txt

@@ -7,6 +7,38 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+Destino: 0.2.0 (major na série 0, porque muda schema e `catalogo.json`; ADR 0001). A parte 2 da
+fase A.5 acrescenta o conteúdo e fecha `## [0.2.0]`.
+
+### Alterado
+
+- A prática passa a ter cinco seções, com `## Exemplo` (antes e depois, prompt para o agente).
+- O bloco do `AGENTS.md` para outros projetos dispara por momento (fases 0 e 7) e mostra
+  `<URL do portal>` quando a base é local.
+- Navegação por tipo de uso (Início, Comece aqui, Como fazer, Padrões, Ferramentas, Entender,
+  Para agentes); item sem página some. A Início explica o portal em sete seções.
+- Páginas especiais estruturadas (O problema, Pessoas e normas); ninho de Conceitos fiel ao
+  mockup; números da espinha derivados de `esquemas/espinha.yml`; `componentes.yml` com schema.
+
+### Adicionado
+
+- Tipos receita, starter, ferramenta e glossário, com schema, validação e página própria; radar
+  de ferramentas filtrável; biblioteca de prompts (`prompts.html`, `prompts.md`, `prompts.json`).
+- Regras: Exemplo obrigatório, arquivo de `exemplos/` com execução registrada (`R-EXECUCAO`),
+  prompt testado (`R-PROMPT`), `[ref:` malformado, referências cruzadas, peça do ninho, starter
+  fixado em `componentes.yml`, prática fora da faixa.
+- Componentes: legenda das forças, barra em escala fixa, cadeia, planta, escada, tabela de
+  falhas e cartões; tema com contraste gráfico 3:1, favicon e largura de 400px.
+- Saídas para agentes: URLs de skill, receita, ferramenta e starter no `roteamento.json`,
+  `llms.txt` completo, busca com palavras do corpo e do glossário.
+- Avisos de `url_base` local e de Exemplo recomendado ausente; skill `curadoria-de-pratica`
+  com execução do exemplo e do prompt.
+
+### Removido
+
+- O campo `ferramentas` da prática (substituído por `ferramentas_aprovadas`) e a página
+  `guias.html` (os guias entram em Comece aqui).
+
 ## [0.1.0] - 2026-10-01
 
 Fase A da v0: o motor do portal, exercitado sobre fixtures e sobre três práticas piloto.

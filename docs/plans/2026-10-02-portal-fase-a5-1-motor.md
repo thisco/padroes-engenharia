@@ -2909,7 +2909,7 @@ estável (fim da fase B).
 ("Estado: fase A.5"; mapa com `receitas/`, `starters/`, `ferramentas/`, `exemplos/`,
 `glossario.yml`; spec delta ao lado da v1.0) · Test `tests/unidade/test_governanca.py`
 
-- [ ] **Passo 1: Teste que falha** (acrescentar a `tests/unidade/test_governanca.py`)
+- [x] **Passo 1: Teste que falha** (acrescentar a `tests/unidade/test_governanca.py`)
 
 ```python
 def test_versao_0_2_0_no_config_e_no_changelog():
@@ -2921,14 +2921,14 @@ def test_versao_0_2_0_no_config_e_no_changelog():
         assert trecho in nao_publicado
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_governanca.py -q` → FAIL.
-- [ ] **Passo 3:** `[Não publicado]` com "Destino: 0.2.0 (major na série 0; ADR 0001)" e as
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_governanca.py -q` → FAIL.
+- [x] **Passo 3:** `[Não publicado]` com "Destino: 0.2.0 (major na série 0; ADR 0001)" e as
   entradas do motor (Alterado: 5 seções, bloco do AGENTS.md, navegação, Início; Adicionado:
   tipos, regras, prompts, componentes, páginas, saídas; Removido: campo `ferramentas`,
   `guias.html`). A parte 2 acrescenta o conteúdo e fecha `## [0.2.0] - <data>`.
-- [ ] **Passo 4:** suíte, ruff e validar verdes (o `AGENTS.md` continua < 30 KB e com a
+- [x] **Passo 4:** suíte, ruff e validar verdes (o `AGENTS.md` continua < 30 KB e com a
   constituição idêntica); regenere README/ROTEAMENTO (versão 0.2.0).
-- [ ] **Passo 5:** `git add CHANGELOG.md portal/config.yml AGENTS.md README.md ROTEAMENTO.md tests && git commit -m "docs: changelog e versão 0.2.0 do motor v1.1"`
+- [x] **Passo 5:** `git add CHANGELOG.md portal/config.yml AGENTS.md README.md ROTEAMENTO.md tests && git commit -m "docs: changelog e versão 0.2.0 do motor v1.1"`
 
 ---
 
