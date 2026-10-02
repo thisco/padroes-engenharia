@@ -27,7 +27,7 @@ def test_config_do_portal():
     assert config == {
         "nome": "Padrões de Engenharia",
         "organizacao": "NUARQ · Serpro",
-        "versao": "0.1.0",
+        "versao": "0.2.0",
         "url_base": "http://localhost:8000",
     }
 
