@@ -235,7 +235,7 @@ HTML (Tarefa 11); o botão Copiar só escreve na área de transferência, nunca 
 - Consumes: delta §2 (D9–D19), §4 e §5.
 - Produces: `docs/adr/` (a pasta passa a existir; fecha o achado R1 da revisão adversarial).
 
-- [ ] **Passo 1: Conferir a branch**
+- [x] **Passo 1: Conferir a branch**
 
 ```bash
 git branch --show-current
@@ -244,7 +244,7 @@ git status --short --untracked-files=no
 
 Esperado: `feat/2026-10-01-portal-fase-a` e nenhuma linha de arquivo rastreado alterado.
 
-- [ ] **Passo 2: Criar `docs/adr/0001-modelo-de-conteudo-v1-1.md`**
+- [x] **Passo 2: Criar `docs/adr/0001-modelo-de-conteudo-v1-1.md`**
 
 ```markdown
 # ADR 0001: Modelo de conteúdo v1.1
@@ -349,7 +349,7 @@ git commit -m "docs: plano da fase A.5 e ADRs do modelo de conteúdo v1.1 e dos 
     `plural(n: int, singular: str, plural_: str) -> str`;
   - filtro Jinja `plural`: `{{ n | plural("prática", "práticas") }}` → `1 prática`, `0 práticas`.
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 Em `tests/unidade/test_espinha.py`, substituir `test_quatro_momentos_com_as_fases_da_sdd_lifecycle`
 e `test_ia_no_produto_mapeia_subdominio_para_prefixo` por:
@@ -452,13 +452,13 @@ def test_filtro_plural_no_jinja():
     assert modelo.render(n=3) == "3 células"
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `python -m pytest tests/unidade/test_espinha.py tests/unidade/test_vocabulario.py -q`
 Expected: FAIL — `AttributeError: 'Momento' object has no attribute 'acao'` e
 `ModuleNotFoundError: No module named 'portal.gerador.vocabulario'`.
 
-- [ ] **Passo 3: Acrescentar subtítulo, scaffold e ação em `esquemas/espinha.yml`**
+- [x] **Passo 3: Acrescentar subtítulo, scaffold e ação em `esquemas/espinha.yml`**
 
 Substituir o comentário do topo e as faixas e momentos por (os slugs, títulos, grupos e
 prefixos não mudam):
@@ -566,7 +566,7 @@ momentos:
     acao: Changelog, memória destilada, bug vira regra.
 ```
 
-- [ ] **Passo 4: Ler os campos novos em `portal/gerador/espinha.py`**
+- [x] **Passo 4: Ler os campos novos em `portal/gerador/espinha.py`**
 
 Substituir as classes `Faixa` e `Momento` por:
 
@@ -624,7 +624,7 @@ Em `carregar_espinha`, substituir a montagem de `faixas` e `momentos` por:
     )
 ```
 
-- [ ] **Passo 5: Criar `portal/gerador/vocabulario.py`**
+- [x] **Passo 5: Criar `portal/gerador/vocabulario.py`**
 
 ```python
 """Vocabulário do portal: as forças e os status de uma prática (spec §6.1; delta §4.3).
@@ -678,7 +678,7 @@ def plural(n: int, singular: str, plural_: str) -> str:
     return f"{n} {singular if n == 1 else plural_}"
 ```
 
-- [ ] **Passo 6: Usar o vocabulário no grafo e na renderização**
+- [x] **Passo 6: Usar o vocabulário no grafo e na renderização**
 
 Em `portal/gerador/grafo.py`, substituir `ORDEM_FORCA = ("bloqueia", "pede-aprovacao", "avisa",
 "orienta")` por `from portal.gerador.vocabulario import ORDEM_FORCA` (junto dos outros imports;
@@ -697,12 +697,12 @@ Em `criar_ambiente`, depois de `ambiente.globals.update(...)`, acrescentar:
     ambiente.filters["plural"] = plural
 ```
 
-- [ ] **Passo 7: Rodar a suíte**
+- [x] **Passo 7: Rodar a suíte**
 
 Run: `python -m pytest -q && ruff check . && ruff format --check . && python scripts/validar.py`
 Expected: todos os testes passam; `validação ok: nenhum erro.`
 
-- [ ] **Passo 8: Commit**
+- [x] **Passo 8: Commit**
 
 ```bash
 git add esquemas/espinha.yml portal/gerador/espinha.py portal/gerador/vocabulario.py \
@@ -811,8 +811,10 @@ Substituições:
 def indices(site: Site) -> list[tuple[str, str]]:
     """Índices para máquina publicados pelo build (spec §7.3): caminho e o que contém."""
     return [
-        ("roteamento.json", f"as {site.espinha.total_celulas} células com práticas, aplica e "
-         "força máxima"),
+        (
+            "roteamento.json",
+            f"as {site.espinha.total_celulas} células com práticas, aplica e força máxima",
+        ),
         ("ROTEAMENTO.md", "o mesmo roteamento em Markdown"),
         ("llms.txt", "todas as páginas, no formato llms.txt"),
         ("llms-full.txt", "todo o conteúdo concatenado"),
@@ -860,21 +862,22 @@ Importar `a_definir_texto`, `dimensoes` e `indices` de `renderizar` (e tirar `IN
 - `roteamento_md`:
 
 ```python
-        f"> {AVISO_GERADO} {site.nome} v{site.versao}: "
-        f"{plural(total, 'prática', 'práticas')}; {a_definir_texto(site)} a definir.",
+f"> {AVISO_GERADO} {site.nome} v{site.versao}: "
+(f"{plural(total, 'prática', 'práticas')}; {a_definir_texto(site)} a definir.",)
 ```
 
 - `readme_md`, o bloco "O que há aqui":
 
 ```python
-        "## O que há aqui\n\n"
-        f"- {plural(total, 'prática', 'práticas')} na espinha de "
-        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} momentos; "
-        f"{a_definir_texto(site)} a definir (`ROTEAMENTO.md`).\n"
-        f"- {plural(len(site.repo.referencias), 'referência', 'referências')}, cada uma "
-        f"conferida na fonte, e {plural(len(site.repo.skills), 'skill publicada', 'skills publicadas')}.\n"
-        "- O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.\n\n"
-        + "\n".join(linhas),
+"## O que há aqui\n\n"
+
+f"- {plural(total, 'prática', 'práticas')} na espinha de "
+f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} momentos; "
+f"{a_definir_texto(site)} a definir (`ROTEAMENTO.md`).\n"
+f"- {plural(len(site.repo.referencias), 'referência', 'referências')}, cada uma "
+f"conferida na fonte, e {plural(len(site.repo.skills), 'skill publicada', 'skills publicadas')}.\n"
+"- O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.\n\n"
+(+"\n".join(linhas),)
 ```
 
 Em `portal/gerador/grafo.py`, na docstring do módulo, `as 48\ncélulas da espinha` → `todas as
@@ -946,9 +949,15 @@ def test_componentes_reais_sao_validos(repo_minimo):
 def test_componente_sem_versao_vira_erro_e_nao_excecao(repo_minimo, mutar):
     mutar("componentes.yml", '    versao: "1.6.1"\n', "")
     erros = validar_tudo(repo_minimo)
-    assert Erro(
-        "componentes.yml", "componentes.sdd-scaffold", "R-ESQUEMA", "'versao' is a required property"
-    ) in erros
+    assert (
+        Erro(
+            "componentes.yml",
+            "componentes.sdd-scaffold",
+            "R-ESQUEMA",
+            "'versao' is a required property",
+        )
+        in erros
+    )
     assert "sdd-scaffold" not in carregar_componentes(repo_minimo)
 
 
@@ -1175,7 +1184,8 @@ def test_texto_citavel_poe_os_blocos_antes_do_corpo():
 
 
 @pytest.mark.parametrize(
-    "relativo", ["praticas/P1-01.md", "praticas/seguranca/sub/SEG-01.md", "praticas/seguranca/_x.md"]
+    "relativo",
+    ["praticas/P1-01.md", "praticas/seguranca/sub/SEG-01.md", "praticas/seguranca/_x.md"],
 )
 def test_pratica_fora_de_praticas_faixa_reprova(tmp_path, relativo):
     _gravar(tmp_path, relativo, "---\nid: P1-01\n---\n")
@@ -1228,13 +1238,13 @@ Test `tests/unidade/test_esquemas.py`, `tests/unidade/test_paginas_conteudo.py`
   `parametrize` de `test_instancia_invalida_aponta_o_campo`:
 
 ```python
-        ("pratica", {"ferramentas": ["claude-code"]}, "frontmatter"),
-        ("pratica", {"exemplos": ["outro/DAD-01/a.yml"]}, "exemplos.0"),
-        ("pratica", {"exemplos": ["exemplos/../AGENTS.md"]}, "exemplos.0"),
-        ("conceito", {"linha": "x" * 121}, "linha"),
-        ("guia", {"tipo": "tutorial"}, "frontmatter"),
-        ("dominio", {"candidatas": [{"titulo": "x"}]}, "candidatas.0"),
-        ("verificacao", {"execucoes": [{"tipo": "prompt", "prompt": "P1-01-prompt-1"}]}, "execucoes.0"),
+(("pratica", {"ferramentas": ["claude-code"]}, "frontmatter"),)
+(("pratica", {"exemplos": ["outro/DAD-01/a.yml"]}, "exemplos.0"),)
+(("pratica", {"exemplos": ["exemplos/../AGENTS.md"]}, "exemplos.0"),)
+(("conceito", {"linha": "x" * 121}, "linha"),)
+(("guia", {"tipo": "tutorial"}, "frontmatter"),)
+(("dominio", {"candidatas": [{"titulo": "x"}]}, "candidatas.0"),)
+(("verificacao", {"execucoes": [{"tipo": "prompt", "prompt": "P1-01-prompt-1"}]}, "execucoes.0"),)
 ```
 
 e ao fim:
@@ -1242,15 +1252,25 @@ e ao fim:
 ```python
 def test_pratica_v1_1_e_execucoes_validas():
     pratica = fabrica.meta_pratica(
-        resumo="Classifique antes de codar.", ferramentas_aprovadas=["flyway"],
-        starter="sdd-scaffold", receitas=["ligar-ci"], exemplos=["exemplos/P1-01/plano.md"],
+        resumo="Classifique antes de codar.",
+        ferramentas_aprovadas=["flyway"],
+        starter="sdd-scaffold",
+        receitas=["ligar-ci"],
+        exemplos=["exemplos/P1-01/plano.md"],
     )
     assert validar_instancia(pratica, carregar_validador(PASTA, "pratica"), "p.md") == []
     comum = {"resultado": "passou", "evidencia": "ok", "data": "2026-10-05"}
-    registro = fabrica.meta_verificacao(execucoes=[
-        {"arquivo": "exemplos/P1-01/plano.md", "comando": "make", "ambiente": "py 3.12", **comum},
-        {"tipo": "prompt", "prompt": "P1-01-prompt-1", "harness": "claude-code", **comum},
-    ])
+    registro = fabrica.meta_verificacao(
+        execucoes=[
+            {
+                "arquivo": "exemplos/P1-01/plano.md",
+                "comando": "make",
+                "ambiente": "py 3.12",
+                **comum,
+            },
+            {"tipo": "prompt", "prompt": "P1-01-prompt-1", "harness": "claude-code", **comum},
+        ]
+    )
     assert validar_instancia(registro, carregar_validador(PASTA, "verificacao"), "v.yaml") == []
 ```
 
@@ -1307,14 +1327,20 @@ Em `tests/unidade/test_paginas_conteudo.py:test_pratica_com_id_chips_corpo_e_lat
   `test_os_esquemas_existem_e_sao_draft_2020_12`; acrescentar ao `parametrize` dos inválidos:
 
 ```python
-        ("receita", {"tempo": 0}, "tempo"),
-        ("starter", {"repo": "http://x"}, "repo"),
-        ("starter", {"planta": [{"grupo": "x"}]}, "planta.0"),
-        ("ferramenta", {"categoria": "editor"}, "categoria"),
-        ("ferramenta", {"status": "evitar"}, "frontmatter"),
-        ("glossario", {"termos": [{"termo": "x", "definicao": "y"}]}, "termos.0"),
-        ("pagina", {"falhas": [{"titulo": "x"}]}, "falhas.0"),
-        ("pagina", {"escada": [{"degrau": "P4", "titulo": "x", "regua": "y", "texto": "z"}]}, "escada.0.degrau"),
+(("receita", {"tempo": 0}, "tempo"),)
+(("starter", {"repo": "http://x"}, "repo"),)
+(("starter", {"planta": [{"grupo": "x"}]}, "planta.0"),)
+(("ferramenta", {"categoria": "editor"}, "categoria"),)
+(("ferramenta", {"status": "evitar"}, "frontmatter"),)
+(("glossario", {"termos": [{"termo": "x", "definicao": "y"}]}, "termos.0"),)
+(("pagina", {"falhas": [{"titulo": "x"}]}, "falhas.0"),)
+(
+    (
+        "pagina",
+        {"escada": [{"degrau": "P4", "titulo": "x", "regua": "y", "texto": "z"}]},
+        "escada.0.degrau",
+    ),
+)
 ```
 
 e ao fim:
@@ -1323,8 +1349,13 @@ e ao fim:
 def test_pagina_estruturada_e_planta_validas():
     pagina = fabrica.meta_pagina_estruturada()
     assert validar_instancia(pagina, carregar_validador(PASTA, "pagina"), "p.md") == []
-    linha = {"grupo": "Governança", "quando": "Todo turno.", "arquivo": "Constituição",
-             "caminhos": ["AGENTS.md"], "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}]}
+    linha = {
+        "grupo": "Governança",
+        "quando": "Todo turno.",
+        "arquivo": "Constituição",
+        "caminhos": ["AGENTS.md"],
+        "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}],
+    }
     starter = fabrica.meta_starter(planta=[linha])
     assert validar_instancia(starter, carregar_validador(PASTA, "starter"), "s.yml") == []
 ```
@@ -1377,16 +1408,21 @@ CTX = lambda raiz: Contexto(raiz=raiz, componentes={}, ids_retirados=frozenset()
 
 def test_ref_malformado_reprova(tmp_path):
     p = fabrica.pratica(corpo=fabrica.CORPO_PRATICA + "\nVeja [ref:Outra].\n")
-    erros = regra_citacoes(Repositorio.de([p, fabrica.referencia()]), fabrica.espinha_real(), CTX(tmp_path))
+    erros = regra_citacoes(
+        Repositorio.de([p, fabrica.referencia()]), fabrica.espinha_real(), CTX(tmp_path)
+    )
     assert Erro(p.caminho_relativo, "corpo", "R-REF-MALFORMADO", "[ref:Outra]") in erros
 
 
 def test_bloco_da_pagina_estruturada_conta_como_citacao(tmp_path):
     meta = fabrica.meta_pagina_estruturada(referencias=["ref-forte", "outra"])
-    repo = Repositorio.de([
-        Conteudo("pagina", "paginas/o-problema.md", meta, ""),
-        fabrica.referencia(), fabrica.referencia(fabrica.meta_referencia(id="outra")),
-    ])
+    repo = Repositorio.de(
+        [
+            Conteudo("pagina", "paginas/o-problema.md", meta, ""),
+            fabrica.referencia(),
+            fabrica.referencia(fabrica.meta_referencia(id="outra")),
+        ]
+    )
     (erro,) = regra_citacoes(repo, fabrica.espinha_real(), CTX(tmp_path))
     assert (erro.regra, erro.valor) == ("R-REF-CONJUNTO", "declaradas e não citadas: outra")
 
@@ -1402,7 +1438,12 @@ def test_glossario_sem_registro_reprova(tmp_path):
     ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
     repo = Repositorio.de([fabrica.glossario(), fabrica.referencia()])
     assert regra_verificacao(repo, fabrica.espinha_real(), ctx) == [
-        Erro("glossario.yml", "verificacao", "R-VERIFICACAO", "sem registro em verificacoes/glossario.yaml")
+        Erro(
+            "glossario.yml",
+            "verificacao",
+            "R-VERIFICACAO",
+            "sem registro em verificacoes/glossario.yaml",
+        )
     ]
 
 
@@ -1411,7 +1452,9 @@ def test_registro_da_ferramenta_cobre_a_referencia_declarada(tmp_path):
     outra = [{"texto": "x", "ref": "outra", "localizacao": "y", "resultado": "confirmada"}]
     registro = fabrica.verificacao(fabrica.meta_verificacao(conteudo="flyway", afirmacoes=outra))
     erros = regra_verificacao(
-        Repositorio.de([fabrica.ferramenta(), fabrica.referencia(), registro]), fabrica.espinha_real(), ctx
+        Repositorio.de([fabrica.ferramenta(), fabrica.referencia(), registro]),
+        fabrica.espinha_real(),
+        ctx,
     )
     valor = "nenhuma afirmação conferida para [ref:ref-forte]"
     assert Erro("verificacoes/flyway.yaml", "afirmacoes", "R-VERIFICACAO", valor) in erros
@@ -1499,16 +1542,30 @@ def test_inocente_com_um_de_cada(tmp_path):
 @pytest.mark.parametrize(
     ("conteudo", "campo", "valor"),
     [
-        (fabrica.pratica(fabrica.meta_pratica(ferramentas_aprovadas=["x"])), "ferramentas_aprovadas", "x"),
+        (
+            fabrica.pratica(fabrica.meta_pratica(ferramentas_aprovadas=["x"])),
+            "ferramentas_aprovadas",
+            "x",
+        ),
         (fabrica.pratica(fabrica.meta_pratica(starter="x")), "starter", "x"),
         (fabrica.receita(meta=fabrica.meta_receita(praticas=["ARQ-09"])), "praticas", "ARQ-09"),
-        (fabrica.starter(fabrica.meta_starter(praticas_aplicadas=["ARQ-09"])), "praticas_aplicadas", "ARQ-09"),
-        (fabrica.ferramenta(fabrica.meta_ferramenta(status="evitar", alternativa="y")), "alternativa", "y"),
+        (
+            fabrica.starter(fabrica.meta_starter(praticas_aplicadas=["ARQ-09"])),
+            "praticas_aplicadas",
+            "ARQ-09",
+        ),
+        (
+            fabrica.ferramenta(fabrica.meta_ferramenta(status="evitar", alternativa="y")),
+            "alternativa",
+            "y",
+        ),
         (fabrica.glossario(), "termos.1.conceito", "harness"),
     ],
 )
 def test_referencia_cruzada_que_nao_resolve(tmp_path, conteudo, campo, valor):
-    assert Erro(conteudo.caminho_relativo, campo, "R-REF-INEXISTENTE", valor) in rodar(conteudo, raiz=tmp_path)
+    assert Erro(conteudo.caminho_relativo, campo, "R-REF-INEXISTENTE", valor) in rodar(
+        conteudo, raiz=tmp_path
+    )
 
 
 def test_peca_fora_do_ninho(tmp_path):
@@ -1544,8 +1601,19 @@ def test_blocos_da_pagina(tmp_path):
     )
     assert Erro("paginas/o-problema.md", "falhas.0.pratica", "R-REF-INEXISTENTE", "ARQ-09") in erros
     assert Erro("paginas/o-problema.md", "momentos.0.momento", "R-ESPINHA", "nunca") in erros
-    assert Erro("paginas/inicio.md", "falhas", "R-ESQUEMA", "bloco que o template inicio não usa") in erros
-    assert Erro("paginas/prompts.md", "arquivo", "R-ESQUEMA", "prompts é página gerada; escolha outro nome") in erros
+    assert (
+        Erro("paginas/inicio.md", "falhas", "R-ESQUEMA", "bloco que o template inicio não usa")
+        in erros
+    )
+    assert (
+        Erro(
+            "paginas/prompts.md",
+            "arquivo",
+            "R-ESQUEMA",
+            "prompts é página gerada; escolha outro nome",
+        )
+        in erros
+    )
 ```
 
 - [ ] **Passo 2:** `python -m pytest tests/unidade/test_regras_vinculos.py -q` → FAIL (`ImportError: regra_vinculos`).
@@ -1674,9 +1742,18 @@ def test_inocentes(tmp_path):
     ("corpo", "valor"),
     [
         (fabrica.CORPO_PRATICA, "## Exemplo obrigatório: status adotar ou força acima de orienta"),
-        (COM_EXEMPLO.replace("### Antes e depois", "### Antes"), "## Exemplo sem ### Antes e depois"),
-        (COM_EXEMPLO.replace("### Para o agente", "### Agente"), "## Exemplo sem ### Para o agente"),
-        (COM_EXEMPLO.replace("```sql\nALTER TABLE x;\n```", "Sem código."), "## Exemplo sem bloco de código"),
+        (
+            COM_EXEMPLO.replace("### Antes e depois", "### Antes"),
+            "## Exemplo sem ### Antes e depois",
+        ),
+        (
+            COM_EXEMPLO.replace("### Para o agente", "### Agente"),
+            "## Exemplo sem ### Para o agente",
+        ),
+        (
+            COM_EXEMPLO.replace("```sql\nALTER TABLE x;\n```", "Sem código."),
+            "## Exemplo sem bloco de código",
+        ),
         (COM_EXEMPLO.replace("```sql", "```"), "bloco de código sem linguagem (linha 17)"),
         (
             COM_EXEMPLO.replace("ALTER TABLE x;\n", "a: 1\n" * 16),
@@ -1706,15 +1783,24 @@ def test_exemplo_na_quinta_posicao_passa_e_fora_de_ordem_reprova(tmp_path):
 
 def test_secoes_da_receita_e_do_tutorial(tmp_path):
     ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
-    tutorial = Conteudo("guia", "guias/do-zero.md",
-                        fabrica.meta_guia(tipo="tutorial", resultado_esperado="a MR"), "## Antes\n")
-    repo = Repositorio.de([
-        fabrica.receita(),
-        fabrica.receita("sem-confira", corpo=fabrica.CORPO_RECEITA.replace("## Confira", "## Veja")),
-        tutorial,
-    ])
+    tutorial = Conteudo(
+        "guia",
+        "guias/do-zero.md",
+        fabrica.meta_guia(tipo="tutorial", resultado_esperado="a MR"),
+        "## Antes\n",
+    )
+    repo = Repositorio.de(
+        [
+            fabrica.receita(),
+            fabrica.receita(
+                "sem-confira", corpo=fabrica.CORPO_RECEITA.replace("## Confira", "## Veja")
+            ),
+            tutorial,
+        ]
+    )
     assert [e.arquivo for e in regra_secoes(repo, fabrica.espinha_real(), ctx)] == [
-        "guias/do-zero.md", "receitas/sem-confira.md",
+        "guias/do-zero.md",
+        "receitas/sem-confira.md",
     ]
 ```
 
@@ -1789,11 +1875,21 @@ def preparar(raiz, conteudo="job:\n  script: [echo ok]\n", registrar=True, inclu
     texto = texto.replace("## Como verificar", f"<!-- incluir: {incluir} -->\n\n## Como verificar")
     pratica.write_text(texto, encoding="utf-8")
     if registrar:
-        registro = fabrica.meta_verificacao(execucoes=[{
-            "arquivo": RELATIVO, "comando": "gitlab-ci-local job", "ambiente": "GitLab 17",
-            "resultado": "passou", "evidencia": "Job succeeded", "data": "2026-10-01",
-        }])
-        (raiz / "verificacoes/P1-01.yaml").write_text(yaml.safe_dump(registro, allow_unicode=True), "utf-8")
+        registro = fabrica.meta_verificacao(
+            execucoes=[
+                {
+                    "arquivo": RELATIVO,
+                    "comando": "gitlab-ci-local job",
+                    "ambiente": "GitLab 17",
+                    "resultado": "passou",
+                    "evidencia": "Job succeeded",
+                    "data": "2026-10-01",
+                }
+            ]
+        )
+        (raiz / "verificacoes/P1-01.yaml").write_text(
+            yaml.safe_dump(registro, allow_unicode=True), "utf-8"
+        )
 
 
 def regras_de(raiz):
@@ -1812,7 +1908,10 @@ def test_inocente(repo_minimo):
         ({"conteudo": "job: [\n"}, f"{RELATIVO}: YAML inválido"),
         ({"conteudo": b"\xff\xfe"}, f"{RELATIVO}: não está em UTF-8"),
         ({"incluir": "exemplos/../AGENTS.md"}, "exemplos/../AGENTS.md: inclusão fora de exemplos/"),
-        ({"incluir": "exemplos/P1-01/outro.yml"}, "exemplos/P1-01/outro.yml: incluído e não declarado em exemplos"),
+        (
+            {"incluir": "exemplos/P1-01/outro.yml"},
+            "exemplos/P1-01/outro.yml: incluído e não declarado em exemplos",
+        ),
     ],
 )
 def test_pega(repo_minimo, ajuste, valor):
@@ -1885,7 +1984,13 @@ from tests import fabrica
 
 EXEMPLO = "## Exemplo\n\n### Antes e depois\n\n```sql\nx;\n```\n\n### Para o agente\n\n```prompt\nFaça <b>x</b>.\n```\n\n"
 COM_PROMPT = fabrica.CORPO_PRATICA.replace("## Como verificar", EXEMPLO + "## Como verificar")
-EXECUTADO = {"tipo": "prompt", "harness": "claude-code", "resultado": "passou", "evidencia": "ok", "data": "2026-10-01"}
+EXECUTADO = {
+    "tipo": "prompt",
+    "harness": "claude-code",
+    "resultado": "passou",
+    "evidencia": "ok",
+    "data": "2026-10-01",
+}
 
 
 def rodar(*conteudos, raiz, isentos=frozenset()):
@@ -1902,16 +2007,25 @@ def test_inocente_pratica_e_receita(tmp_path):
     p = fabrica.pratica(fabrica.meta_pratica(status="adotar"), COM_PROMPT)
     assert [x.id for x in prompts_de(p)] == ["P1-01-prompt-1"]
     r = fabrica.receita()
-    assert rodar(p, registro("P1-01", "P1-01-prompt-1"), r, registro("ligar-ci", "ligar-ci-prompt-1"), raiz=tmp_path) == []
+    assert (
+        rodar(
+            p,
+            registro("P1-01", "P1-01-prompt-1"),
+            r,
+            registro("ligar-ci", "ligar-ci-prompt-1"),
+            raiz=tmp_path,
+        )
+        == []
+    )
 
 
 def test_pega_sem_execucao_obrigatorio_e_fora_do_lugar(tmp_path):
     sem_execucao = fabrica.pratica(fabrica.meta_pratica(status="adotar"), COM_PROMPT)
     assert rodar(sem_execucao, raiz=tmp_path) == ["P1-01-prompt-1: sem execução registrada"]
     sem_prompt = COM_PROMPT.replace("```prompt\nFaça <b>x</b>.\n```", "Cole a linha.")
-    assert rodar(fabrica.pratica(fabrica.meta_pratica(status="adotar"), sem_prompt), raiz=tmp_path) == [
-        "prompt de exemplo obrigatório em ### Para o agente"
-    ]
+    assert rodar(
+        fabrica.pratica(fabrica.meta_pratica(status="adotar"), sem_prompt), raiz=tmp_path
+    ) == ["prompt de exemplo obrigatório em ### Para o agente"]
     fora = fabrica.CORPO_PRATICA + "\n```prompt\nx\n```\n"
     assert "prompt fora de ## Exemplo › ### Para o agente" in rodar(
         fabrica.pratica(corpo=fora), registro("P1-01", "P1-01-prompt-1"), raiz=tmp_path
@@ -1937,17 +2051,18 @@ def test_prompt_sai_escapado_com_id_e_copiar():
 - [ ] **Passo 3: Implementar** conforme as Interfaces. Regra de `fence` em `markdown.criar()`:
 
 ```python
-    def fence(self, tokens, idx, options, env):
-        html = RendererHTML.fence(self, tokens, idx, options, env)
-        if tokens[idx].info.strip().split(" ")[0] != "prompt":
-            return html
-        env["prompts"] = env.get("prompts", 0) + 1
-        ancora = f' id="{id_prompt(env["chave"], env["prompts"])}"' if env.get("chave") else ""
-        botao = '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'
-        legenda = f"<figcaption>Prompt para o agente {botao}</figcaption>"
-        return f'<figure class="prompt"{ancora}>{legenda}{html}</figure>\n'
+def fence(self, tokens, idx, options, env):
+    html = RendererHTML.fence(self, tokens, idx, options, env)
+    if tokens[idx].info.strip().split(" ")[0] != "prompt":
+        return html
+    env["prompts"] = env.get("prompts", 0) + 1
+    ancora = f' id="{id_prompt(env["chave"], env["prompts"])}"' if env.get("chave") else ""
+    botao = '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'
+    legenda = f"<figcaption>Prompt para o agente {botao}</figcaption>"
+    return f'<figure class="prompt"{ancora}>{legenda}{html}</figure>\n'
 
-    md.add_render_rule("fence", fence)
+
+md.add_render_rule("fence", fence)
 ```
 
   `para_html(texto, chave=None)` chama `_MD.render(texto, {"chave": chave})`. CSS `.prompt`:
@@ -1994,15 +2109,22 @@ MAIN = {"CI_COMMIT_BRANCH": "main", "CI_DEFAULT_BRANCH": "main"}
 def test_aviso_7_so_em_build_local_da_main():
     assert eh_local("http://localhost:8000") and not eh_local("https://portal.exemplo")
     assert aviso_url_base("http://localhost:8000", MAIN)[0].categoria == "url-base"
-    assert aviso_url_base("http://localhost:8000", {"CI_COMMIT_BRANCH": "feat/x", "CI_DEFAULT_BRANCH": "main"}) == []
+    assert (
+        aviso_url_base(
+            "http://localhost:8000", {"CI_COMMIT_BRANCH": "feat/x", "CI_DEFAULT_BRANCH": "main"}
+        )
+        == []
+    )
     assert aviso_url_base("https://portal.exemplo", MAIN) == []
 
 
 def test_aviso_8_e_isencao(tmp_path):
-    repo = Repositorio.de([
-        fabrica.pratica(),
-        fabrica.pratica(fabrica.meta_pratica(id="P1-02", status="adotar")),
-    ])
+    repo = Repositorio.de(
+        [
+            fabrica.pratica(),
+            fabrica.pratica(fabrica.meta_pratica(id="P1-02", status="adotar")),
+        ]
+    )
     ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset(), isentos={"P1-02"})
     assert [(a.categoria, a.arquivo) for a in avisos_conteudo(repo, ctx)] == [
         ("exemplo", "praticas/construir-com-ia/P1-01.md"),
@@ -2019,7 +2141,9 @@ def test_bloco_do_agents_dispara_por_momento_e_esconde_localhost():
         "Cite os IDs das práticas aplicadas na spec e no plano.\n"
         "Versão adotada: padroes-engenharia v0.1.0\n"
     )
-    assert "<URL do portal>/roteamento.json" in bloco_agents(fabrica.site(url_base="http://localhost:8000"))
+    assert "<URL do portal>/roteamento.json" in bloco_agents(
+        fabrica.site(url_base="http://localhost:8000")
+    )
 ```
 
 Em `tests/unidade/test_paginas_espinha.py`, o teste que fixava o bloco antigo ("Antes de uma
@@ -2058,7 +2182,9 @@ spec de Tier 2") passa a conferir só `"Em toda mudança de Tier 1 ou 2" in bloc
 
 ```python
 # tests/unidade/test_contraste.py (acrescentar)
-@pytest.mark.parametrize("par", PARES["graficos"]["pares"], ids=lambda p: f"{p['cor']}/{p['fundo']}")
+@pytest.mark.parametrize(
+    "par", PARES["graficos"]["pares"], ids=lambda p: f"{p['cor']}/{p['fundo']}"
+)
 def test_cada_par_grafico_atinge_3_para_1(par):
     cores = tokens(CSS)
     assert razao(cores[par["cor"]], cores[par["fundo"]]) >= PARES["graficos"]["minimo"] == 3.0
@@ -2148,20 +2274,34 @@ def test_rolagem_chips_caixa_alta_e_favicon():
 
 ```python
 def test_navegacao_do_4_2_sem_item_sem_pagina():
-    html = renderizar(fabrica.site(fabrica.pratica()), "base.html", "espinha.html", titulo="Espinha")
+    html = renderizar(
+        fabrica.site(fabrica.pratica()), "base.html", "espinha.html", titulo="Espinha"
+    )
     rotulos = re.findall(r'<(?:summary|a class="topo-nav")[^>]*>([^<]+)<', html)
     assert rotulos == ["Menu", "Início", "Padrões", "Para agentes"]
     assert "O problema" not in html and "em-breve" not in html
     assert '<a href="espinha.html" aria-current="page">Espinha</a>' in html
-    s = fabrica.site(fabrica.pratica(), Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), ""))
-    assert '<a href="o-problema.html">O problema</a>' in renderizar(s, "base.html", "espinha.html", titulo="E")
+    s = fabrica.site(
+        fabrica.pratica(), Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
+    )
+    assert '<a href="o-problema.html">O problema</a>' in renderizar(
+        s, "base.html", "espinha.html", titulo="E"
+    )
 
 
 def test_paginas_publicadas_so_com_conteudo():
     vazio = paginas_publicadas(fabrica.site())
-    assert "comece-aqui.html" not in vazio and "prompts.html" not in vazio and "guias.html" not in vazio
-    cheio = paginas_publicadas(fabrica.site(fabrica.pratica(), fabrica.receita(), fabrica.ferramenta()))
-    assert {"como-fazer.html", "prompts.html", "praticas/index.html", "ferramentas.html"} <= set(cheio)
+    assert (
+        "comece-aqui.html" not in vazio
+        and "prompts.html" not in vazio
+        and "guias.html" not in vazio
+    )
+    cheio = paginas_publicadas(
+        fabrica.site(fabrica.pratica(), fabrica.receita(), fabrica.ferramenta())
+    )
+    assert {"como-fazer.html", "prompts.html", "praticas/index.html", "ferramentas.html"} <= set(
+        cheio
+    )
 ```
 
   (o `<a class="topo-nav">` é o link de grupo com um item só; importe `paginas_publicadas` de
@@ -2216,19 +2356,36 @@ def test_chip_diz_a_consequencia_e_legenda_tem_as_quatro():
     assert chip.attrs["title"] == "o job falha e o merge não passa"
     legenda = analisar(str(macro("legenda_forcas")()))
     assert [d.texto for d in legenda.todos("dd")] == [
-        "o job falha e o merge não passa", "uma pessoa decide",
-        "o CI comenta e não trava", "é texto, depende de você e da revisão",
+        "o job falha e o merge não passa",
+        "uma pessoa decide",
+        "o CI comenta e não trava",
+        "é texto, depende de você e da revisão",
     ]
 
 
 def test_barra_um_segmento_por_pratica_e_some_sem_pratica():
-    barra = analisar(str(macro("barra_forca")({"bloqueia": 1, "pede-aprovacao": 0, "avisa": 0, "orienta": 2})))
-    assert [s.attrs["class"] for s in barra.todos("i")] == ["seg bloqueia", "seg orienta", "seg orienta"]
-    assert str(macro("barra_forca")(dict.fromkeys(["bloqueia", "pede-aprovacao", "avisa", "orienta"], 0))).strip() == ""
+    barra = analisar(
+        str(macro("barra_forca")({"bloqueia": 1, "pede-aprovacao": 0, "avisa": 0, "orienta": 2}))
+    )
+    assert [s.attrs["class"] for s in barra.todos("i")] == [
+        "seg bloqueia",
+        "seg orienta",
+        "seg orienta",
+    ]
+    assert (
+        str(
+            macro("barra_forca")(
+                dict.fromkeys(["bloqueia", "pede-aprovacao", "avisa", "orienta"], 0)
+            )
+        ).strip()
+        == ""
+    )
 
 
 def test_bloco_escuro_com_copiar_e_chips():
-    html = analisar(str(macro("bloco_escuro")("Para o agente", "## Padrões", [("llms.txt", "llms.txt")])))
+    html = analisar(
+        str(macro("bloco_escuro")("Para o agente", "## Padrões", [("llms.txt", "llms.txt")]))
+    )
     assert html.todos("button", **{"data-copiar": ""})
     assert [a.texto for a in html.todos("a")] == ["llms.txt"]
 ```
@@ -2283,9 +2440,12 @@ def test_cadeia_com_figura_titulo_e_conector():
 
 
 def test_pratica_v1_1_tem_resumo_cinco_figuras_e_verificar_em_azul():
-    meta = fabrica.meta_pratica(resumo="Classifique antes de codar.", ferramentas_aprovadas=["flyway"])
+    meta = fabrica.meta_pratica(
+        resumo="Classifique antes de codar.", ferramentas_aprovadas=["flyway"]
+    )
     corpo = fabrica.CORPO_PRATICA.replace(
-        "## Como verificar", "## Exemplo\n\n### Antes e depois\n\n```sql\nx;\n```\n\n## Como verificar"
+        "## Como verificar",
+        "## Exemplo\n\n### Antes e depois\n\n```sql\nx;\n```\n\n## Como verificar",
     )
     p = fabrica.pratica(meta, corpo)
     html = analisar(html_pratica(fabrica.site(p, fabrica.referencia(), fabrica.ferramenta()), p))
@@ -2339,7 +2499,9 @@ from portal.gerador.carregar import Conteudo
 from tests import fabrica
 from tests.dom import analisar
 
-HARNESS = Conteudo("conceito", "conceitos/harness.md", fabrica.meta_conceito(), "x [ref:ref-forte].\n")
+HARNESS = Conteudo(
+    "conceito", "conceitos/harness.md", fabrica.meta_conceito(), "x [ref:ref-forte].\n"
+)
 
 
 def modulo(*conteudos):
@@ -2363,7 +2525,11 @@ def test_ninho_fiel_ao_mockup():
 def test_condensado_e_fluxo():
     assert not analisar(str(modulo().ninho(None, "condensado"))).todos(classe="subagente")
     fluxo = analisar(str(modulo().fluxo_produto()))
-    assert [r.texto for r in fluxo.todos(classe="seta")] == ["autentica com", "passa por", "chega a"]
+    assert [r.texto for r in fluxo.todos(classe="seta")] == [
+        "autentica com",
+        "passa por",
+        "chega a",
+    ]
     assert [n.attrs["class"] for n in fluxo.todos(classe="impede")] == ["cx guardrail impede"]
     assert "disco" not in fluxo.todos(classe="eval")[0].attrs["class"]
 ```
@@ -2407,7 +2573,9 @@ from tests.dom import analisar
 
 
 def pagina(**alteracoes):
-    return Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina_estruturada(**alteracoes), "")
+    return Conteudo(
+        "pagina", "paginas/o-problema.md", fabrica.meta_pagina_estruturada(**alteracoes), ""
+    )
 
 
 def test_secoes_na_ordem_do_4_3_com_chip_da_pratica():
@@ -2415,8 +2583,13 @@ def test_secoes_na_ordem_do_4_3_com_chip_da_pratica():
     html = analisar(html_o_problema(fabrica.site(p, fabrica.pratica(), fabrica.referencia()), p))
     rotulos = [s.attrs["aria-label"] for s in html.todos("section")]
     assert rotulos[:7] == [
-        "Como o agente funciona", "O que dá errado", "Como o vibe coding falha",
-        "O que as pesquisas medem", "O problema em cada disciplina", "Como combinar tudo", "Referências",
+        "Como o agente funciona",
+        "O que dá errado",
+        "Como o vibe coding falha",
+        "O que as pesquisas medem",
+        "O problema em cada disciplina",
+        "Como combinar tudo",
+        "Referências",
     ]
     linha = html.todos("table")[0].todos("tr")[1]
     assert linha.todos("span", classe="ef orienta") and "P1-01" in linha.texto
@@ -2470,23 +2643,44 @@ from portal.gerador.paginas import html_inicio
 from tests import fabrica
 from tests.dom import analisar
 
-INICIO = Conteudo("pagina", "paginas/inicio.md", fabrica.meta_pagina(
-    titulo="Construir software com IA sem perder a arquitetura", lead="Práticas aprovadas.",
-    caminhos=[{"titulo": "Projeto novo", "texto": "Do zero.", "destino": "receitas/ligar-ci"}],
-    fatos=["Fonte conferida.", "Revisão independente.", "Exemplo executado."], referencias=[],
-), "")
+INICIO = Conteudo(
+    "pagina",
+    "paginas/inicio.md",
+    fabrica.meta_pagina(
+        titulo="Construir software com IA sem perder a arquitetura",
+        lead="Práticas aprovadas.",
+        caminhos=[{"titulo": "Projeto novo", "texto": "Do zero.", "destino": "receitas/ligar-ci"}],
+        fatos=["Fonte conferida.", "Revisão independente.", "Exemplo executado."],
+        referencias=[],
+    ),
+    "",
+)
 PROBLEMA = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
 
 
 def test_inicio_nas_sete_secoes_com_por_que_no_topo():
-    s = fabrica.site(INICIO, PROBLEMA, fabrica.pratica(), fabrica.receita(), fabrica.ferramenta(), fabrica.referencia())
+    s = fabrica.site(
+        INICIO,
+        PROBLEMA,
+        fabrica.pratica(),
+        fabrica.receita(),
+        fabrica.ferramenta(),
+        fabrica.referencia(),
+    )
     html = analisar(html_inicio(s))
     topo = html.todos("div", classe="topo")[0]
     assert topo.todos("h1")[0].texto == "Construir software com IA sem perder a arquitetura"
     assert topo.todos("a", href="o-problema.html")[0].texto == "Por que isto existe →"
     rotulos = {x.attrs.get("aria-label") for x in html.todos("section")}
-    assert {"Para quem desenvolve", "Para o agente", "Comece aqui", "Como ler o portal",
-            "Ferramentas aprovadas", "Por que confiar", "Estado"} <= rotulos
+    assert {
+        "Para quem desenvolve",
+        "Para o agente",
+        "Comece aqui",
+        "Como ler o portal",
+        "Ferramentas aprovadas",
+        "Por que confiar",
+        "Estado",
+    } <= rotulos
     assert "Leia a constituição, classifique o tier, escreva a spec." in html.texto
     assert "1 prática" in html.texto and "prática(s)" not in html.texto
     assert html.todos("dl", classe="legenda-forcas")
@@ -2529,8 +2723,15 @@ from tests.dom import analisar
 
 
 def test_norma_com_pratica_e_norma_sem_pratica():
-    meta = fabrica.meta_pagina(titulo="Pessoas e normas", referencias=[], modos=[{"titulo": "Verificador", "texto": "Confere."}],
-                               normas=[{"id": "lgpd", "titulo": "LGPD", "texto": "Lei."}, {"id": "iso-42001", "titulo": "ISO 42001", "texto": "Norma."}])
+    meta = fabrica.meta_pagina(
+        titulo="Pessoas e normas",
+        referencias=[],
+        modos=[{"titulo": "Verificador", "texto": "Confere."}],
+        normas=[
+            {"id": "lgpd", "titulo": "LGPD", "texto": "Lei."},
+            {"id": "iso-42001", "titulo": "ISO 42001", "texto": "Norma."},
+        ],
+    )
     pagina = Conteudo("pagina", "paginas/pessoas-e-normas.md", meta, "")
     p = fabrica.pratica(fabrica.meta_pratica(mapeia=["lgpd:art-46"]))
     html = analisar(html_pessoas_e_normas(fabrica.site(pagina, p), pagina))
@@ -2542,7 +2743,9 @@ def test_glossario_ordena_sem_acento_e_liga_ao_conceito():
     meta = fabrica.meta_glossario()
     meta["termos"].append({"termo": "Ágil", "definicao": "x", "referencias": ["ref-forte"]})
     conceito = Conteudo("conceito", "conceitos/harness.md", fabrica.meta_conceito(), "x\n")
-    html = analisar(html_glossario(fabrica.site(fabrica.glossario(meta), conceito, fabrica.referencia())))
+    html = analisar(
+        html_glossario(fabrica.site(fabrica.glossario(meta), conceito, fabrica.referencia()))
+    )
     assert [dt.texto for dt in html.todos("dt")] == ["Ágil", "Harness", "Migration"]
     assert html.todos("a", href="conceitos/harness.html")
 ```
@@ -2580,11 +2783,19 @@ from tests.dom import analisar
 
 
 def test_prompts_da_receita_com_origem_e_url():
-    s = fabrica.site(fabrica.receita(), fabrica.pratica(), fabrica.referencia(), url_base="https://p.exemplo/sub/")
+    s = fabrica.site(
+        fabrica.receita(),
+        fabrica.pratica(),
+        fabrica.referencia(),
+        url_base="https://p.exemplo/sub/",
+    )
     (item,) = prompts(s)
     assert item == {
-        "id": "ligar-ci-prompt-1", "origem": "ligar-ci", "tipo_origem": "receita",
-        "dominio": "ci-cd", "momento": "antes-do-merge",
+        "id": "ligar-ci-prompt-1",
+        "origem": "ligar-ci",
+        "tipo_origem": "receita",
+        "dominio": "ci-cd",
+        "momento": "antes-do-merge",
         "texto": "Ligue o job normas-do-pr no .gitlab-ci.yml deste repositório e rode o pipeline.\n",
         "url": "https://p.exemplo/sub/receitas/ligar-ci.html#ligar-ci-prompt-1",
     }
@@ -2594,9 +2805,14 @@ def test_como_fazer_e_saidas_da_biblioteca(tmp_path):
     s = fabrica.site(fabrica.receita(), fabrica.pratica(), fabrica.referencia())
     assert analisar(html_como_fazer(s)).todos("a", href="receitas/ligar-ci.html")
     emitir(s, tmp_path)
-    assert json.loads((tmp_path / "prompts.json").read_text(encoding="utf-8"))[0]["id"] == "ligar-ci-prompt-1"
+    assert (
+        json.loads((tmp_path / "prompts.json").read_text(encoding="utf-8"))[0]["id"]
+        == "ligar-ci-prompt-1"
+    )
     assert (tmp_path / "prompts.md").is_file()
-    assert 'id="ligar-ci-prompt-1"' in (tmp_path / "receitas/ligar-ci.html").read_text(encoding="utf-8")
+    assert 'id="ligar-ci-prompt-1"' in (tmp_path / "receitas/ligar-ci.html").read_text(
+        encoding="utf-8"
+    )
 ```
 
 - [ ] **Passo 2:** `python -m pytest tests/unidade/test_paginas_receitas_prompts.py -q` → FAIL.
@@ -2634,13 +2850,25 @@ def test_radar_filtravel_por_categoria_dominio_e_status():
     s = fabrica.site(fabrica.ferramenta(), fabrica.pratica(), fabrica.referencia())
     html = analisar(html_radar(s))
     (linha,) = html.todos("tr", **{"data-status": "adotar"})
-    assert (linha.attrs["data-categoria"], linha.attrs["data-dominios"]) == ("migration", "construir-com-ia")
-    assert {sel.attrs["data-filtro"] for sel in html.todos("select")} == {"categoria", "dominios", "status"}
+    assert (linha.attrs["data-categoria"], linha.attrs["data-dominios"]) == (
+        "migration",
+        "construir-com-ia",
+    )
+    assert {sel.attrs["data-filtro"] for sel in html.todos("select")} == {
+        "categoria",
+        "dominios",
+        "status",
+    }
 
 
 def test_starter_com_comando_prompt_e_planta():
-    linha = {"grupo": "G", "quando": "Todo turno.", "arquivo": "Constituição", "caminhos": ["AGENTS.md"],
-             "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}]}
+    linha = {
+        "grupo": "G",
+        "quando": "Todo turno.",
+        "arquivo": "Constituição",
+        "caminhos": ["AGENTS.md"],
+        "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}],
+    }
     st = fabrica.starter(fabrica.meta_starter(planta=[linha]))
     html = analisar(html_starter(fabrica.site(st, fabrica.pratica(), fabrica.referencia()), st))
     assert html.todos(classe="disco") and html.todos("figure", classe="prompt")
@@ -2736,11 +2964,23 @@ from tests import fabrica
 
 
 def site(**build):
-    p = fabrica.pratica(fabrica.meta_pratica(aplica=["skill:sdd-lifecycle", "steering:sdd-processo"],
-                                             receitas=["ligar-ci"], ferramentas_aprovadas=["flyway"]),
-                        fabrica.CORPO_PRATICA.replace("tier", "tier da migration"))
-    return fabrica.site(p, fabrica.receita(), fabrica.ferramenta(), fabrica.glossario(), fabrica.referencia(),
-                        fabrica.skill("sdd-lifecycle"), **build)
+    p = fabrica.pratica(
+        fabrica.meta_pratica(
+            aplica=["skill:sdd-lifecycle", "steering:sdd-processo"],
+            receitas=["ligar-ci"],
+            ferramentas_aprovadas=["flyway"],
+        ),
+        fabrica.CORPO_PRATICA.replace("tier", "tier da migration"),
+    )
+    return fabrica.site(
+        p,
+        fabrica.receita(),
+        fabrica.ferramenta(),
+        fabrica.glossario(),
+        fabrica.referencia(),
+        fabrica.skill("sdd-lifecycle"),
+        **build,
+    )
 
 
 def test_roteamento_emite_urls_resolviveis_com_subcaminho():
@@ -2748,7 +2988,10 @@ def test_roteamento_emite_urls_resolviveis_com_subcaminho():
     (p,) = [p for c in dados_roteamento(s)["celulas"] for p in c["praticas"]]
     assert p["md_url"] == "https://grupo.pages.exemplo/padroes/praticas/P1-01.md"
     assert p["links"]["aplica"] == [
-        {"item": "skill:sdd-lifecycle", "url": "https://grupo.pages.exemplo/padroes/.well-known/skills/sdd-lifecycle/SKILL.md"},
+        {
+            "item": "skill:sdd-lifecycle",
+            "url": "https://grupo.pages.exemplo/padroes/.well-known/skills/sdd-lifecycle/SKILL.md",
+        },
         {"item": "steering:sdd-processo", "url": None},
     ]
     assert p["links"]["receitas"][0]["url"].endswith("/padroes/receitas/ligar-ci.md")
@@ -2762,7 +3005,9 @@ def test_llms_txt_completo_e_busca_acha_migracao(tmp_path):
         assert secao in llms
     catalogo = json.loads((tmp_path / "catalogo.json").read_text(encoding="utf-8"))
     assert [f["id"] for f in catalogo["ferramentas"]] == ["flyway"]
-    pratica = next(i for i in indice_busca(s, montar_paginas(s)) if i["url"] == "praticas/P1-01.html")
+    pratica = next(
+        i for i in indice_busca(s, montar_paginas(s)) if i["url"] == "praticas/P1-01.html"
+    )
     assert "migracao" in pratica["palavras"]
 ```
 
@@ -2800,7 +3045,12 @@ import pytest
 from portal.gerador.build import construir
 from tests.dom import analisar
 
-PARAMETROS = {"versao": "0.2.0", "commit": "0" * 40, "data": "2026-10-02", "url_base": "https://portal.exemplo"}
+PARAMETROS = {
+    "versao": "0.2.0",
+    "commit": "0" * 40,
+    "data": "2026-10-02",
+    "url_base": "https://portal.exemplo",
+}
 
 
 @pytest.fixture
@@ -2816,7 +3066,10 @@ def ler(pasta, caminho):
 def test_ninho_conceitos_e_inicio(publicado):
     conceitos = ler(publicado, "conceitos.html")
     assert conceitos.todos(classe="sessao")[0].todos(classe="skill")
-    assert [n.attrs["class"] for n in conceitos.todos(classe="impede")] == ["cx hook impede", "cx guardrail impede"]
+    assert [n.attrs["class"] for n in conceitos.todos(classe="impede")] == [
+        "cx hook impede",
+        "cx guardrail impede",
+    ]
     assert all(a.todos(classe="linha") for a in conceitos.todos("a", **{"data-peca": True}))
     topo = ler(publicado, "index.html").todos("div", classe="topo")[0]
     assert topo.todos("a", href="o-problema.html")[0].texto == "Por que isto existe →"

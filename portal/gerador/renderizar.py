@@ -15,13 +15,8 @@ from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
+from portal.gerador.vocabulario import FORCAS, ROTULO_FORCA, STATUS, plural
 
-ROTULO_FORCA = {
-    "bloqueia": "bloqueia",
-    "pede-aprovacao": "pede aprovação",
-    "avisa": "avisa",
-    "orienta": "só orienta",
-}
 ROTULO_TIPO_REFERENCIA = {
     "normativo": "Normativo",
     "vendor": "Vendor",
@@ -197,6 +192,8 @@ def criar_ambiente(raiz: Path) -> Environment:
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
     )
+    ambiente.globals.update(FORCAS=FORCAS, STATUS=STATUS)
+    ambiente.filters["plural"] = plural
     return ambiente
 
 

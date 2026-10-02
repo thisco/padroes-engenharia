@@ -15,6 +15,8 @@ class Faixa:
     grupo: str
     prefixos: tuple[str, ...]
     subdominios: tuple[str, ...] = ()
+    subtitulo: str = ""
+    scaffold: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -22,6 +24,7 @@ class Momento:
     slug: str
     titulo: str
     fases: tuple[int, ...]
+    acao: str = ""
 
 
 @dataclass(frozen=True)
@@ -34,6 +37,10 @@ class Espinha:
 
     def momento(self, slug: str) -> Momento | None:
         return next((m for m in self.momentos if m.slug == slug), None)
+
+    @property
+    def total_celulas(self) -> int:
+        return len(self.faixas) * len(self.momentos)
 
     def celulas(self) -> list[tuple[str, str]]:
         """As células (dominio, momento) na ordem da espinha: faixa por faixa, momento a momento."""
@@ -59,11 +66,18 @@ def carregar_espinha(caminho: Path) -> Espinha:
             grupo=f["grupo"],
             prefixos=tuple(f["prefixos"]),
             subdominios=tuple(f.get("subdominios", ())),
+            subtitulo=str(f.get("subtitulo", "")),
+            scaffold=tuple(f.get("scaffold", ())),
         )
         for f in dados["faixas"]
     )
     momentos = tuple(
-        Momento(slug=m["slug"], titulo=m["titulo"], fases=tuple(m["fases"]))
+        Momento(
+            slug=m["slug"],
+            titulo=m["titulo"],
+            fases=tuple(m["fases"]),
+            acao=str(m.get("acao", "")),
+        )
         for m in dados["momentos"]
     )
     return Espinha(faixas=faixas, momentos=momentos)

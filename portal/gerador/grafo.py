@@ -13,8 +13,7 @@ from dataclasses import dataclass
 from portal.gerador.carregar import Conteudo, Repositorio
 from portal.gerador.citacoes import extrair
 from portal.gerador.espinha import Espinha
-
-ORDEM_FORCA = ("bloqueia", "pede-aprovacao", "avisa", "orienta")
+from portal.gerador.vocabulario import ORDEM_FORCA
 
 
 def forca_max(forcas: Iterable[str]) -> str | None:

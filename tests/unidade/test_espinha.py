@@ -1,8 +1,9 @@
+import re
 from pathlib import Path
 
 import pytest
 
-from portal.gerador.espinha import Espinha, Faixa, Momento, carregar_espinha
+from portal.gerador.espinha import Espinha, carregar_espinha
 
 RAIZ = Path(__file__).resolve().parents[2]
 
@@ -29,13 +30,17 @@ def test_doze_faixas_na_ordem_da_spec(espinha):
     ]
 
 
-def test_quatro_momentos_com_as_fases_da_sdd_lifecycle(espinha):
-    assert espinha.momentos == (
-        Momento("antes-de-escrever", "Antes de escrever", (0, 1, 2, 3)),
-        Momento("enquanto-escreve", "Enquanto escreve", (4, 5, 6)),
-        Momento("antes-do-merge", "Antes do merge", (7,)),
-        Momento("depois-da-entrega", "Depois da entrega", (8,)),
+def test_quatro_momentos_com_as_fases_e_a_acao_da_inicio(espinha):
+    assert [(m.slug, m.titulo, m.fases) for m in espinha.momentos] == [
+        ("antes-de-escrever", "Antes de escrever", (0, 1, 2, 3)),
+        ("enquanto-escreve", "Enquanto escreve", (4, 5, 6)),
+        ("antes-do-merge", "Antes do merge", (7,)),
+        ("depois-da-entrega", "Depois da entrega", (8,)),
+    ]
+    assert espinha.momento("antes-de-escrever").acao == (
+        "Leia a constituição, classifique o tier, escreva a spec."
     )
+    assert all(m.acao.endswith(".") for m in espinha.momentos)
 
 
 def test_quarenta_e_oito_celulas_em_ordem(espinha):
@@ -51,13 +56,9 @@ def test_prefixos_unicos_entre_faixas(espinha):
 
 
 def test_ia_no_produto_mapeia_subdominio_para_prefixo(espinha):
-    assert espinha.faixa("ia-no-produto") == Faixa(
-        "ia-no-produto",
-        "Aplicações que consomem modelos e agentes próprios",
-        "IA no produto",
-        ("P2", "P3"),
-        ("apps", "agentes"),
-    )
+    faixa = espinha.faixa("ia-no-produto")
+    assert (faixa.prefixos, faixa.subdominios) == (("P2", "P3"), ("apps", "agentes"))
+    assert faixa.subtitulo == "P2 apps · P3 agentes próprios"
     assert espinha.prefixo_valido("ia-no-produto", "apps", "P2")
     assert espinha.prefixo_valido("ia-no-produto", "agentes", "P3")
     assert not espinha.prefixo_valido("ia-no-produto", "apps", "P3")
@@ -76,3 +77,19 @@ def test_busca_por_slug(espinha):
     assert espinha.momento("antes-do-merge").fases == (7,)
     assert espinha.faixa("nao-existe") is None
     assert espinha.momento("nao-existe") is None
+
+
+def test_toda_faixa_tem_subtitulo_e_o_scaffold_do_paragrafo_4_1(espinha):
+    assert all(f.subtitulo for f in espinha.faixas)
+    assert espinha.faixa("construir-com-ia").scaffold == (
+        "steering:sdd-processo",
+        "skill:sdd-lifecycle",
+    )
+    assert espinha.faixa("contratos-api").scaffold == ()
+    for faixa in espinha.faixas:
+        for item in faixa.scaffold:
+            assert re.fullmatch(r"[a-z]+:[A-Za-z0-9._/-]+", item), item
+
+
+def test_total_de_celulas_vem_da_espinha(espinha):
+    assert espinha.total_celulas == len(espinha.faixas) * len(espinha.momentos) == 48
