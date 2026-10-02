@@ -2936,16 +2936,16 @@ def test_versao_0_2_0_no_config_e_no_changelog():
 
 **Files:** Modify este plano (seção **Evidências**).
 
-- [ ] **Passo 1:** ambiente limpo: `rm -rf .venv && python3 -m venv .venv && .venv/bin/python -m pip install -r requirements-dev.txt`.
-- [ ] **Passo 2:** `python scripts/validar.py` (0, com os avisos `exemplo` de P1-01/P2-01 e
+- [x] **Passo 1:** ambiente limpo: `rm -rf .venv && python3 -m venv .venv && .venv/bin/python -m pip install -r requirements-dev.txt`.
+- [x] **Passo 2:** `python scripts/validar.py` (0, com os avisos `exemplo` de P1-01/P2-01 e
   `transicao` da DAD-01), `python -m pytest -q`, `ruff check .`, `ruff format --check .`.
-- [ ] **Passo 3:** determinismo: dois `python scripts/gerar.py --saida "$TMPDIR/a5-a|b"` e
+- [x] **Passo 3:** determinismo: dois `python scripts/gerar.py --saida "$TMPDIR/a5-a|b"` e
   `diff -r` sem saída; `git status --short` limpo depois do gerar.
-- [ ] **Passo 4:** com `python -m http.server -d "$TMPDIR/a5-a" 8000`, a 1440px e a 400px:
+- [x] **Passo 4:** com `python -m http.server -d "$TMPDIR/a5-a" 8000`, a 1440px e a 400px:
   Início, espinha (lista abaixo de 600px), uma prática, um domínio vazio, Para agentes;
   `document.documentElement.scrollWidth <= 400` em cada uma; busca `/` abre dentro da tela;
   nenhum item de navegação sem página; favicon sem 404.
-- [ ] **Passo 5:** colar as saídas em **Evidências** e `git commit -am "docs: evidências da verificação do A.5-1"`.
+- [x] **Passo 5:** colar as saídas em **Evidências** e `git commit -am "docs: evidências da verificação do A.5-1"`.
 
 ---
 
@@ -3107,6 +3107,25 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   da `CORPO_RECEITA` da fábrica passou a ser o do teste do plano. Acrescentei o teste do Review
   Focus 2 (prompt com `<script>` e crases): escapado no HTML, intacto no `.md` (cerca de 4
   crases) e em `prompts.json`.
+
+### Evidências da verificação (Tarefa 28)
+
+- **Ambiente limpo (desvio):** em vez de `rm -rf .venv`, criei um venv novo fora do repositório
+  e instalei `requirements-dev.txt` nele (pip: pytest 9.1.1, ruff 0.16.10, PyYAML 6.0.3,
+  markdown-it-py 4.2.0, Jinja2 3.1.6, jsonschema 4.26.0; `markupsafe` 3.0.3 vem do Jinja2).
+- **Checagens no venv limpo:** `validar.py` saiu 0 com os avisos `exemplo` (P1-01, P2-01) e
+  `transicao` (DAD-01); `pytest -q`: 517 passed; `ruff check .`: All checks passed; `ruff format
+  --check .`: 106 files already formatted. Uma falha em `tests/test_bootstrap.py` (versão 0.1.0
+  fixa) apareceu na Tarefa 27 e foi corrigida no commit seguinte.
+- **Determinismo:** dois `gerar.py --saida` (`/tmp/a5-a` e `/tmp/a5-b`): `diff -r` sem saída;
+  `git status --short` limpo depois do gerar.
+- **Navegador (Playwright, iframes de 400px e 1440px):** `scrollWidth` igual à largura em
+  Início, espinha, P1-01, domínio vazio (frontend-ux), Para agentes, ia-no-produto e radar;
+  a 400px a tabela da espinha some (`display: none`) e a lista por domínio aparece, e a 1440px o
+  inverso; a lista da busca (`input` com "prat") fica em x 202–368 (400px) e 1242–1408
+  (1440px), dentro da tela; todo item de navegação resolve (HTTP 200); `tema/favicon.svg` 200.
+  O único 404 foi `ferramentas.html`, que o repositório real não gera (sem ferramentas) e
+  que por isso não aparece na navegação.
 
 ## Revisão adversarial
 
