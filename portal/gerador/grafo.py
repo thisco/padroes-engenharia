@@ -70,7 +70,7 @@ class Catalogo:
 
     def referencias_de(self, conteudo: Conteudo) -> list[Conteudo]:
         """Referências do conteúdo na ordem da primeira citação no corpo (a numeração [N])."""
-        ids = extrair(conteudo.corpo) + list(conteudo.meta.get("referencias") or [])
+        ids = extrair(conteudo.texto_citavel) + conteudo.referencias_declaradas
         return [self.referencias[i] for i in dict.fromkeys(ids) if i in self.referencias]
 
     def citado_por(self, id_referencia: str) -> list[Conteudo]:
@@ -104,8 +104,8 @@ def montar_catalogo(repo: Repositorio, espinha: Espinha) -> Catalogo:
                 ligacoes.setdefault(outra, set()).add(p.chave)
 
     citado_por: dict[str, list[Conteudo]] = {}
-    for c in repo.markdown():
-        ids = extrair(c.corpo) + list(c.meta.get("referencias") or [])
+    for c in repo.publicados():
+        ids = extrair(c.texto_citavel) + c.referencias_declaradas
         for id_ in dict.fromkeys(ids):
             citado_por.setdefault(id_, []).append(c)
 

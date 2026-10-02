@@ -7,6 +7,23 @@ import re
 MARCADOR = re.compile(r"\[ref:([a-z0-9][a-z0-9-]*)\]")
 
 
+INICIO = re.compile(r"\[ref:", re.IGNORECASE)
+
+
+def malformados(texto: str) -> list[str]:
+    """Cada `[ref:` (em qualquer caixa) que não casa `MARCADOR` na mesma posição.
+
+    O trecho vai até o `]`; sem `]` na linha, devolve os primeiros 40 caracteres.
+    """
+    achados = []
+    for inicio in INICIO.finditer(texto):
+        if not MARCADOR.match(texto, inicio.start()):
+            trecho = texto[inicio.start() :].split("\n", 1)[0]
+            fim = trecho.find("]")
+            achados.append(trecho[: fim + 1] if fim != -1 else trecho[:40])
+    return achados
+
+
 def extrair(corpo: str) -> list[str]:
     """IDs citados, na ordem da primeira aparição, sem repetição."""
     return list(dict.fromkeys(MARCADOR.findall(corpo)))

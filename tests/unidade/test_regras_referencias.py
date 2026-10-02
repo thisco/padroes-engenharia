@@ -111,3 +111,25 @@ def test_referencia_pega_data_impossivel(tmp_path):
         Erro("referencias/ref-forte.yaml", "publicado_em", "R-REFERENCIA", "2026-13-01"),
         Erro("referencias/ref-forte.yaml", "verificado_em", "R-REFERENCIA", "2026-02-30"),
     ]
+
+
+def test_ref_malformado_reprova(tmp_path):
+    p = fabrica.pratica(corpo=fabrica.CORPO_PRATICA + "\nVeja [ref:Outra].\n")
+    erros = rodar(regra_citacoes, [p, fabrica.referencia()], tmp_path)
+    assert Erro(p.caminho_relativo, "corpo", "R-REF-MALFORMADO", "[ref:Outra]") in erros
+
+
+def test_bloco_da_pagina_estruturada_conta_como_citacao(tmp_path):
+    meta = fabrica.meta_pagina_estruturada(referencias=["ref-forte", "outra"])
+    conteudos = [
+        Conteudo("pagina", "paginas/o-problema.md", meta, ""),
+        fabrica.referencia(),
+        fabrica.referencia(fabrica.meta_referencia(id="outra")),
+    ]
+    (erro,) = rodar(regra_citacoes, conteudos, tmp_path)
+    assert (erro.regra, erro.valor) == ("R-REF-CONJUNTO", "declaradas e não citadas: outra")
+
+
+def test_starter_declara_sem_citar(tmp_path):
+    starter = fabrica.starter(fabrica.meta_starter(descricao="Gera o repositório."))
+    assert rodar(regra_citacoes, [starter, fabrica.referencia()], tmp_path) == []

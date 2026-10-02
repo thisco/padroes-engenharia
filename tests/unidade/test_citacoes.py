@@ -1,4 +1,6 @@
-from portal.gerador.citacoes import extrair, numerar
+import pytest
+
+from portal.gerador.citacoes import extrair, malformados, numerar
 
 
 def test_extrai_na_ordem_da_primeira_aparicao_sem_repetir():
@@ -21,3 +23,13 @@ def test_numera_cada_marcador_com_link_para_a_ancora():
     texto, ids = numerar(corpo)
     assert ids == ["dora", "spec-kit"]
     assert texto == ("A [[1]](#ref-dora), B [[2]](#ref-spec-kit) e A de novo [[1]](#ref-dora).")
+
+
+@pytest.mark.parametrize("texto", ["[ref:Maiuscula]", "[ref: espaco]", "[REF:ok]", "[ref:sem-fim"])
+def test_malformados(texto):
+    (trecho,) = malformados(f"Ver {texto}.")
+    assert trecho.lower().startswith("[ref:")
+
+
+def test_malformados_ignora_marcador_valido():
+    assert malformados("Ver [ref:ok] e [ref:a-1].") == []

@@ -124,7 +124,8 @@ class Conteudo:
     def referencias_declaradas(self) -> list[str]:
         """O campo `referencias`; no glossário, a união das `referencias` dos termos."""
         if self.tipo != "glossario":
-            return list(self.meta.get("referencias") or [])
+            lista = self.meta.get("referencias")
+            return list(lista) if isinstance(lista, list) else []
         uniao: list[str] = []
         for termo in self.meta.get("termos") or []:
             for id_ in (termo.get("referencias") or []) if isinstance(termo, dict) else []:

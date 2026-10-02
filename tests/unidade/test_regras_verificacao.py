@@ -131,3 +131,27 @@ def test_verificacao_pega_registro_orfao(tmp_path):
             "P1-09: nenhum conteúdo com essa chave",
         )
     ]
+
+
+def test_glossario_sem_registro_reprova(tmp_path):
+    erros = rodar([fabrica.glossario(), fabrica.referencia()], tmp_path)
+    assert erros == [
+        Erro(
+            "glossario.yml",
+            "verificacao",
+            "R-VERIFICACAO",
+            "sem registro em verificacoes/glossario.yaml",
+        )
+    ]
+
+
+def test_registro_da_ferramenta_cobre_a_referencia_declarada(tmp_path):
+    outra = [{"texto": "x", "ref": "outra", "localizacao": "y", "resultado": "confirmada"}]
+    registro = fabrica.verificacao(
+        fabrica.meta_verificacao(conteudo="ferramenta-flyway", afirmacoes=outra)
+    )
+    erros = rodar([fabrica.ferramenta(), fabrica.referencia(), registro], tmp_path)
+    valor = "nenhuma afirmação conferida para [ref:ref-forte]"
+    assert (
+        Erro("verificacoes/ferramenta-flyway.yaml", "afirmacoes", "R-VERIFICACAO", valor) in erros
+    )

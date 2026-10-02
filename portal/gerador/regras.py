@@ -23,6 +23,7 @@ from markdown_it import MarkdownIt
 
 from portal.gerador import erros as codigos
 from portal.gerador.carregar import (
+    TIPOS_YAML_PUBLICADOS,
     Componente,
     Conteudo,
     Repositorio,
@@ -30,7 +31,7 @@ from portal.gerador.carregar import (
     carregar_componentes,
     carregar_ids_retirados,
 )
-from portal.gerador.citacoes import extrair
+from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.esquemas import validar_componentes, validar_repositorio
@@ -199,9 +200,12 @@ def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
     ids_referencia = {r.chave for r in repo.referencias}
     ids_pratica = {p.chave for p in repo.praticas}
     slugs_caso = {c.chave for c in repo.casos}
-    for c in repo.markdown():
-        citados = set(extrair(c.corpo))
-        declarados = set(_lista(c.meta, "referencias"))
+    for c in repo.publicados():
+        texto = c.texto_citavel
+        for trecho in malformados(texto):
+            erros.append(Erro(c.caminho_relativo, "corpo", codigos.R_REF_MALFORMADO, trecho))
+        citados = set(extrair(texto))
+        declarados = set(c.referencias_declaradas)
         for id_ in sorted(citados | declarados):
             if id_ not in ids_referencia:
                 erros.append(
@@ -210,7 +214,7 @@ def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
         partes = []
         if citados - declarados:
             partes.append("citadas e não declaradas: " + ", ".join(sorted(citados - declarados)))
-        if declarados - citados:
+        if declarados - citados and c.tipo not in TIPOS_YAML_PUBLICADOS:
             partes.append("declaradas e não citadas: " + ", ".join(sorted(declarados - citados)))
         if partes:
             valor = "; ".join(partes)
@@ -410,7 +414,7 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     Registro sem conteúdo correspondente também reprova: quase sempre é ID digitado errado.
     """
     erros: list[Erro] = []
-    conteudos = {c.chave: c for c in repo.markdown()}
+    conteudos = {c.chave: c for c in repo.publicados()}
     registros: dict[str, Conteudo] = {}
     for v in repo.verificacoes:
         alvo = _texto(v.meta, "conteudo")
@@ -421,7 +425,9 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
             valor = f"{alvo}: nenhum conteúdo com essa chave"
             erros.append(Erro(v.caminho_relativo, "conteudo", codigos.R_VERIFICACAO, valor))
     for chave, c in conteudos.items():
-        citados = extrair(c.corpo)
+        citados = extrair(c.texto_citavel)
+        if c.tipo in TIPOS_YAML_PUBLICADOS:
+            citados = list(dict.fromkeys(citados + c.referencias_declaradas))
         v = registros.get(chave)
         if v is None:
             valor = f"sem registro em verificacoes/{chave}.yaml"

@@ -29,6 +29,7 @@ R_SKILL = "R-SKILL"
 R_GERADO_DIVERGENTE = "R-GERADO-DIVERGENTE"
 R_EXTERNO = "R-EXTERNO"
 R_PRATICA_FORA = "R-PRATICA-FORA"
+R_REF_MALFORMADO = "R-REF-MALFORMADO"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -52,6 +53,7 @@ DESCRICOES: dict[str, str] = {
     R_GERADO_DIVERGENTE: "README.md ou ROTEAMENTO.md diferente do que o gerador produz",
     R_EXTERNO: "recurso externo em <link>, <script> ou @import",
     R_PRATICA_FORA: "prática fora de praticas/<faixa>/<ID>.md",
+    R_REF_MALFORMADO: "marcador [ref: que não casa [ref:<id>]",
 }
 
 

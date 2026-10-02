@@ -1357,7 +1357,7 @@ def test_pagina_estruturada_e_planta_validas():
   registro cobre `citados ∪ declarados`; `Catalogo.referencias_de` e `citado_por` usam o mesmo
   texto (a numeração [N] segue a ordem de `texto_citavel`).
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 # tests/unidade/test_citacoes.py
@@ -1417,9 +1417,9 @@ def test_registro_da_ferramenta_cobre_a_referencia_declarada(tmp_path):
     assert Erro("verificacoes/flyway.yaml", "afirmacoes", "R-VERIFICACAO", valor) in erros
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_citacoes.py tests/unidade/test_regras_referencias.py tests/unidade/test_regras_verificacao.py -q` → FAIL (`ImportError: malformados`).
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_citacoes.py tests/unidade/test_regras_referencias.py tests/unidade/test_regras_verificacao.py -q` → FAIL (`ImportError: malformados`).
 
-- [ ] **Passo 3: Implementar.** `malformados`:
+- [x] **Passo 3: Implementar.** `malformados`:
 
 ```python
 INICIO = re.compile(r"\[ref:", re.IGNORECASE)
@@ -1443,9 +1443,9 @@ def malformados(texto: str) -> list[str]:
   `referencias_de` e o laço de `citado_por` trocam `corpo`/`meta["referencias"]` pelas duas
   propriedades e `markdown()` por `publicados()`.
 
-- [ ] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
+- [x] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
 
-- [ ] **Passo 5:** `git commit -am "feat: [ref: malformado reprova e citação em campo estruturado entra na curadoria"`
+- [x] **Passo 5:** `git commit -am "feat: [ref: malformado reprova e citação em campo estruturado entra na curadoria"`
 
 ---
 
