@@ -248,9 +248,9 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .legenda-forcas dd { margin: 0; font-size: 13px; color: var(--tinta-2); }
 
 /* lacuna nomeada: o que ainda falta, com os nomes */
-.lacuna { border-top: 2px solid var(--traco); padding-top: 8px; }
-.lacuna h2 { font-size: 15px; margin: 0 0 4px; }
-.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--tinta-2); }
+section.lacuna { border-top: 2px solid var(--traco); padding-top: 8px; }
+section.lacuna h2 { font-size: 15px; margin: 0 0 4px; }
+section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--tinta-2); }
 
 /* ninhos (conceitos.html): azul cheio só em quem impede; âmbar tracejado em sessão e skill;
    memória é o único bloco escuro; MCP, nativas e catálogo têm borda neutra */

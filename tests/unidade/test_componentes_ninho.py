@@ -97,3 +97,10 @@ def test_setas_do_ninho_sao_desenhadas_em_css():
     assert re.search(r"\.ninho \.trav::before\s*\{[^}]*content:\s*\"↑", css)
     html = str(modulo().ninho(None, "completo"))
     assert 'class="seta">delega<' in html and 'class="trav"' in html
+
+
+def test_css_da_lacuna_nao_atinge_o_span_da_peca_sem_conceito():
+    """`span.linha.lacuna` (peça sem conceito) não herda a régua da `section.lacuna`."""
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    assert not re.search(r"^\.lacuna(?= |\{|,)", css, re.M)
+    assert re.search(r"^section\.lacuna\s*\{[^}]*var\(--traco\)", css, re.M)
