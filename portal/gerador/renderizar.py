@@ -10,6 +10,7 @@ from typing import Any
 import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
+from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
@@ -251,12 +252,21 @@ DESCRICAO_INICIO = (
 )
 
 
+def url_portal(site: Site) -> str:
+    """A URL do portal para outro projeto: `<URL do portal>` quando a base é local."""
+    if eh_local(site.url_base):
+        return "<URL do portal>"
+    return site.url_base.rstrip("/")
+
+
 def bloco_agents(site: Site) -> str:
-    """O bloco do §7.3 para o AGENTS.md de outro projeto, com a URL base e a versão do portal."""
+    """O bloco do §7.3 para o AGENTS.md de outro projeto: dispara por momento (fases 0 e 7)."""
     return (
         "## Padrões do departamento\n"
-        f"Antes de uma spec de Tier 2, consulte {site.url('roteamento.json')}\n"
-        "pelo momento e domínio da mudança e leia as práticas indicadas (.md).\n"
+        "Em toda mudança de Tier 1 ou 2, no início (fase 0) e antes de abrir a MR (fase 7),\n"
+        f"consulte {url_portal(site)}/roteamento.json pelo momento e pelo domínio da mudança "
+        "e leia as\n"
+        "práticas indicadas (.md), incluindo a seção Exemplo.\n"
         "Cite os IDs das práticas aplicadas na spec e no plano.\n"
         f"Versão adotada: padroes-engenharia v{site.versao}\n"
     )

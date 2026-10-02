@@ -28,6 +28,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
+from portal.gerador.avisos import Aviso, avisos_conteudo  # noqa: E402
 from portal.gerador.carregar import (  # noqa: E402
     Componente,
     Repositorio,
@@ -36,7 +37,7 @@ from portal.gerador.carregar import (  # noqa: E402
 )
 from portal.gerador.espinha import carregar_espinha  # noqa: E402
 from portal.gerador.grafo import montar_catalogo  # noqa: E402
-from portal.gerador.regras import MECANISMO_EXTERNO  # noqa: E402
+from portal.gerador.regras import MECANISMO_EXTERNO, carregar_contexto  # noqa: E402
 
 TIMEOUT = 10
 LIMITE_CORPO = 1_000_000
@@ -50,6 +51,8 @@ CATEGORIAS = {
     "mecanismo": "Mecanismos externos a conferir",
     "componente": "Componentes com versão nova",
     "celula": "Células a definir",
+    "exemplo": "Exemplo recomendado ausente",
+    "transicao": "Isenções temporárias",
 }
 
 
@@ -60,13 +63,6 @@ class Resposta:
 
 
 Fetch = Callable[[str, str], Resposta]
-
-
-@dataclass(frozen=True, order=True)
-class Aviso:
-    categoria: str
-    arquivo: str
-    mensagem: str
 
 
 def buscar(url: str, metodo: str) -> Resposta:
@@ -206,6 +202,7 @@ def coletar_avisos(raiz: Path, fetch: Fetch, hoje: datetime.date) -> list[Aviso]
         + avisos_mecanismos(repo, componentes, fetch)
         + avisos_componentes(componentes, fetch)
         + avisos_celulas(raiz, repo)
+        + avisos_conteudo(repo, carregar_contexto(raiz))
     )
 
 

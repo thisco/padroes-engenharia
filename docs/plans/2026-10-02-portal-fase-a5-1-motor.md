@@ -1979,7 +1979,7 @@ def test_prompt_sai_escapado_com_id_e_copiar():
   `gerar.py` imprime o aviso 7 em stderr; `checar_links.CATEGORIAS` ganha `"exemplo": "Exemplo
   recomendado ausente"` e `"transicao": "Isenções temporárias"`.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_avisos.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_avisos.py`)
 
 ```python
 from portal.gerador.avisos import Aviso, aviso_url_base, avisos_conteudo, eh_local
@@ -2025,18 +2025,18 @@ def test_bloco_do_agents_dispara_por_momento_e_esconde_localhost():
 Em `tests/unidade/test_paginas_espinha.py`, o teste que fixava o bloco antigo ("Antes de uma
 spec de Tier 2") passa a conferir só `"Em toda mudança de Tier 1 ou 2" in bloco_agents(...)`.
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_avisos.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_avisos.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar** conforme as Interfaces; `scripts/validar.py:main` calcula
+- [x] **Passo 3: Implementar** conforme as Interfaces; `scripts/validar.py:main` calcula
   `avisos_conteudo(carregar(raiz), carregar_contexto(raiz))` depois dos erros; `checar_links`
   importa `Aviso` de `avisos`, soma `avisos_conteudo` em `coletar_avisos` e o teste
   `test_relatorio_tem_uma_secao_por_categoria` continua valendo (conta por `CATEGORIAS`).
 
-- [ ] **Passo 4:** suíte e ruff verdes; `python scripts/validar.py` sai 0 e imprime os avisos
+- [x] **Passo 4:** suíte e ruff verdes; `python scripts/validar.py` sai 0 e imprime os avisos
   de P1-01 e P2-01 (`exemplo`) e da DAD-01 (`transicao`). Regenere README/ROTEAMENTO (não
   mudam) e confira `para-agentes.md` no build temporário: mostra `<URL do portal>`.
 
-- [ ] **Passo 5:** `git add portal scripts tests && git commit -m "feat: avisos de url_base local e de exemplo recomendado e bloco do AGENTS.md por momento"`
+- [x] **Passo 5:** `git add portal scripts tests && git commit -m "feat: avisos de url_base local e de exemplo recomendado e bloco do AGENTS.md por momento"`
 
 ---
 

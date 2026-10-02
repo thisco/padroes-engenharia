@@ -13,6 +13,7 @@ Saída: 0 sem erro · 1 erro de validação · 2 erro interno (exceção não pr
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -21,9 +22,11 @@ RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
+from portal.gerador.avisos import Aviso, aviso_url_base, avisos_conteudo  # noqa: E402
 from portal.gerador.build import ARQUIVOS_DA_RAIZ, construir  # noqa: E402
+from portal.gerador.carregar import carregar  # noqa: E402
 from portal.gerador.erros import R_GERADO_DIVERGENTE, Erro  # noqa: E402
-from portal.gerador.regras import validar_tudo  # noqa: E402
+from portal.gerador.regras import carregar_contexto, validar_tudo  # noqa: E402
 from portal.gerador.renderizar import carregar_config  # noqa: E402
 
 # README.md e ROTEAMENTO.md não dependem de commit nem de data; o build de conferência usa
@@ -38,6 +41,12 @@ def coletar_erros(raiz: Path) -> list[Erro]:
     if erros:
         return erros
     return checar_build(raiz)
+
+
+def coletar_avisos(raiz: Path) -> list[Aviso]:
+    """Avisos que não mudam o código de saída: exemplo recomendado, isenções e url_base local."""
+    avisos = avisos_conteudo(carregar(raiz), carregar_contexto(raiz))
+    return avisos + aviso_url_base(carregar_config(raiz)["url_base"], os.environ)
 
 
 def checar_build(raiz: Path) -> list[Erro]:
@@ -79,6 +88,8 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     for erro in erros:
         print(erro)
+    for aviso in coletar_avisos(args.raiz.resolve()):
+        print(f"aviso: {aviso.arquivo}: {aviso.mensagem}")
     if erros:
         print(f"{len(erros)} erro(s) de validação.", file=sys.stderr)
         return 1

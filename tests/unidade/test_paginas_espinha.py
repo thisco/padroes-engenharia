@@ -26,13 +26,10 @@ DAD = fabrica.pratica(
 
 
 def test_bloco_para_o_agents_md_com_url_base_e_versao():
-    assert bloco_agents(fabrica.site()) == (
-        "## Padrões do departamento\n"
-        "Antes de uma spec de Tier 2, consulte https://portal.exemplo/roteamento.json\n"
-        "pelo momento e domínio da mudança e leia as práticas indicadas (.md).\n"
-        "Cite os IDs das práticas aplicadas na spec e no plano.\n"
-        "Versão adotada: padroes-engenharia v0.1.0\n"
-    )
+    bloco = bloco_agents(fabrica.site())
+    assert "Em toda mudança de Tier 1 ou 2" in bloco
+    assert "https://portal.exemplo/roteamento.json" in bloco
+    assert "Versão adotada: padroes-engenharia v0.1.0" in bloco
 
 
 def test_inicio_minimo_sem_como_fazer():

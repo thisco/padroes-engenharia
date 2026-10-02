@@ -24,6 +24,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 if str(RAIZ) not in sys.path:
     sys.path.insert(0, str(RAIZ))
 
+from portal.gerador.avisos import aviso_url_base  # noqa: E402
 from portal.gerador.build import ARQUIVOS_DA_RAIZ, construir  # noqa: E402
 from portal.gerador.renderizar import carregar_config  # noqa: E402
 
@@ -82,6 +83,8 @@ def main(argv: list[str] | None = None) -> int:
         )
         if not erros:
             copiar_para_raiz(saida, raiz)
+        for aviso in aviso_url_base(args.url_base or config["url_base"], os.environ):
+            print(f"aviso: {aviso.arquivo}: {aviso.mensagem}", file=sys.stderr)
     except Exception as exc:
         print(f"erro interno: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2

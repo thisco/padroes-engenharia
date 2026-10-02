@@ -21,7 +21,9 @@ def executar(*argumentos):
 def test_sai_0_no_repo_minimo(repo_gerado):
     resultado = executar("--raiz", str(repo_gerado))
     assert resultado.returncode == 0, resultado.stdout + resultado.stderr
-    assert resultado.stdout == "validação ok: nenhum erro.\n"
+    linhas = resultado.stdout.splitlines()
+    assert linhas[-1] == "validação ok: nenhum erro."
+    assert all(linha.startswith("aviso: ") for linha in linhas[:-1])
 
 
 def test_sai_0_no_repositorio_real():
@@ -34,7 +36,8 @@ def test_sai_1_e_lista_todos_os_erros(repo_minimo, mutar):
     mutar("referencias/ref-forte.yaml", "url: https://", "url: http://")
     resultado = executar("--raiz", str(repo_minimo))
     assert resultado.returncode == 1
-    assert resultado.stdout.splitlines() == [
+    erros = [x for x in resultado.stdout.splitlines() if not x.startswith("aviso: ")]
+    assert erros == [
         "praticas/construir-com-ia/P1-01.md:mecanismo: "
         "R-MECANISMO (scripts/x.py: caminho inexistente)",
         "referencias/ref-forte.yaml:url: R-REFERENCIA (http://exemplo.org/doc)",
