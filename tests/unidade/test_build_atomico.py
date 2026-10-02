@@ -119,7 +119,7 @@ def test_construir_troca_a_saida_anterior_inteira(repo_minimo, tmp_path):
 def test_erro_de_validacao_nao_publica_nada(repo_minimo, mutar, tmp_path):
     saida = tmp_path / "public"
     escrever(saida, "index.html", "anterior")
-    mutar("praticas/construir-com-ia/P1-01.md", "forca: orienta", "forca: bloqueia")
+    mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
     erros = construir(repo_minimo, saida, **PARAMETROS)
     assert [e.regra for e in erros] == ["R-MECANISMO"]
     assert (saida / "index.html").read_text(encoding="utf-8") == "anterior"

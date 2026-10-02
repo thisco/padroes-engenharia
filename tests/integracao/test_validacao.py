@@ -36,8 +36,8 @@ def test_repo_minimo_e_valido(repo_minimo):
             [(REFERENCIA, "url: https://exemplo.org/doc", "url: http://exemplo.org/doc")],
             "R-REFERENCIA",
         ),
-        ([(PRATICA, "forca: orienta", "forca: bloqueia")], "R-MECANISMO"),
-        ([(PRATICA, "mecanismo: null", "mecanismo: scripts/nao_existe.py")], "R-MECANISMO"),
+        ([(PRATICA, "mecanismo: null", "mecanismo: scripts/x.py")], "R-MECANISMO"),
+        ([(PRATICA, "mecanismo: null", "mecanismo: scripts/x.py")], "R-MECANISMO"),
         (
             [
                 (PRATICA, "status: experimentar", "status: adotar"),
@@ -84,7 +84,7 @@ def test_skill_sem_procedencia(repo_minimo):
 
 
 def test_junta_todos_os_erros_de_varios_arquivos(repo_minimo, mutar):
-    mutar(PRATICA, "forca: orienta", "forca: bloqueia")
+    mutar(PRATICA, "mecanismo: null", "mecanismo: scripts/x.py")
     mutar(REFERENCIA, "url: https://exemplo.org/doc", "url: http://exemplo.org/doc")
     mutar("AGENTS.md", "constituicao:fim", "constituicao:final")
     erros = validar_tudo(repo_minimo)

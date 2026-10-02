@@ -32,11 +32,12 @@ R_PRATICA_FORA = "R-PRATICA-FORA"
 R_REF_MALFORMADO = "R-REF-MALFORMADO"
 R_PECA = "R-PECA"
 R_COMPONENTE = "R-COMPONENTE"
+R_EXEMPLO = "R-EXEMPLO"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
     R_ESQUEMA: "frontmatter fora do JSON Schema do tipo",
-    R_SECOES: "seções obrigatórias da prática ausentes ou fora de ordem",
+    R_SECOES: "seções obrigatórias da prática, da receita ou do tutorial ausentes ou fora de ordem",
     R_ESPINHA: "domínio, subdomínio, momento ou pasta fora de esquemas/espinha.yml",
     R_ID_FORMATO: "ID fora do formato <PREFIXO>-<NN>",
     R_ID_PREFIXO: "prefixo do ID incoerente com o domínio",
@@ -58,6 +59,7 @@ DESCRICOES: dict[str, str] = {
     R_REF_MALFORMADO: "marcador [ref: que não casa [ref:<id>]",
     R_PECA: "peça de conceito que não existe no ninho declarado",
     R_COMPONENTE: "starter fora de componentes.yml ou com versão ou repo diferente",
+    R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
 }
 
 

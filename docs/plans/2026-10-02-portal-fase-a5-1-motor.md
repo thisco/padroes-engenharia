@@ -1594,7 +1594,7 @@ def test_blocos_da_pagina(tmp_path):
 - `carregar.carregar_isencoes(raiz) -> frozenset[str]`; `Contexto.isentos: frozenset[str] =
   frozenset()` (último campo, com padrão), preenchido por `carregar_contexto`.
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ````python
 # tests/unidade/test_exemplos.py
@@ -1721,9 +1721,9 @@ def test_secoes_da_receita_e_do_tutorial(tmp_path):
 (os números de linha esperados — 9, 15 e 17 — são os de `token.map[0] + 1`; se o corpo de teste
 for reformatado, recalcule.)
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_exemplos.py tests/unidade/test_regras_exemplo.py tests/unidade/test_regras_secoes.py -q` → FAIL (`ModuleNotFoundError: portal.gerador.exemplos`).
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_exemplos.py tests/unidade/test_regras_exemplo.py tests/unidade/test_regras_secoes.py -q` → FAIL (`ModuleNotFoundError: portal.gerador.exemplos`).
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
   - `exemplos.py`: `blocos` percorre `MarkdownIt("commonmark").parse(corpo)`, guardando o último
     H2 e H3 (`heading_open` + o `inline` seguinte); `fence` dá a linguagem pelo primeiro termo de
     `token.info`; `code_block` dá `""`. `secoes` usa `token.map` do `heading_open` H2 (fim do
@@ -1740,11 +1740,11 @@ for reformatado, recalcule.)
     vazio); `Contexto.isentos`.
   - `erros.py`: `R_EXEMPLO`; a descrição de `R_SECOES` passa a citar prática, receita e tutorial.
 
-- [ ] **Passo 4:** `ruff format portal tests && python -m pytest -q && ruff check . && python scripts/validar.py`
+- [x] **Passo 4:** `ruff format portal tests && python -m pytest -q && ruff check . && python scripts/validar.py`
   → verde. Prova da isenção: tire `DAD-01` de `esquemas/transicao-a5.yml`, rode o validador
   (sai 1 com `praticas/dados-migrations/DAD-01.md:corpo: R-EXEMPLO (...)`) e restaure.
 
-- [ ] **Passo 5:** `git add esquemas portal tests && git commit -m "feat: cinco seções da prática, seções da receita e do tutorial e Exemplo obrigatório"`
+- [x] **Passo 5:** `git add esquemas portal tests && git commit -m "feat: cinco seções da prática, seções da receita e do tutorial e Exemplo obrigatório"`
 
 ---
 ### Tarefa 10: Exemplos executados: inclusão, execução registrada e sintaxe (§6.5 regra 7; §11.4; bloqueio 14)
@@ -3042,6 +3042,15 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   se errado: reverter uma linha. O plano foi restaurado ao texto original, sem perda.
 - **Tarefa 3, 4 e 5:** mensagens de commit ajustadas ao padrão convencional (o texto do plano
   diz "feat!: …" em alguns casos); nenhum desvio de conteúdo.
+
+- **Tarefa 8:** `regra_vinculos` ficou entre `regra_citacoes` e `regra_referencias` em `REGRAS`
+  (o teste de ordem foi atualizado). `fabrica.meta_starter()` nasce com `receitas: []`: o teste
+  `test_starter_bate_com_componentes` exige zero erros num repositório sem receitas.
+- **Tarefa 9:** seis testes de CLI e build mutavam `forca: orienta` para `bloqueia` só para
+  produzir um erro R-MECANISMO. Com a regra 6, essa mutação também exige Exemplo. Os testes
+  passaram a mutar `mecanismo: null` para `mecanismo: scripts/x.py` (R-MECANISMO, caminho
+  inexistente), o mesmo erro isolado. `regra_exemplo` ficou depois de `regra_secoes` em `REGRAS`.
+  Prova da isenção: com `isentos: []`, `validar.py` sai 1 com `DAD-01.md:corpo: R-EXEMPLO`.
 
 ## Revisão adversarial
 

@@ -268,6 +268,16 @@ def carregar_componentes(raiz: Path) -> dict[str, Componente]:
     return componentes
 
 
+def carregar_isencoes(raiz: Path) -> frozenset[str]:
+    """Lê `esquemas/transicao-a5.yml`: IDs isentos do Exemplo obrigatório (temporário)."""
+    caminho = raiz / "esquemas" / "transicao-a5.yml"
+    if not caminho.is_file():
+        return frozenset()
+    dados = yaml.safe_load(caminho.read_text(encoding="utf-8")) or {}
+    isentos = dados.get("isentos") if isinstance(dados, dict) else None
+    return frozenset(i for i in (isentos or []) if isinstance(i, str))
+
+
 def carregar_ids_retirados(raiz: Path) -> frozenset[str]:
     """Lê `esquemas/ids-retirados.txt`: um ID por linha; linhas vazias e `#` são ignoradas."""
     caminho = raiz / "esquemas" / "ids-retirados.txt"

@@ -60,5 +60,5 @@ def test_sem_build_quando_a_validacao_ja_falhou(repo_gerado, mutar, monkeypatch)
         raise AssertionError("o build não roda com erro de validação")
 
     monkeypatch.setattr(cli, "checar_build", nao_deveria_rodar)
-    mutar(PRATICA, "forca: orienta", "forca: bloqueia")
+    mutar(PRATICA, "mecanismo: null", "mecanismo: scripts/x.py")
     assert regras(repo_gerado) == [(PRATICA, "R-MECANISMO")]

@@ -30,12 +30,13 @@ def test_sai_0_no_repositorio_real():
 
 
 def test_sai_1_e_lista_todos_os_erros(repo_minimo, mutar):
-    mutar("praticas/construir-com-ia/P1-01.md", "forca: orienta", "forca: bloqueia")
+    mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
     mutar("referencias/ref-forte.yaml", "url: https://", "url: http://")
     resultado = executar("--raiz", str(repo_minimo))
     assert resultado.returncode == 1
     assert resultado.stdout.splitlines() == [
-        "praticas/construir-com-ia/P1-01.md:mecanismo: R-MECANISMO (força bloqueia sem mecanismo)",
+        "praticas/construir-com-ia/P1-01.md:mecanismo: "
+        "R-MECANISMO (scripts/x.py: caminho inexistente)",
         "referencias/ref-forte.yaml:url: R-REFERENCIA (http://exemplo.org/doc)",
     ]
     assert resultado.stderr == "2 erro(s) de validação.\n"

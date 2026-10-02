@@ -31,11 +31,13 @@ from portal.gerador.carregar import (
     carregar,
     carregar_componentes,
     carregar_ids_retirados,
+    carregar_isencoes,
 )
 from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.esquemas import validar_componentes, validar_repositorio
+from portal.gerador.exemplos import blocos, inclusoes, secoes
 from portal.gerador.ninhos import PECAS
 
 
@@ -46,6 +48,7 @@ class Contexto:
     raiz: Path
     componentes: dict[str, Componente]
     ids_retirados: frozenset[str]
+    isentos: frozenset[str] = frozenset()
 
 
 Regra = Callable[[Repositorio, Espinha, Contexto], list[Erro]]
@@ -64,6 +67,7 @@ def carregar_contexto(raiz: Path) -> Contexto:
         raiz=raiz,
         componentes=carregar_componentes(raiz),
         ids_retirados=carregar_ids_retirados(raiz),
+        isentos=carregar_isencoes(raiz),
     )
 
 
@@ -559,7 +563,21 @@ def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 # Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
 
-SECOES_PRATICA = ("O que fazer", "Como aparece quando falta", "Como aplicar", "Como verificar")
+SECOES_PRATICA = (
+    "O que fazer",
+    "Como aparece quando falta",
+    "Como aplicar",
+    "Exemplo",
+    "Como verificar",
+)
+SECOES_RECEITA = (
+    "Resultado",
+    "Antes de começar",
+    "Passos",
+    "Com o agente",
+    "Confira",
+    "Se der errado",
+)
 _MARKDOWN = MarkdownIt("commonmark")
 
 
@@ -575,13 +593,77 @@ def titulos_h2(corpo: str) -> list[str]:
 
 @regra
 def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """O corpo da prática tem exatamente as 4 seções `## ` do §6.1, nesta ordem."""
+    """A prática tem as 5 seções do §6.1 (ou as 4 sem `Exemplo`, que a regra 6 cobra à parte), a
+    receita tem as 6 do §6.4 e o guia `tutorial` tem `## Passos`."""
     erros: list[Erro] = []
+    sem_exemplo = tuple(s for s in SECOES_PRATICA if s != "Exemplo")
     for p in repo.praticas:
         titulos = titulos_h2(p.corpo)
-        if tuple(titulos) != SECOES_PRATICA:
+        if tuple(titulos) not in (SECOES_PRATICA, sem_exemplo):
             valor = "encontradas: " + (" | ".join(titulos) or "nenhuma")
             erros.append(Erro(p.caminho_relativo, "corpo", codigos.R_SECOES, valor))
+    for g in repo.guias:
+        if g.meta.get("tipo") == "tutorial" and "Passos" not in titulos_h2(g.corpo):
+            valor = "tutorial sem a seção ## Passos"
+            erros.append(Erro(g.caminho_relativo, "corpo", codigos.R_SECOES, valor))
+    for r in repo.receitas:
+        titulos = titulos_h2(r.corpo)
+        if tuple(titulos) != SECOES_RECEITA:
+            valor = "encontradas: " + (" | ".join(titulos) or "nenhuma")
+            erros.append(Erro(r.caminho_relativo, "corpo", codigos.R_SECOES, valor))
+    return erros
+
+
+# Exemplo obrigatório e blocos de código (delta §6.5, regra 6; §12.1, bloqueio 13) ---------------
+
+LIMITE_BLOCO = 15
+
+
+def exemplo_obrigatorio(meta: dict[str, Any]) -> bool:
+    """O Exemplo é obrigatório quando o status é `adotar` ou a força não é `orienta`."""
+    return meta.get("status") == "adotar" or meta.get("forca") != "orienta"
+
+
+def _h3_da_secao(texto: str) -> set[str]:
+    tokens = _MARKDOWN.parse(texto)
+    return {
+        tokens[i + 1].content.strip()
+        for i, t in enumerate(tokens)
+        if t.type == "heading_open" and t.tag == "h3"
+    }
+
+
+@regra
+def regra_exemplo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """A prática tem `## Exemplo` com antes/depois, prompt e código; os blocos têm linguagem."""
+    erros: list[Erro] = []
+
+    def reprovar(c: Conteudo, valor: str) -> None:
+        erros.append(Erro(c.caminho_relativo, "corpo", codigos.R_EXEMPLO, valor))
+
+    for p in repo.praticas:
+        secao = dict(secoes(p.corpo)).get("Exemplo")
+        if secao is None:
+            if exemplo_obrigatorio(p.meta) and p.chave not in contexto.isentos:
+                reprovar(p, "## Exemplo obrigatório: status adotar ou força acima de orienta")
+            continue
+        subsecoes = _h3_da_secao(secao)
+        for titulo in ("Antes e depois", "Para o agente"):
+            if titulo not in subsecoes:
+                reprovar(p, f"## Exemplo sem ### {titulo}")
+        codigo = [b for b in blocos(p.corpo) if b.h2 == "Exemplo" and b.linguagem != "prompt"]
+        if not codigo and not inclusoes(secao):
+            reprovar(p, "## Exemplo sem bloco de código")
+    for c in [*repo.praticas, *repo.receitas]:
+        for bloco in blocos(c.corpo):
+            if not bloco.linguagem:
+                reprovar(c, f"bloco de código sem linguagem (linha {bloco.linha})")
+            elif bloco.linguagem != "prompt" and bloco.texto.count("\n") > LIMITE_BLOCO:
+                valor = (
+                    f"bloco com {bloco.texto.count(chr(10))} linhas (linha {bloco.linha}); "
+                    f"arquivo com mais de {LIMITE_BLOCO} linhas mora em exemplos/"
+                )
+                reprovar(c, valor)
     return erros
 
 

@@ -63,7 +63,7 @@ def test_url_base_do_config_ou_da_linha_de_comando(repo_minimo, tmp_path):
 
 
 def test_erro_de_validacao_sai_1_e_nao_toca_a_raiz(repo_minimo, mutar, tmp_path, capsys):
-    mutar("praticas/construir-com-ia/P1-01.md", "forca: orienta", "forca: bloqueia")
+    mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
     saida = tmp_path / "site"
     assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 1
     saida_padrao = capsys.readouterr()
