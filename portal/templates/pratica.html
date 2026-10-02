@@ -4,17 +4,30 @@
 <p class="trilha"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a> › <a href="{{ raiz }}espinha.html#momento-{{ momento.slug }}">{{ momento.titulo }}</a></p>
 <div class="topo">
   <h1><span class="id">{{ p.chave }}</span>{{ p.meta.titulo }}</h1>
-  <div class="chips" aria-label="Força e status">
-    {{ c.chip_forca(p.meta.forca) }}
-    <span class="st">{{ p.meta.status }}</span>
-{% if p.meta.subdominio %}
-    <span class="fe">{{ ROTULO_SUBDOMINIO[p.meta.subdominio] }}</span>
+  <div>
+{% if p.meta.get("resumo") %}
+    <p class="resumo">{{ p.meta.resumo }}</p>
 {% endif %}
+    <div class="chips" aria-label="Força e status">
+      {{ c.chip_forca(p.meta.forca) }}
+      <span class="st">{{ p.meta.status }}</span>
+{% if p.meta.subdominio %}
+      <span class="fe">{{ ROTULO_SUBDOMINIO[p.meta.subdominio] }}</span>
+{% endif %}
+      <a class="legenda-link" href="{{ raiz }}index.html#forcas">o que significam força e status</a>
+    </div>
   </div>
 </div>
 <div class="corpo">
-  <article class="texto" aria-label="Prática {{ p.chave }}">
-{{ corpo | safe }}
+  <article class="texto cadeia-secoes" aria-label="Prática {{ p.chave }}">
+{% for titulo, html in secoes %}
+    <section class="elo{% if titulo == "Como verificar" %} verif{% endif %}" aria-label="{{ titulo }}">
+      {{ c.figura(FIGURA_DA_SECAO[titulo]) if titulo in FIGURA_DA_SECAO }}
+      <div><h2>{{ titulo }}</h2>
+{{ html }}
+      </div>
+    </section>
+{% endfor %}
   </article>
   <aside class="lado" aria-label="Referências e vínculos">
     <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
@@ -39,6 +52,18 @@
 {% endfor %}
       </ul>
     </section>
+{% endif %}
+{% if vinculos.ferramentas %}
+    <section><h2>Ferramentas aprovadas</h2><ul>{% for i in vinculos.ferramentas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.receitas %}
+    <section><h2>Receitas</h2><ul>{% for i in vinculos.receitas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.starter %}
+    <section><h2>Starter</h2><ul>{% for i in vinculos.starter %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.exemplos %}
+    <section><h2>Exemplos</h2><ul>{% for i in vinculos.exemplos %}<li><a href="{{ raiz }}{{ i.href }}"><code>{{ i.titulo }}</code></a></li>{% endfor %}</ul></section>
 {% endif %}
 {% if relacionadas %}
     <section><h2>Relacionadas</h2><ul>{% for r in relacionadas %}<li><a href="{{ raiz }}{{ caminho_de(r) }}">{{ r.chave }} · {{ r.meta.titulo }}</a></li>{% endfor %}</ul></section>

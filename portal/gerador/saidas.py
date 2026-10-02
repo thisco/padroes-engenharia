@@ -703,6 +703,11 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
     copiar(site.raiz / "esquemas/catalogo.schema.json", saida / "esquemas/catalogo.schema.json")
     for constituicao in constituicoes(site):
         copiar(site.raiz / constituicao, saida / constituicao)
+    for arquivo in (
+        sorted((site.raiz / "exemplos").rglob("*")) if (site.raiz / "exemplos").is_dir() else []
+    ):
+        if arquivo.is_file() and not arquivo.is_symlink():
+            copiar(arquivo, saida / arquivo.relative_to(site.raiz))
     for origem, destino, padroes in ESTATICOS:
         for padrao in padroes:
             for arquivo in sorted((site.raiz / origem).glob(padrao)):

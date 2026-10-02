@@ -11,12 +11,13 @@ from typing import Any
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
+from markupsafe import Markup
 
 from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
-from portal.gerador.exemplos import Prompt, expandir_inclusoes, prompts_de
+from portal.gerador.exemplos import Prompt, blocos, expandir_inclusoes, prompts_de, secoes
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 from portal.gerador.ninhos import NINHOS
@@ -189,6 +190,7 @@ def criar_ambiente(raiz: Path) -> Environment:
         caminho_de=caminho_de,
         para_md=para_md,
         classe_peca=classe_peca,
+        FIGURA_DA_SECAO=FIGURA_DA_SECAO,
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
     )
@@ -219,6 +221,9 @@ def caminho_de(conteudo: Conteudo) -> str:
     }
     if conteudo.tipo == "referencia":
         return f"referencias.html#{conteudo.chave}"
+    if conteudo.tipo in ("receita", "starter", "ferramenta"):
+        # a chave leva o prefixo do tipo (registro de verificação); o caminho usa o slug ou o id
+        return f"{pastas[conteudo.tipo]}/{PurePosixPath(conteudo.caminho_relativo).stem}.html"
     return f"{pastas[conteudo.tipo]}/{conteudo.chave}.html"
 
 
@@ -709,6 +714,62 @@ def ligadas_de(site: Site, conteudo: Conteudo) -> list[dict[str, str]]:
     ]
 
 
+FIGURA_DA_SECAO = {
+    "O que fazer": "escada",
+    "Como aparece quando falta": "x",
+    "Como aplicar": "caixa",
+    "Exemplo": "codigo",
+    "Como verificar": "check",
+}
+
+
+def corpo_secoes(conteudo: Conteudo, raiz: Path | None = None) -> list[tuple[str, Markup]]:
+    """Cada seção `## ` do corpo como (título, HTML do texto), sem o título.
+
+    As citações são numeradas na página inteira (a ordem da primeira aparição no corpo) e as
+    inclusões de `exemplos/` já vêm expandidas, como em `corpo_html`.
+    """
+    texto, _ = numerar(conteudo.corpo)
+    if raiz is not None:
+        texto = expandir_inclusoes(texto, raiz)
+    secoes_do_corpo = secoes(texto)
+    resultado = []
+    prompts_antes = 0
+    for titulo, trecho in secoes_do_corpo:
+        html = para_html(trecho, conteudo.chave, prompts_antes)
+        prompts_antes += sum(1 for b in blocos(trecho) if b.linguagem == "prompt")
+        resultado.append((titulo, Markup(html)))
+    return resultado
+
+
+def vinculos_da_pratica(site: Site, pratica: Conteudo) -> dict[str, list[dict[str, str]]]:
+    """Os links da lateral: ferramentas aprovadas, receitas, starter e arquivos de exemplo."""
+    meta = pratica.meta
+    ferramentas = {f.meta["id"]: f for f in site.repo.ferramentas}
+    receitas = {
+        r.caminho_relativo.rsplit("/", 1)[-1].removesuffix(".md"): r for r in site.repo.receitas
+    }
+    starters = {s.meta["id"]: s for s in site.repo.starters}
+
+    def itens(ids: list[str], fonte: dict[str, Conteudo]) -> list[dict[str, str]]:
+        return [
+            {"titulo": str(fonte[i].meta["titulo"]), "href": caminho_de(fonte[i])}
+            for i in ids
+            if i in fonte
+        ]
+
+    starter = meta.get("starter")
+    return {
+        "ferramentas": itens(list(meta.get("ferramentas_aprovadas") or []), ferramentas),
+        "receitas": itens(list(meta.get("receitas") or []), receitas),
+        "starter": itens([starter] if isinstance(starter, str) else [], starters),
+        "exemplos": [
+            {"titulo": caminho.removeprefix("exemplos/"), "href": caminho}
+            for caminho in meta.get("exemplos") or []
+        ],
+    }
+
+
 def html_pratica(site: Site, pratica: Conteudo) -> str:
     return renderizar(
         site,
@@ -720,6 +781,8 @@ def html_pratica(site: Site, pratica: Conteudo) -> str:
         faixa=site.espinha.faixa(pratica.meta["dominio"]),
         momento=site.espinha.momento(pratica.meta["momento"]),
         corpo=corpo_html(pratica, site.raiz),
+        secoes=corpo_secoes(pratica, site.raiz),
+        vinculos=vinculos_da_pratica(site, pratica),
         referencias=site.catalogo.referencias_de(pratica),
         relacionadas=site.catalogo.relacionadas(pratica.chave),
         conceitos=site.catalogo.conceitos_da_pratica(pratica.chave),

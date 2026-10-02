@@ -38,9 +38,10 @@ def criar() -> MarkdownIt:
 _MD = criar()
 
 
-def para_html(texto: str, chave: str | None = None) -> str:
+def para_html(texto: str, chave: str | None = None, prompts_antes: int = 0) -> str:
     """O HTML do Markdown `texto`, sem HTML bruto (vira texto escapado).
 
-    Com `chave`, o bloco `prompt` ganha o ID `<chave>-prompt-<n>` e o botão Copiar.
+    Com `chave`, o bloco `prompt` ganha o ID `<chave>-prompt-<n>` e o botão Copiar. Quando o
+    texto é só uma seção do corpo, `prompts_antes` é quantos prompts vieram antes dela.
     """
-    return _MD.render(texto, {"chave": chave})
+    return _MD.render(texto, {"chave": chave, "prompts": prompts_antes})

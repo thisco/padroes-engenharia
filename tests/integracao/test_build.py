@@ -128,7 +128,7 @@ def test_todo_role_img_tem_aria_label(publicado):
         assert re.search(r'aria-label="[^"]+"', tag), tag
     for p in htmls(publicado):
         for tag in re.findall(r"<svg\b[^>]*>", ler(p)):
-            assert 'role="img"' in tag, tag
+            assert 'role="img"' in tag or 'aria-hidden="true"' in tag, tag
 
 
 def test_todo_diagrama_tem_descricao_em_texto(publicado):

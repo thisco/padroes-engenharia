@@ -49,6 +49,40 @@
 </section>
 {%- endmacro %}
 
+{# Biblioteca de figuras (mockups o-problema.html e visual-portal.html): SVG decorativo. #}
+{% macro figura(nome) -%}
+{% if nome == "codigo-rapido" %}
+<svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><g fill="none" stroke="#0A1A2F" stroke-width="1.5"><path d="M6 12h70M6 22h96M6 32h58M6 42h84M6 52h66M6 62h100"/></g><path d="M112 6v58" stroke="#B8452E" stroke-width="2" stroke-dasharray="3 3"/></svg>
+{% elif nome == "drift" %}
+<svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><path d="M4 35 C40 35 60 34 116 10" fill="none" stroke="#1351B4" stroke-width="2"/><path d="M4 35 C40 35 70 36 116 36" fill="none" stroke="#B06F12" stroke-width="2"/><path d="M4 35 C40 35 60 37 116 62" fill="none" stroke="#0A1A2F" stroke-width="2"/><circle cx="4" cy="35" r="3" fill="#0A1A2F"/></svg>
+{% elif nome == "regressao" %}
+<svg width="90" height="54" viewBox="0 0 120 70" aria-hidden="true"><path d="M8 36l10 10 20-22" fill="none" stroke="#1351B4" stroke-width="3"/><path d="M52 35h24M70 29l6 6-6 6" fill="none" stroke="#7A8A9D" stroke-width="1.5"/><path d="M90 22l22 26M112 22l-22 26" fill="none" stroke="#B8452E" stroke-width="3"/></svg>
+{% elif nome == "escada" %}
+<svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M4 32h14V22h14V12h14V4" fill="none" stroke="#1351B4" stroke-width="2"/></svg>
+{% elif nome == "x" %}
+<svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M6 8l18 24M24 8L6 32" stroke="#B8452E" stroke-width="2.5"/><path d="M34 20h20" stroke="#7A8A9D" stroke-width="1.5"/></svg>
+{% elif nome == "caixa" %}
+<svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><rect x="6" y="6" width="22" height="28" fill="none" stroke="#0A1A2F" stroke-width="1.5"/><path d="M34 12h20M34 20h16M34 28h18" stroke="#0A1A2F" stroke-width="1.5"/></svg>
+{% elif nome == "check" %}
+<svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><rect x="6" y="6" width="28" height="28" fill="none" stroke="#1351B4" stroke-width="2.5"/><path d="M12 20l6 6 12-14" fill="none" stroke="#1351B4" stroke-width="2.5"/></svg>
+{% elif nome == "codigo" %}
+<svg width="60" height="40" viewBox="0 0 60 40" aria-hidden="true"><path d="M18 10L6 20l12 10M42 10l12 10-12 10" fill="none" stroke="#0A1A2F" stroke-width="2.5"/><path d="M34 6l-8 28" stroke="#B06F12" stroke-width="2"/></svg>
+{% endif %}
+{%- endmacro %}
+
+{# Cadeia: elos com figura, título, definição e "Como aparece", ligados por conectores rotulados. #}
+{% macro cadeia(elos) -%}
+<ol class="cadeia">
+{% for elo in elos %}
+  <li class="elo">{{ figura(elo.figura) }}
+    <div><h3>{{ elo.titulo }}</h3><p class="def">{{ elo.definicao }}</p>{% if elo.como_aparece %}<p class="sint">Como aparece: {{ elo.como_aparece }}</p>{% endif %}</div></li>
+{% if not loop.last and elo.conector %}
+  <li class="conector" aria-hidden="false">{{ elo.conector }}</li>
+{% endif %}
+{% endfor %}
+</ol>
+{%- endmacro %}
+
 {% macro ninho(destaque=None) -%}
 {% set p = NINHOS["agente-de-codigo"].pecas %}
 <figure class="ninho">

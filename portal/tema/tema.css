@@ -183,6 +183,19 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .campos dt { color: var(--tinta-2); font-size: 13px; font-weight: 600; padding-top: 2px; }
 .campos dd { margin: 0; }
 
+/* Cadeia (O problema) e seções da prática: figura à esquerda, texto à direita */
+.cadeia { list-style: none; margin: 0; padding: 0; }
+.elo { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 14px; padding: 12px 0; border-top: 1px solid var(--regra); }
+.cadeia > .elo:first-child, .cadeia-secoes > .elo:first-child { border-top: 2px solid var(--tinta); }
+.elo h2, .elo h3 { margin: 0; font-size: 16px; letter-spacing: -.015em; padding: 0; border: 0; }
+.elo .def { margin: 3px 0 0; font-size: 13px; }
+.elo .sint { margin: 5px 0 0; font-size: 12px; color: var(--tinta-2); }
+.elo svg { max-width: 100%; height: auto; }
+.elo.verif { background: var(--gov-claro); padding-left: 10px; padding-right: 10px; }
+.conector { list-style: none; text-align: center; font-family: var(--mono); font-size: 12px; color: var(--tinta-2); padding: 2px 0; }
+.resumo { margin: 0 0 8px; font-size: 16px; color: var(--tinta-2); }
+.legenda-link { font-size: 12px; color: var(--gov); align-self: center; }
+
 /* tabelas de evidência densa */
 .tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
@@ -245,6 +258,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
   body { background: var(--branco); }
 }
 @media (max-width: 900px) {
+  .elo { grid-template-columns: 60px minmax(0, 1fr); }
   .folha { padding: 24px 18px; }
   .topo, .duas, .corpo { grid-template-columns: 1fr; gap: 20px; }
   .topo h1 { font-size: 34px; }

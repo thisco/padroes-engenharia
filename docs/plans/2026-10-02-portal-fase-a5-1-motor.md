@@ -2265,7 +2265,7 @@ def test_bloco_escuro_com_copiar_e_chips():
   `.elo` com a figura; "Como verificar" em `.elo.verif` (azul-claro); lateral com
   `ferramentas_aprovadas`, `receitas`, `starter` e `exemplos` como links; link para a legenda.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_cadeia.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_cadeia.py`)
 
 ```python
 from portal.gerador.renderizar import html_pratica
@@ -2296,11 +2296,11 @@ def test_pratica_v1_1_tem_resumo_cinco_figuras_e_verificar_em_azul():
     assert html.todos("a", href="../ferramentas/flyway.html")
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_componentes_cadeia.py -q` → FAIL.
-- [ ] **Passo 3:** macros, `corpo_secoes` (usa `exemplos.secoes` + `expandir_inclusoes` +
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_componentes_cadeia.py -q` → FAIL.
+- [x] **Passo 3:** macros, `corpo_secoes` (usa `exemplos.secoes` + `expandir_inclusoes` +
   `numerar` + `para_html(..., chave=)`; a numeração [N] é a da página inteira) e o template.
-- [ ] **Passo 4:** suíte, ruff e validar verdes; regenere README/ROTEAMENTO.
-- [ ] **Passo 5:** `git commit -am "feat: figuras, cadeia e página de prática com as cinco seções desenhadas"`
+- [x] **Passo 4:** suíte, ruff e validar verdes; regenere README/ROTEAMENTO.
+- [x] **Passo 5:** `git commit -am "feat: figuras, cadeia e página de prática com as cinco seções desenhadas"`
 
 ---
 
@@ -3066,6 +3066,13 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   mas o nome já é o do Contrato (`paginas/inicio.md`). (c) `praticas/index.html` tem slug
   `praticas` no `catalogo.json`. (d) A inspeção visual a 1440px e 400px do Passo 4 não foi feita
   por navegador nesta tarefa; fica para a Tarefa 28 (ver Evidências).
+
+- **Tarefa 16:** `caminho_de` de receita, starter e ferramenta usa o nome do arquivo (o ID), e
+  não `Conteudo.chave` (que leva o prefixo do tipo, só para o registro de verificação). O
+  `exemplos:` da lateral da prática vira link para `exemplos/<arquivo>`, e `emitir` copia a
+  pasta `exemplos/` (só arquivos, sem link simbólico) para o site, para o link resolver; o plano
+  não pedia a cópia, é o mínimo para não deixar link quebrado. O teste de build passou a aceitar
+  SVG decorativo (`aria-hidden="true"`), como diz o cabeçalho da tarefa.
 
 ## Revisão adversarial
 
