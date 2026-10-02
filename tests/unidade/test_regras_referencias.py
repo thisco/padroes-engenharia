@@ -133,3 +133,24 @@ def test_bloco_da_pagina_estruturada_conta_como_citacao(tmp_path):
 def test_starter_declara_sem_citar(tmp_path):
     starter = fabrica.starter(fabrica.meta_starter(descricao="Gera o repositório."))
     assert rodar(regra_citacoes, [starter, fabrica.referencia()], tmp_path) == []
+
+
+@pytest.mark.parametrize(
+    ("conteudo", "campo"),
+    [
+        (fabrica.pratica(fabrica.meta_pratica(resumo="Veja [ref:Outra].")), "resumo"),
+        (
+            Conteudo(
+                "conceito",
+                "conceitos/harness.md",
+                fabrica.meta_conceito(linha="Veja [ref:Outra]."),
+                "x [ref:ref-forte].\n",
+            ),
+            "linha",
+        ),
+        (fabrica.receita(meta=fabrica.meta_receita(objetivo="Veja [ref:Outra].")), "objetivo"),
+    ],
+)
+def test_ref_malformado_em_campo_fora_do_corpo_reprova(tmp_path, conteudo, campo):
+    erros = rodar(regra_citacoes, [conteudo, fabrica.referencia()], tmp_path)
+    assert Erro(conteudo.caminho_relativo, campo, "R-REF-MALFORMADO", "[ref:Outra]") in erros

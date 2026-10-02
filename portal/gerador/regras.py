@@ -32,6 +32,7 @@ from portal.gerador.carregar import (
     carregar_componentes,
     carregar_ids_retirados,
     carregar_isencoes,
+    problemas_de_isencao,
 )
 from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
@@ -87,6 +88,9 @@ def validar_tudo(raiz: Path) -> list[Erro]:
     erros = list(repo.erros)
     erros += validar_repositorio(repo, raiz / "esquemas")
     erros += validar_componentes(raiz)
+    for id_ in problemas_de_isencao(raiz):
+        valor = f"{id_}: só a DAD-01 pode ficar isenta na transição da fase A.5"
+        erros.append(Erro("esquemas/transicao-a5.yml", "isentos", codigos.R_EXEMPLO, valor))
     for funcao in REGRAS:
         erros += funcao(repo, espinha, contexto)
     return sorted(set(erros))
@@ -208,6 +212,18 @@ def regra_ids(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[E
 DATA = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 
+CAMPOS_DE_TEXTO = (
+    "resumo",
+    "linha",
+    "definicao",
+    "onde_mora",
+    "erro_comum",
+    "objetivo",
+    "resultado_esperado",
+    "subtitulo",
+)
+
+
 @regra
 def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
     """Todo `[ref:id]` e todo item de `referencias:` existe, e os dois conjuntos são iguais.
@@ -223,6 +239,9 @@ def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
         texto = c.texto_citavel
         for trecho in malformados(texto):
             erros.append(Erro(c.caminho_relativo, "corpo", codigos.R_REF_MALFORMADO, trecho))
+        for campo in CAMPOS_DE_TEXTO:
+            for trecho in malformados(str(c.meta.get(campo) or "")):
+                erros.append(Erro(c.caminho_relativo, campo, codigos.R_REF_MALFORMADO, trecho))
         citados = set(extrair(texto))
         declarados = set(c.referencias_declaradas)
         for id_ in sorted(citados | declarados):
@@ -663,7 +682,11 @@ def regra_exemplo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> li
         for titulo in ("Antes e depois", "Para o agente"):
             if titulo not in subsecoes:
                 reprovar(p, f"## Exemplo sem ### {titulo}")
-        codigo = [b for b in blocos(p.corpo) if b.h2 == "Exemplo" and b.linguagem != "prompt"]
+        codigo = [
+            b
+            for b in blocos(p.corpo)
+            if b.h2 == "Exemplo" and b.linguagem != "prompt" and b.texto.strip()
+        ]
         if not codigo and not inclusoes(secao):
             reprovar(p, "## Exemplo sem bloco de código")
     for c in [*repo.praticas, *repo.receitas]:

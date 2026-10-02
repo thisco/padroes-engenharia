@@ -60,3 +60,17 @@ def test_pega(tmp_path, corpo, valor):
 def test_isencao_nao_cresce():
     """Contrato com a parte 2: só a DAD-01 fica isenta, e só até ser reescrita."""
     assert carregar_isencoes(fabrica.RAIZ) <= {"DAD-01"}
+
+
+def test_bloco_de_codigo_vazio_nao_conta_como_exemplo(tmp_path):
+    vazio = COM_EXEMPLO.replace("ALTER TABLE x;\n", "  \n")
+    assert "## Exemplo sem bloco de código" in rodar(vazio, tmp_path, status="adotar")
+
+
+def test_isencao_so_aceita_dad_01(tmp_path):
+    from portal.gerador.carregar import carregar_isencoes, problemas_de_isencao
+
+    (tmp_path / "esquemas").mkdir()
+    (tmp_path / "esquemas/transicao-a5.yml").write_text("isentos: [DAD-01, P1-01]\n", "utf-8")
+    assert carregar_isencoes(tmp_path) == frozenset({"DAD-01"})
+    assert problemas_de_isencao(tmp_path) == ["P1-01"]
