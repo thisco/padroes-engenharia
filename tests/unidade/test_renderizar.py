@@ -100,3 +100,9 @@ def test_lista_de_referencias_tem_ancora_numero_e_verificacao():
     assert '<li id="ref-ref-forte"><span class="n">[1]</span>' in html
     assert 'href="https://exemplo.org/doc" rel="noopener noreferrer"' in html
     assert '<span class="marca-v">[V]</span> verificada em 2026-10-01' in html
+
+
+def test_grupo_do_menu_nao_abre_sozinho_sobre_o_conteudo():
+    html = renderizar(fabrica.site(fabrica.pratica()), "base.html", "espinha.html", titulo="E")
+    assert '<details class="grupo">' in html
+    assert '<details class="grupo" open' not in html

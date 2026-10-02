@@ -50,6 +50,7 @@ coluna da esquerda, use o da direita.**
 
 | Premissa deste plano | Nome do contrato (use este) |
 |---|---|
+| **busca** `migracao` acha a DAD-01 | A DAD-01 reescrita contém "migração" no `resumo` ou no corpo, além do termo "Migration" com "migração" na `definicao` do `glossario.yml` (a busca soma a definição às palavras da página que traz o termo; achado 9 da revisão adversarial do A.5-1) |
 | **13.** Chaves `starter-<id>`, `ferramenta-<id>`, `receita-<slug>` | **Igual.** O motor adota os mesmos prefixos (Tarefa 4 do A.5-1, corrigida na integração) |
 | **9.** `subtitulo` no `_dominio.md` | `subtitulo` fica em `esquemas/espinha.yml`, preenchido pela Tarefa 1 do A.5-1. O `_dominio.md` leva `candidatas` e, em Construir com IA, `starter: sdd-scaffold`, que faz a Planta aparecer |
 | **11.** `inicio.md`: `por_que`, `caminhos[].frase`, `forcas[]`, `status[]`, `aprovado`, `confianca[]`, `estado` | `lead` (o "por que", com `[ref:]`), `caminhos[]` = {`titulo`, **`texto`**, `destino`}, `fatos[]` ("Por que confiar"). A legenda das forças e dos status vem do vocabulário do motor (Tarefa 1). As contagens, a versão e o estado são gerados. **Não** escreva `forcas`, `status`, `aprovado`, `confianca` nem `estado` |

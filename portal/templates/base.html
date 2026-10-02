@@ -22,7 +22,7 @@
 {% if grupo.href %}
       <a class="topo-nav" href="{{ raiz }}{{ grupo.href }}"{% if grupo.atual %} aria-current="page"{% endif %}>{{ grupo.titulo }}</a>
 {% else %}
-      <details class="grupo"{% if grupo.atual %} open{% endif %}>
+      <details class="grupo">
         <summary>{{ grupo.titulo }}</summary>
         <ul>
 {% for item in grupo.itens %}

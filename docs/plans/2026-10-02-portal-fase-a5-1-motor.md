@@ -3028,6 +3028,7 @@ para `required` no schema da prática.
 DAD-01, Tarefa 24); `componentes.yml` ganha a entrada de cada starter novo (ex.: `gateway-poc`);
 a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
 `dominios/construir-com-ia.html` quando o `_dominio.md` da faixa declara `starter: sdd-scaffold`.
+A busca por `migracao` só acha a DAD-01 se o texto dela (`resumo` ou corpo) contiver o termo "Migration" ou "migração": o motor soma a `definicao` do glossário às palavras da página em que o termo aparece (Tarefa 24). A DAD-01 reescrita precisa conter "migração" no `resumo` ou no corpo (achado 9 da revisão adversarial).
 
 ---
 
