@@ -23,6 +23,7 @@ from markdown_it import MarkdownIt
 
 from portal.gerador import erros as codigos
 from portal.gerador.carregar import (
+    BLOCOS,
     TIPOS_YAML_PUBLICADOS,
     Componente,
     Conteudo,
@@ -35,6 +36,7 @@ from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.esquemas import validar_componentes, validar_repositorio
+from portal.gerador.ninhos import PECAS
 
 
 @dataclass(frozen=True)
@@ -89,6 +91,12 @@ def _lista(meta: dict[str, Any], campo: str) -> list[str]:
     if not isinstance(valor, list):
         return []
     return [item for item in valor if isinstance(item, str)]
+
+
+def _escalar(meta: dict[str, Any], campo: str) -> list[str]:
+    """O campo de texto como lista de zero ou um item (`null` e ausente dão lista vazia)."""
+    valor = meta.get(campo)
+    return [valor] if isinstance(valor, str) else []
 
 
 def _pasta(conteudo: Conteudo) -> str:
@@ -229,6 +237,183 @@ def regra_citacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
                     Erro(conteudo.caminho_relativo, campo, codigos.R_REF_INEXISTENTE, alvo)
                 )
     return erros
+
+
+# Vínculos entre tipos (delta §6.5, regras 8, 9 e 11) -----------------------------------------
+
+BLOCOS_POR_PAGINA = {
+    "inicio": {"lead", "fatos", "caminhos"},
+    "o-problema": {
+        "lead",
+        "elos",
+        "falhas",
+        "numeros",
+        "disciplinas",
+        "momentos",
+        "principios",
+        "escada",
+    },
+    "pessoas-e-normas": {"lead", "modos", "normas"},
+}
+PAGINAS_RESERVADAS = frozenset(
+    {
+        "index",
+        "espinha",
+        "conceitos",
+        "referencias",
+        "como-fazer",
+        "comece-aqui",
+        "prompts",
+        "ferramentas",
+        "glossario",
+        "casos",
+        "guias",
+    }
+)
+
+
+def _ausentes(conteudo: Conteudo, campo: str, alvos: list[str], existentes: set[str]) -> list[Erro]:
+    """Um R-REF-INEXISTENTE por alvo de `campo` que não está entre os `existentes`."""
+    return [
+        Erro(conteudo.caminho_relativo, campo, codigos.R_REF_INEXISTENTE, alvo)
+        for alvo in alvos
+        if alvo not in existentes
+    ]
+
+
+def _na_espinha(
+    conteudo: Conteudo, espinha: Espinha, dominio: Any, momento: Any, campo: str = ""
+) -> list[Erro]:
+    """R-ESPINHA para `dominio` e `momento` que não existem; `campo` é o prefixo do caminho."""
+    erros: list[Erro] = []
+    if isinstance(dominio, str) and espinha.faixa(dominio) is None:
+        erros.append(Erro(conteudo.caminho_relativo, f"{campo}dominio", codigos.R_ESPINHA, dominio))
+    if isinstance(momento, str) and espinha.momento(momento) is None:
+        erros.append(Erro(conteudo.caminho_relativo, f"{campo}momento", codigos.R_ESPINHA, momento))
+    return erros
+
+
+def _starter_fixado(starter: Conteudo, contexto: Contexto) -> list[Erro]:
+    """Regra 11: o starter é componente de `componentes.yml`, com a mesma versão e o mesmo repo."""
+    caminho = starter.caminho_relativo
+    id_ = _texto(starter.meta, "id") or ""
+    componente = contexto.componentes.get(id_)
+    if componente is None:
+        valor = f"{id_}: componente fora de componentes.yml"
+        return [Erro(caminho, "id", codigos.R_COMPONENTE, valor)]
+    erros: list[Erro] = []
+    versao = _texto(starter.meta, "versao") or ""
+    if normalizar_versao(versao) != componente.versao:
+        valor = f"versão {versao} difere da fixada ({componente.versao})"
+        erros.append(Erro(caminho, "id", codigos.R_COMPONENTE, valor))
+    repo_url = _texto(starter.meta, "repo") or ""
+    if repo_url != componente.repo:
+        valor = f"repo {repo_url} difere do fixado"
+        erros.append(Erro(caminho, "id", codigos.R_COMPONENTE, valor))
+    return erros
+
+
+@regra
+def regra_vinculos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Toda referência cruzada resolve; a peça existe no ninho; o starter bate com
+    `componentes.yml`; a página usa só os blocos do seu template."""
+    praticas = {p.chave for p in repo.praticas}
+    receitas = {_nome(r) for r in repo.receitas}
+    starters = {_texto(s.meta, "id") or _nome(s) for s in repo.starters}
+    ferramentas = {_texto(f.meta, "id") or _nome(f) for f in repo.ferramentas}
+    conceitos = {_nome(c) for c in repo.conceitos}
+    guias = {_nome(g) for g in repo.guias}
+    erros: list[Erro] = []
+    for p in repo.praticas:
+        erros += _ausentes(
+            p, "ferramentas_aprovadas", _lista(p.meta, "ferramentas_aprovadas"), ferramentas
+        )
+        erros += _ausentes(p, "starter", _escalar(p.meta, "starter"), starters)
+        erros += _ausentes(p, "receitas", _lista(p.meta, "receitas"), receitas)
+    for r in repo.receitas:
+        erros += _ausentes(
+            r, "ferramentas_aprovadas", _lista(r.meta, "ferramentas_aprovadas"), ferramentas
+        )
+        erros += _ausentes(r, "starter", _escalar(r.meta, "starter"), starters)
+        erros += _ausentes(r, "praticas", _lista(r.meta, "praticas"), praticas)
+        erros += _na_espinha(r, espinha, r.meta.get("dominio"), r.meta.get("momento"))
+    for s in repo.starters:
+        erros += _ausentes(s, "praticas_aplicadas", _lista(s.meta, "praticas_aplicadas"), praticas)
+        erros += _ausentes(s, "receitas", _lista(s.meta, "receitas"), receitas)
+        erros += _starter_fixado(s, contexto)
+    for f in repo.ferramentas:
+        proprio = _texto(f.meta, "id") or _nome(f)
+        erros += _ausentes(f, "praticas", _lista(f.meta, "praticas"), praticas)
+        erros += _ausentes(f, "receitas", _lista(f.meta, "receitas"), receitas)
+        erros += _ausentes(
+            f, "alternativa", _escalar(f.meta, "alternativa"), ferramentas - {proprio}
+        )
+    for g in repo.guias:
+        erros += _ausentes(g, "starter", _escalar(g.meta, "starter"), starters)
+        erros += _ausentes(g, "relacionados", _lista(g.meta, "relacionados"), praticas)
+    for d in repo.dominios:
+        erros += _ausentes(d, "starter", _escalar(d.meta, "starter"), starters)
+        for i, candidata in enumerate(d.meta.get("candidatas") or []):
+            momento = candidata.get("momento") if isinstance(candidata, dict) else None
+            erros += _na_espinha(d, espinha, None, momento, f"candidatas.{i}.")
+    for g in repo.glossarios:
+        for i, termo in enumerate(g.meta.get("termos") or []):
+            conceito = termo.get("conceito") if isinstance(termo, dict) else None
+            if isinstance(conceito, str) and conceito not in conceitos:
+                campo = f"termos.{i}.conceito"
+                erros.append(Erro(g.caminho_relativo, campo, codigos.R_REF_INEXISTENTE, conceito))
+    for c in repo.conceitos:
+        ninho, peca = _texto(c.meta, "ninho"), _texto(c.meta, "peca")
+        if ninho in PECAS and peca is not None and peca not in PECAS[ninho]:
+            valor = f"{peca} não é peça de {ninho}"
+            erros.append(Erro(c.caminho_relativo, "peca", codigos.R_PECA, valor))
+    for pagina in repo.paginas:
+        erros += _problemas_da_pagina(pagina, espinha, praticas, receitas, starters, guias)
+    return erros
+
+
+def _problemas_da_pagina(
+    pagina: Conteudo,
+    espinha: Espinha,
+    praticas: set[str],
+    receitas: set[str],
+    starters: set[str],
+    guias: set[str],
+) -> list[Erro]:
+    slug = _nome(pagina)
+    caminho = pagina.caminho_relativo
+    erros: list[Erro] = []
+    if slug in PAGINAS_RESERVADAS:
+        valor = f"{slug} é página gerada; escolha outro nome"
+        erros.append(Erro(caminho, "arquivo", codigos.R_ESQUEMA, valor))
+    permitidos = BLOCOS_POR_PAGINA.get(slug, {"lead"})
+    for bloco in BLOCOS:
+        if bloco in pagina.meta and bloco not in permitidos:
+            valor = (
+                f"bloco que o template {slug if slug in BLOCOS_POR_PAGINA else 'pagina'} não usa"
+            )
+            erros.append(Erro(caminho, bloco, codigos.R_ESQUEMA, valor))
+    destinos = {"guias": guias, "receitas": receitas, "starters": starters}
+    for i, falha in enumerate(_itens(pagina, "falhas")):
+        pratica = falha.get("pratica")
+        if isinstance(pratica, str) and pratica not in praticas:
+            erros.append(Erro(caminho, f"falhas.{i}.pratica", codigos.R_REF_INEXISTENTE, pratica))
+        erros += _na_espinha(pagina, espinha, falha.get("dominio"), None, f"falhas.{i}.")
+    for i, disciplina in enumerate(_itens(pagina, "disciplinas")):
+        erros += _na_espinha(pagina, espinha, disciplina.get("dominio"), None, f"disciplinas.{i}.")
+    for i, item in enumerate(_itens(pagina, "momentos")):
+        erros += _na_espinha(pagina, espinha, None, item.get("momento"), f"momentos.{i}.")
+    for i, caminho_item in enumerate(_itens(pagina, "caminhos")):
+        destino = caminho_item.get("destino")
+        pasta, _, resto = destino.partition("/") if isinstance(destino, str) else ("", "", "")
+        if pasta in destinos and resto not in destinos[pasta]:
+            erros.append(Erro(caminho, f"caminhos.{i}.destino", codigos.R_REF_INEXISTENTE, destino))
+    return erros
+
+
+def _itens(conteudo: Conteudo, campo: str) -> list[dict[str, Any]]:
+    valor = conteudo.meta.get(campo)
+    return [i for i in valor if isinstance(i, dict)] if isinstance(valor, list) else []
 
 
 @regra

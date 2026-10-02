@@ -30,6 +30,8 @@ R_GERADO_DIVERGENTE = "R-GERADO-DIVERGENTE"
 R_EXTERNO = "R-EXTERNO"
 R_PRATICA_FORA = "R-PRATICA-FORA"
 R_REF_MALFORMADO = "R-REF-MALFORMADO"
+R_PECA = "R-PECA"
+R_COMPONENTE = "R-COMPONENTE"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -54,6 +56,8 @@ DESCRICOES: dict[str, str] = {
     R_EXTERNO: "recurso externo em <link>, <script> ou @import",
     R_PRATICA_FORA: "prática fora de praticas/<faixa>/<ID>.md",
     R_REF_MALFORMADO: "marcador [ref: que não casa [ref:<id>]",
+    R_PECA: "peça de conceito que não existe no ninho declarado",
+    R_COMPONENTE: "starter fora de componentes.yml ou com versão ou repo diferente",
 }
 
 

@@ -253,7 +253,7 @@ def meta_starter(**alteracoes: Any) -> dict[str, Any]:
             "comando": "git clone <repo> meu-projeto",
             "prompt_para_agente": "Leia o AGENTS.md e siga a constituição.",
             "praticas_aplicadas": ["P1-01"],
-            "receitas": ["ligar-ci"],
+            "receitas": [],
             "dono": "nuarq",
             "status": "adotar",
             "referencias": ["ref-forte"],

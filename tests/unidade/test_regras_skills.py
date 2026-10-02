@@ -18,6 +18,7 @@ from portal.gerador.regras import (
     regra_secoes,
     regra_skills,
     regra_verificacao,
+    regra_vinculos,
 )
 from tests import fabrica
 
@@ -96,6 +97,7 @@ def test_validar_tudo_roda_todas_as_regras_na_ordem():
         regra_espinha,
         regra_ids,
         regra_citacoes,
+        regra_vinculos,
         regra_referencias,
         regra_mecanismo,
         regra_adotar,

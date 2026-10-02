@@ -1468,7 +1468,7 @@ def malformados(texto: str) -> list[str]:
     "comece-aqui", "prompts", "ferramentas", "glossario", "casos", "guias"}`;
   - `regra_vinculos`; códigos `R_PECA`, `R_COMPONENTE`.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_regras_vinculos.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_regras_vinculos.py`)
 
 ```python
 """Regras 8, 9 e 11 do delta: referência cruzada resolve, peça existe, starter fixado."""
@@ -1548,9 +1548,9 @@ def test_blocos_da_pagina(tmp_path):
     assert Erro("paginas/prompts.md", "arquivo", "R-ESQUEMA", "prompts é página gerada; escolha outro nome") in erros
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_regras_vinculos.py -q` → FAIL (`ImportError: regra_vinculos`).
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_regras_vinculos.py -q` → FAIL (`ImportError: regra_vinculos`).
 
-- [ ] **Passo 3: Implementar** `regras.py:regra_vinculos` (`@regra`), com um auxiliar
+- [x] **Passo 3: Implementar** `regras.py:regra_vinculos` (`@regra`), com um auxiliar
   `_ausentes(conteudo, campo, alvos, existentes) -> list[Erro]` (R-REF-INEXISTENTE). Confere:
   - prática e receita: `ferramentas_aprovadas` ⊆ ferramentas; `starter` ∈ starters; prática:
     `receitas` ⊆ receitas; receita: `praticas` ⊆ práticas, `dominio`/`momento` na espinha
@@ -1569,9 +1569,9 @@ def test_blocos_da_pagina(tmp_path):
     `disciplinas[i].dominio` ∈ faixas e `momentos[i].momento` ∈ momentos (R-ESPINHA);
     `caminhos[i].destino` resolve para guia, receita ou starter existente.
 
-- [ ] **Passo 4:** `ruff format portal tests && python -m pytest -q && ruff check . && python scripts/validar.py` → verde.
+- [x] **Passo 4:** `ruff format portal tests && python -m pytest -q && ruff check . && python scripts/validar.py` → verde.
 
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: referências cruzadas, peça do ninho, starter fixado e blocos por página"`
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: referências cruzadas, peça do ninho, starter fixado e blocos por página"`
 
 ---
 

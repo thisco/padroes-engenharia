@@ -15,6 +15,7 @@ from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
+from portal.gerador.ninhos import NINHOS
 from portal.gerador.vocabulario import FORCAS, ROTULO_FORCA, STATUS, plural
 
 ROTULO_TIPO_REFERENCIA = {
@@ -29,43 +30,6 @@ ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Ag
 
 # Os dois ninhos (spec §4.3): só os nomes das peças e o que contém o quê. A definição de cada
 # peça é conteúdo curado e mora em conceitos/<slug>.md.
-NINHOS = {
-    "agente-de-codigo": {
-        "titulo": "Ninho do agente de código",
-        "descricao": (
-            "O agente de código contém o harness e a memória. O harness contém a sessão, os "
-            "subagentes, as skills, os servidores MCP e os hooks. A sessão contém o modelo."
-        ),
-        "pecas": {
-            "agente": "Agente de código",
-            "harness": "Harness",
-            "sessao": "Sessão",
-            "modelo": "Modelo",
-            "subagente": "Subagente",
-            "skill": "Skill",
-            "mcp": "MCP",
-            "hook": "Hook",
-            "memoria": "Memória",
-        },
-    },
-    "ia-no-produto": {
-        "titulo": "Ninho da IA no produto",
-        "descricao": (
-            "A aplicação ou o agente próprio, com o seu nível de agência, chega aos modelos pelo "
-            "gateway, identificado por uma chave virtual. O gateway contém os guardrails e o "
-            "catálogo de modelos. Os evals medem o conjunto."
-        ),
-        "pecas": {
-            "nivel-de-agencia": "Nível de agência",
-            "chave-virtual": "Chave virtual",
-            "gateway": "Gateway",
-            "guardrail": "Guardrail",
-            "catalogo-de-modelos": "Catálogo de modelos",
-            "eval": "Eval",
-        },
-    },
-}
-
 # Páginas geradas que sempre existem, além de uma por domínio e uma por conteúdo.
 PAGINAS_FIXAS = (
     "index.html",
