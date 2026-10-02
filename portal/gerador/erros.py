@@ -28,6 +28,7 @@ R_AGENTS = "R-AGENTS"
 R_SKILL = "R-SKILL"
 R_GERADO_DIVERGENTE = "R-GERADO-DIVERGENTE"
 R_EXTERNO = "R-EXTERNO"
+R_PRATICA_FORA = "R-PRATICA-FORA"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -50,6 +51,7 @@ DESCRICOES: dict[str, str] = {
     R_SKILL: "skill fora da especificação Agent Skills ou sem PROCEDENCIA.md",
     R_GERADO_DIVERGENTE: "README.md ou ROTEAMENTO.md diferente do que o gerador produz",
     R_EXTERNO: "recurso externo em <link>, <script> ou @import",
+    R_PRATICA_FORA: "prática fora de praticas/<faixa>/<ID>.md",
 }
 
 

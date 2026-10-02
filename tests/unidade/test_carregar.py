@@ -174,3 +174,40 @@ def test_ids_retirados_ignora_comentario_e_linha_vazia(tmp_path):
 def test_ids_retirados_do_repositorio_real_comeca_vazio():
     assert (RAIZ / "esquemas" / "ids-retirados.txt").is_file()
     assert carregar_ids_retirados(RAIZ) == frozenset()
+
+
+def test_carrega_receita_starter_ferramenta_e_glossario(tmp_path):
+    escrever(tmp_path, "receitas/ligar-ci.md", "---\ntitulo: Ligar o CI\n---\n\n## Resultado\n")
+    escrever(tmp_path, "starters/sdd-scaffold.yml", "id: sdd-scaffold\ntitulo: Scaffold\n")
+    escrever(tmp_path, "ferramentas/flyway.yml", "id: flyway\ntitulo: Flyway\n")
+    escrever(tmp_path, "ferramentas/sdd-scaffold.yml", "id: sdd-scaffold\ntitulo: Scaffold\n")
+    escrever(tmp_path, "glossario.yml", "termos:\n  - termo: Harness\n    referencias: [a, b]\n")
+    repo = carregar(tmp_path)
+    assert repo.erros == ()
+    assert [c.chave for c in repo.publicados()] == [
+        "ferramenta-flyway",
+        "ferramenta-sdd-scaffold",
+        "glossario",
+        "receita-ligar-ci",
+        "starter-sdd-scaffold",
+    ]
+    assert repo.glossarios[0].referencias_declaradas == ["a", "b"]
+
+
+def test_texto_citavel_poe_os_blocos_antes_do_corpo():
+    meta = {"lead": "L [ref:a].", "falhas": [{"titulo": "T", "observado": "O [ref:b]."}]}
+    pagina = Conteudo("pagina", "paginas/o-problema.md", meta, "C [ref:c].\n")
+    assert pagina.texto_citavel == "L [ref:a].\nT\nO [ref:b].\nC [ref:c].\n"
+    pratica = Conteudo("pratica", "praticas/x/P1-01.md", {"lead": "não conta"}, "Corpo.\n")
+    assert pratica.texto_citavel == "Corpo.\n"
+
+
+@pytest.mark.parametrize(
+    "relativo",
+    ["praticas/P1-01.md", "praticas/seguranca/sub/SEG-01.md", "praticas/seguranca/_x.md"],
+)
+def test_pratica_fora_de_praticas_faixa_reprova(tmp_path, relativo):
+    escrever(tmp_path, relativo, "---\nid: P1-01\n---\n")
+    assert carregar(tmp_path).erros == (
+        Erro(relativo, "caminho", "R-PRATICA-FORA", "a prática mora em praticas/<faixa>/<ID>.md"),
+    )

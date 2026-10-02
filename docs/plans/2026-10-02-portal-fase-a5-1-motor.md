@@ -1149,7 +1149,7 @@ git commit -m "feat: schema de componentes.yml, prefixo v no mecanismo e caminho
 - `Conteudo.referencias_declaradas -> list[str]` (no glossário, união das `referencias` dos termos);
 - `R_PRATICA_FORA = "R-PRATICA-FORA"`.
 
-- [ ] **Passo 1: Testes que falham** (acrescentar a `tests/unidade/test_carregar.py`)
+- [x] **Passo 1: Testes que falham** (acrescentar a `tests/unidade/test_carregar.py`)
 
 ```python
 def _gravar(raiz, relativo, texto):
@@ -1194,10 +1194,10 @@ def test_pratica_fora_de_praticas_faixa_reprova(tmp_path, relativo):
     )
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_carregar.py -q` → FAIL
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_carregar.py -q` → FAIL
   (`AttributeError: 'Repositorio' object has no attribute 'publicados'`).
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
   - `carregar.py:FONTES` e `_CAMPO_POR_TIPO`: as quatro entradas novas (o glossário vai para o
     campo `glossarios`); no laço de `carregar`, `.yml` também é lido com `carregar_mapa`.
   - `Conteudo.chave`, `texto_citavel`, `referencias_declaradas` e `Repositorio.publicados()`
@@ -1206,10 +1206,10 @@ def test_pratica_fora_de_praticas_faixa_reprova(tmp_path, relativo):
     não tem 3 partes, ou cujo nome começa com `_` e não é `_dominio.md`, vira o erro do teste.
   - `erros.py`: o código e `DESCRICOES[R_PRATICA_FORA] = "prática fora de praticas/<faixa>/<ID>.md"`.
 
-- [ ] **Passo 4:** `python -m pytest -q && ruff check . && ruff format --check . && python scripts/validar.py`
+- [x] **Passo 4:** `python -m pytest -q && ruff check . && ruff format --check . && python scripts/validar.py`
   → tudo verde; `validação ok: nenhum erro.`
 
-- [ ] **Passo 5:** `git add portal/gerador tests && git commit -m "feat: carrega receita, starter, ferramenta e glossário e reprova prática fora da faixa"`
+- [x] **Passo 5:** `git add portal/gerador tests && git commit -m "feat: carrega receita, starter, ferramenta e glossário e reprova prática fora da faixa"`
 
 ---
 
