@@ -12549,6 +12549,28 @@ skills: ['arquitetura-viva', 'curadoria-de-pratica', 'estados-de-interface', 'mi
 catálogo: 0.1.0
 ```
 
+### Checkpoint humano da fase A (Tarefa 43): 2026-10-02
+
+**Decisão do dono do projeto: fase A não aprovada como está.** O plano B não começa. Três
+revisões independentes de produto (frontend e design, fidelidade aos mockups e ao brainstorm,
+qualidade de conteúdo) mostraram que o motor passa nos próprios testes, mas não produz o portal
+aprovado:
+
+- o modelo de conteúdo não tem lugar para exemplo e how-to: a `regra_secoes` exige exatamente as
+  4 seções do §6.1, e não há tipos Receita, Starter ou Ferramenta;
+- faltam os componentes Cadeia e Planta do §9.2 (R11, fase A), e o ninho de Conceitos diverge do
+  mockup aprovado;
+- a home não explica o portal;
+- a spec perdeu decisões do brainstorm sem registro de descarte.
+
+**Encaminhamento:**
+1. revisão da spec para a v1.1, em delta: `docs/specs/2026-10-02-portal-v1-1-delta.md`;
+2. plano A.5 com as correções do motor e as 3 pilotos reescritas no modelo novo, antes do
+   plano B.
+
+As 7 pendências do passo 1 continuam abertas e passam para o checkpoint do plano A.5. Os
+relatórios das três revisões estão resumidos na spec delta, no §1.
+
 ## Revisão adversarial
 
 ### Revisão adversarial: 2026-10-02 — achados
