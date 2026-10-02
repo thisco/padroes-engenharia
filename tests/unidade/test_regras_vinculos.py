@@ -12,7 +12,8 @@ SCAFFOLD = Componente("sdd-scaffold", "https://github.com/thisco/sdd-scaffold", 
 
 def rodar(*conteudos, raiz):
     ctx = Contexto(raiz=raiz, componentes={"sdd-scaffold": SCAFFOLD}, ids_retirados=frozenset())
-    repo = Repositorio.de([fabrica.pratica(), fabrica.referencia(), *conteudos])
+    skills = [] if any(c.tipo == "skill" for c in conteudos) else [fabrica.skill("sdd-lifecycle")]
+    repo = Repositorio.de([fabrica.pratica(), fabrica.referencia(), *skills, *conteudos])
     return regra_vinculos(repo, fabrica.espinha_real(), ctx)
 
 
@@ -98,3 +99,10 @@ def test_blocos_da_pagina(tmp_path):
         )
         in erros
     )
+
+
+def test_skill_de_aplica_que_nao_existe_reprova(tmp_path):
+    p = fabrica.pratica(fabrica.meta_pratica(aplica=["skill:fantasma", "steering:x"]))
+    erros = rodar(p, fabrica.skill("sdd-lifecycle"), raiz=tmp_path)
+    assert Erro(p.caminho_relativo, "aplica", "R-REF-INEXISTENTE", "skill:fantasma") in erros
+    assert not [e for e in erros if e.valor == "steering:x"]

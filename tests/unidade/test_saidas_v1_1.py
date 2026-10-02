@@ -50,3 +50,15 @@ def test_llms_txt_completo_e_busca_acha_migracao(tmp_path):
         i for i in indice_busca(s, montar_paginas(s)) if i["url"] == "praticas/P1-01.html"
     )
     assert "migracao" in pratica["palavras"]
+
+
+def test_md_da_pratica_traz_a_url_da_skill_em_aplica():
+    s = site(url_base="https://p.exemplo/")
+    p = s.catalogo.praticas["P1-01"]
+    from portal.gerador.saidas import md_pratica
+
+    md = md_pratica(s, p)
+    assert (
+        "`skill:sdd-lifecycle` (https://p.exemplo/.well-known/skills/sdd-lifecycle/SKILL.md)" in md
+    )
+    assert "`steering:sdd-processo` (sem página)" in md

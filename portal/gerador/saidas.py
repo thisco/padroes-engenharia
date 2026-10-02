@@ -257,7 +257,14 @@ def md_pratica(site: Site, p: Conteudo) -> str:
         f"- Força: {m['forca']}",
         f"- Mecanismo: `{m['mecanismo']}`" if m.get("mecanismo") else "- Mecanismo: nenhum",
         f"- Status: {m['status']}",
-        "- Aplica: " + (", ".join(f"`{a}`" for a in m["aplica"]) or "nada"),
+        "- Aplica: "
+        + (
+            ", ".join(
+                f"`{i['item']}` ({i['url'] or 'sem página'})"
+                for i in links_da_pratica(site, p)["aplica"]
+            )
+            or "nada"
+        ),
         "- Relacionadas: " + (", ".join(relacionadas) or "nenhuma"),
         *_ficha_de_links(site, p),
         f"- Dono: {m['dono']} · revisada em {m['revisado_em']} · revisar até {m['revisar_ate']}",

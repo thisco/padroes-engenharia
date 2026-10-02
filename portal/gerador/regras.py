@@ -334,8 +334,13 @@ def regra_vinculos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
     ferramentas = {_texto(f.meta, "id") or _nome(f) for f in repo.ferramentas}
     conceitos = {_nome(c) for c in repo.conceitos}
     guias = {_nome(g) for g in repo.guias}
+    skills = {s.chave for s in repo.skills}
     erros: list[Erro] = []
     for p in repo.praticas:
+        for item in _lista(p.meta, "aplica"):
+            tipo, _, nome = item.partition(":")
+            if tipo == "skill" and nome not in skills:
+                erros.append(Erro(p.caminho_relativo, "aplica", codigos.R_REF_INEXISTENTE, item))
         erros += _ausentes(
             p, "ferramentas_aprovadas", _lista(p.meta, "ferramentas_aprovadas"), ferramentas
         )

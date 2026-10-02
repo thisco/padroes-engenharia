@@ -139,5 +139,5 @@ def test_todo_diagrama_tem_descricao_em_texto(publicado):
 
 def test_skill_publicada_com_sha256(publicado):
     indice = json.loads(ler(publicado / ".well-known" / "skills" / "index.json"))
-    assert [s["name"] for s in indice["skills"]] == ["curadoria-de-pratica"]
+    assert [s["name"] for s in indice["skills"]] == ["curadoria-de-pratica", "sdd-lifecycle"]
     assert (publicado / ".well-known/skills/curadoria-de-pratica/SKILL.md").is_file()

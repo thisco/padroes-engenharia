@@ -29,7 +29,9 @@ def site(repo_minimo):
 
 
 def test_indice_de_skills_no_formato_do_backstage_com_sha256(site):
-    assert indice_skills(site) == {
+    assert {
+        "skills": [s for s in indice_skills(site)["skills"] if s["name"] == "curadoria-de-pratica"]
+    } == {
         "skills": [
             {
                 "name": "curadoria-de-pratica",

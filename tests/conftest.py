@@ -39,6 +39,7 @@ def repo_minimo(tmp_path: Path) -> Path:
         f"---\n{_yaml(fabrica.meta_pratica())}---\n\n{fabrica.CORPO_PRATICA}",
     )
     escrever(raiz, "referencias/ref-forte.yaml", _yaml(fabrica.meta_referencia()))
+    shutil.copytree(fabrica.RAIZ / "skills" / "sdd-lifecycle", raiz / "skills" / "sdd-lifecycle")
     escrever(raiz, "verificacoes/P1-01.yaml", _yaml(fabrica.meta_verificacao()))
     shutil.copy(fabrica.RAIZ / "componentes.yml", raiz / "componentes.yml")
     escrever(
