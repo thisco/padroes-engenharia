@@ -2675,7 +2675,7 @@ números da espinha), `legenda_forcas()` no topo, e abaixo de 600px a lista por 
 (`<div class="espinha-lista">` gerada junto da tabela; CSS mostra uma ou outra). Páginas
 `praticas/index.html` (`html_praticas`, por domínio) e `casos.html` (`html_casos`).
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 from portal.gerador.renderizar import html_dominio, html_espinha
@@ -2699,11 +2699,11 @@ def test_espinha_sem_texto_na_vazia_e_cobertura_por_linha():
     assert html.todos(classe="espinha-lista") and html.todos("dl", classe="legenda-forcas")
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_paginas_dominio_espinha.py -q` → FAIL.
-- [ ] **Passo 3:** templates, funções e registro em `GERADORES` (`praticas/index.html`,
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_paginas_dominio_espinha.py -q` → FAIL.
+- [x] **Passo 3:** templates, funções e registro em `GERADORES` (`praticas/index.html`,
   `casos.html`); `md_dominio` e `md_espinha` acompanham (lacuna em texto; "N de 4 momentos").
-- [ ] **Passo 4:** suíte, ruff e validar verdes; regenere README/ROTEAMENTO.
-- [ ] **Passo 5:** `git commit -am "feat: domínio e espinha com lacuna nomeada, índice de práticas e casos"`
+- [x] **Passo 4:** suíte, ruff e validar verdes; regenere README/ROTEAMENTO.
+- [x] **Passo 5:** `git commit -am "feat: domínio e espinha com lacuna nomeada, índice de práticas e casos"`
 
 ---
 

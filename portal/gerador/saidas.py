@@ -285,10 +285,19 @@ def md_espinha(site: Site) -> str:
             itens = [f"{p.chave} ({ROTULO_FORCA[p.meta['forca']]})" for p in praticas]
             celulas.append(", ".join(itens) or "a definir")
         linhas.append(f"| {faixa.titulo} (`{faixa.slug}`) | " + " | ".join(celulas) + " |")
+
+    def cobertos(slug: str) -> int:
+        return sum(1 for m in momentos if site.catalogo.celula(slug, m.slug).praticas)
+
+    cobertura = [
+        f"- {f.titulo}: {cobertos(f.slug)} de {len(momentos)} momentos cobertos"
+        for f in site.espinha.faixas
+    ]
     return _juntar(
         "# Espinha",
         f"As {dimensoes(site)}. {a_definir_texto(site)} estão a definir.",
         "\n".join(linhas),
+        "## Cobertura\n\n" + "\n".join(cobertura),
     )
 
 
@@ -305,11 +314,17 @@ def md_dominio(site: Site, slug: str) -> str:
         ]
         secoes.append(f"## {m.titulo}\n\n" + ("\n".join(itens) or "a definir"))
     prefixos = ", ".join(f"`{p}`" for p in faixa.prefixos)
+    lacuna = ""
+    if not site.catalogo.praticas_do_dominio(slug):
+        cobre = "\n".join(f"- {item}" for item in faixa.scaffold) or "- nada ainda"
+        lacuna = "## O que o scaffold já cobre\n\n" + cobre
     return _juntar(
         f"# {faixa.titulo}",
         descricao_dominio(site, faixa),
         f"Grupo: {faixa.grupo} · prefixo de ID: {prefixos}",
+        faixa.subtitulo,
         descrever_forcas(site.catalogo.contagem_forca(slug)),
+        lacuna,
         *secoes,
         dominio.corpo if dominio else "",
         md_lista_referencias(site, dominio),

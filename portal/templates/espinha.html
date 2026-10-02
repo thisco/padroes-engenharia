@@ -5,6 +5,9 @@
   <h1>{{ titulo }}</h1>
   <p>{{ descricao }} Cada célula lista as práticas daquele domínio naquele momento; a célula vazia está a definir e entra no backlog.</p>
 </div>
+<section aria-label="Legenda das forças">
+  {{ c.legenda_forcas() }}
+</section>
 <section aria-label="Matriz da espinha">
   <table class="matriz">
     <caption class="vh">Práticas por domínio e momento</caption>
@@ -22,14 +25,14 @@
       <tr class="grupo"><th colspan="5" scope="rowgroup">{{ faixa.grupo }}</th></tr>
 {% endif %}
       <tr>
-        <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></th>
+        <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a><small>{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} momentos cobertos</small></th>
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
         <td>
 {% for p in celula.praticas %}
           <a class="ef {{ p.meta.forca }}" href="{{ raiz }}{{ caminho_de(p) }}" title="{{ p.meta.titulo }}">{{ p.chave }}<span class="vh"> · {{ ROTULO_FORCA[p.meta.forca] }}</span></a>
 {% else %}
-          <span class="vazia">a definir</span>
+          <span class="q vazia" role="img" aria-label="sem prática neste momento"></span>
 {% endfor %}
         </td>
 {% endfor %}
@@ -37,6 +40,22 @@
 {% endfor %}
     </tbody>
   </table>
-  <p class="legenda">{% for forca in ORDEM_FORCA %}{{ c.chip_forca(forca) }} {% endfor %}· {{ a_definir_texto(site) }} a definir.</p>
+  <p class="legenda"><span class="q vazia"></span> célula sem prática: está no backlog · {{ a_definir_texto(site) }} a definir.</p>
 </section>
+<div class="espinha-lista">
+{% for faixa in site.espinha.faixas %}
+  <section aria-label="{{ faixa.titulo }}">
+    <h2><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></h2>
+    <p class="ref-meta">{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} momentos cobertos</p>
+    <ul class="praticas">
+{% for m in site.espinha.momentos %}
+{% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
+{% if celula.praticas %}
+      <li><b>{{ m.titulo }}</b>: {% for p in celula.praticas %}<a class="ef {{ p.meta.forca }}" href="{{ raiz }}{{ caminho_de(p) }}" title="{{ p.meta.titulo }}">{{ p.chave }}</a> {% endfor %}</li>
+{% endif %}
+{% endfor %}
+    </ul>
+  </section>
+{% endfor %}
+</div>
 {% endblock %}

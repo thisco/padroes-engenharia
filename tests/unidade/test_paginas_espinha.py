@@ -43,7 +43,10 @@ def test_espinha_tem_48_celulas_grupos_e_a_definir():
         "Entrega e operação",
         "IA no produto",
     ]
-    assert corpo.count('<span class="vazia">a definir</span>') == 46
+    assert (
+        corpo.count('<span class="q vazia" role="img" aria-label="sem prática neste momento">')
+        == 46
+    )
     assert '<a class="ef orienta" href="praticas/P1-01.html"' in corpo
     assert '<a class="ef bloqueia" href="praticas/DAD-01.html"' in corpo
     assert 'id="momento-antes-do-merge"' in html

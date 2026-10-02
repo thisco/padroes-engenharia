@@ -4,7 +4,12 @@
 <p class="trilha"><a href="{{ raiz }}dominios/index.html">Domínios</a> › {{ faixa.grupo }}</p>
 <div class="topo">
   <h1>{{ titulo }}</h1>
-  <p>{{ descricao }}</p>
+  <div>
+    <p>{{ descricao }}</p>
+{% if faixa.subtitulo %}
+    <p class="subtitulo mono pequeno">{{ faixa.subtitulo }}</p>
+{% endif %}
+  </div>
 </div>
 <section aria-label="Força das práticas">
   {{ c.barra_forca(contagem) }}
@@ -16,9 +21,27 @@
   {{ c.escada(escada) }}
 </section>
 {% endif %}
+{% if planta %}
+<section aria-label="Planta do starter">
+  <h2>O que o starter traz</h2>
+  {{ c.planta(planta) }}
+</section>
+{% endif %}
+{% if fluxo %}
+<section aria-label="O ninho da IA no produto">
+  <h2>Como a IA entra no produto</h2>
+  {{ c.fluxo_produto(None, raiz) }}
+</section>
+{% endif %}
 <div class="corpo">
   <div>
-{% for m in site.espinha.momentos %}
+{% if not tem_praticas %}
+{{ c.lacuna("O que o scaffold já cobre", scaffold) }}
+{% if candidatas %}
+{{ c.lacuna("Práticas candidatas, ainda sem texto", candidatas) }}
+{% endif %}
+{% endif %}
+{% for m in site.espinha.momentos if tem_praticas %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
     <section aria-label="{{ m.titulo }}">
       <h2>{{ m.titulo }}</h2>
@@ -33,6 +56,12 @@
 {% endif %}
     </section>
 {% endfor %}
+{% if vinculos.receitas %}
+    <section aria-label="Receitas do domínio"><h2>Receitas do domínio</h2><ul class="praticas">{% for i in vinculos.receitas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.ferramentas %}
+    <section aria-label="Ferramentas do domínio"><h2>Ferramentas do domínio</h2><ul class="praticas">{% for i in vinculos.ferramentas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
 {% if corpo %}
     <section class="texto" aria-label="Sobre o domínio">{{ corpo | safe }}</section>
 {% endif %}

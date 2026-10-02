@@ -216,6 +216,17 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .falhas td, .falhas th { font-size: 13px; }
 .planta tr.grupo th { background: var(--papel-2); font-size: 13px; color: var(--tinta-2); }
 
+/* espinha: tabela acima de 600px, lista por domínio abaixo */
+.espinha-lista { display: none; }
+.matriz th[scope="row"] small { display: block; font-weight: 400; font-size: 12px; color: var(--tinta-2); }
+@media (max-width: 600px) {
+  section[aria-label="Matriz da espinha"] { display: none; }
+  .espinha-lista { display: block; }
+}
+.subtitulo { margin: 4px 0 0; }
+.pequeno { font-size: 12px; }
+.mono { font-family: var(--mono); }
+
 /* tabelas de evidência densa */
 .tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }

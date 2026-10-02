@@ -405,7 +405,78 @@ def html_espinha(site: Site) -> str:
         titulo="Espinha",
         descricao=f"As {dimensoes(site)}.",
         a_definir=celulas_a_definir(site),
+        cobertura={
+            f.slug: sum(
+                1 for m in site.espinha.momentos if site.catalogo.celula(f.slug, m.slug).praticas
+            )
+            for f in site.espinha.faixas
+        },
     )
+
+
+def scaffold_do_dominio(site: Site, faixa: Faixa, raiz: str = "../") -> list[Any]:
+    """O que o `sdd-scaffold` já cobre na faixa; skill publicada vira link para o `SKILL.md`."""
+    publicadas = {s.chave for s in site.repo.skills}
+    itens: list[Any] = []
+    for item in faixa.scaffold:
+        tipo, _, nome = item.partition(":")
+        if tipo == "skill" and nome in publicadas:
+            href = f".well-known/skills/{nome}/SKILL.md"
+            itens.append(Markup('<a href="{}">{}</a>').format(f"{raiz}{href}", item))
+        else:
+            itens.append(item)
+    return itens or ["nada: o scaffold ainda não cobre esta faixa"]
+
+
+def candidatas_do_dominio(site: Site, dominio: Conteudo | None) -> list[str]:
+    if dominio is None:
+        return []
+    resultado = []
+    for candidata in dominio.meta.get("candidatas") or []:
+        momento = site.espinha.momento(str(candidata.get("momento", "")))
+        resultado.append(f"{candidata.get('titulo', '')} ({momento.titulo if momento else ''})")
+    return resultado
+
+
+def planta_do_dominio(site: Site, dominio: Conteudo | None) -> list[dict[str, Any]]:
+    """A planta do starter que o `_dominio.md` declara em `starter`, sem os marcadores `[ref:]`."""
+    if dominio is None or not isinstance(dominio.meta.get("starter"), str):
+        return []
+    starter = next(
+        (s for s in site.repo.starters if s.meta.get("id") == dominio.meta["starter"]), None
+    )
+    if starter is None:
+        return []
+    return [_sem_marcadores(linha) for linha in starter.meta.get("planta") or []]
+
+
+def _sem_marcadores(valor: Any) -> Any:
+    if isinstance(valor, str):
+        return " ".join(MARCADOR.sub("", valor).split())
+    if isinstance(valor, dict):
+        return {k: _sem_marcadores(v) for k, v in valor.items()}
+    if isinstance(valor, list):
+        return [_sem_marcadores(v) for v in valor]
+    return valor
+
+
+def vinculos_do_dominio(site: Site, faixa: Faixa) -> dict[str, list[dict[str, str]]]:
+    """Receitas e ferramentas que tocam o domínio (pelas práticas e receitas ligadas a ele)."""
+    receitas = [r for r in site.repo.receitas if r.meta.get("dominio") == faixa.slug]
+    ids_praticas = {p.chave for p in site.catalogo.praticas_do_dominio(faixa.slug)}
+    slugs_receitas = {PurePosixPath(r.caminho_relativo).stem for r in receitas}
+    ferramentas = [
+        f
+        for f in site.repo.ferramentas
+        if ids_praticas & set(f.meta.get("praticas") or [])
+        or slugs_receitas & set(f.meta.get("receitas") or [])
+    ]
+    return {
+        "receitas": [{"titulo": str(r.meta["titulo"]), "href": caminho_de(r)} for r in receitas],
+        "ferramentas": [
+            {"titulo": str(f.meta["titulo"]), "href": caminho_de(f)} for f in ferramentas
+        ],
+    }
 
 
 def escada_do_dominio(site: Site, faixa: Faixa) -> list[dict[str, Any]]:
@@ -434,6 +505,12 @@ def html_dominio(site: Site, faixa: Faixa) -> str:
         faixa=faixa,
         dominio=dominio,
         contagem=site.catalogo.contagem_forca(faixa.slug),
+        tem_praticas=bool(site.catalogo.praticas_do_dominio(faixa.slug)),
+        scaffold=scaffold_do_dominio(site, faixa),
+        candidatas=candidatas_do_dominio(site, dominio),
+        planta=planta_do_dominio(site, dominio),
+        fluxo=faixa.slug == "ia-no-produto",
+        vinculos=vinculos_do_dominio(site, faixa),
         escada=escada_do_dominio(site, faixa),
         corpo=corpo_html(dominio) if dominio else "",
         referencias=site.catalogo.referencias_de(dominio) if dominio else [],
