@@ -25,11 +25,32 @@ def test_verificacao_inocente(tmp_path):
     assert rodar(com_registro(), tmp_path) == []
 
 
-def test_verificacao_inocente_conteudo_sem_referencia_nao_precisa_de_registro(tmp_path):
+def test_verificacao_pega_pagina_sem_referencia_e_sem_registro(tmp_path):
+    # R14 e §11: todo conteúdo publicado passa pela curadoria, cite ou não uma referência.
     pagina = Conteudo(
-        "pagina", "paginas/para-agentes.md", {"titulo": "Para agentes"}, "Sem citação.\n"
+        "pagina",
+        "paginas/o-problema.md",
+        {"titulo": "O problema"},
+        "Agentes aumentam a produtividade em 171%.\n",
     )
-    assert rodar([pagina], tmp_path) == []
+    assert rodar([pagina], tmp_path) == [
+        Erro(
+            "paginas/o-problema.md",
+            "verificacao",
+            "R-VERIFICACAO",
+            "sem registro em verificacoes/o-problema.yaml",
+        )
+    ]
+
+
+def test_verificacao_pega_dominio_sem_referencia_e_sem_registro(tmp_path):
+    dominio = Conteudo(
+        "dominio", "praticas/construir-com-ia/_dominio.md", fabrica.meta_dominio(), "Texto.\n"
+    )
+    erros = rodar([dominio], tmp_path)
+    assert [(e.arquivo, e.regra) for e in erros] == [
+        ("praticas/construir-com-ia/_dominio.md", "R-VERIFICACAO")
+    ]
 
 
 def test_verificacao_pega_conteudo_sem_registro(tmp_path):

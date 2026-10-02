@@ -101,10 +101,10 @@ def repo_exemplo(repo_minimo: Path) -> Path:
     com mecanismo externo e uma de `ia-no-produto`), conceito, guia, caso, página e skill,
     todos com registro de verificação. É o repositório de exemplo do §13 da spec."""
     raiz = repo_minimo
-    escrever(
-        raiz,
-        "praticas/construir-com-ia/_dominio.md",
-        f"---\n{_yaml(fabrica.meta_dominio())}---\n\nComo o time conduz a mudança.\n",
+    citacao = "Afirmação conferida na fonte [ref:ref-forte].\n"
+    dominio = fabrica.meta_dominio(referencias=["ref-forte"])
+    _com_registro(
+        raiz, "praticas/construir-com-ia/_dominio.md", dominio, citacao, "construir-com-ia"
     )
     dad = fabrica.meta_pratica(
         id="DAD-01",
@@ -119,7 +119,6 @@ def repo_exemplo(repo_minimo: Path) -> Path:
         id="P2-01", dominio="ia-no-produto", subdominio="apps", relacionadas=["P1-01"]
     )
     _com_registro(raiz, "praticas/ia-no-produto/P2-01.md", p2, fabrica.CORPO_PRATICA, "P2-01")
-    citacao = "Afirmação conferida na fonte [ref:ref-forte].\n"
     _com_registro(raiz, "conceitos/harness.md", fabrica.meta_conceito(), citacao, "harness")
     _com_registro(raiz, "guias/do-zero.md", fabrica.meta_guia(), citacao, "do-zero")
     _com_registro(raiz, "casos/sgd.md", fabrica.meta_caso(), citacao, "sgd")

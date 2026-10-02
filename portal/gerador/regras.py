@@ -388,10 +388,12 @@ def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 @regra
 def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """Todo conteúdo com referências tem `verificacoes/<chave>.yaml` válido e em dia.
+    """Todo conteúdo publicado tem `verificacoes/<chave>.yaml` válido e em dia (R14, §11).
 
-    O registro não é anterior a `revisado_em`, tem ao menos uma afirmação para cada id citado
-    no corpo, nenhuma afirmação `nao-confirmada` e a `revisao_adversarial` registrada.
+    Vale também para página e domínio sem nenhuma citação: é aí que uma afirmação factual
+    escaparia da curadoria. O registro não é anterior a `revisado_em`, tem ao menos uma
+    afirmação para cada id citado no corpo, nenhuma afirmação `nao-confirmada` e a
+    `revisao_adversarial` registrada.
     Registro sem conteúdo correspondente também reprova: quase sempre é ID digitado errado.
     """
     erros: list[Erro] = []
@@ -407,8 +409,6 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
             erros.append(Erro(v.caminho_relativo, "conteudo", codigos.R_VERIFICACAO, valor))
     for chave, c in conteudos.items():
         citados = extrair(c.corpo)
-        if not citados and not _lista(c.meta, "referencias"):
-            continue
         v = registros.get(chave)
         if v is None:
             valor = f"sem registro em verificacoes/{chave}.yaml"
