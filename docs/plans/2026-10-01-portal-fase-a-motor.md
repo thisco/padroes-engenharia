@@ -12453,4 +12453,75 @@ projeto pediu.
 
 ## Evidências
 
+### Verificação da fase A (Tarefa 40): 2026-10-02
+
+Rodada no repositório real, branch `feat/2026-10-01-portal-fase-a`, commit `5d5fcf6`, depois de
+`rm -rf .venv public` e de recriar o ambiente com `requirements-dev.txt`. Os builds de
+determinismo foram para o diretório temporário da sessão no lugar de `/tmp/portal-a|b`.
+
+**Passos 1 a 3:**
+
+```text
+$ python --version
+Python 3.14.8
+$ python scripts/validar.py
+validação ok: nenhum erro.
+$ python -m pytest -q
+373 passed in 8.05s
+$ ruff check .
+All checks passed!
+$ ruff format --check .
+82 files already formatted
+$ python scripts/gerar.py --saida <tmp>/portal-a ; python scripts/gerar.py --saida <tmp>/portal-b
+portal gerado em <tmp>/portal-a (versão 0.1.0, commit 5d5fcf6, 2026-10-02).
+portal gerado em <tmp>/portal-b (versão 0.1.0, commit 5d5fcf6, 2026-10-02).
+$ diff -r <tmp>/portal-a <tmp>/portal-b && echo "builds idênticos"
+builds idênticos
+$ git status --short
+```
+
+**Passo 4:**
+
+```text
+portal gerado em …/padroes-engenharia/public (versão 0.1.0, commit 5d5fcf6, 2026-10-02).
+células: 48 | práticas: ['DAD-01', 'P1-01', 'P2-01'] | únicas: True
+páginas: 22 | sem .md gêmeo: []
+fora do llms.txt: []
+skills: ['arquitetura-viva', 'curadoria-de-pratica', 'estados-de-interface', 'migrations-reversiveis', 'sdd-lifecycle', 'threat-model']
+catálogo: 0.1.0
+```
+
+**Passo 5** (`python -m http.server -d public 8000`, navegador automatizado):
+
+- Início: os 4 passos, a espinha em miniatura e o bloco "Para agentes" com
+  `http://localhost:8000/roteamento.json`. Conferido.
+- Navegação em Entender, Fazer e Consultar, mais "para agentes"; "O problema" sem link. Conferido.
+- Espinha: 48 células; `P1-01` e `P2-01` em âmbar tracejado (só orienta), `DAD-01` em azul sólido
+  (bloqueia), 45 células "a definir". Conferido.
+- `praticas/DAD-01.html`: ID em mono, chips, citações `[1]`…`[4]` com a lateral, mecanismo,
+  dono e revisão. Conferido.
+- `dominios/dados-migrations.html` com a barra de força. Conferido.
+- `conceitos.html` com os dois ninhos. Conferido.
+- `referencias.html`: filtros de tipo, domínio e verificação presentes. Conferido.
+- Busca `migracao`: **"Nada encontrado."** O JS remove acento e caixa como a spec pede, mas o
+  `busca.json` indexa só título, descrição e seção, e a `DAD-01` diz "migration" em todos eles.
+  O esperado do plano estava errado, e a lacuna de usabilidade (termo em português não acha
+  prática escrita com o termo em inglês) entra como achado menor na revisão adversarial.
+  `migration` acha `DAD-01`.
+- Fontes Inter e JetBrains Mono locais; nenhuma requisição fora de `localhost`. Conferido.
+- `@media (prefers-reduced-motion: reduce)` zera a animação de `.ninho .alvo`. Conferido.
+- Console: só um 404 de `/favicon.ico` (o portal não publica favicon). Menor.
+
+**Passo 6:**
+
+```text
+Links com erro: 0
+Revisão vencida: 0
+Práticas experimentar apoiadas só em [S]: 0
+Mecanismos externos a conferir: 0
+Componentes com versão nova: 0
+Células a definir: 45
+saida=0
+```
+
 ## Revisão adversarial
