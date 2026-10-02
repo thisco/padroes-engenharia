@@ -55,6 +55,52 @@ def test_externo_pega_link_script_import_e_url_do_css(tmp_path):
     ]
 
 
+def test_externo_inocente_imagem_e_midia_locais(tmp_path):
+    escrever(
+        tmp_path,
+        "index.html",
+        '<img src="tema/logo.png" alt="logo" srcset="tema/logo-2x.png 2x">\n'
+        '<video poster="tema/capa.png"><source src="tema/v.mp4"></video>\n',
+    )
+    assert varrer_externos(tmp_path) == []
+
+
+def test_externo_pega_imagem_e_midia_carregadas_de_fora(tmp_path):
+    # §18 e §15 item 4: sem chamada externa; um pixel de rastreio em <img> é recurso carregado.
+    escrever(
+        tmp_path,
+        "pratica.html",
+        '<img alt="pixel" src="https://rastreio.exemplo/p.png">\n'
+        '<img src="local.png" srcset="local.png 1x, //cdn.exemplo/a.png 2x">\n'
+        '<iframe src="https://video.exemplo/embed"></iframe>\n'
+        '<video poster="http://img.exemplo/capa.png"><source src="//cdn.exemplo/v.mp4"></video>\n'
+        '<audio src="https://som.exemplo/a.mp3"></audio>\n'
+        '<object data="https://obj.exemplo/x.pdf"></object>\n',
+    )
+    assert [(e.campo, e.regra) for e in varrer_externos(tmp_path)] == [
+        ("linha 1", "R-EXTERNO"),
+        ("linha 2", "R-EXTERNO"),
+        ("linha 3", "R-EXTERNO"),
+        ("linha 4", "R-EXTERNO"),
+        ("linha 4", "R-EXTERNO"),
+        ("linha 5", "R-EXTERNO"),
+        ("linha 6", "R-EXTERNO"),
+    ]
+
+
+def test_imagem_externa_numa_pratica_nao_publica(repo_minimo, mutar, tmp_path):
+    saida = tmp_path / "public"
+    mutar(
+        "praticas/construir-com-ia/P1-01.md",
+        "## Como verificar",
+        "![pixel](https://rastreio.exemplo/p.png)\n\n## Como verificar",
+    )
+    erros = construir(repo_minimo, saida, **PARAMETROS)
+    assert erros and {e.regra for e in erros} == {"R-EXTERNO"}
+    assert "praticas/P1-01.html" in {e.arquivo for e in erros}
+    assert not saida.exists()
+
+
 def test_construir_gera_e_nao_deixa_pasta_temporaria(repo_minimo, tmp_path):
     saida = tmp_path / "public"
     assert construir(repo_minimo, saida, **PARAMETROS) == []
