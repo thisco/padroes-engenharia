@@ -12524,4 +12524,93 @@ Células a definir: 45
 saida=0
 ```
 
+### Nova rodada dos passos 2 a 4 após os achados críticos: 2026-10-02
+
+Depois de `f0d5286` e `aee60f5` (Tarefa 42). Os builds foram para pastas novas no diretório
+temporário da sessão.
+
+```text
+$ python scripts/validar.py
+validação ok: nenhum erro.
+$ python -m pytest -q
+377 passed in 7.01s
+$ ruff check .
+All checks passed!
+$ ruff format --check .
+82 files already formatted
+portal gerado em <tmp>/v2-portal-a (versão 0.1.0, commit aee60f5, 2026-10-02).
+portal gerado em <tmp>/v2-portal-b (versão 0.1.0, commit aee60f5, 2026-10-02).
+builds idênticos
+$ git status --short
+células: 48 | práticas: ['DAD-01', 'P1-01', 'P2-01'] | únicas: True
+páginas: 22 | sem .md gêmeo: []
+fora do llms.txt: []
+skills: ['arquitetura-viva', 'curadoria-de-pratica', 'estados-de-interface', 'migrations-reversiveis', 'sdd-lifecycle', 'threat-model']
+catálogo: 0.1.0
+```
+
 ## Revisão adversarial
+
+### Revisão adversarial: 2026-10-02 — achados
+
+**Revisor:** subagente em sessão independente, com modelo de raciocínio potente. Recebeu só o
+repositório, a spec e o resumo do diff, sem este plano nem o histórico da implementação. Não
+alterou arquivos. Rodou 34 mutações em cópias temporárias: 30 saíram com código 1, como as
+regras preveem, e as 4 que passaram com 0 estão nos achados abaixo.
+
+| Requisito / critério | Veredito | Achado | Severidade |
+|---|---|---|---|
+| R1 estrutura §5 | parcial | Sem remote GitLab; `docs/adr/` está no mapa do `AGENTS.md`, mas a pasta não existe | menor |
+| R2 espinha como fonte única | entregue com desvio | 12, 4 e 48 fixos em `saidas.py`, `renderizar.py` e templates | menor |
+| R3 JSON Schema por tipo | entregue | — | — |
+| R4 frontmatter e 4 seções | entregue | — | — |
+| R5 `[ref:]` e conjunto igual | entregue com brecha | `[ref:Maiuscula]` e `[ref: espaço]` são ignorados e saem literais | menor |
+| R6 integridade e mecanismo | entregue com desvio | `@v1.6.1` do exemplo da §6.6 é reprovado; qualquer arquivo vale como mecanismo; `.md` fora de `praticas/<faixa>/` é ignorado | menor |
+| R7 gerador determinístico e atômico | entregue | — | — |
+| R8 48 células | entregue | — | — |
+| R9 pacote offline | entregue (só config) | Não roda sem GitLab | — |
+| R10 `AGENTS.md` e bloco §7.3 | entregue | — | — |
+| R11 visual §9 | parcial | Faltam os componentes Cadeia e Planta do §9.2 | menor |
+| R12 navegação e páginas | parcial | `peca` do conceito não é validada contra o ninho | menor |
+| **R14 registro em todo conteúdo** | **parcial** | **Página e domínio sem `[ref:]` publicavam sem registro (mutação "171% (McKinsey)" passava)** | **crítico** |
+| R15 skill de curadoria | entregue | — | — |
+| R16 bloqueios e avisos no CI | entregue (só config) | — | — |
+| R17 governança | entregue | `@nuarq` provisório; `5d5fcf6` e `0f434e4` com `Co-Authored-By` (§12.3) | menor |
+| R18 suíte §13 | entregue com desvio | Sem `tests/fixtures/` (o repositório de exemplo é montado em `conftest.py`), e não há ADR para isso | menor |
+| R19 erros §14 | parcial | Não junta R-ESQUEMA com os erros do build de conferência; `componentes.yml` sem `versao` sai com 2 | menor |
+| R20 procedência | entregue | — | — |
+| §18 critérios (validar, bytes, 48 células, `.md` gêmeo, `llms.txt`, adotar, contraste) | entregue | — | — |
+| **§18 abre sem rede / §15 item 4** | **parcial** | **`![x](https://…)` no Markdown virava `<img src>` externo e o build publicava** | **arquitetural, reclassificado como crítico** |
+| §15 texto fixo no gerador | parcial | `NINHOS[...]["descricao"]` e "Toda afirmação… conferida na fonte" estão fora da curadoria | menor, beirando arquitetural |
+| Passo 5 da Tarefa 40 (busca) | parcial | `migracao` não acha `DAD-01`: o índice não tem o corpo do texto nem sinônimos | menor |
+
+**Tratamento:**
+
+1. **R14 (crítico): corrigido em `f0d5286`.** A `regra_verificacao` deixou de pular conteúdo
+   sem citação. Dois testes novos (página e domínio sem registro) falharam antes da correção.
+   O repositório de exemplo ganhou o registro do domínio, que a docstring já prometia. As
+   mutações `pagina-sem-ref` e `dominio-sem-ref` agora saem com R-VERIFICACAO.
+2. **Imagem externa: corrigido em `aee60f5`.** O revisor classificou o achado como
+   arquitetural, mas a spec se sustenta como está escrita: o defeito é da varredura. Por isso
+   foi tratado como crítico. `EXTERNOS` passa a ver `img`, `iframe`, `source`, `video`,
+   `audio`, `track`, `embed`, `object`, `input` e `srcset`; `<a href>` continua livre, porque
+   só navega. Há três testes novos (inocente, varredura e ponta a ponta numa prática). A
+   mutação `img-externa` agora sai com R-EXTERNO.
+3. **Menores: levados ao checkpoint da Tarefa 43**, com esta proposta:
+   - corrigir na fase A, por serem baratos e travarem a fase B:
+     - `[ref:` malformado reprova (R5);
+     - `@v` aceito no mecanismo (R6);
+     - `.md` fora da faixa reprova (R6);
+     - `peca` validada contra o ninho (R12);
+     - `componentes.yml` com schema (R19);
+   - corrigir no plano B, porque a fase B usa:
+     - componentes Cadeia e Planta (R11);
+     - textos fixos do gerador movidos para conteúdo curado (§15);
+     - palavras-chave no índice da busca;
+     - favicon;
+   - ADR curta para os desvios aceitos: `tests/fixtures/` montado em código (R18), coleta de
+     erros em dois estágios (R19) e números da espinha fixos até a fase B (R2);
+   - pendências de ambiente, que ficam para a criação do projeto no GitLab (R1, R9, R16, R17).
+4. **`Co-Authored-By` em `5d5fcf6` e `0f434e4`:** os commits seguintes já saem sem o trailer.
+   Reescrever as duas mensagens é edição de histórico e depende da aprovação do dono do
+   projeto antes do merge.
