@@ -2200,7 +2200,7 @@ def test_paginas_publicadas_so_com_conteudo():
   `align-self: start`, `<pre>`, botão `data-copiar` e `<ul class="arqs">` de chips-link;
   `lacuna(titulo, itens)` → `<section class="lacuna">` com título e lista nomeada.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_forca.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_forca.py`)
 
 ```python
 from tests import fabrica
@@ -2236,11 +2236,11 @@ def test_bloco_escuro_com_copiar_e_chips():
   Em `test_renderizar.py`, apagar `test_chip_de_forca` e `test_barra_de_forca_e_um_svg_acessivel`
   (substituídos acima).
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_componentes_forca.py -q` → FAIL.
-- [ ] **Passo 3:** macros e CSS conforme as Interfaces (`.seg` 10×10px, `--gov` preenchido só
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_componentes_forca.py -q` → FAIL.
+- [x] **Passo 3:** macros e CSS conforme as Interfaces (`.seg` 10×10px, `--gov` preenchido só
   em força que impede; `avisa` âmbar-claro; `orienta` tracejado; `.lacuna` com régua `--traco`).
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: legenda das forças, barra em escala fixa, bloco escuro com Copiar e lacuna nomeada"` (inclua `tests/dom.py`).
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: legenda das forças, barra em escala fixa, bloco escuro com Copiar e lacuna nomeada"` (inclua `tests/dom.py`).
 
 ---
 

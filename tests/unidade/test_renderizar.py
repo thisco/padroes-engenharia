@@ -11,7 +11,6 @@ from portal.gerador.renderizar import (
     carregar_config,
     classe_peca,
     corpo_html,
-    descrever_forcas,
     descrever_ninho,
     paginas_publicadas,
     para_md,
@@ -99,26 +98,6 @@ def test_corpo_html_numera_as_citacoes():
     html = corpo_html(fabrica.pratica())
     assert '<a href="#ref-ref-forte">[1]</a>' in html
     assert "[ref:" not in html
-
-
-def test_chip_de_forca():
-    assert str(macro("chip_forca")("orienta")) == '<span class="ef orienta">só orienta</span>'
-    assert str(macro("chip_forca")("pede-aprovacao")) == (
-        '<span class="ef pede-aprovacao">pede aprovação</span>'
-    )
-
-
-def test_barra_de_forca_e_um_svg_acessivel():
-    contagem = {"bloqueia": 1, "pede-aprovacao": 0, "avisa": 0, "orienta": 3}
-    html = str(macro("barra_forca")(contagem))
-    descricao = "Força das práticas: bloqueia: 1 · pede aprovação: 0 · avisa: 0 · só orienta: 3."
-    assert descrever_forcas(contagem) == descricao
-    assert f'role="img" aria-label="{descricao}"' in html
-    assert '<rect class="bloqueia" x="0" y="0" width="25.0" height="4"/>' in html
-    assert '<rect class="orienta" x="25.0" y="0" width="75.0" height="4"/>' in html
-    vazia = str(macro("barra_forca")(dict.fromkeys(contagem, 0)))
-    assert '<rect class="nenhuma"' in vazia
-    assert "nenhuma prática publicada" in vazia
 
 
 @pytest.mark.parametrize(

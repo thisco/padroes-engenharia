@@ -148,7 +148,10 @@ p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70
 .legenda { font-size: 12px; color: var(--tinta-2); margin-top: 8px; }
 
 /* bloco escuro: memória e "para agentes" */
-.disco { background: var(--tinta); color: var(--papel); padding: 16px 18px; border-radius: 3px; }
+.disco { background: var(--tinta); color: var(--papel); padding: 16px 18px; border-radius: 3px; align-self: start; }
+.disco .copiar { float: right; }
+.disco .arqs { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; padding: 0; list-style: none; }
+.disco .arqs a { display: inline-block; font-family: var(--mono); font-size: 12px; padding: 2px 8px; border: 1px solid var(--sobre-escuro); border-radius: 2px; text-decoration: none; }
 .disco h2 { margin: 0; font-size: 18px; color: var(--papel); }
 .disco p { margin: 4px 0 10px; font-size: 13px; color: var(--sobre-escuro); }
 .disco pre {
@@ -188,11 +191,22 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .filtros select { font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
 
 /* barra de força de um domínio */
-.barra-forca { display: block; width: 100%; max-width: 480px; height: 12px; }
-.barra-forca .bloqueia, .barra-forca .pede-aprovacao { fill: var(--gov); }
-.barra-forca .avisa { fill: var(--ambar-claro); stroke: var(--ambar); stroke-width: .6; }
-.barra-forca .orienta { fill: var(--branco); stroke: var(--ambar); stroke-width: .6; stroke-dasharray: 1.5 1; }
-.barra-forca .nenhuma { fill: var(--papel-2); }
+.barra-forca { display: flex; flex-wrap: wrap; gap: 3px; max-width: 100%; }
+.seg { display: inline-block; width: 10px; height: 10px; box-sizing: border-box; }
+.seg.bloqueia, .seg.pede-aprovacao { background: var(--gov); }
+.seg.avisa { background: var(--ambar-claro); border: 1.5px solid var(--ambar); }
+.seg.orienta { border: 1.5px dashed var(--ambar); }
+
+/* legenda das forças: o chip e o que ele faz */
+.legenda-forcas { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 20px; margin: 12px 0; }
+.legenda-forcas div { display: flex; flex-direction: column; gap: 4px; }
+.legenda-forcas dt { margin: 0; }
+.legenda-forcas dd { margin: 0; font-size: 13px; color: var(--tinta-2); }
+
+/* lacuna nomeada: o que ainda falta, com os nomes */
+.lacuna { border-top: 2px solid var(--traco); padding-top: 8px; }
+.lacuna h2 { font-size: 15px; margin: 0 0 4px; }
+.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--tinta-2); }
 
 /* ninhos: caixas aninhadas com a peça em destaque */
 .ninho { margin: 0; font-size: 13px; }

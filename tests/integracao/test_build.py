@@ -119,12 +119,16 @@ def test_toda_pagina_em_pt_br(publicado):
         assert ler(pagina).startswith('<!doctype html>\n<html lang="pt-BR">'), pagina
 
 
-def test_todo_svg_tem_role_img_e_aria_label(publicado):
-    svgs = [tag for p in htmls(publicado) for tag in re.findall(r"<svg\b[^>]*>", ler(p))]
-    assert len(svgs) >= 12
-    for tag in svgs:
-        assert 'role="img"' in tag, tag
+def test_todo_role_img_tem_aria_label(publicado):
+    figuras = [
+        tag for p in htmls(publicado) for tag in re.findall(r"<[^>]*role=\"img\"[^>]*>", ler(p))
+    ]
+    assert len(figuras) >= 1
+    for tag in figuras:
         assert re.search(r'aria-label="[^"]+"', tag), tag
+    for p in htmls(publicado):
+        for tag in re.findall(r"<svg\b[^>]*>", ler(p)):
+            assert 'role="img"' in tag, tag
 
 
 def test_todo_diagrama_tem_descricao_em_texto(publicado):

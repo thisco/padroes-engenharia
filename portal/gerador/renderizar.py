@@ -192,7 +192,12 @@ def criar_ambiente(raiz: Path) -> Environment:
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
     )
-    ambiente.globals.update(FORCAS=FORCAS, STATUS=STATUS, a_definir_texto=a_definir_texto)
+    ambiente.globals.update(
+        FORCAS=FORCAS,
+        STATUS=STATUS,
+        CONSEQUENCIA_FORCA={f.slug: f.consequencia for f in FORCAS},
+        a_definir_texto=a_definir_texto,
+    )
     ambiente.filters["plural"] = plural
     return ambiente
 
