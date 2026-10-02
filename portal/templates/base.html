@@ -15,23 +15,28 @@
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="barra">
   <a class="marca" href="{{ raiz }}index.html">{{ site.nome }} · {{ site.organizacao }}</a>
-  <nav class="nav" aria-label="Navegação principal">
-{% for grupo, itens in nav %}
-    <span class="grupo"><span>{{ grupo }}</span>
-{% for item in itens %}
-{% if item.href %}
-      <a href="{{ raiz }}{{ item.href }}"{% if item.atual %} aria-current="page"{% endif %}>{{ item.titulo }}</a>
+  <details class="menu" open>
+    <summary>Menu</summary>
+    <nav class="nav" aria-label="Navegação principal">
+{% for grupo in nav %}
+{% if grupo.href %}
+      <a class="topo-nav" href="{{ raiz }}{{ grupo.href }}"{% if grupo.atual %} aria-current="page"{% endif %}>{{ grupo.titulo }}</a>
 {% else %}
-      <span class="em-breve" title="ainda não publicada">{{ item.titulo }}</span>
+      <details class="grupo"{% if grupo.atual %} open{% endif %}>
+        <summary>{{ grupo.titulo }}</summary>
+        <ul>
+{% for item in grupo.itens %}
+          <li><a href="{{ raiz }}{{ item.href }}"{% if item.atual %} aria-current="page"{% endif %}>{{ item.titulo }}</a></li>
+{% endfor %}
+        </ul>
+      </details>
 {% endif %}
 {% endfor %}
-    </span>
-{% endfor %}
-    <a class="ag" href="{{ raiz }}para-agentes.html"{% if caminho == "para-agentes.html" %} aria-current="page"{% endif %}>para agentes</a>
-  </nav>
+    </nav>
+  </details>
   <div class="busca" role="search">
     <label class="vh" for="busca">Buscar no portal</label>
-    <input id="busca" type="search" placeholder="Buscar práticas, IDs e referências" autocomplete="off" data-indice="{{ raiz }}busca.json" data-raiz="{{ raiz }}">
+    <input id="busca" type="search" placeholder="Buscar (atalho /)" aria-keyshortcuts="/" autocomplete="off" data-indice="{{ raiz }}busca.json" data-raiz="{{ raiz }}">
     <ul id="busca-resultados" aria-live="polite"></ul>
   </div>
 </header>
@@ -40,7 +45,7 @@
 </main>
 <footer class="rodape">
   <span>{{ site.nome }} v{{ site.versao }} · commit <code>{{ site.commit_curto }}</code> · {{ site.data }}</span>
-  <a href="{{ md }}">esta página em Markdown</a>
+  <span><a href="{{ raiz }}referencias.html">Referências</a> · <a href="{{ md }}">esta página em Markdown</a></span>
 </footer>
 </body>
 </html>

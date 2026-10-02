@@ -9,7 +9,6 @@ from portal.gerador.renderizar import (
     html_dominio,
     html_dominios,
     html_espinha,
-    html_guias,
     html_inicio,
 )
 from tests import fabrica
@@ -52,7 +51,7 @@ def test_inicio_minimo_sem_como_fazer():
 def test_inicio_usa_como_fazer_e_liga_o_problema_quando_existem():
     como_fazer = Conteudo(
         "pagina",
-        "paginas/como-fazer.md",
+        "paginas/inicio.md",
         fabrica.meta_pagina(titulo="Como fazer", descricao="O how-to em 4 passos."),
         "Comece pelo tier [ref:ref-forte].\n",
     )
@@ -134,9 +133,3 @@ def test_conceitos_mostra_os_dois_ninhos_e_lista_as_pecas():
     conceito = Conteudo("conceito", "conceitos/harness.md", fabrica.meta_conceito(), "")
     html = html_conceitos(fabrica.site(conceito))
     assert '<a href="conceitos/harness.html">Harness</a>' in html
-
-
-def test_guias_lista_guias_e_casos():
-    html = html_guias(fabrica.site(fabrica.caso()))
-    assert "Ainda não há guias." in html
-    assert '<a href="casos/sgd.html">SGD Catálogo de Nuvem</a>' in html

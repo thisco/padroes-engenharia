@@ -109,8 +109,51 @@
     });
   }
 
+  // Atalho "/" foca a busca; abaixo de 900px o menu começa fechado.
+  function iniciarMenu() {
+    var campo = document.getElementById("busca");
+    var menu = document.querySelector("details.menu");
+    if (menu && window.matchMedia("(max-width: 900px)").matches) {
+      menu.open = false;
+    }
+    document.addEventListener("keydown", function (evento) {
+      var alvo = evento.target;
+      var digitando = alvo && (alvo.tagName === "INPUT" || alvo.tagName === "TEXTAREA" || alvo.tagName === "SELECT");
+      if (evento.key === "/" && campo && !digitando && !evento.ctrlKey && !evento.metaKey) {
+        evento.preventDefault();
+        campo.focus();
+      }
+    });
+  }
+
+  // Botão Copiar do prompt de exemplo: só escreve na área de transferência, nunca lê.
+  function iniciarCopiar() {
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+      return;
+    }
+    document.querySelectorAll("[data-copiar]").forEach(function (botao) {
+      var texto = botao.textContent;
+      botao.hidden = false;
+      botao.addEventListener("click", function () {
+        var figura = botao.closest("figure") || botao.parentElement;
+        var codigo = figura ? figura.querySelector("pre") : null;
+        if (!codigo) {
+          return;
+        }
+        navigator.clipboard.writeText(codigo.textContent).then(function () {
+          botao.textContent = "Copiado";
+          setTimeout(function () {
+            botao.textContent = texto;
+          }, 2000);
+        });
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     iniciarBusca();
     iniciarFiltros();
+    iniciarMenu();
+    iniciarCopiar();
   });
 })();

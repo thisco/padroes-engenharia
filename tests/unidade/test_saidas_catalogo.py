@@ -69,11 +69,12 @@ def test_versao_commit_e_itens():
 def test_paginas_especiais_com_slug_e_md():
     slugs = [p["slug"] for p in completo()["paginas"]]
     assert slugs == [
-        "como-fazer",
+        "inicio",
         "espinha",
         "dominios",
+        "praticas",
         "conceitos",
-        "guias",
+        "casos",
         "referencias",
         "para-agentes",
         "o-problema",

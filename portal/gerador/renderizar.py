@@ -3,6 +3,8 @@ de página. Cada função devolve o HTML pronto; quem grava em disco é `saidas.
 
 from __future__ import annotations
 
+import unicodedata
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -14,7 +16,7 @@ from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
-from portal.gerador.exemplos import expandir_inclusoes
+from portal.gerador.exemplos import Prompt, expandir_inclusoes, prompts_de
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 from portal.gerador.ninhos import NINHOS
@@ -30,32 +32,72 @@ ROTULO_TIPO_REFERENCIA = {
 }
 ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Agentes próprios"}
 
-# Os dois ninhos (spec §4.3): só os nomes das peças e o que contém o quê. A definição de cada
-# peça é conteúdo curado e mora em conceitos/<slug>.md.
-# Páginas geradas que sempre existem, além de uma por domínio e uma por conteúdo.
-PAGINAS_FIXAS = (
-    "index.html",
-    "espinha.html",
-    "dominios/index.html",
-    "conceitos.html",
-    "guias.html",
-    "referencias.html",
-    "para-agentes.html",
+# Páginas geradas (não vêm de um único conteúdo): o caminho e a condição para existirem. A que
+# resume um tipo de conteúdo só existe se houver conteúdo desse tipo (item de navegação sem
+# página não aparece). `index`, `espinha`, `dominios/index`, `referencias` e `para-agentes`
+# existem sempre. Além delas há uma página por domínio e uma por conteúdo.
+PAGINAS_GERADAS: tuple[tuple[str, Callable[[Site], bool]], ...] = (
+    ("index.html", lambda s: True),
+    (
+        "comece-aqui.html",
+        lambda s: bool(s.repo.starters) or any(_tutorial(g) for g in s.repo.guias),
+    ),
+    ("como-fazer.html", lambda s: bool(s.repo.receitas)),
+    ("prompts.html", lambda s: bool(todos_os_prompts(s))),
+    ("espinha.html", lambda s: True),
+    ("dominios/index.html", lambda s: True),
+    ("praticas/index.html", lambda s: bool(s.repo.praticas)),
+    ("ferramentas.html", lambda s: bool(s.repo.ferramentas)),
+    ("conceitos.html", lambda s: bool(s.repo.conceitos)),
+    ("glossario.html", lambda s: bool(s.repo.glossarios)),
+    ("casos.html", lambda s: bool(s.repo.casos)),
+    ("referencias.html", lambda s: True),
+    ("para-agentes.html", lambda s: True),
 )
 
-# Navegação em três grupos (spec §4.2); "para agentes" fica à parte, na barra.
+
+def _tutorial(guia: Conteudo) -> bool:
+    return guia.meta.get("tipo") == "tutorial"
+
+
+def todos_os_prompts(site: Site) -> list[Prompt]:
+    """Os prompts de exemplo de todas as práticas e receitas, na ordem dos caminhos."""
+    conteudos = sorted((*site.repo.praticas, *site.repo.receitas), key=lambda c: c.caminho_relativo)
+    return [p for c in conteudos for p in prompts_de(c)]
+
+
+def paginas_publicadas(site: Site) -> list[str]:
+    """Os caminhos das páginas geradas com conteúdo para mostrar, na ordem de `PAGINAS_GERADAS`."""
+    return [caminho for caminho, existe in PAGINAS_GERADAS if existe(site)]
+
+
+# Navegação (spec §4.2; delta §4.2): grupos com os itens e o caminho de cada um. Grupo com um
+# item só é um link. Item sem página some; grupo sem item some.
 NAV = (
-    ("Entender", (("O problema", "o-problema.html"), ("Conceitos", "conceitos.html"))),
+    ("Início", (("Início", "index.html"),)),
+    ("Comece aqui", (("Comece aqui", "comece-aqui.html"),)),
+    ("Como fazer", (("Receitas", "como-fazer.html"), ("Prompts", "prompts.html"))),
     (
-        "Fazer",
+        "Padrões",
         (
-            ("Como fazer", "index.html"),
             ("Espinha", "espinha.html"),
             ("Domínios", "dominios/index.html"),
             ("IA no produto", "dominios/ia-no-produto.html"),
+            ("Práticas", "praticas/index.html"),
         ),
     ),
-    ("Consultar", (("Guias", "guias.html"), ("Referências", "referencias.html"))),
+    ("Ferramentas", (("Ferramentas", "ferramentas.html"),)),
+    (
+        "Entender",
+        (
+            ("O problema", "o-problema.html"),
+            ("Conceitos", "conceitos.html"),
+            ("Pessoas e normas", "pessoas-e-normas.html"),
+            ("Glossário", "glossario.html"),
+            ("Casos", "casos.html"),
+        ),
+    ),
+    ("Para agentes", (("Para agentes", "para-agentes.html"),)),
 )
 
 
@@ -99,7 +141,7 @@ class Site:
         """Todos os caminhos HTML que o build gera."""
         dominios = {f"dominios/{f.slug}.html" for f in self.espinha.faixas}
         conteudos = {caminho_de(c) for c in self.repo.markdown() if c.tipo != "dominio"}
-        return frozenset(PAGINAS_FIXAS) | dominios | conteudos
+        return frozenset(paginas_publicadas(self)) | dominios | conteudos
 
 
 def montar_site(
@@ -157,7 +199,7 @@ def criar_ambiente(raiz: Path) -> Environment:
 
 def caminho_de(conteudo: Conteudo) -> str:
     """Caminho HTML do conteúdo no site. A prática usa o ID, nunca o título (spec §6.5)."""
-    especiais = {"como-fazer": "index.html", "para-agentes": "para-agentes.html"}
+    especiais = {"inicio": "index.html", "para-agentes": "para-agentes.html"}
     if conteudo.tipo == "pagina":
         return especiais.get(conteudo.chave, f"{conteudo.chave}.html")
     pastas = {
@@ -166,6 +208,9 @@ def caminho_de(conteudo: Conteudo) -> str:
         "conceito": "conceitos",
         "guia": "guias",
         "caso": "casos",
+        "receita": "receitas",
+        "starter": "starters",
+        "ferramenta": "ferramentas",
     }
     if conteudo.tipo == "referencia":
         return f"referencias.html#{conteudo.chave}"
@@ -201,23 +246,41 @@ def descrever_forcas(contagem: dict[str, int]) -> str:
     return "Força das práticas: " + " · ".join(partes) + "."
 
 
-def navegacao(site: Site, atual: str) -> list[tuple[str, list[dict[str, Any]]]]:
-    """Os grupos da navegação; item sem página gerada fica sem link (`href` None)."""
+def navegacao(site: Site, atual: str) -> list[dict[str, Any]]:
+    """Os grupos do menu. Cada grupo é `{"titulo", "href", "itens", "atual"}`.
+
+    Item sem página gerada some; grupo sem item some. Grupo declarado com um item só (Início,
+    Comece aqui, Ferramentas, Para agentes) vira link (`href`); os demais têm `itens`.
+    """
     existentes = site.caminhos()
-    return [
-        (
-            grupo,
-            [
+    grupos: list[dict[str, Any]] = []
+    for titulo, itens in NAV:
+        vivos = [
+            {"titulo": t, "href": destino, "atual": destino == atual}
+            for t, destino in itens
+            if destino in existentes
+        ]
+        if not vivos:
+            continue
+        if len(itens) == 1:
+            grupos.append(
                 {
                     "titulo": titulo,
-                    "href": destino if destino in existentes else None,
-                    "atual": destino == atual,
+                    "href": vivos[0]["href"],
+                    "itens": [],
+                    "atual": vivos[0]["atual"],
                 }
-                for titulo, destino in itens
-            ],
-        )
-        for grupo, itens in NAV
-    ]
+            )
+        else:
+            grupos.append(
+                {
+                    "titulo": titulo,
+                    "href": None,
+                    "itens": vivos,
+                    "atual": any(i["atual"] for i in vivos),
+                }
+            )
+    return grupos
 
 
 def renderizar(site: Site, template: str, caminho: str, **contexto: Any) -> str:
@@ -314,8 +377,8 @@ def pagina_generica(site: Site, caminho: str, titulo: str, **contexto: Any) -> s
 
 
 def html_inicio(site: Site) -> str:
-    """A página inicial: `paginas/como-fazer.md` se existir; senão, a home mínima do template."""
-    pagina = site.pagina("como-fazer")
+    """A página inicial: `paginas/inicio.md` se existir; senão, a home mínima do template."""
+    pagina = site.pagina("inicio")
     por_momento = {
         m.slug: sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
         for m in site.espinha.momentos
@@ -395,14 +458,137 @@ def listas_conceitos(site: Site) -> list[dict[str, Any]]:
     ]
 
 
-def listas_guias(site: Site) -> list[dict[str, Any]]:
-    def itens(conteudos: tuple[Conteudo, ...]) -> list[dict[str, Any]]:
-        return [{"titulo": c.meta["titulo"], "href": caminho_de(c), "nota": ""} for c in conteudos]
-
+def _itens(conteudos: Iterable[Conteudo], nota: Callable[[Conteudo], str]) -> list[dict[str, Any]]:
     return [
-        {"titulo": "Guias", "itens": itens(site.repo.guias), "vazio": "Ainda não há guias."},
-        {"titulo": "Casos", "itens": itens(site.repo.casos), "vazio": "Ainda não há casos."},
+        {"titulo": c.meta.get("titulo", c.chave), "href": caminho_de(c), "nota": nota(c)}
+        for c in conteudos
     ]
+
+
+def listas_casos(site: Site) -> list[dict[str, Any]]:
+    itens = _itens(site.repo.casos, lambda c: str(c.meta.get("periodo", "")))
+    return [{"titulo": "Casos", "itens": itens, "vazio": "Ainda não há casos."}]
+
+
+def listas_comece_aqui(site: Site) -> list[dict[str, Any]]:
+    tutoriais = [g for g in site.repo.guias if _tutorial(g)]
+    explicacoes = [g for g in site.repo.guias if not _tutorial(g)]
+    nota_guia = lambda g: str(g.meta.get("publico", ""))  # noqa: E731
+    return [
+        {
+            "titulo": "Tutoriais",
+            "itens": _itens(tutoriais, nota_guia),
+            "vazio": "Ainda não há tutoriais.",
+        },
+        {
+            "titulo": "Starters",
+            "itens": _itens(site.repo.starters, lambda c: str(c.meta.get("descricao", ""))),
+            "vazio": "Ainda não há starters.",
+        },
+        {
+            "titulo": "Para entender antes",
+            "itens": _itens(explicacoes, nota_guia),
+            "vazio": "Nenhum guia.",
+        },
+    ]
+
+
+def listas_receitas(site: Site) -> list[dict[str, Any]]:
+    itens = _itens(site.repo.receitas, lambda c: str(c.meta.get("objetivo", "")))
+    return [{"titulo": "Receitas", "itens": itens, "vazio": "Ainda não há receitas."}]
+
+
+def listas_prompts(site: Site) -> list[dict[str, Any]]:
+    itens = [
+        {
+            "titulo": p.id,
+            "href": f"{caminho_de(p.origem)}#{p.id}",
+            "nota": p.texto.strip().splitlines()[0] if p.texto.strip() else "",
+        }
+        for p in todos_os_prompts(site)
+    ]
+    return [{"titulo": "Prompts de exemplo", "itens": itens, "vazio": "Ainda não há prompts."}]
+
+
+def listas_ferramentas(site: Site) -> list[dict[str, Any]]:
+    itens = _itens(
+        site.repo.ferramentas,
+        lambda c: f"{c.meta.get('categoria', '')} · {c.meta.get('status', '')}",
+    )
+    return [{"titulo": "Ferramentas", "itens": itens, "vazio": "Ainda não há ferramentas."}]
+
+
+def listas_glossario(site: Site) -> list[dict[str, Any]]:
+    termos = [
+        t for g in site.repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
+    ]
+    itens = [
+        {
+            "titulo": t["termo"],
+            "href": f"glossario.html#{_ancora(t['termo'])}",
+            "nota": t["definicao"],
+        }
+        for t in termos
+    ]
+    return [{"titulo": "Termos", "itens": itens, "vazio": "Ainda não há termos."}]
+
+
+def _ancora(texto: str) -> str:
+    """O texto como âncora de URL: sem acento, minúsculo, hifenizado."""
+    base = unicodedata.normalize("NFD", texto.lower())
+    sem_acento = "".join(c for c in base if not unicodedata.combining(c))
+    return "-".join("".join(c if c.isalnum() else " " for c in sem_acento).split())
+
+
+def listas_praticas(site: Site) -> list[dict[str, Any]]:
+    listas = []
+    for faixa in site.espinha.faixas:
+        praticas = site.catalogo.praticas_do_dominio(faixa.slug)
+        if praticas:
+            itens = [
+                {"titulo": f"{p.chave} · {p.meta['titulo']}", "href": caminho_de(p), "nota": ""}
+                for p in praticas
+            ]
+            listas.append({"titulo": faixa.titulo, "itens": itens, "vazio": ""})
+    return listas
+
+
+# Páginas que resumem um tipo de conteúdo, na versão mínima: título, descrição e uma lista por
+# seção. As tarefas seguintes trocam o gerador de cada uma pelo desenho próprio.
+LISTAGENS = {
+    "comece-aqui.html": (
+        "Comece aqui",
+        "Os caminhos para começar: tutoriais, starters e o que ler antes.",
+        listas_comece_aqui,
+    ),
+    "como-fazer.html": (
+        "Como fazer",
+        "Receitas passo a passo, com o resultado esperado.",
+        listas_receitas,
+    ),
+    "prompts.html": (
+        "Biblioteca de prompts",
+        "Os prompts de exemplo das práticas e receitas, cada um testado num agente.",
+        listas_prompts,
+    ),
+    "praticas/index.html": ("Práticas", "Todas as práticas, por domínio.", listas_praticas),
+    "ferramentas.html": (
+        "Ferramentas",
+        "As ferramentas que as práticas citam e o status de cada uma.",
+        listas_ferramentas,
+    ),
+    "glossario.html": (
+        "Glossário",
+        "Os termos usados no portal, com definição curta.",
+        listas_glossario,
+    ),
+    "casos.html": ("Casos", "Casos reais com números datados.", listas_casos),
+}
+
+
+def html_listagem(site: Site, caminho: str) -> str:
+    titulo, descricao, listas = LISTAGENS[caminho]
+    return pagina_generica(site, caminho, titulo, descricao=descricao, listas=listas(site))
 
 
 def html_dominios(site: Site) -> str:
@@ -423,16 +609,6 @@ def html_conceitos(site: Site) -> str:
         descricao="As peças de um agente de código e da IA no produto, uma dentro da outra.",
         ninhos=[(ninho, None) for ninho in NINHOS],
         listas=listas_conceitos(site),
-    )
-
-
-def html_guias(site: Site) -> str:
-    return pagina_generica(
-        site,
-        "guias.html",
-        "Guias e casos",
-        descricao="Guias passo a passo e casos reais com números datados.",
-        listas=listas_guias(site),
     )
 
 

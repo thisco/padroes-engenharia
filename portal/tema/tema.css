@@ -56,14 +56,21 @@ h1, h2, h3 { letter-spacing: -.02em; }
   padding: 12px 32px; border-bottom: 2px solid var(--tinta); font-size: 14px;
 }
 .marca { color: var(--tinta); font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
+.menu > summary { cursor: pointer; font-weight: 600; color: var(--tinta); list-style: none; }
+.menu > summary::-webkit-details-marker { display: none; }
 .nav { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; }
-.nav .grupo { display: flex; gap: 12px; align-items: baseline; }
-.nav .grupo > span:first-child { font-size: 12px; font-weight: 600; color: var(--tinta-2); }
 .nav a { color: var(--tinta-2); text-decoration: none; }
 .nav a:hover { color: var(--tinta); }
 .nav a[aria-current="page"] { color: var(--tinta); font-weight: 600; border-bottom: 2px solid var(--gov); }
-.nav .em-breve { color: var(--tinta-2); font-style: italic; }
-.nav a.ag {
+.nav .grupo { position: relative; }
+.nav .grupo > summary { cursor: pointer; color: var(--tinta-2); }
+.nav .grupo[open] > summary { color: var(--tinta); font-weight: 600; }
+.nav .grupo ul {
+  position: absolute; z-index: 6; margin: 4px 0 0; padding: 6px 0; list-style: none; min-width: 190px;
+  background: var(--branco); border: 1px solid var(--regra); box-shadow: 0 4px 12px rgba(10, 26, 47, .12);
+}
+.nav .grupo li a { display: block; padding: 4px 14px; }
+.nav a.topo-nav:last-child {
   font-family: var(--mono); font-size: 12px; color: var(--tinta);
   border: 1px solid var(--tinta); padding: 2px 8px; border-radius: 2px;
 }
@@ -73,7 +80,7 @@ h1, h2, h3 { letter-spacing: -.02em; }
   border: 1px solid var(--tinta-2); border-radius: 2px; background: var(--branco); color: var(--tinta);
 }
 .busca ul {
-  position: absolute; right: 0; z-index: 5; width: min(420px, 100%); max-height: 60vh; overflow-y: auto;
+  position: absolute; inset-inline: 0; z-index: 5; width: min(420px, 100%); max-width: calc(100vw - 32px); max-height: 60vh; overflow-y: auto;
   margin: 4px 0 0; padding: 0; list-style: none; background: var(--branco); border: 1px solid var(--regra);
 }
 .busca ul:empty { display: none; }

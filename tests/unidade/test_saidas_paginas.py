@@ -5,8 +5,9 @@ import re
 import pytest
 
 from portal.gerador.carregar import Conteudo
-from portal.gerador.renderizar import PAGINAS_FIXAS
+from portal.gerador.renderizar import PAGINAS_GERADAS, paginas_publicadas
 from portal.gerador.saidas import (
+    GERADORES,
     escrever_paginas,
     md_conteudo,
     md_dominio,
@@ -20,7 +21,7 @@ CONCEITO = Conteudo(
     "conceito", "conceitos/harness.md", fabrica.meta_conceito(), "Texto [ref:ref-forte].\n"
 )
 PROBLEMA = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "[ref:ref-forte]\n")
-COMO_FAZER = Conteudo("pagina", "paginas/como-fazer.md", fabrica.meta_pagina(titulo="Como"), "")
+INICIO = Conteudo("pagina", "paginas/inicio.md", fabrica.meta_pagina(titulo="Como"), "")
 
 
 def site_completo():
@@ -30,14 +31,16 @@ def site_completo():
         fabrica.caso(),
         CONCEITO,
         PROBLEMA,
-        COMO_FAZER,
+        INICIO,
     )
 
 
 def test_todas_as_paginas_em_ordem_estavel():
-    caminhos = [p.caminho for p in montar_paginas(site_completo())]
-    assert caminhos[: len(PAGINAS_FIXAS)] == list(PAGINAS_FIXAS)
-    resto = caminhos[len(PAGINAS_FIXAS) :]
+    site = site_completo()
+    caminhos = [p.caminho for p in montar_paginas(site)]
+    fixas = paginas_publicadas(site)
+    assert caminhos[: len(fixas)] == fixas
+    resto = caminhos[len(fixas) :]
     assert resto[0] == "o-problema.html"
     assert resto[1:13] == [f"dominios/{f.slug}.html" for f in fabrica.espinha_real().faixas]
     assert resto[13:] == ["praticas/P1-01.html", "conceitos/harness.html", "casos/sgd.html"]
@@ -105,3 +108,7 @@ def test_escreve_html_e_md_lado_a_lado(tmp_path):
     gravados = sorted(p.relative_to(tmp_path).as_posix() for p in tmp_path.rglob("*.*"))
     assert len(gravados) == 2 * len(paginas)
     assert all(re.search(r"\.(html|md)$", g) for g in gravados)
+
+
+def test_todo_caminho_gerado_tem_gerador():
+    assert {caminho for caminho, _ in PAGINAS_GERADAS} <= set(GERADORES)

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -17,8 +18,8 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
+    LISTAGENS,
     NINHOS,
-    PAGINAS_FIXAS,
     ROTULO_FORCA,
     ROTULO_TIPO_REFERENCIA,
     Site,
@@ -38,14 +39,14 @@ from portal.gerador.renderizar import (
     html_dominio,
     html_dominios,
     html_espinha,
-    html_guias,
     html_inicio,
+    html_listagem,
     html_para_agentes,
     html_pratica,
     html_referencias,
     listas_conceitos,
     listas_dominios,
-    listas_guias,
+    paginas_publicadas,
     para_md,
     rotulo,
 )
@@ -87,30 +88,27 @@ def escrever_paginas(saida: Path, paginas: list[Pagina]) -> None:
         escrever(saida, pagina.caminho_md, pagina.md)
 
 
+def md_listagem(site: Site, caminho: str) -> str:
+    """O `.md` gêmeo das páginas de listagem (`LISTAGENS`)."""
+    titulo, descricao, listas = LISTAGENS[caminho]
+    return _juntar(f"# {titulo}", descricao, *_md_listas(caminho, listas(site)))
+
+
 def montar_paginas(site: Site) -> list[Pagina]:
     """Todas as páginas, em ordem estável: fixas, especiais, domínios, práticas e conteúdos.
 
     Título e descrição de uma página fixa saem do `.md` gêmeo, que sempre começa com
     `# Título` e um parágrafo de descrição.
     """
-    fixas = {
-        "index.html": (html_inicio, md_inicio),
-        "espinha.html": (html_espinha, md_espinha),
-        "dominios/index.html": (html_dominios, md_dominios),
-        "conceitos.html": (html_conceitos, md_conceitos),
-        "guias.html": (html_guias, md_guias),
-        "referencias.html": (html_referencias, md_referencias),
-        "para-agentes.html": (html_para_agentes, md_para_agentes),
-    }
     paginas = []
-    for caminho in PAGINAS_FIXAS:
-        html, md = fixas[caminho]
+    for caminho in paginas_publicadas(site):
+        html, md = GERADORES[caminho]
         texto_md = md(site)
         titulo, descricao = texto_md.split("\n\n", 2)[:2]
         titulo = titulo.removeprefix("# ")
         paginas.append(Pagina(caminho, titulo, "Páginas", descricao, html(site), texto_md))
     for c in site.repo.paginas:
-        if c.chave not in ("como-fazer", "para-agentes"):
+        if c.chave not in ("inicio", "para-agentes"):
             paginas.append(pagina_de_conteudo(site, c))
     for faixa in site.espinha.faixas:
         caminho = f"dominios/{faixa.slug}.html"
@@ -224,7 +222,7 @@ def md_conteudo(site: Site, c: Conteudo) -> str:
 
 
 def md_inicio(site: Site) -> str:
-    pagina = site.pagina("como-fazer")
+    pagina = site.pagina("inicio")
     titulo = pagina.meta["titulo"] if pagina else site.nome
     descricao = (pagina.meta.get("descricao") if pagina else None) or DESCRICAO_INICIO
     passos = []
@@ -318,14 +316,6 @@ def md_conceitos(site: Site) -> str:
         "As peças de um agente de código e da IA no produto, uma dentro da outra.",
         *diagramas,
         *_md_listas("conceitos.html", listas_conceitos(site)),
-    )
-
-
-def md_guias(site: Site) -> str:
-    return _juntar(
-        "# Guias e casos",
-        "Guias passo a passo e casos reais com números datados.",
-        *_md_listas("guias.html", listas_guias(site)),
     )
 
 
@@ -463,7 +453,11 @@ def indice_busca(site: Site, paginas: list[Pagina]) -> list[dict[str, str]]:
 
 # catalogo.json (Tarefa 25) -----------------------------------------------------------------
 
-SLUG_DA_PAGINA = {"index.html": "como-fazer", "dominios/index.html": "dominios"}
+SLUG_DA_PAGINA = {
+    "index.html": "inicio",
+    "dominios/index.html": "dominios",
+    "praticas/index.html": "praticas",
+}
 
 
 def _item(slug: str, titulo: str, caminho: str, meta: dict[str, Any] | None = None) -> dict:
@@ -714,3 +708,22 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
             for arquivo in sorted((site.raiz / origem).glob(padrao)):
                 copiar(arquivo, saida / destino / arquivo.name)
     return paginas
+
+
+# O gerador de cada página de `PAGINAS_GERADAS`: (HTML, `.md` gêmeo). As páginas de listagem
+# (`LISTAGENS`) saem de `html_listagem` e `md_listagem`, até ganharem o desenho próprio.
+GERADORES: dict[str, tuple[Callable[[Site], str], Callable[[Site], str]]] = {
+    "index.html": (html_inicio, md_inicio),
+    "espinha.html": (html_espinha, md_espinha),
+    "dominios/index.html": (html_dominios, md_dominios),
+    "conceitos.html": (html_conceitos, md_conceitos),
+    "referencias.html": (html_referencias, md_referencias),
+    "para-agentes.html": (html_para_agentes, md_para_agentes),
+    **{
+        caminho: (
+            lambda site, c=caminho: html_listagem(site, c),
+            lambda site, c=caminho: md_listagem(site, c),
+        )
+        for caminho in LISTAGENS
+    },
+}

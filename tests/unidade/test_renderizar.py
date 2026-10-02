@@ -13,6 +13,7 @@ from portal.gerador.renderizar import (
     corpo_html,
     descrever_forcas,
     descrever_ninho,
+    paginas_publicadas,
     para_md,
     renderizar,
 )
@@ -40,12 +41,12 @@ def test_config_e_identidade_do_site():
 
 def test_caminhos_pelo_id_e_md_gemeo():
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
-    como_fazer = Conteudo("pagina", "paginas/como-fazer.md", fabrica.meta_pagina(), "")
+    inicio = Conteudo("pagina", "paginas/inicio.md", fabrica.meta_pagina(), "")
     assert caminho_de(fabrica.pratica()) == "praticas/P1-01.html"
     assert caminho_de(fabrica.caso()) == "casos/sgd.html"
     assert caminho_de(fabrica.referencia()) == "referencias.html#ref-forte"
     assert caminho_de(pagina) == "o-problema.html"
-    assert caminho_de(como_fazer) == "index.html"
+    assert caminho_de(inicio) == "index.html"
     assert para_md("praticas/P1-01.html") == "praticas/P1-01.md"
     s = fabrica.site(fabrica.pratica(), pagina)
     assert {"index.html", "praticas/P1-01.html", "o-problema.html"} <= s.caminhos()
@@ -68,16 +69,30 @@ def test_base_tem_lang_md_gemeo_links_relativos_e_rodape():
     assert '<a href="P1-01.md">esta página em Markdown</a>' in html
 
 
-def test_navegacao_em_tres_grupos_sem_link_para_pagina_que_nao_existe():
-    html = renderizar(fabrica.site(), "base.html", "espinha.html", titulo="Espinha")
-    grupos = re.findall(r'<span class="grupo"><span>([^<]+)</span>', html)
-    assert grupos == ["Entender", "Fazer", "Consultar"]
-    assert '<span class="em-breve" title="ainda não publicada">O problema</span>' in html
+def test_navegacao_do_4_2_sem_item_sem_pagina():
+    html = renderizar(fabrica.site(fabrica.pratica()), "base.html", "espinha.html", titulo="E")
+    rotulos = re.findall(r'<(?:summary|a class="topo-nav")[^>]*>([^<]+)<', html)
+    assert rotulos == ["Menu", "Início", "Padrões", "Para agentes"]
+    assert "O problema" not in html and "em-breve" not in html
     assert '<a href="espinha.html" aria-current="page">Espinha</a>' in html
-    assert '<a class="ag" href="para-agentes.html">para agentes</a>' in html
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
-    html = renderizar(fabrica.site(pagina), "base.html", "espinha.html", titulo="Espinha")
+    html = renderizar(
+        fabrica.site(fabrica.pratica(), pagina), "base.html", "espinha.html", titulo="E"
+    )
     assert '<a href="o-problema.html">O problema</a>' in html
+
+
+def test_paginas_publicadas_so_com_conteudo():
+    vazio = paginas_publicadas(fabrica.site())
+    assert "comece-aqui.html" not in vazio
+    assert "prompts.html" not in vazio
+    assert "guias.html" not in vazio
+    cheio = paginas_publicadas(
+        fabrica.site(fabrica.pratica(), fabrica.receita(), fabrica.ferramenta())
+    )
+    assert {"como-fazer.html", "prompts.html", "praticas/index.html", "ferramentas.html"} <= set(
+        cheio
+    )
 
 
 def test_corpo_html_numera_as_citacoes():

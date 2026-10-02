@@ -2143,7 +2143,7 @@ def test_rolagem_chips_caixa_alta_e_favicon():
   troca o texto por "Copiado"); a lista de resultados fica em `inset-inline: 0` e
   `max-width: calc(100vw - 32px)`.
 
-- [ ] **Passo 1: Testes que falham.** Em `tests/unidade/test_renderizar.py`, trocar
+- [x] **Passo 1: Testes que falham.** Em `tests/unidade/test_renderizar.py`, trocar
   `test_navegacao_em_tres_grupos_sem_link_para_pagina_que_nao_existe` por:
 
 ```python
@@ -2168,19 +2168,19 @@ def test_paginas_publicadas_so_com_conteudo():
   `portal.gerador.renderizar`). Em `test_saidas_paginas.py`,
   trocar `PAGINAS_FIXAS` por `paginas_publicadas(site)` nas asserções de ordem.
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_renderizar.py tests/unidade/test_saidas_paginas.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_renderizar.py tests/unidade/test_saidas_paginas.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar** conforme as Interfaces. Em `saidas.py:montar_paginas`, as fixas
+- [x] **Passo 3: Implementar** conforme as Interfaces. Em `saidas.py:montar_paginas`, as fixas
   saem de `paginas_publicadas(site)` mapeadas por `GERADORES: dict[str, tuple[html, md]]`. As
   páginas novas nascem aqui na versão mínima (`pagina_generica` com `listas`: título, link e
   uma nota por item) e as Tarefas 17 e 20–23 trocam o par do `GERADORES` pelo template próprio.
   Um teste de `test_saidas_paginas.py` garante que todo caminho de `PAGINAS_GERADAS` tem gerador.
 
-- [ ] **Passo 4:** suíte, ruff e validar verdes; abra o build temporário a 1440px e a 400px
+- [x] **Passo 4:** suíte, ruff e validar verdes; abra o build temporário a 1440px e a 400px
   (`python -m http.server -d "$TMPDIR/a5" 8000`): barra numa linha / "Menu"; a lista da busca
   dentro da tela.
 
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: navegação Diátaxis, item sem página some, busca na tela e botão Copiar"`
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: navegação Diátaxis, item sem página some, busca na tela e botão Copiar"`
 
 ---
 ### Tarefa 15: Legenda das forças, chip descrito, barra em escala fixa, bloco escuro e lacuna (§9.2)
@@ -3056,6 +3056,16 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   com ID `ligar-ci-prompt-1`; a chave da receita é `receita-ligar-ci` (Tarefa 4 e Contrato com
   a parte 2), então o teste usa `receita-ligar-ci` e `receita-ligar-ci-prompt-1`. A mensagem de
   prompt em outro tipo é `prompt só em prática e receita`, a do teste.
+
+- **Tarefa 14:** (a) "grupo com 1 item vira link" foi lido como "grupo declarado em `NAV` com um
+  item só" (Início, Comece aqui, Ferramentas, Para agentes); o grupo "Entender" com só "O
+  problema" publicado continua grupo, porque o teste do plano exige `<a href="o-problema.html">`
+  sem classe. (b) O slug de página `como-fazer` (a Início da v1.0) virou `inicio`
+  (`caminho_de`, `html_inicio`, `SLUG_DA_PAGINA`), porque `como-fazer.html` agora é o índice
+  das receitas e `como-fazer` é slug reservado (Tarefa 8); a Tarefa 19 troca o conteúdo da Início
+  mas o nome já é o do Contrato (`paginas/inicio.md`). (c) `praticas/index.html` tem slug
+  `praticas` no `catalogo.json`. (d) A inspeção visual a 1440px e 400px do Passo 4 não foi feita
+  por navegador nesta tarefa; fica para a Tarefa 28 (ver Evidências).
 
 ## Revisão adversarial
 
