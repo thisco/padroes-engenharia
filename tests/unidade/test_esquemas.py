@@ -28,10 +28,14 @@ VALIDOS = {
     "pagina": fabrica.meta_pagina,
     "verificacao": fabrica.meta_verificacao,
     "catalogo": fabrica.meta_catalogo,
+    "receita": fabrica.meta_receita,
+    "starter": fabrica.meta_starter,
+    "ferramenta": fabrica.meta_ferramenta,
+    "glossario": fabrica.meta_glossario,
 }
 
 
-def test_os_nove_esquemas_existem_e_sao_draft_2020_12():
+def test_os_esquemas_existem_e_sao_draft_2020_12():
     assert sorted(p.name for p in PASTA.glob("*.schema.json")) == sorted(
         f"{nome}.schema.json" for nome in ESQUEMAS
     )
@@ -63,6 +67,18 @@ def test_instancia_da_fabrica_e_valida(nome):
         ("pagina", {"titulo": 3}, "titulo"),
         ("verificacao", {"afirmacoes": []}, "afirmacoes"),
         ("catalogo", {"versao": "v1"}, "versao"),
+        ("receita", {"tempo": 0}, "tempo"),
+        ("starter", {"repo": "http://x"}, "repo"),
+        ("starter", {"planta": [{"grupo": "x"}]}, "planta.0"),
+        ("ferramenta", {"categoria": "editor"}, "categoria"),
+        ("ferramenta", {"status": "evitar"}, "frontmatter"),
+        ("glossario", {"termos": [{"termo": "x", "definicao": "y"}]}, "termos.0"),
+        ("pagina", {"falhas": [{"titulo": "x"}]}, "falhas.0"),
+        (
+            "pagina",
+            {"escada": [{"degrau": "P4", "titulo": "x", "regua": "y", "texto": "z"}]},
+            "escada.0.degrau",
+        ),
         ("pratica", {"ferramentas": ["claude-code"]}, "frontmatter"),
         ("pratica", {"exemplos": ["outro/DAD-01/a.yml"]}, "exemplos.0"),
         ("pratica", {"exemplos": ["exemplos/../AGENTS.md"]}, "exemplos.0"),
@@ -132,3 +148,17 @@ def test_pratica_v1_1_e_execucoes_validas():
         ]
     )
     assert validar_instancia(registro, carregar_validador(PASTA, "verificacao"), "v.yaml") == []
+
+
+def test_pagina_estruturada_e_planta_validas():
+    pagina = fabrica.meta_pagina_estruturada()
+    assert validar_instancia(pagina, carregar_validador(PASTA, "pagina"), "p.md") == []
+    linha = {
+        "grupo": "Governança",
+        "quando": "Todo turno.",
+        "arquivo": "Constituição",
+        "caminhos": ["AGENTS.md"],
+        "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}],
+    }
+    starter = fabrica.meta_starter(planta=[linha])
+    assert validar_instancia(starter, carregar_validador(PASTA, "starter"), "s.yml") == []

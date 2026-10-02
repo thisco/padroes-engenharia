@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Receita",
+  "description": "receitas/<slug>.md (delta v1.1 §6.4 e R21): como fazer uma coisa concreta, com resultado esperado e prompt para o agente. Seções do corpo conferidas pela regra R-SECOES.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "titulo", "objetivo", "dominio", "momento", "pre_requisitos", "tempo", "praticas",
+    "resultado_esperado", "referencias", "dono", "revisado_em"
+  ],
+  "properties": {
+    "titulo": {"type": "string", "minLength": 1},
+    "objetivo": {"type": "string", "minLength": 1},
+    "dominio": {"$ref": "#/$defs/slug"},
+    "momento": {"$ref": "#/$defs/slug"},
+    "pre_requisitos": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "tempo": {"type": "integer", "minimum": 1},
+    "praticas": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "resultado_esperado": {"type": "string", "minLength": 1},
+    "ferramentas_aprovadas": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "starter": {"$ref": "#/$defs/slug"},
+    "exemplos": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/exemplo"}},
+    "referencias": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "dono": {"$ref": "#/$defs/slug"},
+    "revisado_em": {"$ref": "#/$defs/data"}
+  },
+  "$defs": {
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "exemplo": {
+      "type": "string",
+      "pattern": "^exemplos/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)+$",
+      "not": {"pattern": "(^|/)\\.\\.?(/|$)"}
+    }
+  }
+}

@@ -22,6 +22,10 @@ ESQUEMAS = (
     "verificacao",
     "catalogo",
     "componentes",
+    "receita",
+    "starter",
+    "ferramenta",
+    "glossario",
 )
 
 # Tipo de conteúdo → schema. Skill não tem schema próprio: a regra R-SKILL cuida dela.
@@ -34,6 +38,10 @@ ESQUEMA_POR_TIPO = {
     "pagina": "pagina",
     "referencia": "referencia",
     "verificacao": "verificacao",
+    "receita": "receita",
+    "starter": "starter",
+    "ferramenta": "ferramenta",
+    "glossario": "glossario",
 }
 
 

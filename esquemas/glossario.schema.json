@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Glossário",
+  "description": "glossario.yml (delta v1.1 D15 e R21): termos com definição curta e referência. conceito liga o termo à página da peça.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["termos"],
+  "properties": {
+    "termos": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["termo", "definicao", "referencias"],
+        "properties": {
+          "termo": {"type": "string", "minLength": 1},
+          "definicao": {"type": "string", "minLength": 1, "maxLength": 200},
+          "conceito": {"$ref": "#/$defs/slug"},
+          "referencias": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"$ref": "#/$defs/slug"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Ferramenta",
+  "description": "ferramentas/<id>.yml (delta v1.1 §6.4 e R21): ferramenta que as práticas citam, com status no radar. Status evitar exige a alternativa (regra 9).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "titulo", "categoria", "status", "versao_minima", "dono", "praticas", "receitas",
+    "como_instalar", "limites", "referencias"
+  ],
+  "properties": {
+    "id": {"$ref": "#/$defs/slug"},
+    "titulo": {"type": "string", "minLength": 1},
+    "categoria": {
+      "enum": ["harness", "gateway", "migration", "iac", "teste", "seguranca", "sdd", "ci"]
+    },
+    "status": {"enum": ["adotar", "experimentar", "avaliar", "evitar"]},
+    "versao_minima": {"type": "string", "minLength": 1},
+    "dono": {"$ref": "#/$defs/slug"},
+    "praticas": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "receitas": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "como_instalar": {"type": "string", "minLength": 1},
+    "limites": {"type": "string", "minLength": 1},
+    "alternativa": {"type": "string", "minLength": 1},
+    "referencias": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}}
+  },
+  "if": {"properties": {"status": {"const": "evitar"}}, "required": ["status"]},
+  "then": {"required": ["alternativa"]},
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+  }
+}

@@ -1302,7 +1302,7 @@ Em `tests/unidade/test_paginas_conteudo.py:test_pratica_com_id_chips_corpo_e_lat
   `ferramenta(meta=None)`, `glossario(meta=None)`; `CORPO_RECEITA` com as 6 seções da Tarefa 9
   e um bloco ```` ```prompt ```` em `## Com o agente`.
 
-- [ ] **Passo 1: Testes que falham.** Em `tests/unidade/test_esquemas.py`: acrescentar a
+- [x] **Passo 1: Testes que falham.** Em `tests/unidade/test_esquemas.py`: acrescentar a
   `VALIDOS` as quatro fábricas novas; renomear o primeiro teste para
   `test_os_esquemas_existem_e_sao_draft_2020_12`; acrescentar ao `parametrize` dos inválidos:
 
@@ -1329,17 +1329,17 @@ def test_pagina_estruturada_e_planta_validas():
     assert validar_instancia(starter, carregar_validador(PASTA, "starter"), "s.yml") == []
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_esquemas.py -q` → FAIL
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_esquemas.py -q` → FAIL
   (`AttributeError: module 'tests.fabrica' has no attribute 'meta_receita'`; depois do passo 3
   da fábrica, `FileNotFoundError` dos schemas).
 
-- [ ] **Passo 3: Implementar** os quatro schemas e os blocos de `pagina.schema.json`
+- [x] **Passo 3: Implementar** os quatro schemas e os blocos de `pagina.schema.json`
   (draft 2020-12, `additionalProperties: false` em todo objeto, `$defs` locais: `texto`,
   `slug`, `data`), a fábrica e o registro em `esquemas.py`.
 
-- [ ] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
+- [x] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes.
 
-- [ ] **Passo 5:** `git add esquemas portal tests && git commit -m "feat: schemas de receita, starter, ferramenta, glossário e página estruturada"`
+- [x] **Passo 5:** `git add esquemas portal tests && git commit -m "feat: schemas de receita, starter, ferramenta, glossário e página estruturada"`
 
 ---
 

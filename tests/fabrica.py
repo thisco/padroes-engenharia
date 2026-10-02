@@ -11,6 +11,8 @@ from functools import cache
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from portal.gerador.carregar import Conteudo, Repositorio
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.renderizar import Site, montar_site
@@ -33,6 +35,35 @@ Na fase 0 do ciclo, registre o tier e o motivo na spec ou no plano.
 ## Como verificar
 
 Não há mecanismo automático; a revisão do plano confere o tier declarado.
+"""
+
+
+CORPO_RECEITA = """## Resultado
+
+O job de qualidade roda em todo merge request [ref:ref-forte].
+
+## Antes de começar
+
+Um repositório no GitLab com runner disponível.
+
+## Passos
+
+1. Copie o `.gitlab-ci.yml` do starter.
+2. Abra uma merge request e confira o job.
+
+## Com o agente
+
+```prompt
+Leia o AGENTS.md e ligue o job de qualidade do CI nesta merge request.
+```
+
+## Confira
+
+O job `qualidade` aparece verde na merge request.
+
+## Se der errado
+
+Se o runner não pegar o job, confira as tags do runner.
 """
 
 
@@ -190,6 +221,143 @@ def meta_pagina(**alteracoes: Any) -> dict[str, Any]:
     )
 
 
+def meta_receita(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "titulo": "Ligar o CI de qualidade",
+            "objetivo": "Rodar o job de qualidade em toda merge request.",
+            "dominio": "ci-cd",
+            "momento": "antes-do-merge",
+            "pre_requisitos": ["repositório no GitLab"],
+            "tempo": 20,
+            "praticas": ["P1-01"],
+            "resultado_esperado": "O job qualidade verde na merge request.",
+            "referencias": ["ref-forte"],
+            "dono": "nuarq",
+            "revisado_em": "2026-10-01",
+        },
+        alteracoes,
+    )
+
+
+def meta_starter(**alteracoes: Any) -> dict[str, Any]:
+    componente = yaml.safe_load((RAIZ / "componentes.yml").read_text(encoding="utf-8"))
+    dados = componente["componentes"]["sdd-scaffold"]
+    return _com(
+        {
+            "id": "sdd-scaffold",
+            "titulo": "SDD scaffold",
+            "descricao": "Repositório-modelo com constituição, steering e skills.",
+            "repo": dados["repo"],
+            "versao": dados["versao"],
+            "comando": "git clone <repo> meu-projeto",
+            "prompt_para_agente": "Leia o AGENTS.md e siga a constituição.",
+            "praticas_aplicadas": ["P1-01"],
+            "receitas": ["ligar-ci"],
+            "dono": "nuarq",
+            "status": "adotar",
+            "referencias": ["ref-forte"],
+        },
+        alteracoes,
+    )
+
+
+def meta_ferramenta(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "id": "flyway",
+            "titulo": "Flyway",
+            "categoria": "migration",
+            "status": "adotar",
+            "versao_minima": "10.0",
+            "dono": "nuarq",
+            "praticas": ["P1-01"],
+            "receitas": ["ligar-ci"],
+            "como_instalar": "Baixe o cliente de linha de comando.",
+            "limites": "Não desfaz migration sozinho.",
+            "referencias": ["ref-forte"],
+        },
+        alteracoes,
+    )
+
+
+def meta_glossario(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "termos": [
+                {
+                    "termo": "Migration",
+                    "definicao": "Mudança versionada do esquema do banco, ou migração.",
+                    "referencias": ["ref-forte"],
+                },
+                {
+                    "termo": "Harness",
+                    "definicao": "O programa que envolve o modelo e executa as ferramentas.",
+                    "conceito": "harness",
+                    "referencias": ["ref-forte"],
+                },
+            ]
+        },
+        alteracoes,
+    )
+
+
+def meta_pagina_estruturada(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "titulo": "O problema",
+            "descricao": "Por que o portal existe.",
+            "referencias": ["ref-forte"],
+            "revisado_em": "2026-10-01",
+            "lead": "O código sai rápido e a regressão chega junto [ref:ref-forte].",
+            "elos": [
+                {
+                    "figura": "codigo-rapido",
+                    "titulo": "Código rápido",
+                    "definicao": "O agente gera muito código [ref:ref-forte].",
+                    "como_aparece": "A mudança sai sem spec.",
+                    "conector": "gera",
+                }
+            ],
+            "falhas": [
+                {
+                    "titulo": "Sem tier",
+                    "apelido": "vai direto",
+                    "observado": "A mudança estrutural entra sem spec [ref:ref-forte].",
+                    "data": "2026-09",
+                    "pratica": "P1-01",
+                    "resposta": "Classifique antes de codar.",
+                }
+            ],
+            "numeros": [
+                {"valor": "45", "descricao": "casos medidos [ref:ref-forte]", "data": "2026-09"}
+            ],
+            "disciplinas": [
+                {
+                    "rotulo": "SDD",
+                    "titulo": "Spec antes do código",
+                    "sintoma": "Código sem especificação.",
+                    "resposta": "Escreva a spec primeiro.",
+                    "dominio": "construir-com-ia",
+                }
+            ],
+            "momentos": [{"momento": "antes-de-escrever", "disciplinas": ["SDD"]}],
+            "principios": [
+                {"titulo": "Verificável", "texto": "Todo padrão tem prova [ref:ref-forte]."}
+            ],
+            "escada": [
+                {
+                    "degrau": "P1",
+                    "titulo": "Assistente",
+                    "regua": "uma pessoa",
+                    "texto": "Usa o harness.",
+                }
+            ],
+        },
+        alteracoes,
+    )
+
+
 def meta_catalogo(**alteracoes: Any) -> dict[str, Any]:
     pratica = meta_pratica()
     pratica.update({"url": "praticas/P1-01.html", "md": "praticas/P1-01.md"})
@@ -229,6 +397,30 @@ def meta_catalogo(**alteracoes: Any) -> dict[str, Any]:
 def pratica(meta: dict[str, Any] | None = None, corpo: str = CORPO_PRATICA) -> Conteudo:
     meta = meta_pratica() if meta is None else meta
     return Conteudo("pratica", f"praticas/{meta['dominio']}/{meta['id']}.md", meta, corpo)
+
+
+def receita(
+    slug: str = "ligar-ci",
+    meta: dict[str, Any] | None = None,
+    corpo: str = CORPO_RECEITA,
+) -> Conteudo:
+    meta = meta_receita() if meta is None else meta
+    return Conteudo("receita", f"receitas/{slug}.md", meta, corpo)
+
+
+def starter(meta: dict[str, Any] | None = None) -> Conteudo:
+    meta = meta_starter() if meta is None else meta
+    return Conteudo("starter", f"starters/{meta['id']}.yml", meta, "")
+
+
+def ferramenta(meta: dict[str, Any] | None = None) -> Conteudo:
+    meta = meta_ferramenta() if meta is None else meta
+    return Conteudo("ferramenta", f"ferramentas/{meta['id']}.yml", meta, "")
+
+
+def glossario(meta: dict[str, Any] | None = None) -> Conteudo:
+    meta = meta_glossario() if meta is None else meta
+    return Conteudo("glossario", "glossario.yml", meta, "")
 
 
 def referencia(meta: dict[str, Any] | None = None) -> Conteudo:

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Página",
-  "description": "paginas/<slug>.md: páginas especiais (spec §4.3), como como-fazer e o-problema.",
+  "description": "paginas/<slug>.md: páginas especiais (spec §4.3; delta v1.1 §6.4). Os blocos são opcionais e cada template usa os seus; todo texto com afirmação factual leva [ref:id].",
   "type": "object",
   "additionalProperties": false,
   "required": ["titulo"],
@@ -13,6 +13,152 @@
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
     },
-    "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+    "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "lead": {"$ref": "#/$defs/texto"},
+    "fatos": {"type": "array", "items": {"$ref": "#/$defs/texto"}},
+    "caminhos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "texto", "destino"],
+        "properties": {
+          "titulo": {"$ref": "#/$defs/texto"},
+          "texto": {"$ref": "#/$defs/texto"},
+          "destino": {"type": "string", "pattern": "^(guias|receitas|starters)/[a-z0-9][a-z0-9-]*$"}
+        }
+      }
+    },
+    "elos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["figura", "titulo", "definicao", "como_aparece"],
+        "properties": {
+          "figura": {
+            "enum": ["codigo-rapido", "drift", "regressao", "escada", "x", "caixa", "check", "codigo"]
+          },
+          "titulo": {"$ref": "#/$defs/texto"},
+          "definicao": {"$ref": "#/$defs/texto"},
+          "como_aparece": {"$ref": "#/$defs/texto"},
+          "conector": {"$ref": "#/$defs/texto"}
+        }
+      }
+    },
+    "falhas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "observado", "resposta"],
+        "anyOf": [{"required": ["pratica"]}, {"required": ["dominio"]}],
+        "properties": {
+          "titulo": {"$ref": "#/$defs/texto"},
+          "apelido": {"$ref": "#/$defs/texto"},
+          "observado": {"$ref": "#/$defs/texto"},
+          "data": {"$ref": "#/$defs/data_mes"},
+          "pratica": {"type": "string", "minLength": 1},
+          "dominio": {"$ref": "#/$defs/slug"},
+          "resposta": {"$ref": "#/$defs/texto"}
+        }
+      }
+    },
+    "numeros": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["valor", "descricao", "data"],
+        "properties": {
+          "valor": {"type": ["string", "number"]},
+          "descricao": {"$ref": "#/$defs/texto"},
+          "data": {"$ref": "#/$defs/data_mes"}
+        }
+      }
+    },
+    "disciplinas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["rotulo", "titulo", "sintoma", "resposta"],
+        "properties": {
+          "rotulo": {"type": "string", "minLength": 1},
+          "titulo": {"$ref": "#/$defs/texto"},
+          "sintoma": {"$ref": "#/$defs/texto"},
+          "resposta": {"$ref": "#/$defs/texto"},
+          "dominio": {"$ref": "#/$defs/slug"}
+        }
+      }
+    },
+    "momentos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["momento", "disciplinas"],
+        "properties": {
+          "momento": {"$ref": "#/$defs/slug"},
+          "disciplinas": {"type": "array", "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "principios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "texto"],
+        "properties": {
+          "titulo": {"$ref": "#/$defs/texto"},
+          "texto": {"$ref": "#/$defs/texto"}
+        }
+      }
+    },
+    "escada": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["degrau", "titulo", "regua", "texto"],
+        "properties": {
+          "degrau": {"enum": ["P1", "P2", "P3"]},
+          "titulo": {"$ref": "#/$defs/texto"},
+          "regua": {"$ref": "#/$defs/texto"},
+          "texto": {"$ref": "#/$defs/texto"}
+        }
+      }
+    },
+    "normas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "titulo", "texto"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*$"},
+          "titulo": {"$ref": "#/$defs/texto"},
+          "texto": {"$ref": "#/$defs/texto"}
+        }
+      }
+    },
+    "modos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "texto"],
+        "properties": {
+          "titulo": {"$ref": "#/$defs/texto"},
+          "texto": {"$ref": "#/$defs/texto"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
+    "texto": {"type": "string", "minLength": 1},
+    "data_mes": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}(-[0-9]{2})?$"}
   }
 }
