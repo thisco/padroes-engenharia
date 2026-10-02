@@ -1872,7 +1872,7 @@ def test_expandir_inclusoes_vira_bloco_com_linguagem(tmp_path):
   conteúdo continua escapado pelo renderizador padrão: `RendererHTML.fence(self, ...)`);
   `corpo_html` passa `conteudo.chave`.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_regras_prompt.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_regras_prompt.py`)
 
 ````python
 """R27 (D19): prompt de exemplo no lugar certo, obrigatório onde o Exemplo é, e executado."""
@@ -1932,9 +1932,9 @@ def test_prompt_sai_escapado_com_id_e_copiar():
     assert 'class="copiar" data-copiar hidden>Copiar</button>' in html
 ````
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_regras_prompt.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_regras_prompt.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar** conforme as Interfaces. Regra de `fence` em `markdown.criar()`:
+- [x] **Passo 3: Implementar** conforme as Interfaces. Regra de `fence` em `markdown.criar()`:
 
 ```python
     def fence(self, tokens, idx, options, env):
@@ -1954,9 +1954,9 @@ def test_prompt_sai_escapado_com_id_e_copiar():
   borda âmbar tracejada à esquerda (o prompt orienta), `pre` com `white-space: pre-wrap`.
   `erros.py`: `R_PROMPT`.
 
-- [ ] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes (a DAD-01 está isenta).
+- [x] **Passo 4:** suíte, ruff e `python scripts/validar.py` verdes (a DAD-01 está isenta).
 
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: prompts de exemplo no lugar certo, obrigatórios e com execução registrada"`
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: prompts de exemplo no lugar certo, obrigatórios e com execução registrada"`
 
 ---
 
@@ -3051,6 +3051,11 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   passaram a mutar `mecanismo: null` para `mecanismo: scripts/x.py` (R-MECANISMO, caminho
   inexistente), o mesmo erro isolado. `regra_exemplo` ficou depois de `regra_secoes` em `REGRAS`.
   Prova da isenção: com `isentos: []`, `validar.py` sai 1 com `DAD-01.md:corpo: R-EXEMPLO`.
+
+- **Tarefa 11:** o teste do plano registrava o prompt da receita em `verificacoes/ligar-ci.yaml`
+  com ID `ligar-ci-prompt-1`; a chave da receita é `receita-ligar-ci` (Tarefa 4 e Contrato com
+  a parte 2), então o teste usa `receita-ligar-ci` e `receita-ligar-ci-prompt-1`. A mensagem de
+  prompt em outro tipo é `prompt só em prática e receita`, a do teste.
 
 ## Revisão adversarial
 

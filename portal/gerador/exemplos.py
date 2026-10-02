@@ -16,6 +16,8 @@ from pathlib import Path, PurePosixPath
 import yaml
 from markdown_it import MarkdownIt
 
+from portal.gerador.carregar import Conteudo
+
 _MARKDOWN = MarkdownIt("commonmark")
 
 # `<!-- incluir: exemplos/DAD-01/ci.yml -->` sozinha na linha.
@@ -181,3 +183,29 @@ def _checar_shell(arquivo: Path) -> str:
         linhas = resultado.stderr.strip().splitlines()
         return "shell inválido: " + (linhas[0] if linhas else "bash -n falhou")
     return ""
+
+
+# Prompts de exemplo (D19, R27) ----------------------------------------------------------------
+
+
+def id_prompt(chave: str, n: int) -> str:
+    """O ID de um prompt: `<chave>-prompt-<n>`, `n` a partir de 1, na ordem do corpo."""
+    return f"{chave}-prompt-{n}"
+
+
+@dataclass(frozen=True)
+class Prompt:
+    id: str
+    origem: Conteudo
+    texto: str
+    h2: str
+    h3: str
+
+
+def prompts_de(conteudo: Conteudo) -> list[Prompt]:
+    """Os blocos `prompt` do corpo, com ID, texto e a seção em que estão."""
+    achados = [b for b in blocos(conteudo.corpo) if b.linguagem == "prompt"]
+    return [
+        Prompt(id_prompt(conteudo.chave, n), conteudo, b.texto, b.h2, b.h3)
+        for n, b in enumerate(achados, start=1)
+    ]

@@ -42,6 +42,7 @@ from portal.gerador.exemplos import (
     caminho_seguro,
     checar_sintaxe,
     inclusoes,
+    prompts_de,
     secoes,
 )
 from portal.gerador.ninhos import PECAS
@@ -716,6 +717,51 @@ def regra_execucao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
                 reprovar(caminho, "inclusão fora de exemplos/")
             elif caminho not in declarados:
                 reprovar(caminho, "incluído e não declarado em exemplos")
+    return erros
+
+
+# Prompts de exemplo (delta D19, R27) ---------------------------------------------------------
+
+LUGAR_DO_PROMPT = {
+    "pratica": ("Exemplo", "Para o agente", "## Exemplo › ### Para o agente"),
+    "receita": ("Com o agente", "", "## Com o agente"),
+}
+
+
+@regra
+def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """O prompt de exemplo mora em `Exemplo › Para o agente` (prática) ou `Com o agente`
+    (receita), é obrigatório onde o Exemplo é e só publica com execução registrada."""
+    registros = {_texto(v.meta, "conteudo"): v for v in repo.verificacoes}
+    erros: list[Erro] = []
+    for c in repo.markdown():
+        achados = prompts_de(c)
+
+        def reprovar(valor: str, c: Conteudo = c) -> None:
+            erros.append(Erro(c.caminho_relativo, "corpo", codigos.R_PROMPT, valor))
+
+        if c.tipo not in LUGAR_DO_PROMPT:
+            if achados:
+                reprovar("prompt só em prática e receita")
+            continue
+        h2, h3, descricao = LUGAR_DO_PROMPT[c.tipo]
+        for achado in achados:
+            if (achado.h2, achado.h3) != (h2, h3):
+                reprovar(f"prompt fora de {descricao}")
+        obrigatorio = c.tipo == "receita" or (
+            exemplo_obrigatorio(c.meta) and c.chave not in contexto.isentos
+        )
+        if obrigatorio and not any((a.h2, a.h3) == (h2, h3) for a in achados):
+            reprovar(f"prompt de exemplo obrigatório em {descricao.split(' › ')[-1]}")
+        registro = registros.get(c.chave)
+        executados = {
+            e.get("prompt")
+            for e in (registro.meta.get("execucoes") or [] if registro else [])
+            if isinstance(e, dict) and e.get("tipo") == "prompt"
+        }
+        for achado in achados:
+            if achado.id not in executados:
+                reprovar(f"{achado.id}: sem execução registrada")
     return erros
 
 

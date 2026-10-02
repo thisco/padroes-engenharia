@@ -240,7 +240,7 @@ def corpo_html(conteudo: Conteudo, raiz: Path | None = None) -> str:
     texto, _ = numerar(conteudo.corpo)
     if raiz is not None and conteudo.tipo in ("pratica", "receita"):
         texto = expandir_inclusoes(texto, raiz)
-    return para_html(texto)
+    return para_html(texto, conteudo.chave)
 
 
 # Páginas da espinha e de listagem (Tarefa 20) -----------------------------------------------

@@ -227,3 +227,9 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
   .ninho .linha, .ninho .exec { grid-template-columns: 1fr; }
   .busca input, .busca ul { width: 100%; }
 }
+
+/* prompt de exemplo (D19): texto que orienta o agente, borda âmbar tracejada à esquerda */
+.prompt { margin: 16px 0; border-left: 3px dashed var(--ambar); padding-left: 12px; }
+.prompt figcaption { font-size: 12px; font-weight: 600; color: var(--ambar-texto); margin-bottom: 4px; }
+.prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
+.copiar { font: inherit; font-size: 12px; margin-left: 8px; cursor: pointer; color: var(--gov); background: var(--branco); border: 1.5px solid var(--gov); border-radius: 4px; padding: 2px 8px; }
