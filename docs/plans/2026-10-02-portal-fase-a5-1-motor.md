@@ -2859,7 +2859,7 @@ novo **"2b. Execução do exemplo e do prompt"** (§11.4 e R27: rodar o arquivo 
 nova, registrar `execucoes` com `tipo`, comando ou harness, ambiente, resultado e evidência); o
 pedido da revisão adversarial ganha a pergunta de executabilidade do §11.4, literal.
 
-- [ ] **Passo 1: Testes que falham** (acrescentar a `tests/unidade/test_skill_curadoria.py`)
+- [x] **Passo 1: Testes que falham** (acrescentar a `tests/unidade/test_skill_curadoria.py`)
 
 ```python
 @pytest.mark.parametrize(
@@ -2887,13 +2887,13 @@ def test_nao_fala_mais_em_quatro_secoes():
   e trocar `test_os_seis_passos_do_ciclo_na_ordem` para aceitar o passo `### 2b. Execução do
   exemplo e do prompt` entre o 2 e o 3 (a ordem dos números continua 1, 2, 2b, 3, 4, 5, 6).
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_skill_curadoria.py -q` → FAIL.
-- [ ] **Passo 3:** editar a skill (mantendo < 500 linhas e a `description` ≤ 1024, agora
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_skill_curadoria.py -q` → FAIL.
+- [x] **Passo 3:** editar a skill (mantendo < 500 linhas e a `description` ≤ 1024, agora
   citando receita, starter, ferramenta e glossário); o checklist ganha "Exemplo e prompt com
   execução registrada".
-- [ ] **Passo 4:** suíte, ruff e validar (R-SKILL) verdes; o `.well-known/skills/index.json` do
+- [x] **Passo 4:** suíte, ruff e validar (R-SKILL) verdes; o `.well-known/skills/index.json` do
   build temporário traz o sha256 novo.
-- [ ] **Passo 5:** `git commit -am "docs: skill curadoria-de-pratica no modelo v1.1 com curadoria por execução"`
+- [x] **Passo 5:** `git commit -am "docs: skill curadoria-de-pratica no modelo v1.1 com curadoria por execução"`
 
 ---
 

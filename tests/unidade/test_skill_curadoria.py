@@ -16,21 +16,42 @@ def test_frontmatter_no_formato_agent_skills():
     assert set(META) <= {"name", "description", "license", "compatibility", "metadata"}
 
 
+PASSOS = [
+    "### 1. Rascunho",
+    "### 2. Verificação na fonte",
+    "### 2b. Execução do exemplo e do prompt",
+    "### 3. Revisão adversarial",
+    "### 4. Validação automática",
+    "### 5. Aprovação humana",
+    "### 6. Revalidação",
+]
+
+
+def test_os_passos_do_ciclo_na_ordem():
+    passos = [linha for linha in CORPO.splitlines() if linha.startswith("### ")]
+    assert passos == PASSOS
+
+
 @pytest.mark.parametrize(
-    "passo",
+    "trecho",
     [
-        "### 1. Rascunho",
-        "### 2. Verificação na fonte",
-        "### 3. Revisão adversarial",
-        "### 4. Validação automática",
-        "### 5. Aprovação humana",
-        "### 6. Revalidação",
+        "`## Exemplo`",
+        "### Para o agente",
+        "```prompt",
+        "<!-- incluir: exemplos/",
+        "execucoes:",
+        "tipo: prompt",
+        "Siga o Como aplicar e o Exemplo num repositório vazio. Liste cada passo que você não "
+        "conseguiu executar sem inventar algo.",
+        "## Com o agente",
     ],
 )
-def test_os_seis_passos_do_ciclo_na_ordem(passo):
-    assert passo in CORPO
-    passos = [linha for linha in CORPO.splitlines() if linha.startswith("### ")]
-    assert passos.index(passo) == int(passo[4]) - 1
+def test_modelo_v1_1_e_curadoria_por_execucao(trecho):
+    assert trecho in CORPO
+
+
+def test_nao_fala_mais_em_quatro_secoes():
+    assert "exatamente estas quatro seções" not in CORPO
 
 
 @pytest.mark.parametrize(
