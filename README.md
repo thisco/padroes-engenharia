@@ -6,8 +6,8 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## O que há aqui
 
-- 3 prática(s) na espinha de 12 domínios × 4 momentos; 45 das 48 células a definir (`ROTEAMENTO.md`).
-- 10 referência(s), cada uma conferida na fonte, e 6 skill(s) publicada(s).
+- 3 práticas na espinha de 12 domínios × 4 momentos; 45 das 48 células a definir (`ROTEAMENTO.md`).
+- 10 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |

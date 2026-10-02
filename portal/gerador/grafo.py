@@ -1,6 +1,6 @@
 """O grafo do portal (spec §7.1): prática ↔ referência ↔ domínio ↔ conceito.
 
-`montar_catalogo(repo, espinha)` organiza um repositório já validado para o gerador: as 48
+`montar_catalogo(repo, espinha)` organiza um repositório já validado para o gerador: todas as
 células da espinha com as suas práticas e a força máxima, as referências por id, as relações
 entre práticas e quem cita cada referência. Nada aqui lê disco nem valida.
 """

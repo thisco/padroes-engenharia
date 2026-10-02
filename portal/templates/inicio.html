@@ -11,7 +11,7 @@
     <div class="passo">
       <span class="n">{{ loop.index }}</span>
       <b>{{ m.titulo }}</b>
-      <p>Fase{{ "s" if m.fases | length > 1 else "" }} {{ m.fases | join(", ") }} da sdd-lifecycle · {{ praticas_por_momento[m.slug] }} prática(s)</p>
+      <p>Fase{{ "s" if m.fases | length > 1 else "" }} {{ m.fases | join(", ") }} da sdd-lifecycle · {{ praticas_por_momento[m.slug] | plural("prática", "práticas") }}</p>
       <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
     </div>
 {% endfor %}
@@ -26,7 +26,7 @@
 <div class="duas">
   <section aria-label="Espinha em miniatura">
     <h2>A espinha</h2>
-    <p class="lead">12 domínios × 4 momentos; {{ a_definir }} das 48 células ainda estão a definir.</p>
+    <p class="lead">{{ site.espinha.faixas | length }} domínios × {{ site.espinha.momentos | length }} momentos; {{ a_definir_texto(site) }} ainda estão a definir.</p>
     <table class="matriz mini">
       <thead>
         <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>

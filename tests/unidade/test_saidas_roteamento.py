@@ -72,7 +72,7 @@ def test_readme_resume_o_repositorio_e_traz_o_roteiro():
     texto = readme_md(fabrica.site(fabrica.pratica(), fabrica.referencia()))
     assert texto.startswith("# Padrões de Engenharia\n\n> Portal de padrões de engenharia")
     assert "Versão 0.1.0." in texto
-    assert "- 1 prática(s) na espinha de 12 domínios × 4 momentos; 47 das 48" in texto
+    assert "- 1 prática na espinha de 12 domínios × 4 momentos; 47 das 48" in texto
     assert "| Guia | Construir com IA (`construir-com-ia`) | 1 |" in texto
     assert "python scripts/validar.py" in texto
     assert "## Roteiro" in texto and "- **v2:**" in texto

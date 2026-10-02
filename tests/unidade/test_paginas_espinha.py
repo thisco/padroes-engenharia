@@ -44,7 +44,7 @@ def test_inicio_minimo_sem_como_fazer():
         "antes-do-merge",
         "depois-da-entrega",
     ]
-    assert "Fases 0, 1, 2, 3 da sdd-lifecycle · 1 prática(s)" in html
+    assert "Fases 0, 1, 2, 3 da sdd-lifecycle · 1 prática" in html
     assert html.count('<span class="q ') == 48 + 4
     assert '<span class="q orienta"></span>' in html
     assert "consulte https://portal.exemplo/roteamento.json" in html
@@ -127,7 +127,7 @@ def test_listagem_de_dominios_por_grupo():
         "Entrega e operação",
         "IA no produto",
     ]
-    assert "1 prática(s) · prefixo P1" in html
+    assert "1 prática · prefixo P1" in html
 
 
 def test_conceitos_mostra_os_dois_ninhos_e_lista_as_pecas():

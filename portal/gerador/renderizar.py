@@ -192,7 +192,7 @@ def criar_ambiente(raiz: Path) -> Environment:
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
     )
-    ambiente.globals.update(FORCAS=FORCAS, STATUS=STATUS)
+    ambiente.globals.update(FORCAS=FORCAS, STATUS=STATUS, a_definir_texto=a_definir_texto)
     ambiente.filters["plural"] = plural
     return ambiente
 
@@ -304,6 +304,19 @@ def celulas_a_definir(site: Site) -> int:
     return sum(1 for c in site.catalogo.celulas if c.estado == "a-definir")
 
 
+def a_definir_texto(site: Site) -> str:
+    """`45 das 48 células`, com os números da espinha (R2)."""
+    return f"{celulas_a_definir(site)} das {site.espinha.total_celulas} células"
+
+
+def dimensoes(site: Site) -> str:
+    """`12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD`."""
+    return (
+        f"{len(site.espinha.faixas)} faixas de domínio cruzadas com os "
+        f"{len(site.espinha.momentos)} momentos do ciclo SDD"
+    )
+
+
 def descricao_dominio(site: Site, faixa: Faixa) -> str:
     dominio = site.catalogo.dominio(faixa.slug)
     if dominio is not None and dominio.meta.get("descricao"):
@@ -355,7 +368,7 @@ def html_espinha(site: Site) -> str:
         "espinha.html",
         "espinha.html",
         titulo="Espinha",
-        descricao="As 12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD.",
+        descricao=f"As {dimensoes(site)}.",
         a_definir=celulas_a_definir(site),
     )
 
@@ -383,8 +396,10 @@ def listas_dominios(site: Site) -> list[dict[str, Any]]:
             {
                 "titulo": f.titulo,
                 "href": f"dominios/{f.slug}.html",
-                "nota": f"{len(site.catalogo.praticas_do_dominio(f.slug))} prática(s) · "
-                f"prefixo {', '.join(f.prefixos)}",
+                "nota": plural(
+                    len(site.catalogo.praticas_do_dominio(f.slug)), "prática", "práticas"
+                )
+                + f" · prefixo {', '.join(f.prefixos)}",
             }
             for f in site.espinha.faixas
             if f.grupo == grupo
@@ -423,7 +438,7 @@ def html_dominios(site: Site) -> str:
         site,
         "dominios/index.html",
         "Domínios",
-        descricao="As 12 faixas da espinha, por grupo.",
+        descricao=f"As {len(site.espinha.faixas)} faixas da espinha, por grupo.",
         listas=listas_dominios(site),
     )
 
@@ -453,16 +468,22 @@ def html_guias(site: Site) -> str:
 
 TRILHAS = {"conceito": "Conceitos", "guia": "Guias", "caso": "Casos", "pagina": ""}
 
+
 # Índices para máquina publicados pelo build (spec §7.3): caminho e o que contém.
-INDICES = (
-    ("roteamento.json", "as 48 células com práticas, aplica e força máxima"),
-    ("ROTEAMENTO.md", "o mesmo roteamento em Markdown"),
-    ("llms.txt", "todas as páginas, no formato llms.txt"),
-    ("llms-full.txt", "todo o conteúdo concatenado"),
-    ("catalogo.json", "todos os itens com metadados, versão e commit"),
-    ("esquemas/catalogo.schema.json", "o JSON Schema do catálogo"),
-    (".well-known/skills/index.json", "as skills publicadas, com sha256 de cada arquivo"),
-)
+def indices(site: Site) -> list[tuple[str, str]]:
+    """Índices para máquina publicados pelo build (spec §7.3): caminho e o que contém."""
+    return [
+        (
+            "roteamento.json",
+            f"as {site.espinha.total_celulas} células com práticas, aplica e força máxima",
+        ),
+        ("ROTEAMENTO.md", "o mesmo roteamento em Markdown"),
+        ("llms.txt", "todas as páginas, no formato llms.txt"),
+        ("llms-full.txt", "todo o conteúdo concatenado"),
+        ("catalogo.json", "todos os itens com metadados, versão e commit"),
+        ("esquemas/catalogo.schema.json", "o JSON Schema do catálogo"),
+        (".well-known/skills/index.json", "as skills publicadas, com sha256 de cada arquivo"),
+    ]
 
 
 def rotulo(conteudo: Conteudo) -> str:
@@ -601,7 +622,7 @@ def html_para_agentes(site: Site) -> str:
             "pelo domínio da mudança, lê as práticas indicadas em Markdown e cita os IDs."
         ),
         corpo=corpo_html(pagina) if pagina else "",
-        indices=list(INDICES) + [(c, "a constituição canônica") for c in constituicoes(site)],
+        indices=indices(site) + [(c, "a constituição canônica") for c in constituicoes(site)],
         bloco=bloco_agents(site),
         celulas=[c for c in site.catalogo.celulas if c.estado == "ok"],
         a_definir=celulas_a_definir(site),

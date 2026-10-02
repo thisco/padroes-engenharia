@@ -16,12 +16,12 @@ from typing import Any
 from portal.gerador.carregar import Conteudo
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
-    INDICES,
     NINHOS,
     PAGINAS_FIXAS,
     ROTULO_FORCA,
     ROTULO_TIPO_REFERENCIA,
     Site,
+    a_definir_texto,
     bloco_agents,
     caminho_de,
     campos_de,
@@ -31,6 +31,7 @@ from portal.gerador.renderizar import (
     descrever_ninho,
     descricao_de,
     descricao_dominio,
+    dimensoes,
     html_conceitos,
     html_conteudo,
     html_dominio,
@@ -47,6 +48,10 @@ from portal.gerador.renderizar import (
     para_md,
     rotulo,
 )
+from portal.gerador.renderizar import (
+    indices as indices_,
+)
+from portal.gerador.vocabulario import plural
 
 SECOES = ("Páginas", "Domínios", "Práticas", "Conceitos", "Guias", "Casos")
 SECAO_POR_TIPO = {"conceito": "Conceitos", "guia": "Guias", "caso": "Casos", "pagina": "Páginas"}
@@ -226,13 +231,15 @@ def md_inicio(site: Site) -> str:
     for i, m in enumerate(site.espinha.momentos, start=1):
         n = sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
         fases = ("fases " if len(m.fases) > 1 else "fase ") + ", ".join(map(str, m.fases))
-        passos.append(f"{i}. **{m.titulo}** ({fases} da sdd-lifecycle): {n} prática(s).")
+        passos.append(
+            f"{i}. **{m.titulo}** ({fases} da sdd-lifecycle): {plural(n, 'prática', 'práticas')}."
+        )
     return _juntar(
         f"# {titulo}",
         descricao,
         "## Os quatro momentos\n\n" + "\n".join(passos),
         pagina.corpo if pagina else "",
-        f"## A espinha\n\n{celulas_a_definir(site)} das 48 células estão a definir. "
+        f"## A espinha\n\n{a_definir_texto(site)} estão a definir. "
         "A matriz completa está em [espinha.md](espinha.md).",
         "## Para agentes\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
         f"{bloco_agents(site)}```",
@@ -255,8 +262,7 @@ def md_espinha(site: Site) -> str:
         linhas.append(f"| {faixa.titulo} (`{faixa.slug}`) | " + " | ".join(celulas) + " |")
     return _juntar(
         "# Espinha",
-        "As 12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD. "
-        f"{celulas_a_definir(site)} das 48 células estão a definir.",
+        f"As {dimensoes(site)}. {a_definir_texto(site)} estão a definir.",
         "\n".join(linhas),
     )
 
@@ -300,7 +306,7 @@ def _md_listas(caminho: str, listas: list[dict]) -> list[str]:
 def md_dominios(site: Site) -> str:
     return _juntar(
         "# Domínios",
-        "As 12 faixas da espinha, por grupo.",
+        f"As {len(site.espinha.faixas)} faixas da espinha, por grupo.",
         *_md_listas("dominios/index.html", listas_dominios(site)),
     )
 
@@ -349,7 +355,7 @@ def md_referencias(site: Site) -> str:
 
 def md_para_agentes(site: Site) -> str:
     pagina = site.pagina("para-agentes")
-    indices = list(INDICES) + [(c, "a constituição canônica") for c in constituicoes(site)]
+    indices = indices_(site) + [(c, "a constituição canônica") for c in constituicoes(site)]
     linhas = ["| Domínio | Momento | Práticas | Força máxima | Aplica |", "|---|---|---|---|---|"]
     for celula in site.catalogo.celulas:
         if celula.estado != "ok":
@@ -371,7 +377,8 @@ def md_para_agentes(site: Site) -> str:
         "## Índices para máquina\n\nToda página HTML tem um `.md` gêmeo no mesmo caminho.\n\n"
         + "\n".join(f"- [/{caminho}]({caminho}): {nota}" for caminho, nota in indices),
         f"## Roteamento\n\nCélulas com prática publicada; as outras {celulas_a_definir(site)} "
-        "estão a definir. As 48 estão em [roteamento.json](roteamento.json).\n\n" + roteamento,
+        f"estão a definir. As {site.espinha.total_celulas} estão em "
+        "[roteamento.json](roteamento.json).\n\n" + roteamento,
     )
 
 
@@ -406,7 +413,8 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
         "",
         f"- [Texto completo]({site.url('llms-full.txt')}): todas as páginas num arquivo só",
         f"- [Catálogo]({site.url('catalogo.json')}): todos os itens com metadados",
-        f"- [Roteamento]({site.url('roteamento.json')}): as 48 células da espinha",
+        f"- [Roteamento]({site.url('roteamento.json')}): "
+        f"as {site.espinha.total_celulas} células da espinha",
         "",
     ]
     return "\n".join(linhas)
@@ -600,8 +608,8 @@ def roteamento_md(site: Site) -> str:
     total = len(site.catalogo.praticas)
     return _juntar(
         "# Roteamento das práticas",
-        f"> {AVISO_GERADO} {site.nome} v{site.versao}: {total} prática(s); "
-        f"{celulas_a_definir(site)} das 48 células a definir.",
+        f"> {AVISO_GERADO} {site.nome} v{site.versao}: {plural(total, 'prática', 'práticas')}; "
+        f"{a_definir_texto(site)} a definir.",
         "Ache a linha do domínio da mudança e a coluna do momento e leia as práticas da célula. "
         "No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal "
         "publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.",
@@ -622,10 +630,12 @@ def readme_md(site: Site) -> str:
         f"Versão {site.versao}.",
         f"{AVISO_GERADO} O validador reprova se este arquivo divergir do gerado.",
         "## O que há aqui\n\n"
-        f"- {total} prática(s) na espinha de 12 domínios × 4 momentos; "
-        f"{celulas_a_definir(site)} das 48 células a definir (`ROTEAMENTO.md`).\n"
-        f"- {len(site.repo.referencias)} referência(s), cada uma conferida na fonte, e "
-        f"{len(site.repo.skills)} skill(s) publicada(s).\n"
+        f"- {plural(total, 'prática', 'práticas')} na espinha de "
+        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} momentos; "
+        f"{a_definir_texto(site)} a definir (`ROTEAMENTO.md`).\n"
+        f"- {plural(len(site.repo.referencias), 'referência', 'referências')}, cada uma "
+        f"conferida na fonte, e "
+        f"{plural(len(site.repo.skills), 'skill publicada', 'skills publicadas')}.\n"
         "- O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.\n\n"
         + "\n".join(linhas),
         "## Como contribuir\n\n"

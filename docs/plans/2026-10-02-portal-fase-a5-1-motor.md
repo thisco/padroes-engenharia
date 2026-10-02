@@ -731,7 +731,7 @@ git commit -m "feat: subtítulo, scaffold e ação na espinha e vocabulário de 
 - Produces: `a_definir_texto(site) -> str` (`"45 das 48 células"`) e `indices(site) ->
   list[tuple[str, str]]` em `renderizar.py`; `INDICES` deixa de existir.
 
-- [ ] **Passo 1: Escrever o teste que falha**
+- [x] **Passo 1: Escrever o teste que falha**
 
 Criar `tests/integracao/test_numeros_da_espinha.py`:
 
@@ -769,12 +769,12 @@ def test_numeros_e_plural_saem_da_espinha(repo_minimo, tmp_path):
     assert "(s)" not in textos
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `python -m pytest tests/integracao/test_numeros_da_espinha.py -q`
 Expected: FAIL em `assert "43 das 44 células" in textos` (o texto ainda diz "das 48").
 
-- [ ] **Passo 3: Derivar os números em `renderizar.py`**
+- [x] **Passo 3: Derivar os números em `renderizar.py`**
 
 Depois de `celulas_a_definir`, acrescentar:
 
@@ -828,7 +828,7 @@ def indices(site: Site) -> list[tuple[str, str]]:
 - registrar a função para os templates: em `criar_ambiente`, no segundo `globals.update`,
   acrescentar `a_definir_texto=a_definir_texto`.
 
-- [ ] **Passo 4: Derivar os números nos templates**
+- [x] **Passo 4: Derivar os números nos templates**
 
 - `portal/templates/espinha.html`: `· {{ a_definir }} das 48 células a definir.` →
   `· {{ a_definir_texto(site) }} a definir.`
@@ -840,7 +840,7 @@ def indices(site: Site) -> list[tuple[str, str]]:
   e `· {{ praticas_por_momento[m.slug] }} prática(s)` vira
   `· {{ praticas_por_momento[m.slug] | plural("prática", "práticas") }}`.
 
-- [ ] **Passo 5: Derivar os números em `saidas.py`**
+- [x] **Passo 5: Derivar os números em `saidas.py`**
 
 Importar `a_definir_texto`, `dimensoes` e `indices` de `renderizar` (e tirar `INDICES`) e
 `plural` de `portal.gerador.vocabulario`. Substituições, uma por uma:
@@ -883,7 +883,7 @@ f"conferida na fonte, e {plural(len(site.repo.skills), 'skill publicada', 'skill
 Em `portal/gerador/grafo.py`, na docstring do módulo, `as 48\ncélulas da espinha` → `todas as
 células da espinha`.
 
-- [ ] **Passo 6: Atualizar os testes que fixavam o texto antigo**
+- [x] **Passo 6: Atualizar os testes que fixavam o texto antigo**
 
 - `tests/unidade/test_paginas_espinha.py`: `"Fases 0, 1, 2, 3 da sdd-lifecycle · 1 prática(s)"`
   → `"Fases 0, 1, 2, 3 da sdd-lifecycle · 1 prática"`; `"1 prática(s) · prefixo P1"` →
@@ -893,7 +893,7 @@ células da espinha`.
 - `tests/unidade/test_saidas_paginas.py`: a asserção `descricao.startswith("As 12 faixas de
   domínio")` continua valendo (a espinha real tem 12 faixas).
 
-- [ ] **Passo 7: Rodar a suíte e regenerar os arquivos da raiz**
+- [x] **Passo 7: Rodar a suíte e regenerar os arquivos da raiz**
 
 Run: `python -m pytest -q && ruff check . && ruff format --check .`
 Expected: todos passam.
@@ -902,7 +902,7 @@ Run: `python scripts/gerar.py --saida "$TMPDIR/a5" && python scripts/validar.py 
 Expected: `validação ok: nenhum erro.` e as duas linhas de README e ROTEAMENTO alteradas
 ("3 práticas", "3 práticas;").
 
-- [ ] **Passo 8: Commit**
+- [x] **Passo 8: Commit**
 
 ```bash
 git add portal/ tests/ README.md ROTEAMENTO.md
