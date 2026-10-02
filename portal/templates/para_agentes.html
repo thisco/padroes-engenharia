@@ -28,6 +28,7 @@
   <h2>Roteamento</h2>
   <p class="lead">Células com prática publicada. As outras {{ a_definir }} estão a definir; as {{ site.espinha.total_celulas }} estão em <a href="{{ raiz }}roteamento.json"><code>roteamento.json</code></a>.</p>
 {% if celulas %}
+  <div class="rola">
   <table class="tabela">
     <thead><tr><th scope="col">Domínio</th><th scope="col">Momento</th><th scope="col">Práticas</th><th scope="col">Força máxima</th><th scope="col">Aplica</th></tr></thead>
     <tbody>
@@ -42,6 +43,7 @@
 {% endfor %}
     </tbody>
   </table>
+  </div>
 {% else %}
   <p class="vazia">Ainda não há prática publicada.</p>
 {% endif %}

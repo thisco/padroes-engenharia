@@ -32,6 +32,14 @@ def criar() -> MarkdownIt:
         legenda = f"<figcaption>Prompt para o agente {botao}</figcaption>"
         return f'<figure class="prompt"{ancora}>{legenda}{html}</figure>\n'
 
+    def tabela_aberta(self, tokens, idx, options, env):
+        return '<div class="rola">\n' + self.renderToken(tokens, idx, options, env)
+
+    def tabela_fechada(self, tokens, idx, options, env):
+        return self.renderToken(tokens, idx, options, env) + "</div>\n"
+
+    md.add_render_rule("table_open", tabela_aberta)
+    md.add_render_rule("table_close", tabela_fechada)
     md.add_render_rule("link_open", link_open)
     md.add_render_rule("fence", fence)
     return md

@@ -27,6 +27,7 @@
   <article class="texto" aria-label="{{ titulo }}">
 {{ corpo | safe }}
 {% if numeros %}
+    <div class="rola">
     <table>
       <thead><tr><th scope="col">Número</th><th scope="col">Valor</th><th scope="col">Data</th><th scope="col">Fonte</th></tr></thead>
       <tbody>
@@ -35,6 +36,7 @@
 {% endfor %}
       </tbody>
     </table>
+    </div>
 {% endif %}
   </article>
   <aside class="lado" aria-label="Ficha e referências">

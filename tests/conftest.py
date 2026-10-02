@@ -90,9 +90,41 @@ def repo_gerado(repo_minimo: Path, tmp_path: Path) -> Path:
     return repo_minimo
 
 
-def _com_registro(raiz: Path, relativo: str, meta: dict, corpo: str, chave: str) -> None:
+def _registro(raiz: Path, chave: str, execucoes: list[dict] | None = None) -> None:
+    meta = fabrica.meta_verificacao(conteudo=chave)
+    if execucoes:
+        meta["execucoes"] = execucoes
+    escrever(raiz, f"verificacoes/{chave}.yaml", _yaml(meta))
+
+
+def _com_registro(
+    raiz: Path,
+    relativo: str,
+    meta: dict,
+    corpo: str,
+    chave: str,
+    execucoes: list[dict] | None = None,
+) -> None:
     escrever(raiz, relativo, f"---\n{_yaml(meta)}---\n\n{corpo}")
-    escrever(raiz, f"verificacoes/{chave}.yaml", _yaml(fabrica.meta_verificacao(conteudo=chave)))
+    _registro(raiz, chave, execucoes)
+
+
+def _yaml_com_registro(
+    raiz: Path, relativo: str, meta: dict, chave: str, execucoes: list[dict] | None = None
+) -> None:
+    escrever(raiz, relativo, _yaml(meta))
+    _registro(raiz, chave, execucoes)
+
+
+def _execucao_prompt(id_: str) -> dict:
+    return {
+        "tipo": "prompt",
+        "prompt": id_,
+        "harness": "claude-code",
+        "resultado": "passou",
+        "evidencia": "sessão nova, resultado conferido",
+        "data": "2026-10-01",
+    }
 
 
 @pytest.fixture
@@ -114,15 +146,83 @@ def repo_exemplo(repo_minimo: Path) -> Path:
         forca="bloqueia",
         mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.6.1",
     )
-    _com_registro(raiz, "praticas/dados-migrations/DAD-01.md", dad, fabrica.CORPO_PRATICA, "DAD-01")
+    exemplo = (
+        "## Exemplo\n\n### Antes e depois\n\n```sql\nALTER TABLE x ADD COLUMN y int;\n```\n\n"
+        "### Para o agente\n\n```prompt\nCrie a migration corretiva, sem editar a antiga.\n```\n\n"
+    )
+    corpo_dad = fabrica.CORPO_PRATICA.replace("## Como verificar", exemplo + "## Como verificar")
+    _com_registro(
+        raiz,
+        "praticas/dados-migrations/DAD-01.md",
+        dad,
+        corpo_dad,
+        "DAD-01",
+        [_execucao_prompt("DAD-01-prompt-1")],
+    )
     p2 = fabrica.meta_pratica(
         id="P2-01", dominio="ia-no-produto", subdominio="apps", relacionadas=["P1-01"]
     )
     _com_registro(raiz, "praticas/ia-no-produto/P2-01.md", p2, fabrica.CORPO_PRATICA, "P2-01")
     _com_registro(raiz, "conceitos/harness.md", fabrica.meta_conceito(), citacao, "harness")
-    _com_registro(raiz, "guias/do-zero.md", fabrica.meta_guia(), citacao, "do-zero")
+    tutorial = fabrica.meta_guia(tipo="tutorial", resultado_esperado="Uma MR aprovada.")
+    _com_registro(
+        raiz, "guias/do-zero.md", tutorial, "## Passos\n\n1. Faça. [ref:ref-forte]\n", "do-zero"
+    )
     _com_registro(raiz, "casos/sgd.md", fabrica.meta_caso(), citacao, "sgd")
-    _com_registro(raiz, "paginas/o-problema.md", fabrica.meta_pagina(), citacao, "o-problema")
+    problema = fabrica.meta_pagina_estruturada()
+    _com_registro(raiz, "paginas/o-problema.md", problema, citacao, "o-problema")
+    inicio = fabrica.meta_pagina(
+        titulo="Construir software com IA sem perder a arquitetura",
+        lead="Práticas aprovadas pela engenharia [ref:ref-forte].",
+        caminhos=[{"titulo": "Projeto novo", "texto": "Do zero.", "destino": "receitas/ligar-ci"}],
+        fatos=["Fonte conferida [ref:ref-forte]."],
+    )
+    _com_registro(raiz, "paginas/inicio.md", inicio, "", "inicio")
+    normas = fabrica.meta_pagina(
+        titulo="Pessoas e normas",
+        lead="Quem confere e o que a lei pede [ref:ref-forte].",
+        modos=[{"titulo": "Verificador", "texto": "Confere."}],
+        normas=[{"id": "lgpd", "titulo": "LGPD", "texto": "Lei."}],
+    )
+    _com_registro(raiz, "paginas/pessoas-e-normas.md", normas, "", "pessoas-e-normas")
+    escrever(raiz, "exemplos/ligar-ci/job.yml", "job:\n  script: [echo ok]\n")
+    receita = fabrica.meta_receita(exemplos=["exemplos/ligar-ci/job.yml"])
+    corpo_receita = fabrica.CORPO_RECEITA.replace(
+        "2. Abra uma merge request e confira o job.",
+        "2. Abra uma merge request e confira o job.\n\n<!-- incluir: exemplos/ligar-ci/job.yml -->",
+    )
+    execucoes = [
+        {
+            "tipo": "arquivo",
+            "arquivo": "exemplos/ligar-ci/job.yml",
+            "comando": "gitlab-ci-local job",
+            "ambiente": "GitLab 17",
+            "resultado": "passou",
+            "evidencia": "Job succeeded",
+            "data": "2026-10-01",
+        },
+        _execucao_prompt("receita-ligar-ci-prompt-1"),
+    ]
+    _com_registro(
+        raiz, "receitas/ligar-ci.md", receita, corpo_receita, "receita-ligar-ci", execucoes
+    )
+    linha = {
+        "grupo": "Governança",
+        "quando": "Todo turno.",
+        "arquivo": "Constituição",
+        "caminhos": ["AGENTS.md"],
+        "mecanismos": [{"forca": "bloqueia", "texto": "reprova"}],
+    }
+    _yaml_com_registro(
+        raiz,
+        "starters/sdd-scaffold.yml",
+        fabrica.meta_starter(planta=[linha]),
+        "starter-sdd-scaffold",
+    )
+    _yaml_com_registro(
+        raiz, "ferramentas/flyway.yml", fabrica.meta_ferramenta(), "ferramenta-flyway"
+    )
+    _yaml_com_registro(raiz, "glossario.yml", fabrica.meta_glossario(), "glossario")
     escrever(
         raiz,
         "skills/curadoria-de-pratica/SKILL.md",

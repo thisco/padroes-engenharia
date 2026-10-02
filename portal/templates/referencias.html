@@ -12,6 +12,7 @@
 {% for tipo, nome in ROTULO_TIPO_REFERENCIA.items() if por_tipo[tipo] %}
 <section aria-label="{{ nome }}">
   <h2>{{ nome }}</h2>
+  <div class="rola">
   <table class="tabela">
     <thead><tr><th scope="col">ID</th><th scope="col">Referência</th><th scope="col">Verificação</th><th scope="col">Citada por</th></tr></thead>
     <tbody>
@@ -25,6 +26,7 @@
 {% endfor %}
     </tbody>
   </table>
+  </div>
 </section>
 {% else %}
 <p class="vazia">Ainda não há referências.</p>

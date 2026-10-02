@@ -2788,7 +2788,7 @@ e executado, e o prompt executado), starter `sdd-scaffold` (com `planta`), ferra
 `paginas/o-problema.md` (`meta_pagina_estruturada`) e `paginas/pessoas-e-normas.md`; a DAD-01 do
 exemplo ganha `## Exemplo` com prompt executado (o repositório de exemplo não usa a isenção).
 
-- [ ] **Passo 1: Testes que falham** (`tests/integracao/test_estrutura_v1_1.py`)
+- [x] **Passo 1: Testes que falham** (`tests/integracao/test_estrutura_v1_1.py`)
 
 ```python
 """§13 do delta: o HTML gerado tem os elementos que os mockups exigem e nada estoura 400px."""
@@ -2835,13 +2835,13 @@ def test_toda_tabela_dentro_de_rola_e_nenhum_item_de_nav_sem_pagina(publicado):
   (a estrutura `{ "data-peca": True }` pede que `No.todos` aceite `True` como "atributo
   presente"; acrescente isso a `tests/dom.py`.)
 
-- [ ] **Passo 2:** `python -m pytest tests/integracao/test_estrutura_v1_1.py -q` → FAIL (o
+- [x] **Passo 2:** `python -m pytest tests/integracao/test_estrutura_v1_1.py -q` → FAIL (o
   `repo_exemplo` ainda não tem os tipos novos).
-- [ ] **Passo 3:** completar `repo_exemplo` com `fabrica` + `_com_registro` (registro com
+- [x] **Passo 3:** completar `repo_exemplo` com `fabrica` + `_com_registro` (registro com
   `execucoes` onde há exemplo ou prompt) e envolver em `<div class="rola">` toda tabela de
   template que ainda não estiver.
-- [ ] **Passo 4:** suíte inteira, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "test: repositório de exemplo com todos os tipos e testes de estrutura e largura"`
+- [x] **Passo 4:** suíte inteira, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "test: repositório de exemplo com todos os tipos e testes de estrutura e largura"`
 
 ---
 ### Tarefa 26: Skill `curadoria-de-pratica` no modelo v1.1 (risco alto)

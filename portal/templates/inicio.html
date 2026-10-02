@@ -44,6 +44,7 @@
   <div class="duas">
     <div>
       <p class="lead">Linha = domínio, coluna = momento, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
+      <div class="rola">
       <table class="matriz mini">
         <thead>
           <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>
@@ -60,6 +61,7 @@
 {% endfor %}
         </tbody>
       </table>
+      </div>
       <p><a href="{{ raiz }}espinha.html">Abrir a espinha completa →</a></p>
     </div>
     <div>
