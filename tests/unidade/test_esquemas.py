@@ -63,6 +63,17 @@ def test_instancia_da_fabrica_e_valida(nome):
         ("pagina", {"titulo": 3}, "titulo"),
         ("verificacao", {"afirmacoes": []}, "afirmacoes"),
         ("catalogo", {"versao": "v1"}, "versao"),
+        ("pratica", {"ferramentas": ["claude-code"]}, "frontmatter"),
+        ("pratica", {"exemplos": ["outro/DAD-01/a.yml"]}, "exemplos.0"),
+        ("pratica", {"exemplos": ["exemplos/../AGENTS.md"]}, "exemplos.0"),
+        ("conceito", {"linha": "x" * 121}, "linha"),
+        ("guia", {"tipo": "tutorial"}, "frontmatter"),
+        ("dominio", {"candidatas": [{"titulo": "x"}]}, "candidatas.0"),
+        (
+            "verificacao",
+            {"execucoes": [{"tipo": "prompt", "prompt": "P1-01-prompt-1"}]},
+            "execucoes.0",
+        ),
     ],
 )
 def test_instancia_invalida_aponta_o_campo(nome, alteracao, campo):
@@ -97,3 +108,27 @@ def test_valida_cada_conteudo_pelo_schema_do_seu_tipo():
     assert [(e.arquivo, e.campo, e.regra) for e in erros] == [
         ("referencias/ref-forte.yaml", "tipo", "R-ESQUEMA")
     ]
+
+
+def test_pratica_v1_1_e_execucoes_validas():
+    pratica = fabrica.meta_pratica(
+        resumo="Classifique antes de codar.",
+        ferramentas_aprovadas=["flyway"],
+        starter="sdd-scaffold",
+        receitas=["ligar-ci"],
+        exemplos=["exemplos/P1-01/plano.md"],
+    )
+    assert validar_instancia(pratica, carregar_validador(PASTA, "pratica"), "p.md") == []
+    comum = {"resultado": "passou", "evidencia": "ok", "data": "2026-10-05"}
+    registro = fabrica.meta_verificacao(
+        execucoes=[
+            {
+                "arquivo": "exemplos/P1-01/plano.md",
+                "comando": "make",
+                "ambiente": "py 3.12",
+                **comum,
+            },
+            {"tipo": "prompt", "prompt": "P1-01-prompt-1", "harness": "claude-code", **comum},
+        ]
+    )
+    assert validar_instancia(registro, carregar_validador(PASTA, "verificacao"), "v.yaml") == []

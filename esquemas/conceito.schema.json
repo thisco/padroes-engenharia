@@ -5,12 +5,13 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "titulo", "ninho", "peca", "definicao", "onde_mora", "quando_entra", "erro_comum", "referencias"
+    "titulo", "ninho", "peca", "linha", "definicao", "onde_mora", "quando_entra", "erro_comum", "referencias"
   ],
   "properties": {
     "titulo": {"type": "string", "minLength": 1},
     "ninho": {"enum": ["agente-de-codigo", "ia-no-produto"]},
     "peca": {"$ref": "#/$defs/slug"},
+    "linha": {"type": "string", "minLength": 1, "maxLength": 120},
     "definicao": {"type": "string", "minLength": 1},
     "onde_mora": {"type": "string", "minLength": 1},
     "quando_entra": {"type": "string", "minLength": 1},

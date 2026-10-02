@@ -25,6 +25,10 @@
         }
       }
     },
+    "execucoes": {
+      "type": "array",
+      "items": {"oneOf": [{"$ref": "#/$defs/execucao_arquivo"}, {"$ref": "#/$defs/execucao_prompt"}]}
+    },
     "revisao_adversarial": {
       "type": "object",
       "additionalProperties": false,
@@ -49,6 +53,35 @@
     }
   },
   "$defs": {
-    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+    "resultado_execucao": {"enum": ["passou", "falhou-como-esperado"]},
+    "execucao_arquivo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arquivo", "comando", "ambiente", "resultado", "evidencia", "data"],
+      "properties": {
+        "tipo": {"const": "arquivo"},
+        "arquivo": {"type": "string", "minLength": 1},
+        "comando": {"type": "string", "minLength": 1},
+        "ambiente": {"type": "string", "minLength": 1},
+        "resultado": {"$ref": "#/$defs/resultado_execucao"},
+        "evidencia": {"type": "string", "minLength": 1},
+        "data": {"$ref": "#/$defs/data"}
+      }
+    },
+    "execucao_prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "prompt", "harness", "resultado", "evidencia", "data"],
+      "properties": {
+        "tipo": {"const": "prompt"},
+        "prompt": {"type": "string", "pattern": "^[A-Za-z0-9-]+-prompt-[0-9]+$"},
+        "harness": {"type": "string", "minLength": 1},
+        "ambiente": {"type": "string", "minLength": 1},
+        "resultado": {"$ref": "#/$defs/resultado_execucao"},
+        "evidencia": {"type": "string", "minLength": 1},
+        "data": {"$ref": "#/$defs/data"}
+      }
+    }
   }
 }

@@ -12,6 +12,19 @@
     "steering": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
     "skills": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
     "referencias": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "starter": {"$ref": "#/$defs/slug"},
+    "candidatas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["titulo", "momento"],
+        "properties": {
+          "titulo": {"type": "string", "minLength": 1},
+          "momento": {"$ref": "#/$defs/slug"}
+        }
+      }
+    },
     "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
   },
   "$defs": {

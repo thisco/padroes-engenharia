@@ -30,7 +30,7 @@
       "type": "object",
       "required": [
         "id", "titulo", "dominio", "subdominio", "momento", "forca", "mecanismo", "status",
-        "aplica", "ferramentas", "referencias", "relacionadas", "dono", "revisado_em",
+        "aplica", "referencias", "relacionadas", "dono", "revisado_em",
         "revisar_ate", "url", "md"
       ],
       "properties": {

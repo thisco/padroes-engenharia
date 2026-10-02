@@ -4,10 +4,13 @@
   "description": "guias/<slug>.md (spec §6.4). tempo_leitura em minutos.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["titulo", "publico", "tempo_leitura", "referencias"],
+  "required": ["titulo", "tipo", "publico", "tempo_leitura", "referencias"],
   "properties": {
     "titulo": {"type": "string", "minLength": 1},
+    "tipo": {"enum": ["tutorial", "explicacao"]},
     "publico": {"type": "string", "minLength": 1},
+    "resultado_esperado": {"type": "string", "minLength": 1},
+    "starter": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "pre_requisitos": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "relacionados": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
     "tempo_leitura": {"type": "integer", "minimum": 1},
@@ -18,5 +21,7 @@
       "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
     },
     "revisado_em": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
-  }
+  },
+  "if": {"properties": {"tipo": {"const": "tutorial"}}, "required": ["tipo"]},
+  "then": {"required": ["resultado_esperado"]}
 }

@@ -25,7 +25,7 @@ def test_pratica_com_id_chips_corpo_e_lateral():
     assert '<h1><span class="id">P1-01</span>Classificar toda mudança' in html
     assert '<span class="ef orienta">só orienta</span>' in html
     assert '<span class="st">experimentar</span>' in html
-    assert '<span class="fe">Claude Code</span>' in html
+    assert "Claude Code" not in html
     assert '<a href="#ref-ref-forte">[1]</a>' in html
     assert '<li id="ref-ref-forte"><span class="n">[1]</span>' in html
     assert "Sem mecanismo: a prática orienta, não impede." in html

@@ -4,15 +4,12 @@
 <p class="trilha"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a> › <a href="{{ raiz }}espinha.html#momento-{{ momento.slug }}">{{ momento.titulo }}</a></p>
 <div class="topo">
   <h1><span class="id">{{ p.chave }}</span>{{ p.meta.titulo }}</h1>
-  <div class="chips" aria-label="Força, status e ferramentas">
+  <div class="chips" aria-label="Força e status">
     {{ c.chip_forca(p.meta.forca) }}
     <span class="st">{{ p.meta.status }}</span>
 {% if p.meta.subdominio %}
     <span class="fe">{{ ROTULO_SUBDOMINIO[p.meta.subdominio] }}</span>
 {% endif %}
-{% for ferramenta in p.meta.ferramentas %}
-    <span class="fe">{{ ROTULO_FERRAMENTA[ferramenta] }}</span>
-{% endfor %}
   </div>
 </div>
 <div class="corpo">

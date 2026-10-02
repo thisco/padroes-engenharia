@@ -25,13 +25,6 @@ ROTULO_TIPO_REFERENCIA = {
     "comunidade": "Comunidade",
     "interno": "Interno",
 }
-ROTULO_FERRAMENTA = {
-    "claude-code": "Claude Code",
-    "codex": "Codex",
-    "kiro": "Kiro",
-    "antigravity": "Antigravity",
-    "copilot": "Copilot",
-}
 ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Agentes próprios"}
 
 # Os dois ninhos (spec §4.3): só os nomes das peças e o que contém o quê. A definição de cada
@@ -182,7 +175,6 @@ def criar_ambiente(raiz: Path) -> Environment:
     ambiente.globals.update(
         ROTULO_FORCA=ROTULO_FORCA,
         ROTULO_TIPO_REFERENCIA=ROTULO_TIPO_REFERENCIA,
-        ROTULO_FERRAMENTA=ROTULO_FERRAMENTA,
         ROTULO_SUBDOMINIO=ROTULO_SUBDOMINIO,
         NINHOS=NINHOS,
         ORDEM_FORCA=ORDEM_FORCA,

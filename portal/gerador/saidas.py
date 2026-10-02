@@ -187,7 +187,6 @@ def md_pratica(site: Site, p: Conteudo) -> str:
         f"- Mecanismo: `{m['mecanismo']}`" if m.get("mecanismo") else "- Mecanismo: nenhum",
         f"- Status: {m['status']}",
         "- Aplica: " + (", ".join(f"`{a}`" for a in m["aplica"]) or "nada"),
-        "- Ferramentas: " + ", ".join(m["ferramentas"]),
         "- Relacionadas: " + (", ".join(relacionadas) or "nenhuma"),
         f"- Dono: {m['dono']} · revisada em {m['revisado_em']} · revisar até {m['revisar_ate']}",
     ]

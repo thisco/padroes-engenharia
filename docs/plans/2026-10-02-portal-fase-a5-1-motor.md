@@ -1234,7 +1234,7 @@ Test `tests/unidade/test_esquemas.py`, `tests/unidade/test_paginas_conteudo.py`
 - `fabrica.meta_pratica()` sem `ferramentas`; `meta_conceito()` com `linha`; `meta_guia()` com
   `tipo: "explicacao"`.
 
-- [ ] **Passo 1: Testes que falham.** Em `tests/unidade/test_esquemas.py`, acrescentar ao
+- [x] **Passo 1: Testes que falham.** Em `tests/unidade/test_esquemas.py`, acrescentar ao
   `parametrize` de `test_instancia_invalida_aponta_o_campo`:
 
 ```python
@@ -1277,9 +1277,9 @@ def test_pratica_v1_1_e_execucoes_validas():
 Em `tests/unidade/test_paginas_conteudo.py:test_pratica_com_id_chips_corpo_e_lateral`, trocar
 `assert '<span class="fe">Claude Code</span>' in html` por `assert "Claude Code" not in html`.
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_esquemas.py tests/unidade/test_paginas_conteudo.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_esquemas.py tests/unidade/test_paginas_conteudo.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
   - Schemas conforme as Interfaces (os `$defs` de `exemplo`, `execucao_arquivo` e
     `execucao_prompt` ficam no arquivo que os usa). O `$defs.exemplo`:
     `{"type": "string", "pattern": "^exemplos/[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)+$", "not": {"pattern": "(^|/)\\.\\.?(/|$)"}}`.
@@ -1290,10 +1290,10 @@ Em `tests/unidade/test_paginas_conteudo.py:test_pratica_com_id_chips_corpo_e_lat
   - **Migração:** nas 3 pilotos, apagar só a linha
     `ferramentas: [claude-code, codex, kiro, antigravity, copilot]` (nenhum outro byte muda).
 
-- [ ] **Passo 4:** `python -m pytest -q && ruff check . && ruff format --check . && python scripts/gerar.py --saida "$TMPDIR/a5" && python scripts/validar.py`
+- [x] **Passo 4:** `python -m pytest -q && ruff check . && ruff format --check . && python scripts/gerar.py --saida "$TMPDIR/a5" && python scripts/validar.py`
   → verde; README e ROTEAMENTO sem diferença.
 
-- [ ] **Passo 5:** `git add esquemas praticas portal tests && git commit -m "feat!: prática v1.1 sem o campo ferramentas, execuções na verificação e campos novos"`
+- [x] **Passo 5:** `git add esquemas praticas portal tests && git commit -m "feat!: prática v1.1 sem o campo ferramentas, execuções na verificação e campos novos"`
 
 ---
 

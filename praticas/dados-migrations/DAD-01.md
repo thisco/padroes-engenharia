@@ -8,7 +8,6 @@ forca: bloqueia
 mecanismo: sdd-scaffold:template/scripts/verificar_pr.py@1.6.1
 status: adotar
 aplica: [skill:migrations-reversiveis]
-ferramentas: [claude-code, codex, kiro, antigravity, copilot]
 referencias: [migrations-reversiveis, flyway-validate, fowler-evodb, sdd-scaffold-verificar-pr]
 relacionadas: []
 dono: nuarq

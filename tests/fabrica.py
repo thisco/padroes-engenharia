@@ -58,7 +58,6 @@ def meta_pratica(**alteracoes: Any) -> dict[str, Any]:
             "mecanismo": None,
             "status": "experimentar",
             "aplica": ["skill:sdd-lifecycle"],
-            "ferramentas": ["claude-code", "codex", "kiro", "antigravity", "copilot"],
             "referencias": ["ref-forte"],
             "relacionadas": [],
             "dono": "nuarq",
@@ -132,6 +131,7 @@ def meta_conceito(**alteracoes: Any) -> dict[str, Any]:
             "titulo": "Harness",
             "ninho": "agente-de-codigo",
             "peca": "harness",
+            "linha": "O programa que envolve o modelo.",
             "definicao": "O programa que envolve o modelo e executa as ferramentas.",
             "onde_mora": "Na máquina do desenvolvedor ou no runner do CI.",
             "quando_entra": "Em toda sessão do agente.",
@@ -147,6 +147,7 @@ def meta_guia(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
             "titulo": "Do zero ao PR com IA",
+            "tipo": "explicacao",
             "publico": "builders",
             "pre_requisitos": ["git", "um harness instalado"],
             "relacionados": ["P1-01"],
