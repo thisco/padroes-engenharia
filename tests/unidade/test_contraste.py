@@ -84,3 +84,16 @@ def test_fontes_locais_existem_e_vem_com_licenca():
     assert set(re.findall(r"font-family: '([^']+)'", fontes)) == {"Inter", "JetBrains Mono"}
     for licenca in ("LICENCAS.md", "OFL-Inter.txt", "OFL-JetBrainsMono.txt"):
         assert (pasta / licenca).is_file(), licenca
+
+
+@pytest.mark.parametrize(
+    "par", PARES["graficos"]["pares"], ids=lambda p: f"{p['cor']}/{p['fundo']}"
+)
+def test_cada_par_grafico_atinge_3_para_1(par):
+    cores = tokens(CSS)
+    assert razao(cores[par["cor"]], cores[par["fundo"]]) >= PARES["graficos"]["minimo"] == 3.0
+
+
+def test_hachura_e_peca_apagada_usam_o_traco():
+    assert re.search(r"\.q\.vazia\s*\{[^}]*var\(--traco\)", CSS)
+    assert re.search(r"\.apaga\s*\{[^}]*border-color:\s*var\(--traco\)", CSS)

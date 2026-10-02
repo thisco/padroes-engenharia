@@ -1,7 +1,8 @@
 /* Tema "prancheta" do portal (spec §9): um único CSS, sem recurso externo.
    A paleta carrega a tese: azul sólido é o que impede; âmbar tracejado é o que orienta.
    Texto pequeno nunca usa --tinta-3 nem --ambar (≈3:1 sobre --papel): use --tinta-2 e
-   --ambar-texto. Os pares de texto e fundo estão em contraste.yml, conferidos por teste. */
+   --ambar-texto. Elemento gráfico (hachura, borda de peça apagada) usa --traco, ≥ 3:1.
+   Os pares de texto e fundo estão em contraste.yml, conferidos por teste. */
 
 :root {
   --papel: #E8EDF2;
@@ -9,6 +10,7 @@
   --tinta: #0A1A2F;
   --tinta-2: #43556B;
   --tinta-3: #7A8A9D;
+  --traco: #6B7B8E;
   --regra: #C3CDD8;
   --gov: #1351B4;
   --gov-claro: #D3E0F5;
@@ -39,6 +41,7 @@ a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visibl
 code, pre, .id, .mono { font-family: var(--mono); font-variant-ligatures: none; }
 code { font-size: 13px; background: rgba(10, 26, 47, .06); padding: 1px 5px; border-radius: 2px; }
 pre { font-size: 13px; overflow-x: auto; }
+.rola { overflow-x: auto; }
 h1, h2, h3 { letter-spacing: -.02em; }
 .vh {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
@@ -55,7 +58,7 @@ h1, h2, h3 { letter-spacing: -.02em; }
 .marca { color: var(--tinta); font-weight: 700; text-decoration: none; letter-spacing: -.01em; }
 .nav { display: flex; flex-wrap: wrap; gap: 6px 22px; align-items: baseline; }
 .nav .grupo { display: flex; gap: 12px; align-items: baseline; }
-.nav .grupo > span:first-child { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); }
+.nav .grupo > span:first-child { font-size: 12px; font-weight: 600; color: var(--tinta-2); }
 .nav a { color: var(--tinta-2); text-decoration: none; }
 .nav a:hover { color: var(--tinta); }
 .nav a[aria-current="page"] { color: var(--tinta); font-weight: 600; border-bottom: 2px solid var(--gov); }
@@ -66,11 +69,11 @@ h1, h2, h3 { letter-spacing: -.02em; }
 }
 .busca { position: relative; }
 .busca input {
-  font: inherit; font-size: 13px; width: 260px; padding: 5px 8px;
+  font: inherit; font-size: 13px; width: min(260px, 100%); padding: 5px 8px;
   border: 1px solid var(--tinta-2); border-radius: 2px; background: var(--branco); color: var(--tinta);
 }
 .busca ul {
-  position: absolute; right: 0; z-index: 5; width: 420px; max-height: 60vh; overflow-y: auto;
+  position: absolute; right: 0; z-index: 5; width: min(420px, 100%); max-height: 60vh; overflow-y: auto;
   margin: 4px 0 0; padding: 0; list-style: none; background: var(--branco); border: 1px solid var(--regra);
 }
 .busca ul:empty { display: none; }
@@ -107,6 +110,7 @@ p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70
 
 /* chips: força, status, ferramentas e ID */
 .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; font-size: 12px; }
+.ef, .id, .st { white-space: nowrap; }
 .ef, .st, .fe { display: inline-block; padding: 2px 8px; border-radius: 2px; font-size: 12px; text-decoration: none; }
 .ef.bloqueia { background: var(--gov); color: var(--branco); border: 1.5px solid var(--gov); }
 .ef.pede-aprovacao { border: 1.5px solid var(--gov); color: var(--gov); background: var(--branco); }
@@ -133,7 +137,7 @@ p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70
 .q.bloqueia, .q.pede-aprovacao { background: var(--gov); }
 .q.avisa { background: var(--ambar-claro); border: 1.5px solid var(--ambar); }
 .q.orienta { border: 1.5px dashed var(--ambar); }
-.q.vazia { border: 1px solid var(--regra); background: repeating-linear-gradient(135deg, transparent 0 2px, var(--regra) 2px 3px); }
+.q.vazia { border: 1px solid var(--traco); background: repeating-linear-gradient(135deg, transparent 0 2px, var(--traco) 2px 3px); }
 .legenda { font-size: 12px; color: var(--tinta-2); margin-top: 8px; }
 
 /* bloco escuro: memória e "para agentes" */
@@ -154,7 +158,7 @@ p.lead { margin: 0 0 14px; font-size: 14px; color: var(--tinta-2); max-width: 70
 .texto h2:first-child { margin-top: 0; border-top: 2px solid var(--tinta); }
 .texto table { border-collapse: collapse; font-size: 14px; }
 .texto th, .texto td { border-bottom: 1px solid var(--regra); padding: 4px 8px; text-align: left; }
-.lado h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); }
+.lado h2 { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--tinta-2); }
 .lado section { margin-top: 22px; }
 .lado section:first-child { margin-top: 0; }
 .lado ul { margin: 0; padding-left: 18px; font-size: 14px; }
@@ -166,7 +170,7 @@ ol.refs a { font-weight: 600; text-decoration: none; }
 ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12px; }
 .marca-v { font-family: var(--mono); font-size: 11px; border: 1px solid var(--tinta-2); color: var(--tinta-2); padding: 0 4px; border-radius: 2px; }
 .campos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14px; }
-.campos dt { color: var(--tinta-2); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; padding-top: 2px; }
+.campos dt { color: var(--tinta-2); font-size: 13px; font-weight: 600; padding-top: 2px; }
 .campos dd { margin: 0; }
 
 /* tabelas de evidência densa */
@@ -197,7 +201,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho .hook, .ninho .guardrail { border: 2px solid var(--gov); }
 .ninho .memoria, .ninho .eval { background: var(--tinta); color: var(--papel); margin-top: 8px; }
 .ninho .fluxo { margin: 6px 0; text-align: center; color: var(--tinta-2); font-size: 12px; }
-.ninho .cx.apaga { border-color: var(--regra); background: transparent; color: var(--tinta-2); }
+.ninho .cx.apaga { border-color: var(--traco); background: transparent; color: var(--tinta-2); }
 .ninho .cx.memoria.apaga, .ninho .cx.eval.apaga { background: var(--papel-2); }
 .ninho .alvo { outline: 3px solid var(--gov); outline-offset: 2px; animation: destaque 1.2s ease-out 1; }
 .ninho figcaption { margin-top: 10px; font-size: 13px; color: var(--tinta-2); }

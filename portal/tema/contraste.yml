@@ -23,3 +23,17 @@ pares:
   - {texto: papel, fundo: tinta}
   - {texto: sobre-escuro, fundo: tinta}
   - {texto: sobre-escuro-2, fundo: tinta}
+
+# Elementos gráficos (hachura, borda de peça apagada, barra de força): WCAG 2.2, critério 1.4.11.
+graficos:
+  minimo: 3.0
+  pares:
+    - {cor: traco, fundo: papel}
+    - {cor: traco, fundo: papel-2}
+    - {cor: traco, fundo: branco}
+    - {cor: ambar, fundo: papel}
+    - {cor: ambar, fundo: papel-2}
+    - {cor: ambar, fundo: branco}
+    - {cor: gov, fundo: papel}
+    - {cor: gov, fundo: papel-2}
+    - {cor: gov, fundo: branco}

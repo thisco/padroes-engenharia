@@ -660,7 +660,7 @@ def readme_md(site: Site) -> str:
 
 # (pasta de origem no repositório, pasta de destino no site, padrões copiados)
 ESTATICOS = (
-    ("portal/tema", "tema", ("*.css", "*.js")),
+    ("portal/tema", "tema", ("*.css", "*.js", "*.svg")),
     ("portal/vendor/fonts", "vendor/fonts", ("*.ttf", "*.css", "*.md", "*.txt")),
 )
 

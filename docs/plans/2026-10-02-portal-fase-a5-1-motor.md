@@ -2054,7 +2054,7 @@ spec de Tier 2") passa a conferir só `"Em toda mudança de Tier 1 ou 2" in bloc
   `.ef, .id, .st { white-space: nowrap; }`; `text-transform: uppercase` só em `th`;
 - `<link rel="icon" href="{{ raiz }}tema/favicon.svg" type="image/svg+xml">` em `base.html`.
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 # tests/unidade/test_contraste.py (acrescentar)
@@ -2103,17 +2103,17 @@ def test_rolagem_chips_caixa_alta_e_favicon():
     assert (fabrica.RAIZ / "portal/tema/favicon.svg").is_file()
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_contraste.py tests/unidade/test_tema_largura.py -q` → FAIL.
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_contraste.py tests/unidade/test_tema_largura.py -q` → FAIL.
 
-- [ ] **Passo 3: Implementar.** Larguras fixas largas (`.busca input 260px`, `.busca ul 420px`)
+- [x] **Passo 3: Implementar.** Larguras fixas largas (`.busca input 260px`, `.busca ul 420px`)
   vão para `min(…, 100%)` ou para `@media (min-width: 901px)`; os rótulos em caixa alta
   (`.nav .grupo`, `.lado h2`, `.campos dt`, `.matriz tr.grupo th`) viram caixa normal em
   `--tinta-2` peso 600, salvo `th`; o favicon é um SVG local de 2 retângulos (`--tinta` e
   `--gov`), sem recurso externo; `ESTATICOS` copia `*.svg` de `portal/tema`.
 
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 4:** suíte, ruff e validar verdes.
 
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: contraste gráfico 3:1, caixa alta só em tabela, nada estoura 400px e favicon"`
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: contraste gráfico 3:1, caixa alta só em tabela, nada estoura 400px e favicon"`
 
 ---
 
