@@ -1,6 +1,6 @@
 # Portal de Padrões de Engenharia: delta v1.1 (how-to, desenho e home)
 
-**Data:** 2026-10-02 · **Status:** em revisão (checkpoint humano pendente)
+**Data:** 2026-10-02 · **Status:** aprovada pelo dono do projeto em 2026-10-02, com as propostas D12, D13, D17 e D18
 **Tier:** 2 (muda schemas, validador, templates e o modelo de conteúdo)
 **Altera:** [spec v1.0](2026-10-01-portal-padroes-engenharia-design.md). O que este delta não
 menciona continua valendo como está na v1.0.
