@@ -2,16 +2,11 @@
 
 import re
 
-import pytest
-
 from portal.gerador.carregar import Conteudo
 from portal.gerador.renderizar import (
-    NINHOS,
     caminho_de,
     carregar_config,
-    classe_peca,
     corpo_html,
-    descrever_ninho,
     paginas_publicadas,
     para_md,
     renderizar,
@@ -98,40 +93,6 @@ def test_corpo_html_numera_as_citacoes():
     html = corpo_html(fabrica.pratica())
     assert '<a href="#ref-ref-forte">[1]</a>' in html
     assert "[ref:" not in html
-
-
-@pytest.mark.parametrize(
-    ("nome", "ninho", "destaque"),
-    [("ninho", "agente-de-codigo", "harness"), ("ninho_produto", "ia-no-produto", "gateway")],
-)
-def test_ninho_destaca_uma_peca_e_descreve_o_desenho(nome, ninho, destaque):
-    html = str(macro(nome)(destaque))
-    assert html.count(" alvo") == 1
-    assert f'class="cx {destaque} alvo"' in html
-    assert html.count(" apaga") == len(NINHOS[ninho]["pecas"]) - 1
-    assert f"<figcaption>{descrever_ninho(ninho, destaque)}</figcaption>" in html
-    assert "Peça em destaque" in descrever_ninho(ninho, destaque)
-    sem_destaque = str(macro(nome)())
-    assert " alvo" not in sem_destaque and " apaga" not in sem_destaque
-
-
-def test_ninho_do_agente_tem_as_nove_pecas_e_o_do_produto_as_seis():
-    assert list(NINHOS["agente-de-codigo"]["pecas"]) == [
-        "agente",
-        "harness",
-        "sessao",
-        "modelo",
-        "subagente",
-        "skill",
-        "mcp",
-        "hook",
-        "memoria",
-    ]
-    assert len(NINHOS["ia-no-produto"]["pecas"]) == 6
-    html = str(macro("ninho")())
-    for peca in NINHOS["agente-de-codigo"]["pecas"]:
-        assert f'class="cx {peca}"' in html
-    assert classe_peca("mcp", None) == ""
 
 
 def test_lista_de_referencias_tem_ancora_numero_e_verificacao():

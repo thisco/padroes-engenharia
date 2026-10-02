@@ -221,25 +221,71 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .lacuna h2 { font-size: 15px; margin: 0 0 4px; }
 .lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(--tinta-2); }
 
-/* ninhos: caixas aninhadas com a peça em destaque */
-.ninho { margin: 0; font-size: 13px; }
-.ninho .cx { border-radius: 3px; padding: 10px 12px; }
-.ninho .cx > b { display: block; font-size: 14px; margin-bottom: 6px; }
+/* ninhos (conceitos.html): azul cheio só em quem impede; âmbar tracejado em sessão e skill;
+   memória é o único bloco escuro; MCP, nativas e catálogo têm borda neutra */
+.ninho { margin: 0; font-size: 13px; max-width: 640px; }
+.ninho .cx { border-radius: 3px; padding: 10px 12px; margin-top: 8px; }
+.ninho .cx:first-child { margin-top: 0; }
+.ninho .peca { display: flex; justify-content: space-between; gap: 10px; color: inherit; text-decoration: none; margin-bottom: 6px; }
+.ninho .peca b { font-size: 14px; }
+.ninho .peca .linha { color: var(--tinta-2); text-align: right; font-size: 12px; }
+.ninho a.peca:hover b, .ninho a.peca:focus-visible b { text-decoration: underline; }
+.ninho .linha.lacuna { font-style: italic; }
 .ninho .agente, .ninho .aplicacao { border: 2px solid var(--tinta); }
-.ninho .harness, .ninho .gateway { border: 2px solid var(--gov); background: var(--harness); margin-top: 6px; }
-.ninho .linha { display: grid; grid-template-columns: minmax(0, 1fr) 150px; gap: 8px; }
-.ninho .sessao, .ninho .subagente, .ninho .chave-virtual, .ninho .nivel-de-agencia { border: 2px dashed var(--ambar); background: var(--branco); }
-.ninho .modelo, .ninho .modelos { border: 1px solid var(--tinta-2); background: var(--branco); text-align: center; }
-.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
-.ninho .exec .cx { border: 1px solid var(--gov); background: var(--branco); }
-.ninho .hook, .ninho .guardrail { border: 2px solid var(--gov); }
-.ninho .memoria, .ninho .eval { background: var(--tinta); color: var(--papel); margin-top: 8px; }
-.ninho .fluxo { margin: 6px 0; text-align: center; color: var(--tinta-2); font-size: 12px; }
+.ninho .harness { border: 2px solid var(--gov); background: var(--harness); }
+.ninho .fila { display: grid; grid-template-columns: minmax(0, 1fr) 70px 140px; gap: 6px; align-items: center; }
+.ninho .sessao, .ninho .subagente, .ninho .skill { border: 2px dashed var(--ambar); background: var(--ambar-claro); }
+.ninho .skill { background: var(--branco); }
+.ninho .ctx { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 7px; }
+.ninho .ctx span { font-size: 11px; border: 1px solid var(--ambar); background: var(--branco); padding: 1px 6px; border-radius: 2px; }
+.ninho .ctx span.sd { border-style: dashed; color: var(--ambar-texto); }
+.ninho .modelo, .ninho .modelos, .ninho .nativas, .ninho .mcp, .ninho .catalogo-de-modelos {
+  border: 1px solid var(--tinta-2); background: var(--branco);
+}
+.ninho .mcp { border-width: 2px; }
+.ninho .setas { display: flex; flex-direction: column; gap: 14px; font-size: 11px; color: var(--ambar-texto); text-align: center; }
+.ninho .seta.volta { font-style: italic; }
+.ninho .onde { margin: 10px 0 0; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
+.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+.ninho .exec.remoto { grid-template-columns: minmax(0, 1fr); }
+.ninho .exec .cx { margin-top: 0; }
+.ninho .impede { background: var(--gov); color: var(--branco); border: 2px solid var(--gov); }
+.ninho .impede .peca .linha { color: var(--gov-claro); }
+.ninho .trav { margin: 9px 0 7px; font-size: 12px; font-weight: 700; }
+.ninho .memoria { background: var(--tinta); color: var(--papel); }
+.ninho .memoria .peca .linha { color: var(--sobre-escuro); }
+.ninho .arqs code { display: inline-block; margin: 2px 3px 0 0; background: rgba(255, 255, 255, .1); color: var(--sobre-escuro-2); }
+.ninho .arqs code.sk { outline: 1.5px dashed var(--ambar); }
 .ninho .cx.apaga { border-color: var(--traco); background: transparent; color: var(--tinta-2); }
-.ninho .cx.memoria.apaga, .ninho .cx.eval.apaga { background: var(--papel-2); }
-.ninho .alvo { outline: 3px solid var(--gov); outline-offset: 2px; animation: destaque 1.2s ease-out 1; }
+.ninho .cx.memoria.apaga { background: var(--papel-2); }
+.ninho .cx.impede.apaga { background: transparent; color: var(--tinta-2); }
+.ninho .alvo, .ninho .alvo-hover { outline: 3px solid var(--gov); outline-offset: 2px; }
+.ninho .alvo { animation: destaque 1.2s ease-out 1; }
 .ninho figcaption { margin-top: 10px; font-size: 13px; color: var(--tinta-2); }
 @keyframes destaque { from { box-shadow: 0 0 0 10px var(--gov-claro); } to { box-shadow: 0 0 0 0 transparent; } }
+.ninho.condensado { max-width: 320px; }
+.ninho.condensado .fila { grid-template-columns: minmax(0, 1fr); }
+
+/* fluxo da IA no produto: horizontal com setas rotuladas; vertical abaixo de 900px */
+.fluxo { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: nowrap; gap: 6px; align-items: stretch; }
+.fluxo .item { flex: 1 1 0; min-width: 0; }
+.fluxo .item > .cx { height: 100%; margin-top: 0; }
+.fluxo .seta { flex: 0 0 auto; align-self: center; font-size: 11px; color: var(--tinta-2); text-align: center; max-width: 70px; }
+.fluxo .seta::after { content: "→"; display: block; font-size: 16px; }
+.ninho.produto { max-width: none; }
+.ninho.produto .chave-virtual { border: 2px dashed var(--ambar); background: var(--branco); }
+.ninho.produto .nivel-de-agencia { border: 2px dashed var(--ambar); background: var(--branco); }
+.ninho.produto .gateway { border: 2px solid var(--gov); background: var(--harness); }
+.ninho.produto .gateway .exec { grid-template-columns: minmax(0, 1fr); }
+.ninho.produto .eval { margin-top: 14px; border: 1px solid var(--tinta-2); border-top: 2px dotted var(--tinta-2); background: var(--branco); position: relative; }
+.ninho.produto .eval .ciclo { position: absolute; right: 10px; top: 6px; font-size: 18px; color: var(--tinta-2); }
+.ninho.produto .eval .mede { font-size: 12px; color: var(--tinta-2); }
+.pecas { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--tinta); }
+.pecas li { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--regra); font-size: 13px; }
+.pecas li:hover, .pecas li:focus-within { background: var(--gov-claro); }
+.pecas .linha { color: var(--tinta-2); }
+.pecas .linha.lacuna { font-style: italic; }
+.det { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 26px; margin-top: 20px; border-top: 3px solid var(--gov); padding-top: 14px; }
 
 /* rodapé */
 .rodape {
@@ -263,7 +309,11 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
   .topo, .duas, .corpo { grid-template-columns: 1fr; gap: 20px; }
   .topo h1 { font-size: 34px; }
   .passos { grid-template-columns: 1fr 1fr; }
-  .ninho .linha, .ninho .exec { grid-template-columns: 1fr; }
+  .ninho .fila, .ninho .exec { grid-template-columns: 1fr; }
+  .fluxo { flex-direction: column; }
+  .fluxo .seta::after { content: "↓"; }
+  .fluxo .seta { max-width: none; }
+  .det { grid-template-columns: 1fr; }
   .busca input, .busca ul { width: 100%; }
 }
 

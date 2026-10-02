@@ -162,7 +162,7 @@ def meta_conceito(**alteracoes: Any) -> dict[str, Any]:
             "titulo": "Harness",
             "ninho": "agente-de-codigo",
             "peca": "harness",
-            "linha": "O programa que envolve o modelo.",
+            "linha": "o programa em volta do modelo",
             "definicao": "O programa que envolve o modelo e executa as ferramentas.",
             "onde_mora": "Na máquina do desenvolvedor ou no runner do CI.",
             "quando_entra": "Em toda sessão do agente.",

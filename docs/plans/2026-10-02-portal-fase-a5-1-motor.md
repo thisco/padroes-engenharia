@@ -2332,7 +2332,7 @@ de ninho antigos saem)
   peças"; publicada só com conceito; `conceito.html`: miniatura com a peça em destaque à
   esquerda (~320px) e a ficha "Onde mora · Quando entra · Erro comum · Práticas · Referências".
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_ninho.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_componentes_ninho.py`)
 
 ```python
 from portal.gerador.carregar import Conteudo
@@ -2368,13 +2368,13 @@ def test_condensado_e_fluxo():
     assert "disco" not in fluxo.todos(classe="eval")[0].attrs["class"]
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_componentes_ninho.py -q` → FAIL.
-- [ ] **Passo 3:** macros, CSS (azul preenchido só em `.impede`; skill e sessão âmbar
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_componentes_ninho.py -q` → FAIL.
+- [x] **Passo 3:** macros, CSS (azul preenchido só em `.impede`; skill e sessão âmbar
   tracejado; MCP, nativas e catálogo borda `--tinta-2`; `.apaga` com borda `--traco`), as duas
   páginas e o registro em `GERADORES` (`conceitos.html`) e em `caminho_de` (conceito →
   `conceito.html`). `descrever_ninho` continua no `figcaption` e no `.md` gêmeo.
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: ninho fiel ao mockup, fluxo da IA no produto, Conceitos em duas colunas e página por peça"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: ninho fiel ao mockup, fluxo da IA no produto, Conceitos em duas colunas e página por peça"`
 
 ---
 
@@ -3073,6 +3073,17 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   pasta `exemplos/` (só arquivos, sem link simbólico) para o site, para o link resolver; o plano
   não pedia a cópia, é o mínimo para não deixar link quebrado. O teste de build passou a aceitar
   SVG decorativo (`aria-hidden="true"`), como diz o cabeçalho da tarefa.
+
+- **Tarefa 17:** (a) a peça é um contêiner `div.cx.<peca>[data-peca]` com um cabeçalho
+  `a.peca.<peca>` (link) dentro, porque `<a>` não pode aninhar `<a>` e as caixas do ninho se
+  aninham; os testes do plano (`a.harness`, `.sessao` contendo `.skill`, `.impede`) valem
+  assim. (b) A grade interna do mockup (`.linha`) virou `.fila`, porque `.linha` é a linha do
+  conceito dentro de cada peça. (c) Os dados dos conceitos chegam às macros pelo global Jinja
+  `CONCEITOS` (peça → título, linha, href), preenchido em `montar_site`. (d) `fabrica.meta_conceito`
+  tem `linha: "o programa em volta do modelo"` (texto que o teste do plano espera). (e) Realce
+  por hover e foco só em JS (`busca.js`), com a classe `.alvo-hover`; sem regra `:has()`.
+  (f) O teste dos ninhos antigos (`class="cx <peca>"`) saiu; os de 9 e 6 peças e de destaque
+  foram refeitos em `test_componentes_ninho.py`.
 
 ## Revisão adversarial
 

@@ -83,49 +83,93 @@
 </ol>
 {%- endmacro %}
 
-{% macro ninho(destaque=None) -%}
+{# O cabeçalho de uma peça: link para a página do conceito e a linha dele; sem conceito, a lacuna. #}
+{% macro cab(peca, nome, raiz="") -%}
+{% set conceito = CONCEITOS.get(peca) %}
+{% if conceito %}
+<a class="peca {{ peca }}" href="{{ raiz }}{{ conceito.href }}"><b>{{ nome }}</b><span class="linha">{{ conceito.linha }}</span></a>
+{% else %}
+<span class="peca {{ peca }}"><b>{{ nome }}</b><span class="linha lacuna">sem conceito publicado</span></span>
+{% endif %}
+{%- endmacro %}
+
+{# Ninho do agente de código, no desenho do mockup conceitos.html. A skill mora dentro da sessão;
+   só o hook e o guardrail impedem (azul cheio); só atravessa a sessão o que foi gravado. #}
+{% macro ninho(destaque=None, variante="completo", raiz="") -%}
 {% set p = NINHOS["agente-de-codigo"].pecas %}
-<figure class="ninho">
-  <div class="cx agente{{ classe_peca('agente', destaque) }}"><b>{{ p.agente }}</b>
-    <div class="cx harness{{ classe_peca('harness', destaque) }}"><b>{{ p.harness }}</b>
-      <div class="linha">
-        <div class="cx sessao{{ classe_peca('sessao', destaque) }}"><b>{{ p.sessao }}</b>
-          <div class="cx modelo{{ classe_peca('modelo', destaque) }}"><b>{{ p.modelo }}</b></div>
+<figure class="ninho {{ variante }}">
+  <div class="cx agente{{ classe_peca('agente', destaque) }}" data-peca="agente">{{ cab("agente", p.agente, raiz) }}
+    <div class="cx harness{{ classe_peca('harness', destaque) }}" data-peca="harness">{{ cab("harness", p.harness, raiz) }}
+      <div class="fila">
+        <div class="cx sessao{{ classe_peca('sessao', destaque) }}" data-peca="sessao">{{ cab("sessao", p.sessao, raiz) }}
+{% if variante == "completo" %}
+          <div class="ctx"><span>prompt de sistema</span><span>AGENTS.md</span><span>descrição das skills</span><span class="sd">corpo da skill, se ativada</span><span>conversa</span><span>resultado das ferramentas</span></div>
+          <div class="cx skill{{ classe_peca('skill', destaque) }}" data-peca="skill">{{ cab("skill", p.skill, raiz) }}</div>
+{% endif %}
+          <div class="cx modelo{{ classe_peca('modelo', destaque) }}" data-peca="modelo">{{ cab("modelo", p.modelo, raiz) }}</div>
         </div>
-        <div class="cx subagente{{ classe_peca('subagente', destaque) }}"><b>{{ p.subagente }}</b></div>
+{% if variante == "completo" %}
+        <div class="setas"><span class="seta">delega</span><span class="seta volta">devolve só o resultado</span></div>
+        <div class="cx subagente{{ classe_peca('subagente', destaque) }}" data-peca="subagente">{{ cab("subagente", p.subagente, raiz) }}</div>
+{% endif %}
       </div>
-      <div class="exec">
-        <div class="cx skill{{ classe_peca('skill', destaque) }}"><b>{{ p.skill }}</b></div>
-        <div class="cx mcp{{ classe_peca('mcp', destaque) }}"><b>{{ p.mcp }}</b></div>
-        <div class="cx hook{{ classe_peca('hook', destaque) }}"><b>{{ p.hook }}</b></div>
+{% if variante == "completo" %}
+      <p class="onde">o harness executa, na sua máquina</p>
+      <div class="exec local">
+        <div class="cx nativas"><b>Ferramentas nativas</b><span class="linha">ler e editar, shell, busca</span></div>
+        <div class="cx mcp{{ classe_peca('mcp', destaque) }}" data-peca="mcp">{{ cab("mcp", p.mcp, raiz) }}</div>
+        <div class="cx hook impede{{ classe_peca('hook', destaque) }}" data-peca="hook">{{ cab("hook", p.hook, raiz) }}</div>
       </div>
+      <p class="onde">o fornecedor executa, no servidor</p>
+      <div class="exec remoto">
+        <div class="cx nativas"><b>Ferramentas do fornecedor</b><span class="linha">busca na web, execução de código</span></div>
+      </div>
+{% endif %}
     </div>
-    <div class="cx memoria{{ classe_peca('memoria', destaque) }}"><b>{{ p.memoria }}</b></div>
+{% if variante == "completo" %}
+    <p class="trav">Só atravessa a sessão o que foi gravado.</p>
+{% endif %}
+    <div class="cx memoria disco{{ classe_peca('memoria', destaque) }}" data-peca="memoria">{{ cab("memoria", p.memoria, raiz) }}
+{% if variante == "completo" %}
+      <div class="arqs"><code>AGENTS.md</code><code>docs/steering/</code><code class="sk">skills/</code><code>docs/adr/</code><code>docs/plans/</code><code>PROJECT_MEMORY.md</code><code>git log</code></div>
+{% endif %}
+    </div>
   </div>
   <figcaption>{{ descrever_ninho("agente-de-codigo", destaque) }}</figcaption>
 </figure>
 {%- endmacro %}
 
-{% macro ninho_produto(destaque=None) -%}
+{# Ninho da IA no produto: um fluxo horizontal com setas rotuladas; o eval fica fora do fluxo. #}
+{% macro fluxo_produto(destaque=None, raiz="") -%}
 {% set p = NINHOS["ia-no-produto"].pecas %}
-<figure class="ninho">
-  <div class="cx aplicacao"><b>Aplicação ou agente próprio</b>
-    <div class="cx nivel-de-agencia{{ classe_peca('nivel-de-agencia', destaque) }}"><b>{{ p["nivel-de-agencia"] }}</b></div>
-  </div>
-  <div class="fluxo" aria-hidden="true">↓</div>
-  <div class="cx chave-virtual{{ classe_peca('chave-virtual', destaque) }}"><b>{{ p["chave-virtual"] }}</b></div>
-  <div class="fluxo" aria-hidden="true">↓</div>
-  <div class="cx gateway{{ classe_peca('gateway', destaque) }}"><b>{{ p.gateway }}</b>
-    <div class="exec">
-      <div class="cx guardrail{{ classe_peca('guardrail', destaque) }}"><b>{{ p.guardrail }}</b></div>
-      <div class="cx catalogo-de-modelos{{ classe_peca('catalogo-de-modelos', destaque) }}"><b>{{ p["catalogo-de-modelos"] }}</b></div>
-    </div>
-  </div>
-  <div class="fluxo" aria-hidden="true">↓</div>
-  <div class="cx modelos"><b>Modelos</b></div>
-  <div class="cx eval{{ classe_peca('eval', destaque) }}"><b>{{ p.eval }}</b></div>
+<figure class="ninho produto">
+  <ol class="fluxo">
+    <li class="item"><div class="cx aplicacao"><b>Aplicação ou agente próprio</b>
+      <div class="cx nivel-de-agencia{{ classe_peca('nivel-de-agencia', destaque) }}" data-peca="nivel-de-agencia">{{ cab("nivel-de-agencia", p["nivel-de-agencia"], raiz) }}</div></div></li>
+    <li class="seta">autentica com</li>
+    <li class="item"><div class="cx chave-virtual{{ classe_peca('chave-virtual', destaque) }}" data-peca="chave-virtual">{{ cab("chave-virtual", p["chave-virtual"], raiz) }}</div></li>
+    <li class="seta">passa por</li>
+    <li class="item"><div class="cx gateway{{ classe_peca('gateway', destaque) }}" data-peca="gateway">{{ cab("gateway", p.gateway, raiz) }}
+      <div class="exec">
+        <div class="cx guardrail impede{{ classe_peca('guardrail', destaque) }}" data-peca="guardrail">{{ cab("guardrail", p.guardrail, raiz) }}</div>
+        <div class="cx catalogo-de-modelos{{ classe_peca('catalogo-de-modelos', destaque) }}" data-peca="catalogo-de-modelos">{{ cab("catalogo-de-modelos", p["catalogo-de-modelos"], raiz) }}</div>
+      </div></div></li>
+    <li class="seta">chega a</li>
+    <li class="item"><div class="cx modelos"><b>Modelos</b></div></li>
+  </ol>
+  <div class="cx eval{{ classe_peca('eval', destaque) }}" data-peca="eval"><span class="ciclo" aria-hidden="true">⟳</span>{{ cab("eval", p.eval, raiz) }}<span class="mede">mede o conjunto</span></div>
   <figcaption>{{ descrever_ninho("ia-no-produto", destaque) }}</figcaption>
 </figure>
+{%- endmacro %}
+
+{# Uma linha por peça do ninho; passar o mouse ou o foco numa linha acende a peça no desenho. #}
+{% macro lista_pecas(ninho, raiz="") -%}
+<ul class="pecas">
+{% for slug, nome in NINHOS[ninho].pecas.items() %}
+{% set conceito = CONCEITOS.get(slug) %}
+  <li data-peca="{{ slug }}">{% if conceito %}<a href="{{ raiz }}{{ conceito.href }}"><b>{{ nome }}</b></a> <span class="linha">{{ conceito.linha }}</span>{% else %}<b>{{ nome }}</b> <span class="linha lacuna">sem conceito publicado</span>{% endif %}</li>
+{% endfor %}
+</ul>
 {%- endmacro %}
 
 {% macro lista_referencias(referencias) -%}

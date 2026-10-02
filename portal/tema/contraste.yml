@@ -19,6 +19,10 @@ pares:
   - {texto: gov, fundo: gov-claro}
   - {texto: ambar-texto, fundo: papel}
   - {texto: ambar-texto, fundo: branco}
+  - {texto: ambar-texto, fundo: harness}
+  - {texto: tinta-2, fundo: harness}
+  - {texto: tinta-2, fundo: ambar-claro}
+  - {texto: gov-claro, fundo: gov}
   - {texto: branco, fundo: gov}
   - {texto: papel, fundo: tinta}
   - {texto: sobre-escuro, fundo: tinta}

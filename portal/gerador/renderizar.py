@@ -158,6 +158,16 @@ def montar_site(
     config = carregar_config(raiz)
     espinha = carregar_espinha(raiz / "esquemas" / "espinha.yml")
     repo = carregar(raiz) if repo is None else repo
+    ambiente = criar_ambiente(raiz)
+    ambiente.globals["CONCEITOS"] = {
+        str(c.meta["peca"]): {
+            "titulo": str(c.meta.get("titulo", "")),
+            "linha": str(c.meta.get("linha", "")),
+            "href": caminho_de(c),
+        }
+        for c in repo.conceitos
+        if isinstance(c.meta.get("peca"), str)
+    }
     return Site(
         raiz=raiz,
         nome=config["nome"],
@@ -168,7 +178,7 @@ def montar_site(
         url_base=url_base,
         espinha=espinha,
         catalogo=montar_catalogo(repo, espinha),
-        ambiente=criar_ambiente(raiz),
+        ambiente=ambiente,
     )
 
 
@@ -374,7 +384,6 @@ def pagina_generica(site: Site, caminho: str, titulo: str, **contexto: Any) -> s
     """`pagina.html` com os campos opcionais vazios por padrão."""
     vazios: dict[str, Any] = {
         "trilha": "",
-        "ninhos": [],
         "listas": [],
         "corpo": "",
         "campos": [],
@@ -612,13 +621,12 @@ def html_dominios(site: Site) -> str:
 
 
 def html_conceitos(site: Site) -> str:
-    return pagina_generica(
+    return renderizar(
         site,
         "conceitos.html",
-        "Conceitos",
+        "conceitos.html",
+        titulo="Conceitos",
         descricao="As peças de um agente de código e da IA no produto, uma dentro da outra.",
-        ninhos=[(ninho, None) for ninho in NINHOS],
-        listas=listas_conceitos(site),
     )
 
 
@@ -791,17 +799,27 @@ def html_pratica(site: Site, pratica: Conteudo) -> str:
 
 
 def html_conteudo(site: Site, conteudo: Conteudo) -> str:
-    """Conceito, guia, caso ou página especial, no template genérico."""
-    ninhos = []
+    """Conceito (com o desenho da peça), guia, caso ou página especial."""
     if conteudo.tipo == "conceito":
-        ninhos = [(conteudo.meta["ninho"], conteudo.meta["peca"])]
+        return renderizar(
+            site,
+            "conceito.html",
+            caminho_de(conteudo),
+            titulo=conteudo.meta["titulo"],
+            descricao=descricao_de(site, conteudo),
+            ninho=conteudo.meta["ninho"],
+            peca=conteudo.meta["peca"],
+            corpo=corpo_html(conteudo),
+            campos=campos_de(conteudo),
+            ligadas=ligadas_de(site, conteudo),
+            referencias=site.catalogo.referencias_de(conteudo),
+        )
     return pagina_generica(
         site,
         caminho_de(conteudo),
         conteudo.meta["titulo"],
         descricao=descricao_de(site, conteudo),
         trilha=TRILHAS[conteudo.tipo],
-        ninhos=ninhos,
         corpo=corpo_html(conteudo),
         campos=campos_de(conteudo),
         ligadas=ligadas_de(site, conteudo),

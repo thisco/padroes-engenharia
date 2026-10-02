@@ -150,7 +150,24 @@
     });
   }
 
+  // Passar o mouse ou o foco numa linha de peça acende a peça no desenho do ninho.
+  function iniciarPecas() {
+    document.querySelectorAll("li[data-peca]").forEach(function (linha) {
+      var peca = linha.getAttribute("data-peca");
+      function marcar(ligar) {
+        document.querySelectorAll('.ninho [data-peca="' + peca + '"]').forEach(function (caixa) {
+          caixa.classList.toggle("alvo-hover", ligar);
+        });
+      }
+      linha.addEventListener("mouseenter", function () { marcar(true); });
+      linha.addEventListener("mouseleave", function () { marcar(false); });
+      linha.addEventListener("focusin", function () { marcar(true); });
+      linha.addEventListener("focusout", function () { marcar(false); });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    iniciarPecas();
     iniciarBusca();
     iniciarFiltros();
     iniciarMenu();

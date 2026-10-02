@@ -9,6 +9,7 @@ from portal.gerador.renderizar import (
     html_referencias,
 )
 from tests import fabrica
+from tests.dom import analisar
 
 CONCEITO = Conteudo(
     "conceito",
@@ -60,7 +61,7 @@ def test_conceito_com_ninho_destacado_ficha_e_praticas():
     s = fabrica.site(CONCEITO, fabrica.pratica(), fabrica.referencia())
     html = html_conteudo(s, CONCEITO)
     assert '<p class="trilha">Conceitos</p>' in html
-    assert '<div class="cx harness alvo">' in html
+    assert [n.attrs["data-peca"] for n in analisar(html).todos(classe="alvo")] == ["harness"]
     assert "<dt>Onde mora</dt><dd>Na máquina do desenvolvedor ou no runner do CI.</dd>" in html
     assert '<a href="../praticas/P1-01.html">P1-01 · Classificar' in html
     assert '<a href="#ref-ref-forte">[1]</a>' in html

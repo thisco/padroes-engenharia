@@ -12,6 +12,7 @@ from portal.gerador.renderizar import (
     html_inicio,
 )
 from tests import fabrica
+from tests.dom import analisar
 
 DAD = fabrica.pratica(
     fabrica.meta_pratica(
@@ -127,9 +128,11 @@ def test_listagem_de_dominios_por_grupo():
 
 
 def test_conceitos_mostra_os_dois_ninhos_e_lista_as_pecas():
-    vazia = html_conceitos(fabrica.site())
-    assert vazia.count('<figure class="ninho">') == 2
-    assert vazia.count("Ainda não há conceitos publicados neste ninho.") == 2
     conceito = Conteudo("conceito", "conceitos/harness.md", fabrica.meta_conceito(), "")
-    html = html_conceitos(fabrica.site(conceito))
-    assert '<a href="conceitos/harness.html">Harness</a>' in html
+    pagina = analisar(html_conceitos(fabrica.site(conceito)))
+    assert len(pagina.todos("figure", classe="ninho")) == 2
+    assert len(pagina.todos("li", **{"data-peca": True})) == 9 + 6
+    assert [a.attrs["href"] for a in pagina.todos("a", classe="harness")] == [
+        "conceitos/harness.html"
+    ]
+    assert pagina.todos("ol", classe="fluxo")
