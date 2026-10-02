@@ -278,6 +278,9 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho .cx.mcp { border-width: 2px; }
 .ninho .setas { display: flex; flex-direction: column; gap: 14px; font-size: 11px; color: var(--ambar-texto); text-align: center; }
 .ninho .seta.volta { font-style: italic; }
+.ninho .setas .seta::after { content: "→"; display: block; font-size: 18px; font-style: normal; }
+.ninho .setas .seta.volta::before { content: "←"; display: block; font-size: 18px; font-style: normal; }
+.ninho .setas .seta.volta::after { content: none; }
 .ninho .onde { margin: 10px 0 0; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
 .ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
 .ninho .exec.remoto { grid-template-columns: minmax(0, 1fr); }
@@ -285,6 +288,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho .cx.impede { background: var(--gov); color: var(--branco); border: 2px solid var(--gov); }
 .ninho .cx.impede .peca .linha { color: var(--gov-claro); }
 .ninho .trav { margin: 9px 0 7px; font-size: 12px; font-weight: 700; }
+.ninho .trav::before { content: "↑ "; color: var(--ambar-texto); }
 .ninho .cx.memoria { background: var(--tinta); color: var(--papel); }
 .ninho .cx.memoria .peca .linha { color: var(--sobre-escuro); }
 .ninho .arqs code { display: inline-block; margin: 2px 3px 0 0; background: rgba(255, 255, 255, .1); color: var(--sobre-escuro-2); }

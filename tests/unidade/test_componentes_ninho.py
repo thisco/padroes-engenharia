@@ -1,3 +1,5 @@
+import re
+
 from portal.gerador.carregar import Conteudo
 from tests import fabrica
 from tests.dom import analisar
@@ -86,3 +88,12 @@ def test_texto_do_cabecalho_nao_cola_nome_e_linha():
     html = str(modulo(HARNESS).ninho(None, "completo"))
     assert "</b> <span" in html
     assert "</b><span" not in html
+
+
+def test_setas_do_ninho_sao_desenhadas_em_css():
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    assert re.search(r"\.ninho \.setas \.seta::after\s*\{[^}]*content:\s*\"→\"", css)
+    assert re.search(r"\.ninho \.setas \.seta\.volta::before\s*\{[^}]*content:\s*\"←\"", css)
+    assert re.search(r"\.ninho \.trav::before\s*\{[^}]*content:\s*\"↑", css)
+    html = str(modulo().ninho(None, "completo"))
+    assert 'class="seta">delega<' in html and 'class="trav"' in html
