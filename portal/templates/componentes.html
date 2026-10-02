@@ -83,6 +83,72 @@
 </ol>
 {%- endmacro %}
 
+{# Tabela de falhas: nº, padrão e apelido, o que a fonte observou e a resposta com o chip da força. #}
+{% macro tabela_falhas(falhas, raiz="") -%}
+<div class="rola">
+<table class="tabela falhas">
+  <thead><tr><th scope="col">Nº</th><th scope="col">Padrão e apelido</th><th scope="col">O que a fonte observou</th><th scope="col">Resposta</th></tr></thead>
+  <tbody>
+{% for f in falhas %}
+    <tr>
+      <td>{{ loop.index }}</td>
+      <td><b>{{ f.titulo }}</b>{% if f.apelido %}<br><span class="ref-meta">{{ f.apelido }}</span>{% endif %}</td>
+      <td>{{ f.observado }}{% if f.data %} <span class="ref-meta">{{ f.data }}</span>{% endif %}{% if f.verificacao %} <span class="marca-v">[{{ f.verificacao }}]</span>{% endif %}</td>
+      <td>{% if f.href %}<a class="id" href="{{ raiz }}{{ f.href }}">{{ f.pratica }}</a> {{ chip_forca(f.forca) }}{% elif f.dominio_href %}<a href="{{ raiz }}{{ f.dominio_href }}">{{ f.dominio_titulo }}</a>{% endif %} {{ f.resposta }}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+</div>
+{%- endmacro %}
+
+{# Cartão de disciplina: rótulo, título, sintoma, resposta (régua azul) e link para o domínio. #}
+{% macro cartoes_disciplina(itens, raiz="") -%}
+<div class="grade">
+{% for d in itens %}
+  <article class="cartao">
+    <span class="k">{{ d.rotulo }}</span>
+    <h3>{{ d.titulo }}</h3>
+    <p class="s">{{ d.sintoma }}</p>
+    <p class="r">{{ d.resposta }}</p>
+{% if d.dominio_href %}
+    <a class="lk" href="{{ raiz }}{{ d.dominio_href }}">{{ d.dominio_titulo }} →</a>
+{% endif %}
+  </article>
+{% endfor %}
+</div>
+{%- endmacro %}
+
+{# Escada P1 · P2 · P3: três degraus, cada um com a régua de classificação. #}
+{% macro escada(degraus) -%}
+<ol class="escada">
+{% for d in degraus %}
+  <li class="degrau {{ d.degrau | lower }}"><span class="n">{{ d.degrau }}</span><b>{{ d.titulo }}</b><span class="regua">{{ d.regua }}</span><p>{{ d.texto }}</p></li>
+{% endfor %}
+</ol>
+{%- endmacro %}
+
+{# Planta do scaffold: quando entra, arquivo e caminhos, e os mecanismos com o chip da força. #}
+{% macro planta(linhas) -%}
+<div class="rola">
+<table class="tabela planta">
+  <thead><tr><th scope="col">Quando entra</th><th scope="col">Arquivo e caminhos</th><th scope="col">Mecanismos</th></tr></thead>
+{% for grupo in linhas | groupby("grupo") %}
+  <tbody>
+    <tr class="grupo"><th scope="rowgroup" colspan="3">{{ grupo.grouper }}</th></tr>
+{% for l in grupo.list %}
+    <tr>
+      <td>{{ l.quando }}</td>
+      <td><b>{{ l.arquivo }}</b>{% for caminho in l.caminhos %}<br><code>{{ caminho }}</code>{% endfor %}{% if l.nota %}<br><span class="ref-meta">{{ l.nota }}</span>{% endif %}</td>
+      <td>{% for m in l.get("mecanismos", []) %}<div>{{ chip_forca(m.forca) }} {{ m.texto }}</div>{% endfor %}</td>
+    </tr>
+{% endfor %}
+  </tbody>
+{% endfor %}
+</table>
+</div>
+{%- endmacro %}
+
 {# O cabeçalho de uma peça: link para a página do conceito e a linha dele; sem conceito, a lacuna. #}
 {% macro cab(peca, nome, raiz="") -%}
 {% set conceito = CONCEITOS.get(peca) %}
@@ -130,7 +196,7 @@
     <p class="trav">Só atravessa a sessão o que foi gravado.</p>
 {% endif %}
     <div class="cx memoria disco{{ classe_peca('memoria', destaque) }}" data-peca="memoria">{{ cab("memoria", p.memoria, raiz) }}
-{% if variante == "completo" %}
+{% if variante == "completo" or (variante == "condensado" and not destaque) %}
       <div class="arqs"><code>AGENTS.md</code><code>docs/steering/</code><code class="sk">skills/</code><code>docs/adr/</code><code>docs/plans/</code><code>PROJECT_MEMORY.md</code><code>git log</code></div>
 {% endif %}
     </div>

@@ -314,7 +314,7 @@ def meta_pagina_estruturada(**alteracoes: Any) -> dict[str, Any]:
                 {
                     "figura": "codigo-rapido",
                     "titulo": "Código rápido",
-                    "definicao": "O agente gera muito código [ref:ref-forte].",
+                    "definicao": "Mil linhas chegam antes da revisão.",
                     "como_aparece": "A mudança sai sem spec.",
                     "conector": "gera",
                 }

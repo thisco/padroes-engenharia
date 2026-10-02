@@ -75,7 +75,7 @@ class No:
 def _casa(no: No, tag: str | None, classe: str | None, attrs: dict[str, str | bool]) -> bool:
     if tag is not None and no.tag != tag:
         return False
-    if classe is not None and classe not in no.classes:
+    if classe is not None and not all(token in no.classes for token in classe.split()):
         return False
     for nome, esperado in attrs.items():
         if nome not in no.attrs:

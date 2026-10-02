@@ -16,6 +16,7 @@ from typing import Any
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
+from portal.gerador.paginas import PAGINAS_ESTRUTURADAS
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
     LISTAGENS,
@@ -53,6 +54,9 @@ from portal.gerador.renderizar import (
 from portal.gerador.renderizar import (
     indices as indices_,
 )
+from portal.gerador.texto_md import celula as _celula
+from portal.gerador.texto_md import juntar as _juntar
+from portal.gerador.texto_md import md_lista_referencias
 from portal.gerador.vocabulario import plural
 
 SECOES = ("Páginas", "Domínios", "Práticas", "Conceitos", "Guias", "Casos")
@@ -130,13 +134,16 @@ def montar_paginas(site: Site) -> list[Pagina]:
 
 
 def pagina_de_conteudo(site: Site, c: Conteudo) -> Pagina:
+    html, md = html_conteudo, md_conteudo
+    if c.tipo == "pagina" and c.chave in PAGINAS_ESTRUTURADAS:
+        html, md = PAGINAS_ESTRUTURADAS[c.chave]
     return Pagina(
         caminho_de(c),
         str(c.meta["titulo"]),
         SECAO_POR_TIPO[c.tipo],
         descricao_de(site, c),
-        html_conteudo(site, c),
-        md_conteudo(site, c),
+        html(site, c),
+        md(site, c),
     )
 
 
@@ -145,30 +152,6 @@ def pagina_de_conteudo(site: Site, c: Conteudo) -> Pagina:
 
 def _raiz(caminho: str) -> str:
     return "../" * caminho.count("/")
-
-
-def _celula(texto: str) -> str:
-    """Texto seguro numa célula de tabela Markdown."""
-    return texto.replace("|", "\\|").replace("\n", " ")
-
-
-def _juntar(*blocos: str) -> str:
-    return "\n\n".join(b.strip("\n") for b in blocos if b and b.strip()) + "\n"
-
-
-def md_lista_referencias(site: Site, conteudo: Conteudo | None) -> str:
-    referencias = site.catalogo.referencias_de(conteudo) if conteudo else []
-    if not referencias:
-        return ""
-    linhas = ["## Referências", ""]
-    for r in referencias:
-        m = r.meta
-        linhas.append(
-            f"- [ref:{r.chave}] {m['titulo']}. {m['organizacao']}. {m['url']} "
-            f"({ROTULO_TIPO_REFERENCIA[m['tipo']]}; [{m['verificacao']}] verificada em "
-            f"{m['verificado_em']}; {m['localizacao']})"
-        )
-    return "\n".join(linhas)
 
 
 def md_pratica(site: Site, p: Conteudo) -> str:

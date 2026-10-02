@@ -2397,7 +2397,7 @@ def test_condensado_e_fluxo():
   descrito em texto no `.md`); seções na ordem do §4.3; **bloco ausente ou vazio não gera
   seção nem título** (Review Focus 3); `caminho_de(o-problema)` usa este template.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_pagina_o_problema.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_pagina_o_problema.py`)
 
 ```python
 from portal.gerador.carregar import Conteudo
@@ -2436,11 +2436,11 @@ def test_bloco_vazio_nao_publica_titulo_e_md_descreve_os_blocos():
   (a seção "Referências" é o `aria-label` da lista final; "Como o agente funciona" usa
   `ninho(None, "condensado")`; as asserções acima assumem a fábrica da Tarefa 6.)
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_pagina_o_problema.py -q` → FAIL.
-- [ ] **Passo 3:** implementar conforme as Interfaces; `escada` aparece também em
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_pagina_o_problema.py -q` → FAIL.
+- [x] **Passo 3:** implementar conforme as Interfaces; `escada` aparece também em
   `dominios/ia-no-produto.html` quando a página O problema existe (D14), com os mesmos degraus.
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git add portal tests && git commit -m "feat: tabela de falhas, cartões, escada, planta e a página O problema estruturada"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git add portal tests && git commit -m "feat: tabela de falhas, cartões, escada, planta e a página O problema estruturada"`
 
 ---
 
@@ -3084,6 +3084,17 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   por hover e foco só em JS (`busca.js`), com a classe `.alvo-hover`; sem regra `:has()`.
   (f) O teste dos ninhos antigos (`class="cx <peca>"`) saiu; os de 9 e 6 peças e de destaque
   foram refeitos em `test_componentes_ninho.py`.
+
+- **Tarefa 18:** (a) `paginas.py` importa só `renderizar`, `markdown` e o novo `texto_md.py`
+  (`celula`, `juntar`, `md_lista_referencias`, movidos de `saidas.py`, que os reimporta), para
+  `saidas.py` poder importar `PAGINAS_ESTRUTURADAS` sem ciclo. (b) A página O problema também
+  mostra o `corpo` Markdown, quando há, com as citações na numeração da página, para não
+  descartar texto que o autor escreveu (o `repo_exemplo` atual tem corpo). (c) O filtro Jinja
+  `citar` não existe: os blocos chegam às macros já como HTML inline com as citações numeradas
+  (`paginas.citar`), porque macro importada sem contexto não enxerga variável da página.
+  (d) A borda do harness e do gateway nos ninhos passou de `--gov` para `--tinta-2`: o §9.3 diz
+  que azul não é cor de borda genérica. (e) `tests/dom.py` aceita várias classes em `classe=`
+  (`"ef orienta"`), como o teste do plano usa.
 
 ## Revisão adversarial
 

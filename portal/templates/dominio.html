@@ -10,6 +10,12 @@
   {{ c.barra_forca(contagem) }}
   <p class="legenda">{{ descrever_forcas(contagem) }}</p>
 </section>
+{% if escada %}
+<section aria-label="Escada P1 · P2 · P3">
+  <h2>Escada: P1 tier · P2 escopo · P3 nível de agência</h2>
+  {{ c.escada(escada) }}
+</section>
+{% endif %}
 <div class="corpo">
   <div>
 {% for m in site.espinha.momentos %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+{% if lead %}
+  <p>{{ lead }}</p>
+{% endif %}
+</div>
+<section aria-label="Como o agente funciona">
+  <h2>Como o agente funciona</h2>
+  <p class="lead">O desenho mostra onde mora cada peça do agente; cada caixa leva à página do conceito.</p>
+  {{ c.ninho(None, "condensado", raiz) }}
+</section>
+{% if elos %}
+<section aria-label="O que dá errado">
+  <h2>O que dá errado</h2>
+  {{ c.cadeia(elos) }}
+</section>
+{% endif %}
+{% if falhas %}
+<section aria-label="Como o vibe coding falha">
+  <h2>Como o vibe coding falha</h2>
+  {{ c.tabela_falhas(falhas, raiz) }}
+</section>
+{% endif %}
+{% if numeros %}
+<section aria-label="O que as pesquisas medem">
+  <h2>O que as pesquisas medem</h2>
+  <ul class="numeros">
+{% for n in numeros %}
+    <li><b>{{ n.valor }}</b> {{ n.descricao }} <span class="ref-meta">{{ n.data }}</span></li>
+{% endfor %}
+  </ul>
+</section>
+{% endif %}
+{% if disciplinas %}
+<section aria-label="O problema em cada disciplina">
+  <h2>O problema em cada disciplina</h2>
+  {{ c.cartoes_disciplina(disciplinas, raiz) }}
+</section>
+{% endif %}
+{% if momentos or principios or escada %}
+<section aria-label="Como combinar tudo">
+  <h2>Como combinar tudo</h2>
+{% if momentos %}
+  <ol class="momentos">
+{% for m in momentos %}
+    <li><b>{{ m.titulo }}</b>: {{ m.disciplinas | join(", ") }}</li>
+{% endfor %}
+  </ol>
+{% endif %}
+{% if principios %}
+  <ul class="principios">
+{% for p in principios %}
+    <li><b>{{ p.titulo }}</b> {{ p.texto }}</li>
+{% endfor %}
+  </ul>
+{% endif %}
+{% if escada %}
+  {{ c.escada(escada) }}
+{% endif %}
+</section>
+{% endif %}
+{% if corpo %}
+<div class="texto" aria-label="Texto da página">
+{{ corpo }}
+</div>
+{% endif %}
+{% if referencias %}
+<section aria-label="Referências">
+  <h2>Referências</h2>
+  {{ c.lista_referencias(referencias) }}
+</section>
+{% endif %}
+{% endblock %}

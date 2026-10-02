@@ -15,7 +15,7 @@ from markupsafe import Markup
 
 from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
-from portal.gerador.citacoes import numerar
+from portal.gerador.citacoes import MARCADOR, numerar
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.exemplos import Prompt, blocos, expandir_inclusoes, prompts_de, secoes
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
@@ -427,6 +427,21 @@ def html_espinha(site: Site) -> str:
     )
 
 
+def escada_do_dominio(site: Site, faixa: Faixa) -> list[dict[str, Any]]:
+    """Os degraus P1 · P2 · P3 de O problema, mostrados em IA no produto (D14)."""
+    problema = site.pagina("o-problema")
+    if faixa.slug != "ia-no-produto" or problema is None:
+        return []
+    degraus = problema.meta.get("escada")
+    if not isinstance(degraus, list):
+        return []
+    return [
+        {k: " ".join(MARCADOR.sub("", str(v)).split()) for k, v in d.items()}
+        for d in degraus
+        if isinstance(d, dict)
+    ]
+
+
 def html_dominio(site: Site, faixa: Faixa) -> str:
     dominio = site.catalogo.dominio(faixa.slug)
     return renderizar(
@@ -438,6 +453,7 @@ def html_dominio(site: Site, faixa: Faixa) -> str:
         faixa=faixa,
         dominio=dominio,
         contagem=site.catalogo.contagem_forca(faixa.slug),
+        escada=escada_do_dominio(site, faixa),
         corpo=corpo_html(dominio) if dominio else "",
         referencias=site.catalogo.referencias_de(dominio) if dominio else [],
     )

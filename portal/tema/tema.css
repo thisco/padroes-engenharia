@@ -196,6 +196,26 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .resumo { margin: 0 0 8px; font-size: 16px; color: var(--tinta-2); }
 .legenda-link { font-size: 12px; color: var(--gov); align-self: center; }
 
+/* cartões de disciplina, escada, números e planta (O problema, domínio, starter) */
+.grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.cartao { background: var(--branco); border: 1px solid var(--regra); border-radius: 3px; padding: 12px 14px; }
+.cartao .k { font-size: 12px; color: var(--tinta-2); font-weight: 600; }
+.cartao h3 { margin: 4px 0 6px; font-size: 16px; }
+.cartao .s { margin: 0 0 8px; font-size: 13px; }
+.cartao .r { margin: 0 0 8px; font-size: 13px; border-left: 3px solid var(--gov); padding-left: 8px; }
+.cartao .lk { font-size: 13px; font-weight: 600; }
+.escada { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+.escada .degrau { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 2px 12px; padding: 8px 10px; background: var(--branco); border-left: 4px solid var(--tinta-2); }
+.escada .degrau.p2 { margin-left: 18px; }
+.escada .degrau.p3 { margin-left: 36px; }
+.escada .n { grid-row: span 3; font-family: var(--mono); font-weight: 700; color: var(--tinta); }
+.escada .regua { font-size: 12px; color: var(--tinta-2); }
+.escada p { margin: 0; font-size: 13px; }
+.numeros, .principios, .momentos { margin: 8px 0; padding-left: 18px; font-size: 14px; }
+.numeros b { font-size: 18px; margin-right: 6px; }
+.falhas td, .falhas th { font-size: 13px; }
+.planta tr.grupo th { background: var(--papel-2); font-size: 13px; color: var(--tinta-2); }
+
 /* tabelas de evidência densa */
 .tabela { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
@@ -232,7 +252,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho a.peca:hover b, .ninho a.peca:focus-visible b { text-decoration: underline; }
 .ninho .linha.lacuna { font-style: italic; }
 .ninho .agente, .ninho .aplicacao { border: 2px solid var(--tinta); }
-.ninho .harness { border: 2px solid var(--gov); background: var(--harness); }
+.ninho .harness { border: 2px solid var(--tinta-2); background: var(--harness); }
 .ninho .fila { display: grid; grid-template-columns: minmax(0, 1fr) 70px 140px; gap: 6px; align-items: center; }
 .ninho .sessao, .ninho .subagente, .ninho .skill { border: 2px dashed var(--ambar); background: var(--ambar-claro); }
 .ninho .skill { background: var(--branco); }
@@ -275,7 +295,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .ninho.produto { max-width: none; }
 .ninho.produto .chave-virtual { border: 2px dashed var(--ambar); background: var(--branco); }
 .ninho.produto .nivel-de-agencia { border: 2px dashed var(--ambar); background: var(--branco); }
-.ninho.produto .gateway { border: 2px solid var(--gov); background: var(--harness); }
+.ninho.produto .gateway { border: 2px solid var(--tinta-2); background: var(--harness); }
 .ninho.produto .gateway .exec { grid-template-columns: minmax(0, 1fr); }
 .ninho.produto .eval { margin-top: 14px; border: 1px solid var(--tinta-2); border-top: 2px dotted var(--tinta-2); background: var(--branco); position: relative; }
 .ninho.produto .eval .ciclo { position: absolute; right: 10px; top: 6px; font-size: 18px; color: var(--tinta-2); }
