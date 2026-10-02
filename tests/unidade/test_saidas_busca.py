@@ -24,7 +24,7 @@ def test_indice_tem_toda_pagina_e_toda_referencia():
         "secao": "Referências",
         "descricao": "Exemplo",
     }
-    assert all(set(i) == {"titulo", "url", "secao", "descricao"} for i in itens)
+    assert all({"titulo", "url", "secao", "descricao"} <= set(i) for i in itens)
     assert json.loads(para_json(itens)) == itens
 
 

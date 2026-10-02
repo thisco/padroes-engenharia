@@ -382,6 +382,11 @@ def meta_catalogo(**alteracoes: Any) -> dict[str, Any]:
             "guias": [],
             "casos": [],
             "paginas": [item],
+            "receitas": [],
+            "starters": [],
+            "ferramentas": [],
+            "glossario": [],
+            "prompts": [],
             "skills": [
                 {
                     "name": "sdd-lifecycle",

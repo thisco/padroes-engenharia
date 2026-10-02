@@ -27,7 +27,7 @@
         })
         .then(function (itens) {
           indice = itens.map(function (item) {
-            item.chave = normalizar([item.titulo, item.descricao, item.secao].join(" "));
+            item.chave = normalizar([item.titulo, item.descricao, item.secao, item.palavras || ""].join(" "));
             return item;
           });
           return indice;

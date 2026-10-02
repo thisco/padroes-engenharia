@@ -9,13 +9,15 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
 from portal.gerador.carregar import Conteudo
-from portal.gerador.exemplos import expandir_inclusoes
+from portal.gerador.exemplos import caminho_seguro, expandir_inclusoes, inclusoes, linguagem_de
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
     html_comece_aqui,
@@ -83,12 +85,16 @@ SECOES = (
     "Domínios",
     "Práticas",
     "Receitas",
+    "Prompts",
     "Starters",
     "Ferramentas",
     "Conceitos",
     "Guias",
     "Casos",
+    "Glossário",
 )
+# Páginas geradas que ganham seção própria no llms.txt (as demais ficam em "Páginas").
+SECAO_DA_FIXA = {"prompts.html": "Prompts", "glossario.html": "Glossário"}
 SECAO_POR_TIPO = {
     "conceito": "Conceitos",
     "guia": "Guias",
@@ -145,7 +151,8 @@ def montar_paginas(site: Site) -> list[Pagina]:
         texto_md = md(site)
         titulo, descricao = texto_md.split("\n\n", 2)[:2]
         titulo = titulo.removeprefix("# ")
-        paginas.append(Pagina(caminho, titulo, "Páginas", descricao, html(site), texto_md))
+        secao = SECAO_DA_FIXA.get(caminho, "Páginas")
+        paginas.append(Pagina(caminho, titulo, secao, descricao, html(site), texto_md))
     for c in site.repo.paginas:
         if c.chave not in ("inicio", "para-agentes"):
             paginas.append(pagina_de_conteudo(site, c))
@@ -222,6 +229,20 @@ def _raiz(caminho: str) -> str:
     return "../" * caminho.count("/")
 
 
+def _ficha_de_links(site: Site, p: Conteudo) -> list[str]:
+    links = links_da_pratica(site, p)
+    linhas = []
+    for nome, chave in (("Receitas", "receitas"), ("Ferramentas aprovadas", "ferramentas")):
+        itens = [f"{i['id']} ({i['url'] or 'sem página'})" for i in links[chave]]
+        if itens:
+            linhas.append(f"- {nome}: " + ", ".join(itens))
+    if links["starter"]:
+        linhas.append(
+            f"- Starter: {links['starter']['id']} ({links['starter']['url'] or 'sem página'})"
+        )
+    return linhas
+
+
 def md_pratica(site: Site, p: Conteudo) -> str:
     m = p.meta
     faixa = site.espinha.faixa(m["dominio"])
@@ -238,14 +259,29 @@ def md_pratica(site: Site, p: Conteudo) -> str:
         f"- Status: {m['status']}",
         "- Aplica: " + (", ".join(f"`{a}`" for a in m["aplica"]) or "nada"),
         "- Relacionadas: " + (", ".join(relacionadas) or "nenhuma"),
+        *_ficha_de_links(site, p),
         f"- Dono: {m['dono']} · revisada em {m['revisado_em']} · revisar até {m['revisar_ate']}",
     ]
     return _juntar(
         f"# {p.chave} · {m['titulo']}",
         "\n".join(ficha),
         expandir_inclusoes(p.corpo, site.raiz),
+        _exemplos_nao_incluidos(site, p),
         md_lista_referencias(site, p),
     )
+
+
+def _exemplos_nao_incluidos(site: Site, p: Conteudo) -> str:
+    """Arquivos de `exemplos:` que o corpo não inclui, em bloco (o agente lê tudo no `.md`)."""
+    blocos = []
+    for caminho in p.meta.get("exemplos") or []:
+        alvo = caminho_seguro(site.raiz, caminho)
+        if caminho in inclusoes(p.corpo) or alvo is None or not alvo.is_file():
+            continue
+        texto = alvo.read_text(encoding="utf-8").replace("\r\n", "\n")
+        cerca = "````" if "```" in texto else "```"
+        blocos.append(f"### Arquivo {caminho}\n\n{cerca}{linguagem_de(caminho)}\n{texto}{cerca}")
+    return "\n\n".join(blocos)
 
 
 def md_conteudo(site: Site, c: Conteudo) -> str:
@@ -440,6 +476,16 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
             item = f"- [{p.titulo}]({site.url(p.caminho_md)})"
             linhas.append(f"{item}: {p.descricao}" if p.descricao else item)
         linhas.append("")
+    if site.repo.skills:
+        linhas += ["## Skills", ""]
+        for s in site.repo.skills:
+            href = site.url(f".well-known/skills/{s.chave}/SKILL.md")
+            linhas.append(f"- [{s.meta['name']}]({href}): {s.meta['description']}")
+        linhas.append("")
+    if constituicoes(site):
+        linhas += ["## Constituição", ""]
+        linhas += [f"- [{c}]({site.url(c)}): a constituição canônica" for c in constituicoes(site)]
+        linhas.append("")
     linhas += [
         "## Optional",
         "",
@@ -475,10 +521,34 @@ def para_json(dados: object) -> str:
     return json.dumps(dados, sort_keys=True, ensure_ascii=False, indent=2) + "\n"
 
 
+def _normalizar(texto: str) -> str:
+    """Minúsculo e sem acento, como o `busca.js`."""
+    base = unicodedata.normalize("NFD", texto.lower())
+    return "".join(c for c in base if not unicodedata.combining(c))
+
+
+def palavras_da_pagina(site: Site, pagina: Pagina) -> str:
+    """Palavras para a busca achar a página: o texto dela (≥ 4 letras) e, de cada termo do
+    glossário que aparece nele, a definição (assim `migracao` acha a prática de migration)."""
+    texto = _normalizar(pagina.md)
+    palavras = set(re.findall(r"[a-z0-9]{4,}", texto))
+    for g in site.repo.glossarios:
+        for termo in g.meta.get("termos") or []:
+            if isinstance(termo, dict) and _normalizar(str(termo["termo"])) in texto:
+                palavras |= set(re.findall(r"[a-z0-9]{4,}", _normalizar(str(termo["definicao"]))))
+    return " ".join(sorted(palavras))
+
+
 def indice_busca(site: Site, paginas: list[Pagina]) -> list[dict[str, str]]:
     """O que `busca.js` filtra: título, caminho, seção e descrição de cada página e referência."""
     itens = [
-        {"titulo": p.titulo, "url": p.caminho, "secao": p.secao, "descricao": p.descricao}
+        {
+            "titulo": p.titulo,
+            "url": p.caminho,
+            "secao": p.secao,
+            "descricao": p.descricao,
+            "palavras": palavras_da_pagina(site, p),
+        }
         for p in paginas
     ]
     itens += [
@@ -548,6 +618,20 @@ def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
         "guias": [_item(c.chave, c.meta["titulo"], caminho_de(c), c.meta) for c in repo.guias],
         "casos": [_item(c.chave, c.meta["titulo"], caminho_de(c), c.meta) for c in repo.casos],
         "paginas": especiais,
+        "receitas": [
+            _item(PurePosixPath(r.caminho_relativo).stem, r.meta["titulo"], caminho_de(r), r.meta)
+            for r in repo.receitas
+        ],
+        "starters": [
+            _item(s.meta["id"], s.meta["titulo"], caminho_de(s), s.meta) for s in repo.starters
+        ],
+        "ferramentas": [
+            _item(f.meta["id"], f.meta["titulo"], caminho_de(f), f.meta) for f in repo.ferramentas
+        ],
+        "glossario": [
+            t for g in repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
+        ],
+        "prompts": prompts(site),
         "skills": [
             {
                 "name": s.meta["name"],
@@ -576,6 +660,33 @@ ROTEIRO = (
     "permitir.",
     "- **v2:** servidor MCP de busca de práticas e RAG dos padrões pelo gateway.",
 )
+
+
+def links_da_pratica(site: Site, p: Conteudo) -> dict[str, Any]:
+    """URLs absolutas que o agente segue a partir da prática; sem página, `url` é `None`."""
+    skills = {s.chave for s in site.repo.skills}
+    receitas = {PurePosixPath(r.caminho_relativo).stem: r for r in site.repo.receitas}
+    ferramentas = {f.meta["id"]: f for f in site.repo.ferramentas}
+    starters = {s.meta["id"]: s for s in site.repo.starters}
+
+    def url(conteudo: Conteudo | None) -> str | None:
+        return site.url(para_md(caminho_de(conteudo))) if conteudo else None
+
+    aplica = []
+    for item in p.meta.get("aplica") or []:
+        tipo, _, nome = item.partition(":")
+        href = f".well-known/skills/{nome}/SKILL.md" if tipo == "skill" and nome in skills else None
+        aplica.append({"item": item, "url": site.url(href) if href else None})
+    starter = p.meta.get("starter")
+    return {
+        "aplica": aplica,
+        "receitas": [{"id": i, "url": url(receitas.get(i))} for i in p.meta.get("receitas") or []],
+        "ferramentas": [
+            {"id": i, "url": url(ferramentas.get(i))}
+            for i in p.meta.get("ferramentas_aprovadas") or []
+        ],
+        "starter": {"id": starter, "url": url(starters.get(starter))} if starter else None,
+    }
 
 
 def dados_roteamento(site: Site) -> dict[str, Any]:
@@ -609,6 +720,8 @@ def dados_roteamento(site: Site) -> dict[str, Any]:
                         "mecanismo": p.meta.get("mecanismo"),
                         "aplica": list(p.meta.get("aplica") or []),
                         "md": para_md(caminho_de(p)),
+                        "md_url": site.url(para_md(caminho_de(p))),
+                        "links": links_da_pratica(site, p),
                     }
                     for p in c.praticas
                 ],

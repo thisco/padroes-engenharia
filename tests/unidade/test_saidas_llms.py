@@ -32,13 +32,21 @@ def test_llms_txt_lista_todas_as_paginas_pelo_md_gemeo():
     for p in paginas:
         assert f"- [{p.titulo}](https://portal.exemplo/{p.caminho_md})" in texto
     links = re.findall(r"^- \[[^\]]+\]\((\S+)\)", texto, re.M)
-    assert len(links) == len(paginas) + 3
+    assert len(links) == len(paginas) + 4  # roteamento, catalogo, texto completo e a constituição
 
 
 def test_llms_txt_secoes_na_ordem_e_sem_secao_vazia():
     s, paginas = site_e_paginas()
     secoes = re.findall(r"^## (.+)$", llms_txt(s, paginas), re.M)
-    assert secoes == ["Páginas", "Domínios", "Práticas", "Conceitos", "Casos", "Optional"]
+    assert secoes == [
+        "Páginas",
+        "Domínios",
+        "Práticas",
+        "Conceitos",
+        "Casos",
+        "Constituição",
+        "Optional",
+    ]
 
 
 def test_item_traz_a_descricao():

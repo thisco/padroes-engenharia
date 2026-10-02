@@ -6,7 +6,8 @@
   "additionalProperties": false,
   "required": [
     "nome", "versao", "commit", "data", "url_base", "praticas", "referencias", "dominios",
-    "conceitos", "guias", "casos", "paginas", "skills"
+    "conceitos", "guias", "casos", "paginas", "skills", "receitas", "starters", "ferramentas",
+    "glossario", "prompts"
   ],
   "properties": {
     "nome": {"type": "string", "minLength": 1},
@@ -21,7 +22,22 @@
     "guias": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
     "casos": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
     "paginas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
-    "skills": {"type": "array", "items": {"$ref": "#/$defs/skill"}}
+    "skills": {"type": "array", "items": {"$ref": "#/$defs/skill"}},
+    "receitas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
+    "starters": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
+    "ferramentas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
+    "glossario": {
+      "type": "array",
+      "items": {"type": "object", "required": ["termo", "definicao"]}
+    },
+    "prompts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "origem", "tipo_origem", "texto", "url"],
+        "properties": {"url": {"type": "string", "pattern": "^https?://"}}
+      }
+    }
   },
   "$defs": {
     "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},

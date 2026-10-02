@@ -2726,7 +2726,7 @@ def test_espinha_sem_texto_na_vazia_e_cobertura_por_linha():
   corpo com ≥ 4 letras e a `definicao` de cada termo do glossário que aparece no texto);
   `busca.js` inclui `palavras` na chave de busca.
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 import json
@@ -2766,13 +2766,13 @@ def test_llms_txt_completo_e_busca_acha_migracao(tmp_path):
     assert "migracao" in pratica["palavras"]
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_saidas_v1_1.py -q` → FAIL.
-- [ ] **Passo 3:** implementar conforme as Interfaces; toda URL absoluta sai de `site.url()`
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_saidas_v1_1.py -q` → FAIL.
+- [x] **Passo 3:** implementar conforme as Interfaces; toda URL absoluta sai de `site.url()`
   (que já remove a barra final da base). `palavras` normaliza com NFD e tira acento, como o
   `busca.js`.
-- [ ] **Passo 4:** suíte (inclui `test_catalogo_valida_contra_o_schema_publicado`), ruff e
+- [x] **Passo 4:** suíte (inclui `test_catalogo_valida_contra_o_schema_publicado`), ruff e
   validar verdes; regenere README/ROTEAMENTO.
-- [ ] **Passo 5:** `git commit -am "feat: URLs de skill, receita, ferramenta e starter para agentes, llms.txt completo e busca ampliada"`
+- [x] **Passo 5:** `git commit -am "feat: URLs de skill, receita, ferramenta e starter para agentes, llms.txt completo e busca ampliada"`
 
 ---
 
