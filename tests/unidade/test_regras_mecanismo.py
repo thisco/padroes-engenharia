@@ -58,7 +58,7 @@ def test_mecanismo_pega_forca_acima_de_orienta_sem_mecanismo(tmp_path, forca):
         ("/etc/hosts", "caminho fora do repositório"),
         ("sdd-outro:x.py@1.0.0", "componente fora de componentes.yml"),
         (
-            "sdd-scaffold:template/scripts/verificar_pr.py@v1.6.1",
+            "sdd-scaffold:template/scripts/verificar_pr.py@1.6.0",
             "versão diferente da fixada (1.6.1)",
         ),
     ],
@@ -139,3 +139,20 @@ def test_evitar_pega_corpo_sem_substituta_existente(tmp_path):
             "o corpo não cita o ID de uma prática existente que substitui esta",
         )
     ]
+
+
+def test_mecanismo_aceita_prefixo_v_na_versao(tmp_path):
+    p = com_mecanismo("sdd-scaffold:template/scripts/verificar_pr.py@v1.6.1")
+    assert rodar(regra_mecanismo, [p], tmp_path) == []
+
+
+def test_caminho_interno_so_vale_em_scripts_portal_ou_ci(tmp_path):
+    (tmp_path / "docs").mkdir()
+    (tmp_path / "docs" / "nota.md").write_text("x", encoding="utf-8")
+    (erro,) = rodar(regra_mecanismo, [com_mecanismo("docs/nota.md", forca="avisa")], tmp_path)
+    assert erro == Erro(
+        ARQUIVO,
+        "mecanismo",
+        "R-MECANISMO",
+        "docs/nota.md: caminho interno fora de scripts/, portal/ ou .gitlab-ci.yml",
+    )

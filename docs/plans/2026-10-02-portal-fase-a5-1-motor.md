@@ -928,7 +928,7 @@ git commit -m "fix: números da espinha derivados de espinha.yml e plural corret
   - `normalizar_versao(versao: str) -> str` em `regras.py` (`"v1.6.1"` → `"1.6.1"`);
   - `RAIZES_DE_MECANISMO = ("scripts/", "portal/", ".gitlab-ci.yml")`.
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 Criar `tests/unidade/test_componentes.py`:
 
@@ -996,12 +996,12 @@ def test_caminho_interno_so_vale_em_scripts_portal_ou_ci(tmp_path):
 Em `tests/unidade/test_esquemas.py`, acrescentar `"componentes": lambda: {"componentes": {"x":
 {"repo": "https://x.org/r", "versao": "1.0.0", "commit": "a" * 40}}}` ao dicionário `VALIDOS`.
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `python -m pytest tests/unidade/test_componentes.py tests/unidade/test_regras_mecanismo.py tests/unidade/test_esquemas.py -q`
 Expected: FAIL — `ImportError: cannot import name 'validar_componentes'`.
 
-- [ ] **Passo 3: Criar `esquemas/componentes.schema.json`**
+- [x] **Passo 3: Criar `esquemas/componentes.schema.json`**
 
 ```json
 {
@@ -1030,7 +1030,7 @@ Expected: FAIL — `ImportError: cannot import name 'validar_componentes'`.
 }
 ```
 
-- [ ] **Passo 4: Validar e carregar sem exceção**
+- [x] **Passo 4: Validar e carregar sem exceção**
 
 Em `portal/gerador/esquemas.py`, acrescentar `"componentes"` ao fim de `ESQUEMAS` e, ao fim do
 arquivo:
@@ -1074,7 +1074,7 @@ Em `portal/gerador/regras.py`, em `validar_tudo`, depois de
 `erros += validar_repositorio(repo, raiz / "esquemas")`, acrescentar
 `erros += validar_componentes(raiz)` (importe de `portal.gerador.esquemas`).
 
-- [ ] **Passo 5: Normalizar o `v` e restringir o caminho interno**
+- [x] **Passo 5: Normalizar o `v` e restringir o caminho interno**
 
 Em `portal/gerador/regras.py`, logo depois de `TIPOS_FORTES`, acrescentar:
 
@@ -1111,14 +1111,14 @@ def _problema_do_mecanismo(mecanismo: str, contexto: Contexto) -> str:
     return ""
 ```
 
-- [ ] **Passo 6: Rodar a suíte**
+- [x] **Passo 6: Rodar a suíte**
 
 Run: `python -m pytest -q && ruff check . && ruff format --check . && python scripts/validar.py`
 Expected: todos passam; `validação ok: nenhum erro.` Se algum teste antigo usava mecanismo
 interno fora de `scripts/`, `portal/` ou `.gitlab-ci.yml`, troque o caminho do teste para
 `scripts/validar.py` (é o exemplo da spec).
 
-- [ ] **Passo 7: Commit**
+- [x] **Passo 7: Commit**
 
 ```bash
 git add esquemas/componentes.schema.json portal/gerador/ tests/

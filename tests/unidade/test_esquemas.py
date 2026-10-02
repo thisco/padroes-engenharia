@@ -16,6 +16,9 @@ from tests import fabrica
 PASTA = fabrica.RAIZ / "esquemas"
 
 VALIDOS = {
+    "componentes": lambda: {
+        "componentes": {"x": {"repo": "https://x.org/r", "versao": "1.0.0", "commit": "a" * 40}}
+    },
     "pratica": fabrica.meta_pratica,
     "referencia": fabrica.meta_referencia,
     "dominio": fabrica.meta_dominio,

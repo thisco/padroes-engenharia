@@ -8,8 +8,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-from portal.gerador.carregar import Repositorio
-from portal.gerador.erros import R_ESQUEMA, Erro
+from portal.gerador.carregar import FrontmatterInvalido, Repositorio, carregar_mapa
+from portal.gerador.erros import R_ESQUEMA, R_FRONTMATTER, Erro
 
 ESQUEMAS = (
     "pratica",
@@ -21,6 +21,7 @@ ESQUEMAS = (
     "pagina",
     "verificacao",
     "catalogo",
+    "componentes",
 )
 
 # Tipo de conteúdo → schema. Skill não tem schema próprio: a regra R-SKILL cuida dela.
@@ -69,3 +70,16 @@ def validar_repositorio(repo: Repositorio, pasta: Path) -> list[Erro]:
         if nome is not None:
             erros += validar_instancia(conteudo.meta, validadores[nome], conteudo.caminho_relativo)
     return erros
+
+
+def validar_componentes(raiz: Path) -> list[Erro]:
+    """`componentes.yml` contra o schema. Arquivo ausente equivale a nenhum componente."""
+    caminho = raiz / "componentes.yml"
+    if not caminho.is_file():
+        return []
+    try:
+        dados = carregar_mapa(caminho.read_text(encoding="utf-8"))
+    except FrontmatterInvalido as exc:
+        return [Erro("componentes.yml", "arquivo", R_FRONTMATTER, str(exc))]
+    validador = carregar_validador(raiz / "esquemas", "componentes")
+    return validar_instancia(dados, validador, "componentes.yml")

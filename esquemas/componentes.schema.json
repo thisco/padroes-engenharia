@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Componentes fixados",
+  "description": "componentes.yml (spec §6.6 e R20): componente externo com repositório, versão SemVer sem prefixo e commit completo.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["componentes"],
+  "properties": {
+    "componentes": {
+      "type": "object",
+      "propertyNames": {"pattern": "^[a-z0-9][a-z0-9-]*$"},
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["repo", "versao", "commit"],
+        "properties": {
+          "repo": {"type": "string", "pattern": "^https://"},
+          "versao": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+          "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+        }
+      }
+    }
+  }
+}

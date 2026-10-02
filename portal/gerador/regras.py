@@ -33,7 +33,7 @@ from portal.gerador.carregar import (
 from portal.gerador.citacoes import extrair
 from portal.gerador.erros import Erro
 from portal.gerador.espinha import Espinha, carregar_espinha
-from portal.gerador.esquemas import validar_repositorio
+from portal.gerador.esquemas import validar_componentes, validar_repositorio
 
 
 @dataclass(frozen=True)
@@ -72,6 +72,7 @@ def validar_tudo(raiz: Path) -> list[Erro]:
     contexto = carregar_contexto(raiz)
     erros = list(repo.erros)
     erros += validar_repositorio(repo, raiz / "esquemas")
+    erros += validar_componentes(raiz)
     for funcao in REGRAS:
         erros += funcao(repo, espinha, contexto)
     return sorted(set(erros))
@@ -273,6 +274,15 @@ MECANISMO_EXTERNO = re.compile(
     r"^(?P<componente>[a-z0-9][a-z0-9-]*):(?P<caminho>[^@\s]+)@(?P<versao>[^@\s]+)$"
 )
 TIPOS_FORTES = frozenset({"normativo", "vendor", "padrao-aberto"})
+
+RAIZES_DE_MECANISMO = ("scripts/", "portal/", ".gitlab-ci.yml")
+
+
+def normalizar_versao(versao: str) -> str:
+    """`v1.6.1` e `1.6.1` são a mesma versão (§6.6 do delta)."""
+    return versao[1:] if versao[:1] in ("v", "V") else versao
+
+
 ID_NO_TEXTO = re.compile(r"\b[A-Z][A-Z0-9]*-[0-9]{2}\b")
 
 
@@ -305,13 +315,16 @@ def _problema_do_mecanismo(mecanismo: str, contexto: Contexto) -> str:
         componente = contexto.componentes.get(externo["componente"])
         if componente is None:
             return "componente fora de componentes.yml"
-        if externo["versao"] != componente.versao:
+        if normalizar_versao(externo["versao"]) != componente.versao:
             return f"versão diferente da fixada ({componente.versao})"
         return ""
     raiz = contexto.raiz.resolve()
     alvo = (raiz / mecanismo).resolve()
     if not alvo.is_relative_to(raiz):
         return "caminho fora do repositório"
+    relativo = alvo.relative_to(raiz).as_posix()
+    if not any(relativo == r or relativo.startswith(r) for r in RAIZES_DE_MECANISMO):
+        return "caminho interno fora de scripts/, portal/ ou .gitlab-ci.yml"
     if not alvo.is_file():
         return "caminho inexistente"
     return ""

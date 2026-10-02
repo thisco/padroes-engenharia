@@ -160,15 +160,20 @@ def carregar(raiz: Path) -> Repositorio:
 
 
 def carregar_componentes(raiz: Path) -> dict[str, Componente]:
-    """Lê `componentes.yml`. Arquivo ausente equivale a nenhum componente fixado."""
+    """Lê `componentes.yml`. Arquivo ausente equivale a nenhum componente fixado.
+
+    Entrada malformada é ignorada aqui; `validar_componentes` reporta."""
     caminho = raiz / "componentes.yml"
     if not caminho.is_file():
         return {}
     dados = yaml.safe_load(caminho.read_text(encoding="utf-8")) or {}
-    return {
-        nome: Componente(nome, str(item["repo"]), str(item["versao"]), str(item["commit"]))
-        for nome, item in sorted((dados.get("componentes") or {}).items())
-    }
+    itens = dados.get("componentes") if isinstance(dados, dict) else None
+    componentes: dict[str, Componente] = {}
+    for nome, item in sorted((itens or {}).items()):
+        campos = item if isinstance(item, dict) else {}
+        if all(isinstance(campos.get(c), str) for c in ("repo", "versao", "commit")):
+            componentes[nome] = Componente(nome, campos["repo"], campos["versao"], campos["commit"])
+    return componentes
 
 
 def carregar_ids_retirados(raiz: Path) -> frozenset[str]:
