@@ -29,3 +29,8 @@ def test_rolagem_chips_caixa_alta_e_favicon():
     seletores = re.findall(r"([^{}]+)\{[^}]*text-transform:\s*uppercase", CSS)
     assert seletores and all(re.search(r"\bth\b", s) for s in seletores), seletores
     assert (fabrica.RAIZ / "portal/tema/favicon.svg").is_file()
+
+
+def test_texto_sem_quebra_nao_estoura_a_largura():
+    assert re.search(r"\.campos dd[^{]*\{[^}]*overflow-wrap:\s*anywhere", CSS)
+    assert re.search(r"(?<![\w-])code\b[^{]*\{[^}]*overflow-wrap:\s*anywhere", CSS)

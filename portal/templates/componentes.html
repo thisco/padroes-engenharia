@@ -153,9 +153,9 @@
 {% macro cab(peca, nome, raiz="") -%}
 {% set conceito = CONCEITOS.get(peca) %}
 {% if conceito %}
-<a class="peca {{ peca }}" href="{{ raiz }}{{ conceito.href }}"><b>{{ nome }}</b><span class="linha">{{ conceito.linha }}</span></a>
+<a class="peca {{ peca }}" href="{{ raiz }}{{ conceito.href }}"><b>{{ nome }}</b> <span class="linha">{{ conceito.linha }}</span></a>
 {% else %}
-<span class="peca {{ peca }}"><b>{{ nome }}</b><span class="linha lacuna">sem conceito publicado</span></span>
+<span class="peca {{ peca }}"><b>{{ nome }}</b> <span class="linha lacuna">sem conceito publicado</span></span>
 {% endif %}
 {%- endmacro %}
 
@@ -182,13 +182,13 @@
 {% if variante == "completo" %}
       <p class="onde">o harness executa, na sua máquina</p>
       <div class="exec local">
-        <div class="cx nativas"><b>Ferramentas nativas</b><span class="linha">ler e editar, shell, busca</span></div>
+        <div class="cx nativas"><b>Ferramentas nativas</b> <span class="linha">ler e editar, shell, busca</span></div>
         <div class="cx mcp{{ classe_peca('mcp', destaque) }}" data-peca="mcp">{{ cab("mcp", p.mcp, raiz) }}</div>
         <div class="cx hook impede{{ classe_peca('hook', destaque) }}" data-peca="hook">{{ cab("hook", p.hook, raiz) }}</div>
       </div>
       <p class="onde">o fornecedor executa, no servidor</p>
       <div class="exec remoto">
-        <div class="cx nativas"><b>Ferramentas do fornecedor</b><span class="linha">busca na web, execução de código</span></div>
+        <div class="cx nativas"><b>Ferramentas do fornecedor</b> <span class="linha">busca na web, execução de código</span></div>
       </div>
 {% endif %}
     </div>

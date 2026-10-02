@@ -80,3 +80,9 @@ def test_css_dos_ninhos_nao_atinge_o_cabecalho_da_peca():
     pecas = "|".join(p for n in NINHOS.values() for p in n["pecas"])
     soltos = re.findall(rf"\.ninho(?:\.\w+)? \.(?:{pecas})\b(?!-)", css)
     assert soltos == [], soltos
+
+
+def test_texto_do_cabecalho_nao_cola_nome_e_linha():
+    html = str(modulo(HARNESS).ninho(None, "completo"))
+    assert "</b> <span" in html
+    assert "</b><span" not in html

@@ -39,7 +39,7 @@ a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visibl
   outline-offset: 2px;
 }
 code, pre, .id, .mono { font-family: var(--mono); font-variant-ligatures: none; }
-code { font-size: 13px; background: rgba(10, 26, 47, .06); padding: 1px 5px; border-radius: 2px; }
+code { overflow-wrap: anywhere; font-size: 13px; background: rgba(10, 26, 47, .06); padding: 1px 5px; border-radius: 2px; }
 pre { font-size: 13px; overflow-x: auto; }
 .rola { overflow-x: auto; }
 h1, h2, h3 { letter-spacing: -.02em; }
@@ -181,7 +181,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .marca-v { font-family: var(--mono); font-size: 11px; border: 1px solid var(--tinta-2); color: var(--tinta-2); padding: 0 4px; border-radius: 2px; }
 .campos { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 0; font-size: 14px; }
 .campos dt { color: var(--tinta-2); font-size: 13px; font-weight: 600; padding-top: 2px; }
-.campos dd { margin: 0; }
+.campos dd { margin: 0; overflow-wrap: anywhere; }
 
 /* Cadeia (O problema) e seções da prática: figura à esquerda, texto à direita */
 .cadeia { list-style: none; margin: 0; padding: 0; }
