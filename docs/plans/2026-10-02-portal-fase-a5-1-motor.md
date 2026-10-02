@@ -2462,7 +2462,7 @@ aqui (`caminhos` cujo destino existe); 4 como ler (miniespinha anotada, `legenda
 `adotar` + link do radar; 6 por que confiar (`fatos` + organização); 7 estado e backlog (link
 da espinha e da skill `curadoria-de-pratica`). Seção sem dado some.
 
-- [ ] **Passo 1: Testes que falham** (`tests/unidade/test_pagina_inicio.py`)
+- [x] **Passo 1: Testes que falham** (`tests/unidade/test_pagina_inicio.py`)
 
 ```python
 from portal.gerador.carregar import Conteudo
@@ -2500,11 +2500,11 @@ def test_sem_conteudo_a_secao_some():
 
   (a ordem das seções é conferida pelo teste de estrutura da Tarefa 25.)
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_pagina_inicio.py -q` → FAIL.
-- [ ] **Passo 3:** template e funções; `caminho_de(inicio)` → `index.html` (`como-fazer` sai
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_pagina_inicio.py -q` → FAIL.
+- [x] **Passo 3:** template e funções; `caminho_de(inicio)` → `index.html` (`como-fazer` sai
   dos especiais).
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: Início em sete seções que explica o portal"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: Início em sete seções que explica o portal"`
 
 ---
 ### Tarefa 20: Pessoas e normas e Glossário (D13, D15)
@@ -3095,6 +3095,11 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   (d) A borda do harness e do gateway nos ninhos passou de `--gov` para `--tinta-2`: o §9.3 diz
   que azul não é cor de borda genérica. (e) `tests/dom.py` aceita várias classes em `classe=`
   (`"ef orienta"`), como o teste do plano usa.
+
+- **Tarefa 19:** o chip "pacote offline" da porta "Para o agente" não foi criado: o build não
+  gera pacote offline (o próprio `public/` é o pacote) e um chip para arquivo inexistente seria
+  link quebrado. Ficam os quatro chips de arquivo que existem. `html_inicio` e `md_inicio`
+  moram em `paginas.py`; `inicio.md` sem `lead` usa `DESCRICAO_INICIO`.
 
 ## Revisão adversarial
 

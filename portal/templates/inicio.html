@@ -3,57 +3,113 @@
 {% block conteudo %}
 <div class="topo">
   <h1>{{ titulo }}</h1>
-  <p>{{ descricao }}</p>
+  <div>
+    <p>{{ lead }}</p>
+{% if fatos_datados %}
+    <p class="fatos-datados mono">{{ fatos_datados }}</p>
+{% endif %}
+    <p class="atalhos">{% for rotulo, href in atalhos %}<a href="{{ raiz }}{{ href }}">{{ rotulo }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+  </div>
 </div>
-<section aria-label="Os quatro momentos">
-  <div class="passos">
-{% for m in site.espinha.momentos %}
-    <div class="passo">
-      <span class="n">{{ loop.index }}</span>
-      <b>{{ m.titulo }}</b>
-      <p>Fase{{ "s" if m.fases | length > 1 else "" }} {{ m.fases | join(", ") }} da sdd-lifecycle · {{ praticas_por_momento[m.slug] | plural("prática", "práticas") }}</p>
-      <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
+<div class="duas portas">
+  <section aria-label="Para quem desenvolve">
+    <h2>Para quem desenvolve</h2>
+    <p class="lead">Comece pelo momento em que você está.</p>
+    <div class="passos">
+{% for m in momentos %}
+      <div class="passo">
+        <span class="n">{{ loop.index }}</span>
+        <b>{{ m.titulo }}</b>
+        <p>{{ m.acao }}</p>
+        <p class="mono pequeno">{{ m.fases_texto }} · {{ m.contagem }}</p>
+        <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
+      </div>
+{% endfor %}
     </div>
+  </section>
+  {{ c.bloco_escuro("Para o agente", bloco, chips) }}
+</div>
+{% if caminhos %}
+<section aria-label="Comece aqui">
+  <h2>Comece aqui</h2>
+  <div class="grade">
+{% for caminho in caminhos %}
+    <article class="cartao"><h3>{{ caminho.titulo }}</h3><p class="s">{{ caminho.texto }}</p><a class="lk" href="{{ raiz }}{{ caminho.href }}">Abrir →</a></article>
 {% endfor %}
   </div>
 </section>
-{% if corpo %}
-<div class="corpo">
-  <section class="texto" aria-label="Como fazer">{{ corpo | safe }}</section>
-  <aside class="lado" aria-label="Referências"><section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section></aside>
-</div>
 {% endif %}
-<div class="duas">
-  <section aria-label="Espinha em miniatura">
-    <h2>A espinha</h2>
-    <p class="lead">{{ site.espinha.faixas | length }} domínios × {{ site.espinha.momentos | length }} momentos; {{ a_definir_texto(site) }} ainda estão a definir.</p>
-    <table class="matriz mini">
-      <thead>
-        <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>
-      </thead>
-      <tbody>
+<section aria-label="Como ler o portal" id="como-ler">
+  <h2>Como ler o portal</h2>
+  <div class="duas">
+    <div>
+      <p class="lead">Linha = domínio, coluna = momento, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
+      <table class="matriz mini">
+        <thead>
+          <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>
+        </thead>
+        <tbody>
 {% for faixa in site.espinha.faixas %}
-        <tr>
-          <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></th>
+          <tr>
+            <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></th>
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
-          <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.titulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
+            <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.titulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
 {% endfor %}
-        </tr>
+          </tr>
 {% endfor %}
-      </tbody>
-    </table>
-    <p class="legenda"><span class="q bloqueia"></span> impede (bloqueia ou pede aprovação) · <span class="q avisa"></span> avisa · <span class="q orienta"></span> só orienta · <span class="q vazia"></span> a definir</p>
-    <p><a href="{{ raiz }}espinha.html">Abrir a espinha completa →</a></p>
-  </section>
-  <section class="disco" aria-label="Para agentes">
-    <h2>Para agentes</h2>
-    <p>Cole no AGENTS.md do seu projeto:</p>
-    <pre>{{ bloco }}</pre>
-    <p><a href="{{ raiz }}para-agentes.html">Roteamento, índices e skills →</a></p>
-  </section>
+        </tbody>
+      </table>
+      <p><a href="{{ raiz }}espinha.html">Abrir a espinha completa →</a></p>
+    </div>
+    <div>
+      <h3 id="forcas">O que significa a força</h3>
+      {{ c.legenda_forcas() }}
+      <h3>O que significa o status</h3>
+      <dl class="legenda-status">
+{% for s in STATUS %}
+        <div><dt><span class="st">{{ s.slug }}</span></dt><dd>{{ s.significado }}</dd></div>
+{% endfor %}
+      </dl>
+      <p class="lead">Aprovada pela engenharia quer dizer: tem dono, revisão com data e referência verificada <span class="marca-v">[V]</span>.</p>
+    </div>
+  </div>
+</section>
+{% if ferramentas %}
+<section aria-label="Ferramentas aprovadas">
+  <h2>Ferramentas aprovadas</h2>
+  <ul class="praticas">
+{% for f in ferramentas %}
+    <li><a href="{{ raiz }}{{ f.href }}">{{ f.titulo }}</a> <span class="ref-meta">{{ f.nota }}</span></li>
+{% endfor %}
+  </ul>
+  <p><a href="{{ raiz }}ferramentas.html">Ver o radar completo →</a></p>
+</section>
+{% endif %}
+{% if confiar %}
+<section aria-label="Por que confiar">
+  <h2>Por que confiar</h2>
+  <ul>
+{% for fato in confiar %}
+    <li>{{ fato }}</li>
+{% endfor %}
+  </ul>
+  <p class="lead">Mantido por {{ site.organizacao }}.</p>
+</section>
+{% endif %}
+<section aria-label="Estado">
+  <h2>Estado</h2>
+  <p>v{{ site.versao }}: {{ n_praticas }}. As células vazias são o backlog público: <a href="{{ raiz }}espinha.html">veja a espinha</a>{% if proposta %} e <a href="{{ raiz }}{{ proposta }}">como propor uma prática</a>{% endif %}.</p>
+</section>
+{% if corpo %}
+<div class="texto" aria-label="Texto da página">
+{{ corpo }}
 </div>
-{% if site.pagina("o-problema") %}
-<p><a href="{{ raiz }}o-problema.html">Por que isto existe →</a></p>
+{% endif %}
+{% if referencias %}
+<section aria-label="Referências">
+  <h2>Referências</h2>
+  {{ c.lista_referencias(referencias) }}
+</section>
 {% endif %}
 {% endblock %}

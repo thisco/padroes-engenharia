@@ -395,27 +395,6 @@ def pagina_generica(site: Site, caminho: str, titulo: str, **contexto: Any) -> s
     return renderizar(site, "pagina.html", caminho, titulo=titulo, **vazios)
 
 
-def html_inicio(site: Site) -> str:
-    """A página inicial: `paginas/inicio.md` se existir; senão, a home mínima do template."""
-    pagina = site.pagina("inicio")
-    por_momento = {
-        m.slug: sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
-        for m in site.espinha.momentos
-    }
-    return renderizar(
-        site,
-        "inicio.html",
-        "index.html",
-        titulo=pagina.meta["titulo"] if pagina else site.nome,
-        descricao=(pagina.meta.get("descricao") if pagina else None) or DESCRICAO_INICIO,
-        corpo=corpo_html(pagina) if pagina else "",
-        referencias=site.catalogo.referencias_de(pagina) if pagina else [],
-        praticas_por_momento=por_momento,
-        a_definir=celulas_a_definir(site),
-        bloco=bloco_agents(site),
-    )
-
-
 def html_espinha(site: Site) -> str:
     return renderizar(
         site,

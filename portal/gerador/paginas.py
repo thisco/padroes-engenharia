@@ -15,8 +15,17 @@ from markupsafe import Markup
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair
 from portal.gerador.markdown import inline_html, para_html
-from portal.gerador.renderizar import Site, caminho_de, descrever_ninho, renderizar
+from portal.gerador.renderizar import (
+    DESCRICAO_INICIO,
+    Site,
+    a_definir_texto,
+    bloco_agents,
+    caminho_de,
+    descrever_ninho,
+    renderizar,
+)
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
+from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
 # Campos que são identificadores ou rótulos de máquina: não passam pelo Markdown.
 LITERAIS = frozenset({"figura", "degrau", "dominio", "pratica", "momento", "destino", "id"})
@@ -178,4 +187,149 @@ PAGINAS_ESTRUTURADAS: dict[
     "o-problema": (html_o_problema, md_o_problema),
 }
 
-__all__ = ["PAGINAS_ESTRUTURADAS", "html_o_problema", "md_o_problema"]
+__all__ = ["PAGINAS_ESTRUTURADAS", "html_inicio", "html_o_problema", "md_inicio", "md_o_problema"]
+
+
+# Início (`/`): sete seções que explicam o portal (delta §4.3) ------------------------------
+
+
+def _meta_da_inicio(site: Site) -> dict[str, Any]:
+    pagina = site.pagina("inicio")
+    return pagina.meta if pagina else {}
+
+
+def _fatos_datados(site: Site) -> str:
+    praticas = list(site.catalogo.praticas.values())
+    partes = [f"v{site.versao}", plural(len(praticas), "prática", "práticas")]
+    datas = [str(p.meta["revisado_em"]) for p in praticas if p.meta.get("revisado_em")]
+    if datas:
+        partes.append(f"revisado em {max(datas)}")
+    return " · ".join(partes)
+
+
+def _momentos_da_inicio(site: Site) -> list[dict[str, Any]]:
+    resultado = []
+    for m in site.espinha.momentos:
+        n = sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
+        fases = ("fases " if len(m.fases) > 1 else "fase ") + ", ".join(map(str, m.fases))
+        resultado.append(
+            {
+                "slug": m.slug,
+                "titulo": m.titulo,
+                "acao": m.acao,
+                "fases_texto": f"{fases} da sdd-lifecycle",
+                "contagem": plural(n, "prática", "práticas"),
+            }
+        )
+    return resultado
+
+
+def _atalhos(site: Site) -> list[tuple[str, str]]:
+    existentes = site.caminhos()
+    candidatos = (("Por que isto existe →", "o-problema.html"), ("Conceitos →", "conceitos.html"))
+    return [(rotulo, href) for rotulo, href in candidatos if href in existentes]
+
+
+def _chips_do_agente(site: Site) -> list[tuple[str, str]]:
+    return [
+        ("llms.txt", "llms.txt"),
+        ("roteamento.json", "roteamento.json"),
+        ("catalogo.json", "catalogo.json"),
+        (".well-known/skills/index.json", ".well-known/skills/index.json"),
+    ]
+
+
+def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
+    """Os caminhos de "Comece aqui" cujo destino existe: caminho sem conteúdo não aparece."""
+    existentes = site.caminhos()
+    resultado = []
+    for caminho in _lista(site.pagina("inicio") or Conteudo("pagina", "", {}, ""), "caminhos"):
+        href = f"{caminho.get('destino', '')}.html"
+        if href in existentes:
+            item = citar(caminho, ids)
+            item["href"] = href
+            resultado.append(item)
+    return resultado
+
+
+def html_inicio(site: Site) -> str:
+    """A Início: `paginas/inicio.md` dá a tese, os caminhos e os fatos; sem ela, o nome do portal"""
+    pagina = site.pagina("inicio")
+    meta = _meta_da_inicio(site)
+    ids = ids_da_pagina(site, pagina) if pagina else []
+    ferramentas = [
+        {
+            "titulo": f.meta["titulo"],
+            "href": caminho_de(f),
+            "nota": f"{f.meta['categoria']} · versão mínima {f.meta['versao_minima']}",
+        }
+        for f in site.repo.ferramentas
+        if f.meta.get("status") == "adotar"
+    ]
+    skill = next((s for s in site.repo.skills if s.chave == "curadoria-de-pratica"), None)
+    n = len(site.catalogo.praticas)
+    return renderizar(
+        site,
+        "inicio.html",
+        "index.html",
+        titulo=meta.get("titulo") or site.nome,
+        descricao=str(meta.get("descricao") or DESCRICAO_INICIO),
+        lead=citar(meta.get("lead") or DESCRICAO_INICIO, ids, "lead"),
+        fatos_datados=_fatos_datados(site),
+        atalhos=_atalhos(site),
+        momentos=_momentos_da_inicio(site),
+        bloco=bloco_agents(site),
+        chips=[(rotulo, caminho) for rotulo, caminho in _chips_do_agente(site)],
+        caminhos=_caminhos_da_inicio(site, ids),
+        ferramentas=ferramentas,
+        confiar=citar([f for f in meta.get("fatos", []) if isinstance(f, str)], ids, "fatos"),
+        n_praticas=plural(n, "prática publicada", "práticas publicadas"),
+        proposta=f".well-known/skills/{skill.chave}/SKILL.md" if skill else "",
+        corpo=corpo_da_pagina(pagina, ids) if pagina else "",
+        referencias=site.catalogo.referencias_de(pagina) if pagina else [],
+    )
+
+
+def md_inicio(site: Site) -> str:
+    pagina = site.pagina("inicio")
+    meta = _meta_da_inicio(site)
+    momentos = [
+        f"{i}. **{m['titulo']}** ({m['fases_texto']}): {m['acao']} {m['contagem']}."
+        for i, m in enumerate(_momentos_da_inicio(site), start=1)
+    ]
+    caminhos = [
+        f"- [{c['titulo']}]({c['href'].removesuffix('.html')}.md): {c['texto']}"
+        for c in _caminhos_da_inicio(site, [])
+    ]
+    status = [f"- {s.slug}: {s.significado}" for s in STATUS]
+    forcas = [f"- {f.rotulo}: {f.consequencia}" for f in FORCAS]
+    adotadas = [
+        f"- [{f.meta['titulo']}]({caminho_de(f).removesuffix('.html')}.md)"
+        for f in site.repo.ferramentas
+        if f.meta.get("status") == "adotar"
+    ]
+    fatos = [f"- {f}" for f in meta.get("fatos", []) if isinstance(f, str)]
+    n = len(site.catalogo.praticas)
+    return juntar(
+        f"# {meta.get('titulo') or site.nome}",
+        str(meta.get("lead") or DESCRICAO_INICIO),
+        _fatos_datados(site),
+        "## Para quem desenvolve\n\nComece pelo momento em que você está.\n\n"
+        + "\n".join(momentos),
+        "## Para o agente\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
+        f"{bloco_agents(site)}```",
+        ("## Comece aqui\n\n" + "\n".join(caminhos)) if caminhos else "",
+        "## Como ler o portal\n\nLinha = domínio, coluna = momento, célula = práticas. "
+        f"{a_definir_texto(site)} estão a definir. A matriz completa está em "
+        "[espinha.md](espinha.md).\n\n### Força\n\n"
+        + "\n".join(forcas)
+        + "\n\n### Status\n\n"
+        + "\n".join(status)
+        + "\n\nAprovada pela engenharia: tem dono, revisão com data e referência verificada [V].",
+        ("## Ferramentas aprovadas\n\n" + "\n".join(adotadas)) if adotadas else "",
+        ("## Por que confiar\n\n" + "\n".join(fatos)) if fatos else "",
+        f"## Estado\n\nv{site.versao}: {plural(n, 'prática publicada', 'práticas publicadas')}. "
+        "As células vazias são o backlog público (espinha.md).",
+        pagina.corpo if pagina else "",
+        md_lista_referencias(site, pagina),
+    )

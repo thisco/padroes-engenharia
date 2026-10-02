@@ -16,9 +16,8 @@ from typing import Any
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
-from portal.gerador.paginas import PAGINAS_ESTRUTURADAS
+from portal.gerador.paginas import PAGINAS_ESTRUTURADAS, html_inicio, md_inicio
 from portal.gerador.renderizar import (
-    DESCRICAO_INICIO,
     LISTAGENS,
     NINHOS,
     ROTULO_FORCA,
@@ -40,7 +39,6 @@ from portal.gerador.renderizar import (
     html_dominio,
     html_dominios,
     html_espinha,
-    html_inicio,
     html_listagem,
     html_para_agentes,
     html_pratica,
@@ -201,30 +199,6 @@ def md_conteudo(site: Site, c: Conteudo) -> str:
         numeros,
         c.corpo,
         md_lista_referencias(site, c),
-    )
-
-
-def md_inicio(site: Site) -> str:
-    pagina = site.pagina("inicio")
-    titulo = pagina.meta["titulo"] if pagina else site.nome
-    descricao = (pagina.meta.get("descricao") if pagina else None) or DESCRICAO_INICIO
-    passos = []
-    for i, m in enumerate(site.espinha.momentos, start=1):
-        n = sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
-        fases = ("fases " if len(m.fases) > 1 else "fase ") + ", ".join(map(str, m.fases))
-        passos.append(
-            f"{i}. **{m.titulo}** ({fases} da sdd-lifecycle): {plural(n, 'prática', 'práticas')}."
-        )
-    return _juntar(
-        f"# {titulo}",
-        descricao,
-        "## Os quatro momentos\n\n" + "\n".join(passos),
-        pagina.corpo if pagina else "",
-        f"## A espinha\n\n{a_definir_texto(site)} estão a definir. "
-        "A matriz completa está em [espinha.md](espinha.md).",
-        "## Para agentes\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
-        f"{bloco_agents(site)}```",
-        md_lista_referencias(site, pagina),
     )
 
 

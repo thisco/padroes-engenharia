@@ -9,7 +9,6 @@ from portal.gerador.renderizar import (
     html_dominio,
     html_dominios,
     html_espinha,
-    html_inicio,
 )
 from tests import fabrica
 from tests.dom import analisar
@@ -30,39 +29,6 @@ def test_bloco_para_o_agents_md_com_url_base_e_versao():
     assert "Em toda mudança de Tier 1 ou 2" in bloco
     assert "https://portal.exemplo/roteamento.json" in bloco
     assert "Versão adotada: padroes-engenharia v0.1.0" in bloco
-
-
-def test_inicio_minimo_sem_como_fazer():
-    html = html_inicio(fabrica.site(fabrica.pratica()))
-    assert "<h1>Padrões de Engenharia</h1>" in html
-    assert re.findall(r'href="espinha.html#momento-([a-z-]+)"', html) == [
-        "antes-de-escrever",
-        "enquanto-escreve",
-        "antes-do-merge",
-        "depois-da-entrega",
-    ]
-    assert "Fases 0, 1, 2, 3 da sdd-lifecycle · 1 prática" in html
-    assert html.count('<span class="q ') == 48 + 4
-    assert '<span class="q orienta"></span>' in html
-    assert "consulte https://portal.exemplo/roteamento.json" in html
-    assert "47 das 48 células" in html
-    assert "Por que isto existe" not in html
-
-
-def test_inicio_usa_como_fazer_e_liga_o_problema_quando_existem():
-    como_fazer = Conteudo(
-        "pagina",
-        "paginas/inicio.md",
-        fabrica.meta_pagina(titulo="Como fazer", descricao="O how-to em 4 passos."),
-        "Comece pelo tier [ref:ref-forte].\n",
-    )
-    problema = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
-    html = html_inicio(fabrica.site(como_fazer, problema, fabrica.referencia()))
-    assert "<h1>Como fazer</h1>" in html
-    assert "<p>O how-to em 4 passos.</p>" in html
-    assert '<a href="#ref-ref-forte">[1]</a>' in html
-    assert '<li id="ref-ref-forte">' in html
-    assert '<a href="o-problema.html">Por que isto existe →</a>' in html
 
 
 def test_espinha_tem_48_celulas_grupos_e_a_definir():
