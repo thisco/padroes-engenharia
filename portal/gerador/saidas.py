@@ -18,10 +18,17 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
+    html_como_fazer,
     html_glossario,
     html_inicio,
+    html_prompts,
+    html_receita,
+    md_como_fazer,
     md_glossario,
     md_inicio,
+    md_prompts,
+    md_receita,
+    prompts,
 )
 from portal.gerador.renderizar import (
     LISTAGENS,
@@ -63,8 +70,14 @@ from portal.gerador.texto_md import juntar as _juntar
 from portal.gerador.texto_md import md_lista_referencias
 from portal.gerador.vocabulario import plural
 
-SECOES = ("Páginas", "Domínios", "Práticas", "Conceitos", "Guias", "Casos")
-SECAO_POR_TIPO = {"conceito": "Conceitos", "guia": "Guias", "caso": "Casos", "pagina": "Páginas"}
+SECOES = ("Páginas", "Domínios", "Práticas", "Receitas", "Conceitos", "Guias", "Casos")
+SECAO_POR_TIPO = {
+    "conceito": "Conceitos",
+    "guia": "Guias",
+    "caso": "Casos",
+    "pagina": "Páginas",
+    "receita": "Receitas",
+}
 
 
 @dataclass(frozen=True)
@@ -128,6 +141,17 @@ def montar_paginas(site: Site) -> list[Pagina]:
         descricao = descricao_de(site, p)
         html, md = html_pratica(site, p), md_pratica(site, p)
         paginas.append(Pagina(caminho_de(p), titulo, "Práticas", descricao, html, md))
+    for r in site.repo.receitas:
+        paginas.append(
+            Pagina(
+                caminho_de(r),
+                str(r.meta["titulo"]),
+                SECAO_POR_TIPO["receita"],
+                descricao_de(site, r),
+                html_receita(site, r),
+                md_receita(site, r),
+            )
+        )
     for c in (*site.repo.conceitos, *site.repo.guias, *site.repo.casos):
         paginas.append(pagina_de_conteudo(site, c))
     caminhos = [p.caminho for p in paginas]
@@ -655,6 +679,7 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
         "busca.json": para_json(indice_busca(site, paginas)),
         "catalogo.json": para_json(dados_catalogo(site, paginas)),
         "roteamento.json": para_json(dados_roteamento(site)),
+        "prompts.json": para_json(prompts(site)),
         "ROTEAMENTO.md": roteamento_md(site),
         "README.md": readme_md(site),
         ".well-known/skills/index.json": para_json(indice_skills(site)),
@@ -687,6 +712,8 @@ GERADORES: dict[str, tuple[Callable[[Site], str], Callable[[Site], str]]] = {
     "conceitos.html": (html_conceitos, md_conceitos),
     "referencias.html": (html_referencias, md_referencias),
     "glossario.html": (html_glossario, md_glossario),
+    "como-fazer.html": (html_como_fazer, md_como_fazer),
+    "prompts.html": (html_prompts, md_prompts),
     "para-agentes.html": (html_para_agentes, md_para_agentes),
     **{
         caminho: (

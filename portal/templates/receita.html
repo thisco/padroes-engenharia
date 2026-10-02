@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}como-fazer.html">Como fazer</a></p>
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ objetivo }}</p>
+</div>
+<div class="corpo">
+  <article class="texto cadeia-secoes" aria-label="Receita">
+{% for titulo_secao, html in secoes %}
+    <section class="elo{% if titulo_secao == "Confira" %} verif{% endif %}" aria-label="{{ titulo_secao }}">
+      {{ c.figura(FIGURA_DA_RECEITA[titulo_secao]) if titulo_secao in FIGURA_DA_RECEITA }}
+      <div><h2>{{ titulo_secao }}</h2>
+{{ html }}
+      </div>
+    </section>
+{% endfor %}
+  </article>
+  <aside class="lado" aria-label="Ficha e referências">
+    <section><h2>Ficha</h2>
+      <dl class="campos">{% for rotulo, valor in campos %}<dt>{{ rotulo }}</dt><dd>{{ valor }}</dd>{% endfor %}</dl>
+    </section>
+{% if vinculos.praticas %}
+    <section><h2>Práticas</h2><ul>{% for i in vinculos.praticas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.ferramentas %}
+    <section><h2>Ferramentas aprovadas</h2><ul>{% for i in vinculos.ferramentas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.starter %}
+    <section><h2>Starter</h2><ul>{% for i in vinculos.starter %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.exemplos %}
+    <section><h2>Exemplos</h2><ul>{% for i in vinculos.exemplos %}<li><a href="{{ raiz }}{{ i.href }}"><code>{{ i.titulo }}</code></a></li>{% endfor %}</ul></section>
+{% endif %}
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+  </aside>
+</div>
+{% endblock %}

@@ -2568,7 +2568,7 @@ starter, resultado esperado; corpo com prompts e inclusões); `html_como_fazer`/
 `html_prompts`/`md_prompts` (agrupados por domínio e momento, cada um com Copiar e link para a
 origem) e `prompts.json` emitido por `saidas.emitir` (`para_json`).
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 import json
@@ -2599,11 +2599,11 @@ def test_como_fazer_e_saidas_da_biblioteca(tmp_path):
     assert 'id="ligar-ci-prompt-1"' in (tmp_path / "receitas/ligar-ci.html").read_text(encoding="utf-8")
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_paginas_receitas_prompts.py -q` → FAIL.
-- [ ] **Passo 3:** funções, templates e registro em `GERADORES` (`como-fazer.html`,
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_paginas_receitas_prompts.py -q` → FAIL.
+- [x] **Passo 3:** funções, templates e registro em `GERADORES` (`como-fazer.html`,
   `prompts.html`); `saidas.montar_paginas` inclui as receitas (seção "Receitas").
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: página de receita, índice Como fazer e biblioteca de prompts"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: página de receita, índice Como fazer e biblioteca de prompts"`
 
 ---
 
@@ -3100,6 +3100,13 @@ a planta do scaffold vai em `starters/sdd-scaffold.yml` (`planta`) e aparece em
   gera pacote offline (o próprio `public/` é o pacote) e um chip para arquivo inexistente seria
   link quebrado. Ficam os quatro chips de arquivo que existem. `html_inicio` e `md_inicio`
   moram em `paginas.py`; `inicio.md` sem `lead` usa `DESCRICAO_INICIO`.
+
+- **Tarefa 21:** o ID do prompt da receita é `receita-ligar-ci-prompt-1` (chave da receita,
+  Tarefa 4 e Contrato com a parte 2), e não `ligar-ci-prompt-1` como no teste do plano; o
+  campo `origem` do item de `prompts()` continua sendo o slug (`ligar-ci`). O texto do prompt
+  da `CORPO_RECEITA` da fábrica passou a ser o do teste do plano. Acrescentei o teste do Review
+  Focus 2 (prompt com `<script>` e crases): escapado no HTML, intacto no `.md` (cerca de 4
+  crases) e em `prompts.json`.
 
 ## Revisão adversarial
 

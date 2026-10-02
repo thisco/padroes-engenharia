@@ -54,7 +54,7 @@ Um repositório no GitLab com runner disponível.
 ## Com o agente
 
 ```prompt
-Leia o AGENTS.md e ligue o job de qualidade do CI nesta merge request.
+Ligue o job normas-do-pr no .gitlab-ci.yml deste repositório e rode o pipeline.
 ```
 
 ## Confira

@@ -7,6 +7,7 @@ como no corpo de qualquer conteúdo. Bloco ausente ou vazio não gera seção ne
 
 from __future__ import annotations
 
+import re
 from collections.abc import Callable
 from typing import Any
 
@@ -14,6 +15,7 @@ from markupsafe import Markup
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair
+from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.markdown import inline_html, para_html
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
@@ -21,9 +23,13 @@ from portal.gerador.renderizar import (
     a_definir_texto,
     bloco_agents,
     caminho_de,
+    corpo_secoes,
     descrever_ninho,
+    pagina_generica,
     renderizar,
     slug_termo,
+    todos_os_prompts,
+    vinculos_de,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
@@ -452,3 +458,206 @@ PAGINAS_ESTRUTURADAS: dict[
     "o-problema": (html_o_problema, md_o_problema),
     "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
 }
+
+
+# Receita, Como fazer e Biblioteca de prompts (R21, R27) --------------------------------------
+
+FIGURA_DA_RECEITA = {
+    "Resultado": "check",
+    "Antes de começar": "caixa",
+    "Passos": "escada",
+    "Com o agente": "codigo",
+    "Confira": "check",
+    "Se der errado": "x",
+}
+
+
+def _slug(conteudo: Conteudo) -> str:
+    return conteudo.caminho_relativo.rsplit("/", 1)[-1].removesuffix(".md")
+
+
+def prompts(site: Site) -> list[dict[str, Any]]:
+    """Todos os prompts de exemplo, por domínio e momento da espinha, com a URL da origem."""
+    faixas = [f.slug for f in site.espinha.faixas]
+    momentos = [m.slug for m in site.espinha.momentos]
+    itens = []
+    for p in todos_os_prompts(site):
+        origem = p.origem
+        origem_id = _slug(origem) if origem.tipo == "receita" else origem.chave
+        itens.append(
+            {
+                "id": p.id,
+                "origem": origem_id,
+                "tipo_origem": origem.tipo,
+                "dominio": origem.meta.get("dominio"),
+                "momento": origem.meta.get("momento"),
+                "texto": p.texto,
+                "url": site.url(f"{caminho_de(origem)}#{p.id}"),
+            }
+        )
+
+    def ordem(item: dict[str, Any]) -> tuple[int, int, str]:
+        d, m = item["dominio"], item["momento"]
+        return (
+            faixas.index(d) if d in faixas else len(faixas),
+            momentos.index(m) if m in momentos else len(momentos),
+            item["id"],
+        )
+
+    return sorted(itens, key=ordem)
+
+
+def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
+    grupos: dict[str, dict[str, Any]] = {}
+    for item in prompts(site):
+        faixa = site.espinha.faixa(str(item["dominio"]))
+        momento = site.espinha.momento(str(item["momento"]))
+        titulo = f"{faixa.titulo if faixa else item['dominio']}"
+        grupo = grupos.setdefault(titulo, {"titulo": titulo, "itens": []})
+        grupo["itens"].append(
+            {
+                **item,
+                "caminho": item["url"].removeprefix(site.url("")),
+                "momento_titulo": momento.titulo if momento else str(item["momento"]),
+            }
+        )
+    return list(grupos.values())
+
+
+PROMPTS_DESCRICAO = "Os prompts de exemplo das práticas e receitas, cada um testado num agente."
+
+
+def html_prompts(site: Site) -> str:
+    return renderizar(
+        site,
+        "prompts.html",
+        "prompts.html",
+        titulo="Biblioteca de prompts",
+        descricao=PROMPTS_DESCRICAO,
+        grupos=_grupos_de_prompts(site),
+    )
+
+
+def _cerca(texto: str) -> str:
+    """A cerca de crases maior que qualquer sequência de crases dentro do texto."""
+    maior = max((len(m) for m in re.findall(r"`+", texto)), default=0)
+    return "`" * max(3, maior + 1)
+
+
+def md_prompts(site: Site) -> str:
+    blocos = ["# Biblioteca de prompts", PROMPTS_DESCRICAO]
+    for grupo in _grupos_de_prompts(site):
+        blocos.append(f"## {grupo['titulo']}")
+        for p in grupo["itens"]:
+            cerca = _cerca(p["texto"])
+            blocos.append(
+                f"### {p['id']}\n\n{p['momento_titulo']} · origem: "
+                f"[{p['origem']}]({p['caminho'].partition('#')[0].removesuffix('.html')}.md)\n\n"
+                f"{cerca}prompt\n{p['texto'].rstrip(chr(10))}\n{cerca}"
+            )
+    return juntar(*blocos)
+
+
+def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
+    """Receitas por domínio e, depois, por momento: cada receita aparece nos dois recortes."""
+    secoes_: list[dict[str, Any]] = []
+
+    def item(r: Conteudo) -> dict[str, Any]:
+        return {
+            "titulo": r.meta["titulo"],
+            "href": caminho_de(r),
+            "nota": f"{r.meta['objetivo']} ({r.meta['tempo']} min)",
+        }
+
+    for faixa in site.espinha.faixas:
+        daqui = [r for r in site.repo.receitas if r.meta.get("dominio") == faixa.slug]
+        if daqui:
+            secoes_.append(
+                {"titulo": f"Domínio: {faixa.titulo}", "itens": [item(r) for r in daqui]}
+            )
+    for momento in site.espinha.momentos:
+        daqui = [r for r in site.repo.receitas if r.meta.get("momento") == momento.slug]
+        if daqui:
+            secoes_.append(
+                {"titulo": f"Momento: {momento.titulo}", "itens": [item(r) for r in daqui]}
+            )
+    return secoes_
+
+
+COMO_FAZER_DESCRICAO = "Receitas passo a passo, com o resultado esperado e um prompt para o agente."
+
+
+def html_como_fazer(site: Site) -> str:
+    listas = [
+        {"titulo": s["titulo"], "itens": s["itens"], "vazio": ""}
+        for s in _receitas_do_como_fazer(site)
+    ]
+    return pagina_generica(
+        site, "como-fazer.html", "Como fazer", descricao=COMO_FAZER_DESCRICAO, listas=listas
+    )
+
+
+def md_como_fazer(site: Site) -> str:
+    blocos = []
+    for s in _receitas_do_como_fazer(site):
+        itens = [
+            f"- [{i['titulo']}]({i['href'].removesuffix('.html')}.md): {i['nota']}"
+            for i in s["itens"]
+        ]
+        blocos.append(f"## {s['titulo']}\n\n" + "\n".join(itens))
+    return juntar("# Como fazer", COMO_FAZER_DESCRICAO, *blocos)
+
+
+def _ficha_da_receita(site: Site, receita: Conteudo) -> list[tuple[str, str]]:
+    m = receita.meta
+    faixa = site.espinha.faixa(str(m.get("dominio", "")))
+    momento = site.espinha.momento(str(m.get("momento", "")))
+    ficha = [
+        ("Domínio", faixa.titulo if faixa else str(m.get("dominio", ""))),
+        ("Momento", momento.titulo if momento else str(m.get("momento", ""))),
+        ("Tempo", f"{m['tempo']} min"),
+        ("Pré-requisitos", "; ".join(m.get("pre_requisitos") or []) or "nenhum"),
+        ("Resultado esperado", str(m["resultado_esperado"])),
+        ("Dono", str(m["dono"])),
+        ("Revisada em", str(m["revisado_em"])),
+    ]
+    return ficha
+
+
+def html_receita(site: Site, receita: Conteudo) -> str:
+    meta = receita.meta
+    vinculos = vinculos_de(site, receita)
+    return renderizar(
+        site,
+        "receita.html",
+        caminho_de(receita),
+        titulo=meta["titulo"],
+        descricao=str(meta["objetivo"]),
+        objetivo=meta["objetivo"],
+        secoes=corpo_secoes(receita, site.raiz),
+        FIGURA_DA_RECEITA=FIGURA_DA_RECEITA,
+        campos=_ficha_da_receita(site, receita),
+        vinculos=vinculos,
+        referencias=site.catalogo.referencias_de(receita),
+    )
+
+
+def md_receita(site: Site, receita: Conteudo) -> str:
+    ficha = "\n".join(f"- {rotulo}: {valor}" for rotulo, valor in _ficha_da_receita(site, receita))
+    vinculos = vinculos_de(site, receita)
+    extras = []
+    for rotulo, chave in (
+        ("Práticas", "praticas"),
+        ("Ferramentas aprovadas", "ferramentas"),
+        ("Starter", "starter"),
+    ):
+        if vinculos[chave]:
+            itens = ", ".join(i["titulo"] for i in vinculos[chave])
+            extras.append(f"- {rotulo}: {itens}")
+    return juntar(
+        f"# {receita.meta['titulo']}",
+        str(receita.meta["objetivo"]),
+        ficha + ("\n" + "\n".join(extras) if extras else ""),
+        expandir_inclusoes(receita.corpo, site.raiz),
+        md_lista_referencias(site, receita),
+    )

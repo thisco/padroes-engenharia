@@ -509,23 +509,6 @@ def listas_comece_aqui(site: Site) -> list[dict[str, Any]]:
     ]
 
 
-def listas_receitas(site: Site) -> list[dict[str, Any]]:
-    itens = _itens(site.repo.receitas, lambda c: str(c.meta.get("objetivo", "")))
-    return [{"titulo": "Receitas", "itens": itens, "vazio": "Ainda não há receitas."}]
-
-
-def listas_prompts(site: Site) -> list[dict[str, Any]]:
-    itens = [
-        {
-            "titulo": p.id,
-            "href": f"{caminho_de(p.origem)}#{p.id}",
-            "nota": p.texto.strip().splitlines()[0] if p.texto.strip() else "",
-        }
-        for p in todos_os_prompts(site)
-    ]
-    return [{"titulo": "Prompts de exemplo", "itens": itens, "vazio": "Ainda não há prompts."}]
-
-
 def listas_ferramentas(site: Site) -> list[dict[str, Any]]:
     itens = _itens(
         site.repo.ferramentas,
@@ -561,16 +544,6 @@ LISTAGENS = {
         "Comece aqui",
         "Os caminhos para começar: tutoriais, starters e o que ler antes.",
         listas_comece_aqui,
-    ),
-    "como-fazer.html": (
-        "Como fazer",
-        "Receitas passo a passo, com o resultado esperado.",
-        listas_receitas,
-    ),
-    "prompts.html": (
-        "Biblioteca de prompts",
-        "Os prompts de exemplo das práticas e receitas, cada um testado num agente.",
-        listas_prompts,
     ),
     "praticas/index.html": ("Práticas", "Todas as práticas, por domínio.", listas_praticas),
     "ferramentas.html": (
@@ -661,6 +634,8 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
         return f"Caso de {meta['origem']['repo']}, {meta['periodo']}."
+    if conteudo.tipo == "receita":
+        return str(meta["objetivo"])
     return str(meta.get("descricao") or "")
 
 
@@ -727,14 +702,15 @@ def corpo_secoes(conteudo: Conteudo, raiz: Path | None = None) -> list[tuple[str
     return resultado
 
 
-def vinculos_da_pratica(site: Site, pratica: Conteudo) -> dict[str, list[dict[str, str]]]:
-    """Os links da lateral: ferramentas aprovadas, receitas, starter e arquivos de exemplo."""
+def vinculos_de(site: Site, pratica: Conteudo) -> dict[str, list[dict[str, str]]]:
+    """Os links da lateral de prática e receita: práticas, ferramentas, starter e exemplos."""
     meta = pratica.meta
     ferramentas = {f.meta["id"]: f for f in site.repo.ferramentas}
     receitas = {
         r.caminho_relativo.rsplit("/", 1)[-1].removesuffix(".md"): r for r in site.repo.receitas
     }
     starters = {s.meta["id"]: s for s in site.repo.starters}
+    praticas = dict(site.catalogo.praticas)
 
     def itens(ids: list[str], fonte: dict[str, Conteudo]) -> list[dict[str, str]]:
         return [
@@ -745,6 +721,7 @@ def vinculos_da_pratica(site: Site, pratica: Conteudo) -> dict[str, list[dict[st
 
     starter = meta.get("starter")
     return {
+        "praticas": itens(list(meta.get("praticas") or []), praticas),
         "ferramentas": itens(list(meta.get("ferramentas_aprovadas") or []), ferramentas),
         "receitas": itens(list(meta.get("receitas") or []), receitas),
         "starter": itens([starter] if isinstance(starter, str) else [], starters),
@@ -767,7 +744,7 @@ def html_pratica(site: Site, pratica: Conteudo) -> str:
         momento=site.espinha.momento(pratica.meta["momento"]),
         corpo=corpo_html(pratica, site.raiz),
         secoes=corpo_secoes(pratica, site.raiz),
-        vinculos=vinculos_da_pratica(site, pratica),
+        vinculos=vinculos_de(site, pratica),
         referencias=site.catalogo.referencias_de(pratica),
         relacionadas=site.catalogo.relacionadas(pratica.chave),
         conceitos=site.catalogo.conceitos_da_pratica(pratica.chave),
