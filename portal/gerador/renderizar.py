@@ -509,14 +509,6 @@ def listas_comece_aqui(site: Site) -> list[dict[str, Any]]:
     ]
 
 
-def listas_ferramentas(site: Site) -> list[dict[str, Any]]:
-    itens = _itens(
-        site.repo.ferramentas,
-        lambda c: f"{c.meta.get('categoria', '')} · {c.meta.get('status', '')}",
-    )
-    return [{"titulo": "Ferramentas", "itens": itens, "vazio": "Ainda não há ferramentas."}]
-
-
 def slug_termo(texto: str) -> str:
     """O texto como âncora de URL: sem acento, minúsculo, hifenizado."""
     base = unicodedata.normalize("NFD", texto.lower())
@@ -540,17 +532,7 @@ def listas_praticas(site: Site) -> list[dict[str, Any]]:
 # Páginas que resumem um tipo de conteúdo, na versão mínima: título, descrição e uma lista por
 # seção. As tarefas seguintes trocam o gerador de cada uma pelo desenho próprio.
 LISTAGENS = {
-    "comece-aqui.html": (
-        "Comece aqui",
-        "Os caminhos para começar: tutoriais, starters e o que ler antes.",
-        listas_comece_aqui,
-    ),
     "praticas/index.html": ("Práticas", "Todas as práticas, por domínio.", listas_praticas),
-    "ferramentas.html": (
-        "Ferramentas",
-        "As ferramentas que as práticas citam e o status de cada uma.",
-        listas_ferramentas,
-    ),
     "casos.html": ("Casos", "Casos reais com números datados.", listas_casos),
 }
 

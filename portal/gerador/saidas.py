@@ -18,16 +18,24 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
+    html_comece_aqui,
     html_como_fazer,
+    html_ferramenta,
     html_glossario,
     html_inicio,
     html_prompts,
+    html_radar,
     html_receita,
+    html_starter,
+    md_comece_aqui,
     md_como_fazer,
+    md_ferramenta,
     md_glossario,
     md_inicio,
     md_prompts,
+    md_radar,
     md_receita,
+    md_starter,
     prompts,
 )
 from portal.gerador.renderizar import (
@@ -70,7 +78,17 @@ from portal.gerador.texto_md import juntar as _juntar
 from portal.gerador.texto_md import md_lista_referencias
 from portal.gerador.vocabulario import plural
 
-SECOES = ("Páginas", "Domínios", "Práticas", "Receitas", "Conceitos", "Guias", "Casos")
+SECOES = (
+    "Páginas",
+    "Domínios",
+    "Práticas",
+    "Receitas",
+    "Starters",
+    "Ferramentas",
+    "Conceitos",
+    "Guias",
+    "Casos",
+)
 SECAO_POR_TIPO = {
     "conceito": "Conceitos",
     "guia": "Guias",
@@ -150,6 +168,28 @@ def montar_paginas(site: Site) -> list[Pagina]:
                 descricao_de(site, r),
                 html_receita(site, r),
                 md_receita(site, r),
+            )
+        )
+    for s in site.repo.starters:
+        paginas.append(
+            Pagina(
+                caminho_de(s),
+                str(s.meta["titulo"]),
+                "Starters",
+                str(s.meta["descricao"]),
+                html_starter(site, s),
+                md_starter(site, s),
+            )
+        )
+    for f in site.repo.ferramentas:
+        paginas.append(
+            Pagina(
+                caminho_de(f),
+                str(f.meta["titulo"]),
+                "Ferramentas",
+                f"{f.meta['categoria']} · {f.meta['status']}",
+                html_ferramenta(site, f),
+                md_ferramenta(site, f),
             )
         )
     for c in (*site.repo.conceitos, *site.repo.guias, *site.repo.casos):
@@ -713,6 +753,8 @@ GERADORES: dict[str, tuple[Callable[[Site], str], Callable[[Site], str]]] = {
     "referencias.html": (html_referencias, md_referencias),
     "glossario.html": (html_glossario, md_glossario),
     "como-fazer.html": (html_como_fazer, md_como_fazer),
+    "comece-aqui.html": (html_comece_aqui, md_comece_aqui),
+    "ferramentas.html": (html_radar, md_radar),
     "prompts.html": (html_prompts, md_prompts),
     "para-agentes.html": (html_para_agentes, md_para_agentes),
     **{

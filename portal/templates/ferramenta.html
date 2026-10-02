@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}ferramentas.html">Ferramentas</a></p>
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <div>
+    <p>{{ f.categoria }} · versão mínima {{ f.versao_minima }}</p>
+    <div class="chips"><span class="st">{{ f.status }}</span></div>
+  </div>
+</div>
+<div class="corpo">
+  <article class="texto" aria-label="Ferramenta">
+    <section aria-label="Como instalar"><h2>Como instalar</h2>
+{{ como_instalar }}
+    </section>
+    <section aria-label="Limites"><h2>Limites</h2>
+{{ limites }}
+    </section>
+{% if f.get("alternativa") %}
+    <section aria-label="Alternativa"><h2>Alternativa</h2>
+{{ alternativa }}
+    </section>
+{% endif %}
+  </article>
+  <aside class="lado" aria-label="Vínculos e referências">
+{% if vinculos.praticas %}
+    <section><h2>Práticas</h2><ul>{% for i in vinculos.praticas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.receitas %}
+    <section><h2>Receitas</h2><ul>{% for i in vinculos.receitas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+  </aside>
+</div>
+{% endblock %}

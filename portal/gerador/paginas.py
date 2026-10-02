@@ -25,6 +25,7 @@ from portal.gerador.renderizar import (
     caminho_de,
     corpo_secoes,
     descrever_ninho,
+    listas_comece_aqui,
     pagina_generica,
     renderizar,
     slug_termo,
@@ -451,15 +452,6 @@ def md_glossario(site: Site) -> str:
     return juntar("# Glossário", GLOSSARIO_DESCRICAO, "\n".join(linhas))
 
 
-# Páginas especiais com gerador próprio: slug do `paginas/<slug>.md` -> (HTML, `.md`).
-PAGINAS_ESTRUTURADAS: dict[
-    str, tuple[Callable[[Site, Conteudo], str], Callable[[Site, Conteudo], str]]
-] = {
-    "o-problema": (html_o_problema, md_o_problema),
-    "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
-}
-
-
 # Receita, Como fazer e Biblioteca de prompts (R21, R27) --------------------------------------
 
 FIGURA_DA_RECEITA = {
@@ -661,3 +653,253 @@ def md_receita(site: Site, receita: Conteudo) -> str:
         expandir_inclusoes(receita.corpo, site.raiz),
         md_lista_referencias(site, receita),
     )
+
+
+# Starter, Ferramenta, radar e Comece aqui (§7.2) ---------------------------------------------
+
+CATEGORIAS_DA_FERRAMENTA = {
+    "harness": "Harness",
+    "gateway": "Gateway",
+    "migration": "Migration",
+    "iac": "IaC",
+    "teste": "Teste",
+    "seguranca": "Segurança",
+    "sdd": "SDD",
+    "ci": "CI",
+}
+
+
+def categoria_nome(categoria: str) -> str:
+    return CATEGORIAS_DA_FERRAMENTA.get(categoria, categoria)
+
+
+def _links(site: Site, ids: list[str], fonte: dict[str, Conteudo]) -> list[dict[str, str]]:
+    return [
+        {"titulo": str(fonte[i].meta["titulo"]), "href": caminho_de(fonte[i])}
+        for i in ids
+        if i in fonte
+    ]
+
+
+def _vinculos(site: Site, conteudo: Conteudo) -> dict[str, list[dict[str, str]]]:
+    praticas = dict(site.catalogo.praticas)
+    receitas = {_slug(r): r for r in site.repo.receitas}
+    meta = conteudo.meta
+    return {
+        "praticas": _links(
+            site, list(meta.get("praticas_aplicadas") or meta.get("praticas") or []), praticas
+        ),
+        "receitas": _links(site, list(meta.get("receitas") or []), receitas),
+    }
+
+
+def _planta(starter: Conteudo, ids: list[str]) -> list[dict[str, Any]]:
+    """As linhas da planta; o texto (e `mecanismos[].texto`) com as citações numeradas."""
+    return [citar(linha, ids) for linha in _lista(starter, "planta")]
+
+
+def html_starter(site: Site, starter: Conteudo) -> str:
+    ids = ids_da_pagina(site, starter)
+    meta = starter.meta
+    return renderizar(
+        site,
+        "starter.html",
+        caminho_de(starter),
+        titulo=meta["titulo"],
+        descricao=str(meta["descricao"]),
+        descricao_html=citar(meta["descricao"], ids, "descricao"),
+        s=meta,
+        planta=_planta(starter, ids),
+        vinculos=_vinculos(site, starter),
+        referencias=site.catalogo.referencias_de(starter),
+    )
+
+
+def md_starter(site: Site, starter: Conteudo) -> str:
+    meta = starter.meta
+    vinculos = _vinculos(site, starter)
+    ficha = [
+        f"- Repositório: {meta['repo']} @ {meta['versao']}",
+        f"- Status: {meta['status']}",
+        f"- Dono: {meta['dono']}",
+    ]
+    linhas_planta = []
+    for linha in _lista(starter, "planta"):
+        mecanismos = "; ".join(f"{m['forca']}: {m['texto']}" for m in linha.get("mecanismos", []))
+        caminhos = ", ".join(f"`{c}`" for c in linha["caminhos"])
+        linhas_planta.append(
+            f"- {linha['grupo']} · {linha['arquivo']} ({linha['quando']}): {caminhos}"
+            + (f" Mecanismos: {mecanismos}." if mecanismos else "")
+        )
+    prompt = str(meta["prompt_para_agente"])
+    cerca_prompt = _cerca(prompt)
+    comando = str(meta["comando"])
+    cerca_comando = _cerca(comando)
+    return juntar(
+        f"# {meta['titulo']}",
+        str(meta["descricao"]),
+        "\n".join(ficha),
+        f"## Comando\n\n{cerca_comando}bash\n{comando.rstrip(chr(10))}\n{cerca_comando}",
+        "## Prompt para o agente\n\n"
+        f"{cerca_prompt}prompt\n{prompt.rstrip(chr(10))}\n{cerca_prompt}",
+        ("## O que o starter traz\n\n" + "\n".join(linhas_planta)) if linhas_planta else "",
+        ("## Práticas aplicadas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["praticas"]))
+        if vinculos["praticas"]
+        else "",
+        ("## Receitas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["receitas"]))
+        if vinculos["receitas"]
+        else "",
+        md_lista_referencias(site, starter),
+    )
+
+
+def _markdown_da_ferramenta(texto: Any, ids: list[str]) -> Markup:
+    """Campo Markdown (como instalar, limites) com as citações na numeração da página."""
+
+    def trocar(achado) -> str:
+        n = ids.index(achado[1]) + 1 if achado[1] in ids else 0
+        return f"[[{n}]](#ref-{achado[1]})" if n else achado[0]
+
+    return Markup(para_html(MARCADOR.sub(trocar, str(texto))))
+
+
+def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
+    ids = ids_da_pagina(site, ferramenta)
+    meta = ferramenta.meta
+    return renderizar(
+        site,
+        "ferramenta.html",
+        caminho_de(ferramenta),
+        titulo=meta["titulo"],
+        descricao=f"{categoria_nome(meta['categoria'])} · {meta['status']}",
+        f=meta,
+        como_instalar=_markdown_da_ferramenta(meta["como_instalar"], ids),
+        limites=_markdown_da_ferramenta(meta["limites"], ids),
+        alternativa=_markdown_da_ferramenta(meta.get("alternativa", ""), ids),
+        vinculos=_vinculos(site, ferramenta),
+        referencias=site.catalogo.referencias_de(ferramenta),
+    )
+
+
+def md_ferramenta(site: Site, ferramenta: Conteudo) -> str:
+    meta = ferramenta.meta
+    vinculos = _vinculos(site, ferramenta)
+    ficha = [
+        f"- Categoria: {meta['categoria']}",
+        f"- Status: {meta['status']}",
+        f"- Versão mínima: {meta['versao_minima']}",
+        f"- Dono: {meta['dono']}",
+    ]
+    return juntar(
+        f"# {meta['titulo']}",
+        "\n".join(ficha),
+        f"## Como instalar\n\n{meta['como_instalar']}",
+        f"## Limites\n\n{meta['limites']}",
+        f"## Alternativa\n\n{meta['alternativa']}" if meta.get("alternativa") else "",
+        ("## Práticas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["praticas"]))
+        if vinculos["praticas"]
+        else "",
+        ("## Receitas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["receitas"]))
+        if vinculos["receitas"]
+        else "",
+        md_lista_referencias(site, ferramenta),
+    )
+
+
+RADAR_DESCRICAO = "As ferramentas que as práticas citam, com categoria, status e versão mínima."
+
+
+def _linhas_do_radar(site: Site) -> list[dict[str, Any]]:
+    praticas = dict(site.catalogo.praticas)
+    receitas = {_slug(r): r for r in site.repo.receitas}
+    linhas = []
+    for f in site.repo.ferramentas:
+        meta = f.meta
+        dominios = [
+            praticas[i].meta["dominio"] for i in meta.get("praticas", []) if i in praticas
+        ] + [receitas[i].meta["dominio"] for i in meta.get("receitas", []) if i in receitas]
+        dominios = list(dict.fromkeys(str(d) for d in dominios))
+        nomes = [faixa.titulo for d in dominios if (faixa := site.espinha.faixa(d))]
+        linhas.append(
+            {
+                "titulo": meta["titulo"],
+                "href": caminho_de(f),
+                "categoria": meta["categoria"],
+                "categoria_nome": CATEGORIAS_DA_FERRAMENTA.get(
+                    meta["categoria"], meta["categoria"]
+                ),
+                "status": meta["status"],
+                "versao_minima": meta["versao_minima"],
+                "dominios": dominios,
+                "dominios_nomes": nomes,
+            }
+        )
+    return linhas
+
+
+def html_radar(site: Site) -> str:
+    linhas = _linhas_do_radar(site)
+    dominios = [
+        (f.slug, f.titulo)
+        for f in site.espinha.faixas
+        if any(f.slug in linha["dominios"] for linha in linhas)
+    ]
+    return renderizar(
+        site,
+        "ferramentas.html",
+        "ferramentas.html",
+        titulo="Ferramentas",
+        descricao=RADAR_DESCRICAO,
+        ferramentas=linhas,
+        categorias=list(CATEGORIAS_DA_FERRAMENTA.items()),
+        dominios=dominios,
+    )
+
+
+def md_radar(site: Site) -> str:
+    linhas = [
+        "| Ferramenta | Categoria | Status | Versão mínima | Domínios |",
+        "|---|---|---|---|---|",
+    ]
+    for linha in _linhas_do_radar(site):
+        link = f"[{celula(linha['titulo'])}]({linha['href'].removesuffix('.html')}.md)"
+        dominios = ", ".join(linha["dominios_nomes"])
+        linhas.append(
+            f"| {link} | {linha['categoria_nome']} | {linha['status']} "
+            f"| {celula(linha['versao_minima'])} | {dominios} |"
+        )
+    return juntar("# Ferramentas", RADAR_DESCRICAO, "\n".join(linhas))
+
+
+COMECE_AQUI_DESCRICAO = "Os caminhos para começar: tutoriais, starters e o que ler antes."
+
+
+def html_comece_aqui(site: Site) -> str:
+    return pagina_generica(
+        site,
+        "comece-aqui.html",
+        "Comece aqui",
+        descricao=COMECE_AQUI_DESCRICAO,
+        listas=listas_comece_aqui(site),
+    )
+
+
+def md_comece_aqui(site: Site) -> str:
+    blocos = []
+    for lista in listas_comece_aqui(site):
+        itens = [
+            f"- [{i['titulo']}]({i['href'].removesuffix('.html')}.md)"
+            + (f": {i['nota']}" if i["nota"] else "")
+            for i in lista["itens"]
+        ]
+        blocos.append(f"## {lista['titulo']}\n\n" + ("\n".join(itens) or lista["vazio"]))
+    return juntar("# Comece aqui", COMECE_AQUI_DESCRICAO, *blocos)
+
+
+# Páginas especiais com gerador próprio: slug do `paginas/<slug>.md` -> (HTML, `.md`).
+PAGINAS_ESTRUTURADAS: dict[
+    str, tuple[Callable[[Site, Conteudo], str], Callable[[Site, Conteudo], str]]
+] = {
+    "o-problema": (html_o_problema, md_o_problema),
+    "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
+}

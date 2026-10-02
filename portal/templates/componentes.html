@@ -139,7 +139,7 @@
 {% for l in grupo.list %}
     <tr>
       <td>{{ l.quando }}</td>
-      <td><b>{{ l.arquivo }}</b>{% for caminho in l.caminhos %}<br><code>{{ caminho }}</code>{% endfor %}{% if l.nota %}<br><span class="ref-meta">{{ l.nota }}</span>{% endif %}</td>
+      <td><b>{{ l.arquivo }}</b>{% for caminho in l.caminhos %}<br><code>{{ caminho }}</code>{% endfor %}{% if l.get("nota") %}<br><span class="ref-meta">{{ l.nota }}</span>{% endif %}</td>
       <td>{% for m in l.get("mecanismos", []) %}<div>{{ chip_forca(m.forca) }} {{ m.texto }}</div>{% endfor %}</td>
     </tr>
 {% endfor %}

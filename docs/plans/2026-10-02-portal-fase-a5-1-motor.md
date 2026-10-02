@@ -2622,7 +2622,7 @@ versão mínima, como instalar em Markdown, limites, alternativa, práticas, rec
 domínios das práticas e receitas —, `data-status`, e os três filtros); `html_comece_aqui`/
 `md_comece_aqui` (guias `tutorial` e starters; guias `explicacao` em "Para entender antes").
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 from portal.gerador.paginas import html_comece_aqui, html_radar, html_starter
@@ -2652,11 +2652,11 @@ def test_comece_aqui_lista_starter():
     assert analisar(html_comece_aqui(s)).todos("a", href="starters/sdd-scaffold.html")
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_paginas_starter_ferramentas.py -q` → FAIL.
-- [ ] **Passo 3:** funções, templates e registro em `GERADORES` (`ferramentas.html`,
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_paginas_starter_ferramentas.py -q` → FAIL.
+- [x] **Passo 3:** funções, templates e registro em `GERADORES` (`ferramentas.html`,
   `comece-aqui.html`) e nas seções do `llms.txt` ("Starters", "Ferramentas").
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: páginas de starter e ferramenta, radar filtrável e Comece aqui"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: páginas de starter e ferramenta, radar filtrável e Comece aqui"`
 
 ---
 

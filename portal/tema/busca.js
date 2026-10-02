@@ -86,16 +86,24 @@
     });
   }
 
+  // Filtros de tabela: `.filtros[data-alvo]` diz quais linhas filtrar; cada select diz o atributo
+  // `data-<filtro>` da linha a comparar (valor vazio = todos).
   function iniciarFiltros() {
-    var caixa = document.getElementById("filtros-referencias");
-    if (!caixa) {
-      return;
+    var caixas = Array.prototype.slice.call(document.querySelectorAll(".filtros[data-alvo]"));
+    var antiga = document.getElementById("filtros-referencias");
+    if (antiga) {
+      caixas.push(antiga);
     }
+    caixas.forEach(ligarFiltros);
+  }
+
+  function ligarFiltros(caixa) {
+    var alvo = caixa.getAttribute("data-alvo") || "tr[data-tipo]";
     caixa.hidden = false;
     var seletores = Array.prototype.slice.call(caixa.querySelectorAll("select[data-filtro]"));
 
     function aplicar() {
-      document.querySelectorAll("tr[data-tipo]").forEach(function (linha) {
+      document.querySelectorAll(alvo).forEach(function (linha) {
         linha.hidden = !seletores.every(function (seletor) {
           var valor = seletor.value;
           var dado = linha.getAttribute("data-" + seletor.getAttribute("data-filtro")) || "";

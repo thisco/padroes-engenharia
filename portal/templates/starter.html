@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}comece-aqui.html">Comece aqui</a></p>
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <div>
+    <p>{{ descricao_html }}</p>
+    <p class="mono pequeno"><a href="{{ s.repo }}" rel="noopener noreferrer">{{ s.repo }}</a> @ {{ s.versao }} · <span class="st">{{ s.status }}</span></p>
+  </div>
+</div>
+<div class="duas">
+  {{ c.bloco_escuro("Comando", s.comando) }}
+  <figure class="prompt" id="starter-{{ s.id }}-prompt">
+    <figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar hidden>Copiar</button></figcaption>
+    <pre>{{ s.prompt_para_agente }}</pre>
+  </figure>
+</div>
+{% if planta %}
+<section aria-label="Planta do starter">
+  <h2>O que o starter traz</h2>
+  {{ c.planta(planta) }}
+</section>
+{% endif %}
+<div class="duas">
+{% if vinculos.praticas %}
+  <section aria-label="Práticas aplicadas"><h2>Práticas aplicadas</h2><ul class="praticas">{% for i in vinculos.praticas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if vinculos.receitas %}
+  <section aria-label="Receitas"><h2>Receitas</h2><ul class="praticas">{% for i in vinculos.receitas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+</div>
+<section aria-label="Referências">
+  <h2>Referências</h2>
+  {{ c.lista_referencias(referencias) }}
+</section>
+{% endblock %}
