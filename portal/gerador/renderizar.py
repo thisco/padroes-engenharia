@@ -231,6 +231,8 @@ def caminho_de(conteudo: Conteudo) -> str:
     }
     if conteudo.tipo == "referencia":
         return f"referencias.html#{conteudo.chave}"
+    if conteudo.tipo == "glossario":
+        return "glossario.html"
     if conteudo.tipo in ("receita", "starter", "ferramenta"):
         # a chave leva o prefixo do tipo (registro de verificação); o caminho usa o slug ou o id
         return f"{pastas[conteudo.tipo]}/{PurePosixPath(conteudo.caminho_relativo).stem}.html"
@@ -532,22 +534,7 @@ def listas_ferramentas(site: Site) -> list[dict[str, Any]]:
     return [{"titulo": "Ferramentas", "itens": itens, "vazio": "Ainda não há ferramentas."}]
 
 
-def listas_glossario(site: Site) -> list[dict[str, Any]]:
-    termos = [
-        t for g in site.repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
-    ]
-    itens = [
-        {
-            "titulo": t["termo"],
-            "href": f"glossario.html#{_ancora(t['termo'])}",
-            "nota": t["definicao"],
-        }
-        for t in termos
-    ]
-    return [{"titulo": "Termos", "itens": itens, "vazio": "Ainda não há termos."}]
-
-
-def _ancora(texto: str) -> str:
+def slug_termo(texto: str) -> str:
     """O texto como âncora de URL: sem acento, minúsculo, hifenizado."""
     base = unicodedata.normalize("NFD", texto.lower())
     sem_acento = "".join(c for c in base if not unicodedata.combining(c))
@@ -590,11 +577,6 @@ LISTAGENS = {
         "Ferramentas",
         "As ferramentas que as práticas citam e o status de cada uma.",
         listas_ferramentas,
-    ),
-    "glossario.html": (
-        "Glossário",
-        "Os termos usados no portal, com definição curta.",
-        listas_glossario,
     ),
     "casos.html": ("Casos", "Casos reais com números datados.", listas_casos),
 }

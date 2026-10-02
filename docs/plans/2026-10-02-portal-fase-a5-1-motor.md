@@ -2519,7 +2519,7 @@ prática mapeia esta norma ainda"); `html_glossario(site)`/`md_glossario(site)` 
 alfabética **sem acento e sem caixa**, âncora `id=<slug do termo>`, definição, referências e link
 ao conceito quando existe); `slug_termo(termo) -> str`.
 
-- [ ] **Passo 1: Testes que falham**
+- [x] **Passo 1: Testes que falham**
 
 ```python
 from portal.gerador.carregar import Conteudo
@@ -2547,11 +2547,11 @@ def test_glossario_ordena_sem_acento_e_liga_ao_conceito():
     assert html.todos("a", href="conceitos/harness.html")
 ```
 
-- [ ] **Passo 2:** `python -m pytest tests/unidade/test_paginas_normas_glossario.py -q` → FAIL.
-- [ ] **Passo 3:** funções, templates e o registro em `GERADORES` (`glossario.html`) e em
+- [x] **Passo 2:** `python -m pytest tests/unidade/test_paginas_normas_glossario.py -q` → FAIL.
+- [x] **Passo 3:** funções, templates e o registro em `GERADORES` (`glossario.html`) e em
   `caminho_de` (`pessoas-e-normas` → template próprio).
-- [ ] **Passo 4:** suíte, ruff e validar verdes.
-- [ ] **Passo 5:** `git commit -am "feat: páginas Pessoas e normas e Glossário"`
+- [x] **Passo 4:** suíte, ruff e validar verdes.
+- [x] **Passo 5:** `git commit -am "feat: páginas Pessoas e normas e Glossário"`
 
 ---
 

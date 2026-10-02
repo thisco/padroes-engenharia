@@ -16,7 +16,13 @@ from typing import Any
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import expandir_inclusoes
-from portal.gerador.paginas import PAGINAS_ESTRUTURADAS, html_inicio, md_inicio
+from portal.gerador.paginas import (
+    PAGINAS_ESTRUTURADAS,
+    html_glossario,
+    html_inicio,
+    md_glossario,
+    md_inicio,
+)
 from portal.gerador.renderizar import (
     LISTAGENS,
     NINHOS,
@@ -680,6 +686,7 @@ GERADORES: dict[str, tuple[Callable[[Site], str], Callable[[Site], str]]] = {
     "dominios/index.html": (html_dominios, md_dominios),
     "conceitos.html": (html_conceitos, md_conceitos),
     "referencias.html": (html_referencias, md_referencias),
+    "glossario.html": (html_glossario, md_glossario),
     "para-agentes.html": (html_para_agentes, md_para_agentes),
     **{
         caminho: (

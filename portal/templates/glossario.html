@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }}</p>
+</div>
+<section aria-label="Termos">
+  <dl class="glossario">
+{% for t in termos %}
+    <div class="termo">
+      <dt id="{{ t.slug }}">{{ t.termo }}</dt>
+      <dd>{{ t.definicao }}
+{% if t.conceito %}
+        <a href="{{ raiz }}{{ t.conceito.href }}">Conceito: {{ t.conceito.titulo }}</a>
+{% endif %}
+{% if t.referencias %}
+        <span class="ref-meta">Fonte: {% for r in t.referencias %}<a href="{{ raiz }}{{ r.href }}">{{ r.titulo }}</a>{% if not loop.last %}; {% endif %}{% endfor %}</span>
+{% endif %}
+      </dd>
+    </div>
+{% endfor %}
+  </dl>
+</section>
+{% endblock %}

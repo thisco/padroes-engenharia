@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+{% if lead %}
+  <p>{{ lead }}</p>
+{% endif %}
+</div>
+{% if modos %}
+<section aria-label="Modos de atuação">
+  <h2>Modos de atuação</h2>
+  <p class="lead">Os papéis de quem constrói com IA e o que cada um confere.</p>
+  <div class="grade">
+{% for modo in modos %}
+    <article class="cartao"><h3>{{ modo.titulo }}</h3><p class="s">{{ modo.texto }}</p></article>
+{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% if normas %}
+<section aria-label="Normas">
+  <h2>Normas</h2>
+  <p class="lead">Cada norma lista as práticas do portal que a aplicam.</p>
+{% for norma in normas %}
+  <article class="norma" id="{{ norma.id }}">
+    <h3>{{ norma.titulo }}</h3>
+    <p>{{ norma.texto }}</p>
+{% if norma.praticas %}
+    <ul class="praticas">
+{% for p in norma.praticas %}
+      <li><span class="id">{{ p.chave }}</span><a href="{{ raiz }}{{ p.href }}">{{ p.titulo }}</a> {{ c.chip_forca(p.forca) }}</li>
+{% endfor %}
+    </ul>
+{% else %}
+    {{ c.lacuna("Nenhuma prática mapeia esta norma ainda", [norma.titulo]) }}
+{% endif %}
+  </article>
+{% endfor %}
+</section>
+{% endif %}
+{% if corpo %}
+<div class="texto" aria-label="Texto da página">
+{{ corpo }}
+</div>
+{% endif %}
+{% if referencias %}
+<section aria-label="Referências">
+  <h2>Referências</h2>
+  {{ c.lista_referencias(referencias) }}
+</section>
+{% endif %}
+{% endblock %}

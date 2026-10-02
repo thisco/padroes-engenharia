@@ -23,6 +23,7 @@ from portal.gerador.renderizar import (
     caminho_de,
     descrever_ninho,
     renderizar,
+    slug_termo,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
@@ -180,16 +181,6 @@ def md_o_problema(site: Site, pagina: Conteudo) -> str:
     return juntar(*blocos)
 
 
-# Páginas especiais com gerador próprio: slug do `paginas/<slug>.md` -> (HTML, `.md`).
-PAGINAS_ESTRUTURADAS: dict[
-    str, tuple[Callable[[Site, Conteudo], str], Callable[[Site, Conteudo], str]]
-] = {
-    "o-problema": (html_o_problema, md_o_problema),
-}
-
-__all__ = ["PAGINAS_ESTRUTURADAS", "html_inicio", "html_o_problema", "md_inicio", "md_o_problema"]
-
-
 # Início (`/`): sete seções que explicam o portal (delta §4.3) ------------------------------
 
 
@@ -333,3 +324,131 @@ def md_inicio(site: Site) -> str:
         pagina.corpo if pagina else "",
         md_lista_referencias(site, pagina),
     )
+
+
+# Pessoas e normas (D13) e Glossário (D15) -----------------------------------------------------
+
+
+def _normas(site: Site, pagina: Conteudo, ids: list[str]) -> list[dict[str, Any]]:
+    """Cada norma com as práticas cujo `mapeia` começa por `<id da norma>:`."""
+    resultado = []
+    for norma in _lista(pagina, "normas"):
+        item = citar(norma, ids)
+        prefixo = f"{norma.get('id', '')}:"
+        item["praticas"] = [
+            {
+                "chave": p.chave,
+                "titulo": p.meta["titulo"],
+                "href": caminho_de(p),
+                "forca": p.meta["forca"],
+            }
+            for p in site.catalogo.praticas.values()
+            if any(str(m).startswith(prefixo) for m in p.meta.get("mapeia") or [])
+        ]
+        resultado.append(item)
+    return resultado
+
+
+def html_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
+    ids = ids_da_pagina(site, pagina)
+    meta = pagina.meta
+    return renderizar(
+        site,
+        "pessoas_e_normas.html",
+        caminho_de(pagina),
+        titulo=meta["titulo"],
+        descricao=str(meta.get("descricao") or ""),
+        lead=citar(meta.get("lead", ""), ids, "lead"),
+        modos=citar(_lista(pagina, "modos"), ids),
+        normas=_normas(site, pagina, ids),
+        corpo=corpo_da_pagina(pagina, ids),
+        referencias=site.catalogo.referencias_de(pagina),
+    )
+
+
+def md_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
+    meta = pagina.meta
+    modos = [f"- {m['titulo']}: {m['texto']}" for m in _lista(pagina, "modos")]
+    normas = []
+    for norma in _normas(site, pagina, []):
+        praticas = ", ".join(p["chave"] for p in norma["praticas"])
+        mapeadas = praticas or "nenhuma prática mapeia esta norma ainda"
+        normas.append(f"- {norma['titulo']}: {norma['texto']} Práticas: {mapeadas}.")
+    return juntar(
+        f"# {meta['titulo']}",
+        str(meta.get("descricao") or ""),
+        str(meta.get("lead") or ""),
+        ("## Modos de atuação\n\n" + "\n".join(modos)) if modos else "",
+        ("## Normas\n\n" + "\n".join(normas)) if normas else "",
+        pagina.corpo,
+        md_lista_referencias(site, pagina),
+    )
+
+
+def _ordem_alfabetica(termo: str) -> str:
+    return slug_termo(termo)
+
+
+def _termos(site: Site) -> list[dict[str, Any]]:
+    """Os termos de todos os glossários, em ordem alfabética sem acento e sem caixa."""
+    conceitos = {str(c.chave): c for c in site.repo.conceitos}
+    brutos = [
+        t for g in site.repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
+    ]
+    resultado = []
+    for t in sorted(brutos, key=lambda t: _ordem_alfabetica(str(t["termo"]))):
+        conceito = conceitos.get(str(t.get("conceito", "")))
+        referencias = [site.repo.referencia(i) for i in t.get("referencias", [])]
+        resultado.append(
+            {
+                "termo": t["termo"],
+                "slug": slug_termo(str(t["termo"])),
+                "definicao": t["definicao"],
+                "conceito": (
+                    {"titulo": conceito.meta["titulo"], "href": caminho_de(conceito)}
+                    if conceito
+                    else None
+                ),
+                "referencias": [
+                    {"titulo": r.meta["titulo"], "href": caminho_de(r)} for r in referencias if r
+                ],
+            }
+        )
+    return resultado
+
+
+GLOSSARIO_DESCRICAO = "Os termos usados no portal, com definição curta e a fonte de cada um."
+
+
+def html_glossario(site: Site) -> str:
+    return renderizar(
+        site,
+        "glossario.html",
+        "glossario.html",
+        titulo="Glossário",
+        descricao=GLOSSARIO_DESCRICAO,
+        termos=_termos(site),
+    )
+
+
+def md_glossario(site: Site) -> str:
+    linhas = []
+    for t in _termos(site):
+        extra = (
+            f" Conceito: [{t['conceito']['titulo']}]({t['conceito']['href']})."
+            if t["conceito"]
+            else ""
+        )
+        fontes = ", ".join(r["titulo"] for r in t["referencias"])
+        fonte = f" Fonte: {fontes}." if fontes else ""
+        linhas.append(f"- **{t['termo']}**: {t['definicao']}{extra}{fonte}")
+    return juntar("# Glossário", GLOSSARIO_DESCRICAO, "\n".join(linhas))
+
+
+# Páginas especiais com gerador próprio: slug do `paginas/<slug>.md` -> (HTML, `.md`).
+PAGINAS_ESTRUTURADAS: dict[
+    str, tuple[Callable[[Site, Conteudo], str], Callable[[Site, Conteudo], str]]
+] = {
+    "o-problema": (html_o_problema, md_o_problema),
+    "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
+}
