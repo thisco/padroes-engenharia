@@ -3169,3 +3169,18 @@ menu da página atual abria sozinho sobre o título (`f7cd598`).
   e editar" separado, lista "As nove peças" sem linha cortando as linhas.
 
 <!-- PARTE 2 (A.5-2, molde): plano próprio em docs/plans/2026-10-02-portal-fase-a5-2-molde.md -->
+
+### Checkpoint humano do A.5-1 (Tarefa 29): 2026-10-03
+
+**Decisão do dono do projeto: aprovado** (resposta "continue" ao pedido de aprovação). Valem:
+- as 8 decisões de interpretação;
+- a isenção da DAD-01 até a M5 do plano A.5-2;
+- os desvios anotados em Evidências.
+
+Defeitos visuais vistos na conferência de `conceitos.html`, que ficam para as revisões de
+produto da A.5-2 (M15):
+- o rótulo "Menu" aparece no desktop;
+- as caixas do fluxo da IA no produto ficam altas e vazias;
+- o ícone do Eval encosta no texto.
+
+Próximo passo: o plano `2026-10-02-portal-fase-a5-2-molde.md`.
