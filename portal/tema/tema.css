@@ -359,3 +359,13 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .prompt figcaption { font-size: 12px; font-weight: 600; color: var(--ambar-texto); margin-bottom: 4px; }
 .prompt pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; }
 .copiar { font: inherit; font-size: 12px; margin-left: 8px; cursor: pointer; color: var(--gov); background: var(--branco); border: 1.5px solid var(--gov); border-radius: 4px; padding: 2px 8px; }
+
+/* A.5-2 C3: as colunas do fluxo seguem a altura do conteúdo, sem caixas altas e vazias */
+.ninho.produto .fluxo { align-items: start; }
+.ninho.produto .fluxo .item > .cx { height: auto; }
+.ninho.produto .cx.eval { padding-right: 40px; }
+
+/* A.5-2 C4: no desktop o menu fica sempre aberto e o rótulo some */
+@media (min-width: 901px) {
+  .menu > summary { display: none; }
+}
