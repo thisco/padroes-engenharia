@@ -11,6 +11,40 @@
     <p class="atalhos">{% for rotulo, href in atalhos %}<a href="{{ raiz }}{{ href }}">{{ rotulo }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
   </div>
 </div>
+{% if caminhos %}
+<section aria-label="Comece aqui">
+  <h2>Comece aqui</h2>
+  <div class="grade">
+{% for caminho in caminhos %}
+    <article class="cartao"><h3>{{ caminho.titulo }}</h3><p class="s">{{ caminho.texto }}</p><a class="lk" href="{{ raiz }}{{ caminho.href }}">Abrir →</a></article>
+{% endfor %}
+  </div>
+</section>
+{% endif %}
+<section aria-label="Como ler a força e o status" id="forcas-status">
+  <h2>Como ler: força e status</h2>
+  <div class="duas">
+    <div>
+      <h3 id="forcas">O que significa a força</h3>
+      {{ c.legenda_forcas() }}
+      <h3>O que significa o status</h3>
+      <dl class="legenda-status">
+{% for s in STATUS %}
+        <div><dt><span class="st">{{ s.slug }}</span></dt><dd>{{ s.significado }}</dd></div>
+{% endfor %}
+      </dl>
+      <p class="lead">Aprovada pela engenharia quer dizer: tem dono, revisão com data e referência verificada <span class="marca-v">[V]</span>.</p>
+    </div>
+  </div>
+</section>
+{% if corpo %}
+<section aria-label="Por que importa">
+  <h2>Por que importa</h2>
+  <div class="texto">
+{{ corpo }}
+  </div>
+</section>
+{% endif %}
 <div class="duas portas">
   <section aria-label="Para quem desenvolve">
     <h2>Para quem desenvolve</h2>
@@ -29,16 +63,6 @@
   </section>
   {{ c.bloco_escuro("Para o agente", bloco, chips) }}
 </div>
-{% if caminhos %}
-<section aria-label="Comece aqui">
-  <h2>Comece aqui</h2>
-  <div class="grade">
-{% for caminho in caminhos %}
-    <article class="cartao"><h3>{{ caminho.titulo }}</h3><p class="s">{{ caminho.texto }}</p><a class="lk" href="{{ raiz }}{{ caminho.href }}">Abrir →</a></article>
-{% endfor %}
-  </div>
-</section>
-{% endif %}
 <section aria-label="Como ler o portal" id="como-ler">
   <h2>Como ler o portal</h2>
   <div class="duas">
@@ -63,17 +87,6 @@
       </table>
       </div>
       <p><a href="{{ raiz }}espinha.html">Abrir a espinha completa →</a></p>
-    </div>
-    <div>
-      <h3 id="forcas">O que significa a força</h3>
-      {{ c.legenda_forcas() }}
-      <h3>O que significa o status</h3>
-      <dl class="legenda-status">
-{% for s in STATUS %}
-        <div><dt><span class="st">{{ s.slug }}</span></dt><dd>{{ s.significado }}</dd></div>
-{% endfor %}
-      </dl>
-      <p class="lead">Aprovada pela engenharia quer dizer: tem dono, revisão com data e referência verificada <span class="marca-v">[V]</span>.</p>
     </div>
   </div>
 </section>
@@ -103,11 +116,6 @@
   <h2>Estado</h2>
   <p>v{{ site.versao }}: {{ n_praticas }}. As células vazias são o backlog público: <a href="{{ raiz }}espinha.html">veja a espinha</a>{% if proposta %} e <a href="{{ raiz }}{{ proposta }}">como propor uma prática</a>{% endif %}.</p>
 </section>
-{% if corpo %}
-<div class="texto" aria-label="Texto da página">
-{{ corpo }}
-</div>
-{% endif %}
 {% if referencias %}
 <section aria-label="Referências">
   <h2>Referências</h2>

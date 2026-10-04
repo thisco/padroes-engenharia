@@ -70,3 +70,29 @@ def test_caminho_para_starter_aparece_em_comece_aqui():
     s = fabrica.site(inicio, PROBLEMA, fabrica.pratica(), fabrica.starter(), fabrica.referencia())
     html = analisar(html_inicio(s))
     assert html.todos("a", href="starters/sdd-scaffold.html")
+
+
+def test_primeira_dobra_responde_antes_de_explicar_o_ciclo():
+    """K1: Comece aqui e a legenda de força e status vêm antes dos momentos; a pesquisa fica
+    em `Por que importa`, fora do lead."""
+    inicio = Conteudo(
+        "pagina",
+        "paginas/inicio.md",
+        fabrica.meta_pagina(
+            lead="Práticas para quem usa agentes de código.",
+            caminhos=[
+                {"titulo": "Projeto novo", "texto": "Do zero.", "destino": "starters/sdd-scaffold"}
+            ],
+            fatos=["Fonte conferida."],
+            referencias=["ref-forte"],
+        ),
+        "A pesquisa mediu o resultado [ref:ref-forte].\n",
+    )
+    s = fabrica.site(inicio, PROBLEMA, fabrica.pratica(), fabrica.starter(), fabrica.referencia())
+    html = analisar(html_inicio(s))
+    rotulos = [x.attrs.get("aria-label") for x in html.todos("section")]
+    assert rotulos.index("Comece aqui") < rotulos.index("Como ler a força e o status")
+    assert rotulos.index("Como ler a força e o status") < rotulos.index("Para quem desenvolve")
+    assert rotulos.index("Por que importa") < rotulos.index("Para quem desenvolve")
+    topo = html.todos("div", classe="topo")[0].texto
+    assert "pesquisa" not in topo
