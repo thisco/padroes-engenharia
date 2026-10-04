@@ -25,7 +25,10 @@ def criar() -> MarkdownIt:
     def fence(self, tokens, idx, options, env):
         html = RendererHTML.fence(self, tokens, idx, options, env)
         if tokens[idx].info.strip().split(" ")[0] != "prompt":
-            return html
+            botao_simples = (
+                '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'
+            )
+            return f'<div class="bloco">{botao_simples}{html}</div>\n'
         env["prompts"] = env.get("prompts", 0) + 1
         ancora = f' id="{id_prompt(env["chave"], env["prompts"])}"' if env.get("chave") else ""
         botao = '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'

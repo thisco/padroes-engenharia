@@ -369,3 +369,8 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 @media (min-width: 901px) {
   .menu > summary { display: none; }
 }
+
+/* A.5-2 C7: todo bloco de código tem Copiar e ocupa a largura inteira da coluna */
+.bloco { position: relative; width: 100%; margin: 12px 0; }
+.bloco pre { width: 100%; box-sizing: border-box; margin: 0; padding: 12px 56px 12px 12px; }
+.bloco .copiar { position: absolute; top: 6px; right: 6px; }

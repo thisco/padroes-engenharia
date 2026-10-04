@@ -32,3 +32,20 @@ def test_comece_aqui_sem_marcador_cru():
     s = _starter()
     html = html_comece_aqui(fabrica.site(s, fabrica.referencia()))
     assert "[ref:" not in html
+
+
+def test_todo_bloco_de_codigo_tem_botao_copiar():
+    """C7: o Copiar vale para todo `pre`, não só para o prompt."""
+    from portal.gerador.markdown import para_html
+
+    html = str(para_html("```bash\necho oi\n```\n"))
+    assert "data-copiar" in html and "<pre>" in html
+
+
+def test_pre_em_largura_cheia_nos_blocos_de_codigo():
+    import re
+
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    assert re.search(r"\.bloco\s*\{[^}]*width:\s*100%", css) or re.search(
+        r"\.bloco pre\s*\{[^}]*width:\s*100%", css
+    )
