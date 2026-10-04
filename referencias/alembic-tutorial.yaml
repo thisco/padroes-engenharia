@@ -1,0 +1,10 @@
+id: alembic-tutorial
+titulo: "Alembic tutorial"
+organizacao: Alembic
+url: https://alembic.sqlalchemy.org/en/latest/tutorial.html
+tipo: padrao-aberto
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções 'Create a Migration Script', 'Running our First Migration' e downgrade relativo"
+dominios: [dados-migrations]
+notas: "Versão do Alembic executada nos testes: 1.20.0."

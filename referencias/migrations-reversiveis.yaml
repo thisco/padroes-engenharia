@@ -4,7 +4,7 @@ organizacao: sdd-scaffold (github.com/thisco)
 url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/skills/migrations-reversiveis/SKILL.md
 tipo: interno
 versao: "1.6.1"
-verificado_em: 2026-10-01
+verificado_em: 2026-10-04
 verificacao: V
 localizacao: "SKILL.md, regra 3 ('Migration já aplicada nunca é editada')"
 dominios: [dados-migrations]

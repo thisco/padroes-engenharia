@@ -1,0 +1,25 @@
+conteudo: ferramenta-alembic
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: alembic revision -m, upgrade(), downgrade(), upgrade head e downgrade -1
+  ref: alembic-tutorial
+  localizacao: seções de criação do script e de downgrade relativo
+  resultado: confirmada
+- texto: o modo batch recria a tabela no SQLite e emite o ALTER direto nos outros bancos
+  ref: alembic-batch
+  localizacao: seções sobre o ALTER no SQLite e 'move and copy'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/alembic.yml
+  comando: alembic upgrade head; alembic downgrade -1; alembic upgrade head (SQLite, revisão r2 com batch_alter_table)
+  ambiente: Alembic 1.20.0 em venv, Python 3.14, SQLite
+  resultado: passou
+  evidencia: Running upgrade  -> r1, cria cliente; Running upgrade r1 -> r2, amplia cpf para 14; Running
+    downgrade r2 -> r1, amplia cpf para 14; Running upgrade r1 -> r2, amplia cpf para 14; saída 0.
+  data: '2026-10-04'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados: []

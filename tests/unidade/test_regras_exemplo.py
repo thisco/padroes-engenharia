@@ -1,6 +1,6 @@
 import pytest
 
-from portal.gerador.carregar import Repositorio, carregar_isencoes
+from portal.gerador.carregar import Repositorio
 from portal.gerador.regras import Contexto, exemplo_obrigatorio, regra_exemplo
 from tests import fabrica
 
@@ -11,8 +11,8 @@ EXEMPLO = (
 COM_EXEMPLO = fabrica.CORPO_PRATICA.replace("## Como verificar", EXEMPLO + "## Como verificar")
 
 
-def rodar(corpo, raiz, isentos=frozenset(), **meta):
-    ctx = Contexto(raiz=raiz, componentes={}, ids_retirados=frozenset(), isentos=isentos)
+def rodar(corpo, raiz, **meta):
+    ctx = Contexto(raiz=raiz, componentes={}, ids_retirados=frozenset())
     repo = Repositorio.de([fabrica.pratica(fabrica.meta_pratica(**meta), corpo)])
     return [e.valor for e in regra_exemplo(repo, fabrica.espinha_real(), ctx)]
 
@@ -27,7 +27,6 @@ def test_quando_e_obrigatorio(meta, esperado):
 def test_inocentes(tmp_path):
     assert rodar(COM_EXEMPLO, tmp_path, status="adotar") == []
     assert rodar(fabrica.CORPO_PRATICA, tmp_path) == []
-    assert rodar(fabrica.CORPO_PRATICA, tmp_path, isentos={"P1-01"}, status="adotar") == []
 
 
 @pytest.mark.parametrize(
@@ -57,20 +56,15 @@ def test_pega(tmp_path, corpo, valor):
     assert valor in rodar(corpo, tmp_path, status="adotar")
 
 
-def test_isencao_nao_cresce():
-    """Contrato com a parte 2: só a DAD-01 fica isenta, e só até ser reescrita."""
-    assert carregar_isencoes(fabrica.RAIZ) <= {"DAD-01"}
-
-
 def test_bloco_de_codigo_vazio_nao_conta_como_exemplo(tmp_path):
     vazio = COM_EXEMPLO.replace("ALTER TABLE x;\n", "  \n")
     assert "## Exemplo sem bloco de código" in rodar(vazio, tmp_path, status="adotar")
 
 
-def test_isencao_so_aceita_dad_01(tmp_path):
-    from portal.gerador.carregar import carregar_isencoes, problemas_de_isencao
+def test_transicao_a5_foi_removida():
+    """A DAD-01 foi reescrita com Exemplo e prompt executados: não há mais isenção."""
+    import portal.gerador.carregar as carregar
 
-    (tmp_path / "esquemas").mkdir()
-    (tmp_path / "esquemas/transicao-a5.yml").write_text("isentos: [DAD-01, P1-01]\n", "utf-8")
-    assert carregar_isencoes(tmp_path) == frozenset({"DAD-01"})
-    assert problemas_de_isencao(tmp_path) == ["P1-01"]
+    assert not (fabrica.RAIZ / "esquemas" / "transicao-a5.yml").exists()
+    assert not hasattr(carregar, "carregar_isencoes")
+    assert "isentos" not in Contexto.__dataclass_fields__

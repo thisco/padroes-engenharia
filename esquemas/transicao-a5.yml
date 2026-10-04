@@ -1,8 +1,0 @@
-# Transição da fase A.5 (temporário). Ver "Decisão de transição" em
-# docs/plans/2026-10-02-portal-fase-a5-1-motor.md.
-#
-# Prática listada aqui continua sujeita às regras do Exemplo obrigatório (§6.5, regra 6) e do
-# prompt obrigatório (R27), mas a falta vira aviso em vez de bloqueio. O único ID isento é a
-# DAD-01, até ser reescrita com Exemplo executado (parte 2 do plano A.5). Um teste trava a lista
-# em {DAD-01}; quem reescrever a DAD-01 apaga este arquivo e a função `carregar_isencoes`.
-isentos: [DAD-01]

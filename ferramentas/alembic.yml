@@ -1,0 +1,20 @@
+id: alembic
+titulo: Alembic
+categoria: migration
+status: adotar
+versao_minima: "1.20.0"
+dono: nuarq
+praticas: [DAD-01]
+receitas: []
+como_instalar: |
+  `pip install alembic` (a instalação está na página Installation do Alembic) e `alembic init
+  <pasta>`; use `alembic` ou `migrations` como pasta, para a trava da DAD-01 reconhecer as
+  revisões. `alembic revision -m "<descrição>"` cria a revisão, com `upgrade()` e `downgrade()`
+  preenchidos; `alembic upgrade head` aplica e `alembic downgrade -1` volta uma revisão
+  [ref:alembic-tutorial]. Versão testada pelo portal: 1.20.0.
+limites: |
+  O `downgrade()` é preenchido por quem escreve a revisão [ref:alembic-tutorial]; teste o par antes do merge, como no exemplo da prática. O SQLite quase não tem
+  ALTER, então mudar o tipo de uma coluna exige o modo `batch`, que recria a tabela nele e emite o
+  ALTER direto nos outros bancos; a documentação diz que o SQLite só faz o `add_column` como ALTER de
+  coluna [ref:alembic-batch].
+referencias: [alembic-tutorial, alembic-batch]

@@ -19,17 +19,16 @@ def test_aviso_7_so_em_build_local_da_main():
     assert aviso_url_base("https://portal.exemplo", MAIN) == []
 
 
-def test_aviso_8_e_isencao(tmp_path):
+def test_aviso_8_so_para_experimentar_e_avaliar(tmp_path):
     repo = Repositorio.de(
         [
             fabrica.pratica(),
             fabrica.pratica(fabrica.meta_pratica(id="P1-02", status="adotar")),
         ]
     )
-    ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset(), isentos={"P1-02"})
+    ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
     assert [(a.categoria, a.arquivo) for a in avisos_conteudo(repo, ctx)] == [
         ("exemplo", "praticas/construir-com-ia/P1-01.md"),
-        ("transicao", "praticas/construir-com-ia/P1-02.md"),
     ]
 
 

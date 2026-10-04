@@ -1,0 +1,23 @@
+id: flyway
+titulo: Flyway
+categoria: migration
+status: adotar
+versao_minima: "11.20.3"
+dono: nuarq
+praticas: [DAD-01]
+receitas: []
+como_instalar: |
+  Migration versionada é um arquivo `V<versão>__<descrição>.sql`, com o prefixo V e dois
+  sublinhados antes da descrição [ref:flyway-versionadas]. Rode `flyway validate` no pipeline: ele
+  compara o checksum guardado ao executar cada migration com o do arquivo local e falha quando
+  diferem [ref:flyway-validate]. A imagem e o CLI procuram as migrations em `sql/` por
+  padrão; para usar `db/migration/`, configure `locations`. A única versão testada pelo portal é
+  a 11.20.3, pela imagem `flyway/flyway:11`; a documentação citada é a vigente, e o texto das
+  mensagens pode mudar entre versões.
+limites: |
+  O `validate` só pega a edição depois que a migration foi aplicada naquele banco; antes disso, a
+  trava é a da prática DAD-01 [ref:flyway-validate]. Ele também falha para migration local ainda
+  não aplicada naquele banco [ref:flyway-validate]. A documentação recomenda não alterar migration
+  versionada já aplicada num ambiente permanente e criar uma nova, que avança a correção
+  [ref:flyway-versionadas].
+referencias: [flyway-validate, flyway-versionadas]

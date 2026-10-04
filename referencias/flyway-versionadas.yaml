@@ -1,0 +1,10 @@
+id: flyway-versionadas
+titulo: "Versioned migrations (Flyway)"
+organizacao: Redgate
+url: https://documentation.red-gate.com/flyway/flyway-concepts/migrations/versioned-migrations
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções de nomenclatura, aplicação em ordem uma única vez e integridade por checksum"
+dominios: [dados-migrations]
+notas: null

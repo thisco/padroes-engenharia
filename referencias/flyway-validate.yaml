@@ -3,7 +3,7 @@ titulo: "Validate"
 organizacao: Redgate (Flyway)
 url: https://documentation.red-gate.com/flyway/reference/commands/validate
 tipo: vendor
-verificado_em: 2026-10-01
+verificado_em: 2026-10-04
 verificacao: V
 localizacao: "seção 'Description': condições de falha e o checksum gravado na execução"
 dominios: [dados-migrations]

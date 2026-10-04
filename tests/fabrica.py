@@ -89,6 +89,7 @@ def meta_pratica(**alteracoes: Any) -> dict[str, Any]:
             "mecanismo": None,
             "status": "experimentar",
             "aplica": ["skill:sdd-lifecycle"],
+            "resumo": "Classifique antes de codar.",
             "referencias": ["ref-forte"],
             "relacionadas": [],
             "dono": "nuarq",

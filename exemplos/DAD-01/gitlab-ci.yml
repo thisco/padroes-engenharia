@@ -1,0 +1,18 @@
+# Trava da DAD-01 no pipeline de merge request do GitLab.
+# É o job normas-do-pr da receita "Ligar o CI do GitLab com as travas".
+# Requer scripts/verificar_pr.py do sdd-scaffold 1.6.1 (commit a8ebdf3).
+stages:
+  - travas
+
+normas-do-pr:
+  stage: travas
+  image: python:3.11
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
+    - git rev-parse --verify "refs/remotes/origin/$ALVO"
+    - python3 scripts/verificar_pr.py --base "origin/$ALVO"

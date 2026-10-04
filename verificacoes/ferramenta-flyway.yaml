@@ -1,0 +1,27 @@
+conteudo: ferramenta-flyway
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: migration versionada é V<versão>__<descrição>.sql; versão testada 11.20.3
+  ref: flyway-versionadas
+  localizacao: seção de nomenclatura
+  resultado: confirmada
+- texto: flyway validate compara o checksum guardado com o do arquivo local e falha quando diferem; só
+    pega a edição depois que a migration foi aplicada naquele banco
+  ref: flyway-validate
+  localizacao: seção 'Description'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/flyway.yml
+  comando: docker run flyway/flyway:11 migrate e validate contra postgres:16-alpine (rede docker efêmera),
+    com a V2 editada
+  ambiente: Docker 29.5.2; Flyway OSS Edition 11.20.3; PostgreSQL 16.13
+  resultado: falhou-como-esperado
+  evidencia: 'validate saiu com 1: "ERROR: Validate failed: Migrations have failed validation" e "Migration
+    checksum mismatch for migration version 2".'
+  data: '2026-10-04'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados: []

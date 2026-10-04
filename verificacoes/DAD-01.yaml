@@ -1,32 +1,163 @@
 conteudo: DAD-01
-verificado_em: 2026-10-01
+verificado_em: '2026-10-04'
 verificador: agente-curadoria
 afirmacoes:
-  - texto: "migration já aplicada não é editada; corrige-se com uma migration corretiva incremental"
-    ref: migrations-reversiveis
-    localizacao: "SKILL.md, regra 3"
-    resultado: confirmada
-  - texto: "quem já rodou a versão anterior fica com um estado que o código não descreve"
-    ref: migrations-reversiveis
-    localizacao: "SKILL.md, regra 3"
-    resultado: confirmada
-  - texto: "toda mudança de banco é um script de migration versionado com o código, e cada mudança é tão pequena quanto possível"
-    ref: fowler-evodb
-    localizacao: "'All database changes are migrations' e 'Jen implements a new story' ('make each database change as small as possible')"
-    resultado: confirmada
-  - texto: "o Flyway grava o checksum ao executar a migration, e o validate falha quando o checksum local difere do aplicado"
-    ref: flyway-validate
-    localizacao: "seção 'Description'"
-    resultado: confirmada
-  - texto: "o verificador de PR bloqueia a alteração de migration que já existe na base e pede migration corretiva incremental"
-    ref: sdd-scaffold-verificar-pr
-    localizacao: "docstring e função analisar()"
-    resultado: confirmada
-  - texto: "migration é todo arquivo sob migration/, migrations/ ou alembic/"
-    ref: sdd-scaffold-verificar-pr
-    localizacao: "constante MIGRATION = (^|/)(migrations?|alembic)/"
-    resultado: confirmada
+- texto: migration já aplicada não é editada; corrige-se com uma migration corretiva incremental
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, regra 3
+  resultado: confirmada
+- texto: quem já rodou a versão anterior fica com um estado que o código não descreve
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, regra 3
+  resultado: confirmada
+- texto: toda mudança de banco é um script de migration versionado com o código, e cada mudança é tão
+    pequena quanto possível
+  ref: fowler-evodb
+  localizacao: '''All database changes are migrations'' e ''Jen implements a new story'''
+  resultado: confirmada
+- texto: o Flyway grava o checksum ao executar a migration, e o validate falha quando o checksum local
+    difere do aplicado
+  ref: flyway-validate
+  localizacao: seção 'Description'
+  resultado: confirmada
+  nota: 'Execução real: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13.
+    migrate aplicou 2 migrations (now at version v2). Com a V2 editada, validate saiu com 1: ''ERROR:
+    Validate failed: Migrations have failed validation'', ''Migration checksum mismatch for migration
+    version 2'', ''-> Applied to database : -1946493639'', ''-> Resolved locally    : -1926160430''. Depois
+    da V3 (V2 restaurada): ''Successfully applied 1 migration to schema "public", now at version v3''
+    e ''\d cliente'' mostrou ''cpf | character varying(14)''. A documentação não traz o texto da mensagem;
+    o texto do Exemplo vem desta execução.'
+- texto: uma migration versionada se aplica uma vez, na ordem; migration nova tem o nome V<versão>__<descrição>.sql;
+    a documentação recomenda não alterar migration aplicada e criar uma nova
+  ref: flyway-versionadas
+  localizacao: seções de nomenclatura, aplicação em ordem e integridade
+  resultado: confirmada
+- texto: alembic revision -m cria a revisão, com upgrade() e downgrade() preenchidos; alembic downgrade
+    -1 volta uma revisão
+  ref: alembic-tutorial
+  localizacao: seções de criação do script e de downgrade relativo
+  resultado: confirmada
+  nota: 'Execução real: Alembic 1.20.0 em SQLite, revisões r1 e r2: ''Running upgrade  -> r1, cria cliente'',
+    ''Running upgrade r1 -> r2, amplia cpf para 14'', ''Running downgrade r2 -> r1, amplia cpf para 14''
+    e de novo ''Running upgrade r1 -> r2, amplia cpf para 14'', saída 0.'
+- texto: o SQLite quase não tem ALTER; o modo batch recria a tabela nele e emite o ALTER direto nos outros
+    bancos
+  ref: alembic-batch
+  localizacao: seções sobre o limite do ALTER no SQLite e o fluxo 'move and copy'
+  resultado: confirmada
+  nota: A execução do par upgrade/downgrade em batch foi só em SQLite; o ALTER direto em PostgreSQL é
+    o que a documentação afirma, sem execução da curadoria.
+- texto: o verificador de PR bloqueia a alteração de migration que já existe na base e pede migration
+    corretiva incremental
+  ref: sdd-scaffold-verificar-pr
+  localizacao: docstring e função analisar()
+  resultado: confirmada
+- texto: migration é todo arquivo sob migration/, migrations/ ou alembic/; db/changelog/ e db/migrate/
+    ficam fora; o verificador só olha o caminho, não o banco
+  ref: sdd-scaffold-verificar-pr
+  localizacao: constante MIGRATION = (^|/)(migrations?|alembic)/
+  resultado: confirmada
+  nota: 'Cobertura executada com a expressão copiada do commit fixado: db/migration/V2__cria_cpf.sql True;
+    alembic/versions/a1b2_amplia_cpf.py True; app/migrations/0002_cpf.py True; db/changelog/002-cpf.xml
+    False; db/migrate/002_cpf.rb False.'
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable
+    CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch
+    que edita a V2)
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11, projeto de
+    teste gerado pela cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65,
+    com remoto bare local
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado.
+    Migration aplicada não se edita: crie uma migration corretiva incremental. normas-do-pr finished in
+    1.01 s FAIL 1; saida=1.'
+  data: '2026-10-04'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: claude-code
+  resultado: passou
+  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt e {mudança} = "a coluna cpf da
+    tabela cliente, criada como VARCHAR(11) pela migration V2, precisa aceitar 14 caracteres", numa cópia
+    do projeto de teste com V1 e V2 em origin/main (cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65).
+    git diff --name-status origin/main...HEAD: "A db/migration/V3__amplia_cpf_para_14.sql" e "A docs/plans/2026-10-04-cpf-14-chars.md"
+    (nenhuma linha M ou D em db/migration/); a V3 tem VARCHAR(14); a seção ## Rollback tem texto; "Verificação
+    de PR: 2 arquivo(s), nenhum achado." com saida=0. Transcrição: relatório final do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.txt.'
+  data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
-  data: 2026-10-01
-  achados: []
+  data: '2026-10-04'
+  achados:
+  - afirmacao: não edite, não renomeie e não apague [ref:migrations-reversiveis]
+    problema: a skill só diz que a migration nunca é editada; renomear e apagar não estavam na fonte
+    tratamento: 'o passo 2 separa: editar vem da skill; renomear e apagar vêm do validate do Flyway (diferença
+      de nome e migration aplicada que sumiu)'
+  - afirmacao: fonte autoral usada como primária para a regra
+    problema: a skill é do próprio autor; a documentação do Flyway diz o mesmo
+    tratamento: O que fazer cita a recomendação do Flyway e diz que a prática é mais estrita que ela
+  - afirmacao: V<próximo número>__<descrição>.sql na mesma pasta [ref:flyway-versionadas]
+    problema: a página só traz um exemplo de nome; a pasta é configuração
+    tratamento: o texto descreve prefixo V, versão e dois sublinhados e diz 'na pasta de migrations do
+      projeto', sem atribuir a pasta à fonte
+  - afirmacao: alembic revision com upgrade() e downgrade() preenchidos [ref:alembic-tutorial]
+    problema: o tutorial trata o downgrade como opcional; a exigência é da skill
+    tratamento: texto diz isso e cita as duas fontes
+  - afirmacao: teste o par upgrade/downgrade antes do merge [ref:alembic-tutorial]
+    problema: a recomendação é da skill de rollback; o tutorial só traz os comandos separados
+    tratamento: texto cita a skill para a recomendação e o tutorial para os comandos
+  - afirmacao: saída do Flyway 11.20.3 sem referência e truncada
+    problema: sem evidência anexada e com linhas a menos; a documentação não reproduz a mensagem
+    tratamento: o bloco traz o trecho completo da execução, o texto diz que é trecho e que a mensagem
+      muda entre versões, e a nota do registro guarda a saída
+  - afirmacao: o job falha com uma linha
+    problema: o log também traz a linha ::error (sintaxe de GitHub Actions) e um AVISO
+    tratamento: texto explica as linhas extras
+  - afirmacao: o que a trava não cobre
+    problema: faltavam renomear, mover para fora da pasta e pasta de revisões do Alembic com outro nome;
+      apagar é bloqueado
+    tratamento: três casos rodados pela curadoria (renomear e mover passam; apagar bloqueia) e incluídos
+      no texto
+  - afirmacao: flyway validate é uma segunda trava
+    problema: a página lista como falha a migration local ainda não aplicada; o portal não dizia onde
+      rodar
+    tratamento: o texto avisa e manda rodar contra um banco com as anteriores aplicadas, cuidando da ordem
+      com o migrate
+  - afirmacao: a prática proíbe mudar qualquer migration da branch de destino
+    problema: é mais estrita que o Flyway, que fala em ambiente permanente
+    tratamento: dito em O que fazer
+  - afirmacao: versão 11.20.3 sem fonte, documentação de outra versão
+    problema: não havia evidência anexada; a página de referência é da versão vigente
+    tratamento: o registro da ferramenta traz a execução; o texto diz que é a única versão testada e que
+      a mensagem pode mudar
+  - afirmacao: pip install alembic [ref:alembic-tutorial]
+    problema: o tutorial remete à página Installation
+    tratamento: a referência saiu dessa parte
+  - afirmacao: mudar o tipo exige o modo batch
+    problema: exige ignora o move-and-copy manual
+    tratamento: 'texto reescrito com o que a documentação diz: o SQLite só faz add_column como ALTER de
+      coluna'
+  - afirmacao: mecanismo verificar_pr.py@1.6.1
+    problema: o repositório do scaffold não tem tags; a versão vem do CHANGELOG no commit fixado
+    tratamento: aceito; a versão está em componentes.yml
+  - afirmacao: 'Rollback: migration corretiva V4 que volta cpf para VARCHAR(11)'
+    problema: conflita com a skill (rollback é o downgrade testado; estreitar tipo é mudança destrutiva)
+      e V4 não está na MR
+    tratamento: 'linha de plano reescrita: downgrade da V3 testado em banco efêmero, com o aviso de truncamento
+      e ADR'
+  - afirmacao: 'não executável sem inventar: passo 1 sem origin/main'
+    problema: o comando assumia remote e branch main
+    tratamento: o passo manda trocar origin/main pela branch de destino
+  - afirmacao: 'não executável sem inventar: configuração do Flyway'
+    problema: faltavam locations (a imagem procura em sql/) e banco
+    tratamento: a ferramenta diz que o padrão é sql/ e que db/migration exige locations; o banco é pré-requisito
+      do projeto
+  - afirmacao: 'não executável sem inventar: pasta do alembic init'
+    problema: com outro nome a trava não reconhece
+    tratamento: a ferramenta manda usar alembic ou migrations
+  - afirmacao: 'não executável sem inventar: caminho do plano e linha de tier'
+    problema: só o prompt dava o formato
+    tratamento: o passo 4 dá o caminho e remete à P1-01
+  - afirmacao: 'não executável sem inventar: verificar_pr.py no repositório vazio'
+    problema: nada dizia como trazer o script
+    tratamento: o passo 6 diz que a receita baixa o script do scaffold

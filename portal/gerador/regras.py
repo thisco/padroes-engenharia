@@ -31,8 +31,6 @@ from portal.gerador.carregar import (
     carregar,
     carregar_componentes,
     carregar_ids_retirados,
-    carregar_isencoes,
-    problemas_de_isencao,
 )
 from portal.gerador.citacoes import extrair, malformados
 from portal.gerador.erros import Erro
@@ -56,7 +54,6 @@ class Contexto:
     raiz: Path
     componentes: dict[str, Componente]
     ids_retirados: frozenset[str]
-    isentos: frozenset[str] = frozenset()
 
 
 Regra = Callable[[Repositorio, Espinha, Contexto], list[Erro]]
@@ -75,7 +72,6 @@ def carregar_contexto(raiz: Path) -> Contexto:
         raiz=raiz,
         componentes=carregar_componentes(raiz),
         ids_retirados=carregar_ids_retirados(raiz),
-        isentos=carregar_isencoes(raiz),
     )
 
 
@@ -88,9 +84,6 @@ def validar_tudo(raiz: Path) -> list[Erro]:
     erros = list(repo.erros)
     erros += validar_repositorio(repo, raiz / "esquemas")
     erros += validar_componentes(raiz)
-    for id_ in problemas_de_isencao(raiz):
-        valor = f"{id_}: só a DAD-01 pode ficar isenta na transição da fase A.5"
-        erros.append(Erro("esquemas/transicao-a5.yml", "isentos", codigos.R_EXEMPLO, valor))
     for funcao in REGRAS:
         erros += funcao(repo, espinha, contexto)
     return sorted(set(erros))
@@ -675,7 +668,7 @@ def regra_exemplo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> li
     for p in repo.praticas:
         secao = dict(secoes(p.corpo)).get("Exemplo")
         if secao is None:
-            if exemplo_obrigatorio(p.meta) and p.chave not in contexto.isentos:
+            if exemplo_obrigatorio(p.meta):
                 reprovar(p, "## Exemplo obrigatório: status adotar ou força acima de orienta")
             continue
         subsecoes = _h3_da_secao(secao)
@@ -776,9 +769,7 @@ def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         for achado in achados:
             if (achado.h2, achado.h3) != (h2, h3):
                 reprovar(f"prompt fora de {descricao}")
-        obrigatorio = c.tipo == "receita" or (
-            exemplo_obrigatorio(c.meta) and c.chave not in contexto.isentos
-        )
+        obrigatorio = c.tipo == "receita" or exemplo_obrigatorio(c.meta)
         if obrigatorio and not any((a.h2, a.h3) == (h2, h3) for a in achados):
             reprovar(f"prompt de exemplo obrigatório em {descricao.split(' › ')[-1]}")
         registro = registros.get(c.chave)

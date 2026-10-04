@@ -17,8 +17,6 @@ import yaml
 from portal.gerador.erros import R_FRONTMATTER, R_PRATICA_FORA, Erro
 
 TIPOS_MARKDOWN = ("pratica", "dominio", "conceito", "guia", "caso", "pagina", "receita")
-# A transição da fase A.5 só isenta a DAD-01; qualquer outro ID reprova.
-ISENCOES_PERMITIDAS = frozenset({"DAD-01"})
 TIPOS_YAML_PUBLICADOS = ("starter", "ferramenta", "glossario")
 
 # Blocos estruturados opcionais da página especial (delta v1.1 §6.4).
@@ -268,26 +266,6 @@ def carregar_componentes(raiz: Path) -> dict[str, Componente]:
         if all(isinstance(campos.get(c), str) for c in ("repo", "versao", "commit")):
             componentes[nome] = Componente(nome, campos["repo"], campos["versao"], campos["commit"])
     return componentes
-
-
-def carregar_isencoes(raiz: Path) -> frozenset[str]:
-    """Lê `esquemas/transicao-a5.yml`: IDs isentos do Exemplo obrigatório (temporário)."""
-    caminho = raiz / "esquemas" / "transicao-a5.yml"
-    if not caminho.is_file():
-        return frozenset()
-    dados = yaml.safe_load(caminho.read_text(encoding="utf-8")) or {}
-    isentos = dados.get("isentos") if isinstance(dados, dict) else None
-    return frozenset(i for i in (isentos or []) if isinstance(i, str) and i in ISENCOES_PERMITIDAS)
-
-
-def problemas_de_isencao(raiz: Path) -> list[str]:
-    """IDs listados em `transicao-a5.yml` que a transição não permite (só a DAD-01)."""
-    caminho = raiz / "esquemas" / "transicao-a5.yml"
-    if not caminho.is_file():
-        return []
-    dados = yaml.safe_load(caminho.read_text(encoding="utf-8")) or {}
-    isentos = dados.get("isentos") if isinstance(dados, dict) else None
-    return [str(i) for i in (isentos or []) if i not in ISENCOES_PERMITIDAS]
 
 
 def carregar_ids_retirados(raiz: Path) -> frozenset[str]:

@@ -697,7 +697,7 @@ Alembic em modo `batch`, que roda igual em SQLite e em PostgreSQL.
 - Produces: o molde de prática `bloqueia` e `adotar`; prompt `DAD-01`; ferramentas `flyway` e
   `alembic`. A M14 aplica a DAD-01 num repositório vazio.
 
-- [ ] **Passo 1: O arquivo do job**
+- [x] **Passo 1: O arquivo do job**
 
 Criar `exemplos/DAD-01/gitlab-ci.yml` (no caminho C da M4, pule este passo, tire o arquivo de
 `exemplos:` e a diretiva do Passo 4, e escreva em "Como verificar" que o job do GitLab ainda não
@@ -730,7 +730,7 @@ python3 -c "import yaml; yaml.safe_load(open('exemplos/DAD-01/gitlab-ci.yml')); 
 
 Esperado: `yaml ok`.
 
-- [ ] **Passo 2: Executar o job (caminho A ou B da M4)**
+- [x] **Passo 2: Executar o job (caminho A ou B da M4)**
 
 ```bash
 export TESTE="$HOME/curadoria-a5"; export PORTAL="$(git rev-parse --show-toplevel)"
@@ -751,7 +751,7 @@ alterado. Migration aplicada não se edita: crie uma migration corretiva increme
 `saida` ≠ 0. (Use `--force-shell-executor` se a M4 precisou; no caminho B, empurre a branch com
 `-o merge_request.create -o merge_request.target=main` e salve o log.)
 
-- [ ] **Passo 3: Executar os exemplos de Flyway e Alembic**
+- [x] **Passo 3: Executar os exemplos de Flyway e Alembic**
 
 **Confirmar na fonte:** a tag vigente da imagem `flyway/flyway` (Docker Hub ou
 https://documentation.red-gate.com/flyway) e a do `alembic` no PyPI; grave as duas no
@@ -829,7 +829,7 @@ db/migrate/002_cpf.rb False
 A expressão é copiada de `MIGRATION` em `template/scripts/verificar_pr.py` no commit fixado;
 confira que é a mesma antes de rodar.
 
-- [ ] **Passo 4: Rascunho da prática**
+- [x] **Passo 4: Rascunho da prática**
 
 Substituir `praticas/dados-migrations/DAD-01.md` por:
 
@@ -998,7 +998,7 @@ segunda trava, no banco [ref:flyway-validate].
 Se o Passo 3 mostrou outra mensagem do Flyway, troque o bloco `text` do "Antes e depois" pela
 real.
 
-- [ ] **Passo 5: Ferramentas**
+- [x] **Passo 5: Ferramentas**
 
 `ferramentas/flyway.yml` e `ferramentas/alembic.yml`, `categoria: migration`,
 `praticas: [DAD-01]`, `status: adotar` (proposta para o checkpoint), `versao_minima` = a versão
@@ -1009,7 +1009,7 @@ só pega a edição depois que a migration foi aplicada naquele banco (antes, a 
 [ref:flyway-validate]; o `downgrade()` é escrito à mão e só vale testado, e o SQLite exige o
 modo `batch` para mudar tipo de coluna [ref:alembic-batch].
 
-- [ ] **Passo 6: Testar o prompt (R27)**
+- [x] **Passo 6: Testar o prompt (R27)**
 
 ```bash
 export TESTE="$HOME/curadoria-a5"
@@ -1034,7 +1034,7 @@ Passou se: o `diff` tem só duas linhas, `A db/migration/V3__<algo>.sql` e
 `VARCHAR(14)`; a seção `## Rollback` tem texto; e o verificador imprime
 `Verificação de PR: 2 arquivo(s), nenhum achado.` com `saida=0`.
 
-- [ ] **Passo 7: Verificação na fonte e registro**
+- [x] **Passo 7: Verificação na fonte e registro**
 
 | Referência | URL | O que conferir |
 |---|---|---|
@@ -1074,12 +1074,12 @@ curtos e estão no corpo): registre-as como `nota` nas afirmações de `flyway-v
 `alembic-batch`, com a versão e a saída. Valores reais no lugar dos `<versão>`, do harness e
 das evidências. Registros das duas ferramentas no formato da M1.
 
-- [ ] **Passo 8: Revisão adversarial**
+- [x] **Passo 8: Revisão adversarial**
 
 Revisor independente com a prática, o arquivo de exemplo e as sete URLs; pedido da skill mais
 a pergunta de executabilidade (repositório vazio). Trate e registre.
 
-- [ ] **Passo 9: Validação e commit**
+- [x] **Passo 9: Validação e commit**
 
 ```bash
 python scripts/gerar.py --saida public && python scripts/validar.py
@@ -1094,6 +1094,8 @@ Esperado: `validação ok: nenhum erro.`, `1` (a mensagem real da trava, em "Com
 git add praticas/dados-migrations/DAD-01.md exemplos/DAD-01/ ferramentas/flyway.yml ferramentas/alembic.yml referencias/flyway-versionadas.yaml referencias/alembic-tutorial.yaml referencias/alembic-batch.yaml referencias/flyway-validate.yaml referencias/fowler-evodb.yaml referencias/migrations-reversiveis.yaml verificacoes/DAD-01.yaml verificacoes/ferramenta-flyway.yaml verificacoes/ferramenta-alembic.yaml README.md ROTEAMENTO.md
 git commit -m "feat(conteudo): DAD-01 no modelo v1.1, com o job do GitLab executado"
 ```
+
+> **Execuções (M5):** job do GitLab (`gitlab-ci-local`), Flyway 11.20.3 + PostgreSQL 16, Alembic 1.20.0 + SQLite e cobertura da regex executados; prompt testado em subagente de sessão nova. Rulings: (1) a transição da A.5 foi removida (`transicao-a5.yml`, `carregar_isencoes`, `Contexto.isentos`, avisos e testes), mas **`resumo` ainda não virou `required`**: a P2-01 também não tem `resumo` e só ganha na M6; o schema e o teste `test_resumo_e_obrigatorio_na_pratica` entram no commit da M6. Custo se errado: um commit de atraso. (2) A DAD-01 adotou `ferramentas/` `flyway` e `alembic` com status adotar (proposta).
 
 ### Tarefa M6: P2-01 reescrita no modelo v1.1, com o gateway de teste executado
 
