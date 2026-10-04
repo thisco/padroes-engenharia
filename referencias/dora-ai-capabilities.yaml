@@ -3,8 +3,8 @@ titulo: DORA AI Capabilities Model
 organizacao: DORA (Google Cloud)
 url: https://dora.dev/ai/capabilities-model/
 tipo: analista
-verificado_em: 2026-10-01
+verificado_em: 2026-10-04
 verificacao: V
-localizacao: "página do relatório (as sete capacidades que ampliam o benefício da IA) e o PDF ligado nela, capacidade 'Working in small batches'"
+localizacao: "página do relatório (as sete capacidades que ampliam o benefício da IA) e o PDF ligado nela, capacidade 'Working in small batches'; página dora.dev/capabilities/working-in-small-batches/, marcada como capacidade AI"
 dominios: [construir-com-ia]
-notas: "Relatório sob CC BY-NC-SA 4.0; o portal parafraseia e não copia trechos."
+notas: "A página do modelo diz que são sete capacidades e não as nomeia; quem confirma 'Working in small batches' como capacidade de IA é a página da própria capacidade. Relatório sob CC BY-NC-SA 4.0; o portal parafraseia e não copia trechos."

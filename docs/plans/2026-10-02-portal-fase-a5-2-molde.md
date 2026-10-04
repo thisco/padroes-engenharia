@@ -308,7 +308,7 @@ verificador candidato.
 - Consumes: M1, M2; referências `sdd-lifecycle`, `spec-kit`, `dora-ai-capabilities`,
   `sdd-scaffold-verificar-pr`. Produces: prompt `P1-01`; a regra de `AGENTS.md` da M14.
 
-- [ ] **Passo 1: O exemplo.** `exemplos/P1-01/verificar-tier.sh`:
+- [x] **Passo 1: O exemplo.** `exemplos/P1-01/verificar-tier.sh`:
 
 ```bash
 #!/usr/bin/env bash
@@ -333,7 +333,7 @@ exit "$faltando"
 Aceita `> **Tier:** 2 — muda o schema`; recusa a linha do modelo, `> **Tier:** 1 | 2`. O glob
 ignora `MODELO-plano.md`.
 
-- [ ] **Passo 2: Executar** numa cópia do projeto de teste:
+- [x] **Passo 2: Executar** numa cópia do projeto de teste:
 
 ```bash
 rm -rf "$TESTE/p1-01" && cp -R "$TESTE/projeto-teste" "$TESTE/p1-01" && cd "$TESTE/p1-01"
@@ -351,7 +351,7 @@ Passou se, em ordem: `P1-01: todos os planos declaram o tier.`/`saida=0`; `SEM T
 docs/plans/2026-10-05-telefone-cliente.md`/`saida=1`; as duas linhas `SEM TIER` (modelo
 intocado e telefone)/`saida=1`; `P1-01: todos os planos declaram o tier.`/`saida=0`.
 
-- [ ] **Passo 3: Rascunho da prática** (pela skill). Frontmatter: `resumo: "O tier decide o
+- [x] **Passo 3: Rascunho da prática** (pela skill). Frontmatter: `resumo: "O tier decide o
   caminho: trivial vai direto, estrutural passa por spec e revisão. Na dúvida, o mais alto."`,
   `ferramentas_aprovadas: [sdd-lifecycle, sdd-scaffold, claude-code, codex, kiro, antigravity,
   copilot]`, `starter: sdd-scaffold`, `exemplos: [exemplos/P1-01/verificar-tier.sh]`,
@@ -397,14 +397,14 @@ portal de padrões de engenharia: {mudança}.
    saída. Ela precisa ter exatamente uma linha.
 ```
 
-- [ ] **Passo 4: Testar o prompt.** Sessão nova numa cópia `$TESTE/p1-01-prompt` do projeto de
+- [x] **Passo 4: Testar o prompt.** Sessão nova numa cópia `$TESTE/p1-01-prompt` do projeto de
   teste; `{mudança}` = *"acrescentar o telefone (texto, até 20 caracteres) no cadastro de
   cliente: uma coluna nova na tabela cliente e um campo novo na API de cadastro"*. Passou se
   `git status --porcelain` tem **uma** linha `?? docs/plans/<data>-<nome>.md`, o `grep` acha uma
   linha `> **Tier:** 2 …`, `bash "$PORTAL/exemplos/P1-01/verificar-tier.sh" .` sai com 0, e a
   transcrição mostra o tier anunciado antes de criar o arquivo.
 
-- [ ] **Passo 5: Fontes e registro.**
+- [x] **Passo 5: Fontes e registro.**
 
 | Referência | URL | Confirmar |
 |---|---|---|
@@ -419,9 +419,11 @@ portal de padrões de engenharia: {mudança}.
 `execucoes`: `tipo: arquivo` (o script, as 4 rodadas, `passou`, as saídas) e `tipo: prompt`
 (`secao: Para o agente`, `harness`, `passou`, o tier e o `git status`).
 
-- [ ] **Passo 6: Revisão adversarial e fecho.** Confira também que `public/prompts.json` tem a
+- [x] **Passo 6: Revisão adversarial e fecho.** Confira também que `public/prompts.json` tem a
   origem da P1-01. Commit:
   `feat(conteudo): P1-01 no modelo v1.1, com exemplo e prompt executados`.
+
+> **Execuções (M3):** o script rodou as 4 rodadas e o prompt foi testado em subagente de sessão nova (duas rodadas, a segunda com o prompt final); saídas reais no registro. Desvios: o verificador foi documentado como confere-só-formato (aceita tier sem justificativa); o texto da v1.0 foi ajustado pelos achados da revisão adversarial.
 
 ### Tarefa M4: Receita "Ligar o CI do GitLab com as travas"
 

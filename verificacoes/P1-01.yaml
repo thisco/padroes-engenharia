@@ -1,36 +1,220 @@
 conteudo: P1-01
-verificado_em: 2026-10-01
+verificado_em: '2026-10-04'
 verificador: agente-curadoria
 afirmacoes:
-  - texto: "Tier 0: sem efeito observável em runtime; Tier 1: correção localizada ou ajuste em até ~3 arquivos, sem mudança de contrato; Tier 2: feature, componente novo, contrato, schema ou infraestrutura"
-    ref: sdd-lifecycle
-    localizacao: "SKILL.md, Fase 0, passo 4, tabela de tiers"
-    resultado: confirmada
-  - texto: "na dúvida entre dois tiers, fica-se com o mais alto"
-    ref: sdd-lifecycle
-    localizacao: "SKILL.md, Fase 0, passo 4"
-    resultado: confirmada
-  - texto: "Tier 0 vai ao encerramento; Tier 1 tem plano leve; Tier 2 passa por spec, gate, checkpoint, plano, TDD e revisão adversarial"
-    ref: sdd-lifecycle
-    localizacao: "SKILL.md, 'Matriz tier → fases'"
-    resultado: confirmada
-  - texto: "a fase 0 lê constituição e memória, reformula o pedido em uma frase, usa os critérios do repositório ou os defaults e anuncia o tier com justificativa de uma linha"
-    ref: sdd-lifecycle
-    localizacao: "SKILL.md, Fase 0, passos 1 a 4"
-    resultado: confirmada
-  - texto: "Tier 0 ou 1 com impacto estrutural é abortado, reclassificado como Tier 2 e recomeça pela matriz"
-    ref: sdd-lifecycle
-    localizacao: "SKILL.md, Fase 0, passo 5 'Escalação obrigatória'"
-    resultado: confirmada
-  - texto: "o Spec Kit leva a feature por especificação, plano técnico e tarefas antes da implementação e tem um processo de correção de bug que dispensa o fluxo de feature"
-    ref: spec-kit
-    localizacao: "README, 'Spec-Driven Development' e 'Bug fixing' ('No SDD feature workflow is required first')"
-    resultado: confirmada
-  - texto: "trabalhar em lotes pequenos é uma das sete capacidades que ampliam o benefício da IA"
-    ref: dora-ai-capabilities
-    localizacao: "página do relatório (sete capacidades); capacidade 'Working in small batches'"
-    resultado: confirmada
+- texto: 'Tier 0: sem linha de código executável alterada ou sem efeito observável em runtime; Tier 1:
+    correção localizada ou ajuste em até ~3 arquivos, sem mudança de contrato; Tier 2: feature, componente
+    novo, contrato, schema ou infraestrutura'
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0, passo 4, tabela de tiers
+  resultado: confirmada
+- texto: na dúvida entre dois tiers, fica-se com o mais alto
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0, passo 4
+  resultado: confirmada
+- texto: Tier 0 vai ao encerramento; Tier 1 tem plano leve; Tier 2 passa por spec, gate, checkpoint, plano,
+    TDD e revisão adversarial
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Matriz tier → fases'
+  resultado: confirmada
+- texto: a fase 0 lê constituição e memória, reformula o pedido em uma frase, usa os critérios do repositório
+    ou os defaults e anuncia o tier com justificativa de uma linha
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0, passos 1 a 4
+  resultado: confirmada
+- texto: Tier 0 ou 1 com impacto estrutural é abortado, reclassificado como Tier 2 e recomeça pela matriz
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0, passo 5 'Escalação obrigatória'
+  resultado: confirmada
+- texto: o Spec Kit leva a feature por especificação, plano técnico e tarefas antes da implementação e
+    tem um processo de correção de bug que dispensa o fluxo de feature
+  ref: spec-kit
+  localizacao: README, 'Spec-Driven Development' e 'Bug fixing' ('No SDD feature workflow is required
+    first')
+  resultado: confirmada
+- texto: trabalhar em lotes pequenos é uma das sete capacidades que ampliam o benefício da IA
+  ref: dora-ai-capabilities
+  localizacao: página do relatório (sete capacidades); capacidade 'Working in small batches'
+  resultado: confirmada
+- texto: 'o spec-kit separa os caminhos por tipo de trabalho: leva a feature por especificação, plano
+    técnico e tarefas, e tem processo próprio de correção de bug que dispensa o fluxo de feature'
+  ref: spec-kit
+  localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
+  resultado: confirmada
+- texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
+    IA e a associa ao desempenho do produto
+  ref: dora-ai-capabilities
+  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
+    (capacidade marcada como AI)
+  resultado: confirmada
+- texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
+  ref: sdd-scaffold-readme
+  localizacao: 'README, ''O que você recebe'' (árvore: sdd-processo.md, tiers, planos, checkpoints, git)'
+  resultado: confirmada
+- texto: no scaffold, .claude/skills, .codex/skills e .kiro/skills apontam para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+- texto: o cabeçalho do modelo de plano traz a linha '> **Tier:** 1 | 2'
+  ref: sdd-scaffold-modelo-plano
+  localizacao: linha 3 de docs/plans/MODELO-plano.md
+  resultado: confirmada
+- texto: o verificador de PR avisa quando o PR altera código e não traz plano em docs/plans/; reconhece
+    código só por extensão de arquivo
+  ref: sdd-scaffold-verificar-pr
+  localizacao: função analisar(), bloco toca_codigo, e constante CODIGO
+  resultado: confirmada
+- texto: 'o spec-kit separa os caminhos por tipo de trabalho: leva a feature por especificação, plano
+    técnico e tarefas, e tem processo próprio de correção de bug que dispensa o fluxo de feature'
+  ref: spec-kit
+  localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
+  resultado: confirmada
+- texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
+    IA e a associa ao desempenho do produto
+  ref: dora-ai-capabilities
+  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
+    (capacidade marcada como AI)
+  resultado: confirmada
+- texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
+  ref: sdd-scaffold-readme
+  localizacao: 'README, ''O que você recebe'' (árvore: sdd-processo.md, tiers, planos, checkpoints, git)'
+  resultado: confirmada
+- texto: no scaffold, .claude/skills, .codex/skills e .kiro/skills apontam para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+- texto: o cabeçalho do modelo de plano traz a linha '> **Tier:** 1 | 2'
+  ref: sdd-scaffold-modelo-plano
+  localizacao: linha 3 de docs/plans/MODELO-plano.md
+  resultado: confirmada
+- texto: o verificador de PR avisa quando o PR altera código e não traz plano em docs/plans/; reconhece
+    código só por extensão de arquivo
+  ref: sdd-scaffold-verificar-pr
+  localizacao: função analisar(), bloco toca_codigo, e constante CODIGO
+  resultado: confirmada
+- texto: 'o spec-kit separa os caminhos por tipo de trabalho: leva a feature por especificação, plano
+    técnico e tarefas, e tem processo próprio de correção de bug que dispensa o fluxo de feature'
+  ref: spec-kit
+  localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
+  resultado: confirmada
+- texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
+    IA e a associa ao desempenho do produto
+  ref: dora-ai-capabilities
+  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
+    (capacidade marcada como AI)
+  resultado: confirmada
+- texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
+  ref: sdd-scaffold-readme
+  localizacao: 'README, ''O que você recebe'' (árvore: sdd-processo.md, tiers, planos, checkpoints, git)'
+  resultado: confirmada
+- texto: no scaffold, .claude/skills, .codex/skills e .kiro/skills apontam para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+- texto: o cabeçalho do modelo de plano traz a linha '> **Tier:** 1 | 2'
+  ref: sdd-scaffold-modelo-plano
+  localizacao: linha 3 de docs/plans/MODELO-plano.md
+  resultado: confirmada
+- texto: o verificador de PR avisa quando o PR altera código e não traz plano em docs/plans/; reconhece
+    código só por extensão de arquivo
+  ref: sdd-scaffold-verificar-pr
+  localizacao: função analisar(), bloco toca_codigo, e constante CODIGO
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-01/verificar-tier.sh
+  comando: 'bash verificar-tier.sh <raiz>, na cópia p1-01 do projeto de teste, sem plano e depois com
+    o plano que traz Tier: 2 — …'
+  ambiente: cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65 (projeto
+    de teste gerado por criar_projeto.py); bash, macOS
+  resultado: passou
+  evidencia: 'Rodada 1 (só MODELO-plano.md em docs/plans): "P1-01: todos os planos declaram o tier.",
+    saida=0. Rodada 4 (plano com a linha "> **Tier:** 2 — muda o schema da tabela cliente e o contrato
+    da API de cadastro"): "P1-01: todos os planos declaram o tier.", saida=0.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P1-01/verificar-tier.sh
+  comando: bash verificar-tier.sh <raiz>, na cópia p1-01, com planos que mantêm a linha do modelo
+  ambiente: cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65 (projeto
+    de teste gerado por criar_projeto.py); bash, macOS
+  resultado: falhou-como-esperado
+  evidencia: 'Rodada 2 (plano sem linha de tier): "SEM TIER: docs/plans/2026-10-05-telefone-cliente.md",
+    saida=1. Rodada 3 (modelo copiado sem alteração e o plano anterior): "SEM TIER: docs/plans/2026-10-05-modelo-intocado.md"
+    e "SEM TIER: docs/plans/2026-10-05-telefone-cliente.md", saida=1.'
+  data: '2026-10-04'
+- tipo: prompt
+  prompt: P1-01-prompt-1
+  harness: claude-code
+  resultado: passou
+  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt final e {mudança} = "acrescentar
+    o telefone (texto, até 20 caracteres) no cadastro de cliente: uma coluna nova na tabela cliente e
+    um campo novo na API de cadastro", numa cópia do projeto de teste (cópia local do sdd-scaffold no
+    commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65). Leu o AGENTS.md e docs/steering/sdd-processo.md
+    e anunciou "Tier 2" com a justificativa antes de criar o arquivo. git status --porcelain: uma linha
+    "?? docs/plans/2026-10-04-telefone-cliente.md". O grep achou uma linha "> **Tier:** 2 — mudança de
+    schema (nova coluna em cliente) e de contrato (novo campo na API de cadastro)". verificar-tier.sh
+    saiu com 0. Transcrição: relatório final do agente em curadoria-a5/transcricoes/P1-01-prompt-2.txt;
+    uma rodada anterior, com a versão do prompt sem o caso do modelo ausente, teve o mesmo resultado.'
+  data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
-  data: 2026-10-01
-  achados: []
+  data: '2026-10-04'
+  achados:
+  - afirmacao: antes de abrir qualquer arquivo de código, registre o tier no pedido, na spec ou no plano
+      [ref:sdd-lifecycle]
+    problema: a skill só manda anunciar o tier com justificativa de uma linha; o momento e o registro
+      são regra do portal, mas a referência estava colada nela
+    tratamento: o texto passou a dizer 'a regra do portal é…' e a referência ficou só nos critérios e
+      no anúncio
+  - afirmacao: Tier 0 é a mudança sem efeito observável em runtime
+    problema: a fonte tem dois critérios (nenhuma linha de código executável alterada, ou sem efeito observável);
+      o texto citava só o segundo
+    tratamento: os dois critérios entraram no texto
+  - afirmacao: Tier 2 passa por spec, gate, checkpoint, plano, TDD e revisão adversarial
+    problema: 'omissão menor: a lista não cita o isolamento em branch nem o encerramento'
+    tratamento: 'aceito: a frase resume as fases que distinguem o Tier 2'
+  - afirmacao: o Spec Kit separa esses caminhos [ref:spec-kit]
+    problema: o Spec Kit separa por tipo de trabalho, não por tamanho ou risco, e o fluxo de bug é extensão
+      opcional; a ponte para os tiers não é da fonte
+    tratamento: o texto diz que o Spec Kit separa por tipo de trabalho e que o tier é outro critério
+  - afirmacao: lotes pequenos entre as sete capacidades do DORA [ref:dora-ai-capabilities]
+    problema: a página do modelo só diz 'sete capacidades'; quem confirma a capacidade é a página dela,
+      e o ganho citado é no desempenho do produto, não geral
+    tratamento: texto reescrito com 'desempenho do produto'; a referência cita as duas páginas; a frase-ponte
+      sobre quebrar a mudança em partes, sem fonte, foi retirada
+  - afirmacao: mudança de schema entra sem spec, sem ADR e sem revisão
+    problema: a skill só pede ADR para mudança destrutiva; o exemplo é aditivo
+    tratamento: '''sem ADR'' saiu da frase'
+  - afirmacao: verificador de PR avisa código sem plano [ref:sdd-scaffold-verificar-pr]
+    problema: código é reconhecido só por extensão de arquivo; SQL, YAML e Terraform sem plano passam
+      sem aviso
+    tratamento: limite dito no texto de Como verificar
+  - afirmacao: sdd-lifecycle e sdd-scaffold são repositórios do próprio autor
+    problema: fontes internas valem só para as próprias definições e não provam que a prática funciona;
+      o DORA trata de lotes pequenos, não de tiers
+    tratamento: status segue experimentar; a decisão de adotar fica para o dono, no checkpoint
+  - afirmacao: regra de quatro linhas para o AGENTS.md
+    problema: a regra tem três linhas
+    tratamento: o texto passou a dizer 'regra curta'
+  - afirmacao: sem o modelo, comece o plano por essa linha
+    problema: contradição com o Exemplo, que põe o título antes da linha de tier
+    tratamento: o passo diz título do plano e, logo abaixo, a linha de tier
+  - afirmacao: um plano que ainda traz a linha do modelo é recusado
+    problema: 'falso em parte: um plano que mantém a linha do modelo e ganha outra linha de tier válida
+      passa; o script aceita tier sem justificativa, Tier 0 e arquivo vazio de planos, e recusa justificativa
+      com o caractere |'
+    tratamento: Como verificar descreve o que o script confere e o que não confere
+  - afirmacao: 'não executável sem inventar: Como aplicar passo 1 sem AGENTS.md nem steering'
+    problema: a skill não vinha indicada
+    tratamento: passo 1 diz que a skill vem no projeto do scaffold ou pelo como_instalar da ferramenta
+  - afirmacao: 'não executável sem inventar: passo 3 do prompt sem MODELO-plano.md'
+    problema: num repositório vazio o agente teria de inventar o plano
+    tratamento: o prompt ganhou o caso do modelo ausente (plano só com título e linha de tier) e foi testado
+      de novo
+  - afirmacao: 'não executável sem inventar: bash exemplos/P1-01/verificar-tier.sh . sem o script no repositório'
+    problema: o texto não dizia de onde copiar o script
+    tratamento: Como verificar manda copiar o script do portal e roda bash verificar-tier.sh .
+  - afirmacao: 'não executável sem inventar: Tier 0 e Por ferramenta para Antigravity e Copilot'
+    problema: Tier 0 não deixa rastro verificável; as ferramentas remetem ao como_instalar
+    tratamento: o passo 4 diz que o anúncio do Tier 0 fica na resposta e na mensagem do commit; Antigravity
+      e Copilot seguem o como_instalar, que diz que não houve execução
