@@ -9,7 +9,7 @@
 <section class="det" aria-label="{{ titulo }}">
   <div class="mini" aria-hidden="false">
 {% if ninho == "agente-de-codigo" %}
-    {{ c.ninho(peca, "condensado", raiz) }}
+    {{ c.ninho(peca, "completo", raiz) }}
 {% else %}
     {{ c.fluxo_produto(peca, raiz) }}
 {% endif %}

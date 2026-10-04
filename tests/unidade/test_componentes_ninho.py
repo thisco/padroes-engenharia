@@ -104,3 +104,23 @@ def test_css_da_lacuna_nao_atinge_o_span_da_peca_sem_conceito():
     css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
     assert not re.search(r"^\.lacuna(?= |\{|,)", css, re.M)
     assert re.search(r"^section\.lacuna\s*\{[^}]*var\(--traco\)", css, re.M)
+
+
+def test_pagina_de_cada_peca_desenha_a_propria_peca_em_destaque():
+    """C1: a página de peça mostra a peça no desenho, sem a classe `apaga`."""
+    from portal.gerador.ninhos import PECAS
+    from portal.gerador.renderizar import html_conteudo
+
+    for ninho, pecas in PECAS.items():
+        for peca in pecas:
+            c = Conteudo(
+                "conceito",
+                f"conceitos/{peca}.md",
+                fabrica.meta_conceito(peca=peca, ninho=ninho),
+                "x [ref:ref-forte].\n",
+            )
+            s = fabrica.site(c, fabrica.referencia())
+            html = analisar(html_conteudo(s, c))
+            alvo = [n for n in html.todos(classe="alvo") if n.attrs.get("data-peca") == peca]
+            assert alvo, f"{peca}: a peça em destaque não está no desenho"
+            assert "apaga" not in alvo[0].attrs["class"], peca
