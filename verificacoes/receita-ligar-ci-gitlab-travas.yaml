@@ -53,6 +53,22 @@ afirmacoes:
   ref: sdd-scaffold-qualidade
   localizacao: passo 'AGENTS.md dentro do limite de contexto' e job segredos
   resultado: confirmada
+- texto: Codex e Antigravity documentam .agents/skills como pasta de skills do projeto
+  ref: codex-skills
+  localizacao: seção de localização das skills de repositório
+  resultado: confirmada
+- texto: Antigravity documenta .agents/skills como pasta de skills do workspace
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+- texto: o CLAUDE.md do scaffold é um ponteiro sem import do AGENTS.md
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Por que os ponteiros são de quatro linhas'
+  resultado: confirmada
+- texto: com AGENTS.md e CLAUDE.md o Claude Code lê só o CLAUDE.md; o AGENTS.md entra por @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md'
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
@@ -173,3 +189,7 @@ revisao_adversarial:
     problema: o origin do clone aponta para o fork e a base pode estar desatualizada; nenhuma referência
       trata
     tratamento: não entra na receita por falta de fonte; fica como limite conhecido para o checkpoint
+  - afirmacao: 'K6 do lote de 2026-10-04: pontos do scaffold (.agents/skills e CLAUDE.md sem @AGENTS.md)'
+    problema: a receita não avisava os dois pontos que fazem o agente não ver o AGENTS.md ou as skills
+    tratamento: item novo em Se der errado, com as fontes; conferência independente fica com a revisão
+      do lote

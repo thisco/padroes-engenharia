@@ -25,6 +25,9 @@ referencias:
   - sdd-scaffold-verificar-pr
   - sdd-scaffold-readme
   - sdd-scaffold-qualidade
+  - codex-skills
+  - antigravity-skills
+  - claude-code-memory
 dono: nuarq
 revisado_em: 2026-10-04
 ---
@@ -198,6 +201,12 @@ WRN leaks found: 1
 - **O `segredos` acusa um segredo antigo.** Revogue o segredo no serviço de origem. Para
   silenciar um achado já tratado, acrescente a impressão digital dele ao `.gitleaksignore`,
   recurso que a documentação marca como experimental [ref:gitleaks-readme].
+- **O agente não segue o `AGENTS.md` ou não vê as skills do projeto.** Até o scaffold passar a
+  montar `.agents/skills`, o Codex e o Antigravity só documentam essa pasta de skills
+  [ref:codex-skills] [ref:antigravity-skills]: aponte `.agents/skills` para `skills/`. O
+  `CLAUDE.md` do scaffold não importa o `AGENTS.md`, e com os dois arquivos o Claude Code lê só o
+  `CLAUDE.md`: acrescente a linha `@AGENTS.md` a ele [ref:sdd-scaffold-readme]
+  [ref:claude-code-memory].
 - **O repositório não tem constituição.** Sem `AGENTS.md`, remova o job `governanca`; com
   `AGENTS.md` sem marcadores, tire só a linha do `verificar_constituicao.py`.
 - **A MR editou uma migration e passou.** A pasta provavelmente fica fora de `migration/`,
