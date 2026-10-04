@@ -1,0 +1,21 @@
+id: litellm
+titulo: LiteLLM
+categoria: gateway
+status: experimentar
+versao_minima: "1.104.0"
+dono: nuarq
+praticas: [P2-01]
+receitas: []
+como_instalar: |
+  Suba o proxy com Docker e um `config.yaml` montado no container, como no `docker-compose.yml` e
+  no `config.yaml` do Exemplo da P2-01 [ref:litellm-proxy-docker]. As chaves virtuais pedem um
+  PostgreSQL em `DATABASE_URL` [ref:litellm-virtual-keys], e todas as chamadas se autenticam, a
+  administração com a master key (`LITELLM_MASTER_KEY`) [ref:litellm-proxy-docker]. Versão testada
+  pelo portal: `ghcr.io/berriai/litellm:v1.104.0`.
+limites: |
+  O gateway de teste do Exemplo só tem modelos simulados. A chave virtual restringe modelos e
+  orçamento e o gasto é acompanhado por chave, usuário e time [ref:litellm-virtual-keys]; a
+  documentação citada não trata de inspeção de conteúdo, então dado pessoal no prompt pede outro
+  controle, como um guardrail. Sem banco, o orçamento não é aplicado e o proxy segue atendendo
+  [ref:litellm-proxy-docker].
+referencias: [litellm-proxy-docker, litellm-virtual-keys]

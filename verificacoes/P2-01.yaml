@@ -1,28 +1,147 @@
 conteudo: P2-01
-verificado_em: 2026-10-01
+verificado_em: '2026-10-04'
 verificador: agente-curadoria
 afirmacoes:
-  - texto: "a chave virtual permite acompanhar o gasto e controlar o acesso a modelos"
-    ref: litellm-virtual-keys
-    localizacao: "abertura da página"
-    resultado: confirmada
-  - texto: "o gasto é acompanhado por chave, por usuário e por time"
-    ref: litellm-virtual-keys
-    localizacao: "'Spend Tracking'"
-    resultado: confirmada
-  - texto: "o gateway de IA autentica e autoriza o acesso, monitora e registra as interações e gerencia tokens e cotas entre aplicações"
-    ref: azure-apim-ai-gateway
-    localizacao: "'Why use an AI gateway?'"
-    resultado: confirmada
-  - texto: "proibir gera adoção paralela, sem telemetria e sem como desligar"
-    ref: anthropic-ciso-agentic-ai
-    localizacao: "parágrafo de abertura"
-    resultado: confirmada
-  - texto: "toda ação acontece sob alguma identidade, e é preciso saber de quem"
-    ref: anthropic-ciso-agentic-ai
-    localizacao: "'Four questions to assess agentic AI risk', pergunta 2"
-    resultado: confirmada
+- texto: 'a chave virtual é a identidade da aplicação no gateway: o gasto é acompanhado por chave, usuário
+    e time, e a chave restringe os modelos (modelo fora da lista é recusado); as chaves pedem um banco
+    em DATABASE_URL'
+  ref: litellm-virtual-keys
+  localizacao: seções 'Key Generation', 'Spend Tracking' e 'Model Access Control'
+  resultado: confirmada
+- texto: o gateway é compatível com o formato da API da OpenAI e qualquer SDK da OpenAI funciona apontando
+    para ele; roda com Docker e um config.yaml montado; a administração usa a master key; sem banco o
+    orçamento não é aplicado
+  ref: litellm-proxy-docker
+  localizacao: seções de Docker, autenticação, compatibilidade e nota do banco
+  resultado: confirmada
+- texto: o mock_response da biblioteca responde sem chamar o provedor
+  ref: litellm-mock-response
+  localizacao: seção do parâmetro mock_response
+  resultado: confirmada
+- texto: um AI gateway autentica e autoriza o acesso, monitora e registra as interações e gerencia o uso
+    de tokens e as cotas entre várias aplicações
+  ref: azure-apim-ai-gateway
+  localizacao: seção 'Why use an AI gateway?'
+  resultado: confirmada
+- texto: proibir sem oferecer caminho gera adoção paralela sem telemetria e sem como desligar; toda ação
+    acontece sob alguma identidade e a segurança precisa saber de quem
+  ref: anthropic-ciso-agentic-ai
+  localizacao: seções sobre adoção paralela e identidade do agente (publicado em 2026-07-17)
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P2-01/docker-compose.yml
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
+    AI_GATEWAY_URL e AI_GATEWAY_KEY)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
+    imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/config.yaml
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
+    AI_GATEWAY_URL e AI_GATEWAY_KEY)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
+    imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/emitir-chave.sh
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
+    AI_GATEWAY_URL e AI_GATEWAY_KEY)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
+    imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/cliente.py
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
+    AI_GATEWAY_URL e AI_GATEWAY_KEY)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
+    imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/cliente.py
+  comando: python cliente.py simulado-restrito (chave emitida só para o modelo simulado)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: falhou-como-esperado
+  evidencia: 'openai.PermissionDeniedError: Error code: 403 - {''error'': {''message'': "The requested
+    model ''simulado-restrito'' is not available for this API key, or the model name is invalid. Check
+    the models available to you and try again.", ''type'': ''key_model_access_denied'', ''param'': ''model'',
+    ''code'': ''403''}}'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/verificar-chamada-direta.sh
+  comando: bash verificar-chamada-direta.sh . (pasta do exemplo)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: 'P2-01: nenhuma chamada direta a provedor encontrada. saida=0'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/verificar-chamada-direta.sh
+  comando: bash verificar-chamada-direta.sh ruim (ruim/app.py com URL = "https://api.openai.com/v1")
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: falhou-como-esperado
+  evidencia: 'ruim/app.py:1:URL = "https://api.openai.com/v1" e P2-01: chamada direta a provedor ou chave
+    de provedor encontrada (acima). saida=1'
+  data: '2026-10-04'
+- tipo: prompt
+  prompt: P2-01-prompt-1
+  harness: claude-code
+  resultado: passou
+  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt e {modelo do catálogo} = simulado,
+    num repositório com app.py (OpenAI com base_url do provedor e model gpt-4o-mini), .env.example com
+    OPENAI_API_KEY= e .gitignore com .env. Conferido pelo curador: app.py e .env.example com AI_GATEWAY_URL
+    e AI_GATEWAY_KEY; verificar-chamada-direta.sh saiu com 0; git grep -nE sk-[A-Za-z0-9] vazio; último
+    commit "feat: chamadas a modelo pelo gateway de IA (P2-01)"; AI_GATEWAY_URL=http://localhost:4010
+    com a chave do teste, python app.py imprimiu a resposta simulada. O relatório do agente veio com o
+    texto "placeholder", então o registro vale pelo estado do repositório (transcricoes/P2-01-prompt-1.txt).'
+  data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
-  data: 2026-10-01
-  achados: []
+  data: '2026-10-04'
+  achados:
+  - afirmacao: pedir um modelo fora da lista da chave é recusado [ref:litellm-virtual-keys]
+    problema: a fonte só diz que a chave controla o acesso a modelos; a recusa vem da execução da curadoria
+    tratamento: o texto atribui a recusa à execução e a fonte ao controle de acesso
+  - afirmacao: a saída 403 real, com versões
+    problema: versão e mensagem sem âncora externa
+    tratamento: aceito como evidência de execução; as versões estão no texto e no registro
+  - afirmacao: mock_response no config.yaml do proxy
+    problema: a fonte só mostra a biblioteca
+    tratamento: o texto e a nota da referência dizem que o uso no proxy foi confirmado pela execução
+  - afirmacao: imagem do gateway [ref:litellm-proxy-docker]
+    problema: a página usa a tag latest e outro registro; a tag fixa não tem fonte
+    tratamento: o texto diz que o exemplo fixa a v1.104.0
+  - afirmacao: a proibição gera adoção paralela, sem telemetria e sem como desligar
+    problema: a fonte diz 'generally' e fala de pedidos de IA agêntica; é post de blog do fornecedor
+    tratamento: texto com 'em geral' e atribuição ao guia do CISO da Anthropic
+  - afirmacao: toda ação acontece sob alguma identidade
+    problema: a fonte trata de agentes; a aplicação não é necessariamente um agente
+    tratamento: texto restringe a agentes e diz que a chave por aplicação leva o princípio ao gateway
+  - afirmacao: ao desativar, peça a revogação da chave
+    problema: nada dizia como
+    tratamento: o passo diz que o time do gateway bloqueia ou apaga a chave
+  - afirmacao: 'litellm.yml: administração com a master key'
+    problema: a fonte diz que as requisições autenticam com a master key no caminho sem banco
+    tratamento: 'aceito: texto descreve a master key para a administração, e o resto vem das chaves virtuais'
+  - afirmacao: 'não executável sem inventar: comandos, master key, espera do gateway, exportar variáveis,
+      pip install openai, chamada do modelo restrito'
+    problema: o texto não trazia a sequência de comandos nem a espera de prontidão
+    tratamento: bloco bash de 10 linhas no Exemplo, com a espera pelo health check, a master key aleatória
+      e as duas chamadas do cliente
+  - afirmacao: 'não executável sem inventar: não há time do gateway num repositório vazio'
+    problema: só o gateway de teste existe
+    tratamento: o passo 1 fala do time do gateway e o Exemplo traz o gateway de teste

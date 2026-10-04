@@ -1,0 +1,12 @@
+# Catálogo de modelos do gateway de teste (P2-01). Os dois modelos respondem com texto fixo.
+model_list:
+  - model_name: simulado
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Resposta simulada pelo gateway: nenhum modelo real foi chamado."
+  - model_name: simulado-restrito
+    litellm_params:
+      model: openai/simulado-restrito
+      api_key: "nao-usada"
+      mock_response: "Resposta do modelo restrito, também simulada."

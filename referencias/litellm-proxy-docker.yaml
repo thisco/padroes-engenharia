@@ -1,0 +1,10 @@
+id: litellm-proxy-docker
+titulo: "LiteLLM Proxy: Docker quick start"
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/docker_quick_start
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções de execução com Docker e config.yaml, master key e API compatível com OpenAI"
+dominios: [ia-no-produto]
+notas: "Imagem usada nos testes: ghcr.io/berriai/litellm:v1.104.0 (release estável de 2026-10-03, API do GitHub)."

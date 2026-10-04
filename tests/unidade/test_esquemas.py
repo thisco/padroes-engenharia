@@ -162,3 +162,11 @@ def test_pagina_estruturada_e_planta_validas():
     }
     starter = fabrica.meta_starter(planta=[linha])
     assert validar_instancia(starter, carregar_validador(PASTA, "starter"), "s.yml") == []
+
+
+def test_resumo_e_obrigatorio_na_pratica():
+    """A transição da A.5 acabou: resumo é obrigatório em toda prática."""
+    meta = fabrica.meta_pratica()
+    meta.pop("resumo", None)
+    (erro,) = validar_instancia(meta, carregar_validador(PASTA, "pratica"), "p.md")
+    assert erro == Erro("p.md", "frontmatter", "R-ESQUEMA", "'resumo' is a required property")

@@ -1,0 +1,10 @@
+id: litellm-mock-response
+titulo: "LiteLLM: mock requests"
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/completion/mock_requests
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção do parâmetro mock_response"
+dominios: [ia-no-produto]
+notas: "A página documenta mock_response na biblioteca (completion()), sem chamar o provedor; o uso no config.yaml do proxy foi confirmado pela execução da curadoria, não pela página."

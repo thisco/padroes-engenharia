@@ -3,7 +3,7 @@ titulo: Virtual Keys
 organizacao: LiteLLM (BerriAI)
 url: https://docs.litellm.ai/docs/proxy/virtual_keys
 tipo: vendor
-verificado_em: 2026-10-01
+verificado_em: 2026-10-04
 verificacao: V
 localizacao: "abertura ('Track Spend, and control model access via virtual keys'), 'What a key inherits from its owner' e 'Spend Tracking'"
 dominios: [ia-no-produto]

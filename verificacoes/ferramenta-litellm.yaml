@@ -1,0 +1,27 @@
+conteudo: ferramenta-litellm
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: proxy com Docker e config.yaml; master key; banco em DATABASE_URL para chaves; sem banco o orçamento
+    não é aplicado
+  ref: litellm-proxy-docker
+  localizacao: seções de Docker, autenticação e nota do banco
+  resultado: confirmada
+- texto: a chave virtual restringe modelos e orçamento e o gasto é acompanhado por chave, usuário e time
+  ref: litellm-virtual-keys
+  localizacao: seções 'Key Generation' e 'Spend Tracking'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/litellm.yml
+  comando: docker compose up -d do exemplo da P2-01
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
+    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  resultado: passou
+  evidencia: imagem ghcr.io/berriai/litellm:v1.104.0 no ar com o banco; /health/liveliness respondeu "I'm
+    alive!".
+  data: '2026-10-04'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados: []

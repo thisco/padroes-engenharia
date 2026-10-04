@@ -1116,7 +1116,7 @@ com que variável). O exemplo reduz a PoC (`serpro-cloud-ia-governance/poc/seed-
 - Produces: prompt `P2-01`; ferramenta `litellm` (categoria `gateway`), citada na M9; o gateway
   de teste que a M14 sobe de novo.
 
-- [ ] **Passo 1: Os exemplos.** Requisitos de cada arquivo:
+- [x] **Passo 1: Os exemplos.** Requisitos de cada arquivo:
   - `docker-compose.yml`: serviço `gateway` com a imagem `ghcr.io/berriai/litellm` numa tag
     estável **fixa** (confirmar a vigente na página de releases; sem `main-stable`), porta
     4000, `LITELLM_MASTER_KEY` obrigatória vinda do `.env`, `DATABASE_URL` para o serviço `db`
@@ -1140,7 +1140,7 @@ com que variável). O exemplo reduz a PoC (`serpro-cloud-ia-governance/poc/seed-
   `gitleaks dir --redact exemplos/P2-01` sem achado (o gitleaks do pipeline do portal varre
   `exemplos/`; se acusar a URL do banco de teste, passe usuário e senha para o `.env`).
 
-- [ ] **Passo 2: Executar.**
+- [x] **Passo 2: Executar.**
 
 ```bash
 rm -rf "$TESTE/p2-01" && mkdir -p "$TESTE/p2-01" && cp "$PORTAL"/exemplos/P2-01/* "$TESTE/p2-01/" && cd "$TESTE/p2-01"
@@ -1163,7 +1163,7 @@ Passou se: a resposta simulada e `saida=0`; o `simulado-restrito` recusado com e
 restringe: não publique e investigue a versão. Deixe o gateway de pé para o Passo 4; depois,
 `docker compose down -v`.
 
-- [ ] **Passo 3: Rascunho da prática** (pela skill). Frontmatter: `resumo: "A aplicação fala com
+- [x] **Passo 3: Rascunho da prática** (pela skill). Frontmatter: `resumo: "A aplicação fala com
   o gateway, com uma chave virtual por ambiente; a chave do provedor fica só no gateway."`,
   `ferramentas_aprovadas: [litellm]`, `exemplos:` os cinco arquivos. O texto precisa cobrir:
   - **O que fazer** e **Como aparece quando falta:** mantêm o texto e as citações da v1.0.
@@ -1201,7 +1201,7 @@ engenharia. O modelo do catálogo do gateway que ela vai usar é {modelo do cat�
 5. Faça um commit com a mensagem "feat: chamadas a modelo pelo gateway de IA (P2-01)".
 ```
 
-- [ ] **Passo 4: Testar o prompt.** Repositório `$TESTE/p2-01-prompt` com `git init`, um
+- [x] **Passo 4: Testar o prompt.** Repositório `$TESTE/p2-01-prompt` com `git init`, um
   `app.py` que usa `OpenAI(base_url="https://api.openai.com/v1",
   api_key=os.environ["OPENAI_API_KEY"])` e `model="gpt-4o-mini"`, `.env.example` com
   `OPENAI_API_KEY=` e `.gitignore` com `.env`, num commit. Sessão nova, `{modelo do catálogo}`
@@ -1210,7 +1210,7 @@ engenharia. O modelo do catálogo do gateway que ela vai usar é {modelo do cat�
   do passo 5; e `AI_GATEWAY_URL=http://localhost:4000 AI_GATEWAY_KEY=<chave do Passo 2> python
   app.py` imprime a resposta simulada.
 
-- [ ] **Passo 5: Ferramenta, fontes e registro.** `ferramentas/litellm.yml`: `categoria:
+- [x] **Passo 5: Ferramenta, fontes e registro.** `ferramentas/litellm.yml`: `categoria:
   gateway`, `status: experimentar` (o gateway do Serpro ainda é PoC), `versao_minima` = tag
   executada, `como_instalar` (o compose e o config do exemplo [ref:litellm-proxy-docker]; chaves
   pedem o banco em `DATABASE_URL` [ref:litellm-virtual-keys]), `limites` (o gateway de teste só
@@ -1228,8 +1228,10 @@ engenharia. O modelo do catálogo do gateway que ela vai usar é {modelo do cat�
 entrada `tipo: arquivo` por arquivo de `exemplos:` (o verificador como `falhou-como-esperado`)
 e uma `tipo: prompt`.
 
-- [ ] **Passo 6: Revisão adversarial e fecho.** Commit:
+- [x] **Passo 6: Revisão adversarial e fecho.** Commit:
   `feat(conteudo): P2-01 no modelo v1.1, com o gateway de teste executado`.
+
+> **Execuções (M6):** gateway de teste (LiteLLM v1.104.0, Postgres, modelos simulados), cliente, verificador (pasta limpa e `ruim/`) e prompt (subagente de sessão nova; o relatório final dele veio como "placeholder", e o registro vale pela conferência do estado do repositório). Desvios: a porta 4000 estava ocupada pela PoC em execução, que não foi parada; o compose aceita `GATEWAY_PORT` (teste na 4010). A recusa do modelo restrito é **403** (`key_model_access_denied`), não 401. `resumo` virou `required` neste commit, com teste RED→GREEN. O `mock_response` no `config.yaml` do proxy só se confirma pela execução (a página documenta a biblioteca).
 
 ### Tarefa M7: `_dominio.md` dos três domínios das pilotos
 
@@ -1239,7 +1241,7 @@ O vazio vira lacuna nomeada (§4.3): o que o scaffold cobre, receitas e ferramen
 - Create: `praticas/{construir-com-ia,dados-migrations,ia-no-produto}/_dominio.md`,
   `verificacoes/{construir-com-ia,dados-migrations,ia-no-produto}.yaml`
 
-- [ ] **Passo 1: Rascunho.** Precisa cobrir, por domínio (subtítulos e candidatas do mockup
+- [x] **Passo 1: Rascunho.** Precisa cobrir, por domínio (subtítulos e candidatas do mockup
   `espinha-sdd-v2.html`):
 
 | Faixa | `subtitulo` | `steering` / `skills` | `candidatas` (título · momento) | Corpo, com fonte |
@@ -1251,7 +1253,7 @@ O vazio vira lacuna nomeada (§4.3): o que o scaffold cobre, receitas e ferramen
 **Confirmar:** que o README do scaffold diz "expandir e contrair" na tabela das skills e que os
 slugs de `steering` passam no schema da parte 1.
 
-- [ ] **Passo 2: Registro, revisão adversarial e fecho.** Confira o subtítulo em
+- [x] **Passo 2: Registro, revisão adversarial e fecho.** Confira o subtítulo em
   `public/espinha.html`. Commit: `feat(conteudo): domínios das pilotos com subtítulo e práticas
   candidatas`.
 

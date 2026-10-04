@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": [
     "id", "titulo", "dominio", "subdominio", "momento", "forca", "mecanismo", "status",
-    "aplica", "referencias", "relacionadas", "dono", "revisado_em", "revisar_ate"
+    "aplica", "referencias", "relacionadas", "dono", "revisado_em", "revisar_ate", "resumo"
   ],
   "properties": {
     "id": {"type": "string", "minLength": 1},
