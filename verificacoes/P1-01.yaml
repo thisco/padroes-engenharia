@@ -32,9 +32,10 @@ afirmacoes:
   localizacao: README, 'Spec-Driven Development' e 'Bug fixing' ('No SDD feature workflow is required
     first')
   resultado: confirmada
-- texto: trabalhar em lotes pequenos é uma das sete capacidades que ampliam o benefício da IA
+- texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
+    IA
   ref: dora-ai-capabilities
-  localizacao: página do relatório (sete capacidades); capacidade 'Working in small batches'
+  localizacao: página do modelo ('seven capabilities')
   resultado: confirmada
 - texto: 'o spec-kit separa os caminhos por tipo de trabalho: leva a feature por especificação, plano
     técnico e tarefas, e tem processo próprio de correção de bug que dispensa o fluxo de feature'
@@ -42,10 +43,9 @@ afirmacoes:
   localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
   resultado: confirmada
 - texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
-    IA e a associa ao desempenho do produto
+    IA
   ref: dora-ai-capabilities
-  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
-    (capacidade marcada como AI)
+  localizacao: página do modelo ('seven capabilities')
   resultado: confirmada
 - texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
   ref: sdd-scaffold-readme
@@ -70,10 +70,9 @@ afirmacoes:
   localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
   resultado: confirmada
 - texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
-    IA e a associa ao desempenho do produto
+    IA
   ref: dora-ai-capabilities
-  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
-    (capacidade marcada como AI)
+  localizacao: página do modelo ('seven capabilities')
   resultado: confirmada
 - texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
   ref: sdd-scaffold-readme
@@ -98,10 +97,9 @@ afirmacoes:
   localizacao: README, 'Spec-Driven Development' e 'Bug fixing'
   resultado: confirmada
 - texto: o DORA lista trabalhar em lotes pequenos entre as sete capacidades que ampliam o benefício da
-    IA e a associa ao desempenho do produto
+    IA
   ref: dora-ai-capabilities
-  localizacao: página do modelo ('seven capabilities') e página dora.dev/capabilities/working-in-small-batches/
-    (capacidade marcada como AI)
+  localizacao: página do modelo ('seven capabilities')
   resultado: confirmada
 - texto: no scaffold, os critérios de tier estão em docs/steering/sdd-processo.md
   ref: sdd-scaffold-readme
@@ -119,6 +117,23 @@ afirmacoes:
     código só por extensão de arquivo
   ref: sdd-scaffold-verificar-pr
   localizacao: função analisar(), bloco toca_codigo, e constante CODIGO
+  resultado: confirmada
+- texto: a página da capacidade diz que os lotes pequenos ampliam o efeito positivo da IA sobre o desempenho
+    do produto
+  ref: dora-small-batches
+  localizacao: página da capacidade, parágrafo sobre IA
+  resultado: confirmada
+- texto: Codex e Antigravity documentam .agents/skills como pasta de skills do projeto
+  ref: codex-skills
+  localizacao: seção de localização das skills de repositório
+  resultado: confirmada
+- texto: Antigravity documenta .agents/skills como pasta de skills do workspace
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+- texto: com AGENTS.md e CLAUDE.md o Claude Code lê só o CLAUDE.md; o AGENTS.md entra por @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md'
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -218,3 +233,9 @@ revisao_adversarial:
     problema: Tier 0 não deixa rastro verificável; as ferramentas remetem ao como_instalar
     tratamento: o passo 4 diz que o anúncio do Tier 0 fica na resposta e na mensagem do commit; Antigravity
       e Copilot seguem o como_instalar, que diz que não houve execução
+  - afirmacao: lotes pequenos ligados ao desempenho do produto [ref:dora-ai-capabilities] (K5); pontos
+      do scaffold (K6)
+    problema: a afirmação de desempenho vem da página da capacidade, não da página do modelo; faltavam
+      .agents/skills e o import do AGENTS.md
+    tratamento: referência própria dora-small-batches; seção Por ferramenta com os dois contornos e as
+      fontes; conferência independente fica com a revisão do lote

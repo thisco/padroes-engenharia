@@ -60,6 +60,14 @@ afirmacoes:
   nota: 'Cobertura executada com a expressão copiada do commit fixado: db/migration/V2__cria_cpf.sql True;
     alembic/versions/a1b2_amplia_cpf.py True; app/migrations/0002_cpf.py True; db/changelog/002-cpf.xml
     False; db/migrate/002_cpf.rb False.'
+- texto: a migration de desfazer do Flyway (prefixo U) só existe nas edições pagas (Teams); sem ela o
+    rollback é uma migration corretiva testada num banco efêmero
+  ref: flyway-undo
+  localizacao: 'abertura da página: ''EDITION: TEAMS'''
+  resultado: confirmada
+  nota: 'A sequência com a V4 corretiva foi executada pela curadoria em PostgreSQL 16 efêmero com flyway/flyway:11:
+    "Successfully applied 3 migrations ... now at version v3" e, depois da V4, "Successfully applied 1
+    migration ... now at version v4" e cpf character varying(11).'
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-01/gitlab-ci.yml
@@ -78,12 +86,14 @@ execucoes:
   prompt: DAD-01-prompt-1
   harness: claude-code
   resultado: passou
-  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt e {mudança} = "a coluna cpf da
-    tabela cliente, criada como VARCHAR(11) pela migration V2, precisa aceitar 14 caracteres", numa cópia
-    do projeto de teste com V1 e V2 em origin/main (cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65).
-    git diff --name-status origin/main...HEAD: "A db/migration/V3__amplia_cpf_para_14.sql" e "A docs/plans/2026-10-04-cpf-14-chars.md"
-    (nenhuma linha M ou D em db/migration/); a V3 tem VARCHAR(14); a seção ## Rollback tem texto; "Verificação
-    de PR: 2 arquivo(s), nenhum achado." com saida=0. Transcrição: relatório final do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.txt.'
+  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt (versão com o formato da linha
+    de tier, o caso sem remoto e a cópia do verificar_pr.py) e {mudança} = "a coluna cpf da tabela cliente,
+    criada como VARCHAR(11) pela migration V2, precisa aceitar 14 caracteres", numa cópia do projeto de
+    teste com V1 e V2 em origin/main (cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65).
+    Conferido pelo curador no repositório: git diff --name-status origin/main...HEAD = "A db/migration/V3__amplia_cpf_para_14.sql"
+    e "A docs/plans/2026-10-04-cpf-14-chars.md"; a V3 tem VARCHAR(14); o plano começa por "> **Tier:**
+    1 — ..." e tem "## Rollback"; "Verificação de PR: 2 arquivo(s), nenhum achado." com saida=0. Transcrição
+    bruta do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.bruta.jsonl.'
   data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
@@ -161,3 +171,8 @@ revisao_adversarial:
   - afirmacao: 'não executável sem inventar: verificar_pr.py no repositório vazio'
     problema: nada dizia como trazer o script
     tratamento: o passo 6 diz que a receita baixa o script do scaffold
+  - afirmacao: 'correções K2 (lote de 2026-10-04): formato da linha de tier, origem do verificar_pr.py,
+      rollback sem U__ e origin/main sem remoto'
+    problema: o agente do teste de aceite precisou inventar esses quatro pontos
+    tratamento: passos e exemplo reescritos; verificar_pr.py --base main testado num repositório sem remoto
+      (BLOQUEIA e saída 1); conferência independente fica com a revisão do lote

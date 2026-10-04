@@ -13,7 +13,7 @@ ferramentas_aprovadas: [flyway, alembic, sdd-scaffold]
 starter: sdd-scaffold
 receitas: [ligar-ci-gitlab-travas]
 exemplos: [exemplos/DAD-01/gitlab-ci.yml]
-referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, fowler-evodb, sdd-scaffold-verificar-pr, alembic-tutorial, alembic-batch]
+referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
 dono: nuarq
 revisado_em: 2026-10-04
@@ -41,7 +41,7 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
 ## Como aplicar
 
 1. Veja se a migration que você quer mudar já está na branch de destino (troque `origin/main`
-   pela sua branch de destino):
+   pela sua branch de destino; num repositório sem remoto, use a branch local, como `main`):
    `git ls-tree -r --name-only origin/main | grep -E '(^|/)(migrations?|alembic)/'`.
 2. Se está, não edite o arquivo [ref:migrations-reversiveis]. Também não renomeie nem apague: o
    `validate` do Flyway falha com diferença de nome ou de checksum, e com migration aplicada que
@@ -52,12 +52,16 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
    `alembic revision -m "<descrição>"` [ref:alembic-tutorial], com o `downgrade()` preenchido
    além do `upgrade()`: o Alembic trata o `downgrade()` como opcional, e a skill de rollback o
    pede [ref:alembic-tutorial] [ref:migrations-reversiveis].
-4. No plano da mudança (`docs/plans/AAAA-MM-DD-<nome>.md`, com a linha de tier da prática P1-01),
-   escreva a seção `## Rollback` com a estratégia de volta, seguindo a skill
-   `migrations-reversiveis` (linha pronta no Exemplo).
+4. No plano da mudança (`docs/plans/AAAA-MM-DD-<nome>.md`), comece pela linha de tier,
+   `> **Tier:** <n> — <motivo>`, como ensina a prática [P1-01](P1-01.html), e escreva a seção
+   `## Rollback` com a estratégia de volta, seguindo a skill `migrations-reversiveis` (linha
+   pronta no Exemplo).
 5. Ponha a migration na mesma MR do código que depende dela [ref:fowler-evodb].
 6. Se o pipeline do projeto ainda não tem a trava, ligue-a pela receita "Ligar o CI do GitLab
-   com as travas", que baixa o `verificar_pr.py` do scaffold.
+   com as travas", que baixa o `verificar_pr.py` do scaffold. O script também vem no projeto
+   gerado pelo [starter sdd-scaffold](../starters/sdd-scaffold.html); sem o starter, copie
+   `scripts/verificar_pr.py` da versão fixada do scaffold, em
+   [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py).
 
 ## Exemplo
 
@@ -107,6 +111,19 @@ mudança destrutiva, com ADR.
 A skill `migrations-reversiveis` pede o `downgrade` testado em ambiente efêmero e trata a
 mudança de tipo incompatível como destrutiva [ref:migrations-reversiveis].
 
+No Flyway, a migration de desfazer (prefixo `U`) só existe nas edições pagas
+[ref:flyway-undo]. Sem ela, o rollback é uma migration corretiva nova, e o teste é aplicar a
+sequência inteira num PostgreSQL efêmero, com a imagem do Flyway, antes do merge:
+
+```bash
+docker network create efemera
+docker run -d --rm --name pg-efemero --network efemera -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine
+until docker exec pg-efemero pg_isready -U postgres >/dev/null 2>&1; do sleep 1; done
+flyway() { docker run --rm --network efemera -v "$PWD/db/migration:/flyway/sql" flyway/flyway:11 -url=jdbc:postgresql://pg-efemero:5432/app -user=postgres -password=teste "$@"; }
+flyway migrate   # aplica a sequência, incluindo a corretiva
+docker stop pg-efemero && docker network rm efemera
+```
+
 Regra para colar no `AGENTS.md` do projeto:
 
 ```markdown
@@ -121,18 +138,21 @@ Prompt para pedir a mudança de uma migration:
 Preciso mudar o efeito de uma migration, seguindo a prática DAD-01 do portal de padrões de
 engenharia: {mudança}.
 
-1. Crie a branch fix/AAAA-MM-DD-<nome-curto> a partir de origin/main, com a data de hoje.
+1. Crie a branch fix/AAAA-MM-DD-<nome-curto> a partir de origin/main, com a data de hoje. Se o
+   repositório não tem remoto, use a branch local main no lugar de origin/main em todos os passos.
 2. Liste as migrations que já estão na branch de destino:
    git ls-tree -r --name-only origin/main | grep -E '(^|/)(migrations?|alembic)/'
 3. Se a migration afetada está na lista, não edite, não renomeie e não apague o arquivo. Crie a
    próxima migration da sequência com a correção incremental: no Flyway,
    V<próximo número>__<descricao>.sql na mesma pasta; no Alembic,
    alembic revision -m "<descricao>", com upgrade() e downgrade().
-4. Crie o plano em docs/plans/AAAA-MM-DD-<nome-curto>.md com a linha de tier e uma seção
-   "## Rollback" que diga como voltar o schema.
+4. Crie o plano em docs/plans/AAAA-MM-DD-<nome-curto>.md, começando pela linha
+   "> **Tier:** <n> — <motivo>", e com uma seção "## Rollback" que diga como voltar o schema.
 5. Faça um commit com a migration nova e o plano.
 6. Rode python3 scripts/verificar_pr.py --base origin/main e me mostre a saída. Ela não pode
-   ter linha BLOQUEIA.
+   ter linha BLOQUEIA. Se scripts/verificar_pr.py não existir, copie-o de
+   https://raw.githubusercontent.com/thisco/sdd-scaffold/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py
+   sem alterar o conteúdo.
 ```
 
 ### Por ferramenta
