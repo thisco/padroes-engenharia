@@ -73,3 +73,34 @@ def test_dominio_com_pratica_lista_as_candidatas_como_lacuna():
     s = fabrica.site(dominio, fabrica.pratica(), fabrica.referencia())
     html = html_dominio(s, fabrica.espinha_real().faixa("construir-com-ia"))
     assert "Plano com checkboxes" in html
+
+
+def test_polimento_de_ferramentas_e_status():
+    """C10: categoria com acento, chips de status distintos e Ferramentas aprovadas em cartões."""
+    from portal.gerador.carregar import Conteudo
+    from portal.gerador.paginas import html_ferramenta, html_inicio, html_radar
+
+    f = Conteudo(
+        "ferramenta",
+        "ferramentas/gitleaks.yml",
+        fabrica.meta_ferramenta(id="gitleaks", categoria="seguranca", status="adotar"),
+        "",
+    )
+    inicio = Conteudo(
+        "pagina", "paginas/inicio.md", fabrica.meta_pagina(lead="x", referencias=[]), ""
+    )
+    problema = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
+    s = fabrica.site(inicio, problema, f, fabrica.pratica(), fabrica.referencia())
+    home = html_inicio(s)
+    assert "Segurança · versão mínima" in home and "seguranca ·" not in home
+    assert 'class="cartao"' in home.split('aria-label="Ferramentas aprovadas"')[1]
+    assert "Segurança" in html_ferramenta(s, f)
+    assert 'class="st adotar"' in html_radar(s)
+
+
+def test_legenda_de_status_em_grade():
+    import re
+
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    assert re.search(r"\.legenda-status\s*\{[^}]*display:\s*grid", css)
+    assert re.search(r"\.st\.adotar\s*\{", css) and re.search(r"\.st\.evitar\s*\{", css)

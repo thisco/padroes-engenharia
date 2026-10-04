@@ -27,6 +27,8 @@ pares:
   - {texto: papel, fundo: tinta}
   - {texto: sobre-escuro, fundo: tinta}
   - {texto: sobre-escuro-2, fundo: tinta}
+  - {texto: erro, fundo: branco}
+  - {texto: tinta, fundo: ambar-claro}
 
 # Elementos gráficos (hachura, borda de peça apagada, barra de força): WCAG 2.2, critério 1.4.11.
 graficos:

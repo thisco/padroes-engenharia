@@ -262,7 +262,7 @@ def html_inicio(site: Site) -> str:
         {
             "titulo": f.meta["titulo"],
             "href": caminho_de(f),
-            "nota": f"{f.meta['categoria']} · versão mínima {f.meta['versao_minima']}",
+            "nota": f"{categoria_nome(f.meta['categoria'])} · versão mínima {f.meta['versao_minima']}",
         }
         for f in site.repo.ferramentas
         if f.meta.get("status") == "adotar"
@@ -776,6 +776,7 @@ def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
         titulo=meta["titulo"],
         descricao=f"{categoria_nome(meta['categoria'])} · {meta['status']}",
         f=meta,
+        categoria_nome=categoria_nome(meta["categoria"]),
         como_instalar=_markdown_da_ferramenta(meta["como_instalar"], ids),
         limites=_markdown_da_ferramenta(meta["limites"], ids),
         alternativa=_markdown_da_ferramenta(meta.get("alternativa", ""), ids),

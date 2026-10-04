@@ -20,6 +20,7 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import caminho_seguro, expandir_inclusoes, inclusoes, linguagem_de
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
+    categoria_nome,
     html_comece_aqui,
     html_como_fazer,
     html_ferramenta,
@@ -194,7 +195,7 @@ def montar_paginas(site: Site) -> list[Pagina]:
                 caminho_de(f),
                 str(f.meta["titulo"]),
                 "Ferramentas",
-                f"{f.meta['categoria']} · {f.meta['status']}",
+                f"{categoria_nome(f.meta['categoria'])} · {f.meta['status']}",
                 html_ferramenta(site, f),
                 md_ferramenta(site, f),
             )

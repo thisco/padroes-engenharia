@@ -5,8 +5,8 @@
 <div class="topo">
   <h1>{{ titulo }}</h1>
   <div>
-    <p>{{ f.categoria }} · versão mínima {{ f.versao_minima }}</p>
-    <div class="chips"><span class="st">{{ f.status }}</span></div>
+    <p>{{ categoria_nome }} · versão mínima {{ f.versao_minima }}</p>
+    <div class="chips"><span class="st {{ f.status }}">{{ f.status }}</span></div>
   </div>
 </div>
 <div class="corpo">

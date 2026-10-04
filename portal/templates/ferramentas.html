@@ -20,7 +20,7 @@
       <tr data-categoria="{{ f.categoria }}" data-dominios="{{ f.dominios | join(' ') }}" data-status="{{ f.status }}">
         <td><a href="{{ raiz }}{{ f.href }}">{{ f.titulo }}</a></td>
         <td>{{ f.categoria_nome }}</td>
-        <td><span class="st">{{ f.status }}</span></td>
+        <td><span class="st {{ f.status }}">{{ f.status }}</span></td>
         <td>{{ f.versao_minima }}</td>
         <td>{{ f.dominios_nomes | join(", ") }}</td>
       </tr>

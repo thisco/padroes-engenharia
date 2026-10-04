@@ -80,11 +80,11 @@
 {% if ferramentas %}
 <section aria-label="Ferramentas aprovadas">
   <h2>Ferramentas aprovadas</h2>
-  <ul class="praticas">
+  <div class="grade">
 {% for f in ferramentas %}
-    <li><a href="{{ raiz }}{{ f.href }}">{{ f.titulo }}</a> <span class="ref-meta">{{ f.nota }}</span></li>
+    <article class="cartao"><h3><a href="{{ raiz }}{{ f.href }}">{{ f.titulo }}</a></h3><p class="s">{{ f.nota }}</p></article>
 {% endfor %}
-  </ul>
+  </div>
   <p><a href="{{ raiz }}ferramentas.html">Ver o radar completo →</a></p>
 </section>
 {% endif %}
