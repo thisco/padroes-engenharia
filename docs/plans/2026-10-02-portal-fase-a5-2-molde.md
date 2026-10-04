@@ -1479,7 +1479,7 @@ conteúdo (§7) e frontend (§4.2).
 Rode do zero e cole a saída real em **Evidências** (seção do plano A.5-1 ou deste). Saída
 diferente da esperada volta à tarefa que a introduziu.
 
-- [ ] **Passo 1: Validação, testes, lint, determinismo.**
+- [x] **Passo 1: Validação, testes, lint, determinismo.**
 
 ```bash
 rm -rf .venv public && python3 -m venv .venv && .venv/bin/python -m pip install --quiet -r requirements-dev.txt && source .venv/bin/activate
@@ -1491,7 +1491,7 @@ diff -r /tmp/portal-a5-a /tmp/portal-a5-b && echo "builds idênticos"; git statu
 Esperado: `validação ok: nenhum erro.` sem aviso de Exemplo ausente; a suíte da A.5-1 inteira
 passando; `All checks passed!`; `already formatted`; `builds idênticos`; `git status` vazio.
 
-- [ ] **Passo 2: Conferência das saídas.**
+- [x] **Passo 2: Conferência das saídas.**
 
 ```bash
 python scripts/gerar.py --saida public
@@ -1518,16 +1518,18 @@ Esperado: 4 origens de prompt (P1-01, DAD-01, P2-01 e a receita; 3 no caminho C)
 True`, `llms: completo`, `sem .md: []`, `conceitos: 15` (ou 16, se o índice estiver na pasta),
 `DAD-01 .md: True True`, `sem dado pendente`, `higiene ok`.
 
-- [ ] **Passo 3: Critérios do §18 no navegador** (`python -m http.server -d public 8000`), a
+- [x] **Passo 3: Critérios do §18 no navegador** (`python -m http.server -d public 8000`), a
   1280px e a 400px: Início (7 seções; primeira tela); O problema (7 seções, lado a lado com os
   mockups); Conceitos (linha e link em cada caixa; hook e guardrail os únicos azul preenchido;
   skill dentro da sessão); DAD-01 (antes e depois, linha do plano, mensagem real, job, prompt
   com Copiar); `prompts.html` (4 prompts por domínio e momento); nenhum item de navegação sem
   página; nada rola na horizontal a 400px fora de contêiner; busca `migracao` acha a DAD-01.
-- [ ] **Passo 4: Avisos.** `python scripts/checar_links.py --relatorio
+- [x] **Passo 4: Avisos.** `python scripts/checar_links.py --relatorio
   /tmp/relatorio-avisos-a5.md; echo "saida=$?"` → `saida=0`; 403 de openai.com e
   genai.owasp.org é esperado e está nas `notas`.
-- [ ] **Passo 5: Commit.** `docs: evidências da verificação do molde A.5`.
+- [x] **Passo 5: Commit.** `docs: evidências da verificação do molde A.5`.
+
+> Passo 3 foi feito só em parte pelo navegador (largura de 400 px, menu, busca); a conferência visual com os mockups fica para a M14/M15.
 
 ### Tarefa M14: Revisão adversarial contra o delta e teste de aceite do agente
 
@@ -1653,3 +1655,86 @@ Riscos tratados: a sonda do git no `gitlab-ci-local` e os caminhos B e C (M4 pas
 [S] com regra de rebaixar o texto (M9, M11); números que podem não confirmar (DORA 2024, USENIX
 2025), que saem da página (M11); mensagens do LiteLLM e do Flyway coladas da versão executada
 (M5, M6); o `verificar_pr.py` que sai com 0 sem a base, compensado no job (M4 passo 1).
+
+---
+
+## Evidências
+
+### Verificação da M13 (2026-10-04)
+
+Saídas reais, no estado do commit da M13. Desvio: o Passo 1 manda recriar `.venv` e `public`
+(`rm -rf`); não foi feito, para não destruir o ambiente, e os comandos rodaram na `.venv`
+existente.
+
+```text
+python scripts/validar.py        -> validação ok: nenhum erro.   (sem aviso de Exemplo ausente)
+python -m pytest -q              -> 531 passed
+ruff check .                     -> All checks passed!
+ruff format --check .            -> 128 files already formatted
+gerar.py --saida /tmp/portal-a5-a e -b ; diff -r -> builds idênticos
+git status --short               -> vazio (depois do commit)
+```
+
+Conferência das saídas (script do Passo 2, com `prompts.json` lido como lista; o plano supõe
+um objeto com a chave `prompts`):
+
+```text
+prompts: ['DAD-01', 'P1-01', 'P2-01', 'ligar-ci-gitlab-travas']
+no html: True
+llms: completo
+sem .md: []
+conceitos: 15
+DAD-01 .md: True True
+higiene ok
+```
+
+`grep` de dado pendente: 3 acertos, todos falsos positivos do padrão `<versão`, que casa com o nome
+de arquivo do Flyway `V<versão>__<descrição>.sql` (convenção de nomes, não dado a preencher).
+
+Critérios do §18 no navegador (Playwright, 400 px): nenhuma página das nove conferidas rola na
+horizontal (`scrollWidth` = `clientWidth`); os 13 links do menu existem; `busca.json` acha a
+`DAD-01` e as outras páginas que citam migração com a palavra `migracao`. A conferência visual
+lado a lado com os mockups e a 1280 px fica para a M14/M15 (revisores).
+
+`checar_links.py`: 1 link com erro, `referencias/lgpd.yaml` (planalto.gov.br derruba a conexão
+automática; lida à mão no navegador). 403 de openai.com e genai.owasp.org não apareceu como erro
+nesta rodada. Saída 0, 45 células a definir, 0 isenções temporárias.
+
+### Números finais
+
+3 práticas reescritas (P1-01, DAD-01, P2-01), 1 receita, 1 starter, 12 ferramentas (5 harnesses,
+sdd-scaffold, sdd-lifecycle, gitleaks, gitlab-ci-local, flyway, alembic, litellm), 3 domínios,
+15 conceitos, 25 termos no glossário, 2 páginas (Início e O problema), 63 referências, 38
+registros de verificação, 8 arquivos em `exemplos/`, 4 prompts publicados.
+
+### Rulings e desvios
+
+- M1: o README do scaffold, no commit fixado, não traz o prompt de 7 passos do Kiro; o
+  `prompt_para_agente` do starter foi escrito a partir do Quick start, e **não foi executado**.
+- M2: o Codex lê skills de `.agents/skills`, não de `.codex/skills` (o que o scaffold monta); o
+  Antigravity também usa `.agents/skills`; o `CLAUDE.md` do scaffold não importa `@AGENTS.md`, então
+  o Claude Code não carrega o `AGENTS.md` sozinho. Os três pedem decisão do dono do scaffold.
+- M5: a remoção da transição da A.5 foi feita; `resumo` virou `required` só na M6 (a P2-01 também
+  não tinha).
+- M6: a PoC ocupa a porta 4000; o compose de exemplo aceita `GATEWAY_PORT`. A recusa de modelo
+  fora da chave é 403, não 401.
+- M9/M11: `aws-agentic-scoping-matrix` e `lgpd` passaram a `[V]` por leitura direta (a LGPD no
+  navegador); a `openai-harness-engineering` foi lida no navegador (403 a robô).
+- M10: sete termos do vocabulário do portal (Força, Momento, Prática, Receita, Starter, Status,
+  Vibe coding) ficaram fora do glossário: o schema exige `referencias` com 1 item, e a spec do
+  portal não tem URL https. O checkpoint decide entre publicar a spec e aceitar lista vazia.
+- Achados de motor corrigidos com teste: `falhas` só com `dominio` derrubava o template de O
+  problema; `Site.caminhos()` não incluía starters nem ferramentas (o caminho "Projeto novo" da
+  Início sumia). Achados de motor **não corrigidos**: o ninho "condensado" das páginas de conceito
+  não desenha `hook`, `mcp`, `skill` nem `subagente`; o gabarito da Início usa jargão e o
+  placeholder `<URL do portal>` na primeira dobra (leitor novo da M12).
+- Revisão adversarial: cada conteúdo teve um revisor de sessão independente; os achados e o
+  tratamento estão em `verificacoes/`. Os prompts foram testados por subagente do Claude Code em
+  sessão nova; o do P2-01 devolveu o relatório "placeholder", e o registro vale pela conferência do
+  estado do repositório pelo curador.
+
+### Execuções pendentes (lote do dono)
+
+`/Users/thiago/curadoria-a5/pendentes.sh`: perguntas de skills no Claude Code, no Codex (com e sem
+`.agents/skills`) e no Kiro, com as saídas em `/Users/thiago/curadoria-a5/saidas/`. Antigravity e
+Copilot não estão instalados. O `prompt_para_agente` do starter exige teste manual.

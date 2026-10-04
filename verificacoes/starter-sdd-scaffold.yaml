@@ -2,67 +2,96 @@ conteudo: starter-sdd-scaffold
 verificado_em: 2026-10-04
 verificador: agente-curadoria
 afirmacoes:
-  - texto: "o projeto gerado traz AGENTS.md com a constituição, modelos de PRD, spec, plano e ADR, steering em docs/steering/, quatro skills de domínio, a sdd-lifecycle instalada na geração e verificadores em scripts/"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'O que você recebe' e 'Um corpo de skill, três pontos de montagem'"
-    resultado: confirmada
-  - texto: "o CI pronto que acompanha o projeto é de GitHub Actions (.github/workflows/qualidade.yml)"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'O que você recebe' (última linha da árvore)"
-    resultado: confirmada
-  - texto: "CLAUDE.md e GEMINI.md são stubs de quatro linhas que apontam para o AGENTS.md"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'Por que os ponteiros são de quatro linhas'"
-    resultado: confirmada
-  - texto: "o AGENTS.md entra no contexto do agente e o orienta"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'O que impede e o que orienta'"
-    resultado: confirmada
-  - texto: "verificar_constituicao.py reprova (exit 1) a constituição editada no projeto"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'A camada 0, e por que ela é inline'"
-    resultado: confirmada
-  - texto: "hook no Claude Code e regra declarativa no Kiro rodam fora do modelo; o Codex só fixa git_attribution desligado"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'O que impede e o que orienta' (tabela de controles)"
-    resultado: confirmada
-  - texto: ".claude/skills, .codex/skills e .kiro/skills são links para a mesma pasta skills/"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'Um corpo de skill, três pontos de montagem'"
-    resultado: confirmada
-  - texto: "editar uma migration já aplicada reprova; spec sem threat-model, plano sem rollback e plano sem evidência de teste só avisam"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'O que impede e o que orienta'"
-    resultado: confirmada
-  - texto: "o check de drift é informativo e nunca bloqueia o CI"
-    ref: sdd-scaffold-readme
-    localizacao: "README, 'Pós-geração', item 'Rodar o drift check'"
-    resultado: confirmada
+- texto: o projeto gerado traz AGENTS.md com a constituição, modelos de PRD, spec, plano e ADR, steering
+    em docs/steering/, quatro skills de domínio, a sdd-lifecycle instalada na geração e verificadores
+    em scripts/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que você recebe' e 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+- texto: o CI pronto que acompanha o projeto é de GitHub Actions (.github/workflows/qualidade.yml)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que você recebe' (última linha da árvore)
+  resultado: confirmada
+- texto: CLAUDE.md e GEMINI.md são stubs de quatro linhas que apontam para o AGENTS.md
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Por que os ponteiros são de quatro linhas'
+  resultado: confirmada
+- texto: o AGENTS.md entra no contexto do agente e o orienta
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: verificar_constituicao.py reprova (exit 1) a constituição editada no projeto
+  ref: sdd-scaffold-readme
+  localizacao: README, 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: hook no Claude Code e regra declarativa no Kiro rodam fora do modelo; o Codex só fixa git_attribution
+    desligado
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que impede e o que orienta' (tabela de controles)
+  resultado: confirmada
+- texto: .claude/skills, .codex/skills e .kiro/skills são links para a mesma pasta skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+- texto: editar uma migration já aplicada reprova; spec sem threat-model, plano sem rollback e plano sem
+    evidência de teste só avisam
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: o check de drift é informativo e nunca bloqueia o CI
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Pós-geração', item 'Rodar o drift check'
+  resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente
   data: 2026-10-04
   achados:
-    - afirmacao: "no GitLab vale a receita de ligar o CI com as travas [ref:sdd-scaffold-readme]"
-      problema: "o README não menciona GitLab; a frase tinha fonte que não a contém, e a receita não estava ligada"
-      tratamento: "frase retirada do starter e da ferramenta; a receita entra no starter pelo campo receitas na M4"
-    - afirmacao: "nó Proteção dos arquivos de governança lista .codex/requirements.toml com mecanismo bloqueia"
-      problema: "o controle do Codex só fixa git_attribution desligado e não protege caminho de escrita"
-      tratamento: "Codex virou linha própria da planta, sem mecanismo de bloqueio e com nota do que o arquivo faz"
-    - afirmacao: "scripts/verificar_drift_arquitetura.py ao lado do mecanismo bloqueia"
-      problema: "o README diz que o drift check é informativo e nunca bloqueia o CI"
-      tratamento: "linha própria na planta, com força avisa e a frase da fonte"
-    - afirmacao: "o prompt prometia a versão fixada para a sdd-lifecycle instalada pelo gerador"
-      problema: "o gerador clona o HEAD do repositório da skill; fixar o commit do scaffold não fixa a skill, e sem rede o projeto nasce sem ela"
-      tratamento: "texto do starter e das ferramentas diz que a skill vem na versão vigente no dia; o passo 4 do prompt avisa da ausência da skill sem rede; a ferramenta sdd-lifecycle traz o commit fixado"
-    - afirmacao: "a sdd-lifecycle é instalada na geração, citando só o README"
-      problema: "o checklist pós-geração do README ainda manda copiar a skill, o que contradiz o Quick start"
-      tratamento: "nota na referência: vale o Quick start, que é o que criar_projeto.py faz"
-    - afirmacao: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
-      problema: "frase sem [ref:] que sustentasse a árvore do repositório"
-      tratamento: "nova referência sdd-lifecycle-repo (árvore do commit fixado) citada na frase"
-    - afirmacao: "os links apontam para ../skills"
-      problema: "detalhe técnico sem ref: o README diz só links para o mesmo diretório"
-      tratamento: "o prompt passou a dizer links para a pasta skills/, como o README"
-    - afirmacao: "passos não executáveis sem inventar: destino indefinido no prompt, confirmação em conflito com o clone, identidade git, Python 3.11 e rede não ditos no comando, commit da skill fora do scaffold sem SHA"
-      problema: "não executável sem inventar: pasta de destino do passo 3 não era pedida, e o comando não dizia os pré-requisitos"
-      tratamento: "o passo 1 pergunta o destino, a confirmação vale antes do passo 3, o comando lista os pré-requisitos e a ferramenta sdd-lifecycle traz o SHA"
+  - afirmacao: no GitLab vale a receita de ligar o CI com as travas [ref:sdd-scaffold-readme]
+    problema: o README não menciona GitLab; a frase tinha fonte que não a contém, e a receita não estava
+      ligada
+    tratamento: frase retirada do starter e da ferramenta; a receita entra no starter pelo campo receitas
+      na M4
+  - afirmacao: nó Proteção dos arquivos de governança lista .codex/requirements.toml com mecanismo bloqueia
+    problema: o controle do Codex só fixa git_attribution desligado e não protege caminho de escrita
+    tratamento: Codex virou linha própria da planta, sem mecanismo de bloqueio e com nota do que o arquivo
+      faz
+  - afirmacao: scripts/verificar_drift_arquitetura.py ao lado do mecanismo bloqueia
+    problema: o README diz que o drift check é informativo e nunca bloqueia o CI
+    tratamento: linha própria na planta, com força avisa e a frase da fonte
+  - afirmacao: o prompt prometia a versão fixada para a sdd-lifecycle instalada pelo gerador
+    problema: o gerador clona o HEAD do repositório da skill; fixar o commit do scaffold não fixa a skill,
+      e sem rede o projeto nasce sem ela
+    tratamento: texto do starter e das ferramentas diz que a skill vem na versão vigente no dia; o passo
+      4 do prompt avisa da ausência da skill sem rede; a ferramenta sdd-lifecycle traz o commit fixado
+  - afirmacao: a sdd-lifecycle é instalada na geração, citando só o README
+    problema: o checklist pós-geração do README ainda manda copiar a skill, o que contradiz o Quick start
+    tratamento: 'nota na referência: vale o Quick start, que é o que criar_projeto.py faz'
+  - afirmacao: o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio
+    problema: frase sem [ref:] que sustentasse a árvore do repositório
+    tratamento: nova referência sdd-lifecycle-repo (árvore do commit fixado) citada na frase
+  - afirmacao: os links apontam para ../skills
+    problema: 'detalhe técnico sem ref: o README diz só links para o mesmo diretório'
+    tratamento: o prompt passou a dizer links para a pasta skills/, como o README
+  - afirmacao: 'passos não executáveis sem inventar: destino indefinido no prompt, confirmação em conflito
+      com o clone, identidade git, Python 3.11 e rede não ditos no comando, commit da skill fora do scaffold
+      sem SHA'
+    problema: 'não executável sem inventar: pasta de destino do passo 3 não era pedida, e o comando não
+      dizia os pré-requisitos'
+    tratamento: o passo 1 pergunta o destino, a confirmação vale antes do passo 3, o comando lista os
+      pré-requisitos e a ferramenta sdd-lifecycle traz o SHA
+execucoes:
+- tipo: arquivo
+  arquivo: starters/sdd-scaffold.yml
+  comando: python3 sdd-scaffold/criar_projeto.py --nome projeto-teste --destino <pasta> --stack "Python
+    3.11" --descricao "Projeto de teste da curadoria A.5" --origem-ciclo <cópia local do sdd-lifecycle>;
+    depois test -f skills/sdd-lifecycle/SKILL.md; readlink .claude/skills .codex/skills .kiro/skills;
+    e o job governanca da receita (scripts/verificar_constituicao.py --raiz .) numa cópia do projeto
+  ambiente: cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65 e do
+    sdd-lifecycle no commit 1726652171f249bdaf86d7dcb6da23a1b7ae990b; o gerador foi rodado pelo dono;
+    Python 3.14, git, macOS; job via gitlab-ci-local 4.76.0 com Docker (python:3.11)
+  resultado: passou
+  evidencia: 'git log do projeto gerado: "feat: estrutura inicial de projeto-teste via sdd-scaffold";
+    "skill do ciclo: ok"; readlink das três pastas: "../skills" três vezes; job governanca: "Constituição
+    padrao-v1.0: bloco inline confere com o arquivo canônico." e PASS. O prompt_para_agente do starter
+    não foi executado nesta curadoria (instrução manual no lote do dono).'
+  data: '2026-10-04'
