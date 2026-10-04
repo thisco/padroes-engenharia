@@ -1,0 +1,150 @@
+conteudo: glossario
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'Agente de código: Agentes são, em geral, modelos usando ferramentas em loop; o agente de código
+    soma o harness.'
+  ref: anthropic-building-effective-agents
+  localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+  resultado: confirmada
+- texto: 'Modelo: Decide quando chamar uma ferramenta e devolve o pedido estruturado; nas ferramentas
+    de cliente, a aplicação executa.'
+  ref: anthropic-tool-use
+  localizacao: abertura e seção 'How tool use works'
+  resultado: confirmada
+- texto: 'Harness: O programa que roda a sessão em volta do modelo e executa as ferramentas de cliente
+    que ele pede.'
+  ref: anthropic-tool-use
+  localizacao: abertura e seção 'How tool use works'
+  resultado: confirmada
+- texto: 'Sessão: Janela de contexto finita; cada sessão nova começa sem memória da anterior.'
+  ref: anthropic-context-engineering
+  localizacao: seções sobre contexto finito e compactação
+  resultado: confirmada
+- texto: 'Sessão: Janela de contexto finita; cada sessão nova começa sem memória da anterior.'
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: 'Subagente: Sessão com contexto próprio; só um resumo volta à principal, salvo no modo fork,
+    que herda a conversa.'
+  ref: claude-code-subagents
+  localizacao: abertura e seção de gestão de contexto
+  resultado: confirmada
+- texto: 'Skill: Pasta com um SKILL.md: a descrição é carregada no início e o corpo, quando a skill é
+    ativada.'
+  ref: agent-skills-spec
+  localizacao: seções 'SKILL.md format' e 'Progressive disclosure'
+  resultado: confirmada
+- texto: 'MCP: Protocolo aberto que integra aplicações de IA a ferramentas e dados externos.'
+  ref: mcp-spec
+  localizacao: abertura, 'Key Details' e 'Security and Trust & Safety'
+  resultado: confirmada
+- texto: 'Hook: Handler que o harness dispara em pontos do ciclo, como antes de uma ferramenta; no PreToolUse
+    pode bloquear a ação.'
+  ref: claude-code-hooks
+  localizacao: conceitos, ciclo de vida, códigos de saída e PreToolUse
+  resultado: confirmada
+- texto: 'Memória: O que atravessa sessões porque foi gravado, como o histórico git e os arquivos de progresso.'
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: 'Gateway: Camada entre as aplicações e os modelos que autentica, monitora e controla tokens e
+    cotas.'
+  ref: azure-apim-ai-gateway
+  localizacao: seção 'Why use an AI gateway?'
+  resultado: confirmada
+- texto: 'Chave virtual: Credencial que o gateway emite, com modelos liberados e orçamento, ligada a usuário
+    ou time.'
+  ref: litellm-virtual-keys
+  localizacao: abertura ('Track Spend, and control model access via virtual keys'), 'What a key inherits
+    from its owner' e 'Spend Tracking'
+  resultado: confirmada
+- texto: 'Guardrail: Verificação do gateway sobre requisição e resposta, fora do modelo, que pode barrar
+    a chamada.'
+  ref: litellm-guardrails
+  localizacao: seções 'What is a guardrail', modos de execução e exemplo de bloqueio
+  resultado: confirmada
+- texto: 'Catálogo de modelos: Lista de modelos que o gateway expõe, com o nome que a aplicação usa.'
+  ref: litellm-proxy-config
+  localizacao: seção sobre model_list (model_name e litellm_params)
+  resultado: confirmada
+- texto: 'Eval: Teste do comportamento do modelo na tarefa, com casos e critério de sucesso definido antes.'
+  ref: anthropic-develop-tests
+  localizacao: abertura e princípios de avaliação específica da tarefa
+  resultado: confirmada
+- texto: 'Nível de agência: Quanto o sistema decide e age sozinho, de nenhuma agência a agência plena;
+    os controles crescem com ela.'
+  ref: aws-agentic-scoping-matrix
+  localizacao: quatro escopos de agência e a regra de que os controles crescem com a agência
+  resultado: confirmada
+- texto: 'ADR: Registro de decisão de arquitetura: texto curto com contexto, decisão, status e consequências.'
+  ref: nygard-adr
+  localizacao: 'texto principal: definição de ADR e seções Title, Context, Decision, Status e Consequences'
+  resultado: confirmada
+- texto: 'AGENTS.md: Formato aberto de arquivo com instruções para agentes de código.'
+  ref: agents-md
+  localizacao: 'página inicial: descrição do formato e lista de agentes'
+  resultado: confirmada
+- texto: 'Constituição: Princípios que valem para todos os projetos da organização, inline no AGENTS.md
+    e conferidos contra uma cópia canônica.'
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: 'Drift: Divergência entre o diagrama, a infraestrutura como código e o ambiente local, apontada
+    pelo drift check do scaffold.'
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: 'Migration: Mudança versionada do esquema do banco, ou migração, aplicada uma vez e em ordem.'
+  ref: flyway-versionadas
+  localizacao: seções de nomenclatura, aplicação em ordem uma única vez e integridade por checksum
+  resultado: confirmada
+- texto: 'MR: Merge request: pedido de mesclagem no GitLab, cujo pipeline pode rodar jobs próprios.'
+  ref: gitlab-mr-pipelines
+  localizacao: seções sobre quando rodam, requisitos e a regra CI_PIPELINE_SOURCE == merge_request_event
+  resultado: confirmada
+- texto: 'Plano: Documento da fase de planejamento do ciclo, com as tarefas, os testes e a evidência.'
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: 'Spec: Especificação do que será feito, escrita antes do plano nas mudanças de Tier 2.'
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: 'Tier: Classe de rigor da mudança, de 0 (trivial) a 2 (estrutural).'
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: 'Revisão adversarial: Revisão por agente independente que confere o resultado contra a especificação.'
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: Memória inclui o AGENTS.md [ref:anthropic-effective-harnesses]
+    problema: o artigo não cita AGENTS.md; era extrapolação
+    tratamento: definição ficou com o histórico git e os arquivos de progresso; o AGENTS.md como memória
+      está no conceito, com a fonte da OpenAI
+  - afirmacao: 'Constituição: princípios inegociáveis do projeto'
+    problema: o README fala de princípios que valem para todos os projetos da organização
+    tratamento: definição reescrita
+  - afirmacao: Harness [ref:anthropic-tool-use]
+    problema: a página não usa a palavra harness e trata de client tools
+    tratamento: definição restringe a ferramentas de cliente e é do portal; o uso do termo está nas fontes
+      dos conceitos
+  - afirmacao: 'Sessão: começa sem memória e é resumida [ref:anthropic-context-engineering]'
+    problema: a memória da anterior vem do artigo de harnesses e a compactação é técnica
+    tratamento: duas referências, cada uma na sua parte; 'é resumida' saiu
+  - afirmacao: Modelo, Hook, Subagente, Gateway, Chave virtual, Nível de agência
+    problema: paráfrases mais amplas que a fonte (server tools, PreToolUse, fork, 'ponto único', aplicação,
+      supervisão)
+    tratamento: cada definição foi restringida ao que a fonte diz
+  - afirmacao: fontes próprias do autor para Tier, Plano, Spec e Constituição
+    problema: valem para os termos do processo, não como validação externa
+    tratamento: 'aceito: são termos do processo do portal'

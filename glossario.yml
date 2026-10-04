@@ -1,0 +1,123 @@
+termos:
+- termo: Agente de código
+  definicao: Agentes são, em geral, modelos usando ferramentas em loop [ref:anthropic-building-effective-agents]; o agente
+    de código soma o harness.
+  conceito: agente
+  referencias:
+  - anthropic-building-effective-agents
+- termo: Modelo
+  definicao: Decide quando chamar uma ferramenta e devolve o pedido estruturado; nas ferramentas de cliente, a aplicação executa
+    [ref:anthropic-tool-use].
+  conceito: modelo
+  referencias:
+  - anthropic-tool-use
+- termo: Harness
+  definicao: O programa que roda a sessão em volta do modelo e executa as ferramentas de cliente que ele pede [ref:anthropic-tool-use].
+  conceito: harness
+  referencias:
+  - anthropic-tool-use
+- termo: Sessão
+  definicao: Janela de contexto finita [ref:anthropic-context-engineering]; cada sessão nova começa sem memória da anterior
+    [ref:anthropic-effective-harnesses].
+  conceito: sessao
+  referencias:
+  - anthropic-context-engineering
+  - anthropic-effective-harnesses
+- termo: Subagente
+  definicao: Sessão com contexto próprio; só um resumo volta à principal, salvo no modo fork, que herda a conversa [ref:claude-code-subagents].
+  conceito: subagente
+  referencias:
+  - claude-code-subagents
+- termo: Skill
+  definicao: 'Pasta com um SKILL.md: a descrição é carregada no início e o corpo, quando a skill é ativada [ref:agent-skills-spec].'
+  conceito: skill
+  referencias:
+  - agent-skills-spec
+- termo: MCP
+  definicao: Protocolo aberto que integra aplicações de IA a ferramentas e dados externos [ref:mcp-spec].
+  conceito: mcp
+  referencias:
+  - mcp-spec
+- termo: Hook
+  definicao: Handler que o harness dispara em pontos do ciclo, como antes de uma ferramenta; no PreToolUse pode bloquear a
+    ação [ref:claude-code-hooks].
+  conceito: hook
+  referencias:
+  - claude-code-hooks
+- termo: Memória
+  definicao: O que atravessa sessões porque foi gravado, como o histórico git e os arquivos de progresso [ref:anthropic-effective-harnesses].
+  conceito: memoria
+  referencias:
+  - anthropic-effective-harnesses
+- termo: Gateway
+  definicao: Camada entre as aplicações e os modelos que autentica, monitora e controla tokens e cotas [ref:azure-apim-ai-gateway].
+  conceito: gateway
+  referencias:
+  - azure-apim-ai-gateway
+- termo: Chave virtual
+  definicao: Credencial que o gateway emite, com modelos liberados e orçamento, ligada a usuário ou time [ref:litellm-virtual-keys].
+  conceito: chave-virtual
+  referencias:
+  - litellm-virtual-keys
+- termo: Guardrail
+  definicao: Verificação do gateway sobre requisição e resposta, fora do modelo, que pode barrar a chamada [ref:litellm-guardrails].
+  conceito: guardrail
+  referencias:
+  - litellm-guardrails
+- termo: Catálogo de modelos
+  definicao: Lista de modelos que o gateway expõe, com o nome que a aplicação usa [ref:litellm-proxy-config].
+  conceito: catalogo-de-modelos
+  referencias:
+  - litellm-proxy-config
+- termo: Eval
+  definicao: Teste do comportamento do modelo na tarefa, com casos e critério de sucesso definido antes [ref:anthropic-develop-tests].
+  conceito: eval
+  referencias:
+  - anthropic-develop-tests
+- termo: Nível de agência
+  definicao: Quanto o sistema decide e age sozinho, de nenhuma agência a agência plena; os controles crescem com ela [ref:aws-agentic-scoping-matrix].
+  conceito: nivel-de-agencia
+  referencias:
+  - aws-agentic-scoping-matrix
+- termo: ADR
+  definicao: 'Registro de decisão de arquitetura: texto curto com contexto, decisão, status e consequências [ref:nygard-adr].'
+  referencias:
+  - nygard-adr
+- termo: AGENTS.md
+  definicao: Formato aberto de arquivo com instruções para agentes de código [ref:agents-md].
+  referencias:
+  - agents-md
+- termo: Constituição
+  definicao: Princípios que valem para todos os projetos da organização, inline no AGENTS.md e conferidos contra uma cópia
+    canônica [ref:sdd-scaffold-readme].
+  referencias:
+  - sdd-scaffold-readme
+- termo: Drift
+  definicao: Divergência entre o diagrama, a infraestrutura como código e o ambiente local, apontada pelo drift check do scaffold
+    [ref:sdd-scaffold-readme].
+  referencias:
+  - sdd-scaffold-readme
+- termo: Migration
+  definicao: Mudança versionada do esquema do banco, ou migração, aplicada uma vez e em ordem [ref:flyway-versionadas].
+  referencias:
+  - flyway-versionadas
+- termo: MR
+  definicao: 'Merge request: pedido de mesclagem no GitLab, cujo pipeline pode rodar jobs próprios [ref:gitlab-mr-pipelines].'
+  referencias:
+  - gitlab-mr-pipelines
+- termo: Plano
+  definicao: Documento da fase de planejamento do ciclo, com as tarefas, os testes e a evidência [ref:sdd-lifecycle].
+  referencias:
+  - sdd-lifecycle
+- termo: Spec
+  definicao: Especificação do que será feito, escrita antes do plano nas mudanças de Tier 2 [ref:sdd-lifecycle].
+  referencias:
+  - sdd-lifecycle
+- termo: Tier
+  definicao: Classe de rigor da mudança, de 0 (trivial) a 2 (estrutural) [ref:sdd-lifecycle].
+  referencias:
+  - sdd-lifecycle
+- termo: Revisão adversarial
+  definicao: Revisão por agente independente que confere o resultado contra a especificação [ref:sdd-lifecycle].
+  referencias:
+  - sdd-lifecycle
