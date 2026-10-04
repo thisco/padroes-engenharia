@@ -262,7 +262,9 @@ def html_inicio(site: Site) -> str:
         {
             "titulo": f.meta["titulo"],
             "href": caminho_de(f),
-            "nota": f"{categoria_nome(f.meta['categoria'])} · versão mínima {f.meta['versao_minima']}",
+            "nota": (
+                f"{categoria_nome(f.meta['categoria'])} · versão mínima {f.meta['versao_minima']}"
+            ),
         }
         for f in site.repo.ferramentas
         if f.meta.get("status") == "adotar"
