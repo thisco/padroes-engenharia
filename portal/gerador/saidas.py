@@ -229,16 +229,23 @@ def _raiz(caminho: str) -> str:
     return "../" * caminho.count("/")
 
 
+def _relativo(site: Site, url: str | None, p: Conteudo) -> str:
+    """O link de um `.md` gêmeo, relativo à página dele; sem página, `sem página`."""
+    if not url:
+        return "sem página"
+    return _raiz(caminho_de(p)) + url.removeprefix(site.url(""))
+
+
 def _ficha_de_links(site: Site, p: Conteudo) -> list[str]:
     links = links_da_pratica(site, p)
     linhas = []
     for nome, chave in (("Receitas", "receitas"), ("Ferramentas aprovadas", "ferramentas")):
-        itens = [f"{i['id']} ({i['url'] or 'sem página'})" for i in links[chave]]
+        itens = [f"{i['id']} ({_relativo(site, i['url'], p)})" for i in links[chave]]
         if itens:
             linhas.append(f"- {nome}: " + ", ".join(itens))
     if links["starter"]:
         linhas.append(
-            f"- Starter: {links['starter']['id']} ({links['starter']['url'] or 'sem página'})"
+            f"- Starter: {links['starter']['id']} ({_relativo(site, links['starter']['url'], p)})"
         )
     return linhas
 
@@ -260,7 +267,7 @@ def md_pratica(site: Site, p: Conteudo) -> str:
         "- Aplica: "
         + (
             ", ".join(
-                f"`{i['item']}` ({i['url'] or 'sem página'})"
+                f"`{i['item']}` ({_relativo(site, i['url'], p)})"
                 for i in links_da_pratica(site, p)["aplica"]
             )
             or "nada"

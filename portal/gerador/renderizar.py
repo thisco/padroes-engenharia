@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import unicodedata
 from collections.abc import Callable, Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -159,6 +159,8 @@ def montar_site(
     config = carregar_config(raiz)
     espinha = carregar_espinha(raiz / "esquemas" / "espinha.yml")
     repo = carregar(raiz) if repo is None else repo
+    if not eh_local(url_base):
+        repo = _com_url_do_portal(repo, url_base.rstrip("/"))
     ambiente = criar_ambiente(raiz)
     ambiente.globals["CONCEITOS"] = {
         str(c.meta["peca"]): {
@@ -180,6 +182,25 @@ def montar_site(
         espinha=espinha,
         catalogo=montar_catalogo(repo, espinha),
         ambiente=ambiente,
+    )
+
+
+MARCADORES_URL = ("{URL do portal}", "<URL do portal>")
+CAMPOS_COM_CORPO = ("praticas", "dominios", "conceitos", "guias", "casos", "paginas", "receitas")
+
+
+def _com_url_do_portal(repo: Repositorio, url: str) -> Repositorio:
+    """Troca os marcadores de URL do portal pelo endereço publicado (base não local)."""
+
+    def trocar(c: Conteudo) -> Conteudo:
+        corpo = c.corpo
+        for marcador in MARCADORES_URL:
+            corpo = corpo.replace(marcador, url)
+        return replace(c, corpo=corpo) if corpo != c.corpo else c
+
+    return replace(
+        repo,
+        **{campo: tuple(trocar(c) for c in getattr(repo, campo)) for campo in CAMPOS_COM_CORPO},
     )
 
 

@@ -58,7 +58,5 @@ def test_md_da_pratica_traz_a_url_da_skill_em_aplica():
     from portal.gerador.saidas import md_pratica
 
     md = md_pratica(s, p)
-    assert (
-        "`skill:sdd-lifecycle` (https://p.exemplo/.well-known/skills/sdd-lifecycle/SKILL.md)" in md
-    )
+    assert "`skill:sdd-lifecycle` (../.well-known/skills/sdd-lifecycle/SKILL.md)" in md
     assert "`steering:sdd-processo` (sem página)" in md
