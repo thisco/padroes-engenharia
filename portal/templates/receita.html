@@ -33,7 +33,7 @@
 {% if vinculos.exemplos %}
     <section><h2>Exemplos</h2><ul>{% for i in vinculos.exemplos %}<li><a href="{{ raiz }}{{ i.href }}"><code>{{ i.titulo }}</code></a></li>{% endfor %}</ul></section>
 {% endif %}
-    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias, raiz) }}</section>
   </aside>
 </div>
 {% endblock %}

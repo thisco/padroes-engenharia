@@ -30,6 +30,7 @@ ROTULO_TIPO_REFERENCIA = {
     "analista": "Analista",
     "comunidade": "Comunidade",
     "interno": "Interno",
+    "portal": "Portal",
 }
 ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Agentes próprios"}
 

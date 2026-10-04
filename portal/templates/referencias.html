@@ -19,7 +19,7 @@
 {% for r in por_tipo[tipo] %}
       <tr id="{{ r.chave }}" data-tipo="{{ tipo }}" data-dominios="{{ r.meta.get('dominios', []) | join(' ') }}" data-verificacao="{{ r.meta.verificacao }}">
         <td><code>{{ r.chave }}</code></td>
-        <td><a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a><span class="ref-meta">{{ r.meta.organizacao }} · {{ r.meta.localizacao }}</span></td>
+        <td>{% if r.meta.tipo == "portal" %}<a href="{{ raiz }}{{ r.meta.url }}">{{ r.meta.titulo }}</a>{% else %}<a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a>{% endif %}<span class="ref-meta">{{ r.meta.organizacao }} · {{ r.meta.localizacao }}</span></td>
         <td><span class="marca-v">[{{ r.meta.verificacao }}]</span> {{ r.meta.verificado_em }}</td>
         <td>{% for item in site.catalogo.citado_por(r.chave) %}<a href="{{ raiz }}{{ caminho_de(item) }}">{{ rotulo(item) }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
       </tr>

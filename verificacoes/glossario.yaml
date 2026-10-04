@@ -123,6 +123,36 @@ afirmacoes:
   ref: sdd-lifecycle
   localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
   resultado: confirmada
+- texto: 'Força: Quanto uma prática impede: bloqueia, pede aprovação, avisa ou só orienta.'
+  ref: portal-inicio
+  localizacao: seções 'O que significa a força' e 'O que significa o status'
+  resultado: confirmada
+- texto: 'Status: Maturidade de uma prática: adotar, experimentar, avaliar ou evitar.'
+  ref: portal-inicio
+  localizacao: seções 'O que significa a força' e 'O que significa o status'
+  resultado: confirmada
+- texto: 'Momento: Fase do ciclo em que a prática vale, uma coluna da espinha: antes de escrever, enquanto
+    escreve, antes do merge ou depois da entrega.'
+  ref: portal-espinha
+  localizacao: matriz de domínios por momentos, com as práticas em cada célula
+  resultado: confirmada
+- texto: 'Prática: Regra do portal, na célula de um domínio e de um momento da espinha, com força e status.'
+  ref: portal-espinha
+  localizacao: matriz de domínios por momentos, com as práticas em cada célula
+  resultado: confirmada
+- texto: 'Receita: Passo a passo de uma tarefa concreta, listado no índice Como fazer.'
+  ref: portal-como-fazer
+  localizacao: índice das receitas
+  resultado: confirmada
+- texto: 'Starter: Repositório-modelo com versão fixada, listado em Comece aqui.'
+  ref: portal-comece-aqui
+  localizacao: lista de starters
+  resultado: confirmada
+- texto: 'Vibe coding: Deixar o agente escrever sem o ciclo de especificação, plano e revisão; as falhas
+    desse modo estão em O problema.'
+  ref: portal-o-problema
+  localizacao: seção 'Como o vibe coding falha'
+  resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

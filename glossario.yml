@@ -121,3 +121,33 @@ termos:
   definicao: Revisão por agente independente que confere o resultado contra a especificação [ref:sdd-lifecycle].
   referencias:
   - sdd-lifecycle
+- termo: Força
+  definicao: 'Quanto uma prática impede: bloqueia, pede aprovação, avisa ou só orienta [ref:portal-inicio].'
+  referencias:
+  - portal-inicio
+- termo: Status
+  definicao: 'Maturidade de uma prática: adotar, experimentar, avaliar ou evitar [ref:portal-inicio].'
+  referencias:
+  - portal-inicio
+- termo: Momento
+  definicao: 'Fase do ciclo em que a prática vale, uma coluna da espinha: antes de escrever, enquanto escreve, antes do merge
+    ou depois da entrega [ref:portal-espinha].'
+  referencias:
+  - portal-espinha
+- termo: Prática
+  definicao: Regra do portal, na célula de um domínio e de um momento da espinha, com força e status [ref:portal-espinha].
+  referencias:
+  - portal-espinha
+- termo: Receita
+  definicao: Passo a passo de uma tarefa concreta, listado no índice Como fazer [ref:portal-como-fazer].
+  referencias:
+  - portal-como-fazer
+- termo: Starter
+  definicao: Repositório-modelo com versão fixada, listado em Comece aqui [ref:portal-comece-aqui].
+  referencias:
+  - portal-comece-aqui
+- termo: Vibe coding
+  definicao: Deixar o agente escrever sem o ciclo de especificação, plano e revisão; as falhas desse modo estão em O problema
+    [ref:portal-o-problema].
+  referencias:
+  - portal-o-problema

@@ -24,7 +24,7 @@
 {% if ligadas %}
     <section><h2>Práticas</h2><ul>{% for item in ligadas %}<li><a href="{{ raiz }}{{ item.href }}">{{ item.titulo }}</a></li>{% endfor %}</ul></section>
 {% endif %}
-    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias, raiz) }}</section>
   </div>
 </section>
 {% endblock %}

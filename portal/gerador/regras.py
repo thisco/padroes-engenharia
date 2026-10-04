@@ -453,13 +453,19 @@ def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     erros: list[Erro] = []
     for r in repo.referencias:
         url = _texto(r.meta, "url")
-        if url is not None and not url_https_valida(url):
+        if url is not None and r.meta.get("tipo") == "portal":
+            if not PAGINA_DO_PORTAL.match(url):
+                erros.append(Erro(r.caminho_relativo, "url", codigos.R_REFERENCIA, url))
+        elif url is not None and not url_https_valida(url):
             erros.append(Erro(r.caminho_relativo, "url", codigos.R_REFERENCIA, url))
         for campo in ("publicado_em", "verificado_em"):
             valor = _texto(r.meta, campo)
             if valor is not None and _data_impossivel(valor):
                 erros.append(Erro(r.caminho_relativo, campo, codigos.R_REFERENCIA, valor))
     return erros
+
+
+PAGINA_DO_PORTAL = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*\.html$")
 
 
 def url_https_valida(url: str) -> bool:

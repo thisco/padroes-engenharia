@@ -154,3 +154,47 @@ def test_starter_declara_sem_citar(tmp_path):
 def test_ref_malformado_em_campo_fora_do_corpo_reprova(tmp_path, conteudo, campo):
     erros = rodar(regra_citacoes, [conteudo, fabrica.referencia()], tmp_path)
     assert Erro(conteudo.caminho_relativo, campo, "R-REF-MALFORMADO", "[ref:Outra]") in erros
+
+
+def test_referencia_interna_do_tipo_portal_aponta_para_pagina_do_proprio_portal(tmp_path):
+    """C11: o tipo `portal` usa o caminho de uma página do portal, e não uma URL https."""
+    ok = fabrica.referencia(fabrica.meta_referencia(tipo="portal", url="espinha.html"))
+    assert rodar(regra_referencias, [ok], tmp_path) == []
+    for url in ("https://exemplo.org/doc", "../fora.html", "espinha"):
+        r = fabrica.referencia(fabrica.meta_referencia(tipo="portal", url=url))
+        assert rodar(regra_referencias, [r], tmp_path) == [
+            Erro("referencias/ref-forte.yaml", "url", "R-REFERENCIA", url)
+        ], url
+
+
+def test_referencia_do_portal_vira_link_relativo_no_html_e_no_md():
+    from portal.gerador.carregar import Conteudo
+    from portal.gerador.paginas import html_glossario
+    from portal.gerador.texto_md import md_lista_referencias
+
+    r = fabrica.referencia(
+        fabrica.meta_referencia(id="portal-espinha", tipo="portal", url="espinha.html")
+    )
+    meta = fabrica.meta_glossario()
+    meta["termos"] = [
+        {
+            "termo": "Força",
+            "definicao": "Quanto a prática impede.",
+            "referencias": ["portal-espinha"],
+        }
+    ]
+    g = Conteudo("glossario", "glossario.yml", meta, "")
+    s = fabrica.site(g, r)
+    html = html_glossario(s)
+    assert "Fonte:" in html
+    pr = fabrica.pratica(
+        fabrica.meta_pratica(referencias=["portal-espinha"]), "x [ref:portal-espinha].\n"
+    )
+    s2 = fabrica.site(pr, r)
+    from portal.gerador.renderizar import html_pratica
+
+    pagina = html_pratica(s2, pr)
+    assert 'href="../espinha.html"' in pagina and 'href="espinha.html"' not in pagina
+    assert "noopener" not in pagina.split('class="refs"')[1].split("</ol>")[0]
+    md = md_lista_referencias(s2, pr)
+    assert "(espinha.html)" in md or " espinha.html " in md

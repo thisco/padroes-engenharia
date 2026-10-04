@@ -238,11 +238,11 @@
 </ul>
 {%- endmacro %}
 
-{% macro lista_referencias(referencias) -%}
+{% macro lista_referencias(referencias, raiz="") -%}
 {% if referencias %}
 <ol class="refs">
 {% for r in referencias %}
-  <li id="ref-{{ r.chave }}"><span class="n">[{{ loop.index }}]</span> <a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a>
+  <li id="ref-{{ r.chave }}"><span class="n">[{{ loop.index }}]</span> {% if r.meta.tipo == "portal" %}<a href="{{ raiz }}{{ r.meta.url }}">{{ r.meta.titulo }}</a>{% else %}<a href="{{ r.meta.url }}" rel="noopener noreferrer">{{ r.meta.titulo }}</a>{% endif %}
     <small>{{ r.meta.organizacao }} · {{ ROTULO_TIPO_REFERENCIA[r.meta.tipo] }} · <span class="marca-v">[{{ r.meta.verificacao }}]</span> verificada em {{ r.meta.verificado_em }} · {{ r.meta.localizacao }}</small></li>
 {% endfor %}
 </ol>

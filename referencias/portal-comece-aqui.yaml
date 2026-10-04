@@ -1,0 +1,10 @@
+id: portal-comece-aqui
+titulo: "Comece aqui"
+organizacao: Portal de Padrões de Engenharia
+url: comece-aqui.html
+tipo: portal
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "lista de starters"
+dominios: [construir-com-ia]
+notas: "Página do próprio portal, lida no HTML gerado em 2026-10-04."

@@ -1,0 +1,10 @@
+id: portal-inicio
+titulo: "Início do portal"
+organizacao: Portal de Padrões de Engenharia
+url: index.html
+tipo: portal
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções 'O que significa a força' e 'O que significa o status'"
+dominios: [construir-com-ia]
+notas: "Página do próprio portal, lida no HTML gerado em 2026-10-04."

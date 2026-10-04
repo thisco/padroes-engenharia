@@ -77,7 +77,7 @@
 {% if dominio and dominio.meta.get("skills") %}
     <section><h2>Skills</h2><ul>{% for s in dominio.meta.skills %}<li><code>{{ s }}</code></li>{% endfor %}</ul></section>
 {% endif %}
-    <section><h2>Referências</h2>{{ c.lista_referencias(referencias) }}</section>
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias, raiz) }}</section>
   </aside>
 </div>
 {% endblock %}
