@@ -49,3 +49,27 @@ def test_pre_em_largura_cheia_nos_blocos_de_codigo():
     assert re.search(r"\.bloco\s*\{[^}]*width:\s*100%", css) or re.search(
         r"\.bloco pre\s*\{[^}]*width:\s*100%", css
     )
+
+
+def test_comece_aqui_nao_mostra_secao_vazia():
+    """C9: tutoriais e guias sem conteúdo não aparecem; só os starters."""
+    s = _starter()
+    html = html_comece_aqui(fabrica.site(s, fabrica.referencia()))
+    assert "Tutoriais" not in html and "Para entender antes" not in html
+    assert "Starters" in html
+
+
+def test_dominio_com_pratica_lista_as_candidatas_como_lacuna():
+    from portal.gerador.renderizar import html_dominio
+
+    dominio = Conteudo(
+        "dominio",
+        "praticas/construir-com-ia/_dominio.md",
+        fabrica.meta_dominio(
+            candidatas=[{"titulo": "Plano com checkboxes", "momento": "enquanto-escreve"}]
+        ),
+        "",
+    )
+    s = fabrica.site(dominio, fabrica.pratica(), fabrica.referencia())
+    html = html_dominio(s, fabrica.espinha_real().faixa("construir-com-ia"))
+    assert "Plano com checkboxes" in html

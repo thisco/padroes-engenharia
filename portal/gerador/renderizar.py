@@ -608,7 +608,7 @@ def listas_comece_aqui(site: Site) -> list[dict[str, Any]]:
     tutoriais = [g for g in site.repo.guias if _tutorial(g)]
     explicacoes = [g for g in site.repo.guias if not _tutorial(g)]
     nota_guia = lambda g: str(g.meta.get("publico", ""))  # noqa: E731
-    return [
+    listas = [
         {
             "titulo": "Tutoriais",
             "itens": _itens(tutoriais, nota_guia),
@@ -625,6 +625,7 @@ def listas_comece_aqui(site: Site) -> list[dict[str, Any]]:
             "vazio": "Nenhum guia.",
         },
     ]
+    return [lista for lista in listas if lista["itens"]]  # seção sem conteúdo não aparece (§4.3)
 
 
 def slug_termo(texto: str) -> str:

@@ -381,6 +381,6 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 @media (min-width: 901px) {
   .lado-a-lado { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
-.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--harness); border: 1px solid var(--azul); padding: 12px; }
-.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--azul); padding: 8px 10px; }
+.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--gov-claro); border: 1px solid var(--gov); padding: 12px; }
+.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--gov); padding: 8px 10px; }
 .combinar .momento-caixa p { margin: 4px 0 0; font-size: 13px; }
