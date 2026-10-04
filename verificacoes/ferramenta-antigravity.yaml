@@ -1,0 +1,38 @@
+conteudo: ferramenta-antigravity
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Antigravity lê AGENTS.md e GEMINI.md e arquivos de .agents/rules/
+  ref: antigravity-rules
+  localizacao: seção de descoberta de regras por diretório
+  resultado: confirmada
+- texto: AGENTS.md e GEMINI.md não usam frontmatter; todo .md de .agents/rules/ exige trigger (model_decision,
+    always_on, glob ou manual), e sem ele a regra é descartada em silêncio
+  ref: antigravity-rules
+  localizacao: seção sobre frontmatter
+  resultado: confirmada
+- texto: skills de workspace em .agents/skills/<pasta>/
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+- texto: o scaffold monta só .claude/skills, .codex/skills e .kiro/skills; o Antigravity não lê ANTIGRAVITY.md
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill...' e 'Por que os ponteiros são de quatro linhas'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o Antigravity não lê ANTIGRAVITY.md [ref:sdd-scaffold-readme]
+    problema: 'fonte secundária usada como primária: a página oficial lista o que lê mas não traz a negativa'
+    tratamento: texto atribui a observação ao README do scaffold
+  - afirmacao: regras em .agents/rules/ com frontmatter
+    problema: 'não executável sem inventar: faltavam o nome do campo e os valores válidos, e o descarte
+      silencioso'
+    tratamento: trigger e os quatro valores entraram em limites, com a fonte
+  - afirmacao: crie .agents/skills apontando para skills/
+    problema: 'parcialmente executável: sem comando nem alvo relativo'
+    tratamento: comando ln -s ../skills .agents/skills no texto
+  - afirmacao: versão não verificada
+    problema: produto não instalado, sem execução
+    tratamento: dito no texto de versao_minima e de limites; o status segue experimentar

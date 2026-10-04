@@ -1,0 +1,41 @@
+conteudo: ferramenta-codex
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Codex lê o AGENTS.md e para de acrescentar arquivos quando o conjunto chega a 32 KiB (project_doc_max_bytes,
+    padrão)
+  ref: codex-agents-md
+  localizacao: seção sobre project_doc_max_bytes
+  resultado: confirmada
+- texto: AGENTS.md é um formato aberto lido por vários agentes
+  ref: agents-md
+  localizacao: página inicial, descrição e lista de agentes
+  resultado: confirmada
+- texto: skills de repositório ficam em .agents/skills, varridas da pasta de trabalho até a raiz do repositório;
+    a página não cita .codex/skills
+  ref: codex-skills
+  localizacao: seção de localização das skills de repositório
+  resultado: confirmada
+- texto: o scaffold monta .codex/skills; o README diz que o corte dos 32 KiB é silencioso
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem' e 'O que impede e o que orienta'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o scaffold registra o corte sem aviso [ref:sdd-scaffold-readme]
+    problema: fonte secundária repassando afirmação técnica sobre o Codex; a documentação diz que o Codex
+      para de acrescentar arquivos, não que trunca nem se avisa
+    tratamento: texto atribui a observação ao scaffold e usa a descrição da documentação para o mecanismo
+  - afirmacao: confira na sua versão qual pasta ele lê
+    problema: 'ressalva fraca: a página não cita .codex/skills; também não executável (sem procedimento
+      de conferência)'
+    tratamento: o texto diz que o link do scaffold não é caminho documentado e traz o comando do link
+      .agents/skills; o teste fica no lote pendentes.sh, blocos m2-codex e m2-codex-agents
+  - afirmacao: versão 0.160.0
+    problema: número sem fonte
+    tratamento: vem de codex --version na máquina da curadoria em 2026-10-04
+  - afirmacao: como_instalar não instala a ferramenta
+    problema: não executável sem inventar
+    tratamento: campo abre dizendo que a instalação é pelo site do fornecedor

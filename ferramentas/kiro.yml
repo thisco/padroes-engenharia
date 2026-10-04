@@ -1,0 +1,21 @@
+id: kiro
+titulo: Kiro
+categoria: harness
+status: experimentar
+versao_minima: "2.27.0"
+dono: nuarq
+praticas: [P1-01]
+receitas: []
+como_instalar: |
+  Instale o Kiro pelo site do fornecedor; este campo cobre só a configuração do repositório. A versão
+  é a do kiro-cli.
+  Instruções do projeto: o Kiro lê o `AGENTS.md` da raiz do workspace automaticamente, e também os de
+  subpastas, além dos arquivos de `.kiro/steering/` [ref:kiro-steering]. Skills de workspace ficam em
+  `.kiro/skills/<nome>/SKILL.md`, e o `name` do frontmatter precisa ser igual ao nome da pasta
+  [ref:kiro-skills]. No projeto gerado pelo starter `sdd-scaffold` o link `.kiro/skills` já aponta
+  para `skills/` [ref:sdd-scaffold-readme].
+limites: |
+  O `name` da skill só aceita letras minúsculas, números e hífens, com até 64 caracteres
+  [ref:kiro-skills]. O `AGENTS.md` não tem modos de inclusão e entra sempre, diferente dos arquivos de
+  steering [ref:kiro-steering].
+referencias: [kiro-skills, kiro-steering, sdd-scaffold-readme]

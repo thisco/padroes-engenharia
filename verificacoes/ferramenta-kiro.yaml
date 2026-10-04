@@ -1,0 +1,35 @@
+conteudo: ferramenta-kiro
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Kiro lê o AGENTS.md da raiz do workspace automaticamente, e os de subpastas, além de .kiro/steering/
+  ref: kiro-steering
+  localizacao: seções 'Workspace steering' e 'Agents.md'
+  resultado: confirmada
+- texto: o AGENTS.md não tem modos de inclusão e entra sempre, diferente do steering
+  ref: kiro-steering
+  localizacao: seção 'Agents.md'
+  resultado: confirmada
+- texto: skills de workspace em .kiro/skills/<nome>/SKILL.md, com name igual à pasta; name só com minúsculas,
+    números e hífens, até 64 caracteres
+  ref: kiro-skills
+  localizacao: seções de local do workspace e de campos do frontmatter
+  resultado: confirmada
+- texto: no projeto do scaffold o link .kiro/skills aponta para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o Kiro lê os arquivos de .kiro/steering/
+    problema: 'generalização: omitia que o AGENTS.md entra sempre e que o steering tem modos de inclusão,
+      e os AGENTS.md de subpastas'
+    tratamento: texto e limites completados
+  - afirmacao: versão 2.27.0
+    problema: número sem fonte e ambiguidade IDE ou CLI
+    tratamento: a versão é a do kiro-cli (kiro-cli --version em 2026-10-04) e o texto diz isso
+  - afirmacao: como_instalar não instala a ferramenta
+    problema: não executável sem inventar
+    tratamento: campo abre dizendo que a instalação é pelo site do fornecedor

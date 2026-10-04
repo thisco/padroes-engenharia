@@ -1,0 +1,34 @@
+conteudo: ferramenta-copilot
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Copilot lê .github/copilot-instructions.md, AGENTS.md (vale o mais próximo) ou CLAUDE.md ou
+    GEMINI.md na raiz
+  ref: copilot-instructions
+  localizacao: seções de instruções do repositório e de agente
+  resultado: confirmada
+- texto: skills de projeto em .github/skills, .claude/skills ou .agents/skills, uma pasta por skill; SKILL.md
+    exige name (minúsculas com hífen) e description
+  ref: copilot-skills
+  localizacao: seção de skills de projeto e de formato do SKILL.md
+  resultado: confirmada
+- texto: no projeto do scaffold .claude/skills é um link para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o link .claude/skills do scaffold já está entre os três
+    problema: 'o já promete mais do que a fonte: nenhuma fonte diz se o Copilot segue link simbólico'
+    tratamento: texto manda conferir antes de confiar
+  - afirmacao: skills em .github/skills
+    problema: omitia a pasta por skill que a fonte exige
+    tratamento: incluída no texto
+  - afirmacao: versão não verificada
+    problema: produto não instalado, sem execução
+    tratamento: dito no texto; o status segue experimentar
+  - afirmacao: como_instalar não instala a ferramenta
+    problema: não executável sem inventar
+    tratamento: campo abre dizendo que a habilitação é pelo site do fornecedor

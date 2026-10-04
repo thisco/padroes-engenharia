@@ -1,0 +1,50 @@
+conteudo: ferramenta-claude-code
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a partir da 2.1.277 o Claude Code lê o AGENTS.md direto, e só quando não há CLAUDE.md; com os
+    dois arquivos lê só o CLAUDE.md, que pode importar o AGENTS.md com @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md' (tabela e nota da versão)
+  resultado: confirmada
+- texto: skills de projeto ficam em .claude/skills/<nome>/SKILL.md
+  ref: claude-code-skills
+  localizacao: seção 'Choose where skills load', linha Project
+  resultado: confirmada
+- texto: o CLAUDE.md do scaffold é um ponteiro de quatro linhas para o AGENTS.md; o link .claude/skills
+    aponta para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Por que os ponteiros são de quatro linhas' e 'Um corpo de skill, três pontos de
+    montagem'
+  resultado: confirmada
+- texto: um CLAUDE.md que só manda ler o AGENTS.md faz o Claude ver o AGENTS.md apenas se decidir abri-lo;
+    a documentação recomenda @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md', lista de migração de configurações
+  resultado: confirmada
+- texto: CLAUDE.md é contexto, não configuração imposta; para bloquear use hook PreToolUse
+  ref: claude-code-memory
+  localizacao: seção 'CLAUDE.md vs auto memory'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o Claude Code lê o AGENTS.md quando não há CLAUDE.md, e no scaffold o CLAUDE.md é ponteiro
+    problema: 'a combinação engana: o CLAUDE.md do scaffold não importa o AGENTS.md (sem @AGENTS.md),
+      então o Claude lê só o CLAUDE.md e o AGENTS.md depende de o modelo abri-lo'
+    tratamento: a ressalva entrou em limites com a fonte; levado como achado ao checkpoint para decisão
+      do dono do scaffold
+  - afirmacao: configuração obrigatória
+    problema: tradução imprecisa de 'enforced configuration'
+    tratamento: trocado por 'configuração imposta'
+  - afirmacao: versões 2.1.285, 0.160.0 e 2.27.0 sem [ref:]
+    problema: número sem fonte
+    tratamento: versao_minima do Claude Code passou a 2.1.277, que a documentação dá como mínima para
+      ler AGENTS.md; as versões de Codex e Kiro vêm de --version na máquina da curadoria em 2026-10-04
+      e a linha 'Versão testada' saiu do texto
+  - afirmacao: como_instalar não instala a ferramenta
+    problema: 'não executável sem inventar: o texto não dizia onde instalar o produto, qual arquivo criar,
+      nem como gerar o projeto do scaffold'
+    tratamento: o campo abre dizendo que a instalação é pelo site do fornecedor e que ele cobre só a configuração
+      do repositório; a geração do projeto remete ao starter

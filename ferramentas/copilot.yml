@@ -1,0 +1,21 @@
+id: copilot
+titulo: GitHub Copilot
+categoria: harness
+status: experimentar
+versao_minima: "não verificada: produto não instalado na curadoria"
+dono: nuarq
+praticas: [P1-01]
+receitas: []
+como_instalar: |
+  Habilite o Copilot pelo site do fornecedor; este campo cobre só a configuração do repositório.
+  Instruções do projeto: o Copilot lê `.github/copilot-instructions.md`, arquivos `AGENTS.md` (vale o
+  mais próximo) ou um `CLAUDE.md` ou `GEMINI.md` na raiz [ref:copilot-instructions]. Skills de
+  projeto ficam numa pasta própria por skill, dentro de `.github/skills`, `.claude/skills` ou
+  `.agents/skills` [ref:copilot-skills]. No projeto gerado pelo starter `sdd-scaffold`, `.claude/skills`
+  é um link para `skills/` [ref:sdd-scaffold-readme]; a documentação não diz se o Copilot segue
+  link simbólico, então confira antes de confiar nele.
+limites: |
+  O `SKILL.md` exige `name` (minúsculas, com hífen no lugar de espaço) e `description`, e o arquivo
+  se chama exatamente `SKILL.md` [ref:copilot-skills]. Sem execução nesta curadoria: o produto não
+  estava instalado.
+referencias: [copilot-instructions, copilot-skills, sdd-scaffold-readme]

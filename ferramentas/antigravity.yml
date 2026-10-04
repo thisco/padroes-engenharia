@@ -1,0 +1,22 @@
+id: antigravity
+titulo: Antigravity
+categoria: harness
+status: experimentar
+versao_minima: "não verificada: produto não instalado na curadoria"
+dono: nuarq
+praticas: [P1-01]
+receitas: []
+como_instalar: |
+  Instale o Antigravity pelo site do fornecedor; este campo cobre só a configuração do repositório.
+  Instruções do projeto: o Antigravity lê `AGENTS.md` e `GEMINI.md`, e arquivos de `.agents/rules/`
+  [ref:antigravity-rules]. Skills de workspace ficam em `.agents/skills/<pasta>/` [ref:antigravity-skills].
+  O scaffold monta só `.claude/skills`, `.codex/skills` e `.kiro/skills` [ref:sdd-scaffold-readme]:
+  no projeto gerado pelo starter `sdd-scaffold`, aponte `.agents/skills` para `skills/` com
+  `mkdir -p .agents && ln -s ../skills .agents/skills`.
+limites: |
+  `AGENTS.md` e `GEMINI.md` não usam frontmatter; todo `.md` dentro de `.agents/rules/` precisa de
+  frontmatter com `trigger` igual a `model_decision`, `always_on`, `glob` ou `manual`, e sem ele a regra
+  é descartada em silêncio [ref:antigravity-rules]. O README do scaffold diz que o Antigravity não lê
+  `ANTIGRAVITY.md`, observação do scaffold que a página oficial de regras não faz
+  [ref:sdd-scaffold-readme]. Sem execução nesta curadoria: o produto não estava instalado.
+referencias: [antigravity-rules, antigravity-skills, sdd-scaffold-readme]

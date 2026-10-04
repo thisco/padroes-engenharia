@@ -260,7 +260,7 @@ A P1-01 lista os harnesses porque instalar a `sdd-lifecycle` muda entre eles (§
 - Consumes: `sdd-scaffold-readme` (M1). Produces: ids de categoria `harness`, usados pela P1-01 e
   como `harness` em `execucoes`.
 
-- [ ] **Passo 1: Fonte antes do texto** (os caminhos mudam entre versões). Anote, por harness:
+- [x] **Passo 1: Fonte antes do texto** (os caminhos mudam entre versões). Anote, por harness:
   (a) arquivo de instruções do projeto que ele lê; (b) pasta de skills do projeto; (c) formato
   `SKILL.md`.
 
@@ -277,20 +277,22 @@ URL que não existir mais: procure a página de "skills" na documentação ofici
 pasta de skills de projeto, `limites` diz isso e `como_instalar` usa o arquivo de instruções
 (forma da seção "Instalação" do README da `sdd-lifecycle`).
 
-- [ ] **Passo 2: Rascunho.** Cada item: `categoria: harness`, `status: experimentar`,
+- [x] **Passo 2: Rascunho.** Cada item: `categoria: harness`, `status: experimentar`,
   `praticas: [P1-01]`, `versao_minima` = versão instalada no dia (`--version`), `como_instalar`
   com (a) e (b) citados; no projeto do scaffold, os links já existem [ref:sdd-scaffold-readme].
   `limites`: Codex trunca documentos de projeto em 32.768 bytes sem avisar
   [ref:sdd-scaffold-readme]; Antigravity não lê `ANTIGRAVITY.md` [ref:sdd-scaffold-readme]; os
   demais, o que a fonte disser.
 
-- [ ] **Passo 3: Executar** para cada harness instalado: `cp -R "$TESTE/projeto-teste"
+- [x] **Passo 3: Executar** para cada harness instalado: `cp -R "$TESTE/projeto-teste"
   "$TESTE/harness-<id>"`, sessão nova, *"Quais skills você tem disponíveis neste projeto?
   Responda só com os nomes."* Passou se lista as 5 skills do scaffold. Registro `tipo: prompt`,
   `secao: como_instalar`. Harness não instalado: sem execução, com `nota` na afirmação.
 
-- [ ] **Passo 4: Registro, revisão adversarial, fecho.** Commit:
+- [x] **Passo 4: Registro, revisão adversarial, fecho.** Commit:
   `feat(conteudo): os cinco harnesses no radar de ferramentas`.
+
+> **Execução pendente (M2):** pendentes.sh, blocos `m2-claude`, `m2-codex`, `m2-codex-agents` e `m2-kiro` (pergunta de skills por harness; Antigravity e Copilot não estão instalados, sem execução). Desvios: o Codex lê skills de `.agents/skills`, não de `.codex/skills` (que o scaffold monta); o Antigravity também usa `.agents/skills`; o `CLAUDE.md` do scaffold não importa `@AGENTS.md`. Achados levados ao checkpoint. Referências novas: `claude-code-memory`, `codex-agents-md`, `kiro-steering`, `antigravity-rules`, `copilot-instructions` (já no commit da M1).
 
 ### Tarefa M3: P1-01 reescrita no modelo v1.1
 

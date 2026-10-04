@@ -1,0 +1,22 @@
+id: claude-code
+titulo: Claude Code
+categoria: harness
+status: experimentar
+versao_minima: "2.1.277"
+dono: nuarq
+praticas: [P1-01]
+receitas: []
+como_instalar: |
+  Instale o Claude Code pelo site do fornecedor; este campo cobre só a configuração do repositório.
+  Instruções do projeto: a partir da 2.1.277 o Claude Code lê o `AGENTS.md` direto, mas só quando não
+  há `CLAUDE.md` na pasta de trabalho nem acima dela; com os dois arquivos, lê só o `CLAUDE.md`, e o
+  `AGENTS.md` entra se o `CLAUDE.md` o importar com `@AGENTS.md` [ref:claude-code-memory]. Skills de
+  projeto ficam em `.claude/skills/<nome>/SKILL.md` [ref:claude-code-skills]. No projeto gerado pelo
+  starter `sdd-scaffold` o link `.claude/skills` já aponta para `skills/` [ref:sdd-scaffold-readme].
+limites: |
+  O `CLAUDE.md` do scaffold é um ponteiro de quatro linhas para o `AGENTS.md`, escrito em texto e sem
+  `@AGENTS.md` [ref:sdd-scaffold-readme]. Um `CLAUDE.md` que só manda ler o `AGENTS.md` faz o Claude Code
+  ver o `AGENTS.md` apenas se decidir abrir o arquivo; a documentação recomenda o import `@AGENTS.md`
+  [ref:claude-code-memory]. Para o Claude Code, `CLAUDE.md` é contexto, não configuração imposta; para
+  bloquear uma ação, use um hook `PreToolUse` [ref:claude-code-memory].
+referencias: [claude-code-memory, claude-code-skills, sdd-scaffold-readme]
