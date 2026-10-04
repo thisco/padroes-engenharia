@@ -1,0 +1,29 @@
+conteudo: ferramenta-sdd-lifecycle
+verificado_em: 2026-10-04
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "no projeto gerado pelo starter, a skill já vem em skills/sdd-lifecycle/"
+    ref: sdd-scaffold-readme
+    localizacao: "README, 'O que você recebe' (árvore) e 'A skill do ciclo é instalada, não copiada'"
+    resultado: confirmada
+  - texto: "a skill é um procedimento em Markdown que o agente lê e segue"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Visão geral' (autocontida, agnóstica de agente) e fases"
+    resultado: confirmada
+  - texto: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
+    ref: sdd-lifecycle-repo
+    localizacao: "árvore do commit 1726652: AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md, docs/"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: 2026-10-04
+  achados:
+    - afirmacao: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
+      problema: "frase sem [ref:] sobre a árvore do repositório"
+      tratamento: "referência sdd-lifecycle-repo criada e citada"
+    - afirmacao: "copie o SKILL.md do commit fixado para a pasta de skills do harness"
+      problema: "não executável sem inventar: o SHA e a pasta do harness não apareciam no texto"
+      tratamento: "o SHA e a versão entram no como_instalar, que remete à página de cada harness"
+    - afirmacao: "a skill já vem no projeto gerado"
+      problema: "a versão não é fixada pelo scaffold, e sem rede a skill não é instalada"
+      tratamento: "dito em limites da ferramenta sdd-scaffold e no passo 4 do prompt do starter"

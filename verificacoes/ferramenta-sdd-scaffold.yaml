@@ -1,0 +1,26 @@
+conteudo: ferramenta-sdd-scaffold
+verificado_em: 2026-10-04
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "o gerador requer Python 3.11 ou superior"
+    ref: sdd-scaffold-readme
+    localizacao: "README, 'Quick start'"
+    resultado: confirmada
+  - texto: "o CI pronto do projeto gerado é de GitHub Actions"
+    ref: sdd-scaffold-readme
+    localizacao: "README, 'O que você recebe'"
+    resultado: confirmada
+  - texto: "o gerador instala a skill do ciclo a partir do repositório dela, na versão vigente no dia"
+    ref: sdd-scaffold-readme
+    localizacao: "README, 'A skill do ciclo é instalada, não copiada'"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: 2026-10-04
+  achados:
+    - afirmacao: "no GitLab o CI é ligado pela receita do portal [ref:sdd-scaffold-readme]"
+      problema: "o README não menciona GitLab"
+      tratamento: "frase retirada de limites"
+    - afirmacao: "a versão fixada em componentes.yml"
+      problema: "o texto não dizia qual das duas fontes da versão vale"
+      tratamento: "como_instalar diz que valem a versão e o commit do starter, iguais aos de componentes.yml"

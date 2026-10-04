@@ -1,0 +1,11 @@
+id: sdd-scaffold-readme
+titulo: "README do sdd-scaffold (projeto gerado, Quick start e pontos de montagem das skills)"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/README.md
+tipo: interno
+versao: "1.6.1"
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem' e 'O que impede e o que orienta'"
+dominios: [construir-com-ia, dados-migrations]
+notas: "Lido na web (página do commit fixado) e conferido contra a cópia local no mesmo commit. O Quick start diz que o gerador instala a sdd-lifecycle; o checklist pós-geração ainda manda copiá-la. Vale o primeiro, que é o que criar_projeto.py faz (clone raso do HEAD do repositório da skill)."

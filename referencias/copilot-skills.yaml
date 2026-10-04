@@ -1,0 +1,10 @@
+id: copilot-skills
+titulo: "Criar skills para o agente do GitHub Copilot"
+organizacao: GitHub
+url: https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-skills
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção de skills de projeto (.github/skills, .claude/skills, .agents/skills) e formato do SKILL.md"
+dominios: [construir-com-ia]
+notas: "A página about-agent-skills confirma os três diretórios de skills de projeto."

@@ -1,0 +1,10 @@
+id: codex-skills
+titulo: "Build skills (Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/build-skills
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção de localização das skills de repositório e formato do SKILL.md"
+dominios: [construir-com-ia]
+notas: "A URL antiga developers.openai.com/codex/skills redireciona (308) para esta página."

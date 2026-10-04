@@ -184,7 +184,7 @@ A execução do starter cria o projeto de teste que M3 a M6 e M14 reaproveitam.
 - Produces: ids `sdd-scaffold` (starter e ferramenta), `sdd-lifecycle`; referência
   `sdd-scaffold-readme`; `$TESTE/projeto-teste`, `$TESTE/sdd-scaffold`, `$TESTE/sdd-lifecycle`.
 
-- [ ] **Passo 1: Rascunho.** O starter cobre: `descricao` (o que o projeto gerado traz:
+- [x] **Passo 1: Rascunho.** O starter cobre: `descricao` (o que o projeto gerado traz:
   constituição no `AGENTS.md`, modelos de PRD/spec/plano/ADR, 4 skills de domínio, a
   `sdd-lifecycle` instalada, os verificadores; e que o CI pronto é GitHub Actions, então no
   GitLab vale a receita da M4) [ref:sdd-scaffold-readme]; `versao: "1.6.1"`;
@@ -200,7 +200,7 @@ A execução do starter cria o projeto de teste que M3 a M6 e M14 reaproveitam.
   CI só GitHub Actions, Python 3.11+ [ref:sdd-scaffold-readme]; lifecycle: é procedimento lido
   pelo agente, não executa verificação — **confirmar** no SKILL.md fixado).
 
-- [ ] **Passo 2: Executar o comando.**
+- [x] **Passo 2: Executar o comando.**
 
 ```bash
 export TESTE="$HOME/curadoria-a5"; rm -rf "$TESTE" && mkdir -p "$TESTE/transcricoes"
@@ -220,14 +220,14 @@ Passou se: `✔ Projeto criado em …/projeto-teste`, `skill do ciclo: ok`, trê
 `Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.` (O gerador faz commit:
 a máquina precisa de `git config user.name/user.email`.)
 
-- [ ] **Passo 3: Testar o `prompt_para_agente`** (não exigido pelo R27, mas é a porta "Projeto
+- [x] **Passo 3: Testar o `prompt_para_agente`** (não exigido pelo R27, mas é a porta "Projeto
   novo"). Sessão nova em `$TESTE/starter-prompt` (vazia); respostas: `app-prompt`,
   `Python 3.11`, `Teste do prompt do starter`; "pode seguir" a cada confirmação. Passou se
   `git -C /tmp/sdd-scaffold rev-parse HEAD` dá o commit fixado, a skill existe em
   `app-prompt/skills/sdd-lifecycle/`, a constituição confere e a última mensagem lista os 3
   pendentes do passo 7.
 
-- [ ] **Passo 4: Fontes e registro.**
+- [x] **Passo 4: Fontes e registro.**
 
 | Referência | URL | Confirmar |
 |---|---|---|
@@ -238,12 +238,14 @@ Registros com uma afirmação por `[ref:]` e, no do starter, `execucoes`: uma `t
 (`arquivo: starters/sdd-scaffold.yml`, o comando, ambiente com Python/git/commits, `passou`,
 as linhas de saída) e uma `tipo: prompt` (`secao: prompt_para_agente`, `harness`, `passou`).
 
-- [ ] **Passo 5: Revisão adversarial, validação e commit.**
+- [x] **Passo 5: Revisão adversarial, validação e commit.**
 
 ```bash
 git add starters/ ferramentas/sdd-scaffold.yml ferramentas/sdd-lifecycle.yml referencias/sdd-scaffold-readme.yaml verificacoes/starter-sdd-scaffold.yaml verificacoes/ferramenta-sdd-scaffold.yaml verificacoes/ferramenta-sdd-lifecycle.yaml README.md ROTEAMENTO.md
 git commit -m "feat(conteudo): starter sdd-scaffold e ferramentas sdd-scaffold e sdd-lifecycle"
 ```
+
+> **Execução pendente (M1):** pendentes.sh, bloco `m1-constituicao` (`verificar_constituicao.py`); o `criar_projeto.py` foi rodado pelo dono, e o passo 3 (prompt do starter) foi para o lote manual do coordenador. Desvios: o README do scaffold no commit fixado não traz o prompt de 7 passos do Kiro, então o `prompt_para_agente` foi escrito a partir do Quick start; a frase do GitLab saiu (README não cita GitLab; a receita entra pelo campo `receitas` na M4). Nova referência `sdd-lifecycle-repo`.
 
 ### Tarefa M2: Os cinco harnesses como ferramentas
 

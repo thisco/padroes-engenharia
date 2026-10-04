@@ -1,0 +1,10 @@
+id: antigravity-rules
+titulo: "Rules (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/rules
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção de descoberta de regras por diretório (AGENTS.md, GEMINI.md, .agents/rules/)"
+dominios: [construir-com-ia]
+notas: "A URL antiga /docs/rules-workflows redireciona para /docs/rules."

@@ -1,0 +1,10 @@
+id: codex-agents-md
+titulo: "AGENTS.md (configuração do agente Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/agent-configuration/agents-md
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção sobre o limite project_doc_max_bytes (32 KiB por padrão)"
+dominios: [construir-com-ia]
+notas: "A URL antiga developers.openai.com/codex/guides/agents-md redireciona (308) para esta página."

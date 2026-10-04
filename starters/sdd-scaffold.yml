@@ -1,0 +1,86 @@
+id: sdd-scaffold
+titulo: "SDD scaffold: projeto novo com constituição, steering e skills"
+descricao: >-
+  Gera um projeto com a constituição no AGENTS.md, modelos de PRD, spec, plano e ADR, o
+  steering em docs/steering/, quatro skills de domínio, a skill sdd-lifecycle instalada na
+  geração e os verificadores em scripts/ [ref:sdd-scaffold-readme]. O CI pronto que acompanha
+  o projeto é de GitHub Actions (.github/workflows/qualidade.yml) [ref:sdd-scaffold-readme].
+repo: https://github.com/thisco/sdd-scaffold
+versao: "1.6.1"
+comando: |
+  # Requer Python 3.11+, git com user.name e user.email configurados e rede (o gerador
+  # clona a skill sdd-lifecycle). O destino não pode ter uma pasta com o nome do projeto.
+  git clone https://github.com/thisco/sdd-scaffold.git
+  git -C sdd-scaffold checkout a8ebdf3c6734f11f6763c182b2325fe227216b65
+  python3 sdd-scaffold/criar_projeto.py --nome meu-projeto --destino ~/workspace \
+    --stack "Python 3.11" --descricao "Descrição do projeto"
+prompt_para_agente: |
+  Crie um projeto novo a partir do sdd-scaffold e confira o resultado. Siga estes passos, um de cada
+  vez. O clone do passo 2 é permitido; antes do passo 3, peça minha confirmação.
+  1. Pergunte o nome do projeto, a pasta de destino, a stack e a descrição de uma frase. Não invente
+     nenhum dos quatro. A pasta `<destino>/<nome>` não pode existir.
+  2. Clone https://github.com/thisco/sdd-scaffold.git numa pasta temporária e faça o checkout do
+     commit a8ebdf3c6734f11f6763c182b2325fe227216b65 (versão 1.6.1 do scaffold).
+  3. Rode `python3 criar_projeto.py --nome <nome> --destino <destino> --stack "<stack>" --descricao "<descrição>"`
+     a partir da pasta clonada. Exige Python 3.11 ou superior, git com user.name e user.email e rede.
+  4. Confira que `.claude/skills`, `.codex/skills` e `.kiro/skills` são links para a pasta `skills/` e que
+     `skills/sdd-lifecycle/SKILL.md` existe. Sem rede o gerador cria o projeto sem essa skill; diga isso
+     se acontecer. A skill vem do HEAD do repositório dela no momento da geração.
+  5. Rode `python3 scripts/verificar_constituicao.py --raiz .` dentro de `<destino>/<nome>` e mostre a saída.
+  6. Liste os arquivos que ainda têm o marcador `<!-- preencher -->`, sem preenchê-los.
+  Ao final, mostre o que foi criado e o que ficou pendente, e não faça commit de nada além do que o
+  gerador já fez.
+praticas_aplicadas: [P1-01, DAD-01]
+receitas: []
+dono: nuarq
+status: adotar
+referencias: [sdd-scaffold-readme]
+planta:
+  - grupo: Governança
+    quando: "Todo turno de qualquer agente."
+    arquivo: Constituição e ponteiros
+    caminhos: [AGENTS.md, CLAUDE.md, GEMINI.md, docs/constituicao/padrao-v1.0.md]
+    nota: "CLAUDE.md e GEMINI.md são stubs de quatro linhas que apontam para o AGENTS.md [ref:sdd-scaffold-readme]."
+    mecanismos:
+      - forca: orienta
+        texto: "o AGENTS.md entra no contexto do agente e o orienta [ref:sdd-scaffold-readme]"
+      - forca: bloqueia
+        texto: "scripts/verificar_constituicao.py reprova (exit 1) a constituição editada no projeto [ref:sdd-scaffold-readme]"
+  - grupo: Governança
+    quando: "Quando o agente tenta escrever num caminho protegido."
+    arquivo: Proteção dos arquivos de governança
+    caminhos: [scripts/proteger_governanca.py, .claude/settings.json, .kiro/permissions.yaml]
+    nota: "Hook no Claude Code e regra declarativa no Kiro, um por ferramenta [ref:sdd-scaffold-readme]."
+    mecanismos:
+      - forca: bloqueia
+        texto: "o hook e a regra declarativa rodam fora do modelo [ref:sdd-scaffold-readme]"
+  - grupo: Governança
+    quando: "Em toda sessão do Codex."
+    arquivo: Atribuição de IA desligada no Codex
+    caminhos: [.codex/requirements.toml]
+    nota: "O arquivo fixa git_attribution desligado, o que protege o princípio de não citar marca de IA; não protege caminho de escrita [ref:sdd-scaffold-readme]."
+  - grupo: Ciclo e skills
+    quando: "Antes de escrever, enquanto escreve e antes do merge."
+    arquivo: Skills montadas nas três ferramentas
+    caminhos: [skills/sdd-lifecycle/, skills/arquitetura-viva/, skills/threat-model/, skills/migrations-reversiveis/, skills/estados-de-interface/]
+    nota: ".claude/skills, .codex/skills e .kiro/skills são links para a mesma pasta skills/ [ref:sdd-scaffold-readme]."
+    mecanismos:
+      - forca: orienta
+        texto: "a skill entra no contexto como procedimento que o agente segue [ref:sdd-scaffold-readme]"
+  - grupo: Verificação
+    quando: "A cada PR."
+    arquivo: Verificador de PR e CI
+    caminhos: [scripts/verificar_pr.py, .github/workflows/qualidade.yml]
+    nota: "O CI que acompanha o projeto é de GitHub Actions [ref:sdd-scaffold-readme]."
+    mecanismos:
+      - forca: bloqueia
+        texto: "editar uma migration já aplicada reprova [ref:sdd-scaffold-readme]"
+      - forca: avisa
+        texto: "spec sem threat-model, plano sem rollback e plano sem evidência de teste só avisam [ref:sdd-scaffold-readme]"
+  - grupo: Verificação
+    quando: "Antes do PR, quando a mudança toca compose, IaC ou diagrama."
+    arquivo: Verificador de drift da arquitetura
+    caminhos: [scripts/verificar_drift_arquitetura.py, Arquitetura/mapa.yml]
+    mecanismos:
+      - forca: avisa
+        texto: "o check é informativo e nunca bloqueia o CI [ref:sdd-scaffold-readme]"

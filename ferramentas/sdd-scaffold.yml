@@ -1,0 +1,18 @@
+id: sdd-scaffold
+titulo: SDD scaffold
+categoria: sdd
+status: adotar
+versao_minima: "1.6.1"
+dono: nuarq
+praticas: [P1-01, DAD-01]
+receitas: []
+como_instalar: |
+  O scaffold não se instala: ele gera um projeto novo. Use o starter `sdd-scaffold`, que traz o
+  comando e o prompt para o agente; a versão e o commit valem os do starter (iguais aos de
+  componentes.yml).
+limites: |
+  Requer Python 3.11 ou superior [ref:sdd-scaffold-readme]. O CI pronto que acompanha o projeto
+  gerado é de GitHub Actions [ref:sdd-scaffold-readme]. O gerador instala a skill do ciclo a partir
+  do repositório dela, na versão vigente no dia, e não no commit fixado do scaffold
+  [ref:sdd-scaffold-readme].
+referencias: [sdd-scaffold-readme]

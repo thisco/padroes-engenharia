@@ -1,0 +1,10 @@
+id: kiro-steering
+titulo: "Steering (Kiro)"
+organizacao: Kiro
+url: https://kiro.dev/docs/steering/
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções 'Workspace steering' e 'Agents.md'"
+dominios: [construir-com-ia]
+notas: null

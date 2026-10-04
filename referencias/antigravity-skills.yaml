@@ -1,0 +1,10 @@
+id: antigravity-skills
+titulo: "Agent Skills (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/skills
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções de local do workspace (.agents/skills/) e formato do SKILL.md"
+dominios: [construir-com-ia]
+notas: null

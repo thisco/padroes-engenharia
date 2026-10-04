@@ -1,0 +1,10 @@
+id: copilot-instructions
+titulo: "Instruções de repositório para o Copilot"
+organizacao: GitHub
+url: https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções de instruções do repositório, por caminho e de agente (AGENTS.md, CLAUDE.md, GEMINI.md)"
+dominios: [construir-com-ia]
+notas: null
