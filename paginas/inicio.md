@@ -10,7 +10,7 @@ caminhos:
   texto: Gere o projeto já com as regras, o roteiro de trabalho e as verificações automáticas.
   destino: starters/sdd-scaffold
 - titulo: Projeto existente
-  texto: Ligue as verificações ao pipeline de merge request do GitLab.
+  texto: Ligue as verificações automáticas ao pipeline do GitLab.
   destino: receitas/ligar-ci-gitlab-travas
 fatos:
 - Cada afirmação tem uma fonte, aberta e conferida na web por quem escreveu.
