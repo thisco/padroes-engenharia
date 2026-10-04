@@ -1738,3 +1738,49 @@ registros de verificação, 8 arquivos em `exemplos/`, 4 prompts publicados.
 `/Users/thiago/curadoria-a5/pendentes.sh`: perguntas de skills no Claude Code, no Codex (com e sem
 `.agents/skills`) e no Kiro, com as saídas em `/Users/thiago/curadoria-a5/saidas/`. Antigravity e
 Copilot não estão instalados. O `prompt_para_agente` do starter exige teste manual.
+
+### Lote de correções de 2026-10-04 (C1 a C11, K1 a K6) e nova verificação
+
+**Motor (cada item com teste que falhou antes):** C1 página de peça com o ninho completo; C2
+`[ref:…]` fora do HTML e do `meta description`; C3 a C5 fluxo da IA, rótulo Menu e ícone do eval; C6
+marcador `{URL do portal}`/`<URL do portal>` trocado pela `url_base` pública e `.md` com links
+relativos; C7 Copiar em todo bloco de código; C8 O problema com grade de 2 colunas e "Como
+combinar" em caixas; C9 Comece aqui sem seção vazia e domínio com candidatas; C10 polimento
+(categoria com acento, chips de status, legenda em grade, cartões); C11 tipo de referência `portal`
+e os 7 termos do vocabulário no glossário. Desvios: C3, C4 e C5 num só commit; um commit de estilo
+corrigiu uma linha longa que passou por mim.
+
+**Conteúdo:** K1 Início responde primeiro (Comece aqui e "Como ler: força e status" antes do ciclo;
+a pesquisa foi para "Por que importa"; os `fatos` perderam a frase sobre todo prompt). K2 P2-01 e
+DAD-01 corrigidas, exemplos reexecutados (gateway em venv, `GATEWAY_PORT`, verificador em
+`scripts/`; `verificar_pr.py --base main` sem remoto; sequência Flyway com a V4 corretiva num
+PostgreSQL efêmero). K4 prompt da DAD-01 refeito e transcrição bruta guardada. K5 referência
+própria `dora-small-batches`. K6 `.agents/skills` e `CLAUDE.md` sem `@AGENTS.md` explicados na
+P1-01, nos harnesses e na receita, com fonte.
+
+**K3 (pendente de decisão):** o prompt da P2-01 foi refeito com subagente novo, e a transcrição bruta
+está em `transcricoes/P2-01-prompt-1.bruta.jsonl`. O validador só aceita `passou` ou
+`falhou-como-esperado` em `execucoes`, então o registro com `resultado: pendente-conferencia`
+(e as quatro reexecuções do K2) ficou **fora do commit**, em
+`/Users/thiago/curadoria-a5/registros-pendentes/P2-01.yaml`. O `verificacoes/P2-01.yaml` do
+repositório mantém a execução anterior, que o curador marcou `passou`; quem confere o K3 é o
+revisor independente.
+
+**Harnesses (lote do dono):** Claude Code (rc 0, 5 skills) e Codex (rc 0, 5 skills com só
+`.codex/skills`; com `.agents/skills` também, sem distinguir) registrados em `verificacoes/`. Na
+versão 0.160.0 o Codex listou as skills mesmo só com `.codex/skills`, então o texto do K6 não afirma
+que ele não lê essa pasta. Execução pendente: login do Kiro CLI (`m2-kiro` parou em "Opening
+browser…"); Antigravity e Copilot continuam sem instalação.
+
+Verificação da M13 repetida no estado final:
+
+```text
+python scripts/validar.py        -> validação ok: nenhum erro.
+python -m pytest -q              -> 555 passed
+ruff check .                     -> All checks passed!
+ruff format --check .            -> 131 files already formatted
+gerar.py duas vezes, diff -r     -> builds idênticos
+prompts: ['DAD-01', 'P1-01', 'P2-01', 'ligar-ci-gitlab-travas']   no html: True   llms: completo
+sem .md: []   conceitos: 15   DAD-01 .md: True True   higiene ok   sem marcador cru no HTML
+git status --short               -> vazio
+```
