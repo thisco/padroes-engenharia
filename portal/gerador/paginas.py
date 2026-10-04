@@ -144,7 +144,10 @@ def html_o_problema(site: Site, pagina: Conteudo) -> str:
 def md_o_problema(site: Site, pagina: Conteudo) -> str:
     meta = pagina.meta
     blocos = [f"# {meta['titulo']}", str(meta.get("descricao") or ""), str(meta.get("lead") or "")]
-    blocos.append("## Como o agente funciona\n\nDiagrama: " + descrever_ninho("agente-de-codigo"))
+    blocos.append(
+        "## Como o agente funciona\n\nDiagrama: "
+        + descrever_ninho("agente-de-codigo", None, "condensado")
+    )
     if elos := _lista(pagina, "elos"):
         linhas = []
         for elo in elos:

@@ -374,3 +374,13 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .bloco { position: relative; width: 100%; margin: 12px 0; }
 .bloco pre { width: 100%; box-sizing: border-box; margin: 0; padding: 12px 56px 12px 12px; }
 .bloco .copiar { position: absolute; top: 6px; right: 6px; }
+
+/* A.5-2 C8: O problema, ninho e cadeia lado a lado; "Como combinar" em bloco azul-claro */
+.lado-a-lado { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
+.lado-a-lado > section { min-width: 0; }
+@media (min-width: 901px) {
+  .lado-a-lado { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
+.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--harness); border: 1px solid var(--azul); padding: 12px; }
+.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--azul); padding: 8px 10px; }
+.combinar .momento-caixa p { margin: 4px 0 0; font-size: 13px; }

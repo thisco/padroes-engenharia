@@ -273,10 +273,25 @@ def classe_peca(peca: str, destaque: str | None) -> str:
     return " alvo" if peca == destaque else " apaga"
 
 
-def descrever_ninho(ninho: str, destaque: str | None = None) -> str:
-    """Descrição em texto do desenho, para o `figcaption` e para o `.md` gêmeo."""
+DESCRICAO_CONDENSADA = (
+    "O agente de código contém o harness e a memória. O harness contém a sessão, e a sessão "
+    "contém o modelo. Só atravessa a sessão o que foi gravado na memória."
+)
+
+
+def descrever_ninho(ninho: str, destaque: str | None = None, variante: str = "completo") -> str:
+    """Descrição em texto do desenho, para o `figcaption` e para o `.md` gêmeo.
+
+    O ninho condensado do agente de código só desenha agente, harness, sessão, modelo e memória:
+    a descrição dele não cita o que ficou de fora.
+    """
     dados = NINHOS[ninho]
-    texto = f"{dados['titulo']}. {dados['descricao']}"
+    descricao = (
+        DESCRICAO_CONDENSADA
+        if ninho == "agente-de-codigo" and variante == "condensado"
+        else dados["descricao"]
+    )
+    texto = f"{dados['titulo']}. {descricao}"
     if destaque in dados["pecas"]:
         texto += f" Peça em destaque: {dados['pecas'][destaque]}."
     return texto

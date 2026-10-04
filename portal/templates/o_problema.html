@@ -7,6 +7,7 @@
   <p>{{ lead }}</p>
 {% endif %}
 </div>
+<div class="lado-a-lado">
 <section aria-label="Como o agente funciona">
   <h2>Como o agente funciona</h2>
   <p class="lead">O desenho mostra onde mora cada peça do agente; cada caixa leva à página do conceito.</p>
@@ -18,6 +19,7 @@
   {{ c.cadeia(elos) }}
 </section>
 {% endif %}
+</div>
 {% if falhas %}
 <section aria-label="Como o vibe coding falha">
   <h2>Como o vibe coding falha</h2>
@@ -44,11 +46,11 @@
 <section aria-label="Como combinar tudo">
   <h2>Como combinar tudo</h2>
 {% if momentos %}
-  <ol class="momentos">
+  <div class="combinar">
 {% for m in momentos %}
-    <li><b>{{ m.titulo }}</b>: {{ m.disciplinas | join(", ") }}</li>
+    <div class="momento-caixa"><b>{{ loop.index }} · {{ m.titulo }}</b><p>{{ m.disciplinas | join(", ") }}</p></div>
 {% endfor %}
-  </ol>
+  </div>
 {% endif %}
 {% if principios %}
   <ul class="principios">

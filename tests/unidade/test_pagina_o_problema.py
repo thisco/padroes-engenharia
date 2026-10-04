@@ -74,3 +74,36 @@ def test_falha_so_com_dominio_mostra_o_link_do_dominio_sem_pratica():
     linha = analisar(html_o_problema(s, p)).todos("table")[0].todos("tr")[1]
     assert linha.todos("a", href="dominios/construir-com-ia.html")
     assert not linha.todos("span", classe="ef orienta")
+
+
+def _html_completo():
+    p = pagina(
+        momentos=[
+            {"momento": "antes-de-escrever", "disciplinas": ["contratos"]},
+            {"momento": "enquanto-escreve", "disciplinas": ["design"]},
+            {"momento": "antes-do-merge", "disciplinas": ["qualidade"]},
+            {"momento": "depois-da-entrega", "disciplinas": ["operação"]},
+        ]
+    )
+    s = fabrica.site(p, fabrica.pratica(), fabrica.referencia())
+    return analisar(html_o_problema(s, p)), s, p
+
+
+def test_ninho_e_cadeia_lado_a_lado_e_como_combinar_com_quatro_caixas():
+    """C8: grade de duas colunas e o bloco azul-claro com as quatro caixas de momento."""
+    html, _, _ = _html_completo()
+    lado = html.todos(classe="lado-a-lado")[0]
+    rotulos = [s.attrs["aria-label"] for s in lado.todos("section")]
+    assert rotulos == ["Como o agente funciona", "O que dá errado"]
+    combinar = [s for s in html.todos("section") if s.attrs["aria-label"] == "Como combinar tudo"]
+    assert len(combinar[0].todos(classe="momento-caixa")) == 4
+
+
+def test_legenda_do_ninho_condensado_so_descreve_o_que_o_desenho_mostra():
+    html, s, p = _html_completo()
+    legenda = html.todos("figcaption")[0].texto
+    for peca_ausente in ("subagentes", "MCP", "hooks"):
+        assert peca_ausente not in legenda, peca_ausente
+    assert "sessão" in legenda and "modelo" in legenda
+    md = md_o_problema(s, p)
+    assert "MCP" not in md.split("## O que dá errado")[0]
