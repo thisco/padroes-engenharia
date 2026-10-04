@@ -15,7 +15,7 @@ from markupsafe import Markup
 
 from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
-from portal.gerador.citacoes import MARCADOR, numerar
+from portal.gerador.citacoes import MARCADOR, numerar, sem_marcadores
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.exemplos import Prompt, blocos, expandir_inclusoes, prompts_de, secoes
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
@@ -554,7 +554,11 @@ def listas_conceitos(site: Site) -> list[dict[str, Any]]:
 
 def _itens(conteudos: Iterable[Conteudo], nota: Callable[[Conteudo], str]) -> list[dict[str, Any]]:
     return [
-        {"titulo": c.meta.get("titulo", c.chave), "href": caminho_de(c), "nota": nota(c)}
+        {
+            "titulo": c.meta.get("titulo", c.chave),
+            "href": caminho_de(c),
+            "nota": sem_marcadores(nota(c)),
+        }
         for c in conteudos
     ]
 
@@ -689,14 +693,14 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
             f"{momento.titulo if momento else meta['momento']}"
         )
     if conteudo.tipo == "conceito":
-        return str(meta["definicao"])
+        return sem_marcadores(str(meta["definicao"]))
     if conteudo.tipo == "guia":
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
         return f"Caso de {meta['origem']['repo']}, {meta['periodo']}."
     if conteudo.tipo == "receita":
         return str(meta["objetivo"])
-    return str(meta.get("descricao") or "")
+    return sem_marcadores(str(meta.get("descricao") or ""))
 
 
 def campos_de(conteudo: Conteudo) -> list[tuple[str, str]]:

@@ -14,7 +14,7 @@ from typing import Any
 from markupsafe import Markup
 
 from portal.gerador.carregar import Conteudo
-from portal.gerador.citacoes import MARCADOR, extrair
+from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
 from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.markdown import inline_html, para_html
 from portal.gerador.renderizar import (
@@ -410,7 +410,7 @@ def _termos(site: Site) -> list[dict[str, Any]]:
             {
                 "termo": t["termo"],
                 "slug": slug_termo(str(t["termo"])),
-                "definicao": t["definicao"],
+                "definicao": sem_marcadores(str(t["definicao"])),
                 "conceito": (
                     {"titulo": conceito.meta["titulo"], "href": caminho_de(conceito)}
                     if conceito
@@ -706,7 +706,7 @@ def html_starter(site: Site, starter: Conteudo) -> str:
         "starter.html",
         caminho_de(starter),
         titulo=meta["titulo"],
-        descricao=str(meta["descricao"]),
+        descricao=sem_marcadores(str(meta["descricao"])),
         descricao_html=citar(meta["descricao"], ids, "descricao"),
         s=meta,
         planta=_planta(starter, ids),

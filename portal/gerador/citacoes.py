@@ -35,3 +35,9 @@ def numerar(corpo: str) -> tuple[str, list[str]]:
     numero = {id_: i for i, id_ in enumerate(ids, start=1)}
     texto = MARCADOR.sub(lambda m: f"[[{numero[m[1]]}]](#ref-{m[1]})", corpo)
     return texto, ids
+
+
+def sem_marcadores(texto: str) -> str:
+    """O texto sem os `[ref:id]` e sem o espaço que sobra antes da pontuação (meta e títulos)."""
+    limpo = " ".join(MARCADOR.sub("", texto).split())
+    return re.sub(r"\s+([.,;:])", r"\1", limpo)
