@@ -1,0 +1,30 @@
+conteudo: ferramenta-gitleaks
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: imagem oficial ghcr.io/gitleaks/gitleaks; subcomando git que substitui o detect desde a 8.19.0
+  ref: gitleaks-readme
+  localizacao: README, Docker images e nota sobre a v8.19.0
+  resultado: confirmada
+- texto: o gitleaks usa a imagem com entrypoint vazio no GitLab
+  ref: gitlab-docker-entrypoint
+  localizacao: seção 'Override the entrypoint of an image'
+  resultado: confirmada
+- texto: detecta por regex e entropia; segredo de formato próprio fora das regras passa; .gitleaksignore
+    com a impressão digital
+  ref: gitleaks-readme
+  localizacao: README, regras e .gitleaksignore (recurso experimental)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: entrypoint [ref:gitleaks-readme]
+    problema: fonte errada
+    tratamento: passou a gitlab-docker-entrypoint
+  - afirmacao: formato próprio passa sem achado
+    problema: extrapolação
+    tratamento: marcada como consequência do método
+  - afirmacao: substitui o detect
+    problema: o detect segue disponível
+    tratamento: reescrito

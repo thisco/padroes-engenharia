@@ -1,0 +1,10 @@
+id: gitlab-ci-local-readme
+titulo: "gitlab-ci-local"
+organizacao: firecow
+url: https://github.com/firecow/gitlab-ci-local
+tipo: comunidade
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "README: instalação, executores shell e docker, opções --list, --variable, --file e --force-shell-executor"
+dominios: [ci-cd]
+notas: "Projeto da comunidade, não do GitLab. README da branch principal, lido em 2026-10-04; versão usada nos testes: 4.76.0 (npm)."

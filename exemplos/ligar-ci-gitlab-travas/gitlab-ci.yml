@@ -1,0 +1,47 @@
+# Travas do processo SDD no pipeline de merge request do GitLab.
+# Receita: "Ligar o CI do GitLab com as travas" (portal de padrões de engenharia).
+# Requer no repositório: scripts/verificar_pr.py e scripts/verificar_constituicao.py do
+# sdd-scaffold 1.6.1 (commit a8ebdf3c6734f11f6763c182b2325fe227216b65) e o AGENTS.md.
+stages:
+  - travas
+
+.so-em-merge-request:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# Bloqueia migration já aplicada que foi editada (DAD-01). Avisa rollback, threat-model e
+# evidência, sem bloquear.
+normas-do-pr:
+  extends: .so-em-merge-request
+  stage: travas
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
+    - git rev-parse --verify "refs/remotes/origin/$ALVO"
+    - python3 scripts/verificar_pr.py --base "origin/$ALVO"
+
+# Bloqueia AGENTS.md grande demais e constituição inline adulterada.
+governanca:
+  extends: .so-em-merge-request
+  stage: travas
+  image: python:3.11
+  script:
+    - TAMANHO=$(wc -c < AGENTS.md)
+    - echo "AGENTS.md com $TAMANHO bytes (limite 30000)"
+    - if [ "$TAMANHO" -ge 30000 ]; then echo "AGENTS.md grande demais; mova o detalhe para docs/steering/"; exit 1; fi
+    - python3 scripts/verificar_constituicao.py --raiz .
+
+# Bloqueia segredo em qualquer commit do histórico.
+segredos:
+  extends: .so-em-merge-request
+  stage: travas
+  image:
+    name: ghcr.io/gitleaks/gitleaks:v8.30.1
+    entrypoint: [""]
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - gitleaks git --redact --verbose .

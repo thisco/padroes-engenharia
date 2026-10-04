@@ -1,0 +1,18 @@
+id: gitlab-ci-local
+titulo: gitlab-ci-local
+categoria: ci
+status: avaliar
+versao_minima: "4.76.0"
+dono: nuarq
+praticas: []
+receitas: [ligar-ci-gitlab-travas]
+como_instalar: |
+  `npm install -g gitlab-ci-local` ou `brew install gitlab-ci-local` [ref:gitlab-ci-local-readme]. Sem
+  instalar, `npx --yes gitlab-ci-local@4.76.0` roda a versão testada pelo portal. Nos testes do portal,
+  a opção `--cwd` recusou caminho absoluto.
+limites: |
+  Projeto de terceiros, não do GitLab. Roda os jobs como shell ou como Docker [ref:gitlab-ci-local-readme].
+  Só os arquivos rastreados pelo git entram nos jobs isolados; arquivo novo e ignorado fica de fora
+  [ref:gitlab-ci-local-readme]. No teste do portal, o job em Docker enxergou o histórico do git do
+  repositório, incluindo a base `origin/main`, o que as travas de MR exigem.
+referencias: [gitlab-ci-local-readme]

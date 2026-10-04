@@ -5,7 +5,7 @@ status: adotar
 versao_minima: "1.6.1"
 dono: nuarq
 praticas: [P1-01, DAD-01]
-receitas: []
+receitas: [ligar-ci-gitlab-travas]
 como_instalar: |
   O scaffold não se instala: ele gera um projeto novo. Use o starter `sdd-scaffold`, que traz o
   comando e o prompt para o agente; a versão e o commit valem os do starter (iguais aos de

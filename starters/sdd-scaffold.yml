@@ -5,6 +5,7 @@ descricao: >-
   steering em docs/steering/, quatro skills de domínio, a skill sdd-lifecycle instalada na
   geração e os verificadores em scripts/ [ref:sdd-scaffold-readme]. O CI pronto que acompanha
   o projeto é de GitHub Actions (.github/workflows/qualidade.yml) [ref:sdd-scaffold-readme].
+  No GitLab, a receita "Ligar o CI do GitLab com as travas" traz as três travas do CI do scaffold: normas do PR, governança e segredos.
 repo: https://github.com/thisco/sdd-scaffold
 versao: "1.6.1"
 comando: |
@@ -31,7 +32,7 @@ prompt_para_agente: |
   Ao final, mostre o que foi criado e o que ficou pendente, e não faça commit de nada além do que o
   gerador já fez.
 praticas_aplicadas: [P1-01, DAD-01]
-receitas: []
+receitas: [ligar-ci-gitlab-travas]
 dono: nuarq
 status: adotar
 referencias: [sdd-scaffold-readme]

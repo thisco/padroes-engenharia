@@ -1,0 +1,10 @@
+id: gitlab-git-depth
+titulo: "Pipeline settings: Limit the number of changes fetched during clone"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/pipelines/settings/
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção 'Limit the number of changes fetched during clone'"
+dominios: [ci-cd]
+notas: "A página de runners (configure_runners, 'Shallow cloning') cita o GIT_DEPTH mas não diz o valor 0; quem diz é esta página."

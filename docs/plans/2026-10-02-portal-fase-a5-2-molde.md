@@ -445,7 +445,7 @@ publicada**.
 - Produces: a receita (citada por DAD-01, Início, starter); `$TESTE/ci` com remoto
   `$TESTE/ci-origin.git`; o caminho de execução (A/B/C), que a M5 herda.
 
-- [ ] **Passo 1: O pipeline.** **Confirmar** a versão 8.x vigente do gitleaks
+- [x] **Passo 1: O pipeline.** **Confirmar** a versão 8.x vigente do gitleaks
   (https://github.com/gitleaks/gitleaks/releases), o subcomando `git` (desde a 8.19) e o `git`
   na imagem; troque `v8.24.2` pela vigente. `exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml`:
 
@@ -504,7 +504,7 @@ de saída do `git diff`: sem a base no clone, ele imprime `Nenhum arquivo altera
 origin/main` e **sai com 0**. A linha faz o job falhar alto. Sintaxe:
 `python3 -c "import yaml; yaml.safe_load(open('exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml')); print('yaml ok')"`.
 
-- [ ] **Passo 2: Repositório de teste com remoto e o mecanismo direto.**
+- [x] **Passo 2: Repositório de teste com remoto e o mecanismo direto.**
 
 ```bash
 rm -rf "$TESTE/ci" "$TESTE/ci-origin.git"; cp -R "$TESTE/projeto-teste" "$TESTE/ci" && cd "$TESTE/ci"
@@ -531,7 +531,7 @@ foi alterado. Migration aplicada não se edita: crie uma migration corretiva inc
 linha `::error …`, o AVISO de rollback e `saida=1`; e a segunda,
 `Verificação de PR: 2 arquivo(s), nenhum achado.` e `saida=0`.
 
-- [ ] **Passo 3: Decidir o caminho de execução.**
+- [x] **Passo 3: Decidir o caminho de execução.**
 
 **A, `gitlab-ci-local`:** `npm install -g gitlab-ci-local` (ou `brew`); anote
 `gitlab-ci-local --version` e a do Docker; **confirme no `--help`** os nomes de `--variable`,
@@ -561,7 +561,7 @@ pendência 1 da M17 já estiver resolvida), runner Docker; `git push` das branch
 do §18 não atendido. A M5 segue sem `exemplos/DAD-01/gitlab-ci.yml`. Rodar o `script` num
 `docker run` não conta como execução do job.
 
-- [ ] **Passo 4: Executar os três jobs (A ou B).**
+- [x] **Passo 4: Executar os três jobs (A ou B).**
 
 ```bash
 cd "$TESTE/ci"; MR="--variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main"
@@ -585,7 +585,7 @@ gitleaks sem vazamento (na 8.x, `no leaks found`) e três `saida=0`; constituiç
 segredo plantado: achado `github-pat` redigido, resumo com 1 vazamento e `saida` ≠ 0. O token
 só existe em `$TESTE`.
 
-- [ ] **Passo 5: Rascunho da receita** (pela skill). Frontmatter: `objetivo` ("a MR que edita
+- [x] **Passo 5: Rascunho da receita** (pela skill). Frontmatter: `objetivo` ("a MR que edita
   migration aplicada, adultera a constituição ou traz segredo fica vermelha e não entra"),
   `dominio: ci-cd`, `momento: antes-do-merge`, `pre_requisitos` (runner Docker; Maintainer;
   constituição no `AGENTS.md`), `tempo: "30 min"`, `praticas: [DAD-01]`,
@@ -637,14 +637,14 @@ ci/AAAA-MM-DD-travas, com a data de hoje.
 **Confirmar na fonte:** o nome atual de "Pipelines must succeed" e o caminho do menu (se mudou,
 use o da documentação e, para instância antiga, o nome antigo entre parênteses).
 
-- [ ] **Passo 6: Ferramentas.** `gitleaks`: `categoria: seguranca`, `status: adotar`,
+- [x] **Passo 6: Ferramentas.** `gitleaks`: `categoria: seguranca`, `status: adotar`,
   `versao_minima: "8.19.0"` (confirmar nas notas de release), `receitas:
   [ligar-ci-gitlab-travas]`; `limites`: detecta por formato (regex e entropia), segredo de
   formato próprio pode passar [ref:gitleaks-readme]. `gitlab-ci-local`: `categoria: ci`,
   `status: avaliar`, `como_instalar` com `npm`/`brew` [ref:gitlab-ci-local-readme], `limites`
   com o que a sonda mostrou (registrado na execução).
 
-- [ ] **Passo 7: Testar o prompt.** Portal servido; `curl -fsS
+- [x] **Passo 7: Testar o prompt.** Portal servido; `curl -fsS
   http://localhost:8000/receitas/ligar-ci-gitlab-travas.md | grep -c normas-do-pr` ≥ 1 (o `.md`
   gêmeo traz o arquivo). Sessão nova numa cópia `$TESTE/receita-prompt` do projeto de teste.
   Passou se: branch `ci/<data>-travas`; **um** commit com a mensagem pedida; `git diff --stat
@@ -652,7 +652,7 @@ use o da documentação e, para instância antiga, o nome antigo entre parêntes
   (`diff` vazio); os jobs `['governanca', 'normas-do-pr', 'segredos']`; e a última mensagem
   cita os dois passos do GitLab.
 
-- [ ] **Passo 8: Fontes e registro.**
+- [x] **Passo 8: Fontes e registro.**
 
 | Referência | URL | Confirmar |
 |---|---|---|
@@ -669,9 +669,11 @@ afirmações e `execucoes` — `tipo: arquivo`, `falhou-como-esperado` (as três
 com as linhas reais); `tipo: arquivo`, `passou` (branch da V3); `tipo: prompt`, `secao: Com o
 agente`. No caminho B, `comando`/`ambiente` descrevem o pipeline real.
 
-- [ ] **Passo 9: Revisão adversarial e fecho (só A ou B).** Confira a origem da receita em
+- [x] **Passo 9: Revisão adversarial e fecho (só A ou B).** Confira a origem da receita em
   `public/prompts.json`. Commit: `feat(conteudo): receita do CI do GitLab com as travas, com o
   job executado`.
+
+> **Execuções (M4):** caminho A (`gitlab-ci-local` 4.76.0 via `npx`, executor Docker, histórico do git visível no job). As três provas de bloqueio e a branch verde rodaram; o prompt foi testado em subagente de sessão nova (duas rodadas). Sem bloqueio na M4. Desvios: o `gitleaks` ficou na tag `v8.30.1` (vigente em 2026-10-04) no lugar de `v8.24.2`; `--cwd` do `gitlab-ci-local` só aceita caminho relativo; `gitlab-git-depth` aponta para a página de configurações do pipeline, onde o valor 0 está documentado; referências novas `gitlab-job-rules` e `sdd-scaffold-qualidade`; o job `governanca` precisa de `AGENTS.md` (sem ele, remova o job).
 
 ### Tarefa M5: DAD-01 reescrita no modelo v1.1, com o job do GitLab executado
 

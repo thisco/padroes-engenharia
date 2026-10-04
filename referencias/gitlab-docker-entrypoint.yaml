@@ -1,0 +1,10 @@
+id: gitlab-docker-entrypoint
+titulo: "Run your CI/CD jobs in Docker containers"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/docker/using_docker_images/
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção 'Override the entrypoint of an image'"
+dominios: [ci-cd]
+notas: null

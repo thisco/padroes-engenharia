@@ -1,0 +1,10 @@
+id: gitlab-job-rules
+titulo: "Specify when jobs run with rules"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/jobs/job_rules/
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seção 'Avoid duplicate pipelines'"
+dominios: [ci-cd]
+notas: null

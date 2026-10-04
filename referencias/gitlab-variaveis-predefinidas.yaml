@@ -1,0 +1,10 @@
+id: gitlab-variaveis-predefinidas
+titulo: "Predefined CI/CD variables reference"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/variables/predefined_variables/
+tipo: vendor
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "tabela, variável CI_MERGE_REQUEST_TARGET_BRANCH_NAME (pipelines de merge request)"
+dominios: [ci-cd]
+notas: null

@@ -1,0 +1,29 @@
+conteudo: ferramenta-gitlab-ci-local
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: instalação por npm e brew; roda jobs como shell ou docker; só arquivos rastreados entram nos
+    jobs isolados
+  ref: gitlab-ci-local-readme
+  localizacao: 'README: instalação, executores e limitações'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/gitlab-ci-local.yml
+  comando: 'npx --yes gitlab-ci-local@4.76.0 --cwd <projeto-de-teste> --file <sonda> sonda-git, com a
+    sonda: git rev-parse HEAD; git rev-parse --verify origin/main; git merge-base origin/main HEAD'
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1,
+    projeto de teste gerado pela cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65,
+    com remoto bare local
+  resultado: passou
+  evidencia: sonda-git > 65b0dba985ba958e1e0d465c1b58e2c9ee12861d (HEAD); > 33cd4a34c9454260019009f33c3274d0ede2d420
+    (origin/main); > 33cd4a34c9454260019009f33c3274d0ede2d420 (merge-base); PASS, saida=0. A opção --cwd
+    recusou caminho absoluto ("Please use relative path for the --cwd option").
+  data: '2026-10-04'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: --cwd só relativo; projeto da comunidade
+    problema: afirmações sem referência
+    tratamento: texto atribui --cwd aos testes do portal e diz projeto de terceiros

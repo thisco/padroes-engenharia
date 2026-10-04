@@ -1,0 +1,20 @@
+id: gitleaks
+titulo: Gitleaks
+categoria: seguranca
+status: adotar
+versao_minima: "8.19.0"
+dono: nuarq
+praticas: [DAD-01]
+receitas: [ligar-ci-gitlab-travas]
+como_instalar: |
+  No pipeline, use a imagem oficial `ghcr.io/gitleaks/gitleaks` com a versão fixada e
+  `entrypoint: [""]`, como no arquivo da receita [ref:gitlab-docker-entrypoint]; as imagens
+  oficiais são publicadas no GitHub Container Registry [ref:gitleaks-readme]. A varredura é o
+  subcomando `gitleaks git`; a partir da 8.19.0 o `detect` e o `protect` estão obsoletos, mas
+  seguem disponíveis [ref:gitleaks-readme].
+limites: |
+  Detecta por formato: regras com expressão regular e entropia [ref:gitleaks-readme]. Por ser
+  assim, um segredo num formato que nenhuma regra descreve não gera achado (consequência do método;
+  a documentação não faz essa afirmação). Um achado já tratado se silencia com a impressão digital
+  dele no `.gitleaksignore`, recurso que a documentação marca como experimental [ref:gitleaks-readme].
+referencias: [gitleaks-readme, gitlab-docker-entrypoint]

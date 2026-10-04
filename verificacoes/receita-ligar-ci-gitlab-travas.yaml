@@ -1,0 +1,175 @@
+conteudo: receita-ligar-ci-gitlab-travas
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: os jobs rodam só em pipeline de merge request pela regra $CI_PIPELINE_SOURCE == merge_request_event;
+    a configuração precisa dessa regra
+  ref: gitlab-mr-pipelines
+  localizacao: seções 'When they run' e de configuração
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_TARGET_BRANCH_NAME traz a branch de destino da MR e só existe em pipelines de
+    merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: seção de variáveis de pipelines de merge request
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso e traz todo o histórico; a variável no .gitlab-ci.yml sobrescreve
+    a configuração do projeto
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone'
+  resultado: confirmada
+- texto: 'entrypoint: [""] troca o entrypoint da imagem'
+  ref: gitlab-docker-entrypoint
+  localizacao: seção 'Override the entrypoint of an image'
+  resultado: confirmada
+- texto: o merge check chama-se Pipelines must succeed, em Settings > Merge requests > Merge checks
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido
+  resultado: confirmada
+- texto: pipelines duplicados nascem de job que roda em push e em MR; a saída é workflow ou rules específicas
+  ref: gitlab-job-rules
+  localizacao: seção 'Avoid duplicate pipelines'
+  resultado: confirmada
+- texto: o gitleaks detecta por regex e entropia; o subcomando git substitui o detect desde a 8.19.0;
+    --redact, --verbose e .gitleaksignore; imagem ghcr.io/gitleaks/gitleaks
+  ref: gitleaks-readme
+  localizacao: 'README: subcomandos, flags, regras, imagens'
+  resultado: confirmada
+- texto: o gitlab-ci-local roda pipelines como shell ou docker; --list, --variable e --file; só arquivos
+    rastreados entram nos jobs isolados
+  ref: gitlab-ci-local-readme
+  localizacao: 'README: instalação, executores, opções e limitações'
+  resultado: confirmada
+- texto: verificar_pr.py bloqueia migration já existente na base que foi alterada e só avisa rollback,
+    threat-model e evidência; avisa código sem plano
+  ref: sdd-scaffold-verificar-pr
+  localizacao: docstring (severidades), regex MIGRATION e função analisar()
+  resultado: confirmada
+- texto: verificar_constituicao.py reprova a constituição editada no projeto
+  ref: sdd-scaffold-readme
+  localizacao: README, 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: o CI do scaffold tem o limite de 30000 bytes para o AGENTS.md (alerta, com exit 1) e o job de
+    segredos com gitleaks
+  ref: sdd-scaffold-qualidade
+  localizacao: passo 'AGENTS.md dentro do limite de contexto' e job segredos
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 <job> --ignore-predefined-vars CI_PIPELINE_SOURCE --variable
+    CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (jobs normas-do-pr,
+    governanca e segredos, na branch feat/2026-10-05-amplia-cpf, que só soma uma migration nova V3 e um
+    plano com Rollback)
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1,
+    projeto de teste gerado pela cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65,
+    com remoto bare local
+  resultado: passou
+  evidencia: 'normas-do-pr: "Verificação de PR: 2 arquivo(s), nenhum achado." e PASS, saida=0. governanca:
+    "AGENTS.md com 5418 bytes (limite 30000)", "Constituição padrao-v1.0: bloco inline confere com o arquivo
+    canônico." e PASS, saida=0. segredos: "4 commits scanned." e "no leaks found", PASS, saida=0. Antes:
+    a sonda `git rev-parse --verify origin/main` no job em Docker devolveu 33cd4a34c9454260019009f33c3274d0ede2d420,
+    e o histórico estava visível. A listagem (--list) mostrou os três jobs no stage travas.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 <job> --ignore-predefined-vars CI_PIPELINE_SOURCE --variable
+    CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (normas-do-pr
+    na branch fix/2026-10-05-cpf-editado, que edita a V2; governanca na branch teste/constituicao-adulterada;
+    segredos na branch teste/segredo)
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1,
+    projeto de teste gerado pela cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65,
+    com remoto bare local; o token de teste foi gerado aleatoriamente e só existe na pasta de teste
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr (V2 editada): "BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e
+    foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental." mais o AVISO
+    de rollback, FAIL 1, saida=1. governanca (constituição adulterada): "DIVERGÊNCIA: o bloco inline no
+    AGENTS.md não corresponde a padrao-v1.0.", FAIL 1, saida=1. segredos (segredo plantado): "RuleID:      github-pat",
+    "Finding:     GITHUB_TOKEN=REDACTED", "WRN leaks found: 1", FAIL 1, saida=1.'
+  data: '2026-10-04'
+- tipo: prompt
+  prompt: receita-ligar-ci-gitlab-travas-prompt-1
+  harness: claude-code
+  resultado: passou
+  evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt final, numa cópia do projeto de
+    teste (cópia local do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65) e com
+    o portal servido em http://localhost:8765. Branch ci/2026-10-04-travas; um commit "ci: travas do processo
+    no pipeline de MR" (3d0281c); git diff --stat main..HEAD só com .gitlab-ci.yml (47 linhas); o arquivo
+    igual ao exemplo (diff vazio); jobs [governanca, normas-do-pr, segredos]; a última mensagem cita os
+    dois passos do GitLab (abrir a MR e marcar Pipelines must succeed). Transcrição: relatório final do
+    agente em curadoria-a5/transcricoes/receita-ligar-ci-gitlab-travas-prompt-1.txt; uma rodada anterior,
+    com a versão do prompt sem os casos de AGENTS.md e PyYAML ausentes, teve o mesmo resultado.'
+  data: '2026-10-04'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: confira o GIT_DEPTH e se o runner tem acesso de leitura [ref:gitlab-git-depth]
+    problema: a página só trata da profundidade do clone; acesso de leitura do runner não está na fonte
+    tratamento: a frase ficou com a referência só no GIT_DEPTH; o acesso do runner ficou sem referência,
+      como orientação
+  - afirmacao: 'GIT_DEPTH: 0 desliga o clone raso [ref:gitlab-git-depth]'
+    problema: 'inferência: a página diz que o campo da configuração do projeto com 0 desliga o clone raso
+      e que a variável GIT_DEPTH sobrescreve o campo'
+    tratamento: o texto passou a dizer isso, sem atribuir à fonte que a variável com 0 desliga
+  - afirmacao: traduzidos do CI de GitHub Actions do scaffold
+    problema: 'exagero de equivalência: são três dos sete jobs, o segredos varre o histórico inteiro e
+      o governanca não confere ponteiros de ferramenta'
+    tratamento: texto diz adaptados, três dos sete, e lista as duas diferenças
+  - afirmacao: cada um falha por um motivo
+    problema: a própria tabela dá dois motivos ao governanca
+    tratamento: 'reescrito: motivos próprios'
+  - afirmacao: 'RuleID github-pat e WRN leaks found: 1 [ref:gitleaks-readme]'
+    problema: o README do gitleaks não mostra essa linha nem a regra; só a redação do segredo vem dele
+    tratamento: a referência ficou na opção --redact; o bloco é saída real do gitleaks 8.30.1 e o texto
+      diz isso
+  - afirmacao: o .gitleaksignore [ref:gitleaks-readme]
+    problema: a fonte marca o recurso como experimental e o texto omitia
+    tratamento: dito na receita e na ferramenta
+  - afirmacao: rode os jobs na sua máquina (passo 3)
+    problema: 'não executável sem inventar: o comando só listava, faltavam o comando de execução, a branch
+      origin/main no clone e os avisos esperados do gitlab-ci-local'
+    tratamento: passo 3 ganhou os pré-requisitos, os avisos esperados, a opção --ignore-predefined-vars
+      e a instrução de trocar --list pelo nome do job
+  - afirmacao: commit, push e abrir a MR (passo 4)
+    problema: 'não executável sem inventar: faltava o projeto no GitLab e o remote origin'
+    tratamento: passo 4 diz que o remote origin precisa estar configurado
+  - afirmacao: job governanca sem AGENTS.md
+    problema: 'não executável sem inventar: sem AGENTS.md a contagem de bytes falha mesmo depois de tirar
+      a linha do verificar_constituicao.py'
+    tratamento: a receita e o prompt mandam remover o job inteiro quando não há AGENTS.md; o prompt foi
+      testado de novo
+  - afirmacao: editar uma migration que está na main (passo 6)
+    problema: 'não executável sem inventar: faltava dizer que a pasta precisa casar com migration/, migrations/
+      ou alembic/ e que db/migrate/ passa em silêncio'
+    tratamento: passo 6 e Se der errado dizem isso, com a referência do verificador
+  - afirmacao: 'Verificação de PR: 2 arquivo(s), nenhum achado.'
+    problema: o 2 muda com a MR, e MR com código sem plano traz AVISO
+    tratamento: o texto do Confira explica
+  - afirmacao: MR com segredo no Confira
+    problema: 'não executável sem inventar: não havia como produzir o segredo de teste'
+    tratamento: o Confira diz como produzir o token de teste numa branch descartável
+  - afirmacao: 'com o agente, passo 4: python3 -c import yaml'
+    problema: o PyYAML não é pré-requisito declarado e o python3 do Homebrew não o tem (visto também no
+      teste do prompt)
+    tratamento: o prompt manda usar outro interpretador com PyYAML ou dizer que não validou, e foi testado
+      de novo
+  - afirmacao: 'ferramentas/gitleaks.yml: entrypoint [ref:gitleaks-readme]'
+    problema: 'fonte errada: o README do gitleaks não fala de entrypoint nem de GitLab'
+    tratamento: a referência da frase passou a gitlab-docker-entrypoint
+  - afirmacao: 'ferramentas/gitleaks.yml: formato próprio passa sem achado [ref:gitleaks-readme]'
+    problema: extrapolação do método; o README não afirma
+    tratamento: texto marca como consequência do método, sem atribuir à fonte
+  - afirmacao: 'ferramentas/gitleaks.yml: a partir da 8.19.0 substitui o detect'
+    problema: o README diz que detect e protect estão obsoletos mas seguem disponíveis
+    tratamento: texto reescrito
+  - afirmacao: 'ferramentas/gitlab-ci-local.yml: --cwd só relativo; projeto da comunidade'
+    problema: 'afirmações sem referência: --cwd vem do teste do portal e a autoria não está no README'
+    tratamento: texto diz que foi observado nos testes do portal e passou a 'projeto de terceiros'
+  - afirmacao: 'exemplo: sdd-scaffold 1.6.1 no comentário'
+    problema: a versão não vem de nenhuma das referências listadas
+    tratamento: a versão está em componentes.yml do portal e no CHANGELOG do scaffold no commit fixado;
+      aceito como metadado do comentário
+  - afirmacao: risco de MR vinda de fork
+    problema: o origin do clone aponta para o fork e a base pode estar desatualizada; nenhuma referência
+      trata
+    tratamento: não entra na receita por falta de fonte; fica como limite conhecido para o checkpoint
