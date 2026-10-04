@@ -1,0 +1,11 @@
+id: aws-agentic-scoping-matrix
+titulo: Agentic AI Security Scoping Matrix
+organizacao: Amazon Web Services
+url: https://aws.amazon.com/ai/security/agentic-ai-scoping-matrix/
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: quatro escopos de agência e a regra de que os controles crescem com a agência
+dominios:
+- ia-no-produto
+notas: Lida em 2026-10-04 (verificação V); no benchmark do portal a referência constava como [S].

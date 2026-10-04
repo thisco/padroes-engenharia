@@ -1,0 +1,26 @@
+conteudo: gateway
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Num AI gateway do Azure API Management, a função inclui autenticar e autorizar o acesso aos serviços
+    de IA, monitorar e registrar as interações e gerenciar o uso de tokens e as cotas entre várias aplicações.
+  ref: azure-apim-ai-gateway
+  localizacao: seção 'Why use an AI gateway?'
+  resultado: confirmada
+- texto: O proxy do LiteLLM é compatível com o formato da API da OpenAI, e qualquer SDK da OpenAI funciona
+    apontando para ele.
+  ref: litellm-proxy-docker
+  localizacao: seções de execução com Docker e config.yaml, master key e API compatível com OpenAI
+  resultado: confirmada
+- texto: No LiteLLM, os guardrails também rodam no proxy.
+  ref: litellm-guardrails
+  localizacao: seções 'What is a guardrail', modos de execução e exemplo de bloqueio
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: linha cita guardrails; onde_mora cita a PoC do Serpro
+    problema: fatos sem fonte no corpo
+    tratamento: linha sem guardrails, corpo cita o guardrail do LiteLLM, onde_mora fala do exemplo do
+      portal

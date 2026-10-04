@@ -1,0 +1,36 @@
+conteudo: guardrail
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: No LiteLLM, o guardrail examina requisições e respostas, com exemplos como detecção de injeção
+    de prompt e mascaramento de dados pessoais, e roda em modos como pre_call e post_call; no exemplo
+    da página, a violação devolve o erro 'Violated guardrail policy' com código 400, e o modo logging_only
+    só audita, sem bloquear, conforme a integração do guardrail.
+  ref: litellm-guardrails
+  localizacao: seções 'What is a guardrail', modos de execução e exemplo de bloqueio
+  resultado: confirmada
+- texto: A OWASP descreve a injeção de prompt indireta como a que ocorre quando o modelo aceita entrada
+    de fontes externas, como sites ou arquivos; a conclusão de que a verificação que barra deve rodar
+    fora do modelo, e não depender só do prompt de sistema, é inferência do portal, não da OWASP.
+  ref: owasp-llm-top10
+  localizacao: seção 'Indirect Prompt Injections'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: conteúdo nocivo, dados pessoais ou violação de política
+    problema: a página fala em detecção de injeção de prompt e mascaramento de PII
+    tratamento: texto com os exemplos da página
+  - afirmacao: status HTTP 400
+    problema: é o campo code no corpo do exemplo, não o status HTTP
+    tratamento: texto diz 'código 400 no exemplo da página'
+  - afirmacao: logging_only sem bloquear
+    problema: a fonte ressalva que depende da integração
+    tratamento: ressalva incluída
+  - afirmacao: por isso a verificação roda fora do modelo [ref:owasp-llm-top10]
+    problema: a OWASP não diz isso; lista restringir o comportamento no prompt de sistema como mitigação
+    tratamento: marcada como inferência do portal
+  - afirmacao: definição 'verificação do gateway'
+    problema: no LiteLLM costuma ser um serviço integrado
+    tratamento: definição passou a 'configurada no gateway'

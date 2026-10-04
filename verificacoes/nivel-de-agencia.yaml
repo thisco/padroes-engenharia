@@ -1,0 +1,22 @@
+conteudo: nivel-de-agencia
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: A Anthropic separa workflows, em que modelos e ferramentas seguem caminhos de código predefinidos,
+    de agentes, em que o modelo dirige o próprio processo.
+  ref: anthropic-building-effective-agents
+  localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+  resultado: confirmada
+- texto: A matriz da AWS classifica sistemas agênticos em quatro escopos, de sem agência a agência plena,
+    e diz que, quanto maior a agência, mais sofisticados precisam ser os controles de segurança.
+  ref: aws-agentic-scoping-matrix
+  localizacao: quatro escopos de agência e a regra de que os controles crescem com a agência
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

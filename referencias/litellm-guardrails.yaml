@@ -1,0 +1,11 @@
+id: litellm-guardrails
+titulo: 'LiteLLM Proxy: guardrails quick start'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/guardrails/quick_start
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seções 'What is a guardrail', modos de execução e exemplo de bloqueio
+dominios:
+- ia-no-produto
+notas: null

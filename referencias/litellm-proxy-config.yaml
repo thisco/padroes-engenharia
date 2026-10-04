@@ -1,0 +1,11 @@
+id: litellm-proxy-config
+titulo: 'LiteLLM Proxy: config.yaml'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/configs
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seção sobre model_list (model_name e litellm_params)
+dominios:
+- ia-no-produto
+notas: null

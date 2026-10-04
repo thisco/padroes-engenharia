@@ -1,0 +1,17 @@
+conteudo: catalogo-de-modelos
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: No config.yaml do LiteLLM, o model_name é o nome que o cliente externo passa, e o litellm_params.model
+    traz o modelo e o provedor reais; essa separação permite apelidos e, com vários itens de mesmo model_name,
+    balanceamento de carga.
+  ref: litellm-proxy-config
+  localizacao: seção sobre model_list (model_name e litellm_params)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: com nome próprio, camada e dono
+    problema: camada e dono não estão na fonte
+    tratamento: linha reescrita

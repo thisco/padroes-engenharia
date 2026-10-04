@@ -1,0 +1,18 @@
+conteudo: eval
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: A Anthropic orienta definir primeiro os critérios de sucesso e só então desenhar avaliações que
+    meçam o desempenho contra eles; os critérios devem ser específicos, mensuráveis, alcançáveis e relevantes,
+    e os evals devem espelhar a distribuição das tarefas reais.
+  ref: anthropic-develop-tests
+  localizacao: abertura e princípios de avaliação específica da tarefa
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

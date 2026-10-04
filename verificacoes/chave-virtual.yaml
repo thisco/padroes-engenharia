@@ -1,0 +1,19 @@
+conteudo: chave-virtual
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: No LiteLLM, as chaves virtuais são geradas com modelos, orçamento, duração do orçamento e apelido,
+    e controlam o acesso a modelos; o gasto é acompanhado por chave, por usuário e por time, e as chaves
+    exigem um banco PostgreSQL em DATABASE_URL.
+  ref: litellm-virtual-keys
+  localizacao: abertura ('Track Spend, and control model access via virtual keys'), 'What a key inherits
+    from its owner' e 'Spend Tracking'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

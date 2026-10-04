@@ -1,0 +1,11 @@
+id: anthropic-develop-tests
+titulo: Define success criteria and build evaluations
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/test-and-evaluate/develop-tests
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: abertura e princípios de avaliação específica da tarefa
+dominios:
+- ia-no-produto
+notas: null
