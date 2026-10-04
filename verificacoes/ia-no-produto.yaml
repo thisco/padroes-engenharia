@@ -1,0 +1,26 @@
+conteudo: ia-no-produto
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o gateway autentica e autoriza, monitora e registra as interações e gerencia tokens e cotas entre
+    aplicações
+  ref: azure-apim-ai-gateway
+  localizacao: seção 'Why use an AI gateway?'
+  resultado: confirmada
+- texto: o scaffold traz a skill threat-model, com as cinco perguntas, menor privilégio e tratamento de
+    segredo
+  ref: sdd-scaffold-readme
+  localizacao: README, tabela das skills
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o gateway de IA existe para autenticar... [ref:azure-apim-ai-gateway]
+    problema: 'exagero e recorte: a fonte diz ''helps you'' numa lista de cinco itens e é página de um
+      produto'
+    tratamento: texto reescrito para 'No Azure API Management, o AI gateway ajuda a…, entre outras funções'
+      e diz que a página é de produto
+  - afirmacao: a única prática publicada hoje; descrição P2 e P3
+    problema: afirmações internas que envelhecem
+    tratamento: frases retiradas do texto

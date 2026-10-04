@@ -1,0 +1,20 @@
+conteudo: construir-com-ia
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a sdd-lifecycle classifica em tiers e conduz spec, plano, implementação TDD, revisão adversarial
+    e destilação de memória
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, descrição e 'Visão geral'
+  resultado: confirmada
+- texto: o scaffold entrega constituição no AGENTS.md, steering do processo, skills e verificadores
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que você recebe'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: o scaffold entrega as skills e os verificadores
+    problema: o README se contradiz sobre a skill do ciclo, que pode faltar
+    tratamento: texto diz que a skill do ciclo é instalada na geração e pode faltar com a origem inacessível

@@ -1,0 +1,20 @@
+conteudo: dados-migrations
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a skill migrations-reversiveis traz a regra de que migration aplicada nunca é editada
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, regra 3
+  resultado: confirmada
+- texto: o verificador de PR bloqueia a edição de migration existente e avisa mudança de schema sem rollback
+    no plano; a skill cobre expandir e contrair
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que impede e o que orienta' e tabela das skills
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: a única prática publicada hoje é a DAD-01
+    problema: afirmação interna que envelhece
+    tratamento: frase retirada
