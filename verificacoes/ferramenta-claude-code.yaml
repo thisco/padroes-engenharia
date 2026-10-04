@@ -48,3 +48,14 @@ revisao_adversarial:
       nem como gerar o projeto do scaffold'
     tratamento: o campo abre dizendo que a instalação é pelo site do fornecedor e que ele cobre só a configuração
       do repositório; a geração do projeto remete ao starter
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/claude-code.yml
+  comando: claude -p "Quais skills você tem disponíveis neste projeto? Responda só com os nomes." (pasta
+    harness-claude-code, com .claude/skills apontando para skills/)
+  ambiente: Claude Code 2.1.285, em cópia do projeto de teste (cópia local do sdd-scaffold no commit fixado
+    a8ebdf3c6734f11f6763c182b2325fe227216b65); lote rodado pelo dono; macOS
+  resultado: passou
+  evidencia: 'Resposta: "Skills do projeto (`.claude/skills/`):" e a lista sdd-lifecycle, arquitetura-viva,
+    estados-de-interface, migrations-reversiveis, threat-model (as 5 skills do scaffold). rc 0.'
+  data: '2026-10-04'

@@ -39,3 +39,29 @@ revisao_adversarial:
   - afirmacao: como_instalar não instala a ferramenta
     problema: não executável sem inventar
     tratamento: campo abre dizendo que a instalação é pelo site do fornecedor
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/codex.yml
+  comando: codex exec "Quais skills você tem disponíveis neste projeto? Responda só com os nomes." (pasta
+    harness-codex, só com .codex/skills apontando para skills/)
+  ambiente: Codex 0.160.0, modelo gpt-6-luna, sandbox read-only, em cópia do projeto de teste (cópia local
+    do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65); lote rodado pelo dono;
+    macOS
+  resultado: passou
+  evidencia: 'Resposta: arquitetura-viva, estados-de-interface, migrations-reversiveis, sdd-lifecycle,
+    threat-model (as 5 skills do scaffold), 5.121 tokens. rc 0. Com só .codex/skills, o Codex 0.160.0
+    listou as skills do scaffold.'
+  data: '2026-10-04'
+- tipo: arquivo
+  arquivo: ferramentas/codex.yml
+  comando: codex exec "Quais skills você tem disponíveis neste projeto? Responda só com os nomes." (pasta
+    harness-codex-agents, com .codex/skills e .agents/skills apontando para skills/)
+  ambiente: Codex 0.160.0, modelo gpt-6-luna, sandbox read-only, em cópia do projeto de teste (cópia local
+    do sdd-scaffold no commit fixado a8ebdf3c6734f11f6763c182b2325fe227216b65); lote rodado pelo dono;
+    macOS
+  resultado: passou
+  evidencia: 'Resposta: openai-docs, skill-creator, skill-installer, as 5 skills do scaffold (arquitetura-viva,
+    estados-de-interface, migrations-reversiveis, sdd-lifecycle, threat-model) e, em seguida, as skills
+    do usuário (superpowers). rc 0. Não distingue .agents/skills de .codex/skills: as 5 skills aparecem
+    nos dois casos.'
+  data: '2026-10-04'
