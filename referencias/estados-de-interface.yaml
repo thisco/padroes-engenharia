@@ -1,0 +1,11 @@
+id: estados-de-interface
+titulo: "skills/estados-de-interface do sdd-scaffold"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/skills/estados-de-interface/SKILL.md
+tipo: interno
+versao: "1.6.1"
+verificado_em: 2026-10-04
+verificacao: V
+localizacao: "seções 'Os quatro estados de toda interface' e 'Protótipo antes do código'"
+dominios: [frontend-ux]
+notas: "Conferido na web e na cópia local do commit fixado."

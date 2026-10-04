@@ -1,0 +1,12 @@
+id: anthropic-claude-code-expertise
+titulo: Claude Code expertise study
+organizacao: Anthropic
+url: https://www.anthropic.com/research/claude-code-expertise
+tipo: vendor
+publicado_em: '2026-06-16'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: Sucesso por nível de experiência e divisão de decisões entre pessoa e Claude
+dominios:
+- construir-com-ia
+notas: Não usar o ganho de valor por sessão (a página diverge entre trechos).

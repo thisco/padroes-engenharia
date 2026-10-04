@@ -1,0 +1,12 @@
+id: openapi-spec
+titulo: OpenAPI Specification v3.2.1
+organizacao: OpenAPI Initiative
+url: https://spec.openapis.org/oas/latest.html
+tipo: padrao-aberto
+versao: 3.2.1
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: 'abertura: descrição de interface de API HTTP legível por pessoas e máquinas'
+dominios:
+- contratos-api
+notas: null

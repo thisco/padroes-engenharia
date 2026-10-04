@@ -1,0 +1,13 @@
+id: lgpd
+titulo: Lei nº 13.709/2018 (LGPD)
+organizacao: República Federativa do Brasil
+url: https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm
+tipo: normativo
+publicado_em: '2018-08-14'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: art. 5º, I (dado pessoal) e art. 6º, III (necessidade)
+dominios:
+- privacidade-lgpd
+notas: 'Verificação manual no navegador em 2026-10-04: o WebFetch recebeu ECONNREFUSED, e o texto dos
+  incisos I do art. 5º e III do art. 6º foi lido na própria página do Planalto.'

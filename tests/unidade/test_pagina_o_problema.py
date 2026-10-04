@@ -59,3 +59,18 @@ def test_escada_aparece_em_ia_no_produto_sem_marcador_de_referencia():
     assert not analisar(html_dominio(s, fabrica.espinha_real().faixa("seguranca"))).todos(
         "li", classe="degrau"
     )
+
+
+def test_falha_so_com_dominio_mostra_o_link_do_dominio_sem_pratica():
+    """Bug da A.5-2: a linha sem prática derrubava o template (`f.href` indefinido)."""
+    falha = {
+        "titulo": "Vitória prematura",
+        "observado": "Declara o trabalho concluído [ref:ref-forte].",
+        "dominio": "construir-com-ia",
+        "resposta": "Evidência no plano.",
+    }
+    p = pagina(falhas=[falha])
+    s = fabrica.site(p, fabrica.pratica(), fabrica.referencia())
+    linha = analisar(html_o_problema(s, p)).todos("table")[0].todos("tr")[1]
+    assert linha.todos("a", href="dominios/construir-com-ia.html")
+    assert not linha.todos("span", classe="ef orienta")

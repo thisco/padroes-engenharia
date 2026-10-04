@@ -1,0 +1,12 @@
+id: usenix-pacotes-alucinados
+titulo: Package hallucinations in code-generating LLMs (USENIX Security 2025)
+organizacao: USENIX Security 2025
+url: https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen
+tipo: analista
+versao: USENIX Security 2025
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: 'resumo do artigo: percentuais de pacotes alucinados, amostras e modelos'
+dominios:
+- seguranca
+notas: Publicação em agosto de 2025 (campo month=aug da citação BibTeX da página).

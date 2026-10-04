@@ -1,0 +1,11 @@
+id: sre-book-slo
+titulo: Service Level Objectives (SRE book)
+organizacao: Google
+url: https://sre.google/sre-book/service-level-objectives/
+tipo: analista
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: definições de SLI e SLO
+dominios:
+- observabilidade
+notas: null

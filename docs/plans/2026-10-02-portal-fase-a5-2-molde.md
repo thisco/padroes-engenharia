@@ -1382,7 +1382,7 @@ repetir o número**.
 **Interfaces:** Consumes M8, M9, M10, M6, `sdd-lifecycle`, `gitleaks-readme`; as 3 pilotos;
 faixas de `espinha.yml`. Produces o número da pesquisa de perfil que a M12 cita.
 
-- [ ] **Passo 1: Fontes (antes do texto).** Número só entra [V] e com data; se não confirmar,
+- [x] **Passo 1: Fontes (antes do texto).** Número só entra [V] e com data; se não confirmar,
   sai e fica a observação qualitativa.
 
 | Referência | URL | Confirmar |
@@ -1400,7 +1400,7 @@ faixas de `espinha.yml`. Produces o número da pesquisa de perfil que a M12 cita
 | `lgpd` (`normativo`) | https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm | art. 5º, I; art. 6º, III (necessidade) |
 | `sre-book-slo` | https://sre.google/sre-book/service-level-objectives/ | SLO como alvo medido por SLI |
 
-- [ ] **Passo 2: Rascunho.** Os blocos precisam cobrir:
+- [x] **Passo 2: Rascunho.** Os blocos precisam cobrir:
   1. `lead`: a tese do mockup ("Agentes escrevem mais rápido do que qualquer time revisa…").
   2. `como_funciona`: harness roda a sessão, sessão contém o modelo, só atravessa o que foi
      gravado [ref:openai-harness-engineering].
@@ -1424,17 +1424,19 @@ faixas de `espinha.yml`. Produces o número da pesquisa de perfil que a M12 cita
      `escada[]`: P1 tier [ref:sdd-lifecycle], P2 escopo [ref:aws-genai-scoping-matrix], P3
      agência [ref:aws-agentic-scoping-matrix].
 
-- [ ] **Passo 3: Registro e revisão adversarial.** Uma afirmação por `[ref:]` (cerca de 30),
+- [x] **Passo 3: Registro e revisão adversarial.** Uma afirmação por `[ref:]` (cerca de 30),
   cada número com localização exata. Pedido adicional ao revisor: *"Confira cada número contra a
   fonte e se está com data. Procure número sem data e qualquer menção a ROI ou a percentual de
   desvio por feature."*
 
-- [ ] **Passo 4: Fecho e conferência com o mockup.**
+- [x] **Passo 4: Fecho e conferência com o mockup.**
   `grep -nE "171%|ROI|\+5%|sophyworks|linkedin" paginas/o-problema.md public/o-problema.html ||
   echo "higiene ok"`. Abra a página ao lado dos dois mockups e anote para a M13 as 7 seções na
   ordem, a tabela de 7 linhas com link, data e [V], o chip na linha 1, 9 cartões com link e a
   Escada. Commit: `feat(conteudo): página O problema com os sete padrões de falha e as
   pesquisas`.
+
+> **Notas (M11):** a `openai-harness-engineering` foi verificada no navegador (data 11/02/2026 [V]); a `lgpd` (planalto.gov.br recusa conexão automática) foi lida na própria página, no navegador. `como_funciona` não existe no contrato: o texto foi para o `lead`. O DORA foi citado pelo anúncio oficial do Google Cloud (a página dora.dev não traz os percentuais). **Achado de motor corrigido (TDD):** a linha de `falhas` só com `dominio` (ou sem `apelido`/`data`) derrubava o template (`f.href` indefinido); `componentes.html` passou a usar `.get`. Teste RED→GREEN `test_falha_so_com_dominio_mostra_o_link_do_dominio_sem_pratica`.
 
 ### Tarefa M12: Página inicial (Início)
 
@@ -1444,7 +1446,7 @@ conteúdo (§7) e frontend (§4.2).
 
 **Files:** Create `paginas/inicio.md`, `verificacoes/inicio.yaml`.
 
-- [ ] **Passo 1: Rascunho.** Os blocos precisam cobrir as 7 seções do §4.3:
+- [x] **Passo 1: Rascunho.** Os blocos precisam cobrir as 7 seções do §4.3:
   1. `titulo` "Construir software com IA sem perder a arquitetura"; `lead` de 2 a 3 linhas (o
      que é e quem aprova: práticas para times com agentes de código, aprovadas pelo NUARQ; cada
      uma diz o que fazer, com que força e de onde vem a evidência); `por_que`: o número da
@@ -1463,12 +1465,14 @@ conteúdo (§7) e frontend (§4.2).
   7. `estado`: células vazias são o backlog público; como propor (MR pela skill
      `curadoria-de-pratica`).
 
-- [ ] **Passo 2: Registro e revisão adversarial.** Pedido adicional: *"Você nunca viu este
+- [x] **Passo 2: Registro e revisão adversarial.** Pedido adicional: *"Você nunca viu este
   portal. Só com a primeira tela, responda: o que é, para quem é, por onde começo e o que
   significam 'bloqueia' e 'experimentar'. Diga o que faltou."*
 
-- [ ] **Passo 3: Fecho.** Abra `/` a 1280px e a 400px e anote as 7 seções para a M13. Commit:
+- [x] **Passo 3: Fecho.** Abra `/` a 1280px e a 400px e anote as 7 seções para a M13. Commit:
   `feat(conteudo): página inicial que explica o portal`.
+
+> **Notas (M12):** o caminho "Aplicação que usa modelo" (`praticas/P2-01`) não existe: o schema só aceita `guias/`, `receitas/` ou `starters/` como destino, então a Início tem dois caminhos. **Achado de motor corrigido (TDD):** `Site.caminhos()` não incluía starters nem ferramentas, e o caminho para `starters/sdd-scaffold` sumia da Início; teste RED→GREEN `test_caminho_para_starter_aparece_em_comece_aqui`. Achados do leitor novo sobre o texto gerado pelo motor (jargão, `<URL do portal>`, duas escalas) foram levados ao checkpoint.
 
 ### Tarefa M13: Verificação da A.5-2
 

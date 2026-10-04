@@ -1,0 +1,11 @@
+id: aws-genai-scoping-matrix
+titulo: Generative AI Security Scoping Matrix
+organizacao: Amazon Web Services
+url: https://aws.amazon.com/ai/security/generative-ai-scoping-matrix/
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: escopos 1 a 5, por posse do modelo e dos dados, e o papel do escopo nos controles
+dominios:
+- ia-no-produto
+notas: No benchmark do portal constava como [S]; lida em 2026-10-04.

@@ -1,0 +1,236 @@
+conteudo: o-problema
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Na pesquisa do DORA de 2024, o aumento da adoção de IA veio acompanhado de uma queda estimada
+    na estabilidade e no throughput da entrega.
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+  resultado: confirmada
+- texto: 'Cada sessão nova do agente começa sem memória da anterior, e o que ele não alcança no contexto
+    efetivamente não existe: só continua o que foi gravado.'
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: 'Cada sessão nova do agente começa sem memória da anterior, e o que ele não alcança no contexto
+    efetivamente não existe: só continua o que foi gravado.'
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: O agente tenta fazer demais de uma vez e deixa funcionalidades incompletas, sem registro do que
+    falta.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: O agente replica os padrões que já existem no repositório, inclusive os irregulares, e isso leva
+    ao desvio com o tempo.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: O agente marca a funcionalidade como pronta sem teste de ponta a ponta, e a falha só aparece
+    depois.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: O agente tentou fazer o aplicativo inteiro de uma vez, esgotou o contexto no meio da implementação
+    e deixou funcionalidades incompletas.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Uma instância posterior olhava o projeto, via que já havia progresso e declarava o trabalho concluído.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Cada sessão começa sem memória da anterior (Anthropic, 11/2025); para o agente, o que ele não
+    alcança no contexto efetivamente não existe (OpenAI, 02/2026).
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Cada sessão começa sem memória da anterior (Anthropic, 11/2025); para o agente, o que ele não
+    alcança no contexto efetivamente não existe (OpenAI, 02/2026).
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: O agente tendia a marcar a funcionalidade como completa sem teste adequado, e falhas de ponta
+    a ponta escapavam de testes unitários e de chamadas de curl.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Agentes tendem a elogiar com confiança o próprio trabalho, mesmo quando a qualidade é medíocre;
+    separar quem faz de quem avalia é uma alavanca forte, embora não elimine de imediato essa complacência.
+  ref: anthropic-harness-design
+  localizacao: seção sobre autoavaliação e a separação entre gerador e avaliador
+  resultado: confirmada
+- texto: O agente replica os padrões do repositório, inclusive os irregulares, e isso leva ao desvio;
+    a equipe da OpenAI gastava as sextas-feiras, 20% da semana, limpando o que chamou de resíduos de IA,
+    e isso não escalou.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: Um manual monolítico apodrece, vira um cemitério de regras obsoletas e é difícil de verificar;
+    funcionou tratar o AGENTS.md como um mapa de cerca de 100 linhas, com indicações para fontes mais
+    profundas.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: 'Base: cerca de 400 mil sessões interativas de cerca de 235 mil pessoas, de outubro de 2025 a
+    abril de 2026; o sucesso exige um classificador mais um sinal concreto, e o nível de experiência também
+    é avaliado por modelo.'
+  ref: anthropic-claude-code-expertise
+  localizacao: Sucesso por nível de experiência e divisão de decisões entre pessoa e Claude
+  resultado: confirmada
+- texto: Em sessões típicas, a pessoa toma cerca de 70% das decisões de planejamento (o que fazer) e cerca
+    de 20% das de execução (como fazer).
+  ref: anthropic-claude-code-expertise
+  localizacao: Sucesso por nível de experiência e divisão de decisões entre pessoa e Claude
+  resultado: confirmada
+- texto: À medida que a adoção de IA aumentou, a estimativa é de queda de 7,2% na estabilidade da entrega
+    e de 1,5% no throughput.
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+  resultado: confirmada
+- texto: 'Pacotes alucinados: média de pelo menos 5,2% nos modelos comerciais e de 21,7% nos abertos,
+    em 576 mil amostras de código de 16 modelos.'
+  ref: usenix-pacotes-alucinados
+  localizacao: 'resumo do artigo: percentuais de pacotes alucinados, amostras e modelos'
+  resultado: confirmada
+- texto: Tempo que uma equipe de agentes gastava, às sextas-feiras, limpando resíduos de IA antes de codificar
+    princípios no repositório.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: Declarar os padrões no steering e isolar o núcleo por portas e adaptadores; revisão contra a
+    spec.
+  ref: cockburn-hexagonal
+  localizacao: intenção e descrição de portas e adaptadores
+  resultado: confirmada
+- texto: Registrar a decisão num ADR curto, com contexto, decisão, status e consequências; drift check
+    entre diagrama, IaC e compose.
+  ref: nygard-adr
+  localizacao: 'texto principal: definição de ADR e seções Title, Context, Decision, Status e Consequences'
+  resultado: confirmada
+- texto: Descrever a API num contrato legível por pessoas e máquinas, como o OpenAPI; quebra de contrato
+    exige ADR.
+  ref: openapi-spec
+  localizacao: 'abertura: descrição de interface de API HTTP legível por pessoas e máquinas'
+  resultado: confirmada
+- texto: Definir os quatro estados de cada tela e validar um protótipo antes do código.
+  ref: estados-de-interface
+  localizacao: seções 'Os quatro estados de toda interface' e 'Protótipo antes do código'
+  resultado: confirmada
+- texto: Segredo em commit, entrada sem validação e dependência que não existe e que alguém pode registrar.
+  ref: usenix-pacotes-alucinados
+  localizacao: 'resumo do artigo: percentuais de pacotes alucinados, amostras e modelos'
+  resultado: confirmada
+- texto: Threat-model em cinco perguntas e o gitleaks no pipeline.
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: Threat-model em cinco perguntas e o gitleaks no pipeline.
+  ref: gitleaks-readme
+  localizacao: 'README: subcomandos git/dir/stdin, --redact, --verbose, .gitleaksignore, regras com regex
+    e entropia, imagens Docker'
+  resultado: confirmada
+- texto: Tratar só o mínimo necessário de dado pessoal, o que a lei chama de necessidade, e usar migration
+    reversível (DAD-01).
+  ref: lgpd
+  localizacao: art. 5º, I (dado pessoal) e art. 6º, III (necessidade)
+  resultado: confirmada
+- texto: Definir o SLO como alvo de um indicador medido, o SLI.
+  ref: sre-book-slo
+  localizacao: definições de SLI e SLO
+  resultado: confirmada
+- texto: Passar as chamadas por um gateway que autentica, monitora e controla tokens e cotas; chave virtual
+    (P2-01).
+  ref: azure-apim-ai-gateway
+  localizacao: seção 'Why use an AI gateway?'
+  resultado: confirmada
+- texto: Teste de ponta a ponta contra o artefato real antes de fechar.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Tier na mudança, escopo no aplicativo e nível de agência no agente; na dúvida, o mais alto.
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: 'Cada prática diz se é código que bloqueia ou texto que orienta: o CLAUDE.md é contexto, não
+    configuração imposta, e bloquear exige um hook.'
+  ref: claude-code-memory
+  localizacao: seções 'CLAUDE.md vs auto memory' e 'AGENTS.md'
+  resultado: confirmada
+- texto: Spec, ADR, plano e memória em disco são o que a próxima sessão vai ler, porque o agente não alcança
+    o que não está acessível.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: A skill do ciclo classifica a mudança em tiers e, na dúvida, assume o mais alto.
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5) e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: A matriz da AWS numera os escopos de 1 a 5 e diz que o escopo orienta onde focar os controles
+    de segurança.
+  ref: aws-genai-scoping-matrix
+  localizacao: escopos 1 a 5, por posse do modelo e dos dados, e o papel do escopo nos controles
+  resultado: confirmada
+- texto: Na matriz agêntica da AWS, quanto maior a agência, mais sofisticados os controles de segurança.
+  ref: aws-agentic-scoping-matrix
+  localizacao: quatro escopos de agência e a regra de que os controles crescem com a agência
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: O harness roda a sessão e a sessão contém o modelo [ref:openai-harness-engineering]
+    problema: síntese do autor apresentada como da fonte
+    tratamento: o lead agora cita só o que cada fonte diz (sessão sem memória; o que não está no contexto
+      não existe)
+  - afirmacao: a cada 25% a mais de adoção de IA, −7,2% e −1,5% [ref:dora-2024]
+    problema: o blog do Google Cloud usa o 25% só para os ganhos; as quedas vêm com 'as AI adoption increased'
+    tratamento: o texto perdeu o 'a cada 25%'; os valores e a data (22/10/2024) batem
+  - afirmacao: Anthropic (1 a 5) e OpenAI (6 e 7)
+    problema: a falha 3 cita as duas
+    tratamento: lead reescrito
+  - afirmacao: falha 3, data 2026-02 juntando duas fontes
+    problema: uma data só para duas fontes
+    tratamento: data 2025-11 e as duas fontes datadas no texto
+  - afirmacao: agentes escrevem mais rápido do que qualquer time revisa
+    problema: absoluto e sem fonte
+    tratamento: reescrito como 'podem escrever mais rápido do que um time consegue revisar', com o DORA
+      ao lado; definição do elo suavizada
+  - afirmacao: princípio 'impede ou orienta' [ref:claude-code-memory]
+    problema: a frase sobre onde a revisão humana olha não está na fonte
+    tratamento: frase trocada pelo que a fonte diz (CLAUDE.md é contexto; bloquear exige hook)
+  - afirmacao: 'quem faz, julga: separar funcionou melhor [ref:anthropic-harness-design]'
+    problema: a fonte chama de alavanca forte e diz que não elimina de imediato a complacência
+    tratamento: texto com a ressalva
+  - afirmacao: fontes do próprio autor (estados-de-interface, sdd-scaffold-readme, sdd-lifecycle)
+    problema: documentam a ferramenta do autor, não são evidência externa; o README só nomeia as cinco
+      perguntas do threat-model
+    tratamento: 'aceito: as afirmações são sobre o que o scaffold traz, não sobre eficácia'
+  - afirmacao: 'número do 15% × 28–33%: a fonte classifica a sessão, não a pessoa; sucesso verificado
+      é jargão'
+    problema: texto lia como medição objetiva
+    tratamento: descrição com 'sessões classificadas como', sucesso = classificador mais sinal concreto,
+      nível avaliado por modelo
+  - afirmacao: marcador [S] da LGPD sem explicação
+    problema: o marcador não era explicado e o art. 5º I não era usado
+    tratamento: o portal planalto.gov.br foi lido manualmente no navegador (V) e o marcador saiu
+  - afirmacao: 20% da semana e cerca de 100 linhas sem data própria
+    problema: herdam a data da falha
+    tratamento: 'aceito: o número tem a data da própria entrada em numeros e da falha'

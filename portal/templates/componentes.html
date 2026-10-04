@@ -76,7 +76,7 @@
 {% for elo in elos %}
   <li class="elo">{{ figura(elo.figura) }}
     <div><h3>{{ elo.titulo }}</h3><p class="def">{{ elo.definicao }}</p>{% if elo.como_aparece %}<p class="sint">Como aparece: {{ elo.como_aparece }}</p>{% endif %}</div></li>
-{% if not loop.last and elo.conector %}
+{% if not loop.last and elo.get("conector") %}
   <li class="conector" aria-hidden="false">{{ elo.conector }}</li>
 {% endif %}
 {% endfor %}
@@ -92,9 +92,9 @@
 {% for f in falhas %}
     <tr>
       <td>{{ loop.index }}</td>
-      <td><b>{{ f.titulo }}</b>{% if f.apelido %}<br><span class="ref-meta">{{ f.apelido }}</span>{% endif %}</td>
-      <td>{{ f.observado }}{% if f.data %} <span class="ref-meta">{{ f.data }}</span>{% endif %}{% if f.verificacao %} <span class="marca-v">[{{ f.verificacao }}]</span>{% endif %}</td>
-      <td>{% if f.href %}<a class="id" href="{{ raiz }}{{ f.href }}">{{ f.pratica }}</a> {{ chip_forca(f.forca) }}{% elif f.dominio_href %}<a href="{{ raiz }}{{ f.dominio_href }}">{{ f.dominio_titulo }}</a>{% endif %} {{ f.resposta }}</td>
+      <td><b>{{ f.titulo }}</b>{% if f.get("apelido") %}<br><span class="ref-meta">{{ f.apelido }}</span>{% endif %}</td>
+      <td>{{ f.observado }}{% if f.get("data") %} <span class="ref-meta">{{ f.data }}</span>{% endif %}{% if f.get("verificacao") %} <span class="marca-v">[{{ f.verificacao }}]</span>{% endif %}</td>
+      <td>{% if f.get("href") %}<a class="id" href="{{ raiz }}{{ f.href }}">{{ f.pratica }}</a> {{ chip_forca(f.forca) }}{% elif f.get("dominio_href") %}<a href="{{ raiz }}{{ f.dominio_href }}">{{ f.dominio_titulo }}</a>{% endif %} {{ f.resposta }}</td>
     </tr>
 {% endfor %}
   </tbody>
@@ -111,7 +111,7 @@
     <h3>{{ d.titulo }}</h3>
     <p class="s">{{ d.sintoma }}</p>
     <p class="r">{{ d.resposta }}</p>
-{% if d.dominio_href %}
+{% if d.get("dominio_href") %}
     <a class="lk" href="{{ raiz }}{{ d.dominio_href }}">{{ d.dominio_titulo }} →</a>
 {% endif %}
   </article>

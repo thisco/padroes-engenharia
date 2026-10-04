@@ -1,0 +1,13 @@
+id: dora-2024
+titulo: Announcing the 2024 DORA report
+organizacao: Google Cloud (DORA)
+url: https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report
+tipo: analista
+publicado_em: '2024-10-22'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+dominios:
+- construir-com-ia
+notas: 'A página dora.dev/research/2024/dora-report/ não traz os percentuais; o anúncio oficial no blog
+  do Google Cloud traz. Relatório sob CC BY-NC-SA 4.0: o portal parafraseia.'
