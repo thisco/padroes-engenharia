@@ -1,0 +1,22 @@
+conteudo: mcp
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: O Model Context Protocol é um protocolo aberto que permite a integração entre aplicações de LLM
+    e fontes de dados e ferramentas externas; os servidores oferecem recursos, prompts e ferramentas.
+  ref: mcp-spec
+  localizacao: abertura, 'Key Details' e 'Security and Trust & Safety'
+  resultado: confirmada
+- texto: A especificação trata ferramentas como execução arbitrária de código e diz que as descrições
+    de comportamento delas devem ser tidas como não confiáveis, salvo as de um servidor confiável.
+  ref: mcp-spec
+  localizacao: abertura, 'Key Details' e 'Security and Trust & Safety'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

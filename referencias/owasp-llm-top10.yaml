@@ -1,0 +1,12 @@
+id: owasp-llm-top10
+titulo: LLM01:2025 Prompt Injection
+organizacao: OWASP GenAI Security Project
+url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+tipo: padrao-aberto
+versao: '2025'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seção 'Indirect Prompt Injections'
+dominios:
+- ia-no-produto
+notas: Lista de 2025; a página da LLM01 define injeção direta e indireta.

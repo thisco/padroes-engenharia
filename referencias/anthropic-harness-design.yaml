@@ -1,0 +1,12 @@
+id: anthropic-harness-design
+titulo: Harness design for long-running application development
+organizacao: Anthropic
+url: https://www.anthropic.com/engineering/harness-design-long-running-apps
+tipo: vendor
+publicado_em: '2026-03-24'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seção sobre autoavaliação e a separação entre gerador e avaliador
+dominios:
+- construir-com-ia
+notas: null

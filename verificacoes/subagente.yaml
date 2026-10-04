@@ -1,0 +1,21 @@
+conteudo: subagente
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'No Claude Code, cada subagente roda na própria janela de contexto, com prompt de sistema e acesso
+    a ferramentas próprios, e a saída verbosa fica nele: só um resumo volta para a conversa principal.'
+  ref: claude-code-subagents
+  localizacao: abertura e seção de gestão de contexto
+  resultado: confirmada
+- texto: A Anthropic observa que agentes tendem a elogiar com confiança o próprio trabalho, mesmo quando
+    a qualidade é medíocre, e separa quem faz de quem avalia.
+  ref: anthropic-harness-design
+  localizacao: seção sobre autoavaliação e a separação entre gerador e avaliador
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: outra sessão com contexto próprio; definido em .claude/agents/
+    problema: ignora o modo fork e os subagentes de nível de usuário
+    tratamento: texto completado

@@ -1,0 +1,21 @@
+conteudo: sessao
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Cada nova sessão começa sem memória do que veio antes.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: O contexto é um recurso finito, com retornos marginais decrescentes, e a compactação, uma técnica
+    para esse caso, resume uma conversa próxima do limite e recomeça uma janela com o resumo.
+  ref: anthropic-context-engineering
+  localizacao: seções sobre contexto finito e compactação
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: nova a cada início; resumida perto do limite; dentro do harness, em memória
+    problema: a compactação é uma técnica, não regra; ferramentas retomam a transcrição
+    tratamento: texto reescrito

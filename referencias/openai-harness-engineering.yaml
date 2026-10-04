@@ -1,0 +1,16 @@
+id: openai-harness-engineering
+titulo: 'Harness engineering: leveraging Codex in an agent-first world'
+organizacao: OpenAI
+url: https://openai.com/index/harness-engineering/
+tipo: vendor
+publicado_em: '2026-02-11'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza de
+  resíduos de IA
+dominios:
+- construir-com-ia
+notas: 'A página responde 403 a leitura automática; a verificação foi manual, no navegador (versão em
+  português, ''Alavancando o Codex em um mundo centrado no agente'', de 11 de fevereiro de 2026). Confirmados:
+  o que o agente não acessa no contexto ''efetivamente não existe''; AGENTS.md curto (~100 linhas) como
+  mapa; as sextas-feiras (20% da semana) gastas limpando ''resíduos de IA''.'

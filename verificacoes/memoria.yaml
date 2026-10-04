@@ -1,0 +1,28 @@
+conteudo: memoria
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'Como cada sessão começa sem memória, o trabalho de longa duração depende de artefatos gravados:
+    arquivos de progresso e histórico git.'
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+- texto: Para um agente, o que ele não alcança no contexto efetivamente não existe, e um AGENTS.md curto,
+    de cerca de 100 linhas, serve de mapa para a base de conhecimento do repositório.
+  ref: openai-harness-engineering
+  localizacao: seções sobre o repositório como sistema de registro, o AGENTS.md como mapa e a limpeza
+    de resíduos de IA
+  resultado: confirmada
+- texto: O scaffold guarda uma memória quente de cerca de uma página em docs/PROJECT_MEMORY.md.
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: AGENTS.md de ~100 linhas como mapa; o que não está no contexto não existe [ref:openai-harness-engineering]
+    problema: o revisor não conseguiu ler a página (403)
+    tratamento: verificação manual no navegador em 2026-10-04, registrada na nota da referência

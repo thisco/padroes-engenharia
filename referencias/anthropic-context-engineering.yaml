@@ -1,0 +1,12 @@
+id: anthropic-context-engineering
+titulo: Effective context engineering for AI agents
+organizacao: Anthropic
+url: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+tipo: vendor
+publicado_em: '2025-09-29'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seções sobre contexto finito e compactação
+dominios:
+- construir-com-ia
+notas: null

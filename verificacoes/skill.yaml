@@ -1,0 +1,22 @@
+conteudo: skill
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: O SKILL.md exige frontmatter com nome e descrição, e a descrição diz o que a skill faz e quando
+    usá-la; o nome e a descrição são carregados no início, e o corpo só quando a skill é ativada.
+  ref: agent-skills-spec
+  localizacao: seções 'SKILL.md format' e 'Progressive disclosure'
+  resultado: confirmada
+- texto: No scaffold, as pastas de skills de cada ferramenta são links para a mesma pasta skills/.
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

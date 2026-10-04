@@ -1,0 +1,29 @@
+conteudo: harness
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Nas ferramentas de cliente, quem executa o que o modelo pede é a aplicação, e no agente de código
+    essa aplicação é o harness.
+  ref: anthropic-tool-use
+  localizacao: abertura e seção 'How tool use works'
+  resultado: confirmada
+- texto: Para agentes de longa duração, a Anthropic descreve um agente inicializador e um agente de código
+    que se distinguem só pelo prompt inicial, com as mesmas ferramentas e o mesmo harness, e artefatos
+    como arquivos de progresso, histórico git e teste de ponta a ponta com automação de navegador.
+  ref: anthropic-effective-harnesses
+  localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e
+    das soluções
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: técnicas vivem nesse programa
+    problema: o inicializador e o agente de código só diferem pelo prompt inicial
+    tratamento: texto reescrito
+  - afirmacao: testes automatizados
+    problema: o ponto da fonte é teste de ponta a ponta com automação de navegador
+    tratamento: texto ajustado
+  - afirmacao: o portal lista cinco harnesses no radar
+    problema: sem fonte
+    tratamento: frase retirada do onde_mora

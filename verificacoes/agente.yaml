@@ -1,0 +1,23 @@
+conteudo: agente
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: A Anthropic define agentes como sistemas em que o modelo dirige o próprio processo e o uso de
+    ferramentas, e workflows como modelos e ferramentas orquestrados por caminhos de código predefinidos;
+    na prática, agentes são em geral modelos usando ferramentas em loop, a partir do retorno do ambiente.
+  ref: anthropic-building-effective-agents
+  localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+  resultado: confirmada
+- texto: O mesmo texto recomenda começar com prompts simples e só adicionar sistemas agênticos de vários
+    passos quando as soluções mais simples falham.
+  ref: anthropic-building-effective-agents
+  localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: texto do conceito comparado à fonte (revisão de 15 conceitos)
+    problema: ver os itens por conceito abaixo; nenhuma instrução escondida e nenhuma citação acima de
+      30 palavras
+    tratamento: cada item foi tratado na mesma rodada

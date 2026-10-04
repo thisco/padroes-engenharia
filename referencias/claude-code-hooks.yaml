@@ -1,0 +1,11 @@
+id: claude-code-hooks
+titulo: Hooks reference
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/hooks
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: conceitos, ciclo de vida, códigos de saída e PreToolUse
+dominios:
+- construir-com-ia
+notas: null

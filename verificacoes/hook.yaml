@@ -1,0 +1,36 @@
+conteudo: hook
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: No Claude Code, hooks são comandos, endpoints HTTP, chamadas de ferramenta MCP, prompts ou subagentes
+    que disparam em pontos do ciclo, como PreToolUse e PostToolUse; no PreToolUse, o código de saída 2
+    bloqueia a chamada, e no PostToolUse a ferramenta já rodou e o código 2 só mostra o erro ao modelo.
+  ref: claude-code-hooks
+  localizacao: conceitos, ciclo de vida, códigos de saída e PreToolUse
+  resultado: confirmada
+- texto: O CLAUDE.md, por sua vez, é contexto e não configuração imposta; para bloquear uma ação a documentação
+    manda usar um hook PreToolUse.
+  ref: claude-code-memory
+  localizacao: seções 'CLAUDE.md vs auto memory' e 'AGENTS.md'
+  resultado: confirmada
+- texto: O scaffold instala um hook que protege a governança.
+  ref: sdd-scaffold-readme
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+    e 'O que impede e o que orienta'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: dão controle determinístico [ref:claude-code-hooks]
+    problema: a frase não está na página citada
+    tratamento: adjetivo retirado
+  - afirmacao: lista de tipos de hook incompleta
+    problema: a fonte inclui chamadas de ferramenta MCP e subagentes
+    tratamento: lista completada
+  - afirmacao: exit 2 bloqueia a chamada
+    problema: só o PreToolUse bloqueia; no PostToolUse a ferramenta já rodou
+    tratamento: texto separa os dois casos
+  - afirmacao: erro comum fala em AGENTS.md; fonte fala de CLAUDE.md
+    problema: extrapolação não dita
+    tratamento: dita como extensão do portal; quando_entra cobre eventos de sessão, turno e ferramenta

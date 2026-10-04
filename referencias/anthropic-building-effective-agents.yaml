@@ -1,0 +1,12 @@
+id: anthropic-building-effective-agents
+titulo: Building effective agents
+organizacao: Anthropic
+url: https://www.anthropic.com/engineering/building-effective-agents
+tipo: vendor
+publicado_em: '2024-12-19'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+dominios:
+- construir-com-ia
+notas: null

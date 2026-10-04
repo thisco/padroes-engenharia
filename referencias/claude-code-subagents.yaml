@@ -1,0 +1,11 @@
+id: claude-code-subagents
+titulo: Create custom subagents
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/sub-agents
+tipo: vendor
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: abertura e seção de gestão de contexto
+dominios:
+- construir-com-ia
+notas: null

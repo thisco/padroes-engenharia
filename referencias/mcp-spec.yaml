@@ -1,0 +1,12 @@
+id: mcp-spec
+titulo: Model Context Protocol specification
+organizacao: Model Context Protocol
+url: https://modelcontextprotocol.io/specification/latest
+tipo: padrao-aberto
+versao: '2026-07-28'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: abertura, 'Key Details' e 'Security and Trust & Safety'
+dominios:
+- construir-com-ia
+notas: 'Versão do esquema lida em 2026-10-04: 2026-07-28.'

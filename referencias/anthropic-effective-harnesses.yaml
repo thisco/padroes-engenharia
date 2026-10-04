@@ -1,0 +1,13 @@
+id: anthropic-effective-harnesses
+titulo: Effective harnesses for long-running agents
+organizacao: Anthropic
+url: https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
+tipo: vendor
+publicado_em: '2025-11-26'
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e das
+  soluções
+dominios:
+- construir-com-ia
+notas: null

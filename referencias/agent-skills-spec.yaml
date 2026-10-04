@@ -1,0 +1,11 @@
+id: agent-skills-spec
+titulo: Agent Skills specification
+organizacao: Agent Skills
+url: https://agentskills.io/specification
+tipo: padrao-aberto
+verificado_em: '2026-10-04'
+verificacao: V
+localizacao: seções 'SKILL.md format' e 'Progressive disclosure'
+dominios:
+- construir-com-ia
+notas: null

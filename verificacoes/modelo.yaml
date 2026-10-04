@@ -1,0 +1,18 @@
+conteudo: modelo
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: No uso de ferramentas da Anthropic, o modelo decide quando chamar uma ferramenta a partir do
+    pedido e da descrição dela e devolve uma chamada estruturada; nas ferramentas de cliente, é o código
+    da aplicação que a executa e devolve o resultado, e nas ferramentas de servidor, como a busca na web,
+    quem executa é a Anthropic.
+  ref: anthropic-tool-use
+  localizacao: abertura e seção 'How tool use works'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: a aplicação, não o modelo, executa a ação
+    problema: as ferramentas de servidor são executadas pela Anthropic
+    tratamento: linha, definição e corpo restritos às ferramentas de cliente; onde_mora generalizado

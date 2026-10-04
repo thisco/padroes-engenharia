@@ -1271,7 +1271,7 @@ Ficha por peça: `linha`, `definicao`, `onde_mora`, `quando_entra`, `erro_comum`
 `anthropic-harness-design`, `openai-harness-engineering` e `owasp-llm-top10`, reaproveitadas na
 M11.
 
-- [ ] **Passo 1: Fontes (antes do texto).**
+- [x] **Passo 1: Fontes (antes do texto).**
 
 | Referência | URL | Confirmar |
 |---|---|---|
@@ -1287,7 +1287,7 @@ M11.
 | `mcp-spec` (`padrao-aberto`) | https://modelcontextprotocol.io/specification/latest | protocolo aberto para ferramentas e dados externos; anote a versão |
 | `owasp-llm-top10` (`padrao-aberto`) | https://genai.owasp.org/llm-top-10/ | LLM01, injeção indireta por conteúdo externo (403 a robô: verificação manual em `notas`) |
 
-- [ ] **Passo 2: Rascunho.** `linha` de cada peça = a lista "As nove peças" do mockup
+- [x] **Passo 2: Rascunho.** `linha` de cada peça = a lista "As nove peças" do mockup
   `conceitos.html` (agente: "modelo e harness em loop, usando ferramentas até cumprir um
   objetivo"; modelo: "só produz texto; pede a ação, quem executa é o harness"; harness: "o
   programa em volta do modelo: Claude Code, Codex, Kiro, Antigravity, Copilot"; sessão: "uma
@@ -1304,9 +1304,11 @@ M11.
   texto no AGENTS.md impede). `praticas`: P1-01 em agente, harness, sessão, skill, memória;
   DAD-01 em skill.
 
-- [ ] **Passo 3: Registro, revisão adversarial e fecho.** Confira que as 9 páginas existem em
+- [x] **Passo 3: Registro, revisão adversarial e fecho.** Confira que as 9 páginas existem em
   `public/conceitos/` e que o hook sai com a classe de "impede". Commit:
   `feat(conteudo): as nove peças do agente de código, com linha e página`.
+
+> **Notas (M8):** revisão adversarial dos 15 conceitos em um só pedido. A `openai-harness-engineering` responde 403 a robô; verificada **manualmente no navegador** (Playwright) em 2026-10-04: data 11/02/2026, AGENTS.md de ~100 linhas como mapa, o que o agente não acessa "efetivamente não existe", sextas-feiras (20% da semana) limpando "resíduos de IA", manual monolítico que "apodrece" e é "difícil de verificar". `linha` de `modelo` e `harness` ajustadas ao que a fonte diz. **Achado de motor:** nas páginas de conceito, o ninho "condensado" não desenha `hook`, `mcp`, `skill` nem `subagente`, então o passo "o hook sai com a classe de impede" não se cumpre nelas (o ninho completo, na página de conceitos, tem `cx hook impede`). Levado ao checkpoint, sem alterar o motor.
 
 ### Tarefa M9: As seis peças da IA no produto
 
@@ -1316,7 +1318,7 @@ M11.
 
 **Interfaces:** Consumes M6 e M8. Produces `aws-agentic-scoping-matrix` (Escada, M11).
 
-- [ ] **Passo 1: Fontes.**
+- [x] **Passo 1: Fontes.**
 
 | Referência | URL | Confirmar |
 |---|---|---|
@@ -1325,7 +1327,7 @@ M11.
 | `anthropic-develop-tests` | https://platform.claude.com/docs/en/test-and-evaluate/develop-tests | casos da tarefa e critério de sucesso definido antes |
 | `aws-agentic-scoping-matrix` | https://aws.amazon.com/ai/security/agentic-ai-scoping-matrix/ | escopos de agência e controles que escalam ([S] no benchmark; sem leitura, fica S e o texto diz só "os controles crescem com o nível") |
 
-- [ ] **Passo 2: Rascunho.** `linha`: gateway "um ponto só entre as aplicações e os modelos:
+- [x] **Passo 2: Rascunho.** `linha`: gateway "um ponto só entre as aplicações e os modelos:
   identidade, catálogo, orçamento, guardrails e auditoria" [ref:azure-apim-ai-gateway];
   chave-virtual "a identidade da aplicação no gateway: modelos liberados e orçamento"
   [ref:litellm-virtual-keys]; guardrail "verificação que roda fora do modelo, na entrada ou na
@@ -1342,14 +1344,14 @@ M11.
   preenchido (§9.2): se a fonte não confirmar o bloqueio, tire "pode barrar" e leve a cor ao
   checkpoint.
 
-- [ ] **Passo 3: Registro, revisão adversarial e fecho.** Commit:
+- [x] **Passo 3: Registro, revisão adversarial e fecho.** Commit:
   `feat(conteudo): as seis peças da IA no produto, com linha e página`.
 
 ### Tarefa M10: Glossário mínimo (D15)
 
 **Files:** Create `glossario.yml`, `verificacoes/glossario.yaml`, `referencias/nygard-adr.yaml`.
 
-- [ ] **Passo 1: Rascunho.** Os termos que Início, O problema, pilotos, receita e conceitos usam,
+- [x] **Passo 1: Rascunho.** Os termos que Início, O problema, pilotos, receita e conceitos usam,
   cada um com definição de uma linha e, quando há peça, `conceito`: as 15 peças; ADR
   [ref:nygard-adr]; AGENTS.md [ref:agents-md]; constituição [ref:sdd-scaffold-readme]; drift;
   força; migration [ref:fowler-evodb]; momento; MR [ref:gitlab-mr-pipelines]; plano, spec, tier
@@ -1357,12 +1359,14 @@ M11.
   (definição de trabalho do portal, sem atribuição de origem). Vocabulário do próprio portal
   (força, status, momento, prática, receita, starter, drift, vibe coding) fica com
   `referencias: []`.
-- [ ] **Passo 2: Fonte nova.** `nygard-adr` (`analista`):
+- [x] **Passo 2: Fonte nova.** `nygard-adr` (`analista`):
   https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions — ADR curto com
   contexto, decisão, status e consequências; `publicado_em: 2011-11-15`.
-- [ ] **Passo 3: Registro, revisão adversarial e fecho.** Confira `glossario.html` e a entrada no
+- [x] **Passo 3: Registro, revisão adversarial e fecho.** Confira `glossario.html` e a entrada no
   `llms.txt`. Commit: `feat(conteudo): glossário mínimo com os termos dos ninhos, da espinha e
   das pilotos`.
+
+> **Notas (M10):** o schema do glossário exige `referencias` com ao menos 1 item, mas o plano manda `referencias: []` para o vocabulário do portal. Ruling: o contrato do motor prevalece; os termos Força, Momento, Prática, Receita, Starter, Status e Vibe coding **ficaram de fora**, porque não têm fonte pública (a spec do portal não tem URL https ainda). Custo se errado: 7 termos a acrescentar quando a spec for publicada ou o schema aceitar lista vazia. Checkpoint decide.
 
 ### Tarefa M11: Página "O problema"
 
