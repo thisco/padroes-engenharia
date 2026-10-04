@@ -142,7 +142,8 @@ class Site:
         """Todos os caminhos HTML que o build gera."""
         dominios = {f"dominios/{f.slug}.html" for f in self.espinha.faixas}
         conteudos = {caminho_de(c) for c in self.repo.markdown() if c.tipo != "dominio"}
-        return frozenset(paginas_publicadas(self)) | dominios | conteudos
+        yamls = {caminho_de(c) for c in [*self.repo.starters, *self.repo.ferramentas]}
+        return frozenset(paginas_publicadas(self)) | dominios | conteudos | yamls
 
 
 def montar_site(

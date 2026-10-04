@@ -1,0 +1,38 @@
+conteudo: inicio
+verificado_em: '2026-10-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Em cerca de 400 mil sessões interativas do Claude Code, de outubro de 2025 a abril de 2026, as
+    sessões classificadas como de iniciantes chegaram a sucesso verificado (classificador mais sinal concreto)
+    em 15% das vezes e as de intermediários e especialistas, em 28% a 33%; nas sessões típicas, a pessoa
+    decide cerca de 70% do planejamento e 20% da execução.
+  ref: anthropic-claude-code-expertise
+  localizacao: Sucesso por nível de experiência e divisão de decisões entre pessoa e Claude
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-04'
+  achados:
+  - afirmacao: 'número [1]: período, base e sentido de ''sucesso verificado'''
+    problema: faltavam o período, a base interativa, o classificador e o sinal concreto, e o texto lia
+      como medição objetiva
+    tratamento: o lead traz o período, 'sessões interativas', 'classificadas como' e a definição de sucesso
+      verificado
+  - afirmacao: três entradas concorrentes (momento, comece aqui, por que isto existe)
+    problema: falta dizer qual vem primeiro
+    tratamento: 'o lead diz: quem está começando vai em ''Comece aqui''; quem está no meio de uma mudança
+      escolhe o momento'
+  - afirmacao: jargão (tier, spec, steering, espinha) e duas escalas (força e status) sem explicação na
+      primeira dobra
+    problema: o texto gerado pelo motor da Início e os cartões de momento não explicam os termos antes
+      de usá-los
+    tratamento: levado ao checkpoint como achado de produto sobre o gabarito da Início; o conteúdo não
+      altera o texto gerado
+  - afirmacao: placeholder <URL do portal> no bloco Para o agente; [V] sem explicação; 3 práticas em 48
+      células
+    problema: texto gerado pelo motor
+    tratamento: levado ao checkpoint (gabarito); o estado real (3 práticas, células a definir) já aparece
+      no rodapé e na legenda da espinha
+  - afirmacao: estatística de abertura de uma ferramenta específica num portal agnóstico
+    problema: a abertura fala do Claude Code
+    tratamento: 'aceito: é a pesquisa de perfil prevista no plano (D16), com a fonte e o escopo no texto'

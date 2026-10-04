@@ -50,3 +50,23 @@ def test_sem_conteudo_a_secao_some():
     html = analisar(html_inicio(fabrica.site(fabrica.pratica())))
     rotulos = {x.attrs.get("aria-label") for x in html.todos("section")}
     assert not {"Comece aqui", "Ferramentas aprovadas", "Por que confiar"} & rotulos
+
+
+def test_caminho_para_starter_aparece_em_comece_aqui():
+    """Bug da A.5-2: o destino `starters/<id>` nunca contava como página existente."""
+    inicio = Conteudo(
+        "pagina",
+        "paginas/inicio.md",
+        fabrica.meta_pagina(
+            lead="Práticas.",
+            caminhos=[
+                {"titulo": "Projeto novo", "texto": "Do zero.", "destino": "starters/sdd-scaffold"}
+            ],
+            fatos=["Fonte conferida."],
+            referencias=[],
+        ),
+        "",
+    )
+    s = fabrica.site(inicio, PROBLEMA, fabrica.pratica(), fabrica.starter(), fabrica.referencia())
+    html = analisar(html_inicio(s))
+    assert html.todos("a", href="starters/sdd-scaffold.html")
