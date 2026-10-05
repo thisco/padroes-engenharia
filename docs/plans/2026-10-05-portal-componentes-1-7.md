@@ -112,15 +112,15 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 - [x] **T12 (R6).** Rode os jobs `gitlab-ci-local` da receita, com a prova da V2 editada, a branch
   verde, a constituição adulterada e o segredo, mais o job da DAD-01 com os scripts baixados do
   portal servido (`python -m http.server` sobre `public/`). Os registros vão em `verificacoes/`.
-- [ ] **T13 (R6).** O prompt da receita roda em sessão nova, com o portal servido. Transcrição
+- [x] **T13 (R6).** O prompt da receita roda em sessão nova, com o portal servido. Transcrição
   bruta em `$TESTE/transcricoes/`.
 - [x] **T14 (R6).** O fluxo da DAD-01 vai até a trava da fase 7, com o `verificar_pr.py` vindo do
   portal (a lacuna 1 do aceite).
-- [ ] **T15 (R8).** Prompt da `sdd-lifecycle`: sessão nova em `$TESTE/projeto-teste-17`, com o
+- [x] **T15 (R8).** Prompt da `sdd-lifecycle`: sessão nova em `$TESTE/projeto-teste-17`, com o
   pedido de uma mudança Tier 2 (telefone no cadastro de cliente). Passou se a transcrição bruta
   mostra o `SKILL.md` lido, a spec com R<n> e critério e a parada na Fase 3 sem código escrito.
   O registro vai em `verificacoes/ferramenta-sdd-lifecycle.yaml`, e o status volta a `adotar`.
-- [ ] **T16 (R10).** `CHANGELOG.md` com a entrada `0.3.0`. Rode a suíte completa e dois builds
+- [x] **T16 (R10).** `CHANGELOG.md` com a entrada `0.3.0`. Rode a suíte completa e dois builds
   com `diff -r`, e cole a saída.
 
 ### Fecho
@@ -271,6 +271,32 @@ $ python3 scripts/verificar_pr.py --base origin/main   (saida=0)
 Verificação de PR: 2 arquivo(s), nenhum achado.
 $ $V/python scripts/validar.py
 validação ok: nenhum erro.
+```
+
+T13, T15 e T16 (prompt da receita, prompt da sdd-lifecycle, 0.3.0), saída real no worktree com `$V=.../padroes-engenharia/.venv/bin`:
+
+```text
+$ $V/python -m pytest -q   (últimas linhas)
+........................................................................ [ 75%]
+........................................................................ [ 87%]
+.....................................................................    [100%]
+573 passed in 17.89s
+$ $V/ruff check .
+All checks passed!
+$ $V/ruff format --check .
+133 files already formatted
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
+exit 0
+$ $V/python scripts/gerar.py --saida gA
+portal gerado em <scratchpad>/gA (versão 0.3.0, commit 0c444a9, 2026-10-05).
+$ $V/python scripts/gerar.py --saida gB
+portal gerado em <scratchpad>/gB (versão 0.3.0, commit 0c444a9, 2026-10-05).
+$ diff -r gA gB
+exit 0
+$ $V/python scripts/gerar.py --saida public
+portal gerado em <scratchpad>/portal-fase-a/public (versão 0.3.0, commit 0c444a9, 2026-10-05).
+exit 0
 ```
 
 ## Revisão adversarial: <data> — achados
