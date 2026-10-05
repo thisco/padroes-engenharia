@@ -65,7 +65,7 @@ Toda tarefa de conteúdo segue a skill `curadoria-de-pratica` no modelo v1.1:
 A tarefa fecha com `validar.py` e `gerar.py --saida public` saindo com 0, e com um commit
 próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `projeto-teste-17`.
 
-- [ ] **T1 (ADR 0005).** Escreva `docs/adr/0005-revisao-proporcional-na-curadoria.md`. Ela
+- [x] **T1 (ADR 0005).** Escreva `docs/adr/0005-revisao-proporcional-na-curadoria.md`. Ela
   registra a decisão do dono:
   - a revisão adversarial por conteúdo (spec §11) passa a ser uma conferência de
     executabilidade, em lote por fatia, feita por agente independente com modelo econômico;
