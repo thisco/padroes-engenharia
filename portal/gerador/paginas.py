@@ -17,6 +17,7 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
 from portal.gerador.exemplos import expandir_inclusoes
 from portal.gerador.markdown import inline_html, para_html
+from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.renderizar import (
     DESCRICAO_INICIO,
     Site,
@@ -843,6 +844,12 @@ def _linhas_do_radar(site: Site) -> list[dict[str, Any]]:
     return linhas
 
 
+MECANISMOS_NOTA = (
+    "Os scripts de mecanismo que as práticas e receitas citam ficam hospedados no portal, com "
+    "versão, commit e sha256 em `.well-known/mecanismos/index.json`."
+)
+
+
 def html_radar(site: Site) -> str:
     linhas = _linhas_do_radar(site)
     dominios = [
@@ -859,6 +866,7 @@ def html_radar(site: Site) -> str:
         ferramentas=linhas,
         categorias=list(CATEGORIAS_DA_FERRAMENTA.items()),
         dominios=dominios,
+        mecanismos=bool(carregar_mecanismos(site.raiz)),
     )
 
 
@@ -874,7 +882,10 @@ def md_radar(site: Site) -> str:
             f"| {link} | {linha['categoria_nome']} | {linha['status']} "
             f"| {celula(linha['versao_minima'])} | {dominios} |"
         )
-    return juntar("# Ferramentas", RADAR_DESCRICAO, "\n".join(linhas))
+    partes = [RADAR_DESCRICAO, "\n".join(linhas)]
+    if carregar_mecanismos(site.raiz):
+        partes.append(MECANISMOS_NOTA)
+    return juntar("# Ferramentas", *partes)
 
 
 COMECE_AQUI_DESCRICAO = "Os caminhos para começar: tutoriais, starters e o que ler antes."

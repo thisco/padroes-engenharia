@@ -8,6 +8,7 @@ import pytest
 from portal.gerador.carregar import Componente, Repositorio
 from portal.gerador.erros import Erro
 from portal.gerador.mecanismos import Mecanismo, carregar_mecanismos
+from portal.gerador.paginas import html_radar, md_radar
 from portal.gerador.regras import REGRAS, Contexto, regra_mecanismos_hospedados
 from portal.gerador.renderizar import indices, montar_site
 from portal.gerador.saidas import emitir, indice_mecanismos, llms_txt, montar_paginas, readme_md
@@ -338,3 +339,20 @@ def test_indices_para_maquina_e_readme_citam_o_indice(site):
         "os scripts de mecanismo hospedados, com versão, commit e sha256",
     ) in indices(site)
     assert "`.well-known/mecanismos/index.json`" in readme_md(site)
+
+
+def test_pagina_de_ferramentas_cita_o_indice_de_mecanismos(site):
+    assert '.well-known/mecanismos/index.json">' in html_radar(site)
+    assert "`.well-known/mecanismos/index.json`" in md_radar(site)
+
+
+def test_pagina_de_ferramentas_sem_mecanismos_nao_cita_o_indice(repo_minimo):
+    s = montar_site(
+        repo_minimo,
+        versao="0.1.0",
+        commit="0" * 40,
+        data="2026-10-05",
+        url_base="https://p.exemplo",
+    )
+    assert "mecanismos/index.json" not in html_radar(s)
+    assert "mecanismos/index.json" not in md_radar(s)

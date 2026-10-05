@@ -29,4 +29,7 @@
   </table>
   </div>
 </section>
+{% if mecanismos %}
+<p>Os scripts de mecanismo que as práticas e receitas citam ficam hospedados no portal, com versão, commit e sha256 em <a href="{{ raiz }}.well-known/mecanismos/index.json"><code>.well-known/mecanismos/index.json</code></a>.</p>
+{% endif %}
 {% endblock %}
