@@ -2,9 +2,9 @@
 
 > **Tier:** 2 (muda `componentes.yml`, `skills/`, o motor e as práticas com execução registrada;
 > risco alto em `niveis-de-risco.yml`).
-> **Status:** em revisão
-> **Aprovado por:**
-> **Aprovado em:**
+> **Status:** aprovada
+> **Aprovado por:** thiago
+> **Aprovado em:** 2026-10-05
 > **Data:** 2026-10-05
 > **Base:** spec v1.0, delta v1.1 (D19) e checkpoint da A.5, itens 2, 3 e 5
 > (`docs/plans/2026-10-02-portal-fase-a5-2-molde.md`, seção Checkpoint).
