@@ -6,7 +6,8 @@ lead: 'Agentes podem escrever mais rápido do que um time consegue revisar. A ve
   em cada disciplina da engenharia, e nenhuma delas resolve sozinha. Na pesquisa do DORA de 2024, o aumento da adoção
   de IA veio acompanhado de uma queda estimada na estabilidade e no throughput da entrega [ref:dora-2024]. Cada
   sessão nova do agente começa sem memória da anterior [ref:anthropic-effective-harnesses], e o que ele não alcança
-  no contexto efetivamente não existe [ref:openai-harness-engineering]: só continua o que foi gravado. Os padrões
+  no contexto efetivamente não existe [ref:openai-harness-engineering]: só continua o que foi gravado. Neste
+  portal, vibe coding é deixar o agente escrever sem o ciclo de especificação, plano e revisão. Os padrões
   de falha abaixo vêm das fontes primárias da Anthropic e da OpenAI (o 3 cita as duas); um número de desvio por
   feature que circulava em apresentações internas não aparece em nenhuma delas e não entra no portal.'
 elos:
