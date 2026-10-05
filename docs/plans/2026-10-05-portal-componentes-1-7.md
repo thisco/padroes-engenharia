@@ -299,6 +299,33 @@ portal gerado em <scratchpad>/portal-fase-a/public (versão 0.3.0, commit 0c444a
 exit 0
 ```
 
+### Correções da revisão
+
+Itens a) a h) tratados em commits separados (a, b e c no motor, com teste vermelho antes). A
+verificação de hash de receita e prática cobre o hash de 64 hex na mesma linha de um nome de
+script hospedado ou até três linhas depois dele; citação por `$BASE/<arquivo>` sem o caminho
+`/.well-known/mecanismos/` completo não é conferida. As menções à 1.6.1 foram reescritas sem
+fato falso; ficam as de `docs/`, `CHANGELOG.md`, os registros históricos de `verificacoes/` e os
+dois casos de versão divergente proposital em `tests/unidade/test_mecanismos.py`.
+
+```text
+$ $V/python -m pytest -q   (últimas linhas)
+587 passed in 16.26s
+$ $V/ruff check .
+All checks passed!
+$ $V/ruff format --check .
+133 files already formatted
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
+exit 0
+$ gerar.py --saida gA ; gerar.py --saida gB ; diff -r gA gB
+portal gerado (versão 0.3.0, commit 770e889, 2026-10-05).
+exit 0
+$ $V/python scripts/gerar.py --saida public
+portal gerado em <scratchpad>/portal-fase-a/public (versão 0.3.0, commit 770e889, 2026-10-05).
+exit 0
+```
+
 ## Revisão adversarial: 2026-10-05 — achados
 
 Registro do revisor independente (T17, modelo potente, 573 passed, builds idênticos) e do
@@ -338,5 +365,3 @@ Divergências apontadas:
   `CLAUDE.local.md` e o lembrete de hook do graphify). Influência mínima em B e nenhuma em A.
 - `ferramenta-sdd-lifecycle.yaml:47` usa `prompt: sdd-lifecycle-prompt-1` na rodada 2, um id sem
   prompt publicado.
-
-## Evidências: correções da revisão
