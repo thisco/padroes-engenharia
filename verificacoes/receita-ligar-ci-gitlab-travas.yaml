@@ -85,6 +85,16 @@ afirmacoes:
   nota: git show v1.7.0:template/scripts/<arquivo> | shasum -a 256 em 2026-10-05; iguais ao PROCEDENCIA
     de mecanismos/sdd-scaffold e ao index.json gerado. O verificar_constituicao.py não mudou entre
     a8ebdf3 e v1.7.0 (git diff vazio).
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo, exceto a do CLAUDE.md sem import, tratada na T7'
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
+  resultado: confirmada
+  nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-qualidade neste conteúdo'
+  ref: sdd-scaffold-qualidade
+  localizacao: template/.github/workflows/qualidade.yml na tag v1.7.0, passos citados neste registro
+  resultado: confirmada
+  nota: git diff a8ebdf3 v1.7.0 em template/.github é vazio.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml

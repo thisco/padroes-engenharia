@@ -97,6 +97,11 @@ afirmacoes:
   resultado: confirmada
   nota: git show v1.7.0:template/scripts/verificar_pr.py | shasum -a 256 em 2026-10-05; igual ao
     PROCEDENCIA de mecanismos/sdd-scaffold e ao index.json gerado.
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre migrations-reversiveis neste conteúdo'
+  ref: migrations-reversiveis
+  localizacao: template/skills/migrations-reversiveis/SKILL.md na tag v1.7.0
+  resultado: confirmada
+  nota: git diff a8ebdf3 v1.7.0 em template/skills é vazio; a cópia em skills/migrations-reversiveis tem o mesmo sha256.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-01/gitlab-ci.yml

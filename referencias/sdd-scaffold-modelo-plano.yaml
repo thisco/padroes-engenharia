@@ -1,11 +1,11 @@
 id: sdd-scaffold-modelo-plano
 titulo: "docs/plans/MODELO-plano.md do sdd-scaffold"
 organizacao: sdd-scaffold (github.com/thisco)
-url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/docs/plans/MODELO-plano.md
+url: https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/docs/plans/MODELO-plano.md
 tipo: interno
-versao: "1.6.1"
-verificado_em: 2026-10-04
+versao: "1.7.0"
+verificado_em: 2026-10-05
 verificacao: V
 localizacao: "cabeçalho do modelo, linha '> **Tier:** 1 | 2'"
 dominios: [construir-com-ia]
-notas: "Conferido na web e na cópia local do commit fixado (linha 3 do arquivo)."
+notas: "Reconferido em 2026-10-05 no arquivo da tag v1.7.0 (clone local): a linha 3 segue sendo `> **Tier:** 1 | 2`. O modelo mudou só em Tarefas (cada tarefa termina com o requisito entre parênteses) e na Revisão adversarial (tabela de veredito por requisito)."

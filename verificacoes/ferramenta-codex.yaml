@@ -20,6 +20,11 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README, 'Um corpo de skill, três pontos de montagem' e 'O que impede e o que orienta'
   resultado: confirmada
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
+  resultado: confirmada
+  nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

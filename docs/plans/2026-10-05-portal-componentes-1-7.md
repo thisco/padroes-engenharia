@@ -84,7 +84,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
   Isso vale para a DAD-01, a receita, o prompt da receita e os comentários de
   `exemplos/DAD-01/gitlab-ci.yml` e `exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml`.
-- [ ] **T6 (R5).** Refixe as referências no commit novo e reconfira cada afirmação na tag. Elas
+- [x] **T6 (R5).** Refixe as referências no commit novo e reconfira cada afirmação na tag. Elas
   são `sdd-scaffold-readme`, `-modelo-plano`, `-verificar-pr`, `-qualidade`, `sdd-lifecycle`,
   `sdd-lifecycle-repo`, `estados-de-interface` e `migrations-reversiveis`. Uma afirmação que
   mudou muda no texto e no registro.

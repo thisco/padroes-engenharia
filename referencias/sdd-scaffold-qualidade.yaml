@@ -1,11 +1,11 @@
 id: sdd-scaffold-qualidade
 titulo: ".github/workflows/qualidade.yml do sdd-scaffold"
 organizacao: sdd-scaffold (github.com/thisco)
-url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/.github/workflows/qualidade.yml
+url: https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/.github/workflows/qualidade.yml
 tipo: interno
-versao: "1.6.1"
-verificado_em: 2026-10-04
+versao: "1.7.0"
+verificado_em: 2026-10-05
 verificacao: V
 localizacao: "passo 'AGENTS.md dentro do limite de contexto' e job segredos"
 dominios: [ci-cd]
-notas: "Conferido na web e na cópia local do commit fixado."
+notas: "Reconferido em 2026-10-05 na tag v1.7.0 (clone local): o arquivo é idêntico ao do commit anterior (git diff vazio em template/.github)."

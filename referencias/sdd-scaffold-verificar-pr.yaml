@@ -1,11 +1,11 @@
 id: sdd-scaffold-verificar-pr
 titulo: "scripts/verificar_pr.py do sdd-scaffold"
 organizacao: sdd-scaffold (github.com/thisco)
-url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py
+url: https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts/verificar_pr.py
 tipo: interno
-versao: "1.6.1"
-verificado_em: 2026-10-04
+versao: "1.7.0"
+verificado_em: 2026-10-05
 verificacao: V
-localizacao: "docstring (severidade BLOQUEIA), regex MIGRATION e função analisar()"
+localizacao: "docstring (severidade BLOQUEIA), regex MIGRATION, função analisar() e função main() (conferência da base)"
 dominios: [dados-migrations, ci-cd]
-notas: "É o mecanismo declarado em DAD-01 (componentes.yml fixa a versão 1.6.1)."
+notas: "Reconferido em 2026-10-05 no arquivo da tag v1.7.0 (clone local). É o mecanismo declarado em DAD-01 (componentes.yml fixa a versão 1.7.0) e o portal o hospeda em /.well-known/mecanismos/sdd-scaffold/, com o sha256 do arquivo da tag. Mudou desde a 1.6.1: o script confere a base do diff (sem ela, ERRO e saída 2) e passa a avisar sobre spec (requisito R<n>, aprovação, marcador de dúvida e critério) e sobre o rastro requisito-tarefa-teste, sempre sem bloquear. A regex MIGRATION, a constante EVIDENCIA e as mensagens de migration, rollback e evidência não mudaram."

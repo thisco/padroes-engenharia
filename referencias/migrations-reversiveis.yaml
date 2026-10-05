@@ -1,11 +1,11 @@
 id: migrations-reversiveis
 titulo: "Skill migrations-reversiveis"
 organizacao: sdd-scaffold (github.com/thisco)
-url: https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/skills/migrations-reversiveis/SKILL.md
+url: https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/skills/migrations-reversiveis/SKILL.md
 tipo: interno
-versao: "1.6.1"
-verificado_em: 2026-10-04
+versao: "1.7.0"
+verificado_em: 2026-10-05
 verificacao: V
 localizacao: "SKILL.md, regra 3 ('Migration já aplicada nunca é editada')"
 dominios: [dados-migrations]
-notas: "Cópia publicada em skills/migrations-reversiveis/SKILL.md, no mesmo commit (PROCEDENCIA.md)."
+notas: "Cópia publicada em skills/migrations-reversiveis/SKILL.md, no mesmo commit (PROCEDENCIA.md). Reconferido em 2026-10-05 na tag v1.7.0 (clone local): o arquivo é idêntico ao do commit anterior (git diff vazio em template/skills)."

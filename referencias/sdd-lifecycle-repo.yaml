@@ -1,11 +1,11 @@
 id: sdd-lifecycle-repo
 titulo: "Repositório sdd-lifecycle (árvore do commit fixado)"
 organizacao: sdd-lifecycle (github.com/thisco)
-url: https://github.com/thisco/sdd-lifecycle/tree/1726652171f249bdaf86d7dcb6da23a1b7ae990b
+url: https://github.com/thisco/sdd-lifecycle/tree/5f6e9ad879f7abd11267547fb3f527e876b60140
 tipo: interno
-versao: "2.0.0"
-verificado_em: 2026-10-04
+versao: "3.0.0"
+verificado_em: 2026-10-05
 verificacao: V
 localizacao: "árvore do repositório no commit fixado (AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md, docs/)"
 dominios: [construir-com-ia]
-notas: "Conferida na web e na cópia local no mesmo commit."
+notas: "Reconferida em 2026-10-05 na tag v3.0.0 (clone local): a árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/ (exemplos, plans e specs), só Markdown."
