@@ -1803,13 +1803,17 @@ depois da frente sdd-scaffold 1.7.0 + sdd-lifecycle 2.1.0, que vem antes por dec
 3. **Status das ferramentas:** `kiro`, `antigravity` e `copilot` passam de `experimentar` para
    `avaliar` (sem execução nesta fase: o Kiro exige login; Antigravity e Copilot não estão
    instalados). Ficam como estão: `claude-code`, `codex`, `litellm` (`experimentar`);
-   `gitlab-ci-local` (`avaliar`); `flyway`, `alembic`, `gitleaks`, `sdd-scaffold`,
-   `sdd-lifecycle` e o starter `sdd-scaffold` (`adotar`), com a evidência de execução em
-   `verificacoes/` conferida por revisor independente. A mudança vai em commit próprio, pela
-   curadoria.
+   `gitlab-ci-local` (`avaliar`); `flyway`, `alembic`, `gitleaks`, `sdd-scaffold` e o starter
+   `sdd-scaffold` (`adotar`), com a evidência de execução em `verificacoes/` conferida por
+   revisor independente (gitleaks pela receita do CI; a ferramenta sdd-scaffold pelo registro do
+   starter). A `sdd-lifecycle` não tinha execução registrada com a skill carregada, então, pela
+   condição desta decisão, passa a `experimentar` (uso real nos planos deste portal) e volta a
+   `adotar` quando a frente do sdd-lifecycle 3.0.0 registrar essa execução. A mudança vai em
+   commit próprio, pela curadoria.
 4. **Kiro:** sem execução nesta fase, por exigir login.
 5. **Spec como delta arquivado × spec viva:** fica o delta arquivado (cenário A da análise da
-   prática SDD, §6), com o campo `Requisitos afetados` (M5) e o aviso C12 no scaffold 1.7.0.
+   prática SDD, §6), com o campo `Requisitos afetados` (M5) e o aviso C12 na Release 2 (scaffold 1.8.0), como na
+   priorização da análise (decisão do dono em 2026-10-05, depois do checkpoint).
    Gatilho para reavaliar a spec viva: adoção em brownfield com dificuldade de onboarding, ou
    conflito entre hotfix e delta arquivado. Registro em ADR 0003.
 6. **Pendências do GitLab:** nenhuma bloqueia o 1.7.0 nem a fase B; tratadas antes da
