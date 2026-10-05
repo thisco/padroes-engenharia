@@ -5,6 +5,8 @@ Todas as mudanças relevantes deste repositório são registradas aqui. O format
 [Versionamento Semântico](https://semver.org/lang/pt-BR/): major para mudança de schema ou ID
 retirado, minor para conteúdo novo, patch para texto e links.
 
+## [Não publicado]
+
 ## [0.3.0] - 2026-10-05
 
 Integração dos componentes `sdd-scaffold` 1.7.0 e `sdd-lifecycle` 3.0.0. Minor na série 0: há
@@ -15,8 +17,9 @@ saída nova (`.well-known/mecanismos/`) e conteúdo novo, sem mudança de schema
 - Mecanismos hospedados: `mecanismos/sdd-scaffold/` traz `verificar_pr.py` e
   `verificar_constituicao.py` como cópia da tag `v1.7.0`, com `PROCEDENCIA.md` e sha256. O portal
   publica os arquivos e o `index.json` em `.well-known/mecanismos/`, e a regra de validação
-  reprova hash divergente, versão diferente de `componentes.yml` e `mecanismo:` que aponta para
-  arquivo não hospedado.
+  reprova hash divergente, versão ou commit diferentes de `componentes.yml`, `mecanismo:` que
+  aponta para arquivo não hospedado, receita, prática ou exemplo que cita um arquivo de
+  `/.well-known/mecanismos/` não hospedado e sha256 literal que diverge do registro.
 - ADR 0003 (formato de spec delta arquivado) e ADR 0004 (revoga a D3: executáveis evoluem com o
   portal).
 - Execuções registradas na 1.7.0: starter `sdd-scaffold`, jobs `gitlab-ci-local` da receita e da
@@ -35,10 +38,10 @@ saída nova (`.well-known/mecanismos/`) e conteúdo novo, sem mudança de schema
 - A ferramenta `sdd-lifecycle` passa a `adotar`, com a execução do prompt registrada.
 - `mecanismos/` entra como caminho de risco alto em `niveis-de-risco.yml` e no `CODEOWNERS`.
 
-## [Não publicado]
+## [0.2.0] - 2026-10-05
 
-Destino: 0.2.0 (major na série 0, porque muda schema e `catalogo.json`; ADR 0001). A parte 2 da
-fase A.5 acrescenta o conteúdo e fecha `## [0.2.0]`.
+Major na série 0, porque muda schema e `catalogo.json` (ADR 0001). Fecha a fase A.5, aprovada no
+checkpoint.
 
 ### Alterado
 
