@@ -56,6 +56,14 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
    `> **Tier:** <n> — <motivo>`, como ensina a prática [P1-01](P1-01.html), e escreva a seção
    `## Rollback` com a estratégia de volta, seguindo a skill `migrations-reversiveis` (linha
    pronta no Exemplo).
+   Se a MR também altera código (um arquivo `.py`, como a revisão do Alembic) e o plano não traz
+   a seção `## Evidências` com saída de execução colada, o verificador emite este AVISO, que não
+   bloqueia: "o plano não traz evidência colada de teste ou lint. Afirmação de sucesso sem saída
+   de execução não encerra a tarefa." Para atender, cole na seção `## Evidências` do plano a saída
+   real do teste da migration (a sequência aplicada no banco efêmero, ou `alembic upgrade head`
+   e `downgrade -1`), em bloco de código ou com `passed`, `passou` ou `ok`
+   [ref:sdd-scaffold-verificar-pr]. Sem plano em `docs/plans/`, o aviso é outro: "o PR altera
+   código e não traz plano em docs/plans/".
 5. Ponha a migration na mesma MR do código que depende dela [ref:fowler-evodb].
 6. Se o pipeline do projeto ainda não tem a trava, ligue-a pela receita "Ligar o CI do GitLab
    com as travas", que baixa o `verificar_pr.py` do scaffold. O script também vem no projeto
@@ -103,9 +111,9 @@ Linha para o plano da mudança (`docs/plans/`):
 ```markdown
 ## Rollback
 
-Schema: downgrade da V3, testado em banco efêmero antes do merge. Voltar de VARCHAR(14) para
-VARCHAR(11) falha ou trunca CPF já gravado com 14 caracteres: se isso acontecer, tratar como
-mudança destrutiva, com ADR.
+Schema: migration corretiva V4 (volta para VARCHAR(11)), testada aplicando a sequência inteira
+num PostgreSQL efêmero; no Alembic, o downgrade() testado. Estreitar o tipo pode falhar ou
+truncar: tratar como destrutiva, com ADR.
 ```
 
 A skill `migrations-reversiveis` pede o `downgrade` testado em ambiente efêmero e trata a
