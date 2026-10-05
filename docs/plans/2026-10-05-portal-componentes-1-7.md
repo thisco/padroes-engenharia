@@ -73,7 +73,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   - O índice entra em `llms.txt` e na página de ferramentas (ou de starter), ao lado da menção a
     `.well-known/skills/index.json`.
   - Teste vermelho antes de cada parte, em `tests/unidade/test_mecanismos.py`.
-- [ ] **T4.** Lote 1 verde: rode pytest, ruff, validar e gerar, e cole a saída em Evidências.
+- [x] **T4.** Lote 1 verde: rode pytest, ruff, validar e gerar, e cole a saída em Evidências.
 
 ### Lote 2: conteúdo (curadoria)
 
@@ -127,6 +127,28 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 - [ ] **T18.** Conferência independente das transcrições (T13 e T15). Quem faz não julga.
 
 ## Evidências
+
+### Lote 1 (T4)
+
+Saída real dos comandos, rodados no worktree com `$V=.../padroes-engenharia/.venv/bin`:
+
+```text
+$ $V/python -m pytest -q   (últimas linhas)
+........................................................................ [ 75%]
+........................................................................ [ 87%]
+.....................................................................    [100%]
+573 passed in 18.12s
+$ $V/ruff check .
+All checks passed!
+$ $V/ruff format --check .
+133 files already formatted
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
+exit 0
+$ $V/python scripts/gerar.py --saida public
+portal gerado em /private/tmp/claude-501/-Users-thiago-Documents-Workspace-repos-padroes-engenharia/2655ba20-9b0a-49de-b67d-e78ac69097db/scratchpad/portal-fase-a/public (versão 0.2.0, commit 8363c21, 2026-10-05).
+exit 0
+```
 
 ## Revisão adversarial: <data> — achados
 
