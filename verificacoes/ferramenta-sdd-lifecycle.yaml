@@ -30,9 +30,15 @@ afirmacoes:
     resultado: confirmada
     nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown.
 revisao_adversarial:
-  revisor: sessao-independente
-  data: 2026-10-04
+  revisor: sessao-independente (2026-10-04) e conferente independente das transcrições (2026-10-05)
+  data: 2026-10-05
   achados:
+    - afirmacao: "execução do prompt na rodada 2 (id sdd-lifecycle-prompt-1)"
+      problema: "o id sugeria um prompt publicado, mas a ferramenta não publica prompt; o schema exige o sufixo -prompt-<N>"
+      tratamento: "id trocado para sdd-lifecycle-pedido-tier2-prompt-1, que nomeia o pedido de teste e não sugere prompt publicado; a transcrição bruta mantém o nome do arquivo"
+    - afirmacao: "a execução foi em sessão nova, sem o contexto do repositório"
+      problema: "a sessão foi um subagente com o contexto do repositório do portal (CLAUDE.md, CLAUDE.local.md e lembrete de hook do graphify), o que a conferência independente apontou como vazamento de contexto"
+      tratamento: "o ambiente da execução registra o vazamento; a conferência avaliou a influência como mínima, e o resultado passou se sustenta (SKILL.md lido, spec com R<n> e parada na Fase 3)"
     - afirmacao: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
       problema: "frase sem [ref:] sobre a árvore do repositório"
       tratamento: "referência sdd-lifecycle-repo criada e citada"
@@ -44,9 +50,9 @@ revisao_adversarial:
       tratamento: "dito em limites da ferramenta sdd-scaffold e no passo 4 do prompt do starter"
 execucoes:
   - tipo: prompt
-    prompt: sdd-lifecycle-prompt-1
+    prompt: sdd-lifecycle-pedido-tier2-prompt-1
     harness: claude-code
-    ambiente: 'sessão nova em /Users/thiago/curadoria-a5/lifecycle17-prompt-2 (projeto gerado pelo sdd-scaffold 1.7.0 com a skill sdd-lifecycle 3.0.0, mais db/migration/V1__cria_cliente.sql e src/cadastro/api.py, commit 187448c)'
+    ambiente: 'subagente em sessão nova, com o contexto do repositório do portal (recebeu o CLAUDE.md, o CLAUDE.local.md e o lembrete de hook do graphify; influência mínima no resultado), em /Users/thiago/curadoria-a5/lifecycle17-prompt-2 (projeto gerado pelo sdd-scaffold 1.7.0 com a skill sdd-lifecycle 3.0.0, mais db/migration/V1__cria_cliente.sql e src/cadastro/api.py, commit 187448c)'
     resultado: passou
     evidencia: 'Pedido: "Use a skill sdd-lifecycle deste projeto (skills/sdd-lifecycle/SKILL.md) para implementar esta mudança: acrescentar o telefone (texto, até 20 caracteres) no cadastro de cliente — uma coluna nova na tabela cliente e um campo novo na API de cadastro." O agente leu SKILL.md, AGENTS.md, a memória, o steering e a skill migrations-reversiveis; classificou Tier 2; escreveu docs/specs/2026-10-05-telefone-cliente.md com Status rascunho, Aprovado por e em vazios, cinco requisitos R1 a R5 com critério, o marcador [ESCLARECER] para a obrigatoriedade (R5), o gate da Fase 2 sem mudança destrutiva e o threat-model (LGPD). Parou na Fase 3 pedindo aprovação, sem plano, sem branch e sem código, e disse que a gravação da aprovação é do usuário. Transcrição bruta: curadoria-a5/transcricoes/sdd-lifecycle-prompt-2.bruta.jsonl. Rodada 1, descartada por defeito do cenário: em /Users/thiago/curadoria-a5/lifecycle17-prompt, um projeto vazio sem a tabela cliente, o agente leu SKILL.md, AGENTS.md e o steering, classificou Tier 2 e recusou inventar o schema (princípio 4 da constituição), sem escrever a spec; o comportamento foi correto, mas o cenário não permitia cumprir o pedido (transcrição sdd-lifecycle-prompt-1.bruta.jsonl). A rodada 2 é a que vale.'
     data: 2026-10-05
