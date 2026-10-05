@@ -1,0 +1,10 @@
+id: thoughtworks-radar-speckit
+titulo: "GitHub Spec Kit (Technology Radar)"
+organizacao: Thoughtworks
+url: https://www.thoughtworks.com/en-in/radar/languages-and-frameworks/github-spec-kit
+tipo: analista
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "bloco inteiro: trechos sobre instruction bloat, context rot e extração do guia para skills"
+dominios: [construir-com-ia]
+notas: "Data de publicação do blip não confirmada na página. Conteúdo do Radar: o portal parafraseia."

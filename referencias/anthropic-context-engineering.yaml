@@ -4,9 +4,9 @@ organizacao: Anthropic
 url: https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 tipo: vendor
 publicado_em: '2025-09-29'
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-05'
 verificacao: V
-localizacao: seções sobre contexto finito e compactação
+localizacao: trechos sobre contexto como recurso finito (context rot, orçamento de atenção) e sobre compactação
 dominios:
 - construir-com-ia
 notas: null

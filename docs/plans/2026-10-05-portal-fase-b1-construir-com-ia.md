@@ -109,4 +109,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
 
 ## Evidências
 
+- T1: ADR 0005 escrita e commitada.
+- T2 (P1-03): autor concluído (rascunho, fontes abertas, Exemplo executado em `gitlab-ci-local` 4.76.0, registro). `validar.py` sai com 1 erro, `R-PROMPT (P1-03-prompt-1: sem execução registrada)`, até o testador do prompt rodar; `gerar.py --saida public` fica bloqueado pelo mesmo erro. Repositório de teste: `~/curadoria-a5/b1-p1-03-prompt`.
+
 ## Conferência em lote: <data> — achados

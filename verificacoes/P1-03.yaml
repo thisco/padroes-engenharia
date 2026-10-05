@@ -1,0 +1,72 @@
+conteudo: P1-03
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a constituição fica inline no AGENTS.md porque a premissa precisa valer em todo turno, e o detalhe vai para docs/steering/, lido sob demanda pelas skills
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: o README do scaffold diz que o Codex trunca o documento de projeto em 32768 bytes, sem avisar
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: o verificar_constituicao.py reprova se o bloco inline divergir da cópia canônica
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A camada 0, e por que ela é inline' (saída 'bloco inline confere com o arquivo canônico')
+  resultado: confirmada
+- texto: o Claude Code lê o CLAUDE.md no início de toda sessão e orienta ficar abaixo de 200 linhas por arquivo, porque arquivo mais longo consome mais contexto e reduz a aderência
+  ref: claude-code-memory
+  localizacao: seções 'CLAUDE.md files' e 'Write effective instructions' (item Size)
+  resultado: confirmada
+- texto: procedimento de várias etapas ou que só importa a parte do código vai para skill ou regra com escopo de caminho
+  ref: claude-code-memory
+  localizacao: seção 'When to add to CLAUDE.md' e item Size de 'Write effective instructions'
+  resultado: confirmada
+- texto: arquivos importados com @ também carregam no início, então o import não reduz o custo de contexto
+  ref: claude-code-memory
+  localizacao: seção 'Write effective instructions', item Size
+  resultado: confirmada
+- texto: o AGENTS.md entra no Claude Code pelo CLAUDE.md com a linha @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md'
+  resultado: confirmada
+- texto: com mais tokens na janela, a capacidade do modelo de recuperar com precisão o que está nela diminui (context rot)
+  ref: anthropic-context-engineering
+  localizacao: trecho sobre contexto como recurso finito e context rot
+  resultado: confirmada
+- texto: no uso do Spec Kit, acrescentar contexto de projeto continuamente levou a instruções cada vez maiores e a context rot, e o time extraiu orientações reutilizáveis para skills
+  ref: thoughtworks-radar-speckit
+  localizacao: bloco do Radar, trecho sobre instruction bloat
+  resultado: confirmada
+- texto: o Codex monta a cadeia de instruções no início de cada execução e para de acrescentar arquivos quando o tamanho combinado chega a project_doc_max_bytes, 32 KiB por padrão
+  ref: codex-agents-md
+  localizacao: seção sobre project_doc_max_bytes
+  resultado: confirmada
+- texto: o CI do scaffold reprova o AGENTS.md a partir de 30000 bytes (limite de alerta), com truncamento real em 32768
+  ref: sdd-scaffold-qualidade
+  localizacao: passo 'AGENTS.md dentro do limite de contexto'
+  resultado: confirmada
+- texto: os templates de plano do Spec Kit exigem passar por gates da constituição ou documentar a exceção
+  ref: speckit-spec-driven
+  localizacao: seção sobre o mecanismo de enforcement da constituição e estrutura dos gates
+  resultado: confirmada
+  nota: A página foi lida por resumo do WebFetch; a frase é paráfrase.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-03/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 governanca --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event (cópia b1-p1-03, AGENTS.md com 36653 bytes)
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker 29.5.2, imagem python:3.11; cópia de projeto-teste-17 (sdd-scaffold 1.7.0); scripts/verificar_constituicao.py com sha256 8a3eeedf...ebad; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'governanca > AGENTS.md com 36653 bytes (limite 30000); governanca > AGENTS.md grande demais; mova o detalhe para docs/steering/; governanca finished in 689 ms FAIL 1.'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-03/gitlab-ci.yml
+  comando: o mesmo comando, depois de mover os 200 passos para docs/steering/procedimentos.md e deixar uma linha de roteamento no AGENTS.md
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'governanca > AGENTS.md com 5516 bytes (limite 30000); governanca > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.; governanca finished in 779 ms PASS governanca.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
