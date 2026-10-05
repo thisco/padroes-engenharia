@@ -96,3 +96,19 @@ def test_primeira_dobra_responde_antes_de_explicar_o_ciclo():
     assert rotulos.index("Por que importa") < rotulos.index("Para quem desenvolve")
     topo = html.todos("div", classe="topo")[0].texto
     assert "pesquisa" not in topo
+
+
+def test_momentos_dizem_a_acao_e_deixam_a_fase_em_texto_pequeno_abaixo():
+    s = fabrica.site(INICIO, PROBLEMA, fabrica.pratica(), fabrica.starter(), fabrica.referencia())
+    html = analisar(html_inicio(s))
+    assert (
+        "sdd-lifecycle"
+        not in html.texto.replace("ferramentas/sdd-lifecycle", "")
+        .split("Para quem desenvolve")[1]
+        .split("Para o agente")[0]
+    )
+    passo = html.todos("div", classe="passo")[0]
+    paragrafos = [p.texto for p in passo.todos("p")]
+    assert paragrafos[1].endswith("prática") or paragrafos[1].endswith("práticas")
+    assert "fase" not in paragrafos[1]
+    assert paragrafos[2].startswith("fase") and "do ciclo" in paragrafos[2]

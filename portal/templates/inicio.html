@@ -55,7 +55,8 @@
         <span class="n">{{ loop.index }}</span>
         <b>{{ m.titulo }}</b>
         <p>{{ m.acao }}</p>
-        <p class="mono pequeno">{{ m.fases_texto }} · {{ m.contagem }}</p>
+        <p class="mono pequeno">{{ m.contagem }}</p>
+        <p class="mono pequeno">{{ m.fases_texto }}</p>
         <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
       </div>
 {% endfor %}

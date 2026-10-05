@@ -30,10 +30,18 @@ def test_status_iguais_ao_enum_do_schema():
 
 
 def test_consequencia_de_cada_forca_e_quem_impede():
-    assert forca("bloqueia").consequencia == "o job falha e o merge não passa"
-    assert forca("pede-aprovacao").consequencia == "uma pessoa decide"
-    assert forca("avisa").consequencia == "o CI comenta e não trava"
-    assert forca("orienta").consequencia == "é texto, depende de você e da revisão"
+    assert (
+        forca("bloqueia").consequencia == "a verificação automática reprova e a mudança não entra"
+    )
+    assert (
+        forca("pede-aprovacao").consequencia
+        == "uma pessoa precisa aprovar antes de a mudança entrar"
+    )
+    assert forca("avisa").consequencia == "a verificação aponta o problema e não impede"
+    assert (
+        forca("orienta").consequencia
+        == "não há verificação automática; depende de você e da revisão"
+    )
     assert [f.slug for f in FORCAS if f.impede] == ["bloqueia", "pede-aprovacao"]
     assert ROTULO_FORCA["orienta"] == "só orienta"
 

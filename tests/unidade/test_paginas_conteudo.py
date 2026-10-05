@@ -25,7 +25,9 @@ def test_pratica_com_id_chips_corpo_e_lateral():
     assert "<title>P1-01 · Classificar toda mudança em tier antes de codar ·" in html
     assert '<h1><span class="id">P1-01</span>Classificar toda mudança' in html
     assert (
-        '<span class="ef orienta" title="é texto, depende de você e da revisão">só orienta' in html
+        '<span class="ef orienta" '
+        'title="não há verificação automática; depende de você e da revisão">só orienta'
+        in html
     )
     assert '<span class="st">experimentar</span>' in html
     assert "Claude Code" not in html

@@ -8,13 +8,13 @@ def macro(nome):
 
 def test_chip_diz_a_consequencia_e_legenda_tem_as_quatro():
     chip = analisar(str(macro("chip_forca")("bloqueia"))).todos("span", classe="ef")[0]
-    assert chip.attrs["title"] == "o job falha e o merge não passa"
+    assert chip.attrs["title"] == "a verificação automática reprova e a mudança não entra"
     legenda = analisar(str(macro("legenda_forcas")()))
     assert [d.texto for d in legenda.todos("dd")] == [
-        "o job falha e o merge não passa",
-        "uma pessoa decide",
-        "o CI comenta e não trava",
-        "é texto, depende de você e da revisão",
+        "a verificação automática reprova e a mudança não entra",
+        "uma pessoa precisa aprovar antes de a mudança entrar",
+        "a verificação aponta o problema e não impede",
+        "não há verificação automática; depende de você e da revisão",
     ]
 
 

@@ -25,10 +25,20 @@ class Status:
 
 
 FORCAS = (
-    Forca("bloqueia", "bloqueia", "o job falha e o merge não passa", True),
-    Forca("pede-aprovacao", "pede aprovação", "uma pessoa decide", True),
-    Forca("avisa", "avisa", "o CI comenta e não trava", False),
-    Forca("orienta", "só orienta", "é texto, depende de você e da revisão", False),
+    Forca("bloqueia", "bloqueia", "a verificação automática reprova e a mudança não entra", True),
+    Forca(
+        "pede-aprovacao",
+        "pede aprovação",
+        "uma pessoa precisa aprovar antes de a mudança entrar",
+        True,
+    ),
+    Forca("avisa", "avisa", "a verificação aponta o problema e não impede", False),
+    Forca(
+        "orienta",
+        "só orienta",
+        "não há verificação automática; depende de você e da revisão",
+        False,
+    ),
 )
 STATUS = (
     Status("adotar", "aprovada pela engenharia: use por padrão"),

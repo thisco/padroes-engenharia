@@ -218,7 +218,7 @@ def _momentos_da_inicio(site: Site) -> list[dict[str, Any]]:
                 "slug": m.slug,
                 "titulo": m.titulo,
                 "acao": m.acao,
-                "fases_texto": f"{fases} da sdd-lifecycle",
+                "fases_texto": f"{fases} do ciclo",
                 "contagem": plural(n, "prática", "práticas"),
             }
         )
