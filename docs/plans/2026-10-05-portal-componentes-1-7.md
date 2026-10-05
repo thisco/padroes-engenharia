@@ -98,6 +98,8 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 - [x] **T8 (R9).** Escreva `docs/adr/0003-formato-de-spec-delta-arquivado.md` e
   `docs/adr/0004-revoga-d3-executaveis-evoluem-com-o-portal.md`, no formato da 0001 e da 0002,
   citando o checkpoint da A.5.
+- [x] **T9a.** `mecanismos/` entra nos caminhos de risco alto de `niveis-de-risco.yml` e na seção
+  `[Motor e governança][2]` do `CODEOWNERS`, no mesmo padrão de `skills/`.
 - [ ] **T9.** Lote 2 verde (validar, gerar, pytest) e evidência colada.
 
 ### Lote 3: execuções (R6, R8)

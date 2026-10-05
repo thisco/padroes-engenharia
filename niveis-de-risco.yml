@@ -15,8 +15,9 @@ niveis:
     descricao: o motor, os contratos e a própria governança
     aprovacoes: 2
     aprovador: dois donos da seção [Motor e governança] do CODEOWNERS
-    # Os seis primeiros são os do §12.3; os quatro últimos mudam a governança (princípio 8
-    # da constituição: a governança não se autoedita).
+    # Os seis primeiros são os do §12.3; mecanismos/ hospeda script que roda no CI de quem o
+    # baixa (ADR 0004); os quatro últimos mudam a governança (princípio 8 da constituição:
+    # a governança não se autoedita).
     caminhos:
       - esquemas/
       - scripts/
@@ -24,6 +25,7 @@ niveis:
       - .gitlab-ci.yml
       - constituicao/
       - skills/
+      - mecanismos/
       - AGENTS.md
       - CODEOWNERS
       - niveis-de-risco.yml
