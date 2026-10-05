@@ -104,7 +104,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
 ### Lote 3: execuções (R6, R8)
 
-- [ ] **T10 (R6).** Rode `docker system df` e cole a saída. Se o uso passar de 80% do disco
+- [x] **T10 (R6).** Rode `docker system df` e cole a saída. Se o uso passar de 80% do disco
   reservado, pare e peça limpeza ao dono.
 - [ ] **T11 (R6).** Starter: `criar_projeto.py` da tag `v1.7.0` gera `$TESTE/projeto-teste-17`.
   Confira a skill v3.0.0 (o `PROCEDENCIA` da skill), `readlink` dos 4 pontos de montagem e o
@@ -173,6 +173,20 @@ exit 0
 $ $V/python scripts/gerar.py --saida public
 portal gerado em /private/tmp/claude-501/-Users-thiago-Documents-Workspace-repos-padroes-engenharia/2655ba20-9b0a-49de-b67d-e78ac69097db/scratchpad/portal-fase-a/public (versão 0.2.0, commit a083f60, 2026-10-05).
 exit 0
+```
+
+### Lote 3
+
+T10, `docker system df` antes de qualquer execução (Containers 4,473 GB e Build Cache 13,62 GB,
+os dois abaixo do limite de 20 GB definido para a T12):
+
+```text
+$ docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          92        24        30.9GB    10.37GB (33%)
+Containers      31        14        4.473GB   4.389GB (98%)
+Local Volumes   26        10        15.34GB   3.204GB (20%)
+Build Cache     296       0         13.62GB   1.72GB
 ```
 
 ## Revisão adversarial: <data> — achados
