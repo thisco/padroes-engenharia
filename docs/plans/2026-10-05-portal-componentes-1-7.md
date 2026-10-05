@@ -100,7 +100,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   citando o checkpoint da A.5.
 - [x] **T9a.** `mecanismos/` entra nos caminhos de risco alto de `niveis-de-risco.yml` e na seção
   `[Motor e governança][2]` do `CODEOWNERS`, no mesmo padrão de `skills/`.
-- [ ] **T9.** Lote 2 verde (validar, gerar, pytest) e evidência colada.
+- [x] **T9.** Lote 2 verde (validar, gerar, pytest) e evidência colada.
 
 ### Lote 3: execuções (R6, R8)
 
@@ -149,6 +149,29 @@ validação ok: nenhum erro.
 exit 0
 $ $V/python scripts/gerar.py --saida public
 portal gerado em /private/tmp/claude-501/-Users-thiago-Documents-Workspace-repos-padroes-engenharia/2655ba20-9b0a-49de-b67d-e78ac69097db/scratchpad/portal-fase-a/public (versão 0.2.0, commit 8363c21, 2026-10-05).
+exit 0
+```
+
+### Lote 2 (T9)
+
+Saída real dos comandos, rodados no worktree com `$V=.../padroes-engenharia/.venv/bin`, depois do
+commit da T9a:
+
+```text
+$ $V/python -m pytest -q   (últimas linhas)
+........................................................................ [ 75%]
+........................................................................ [ 87%]
+.....................................................................    [100%]
+573 passed in 18.34s
+$ $V/ruff check .
+All checks passed!
+$ $V/ruff format --check .
+133 files already formatted
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
+exit 0
+$ $V/python scripts/gerar.py --saida public
+portal gerado em /private/tmp/claude-501/-Users-thiago-Documents-Workspace-repos-padroes-engenharia/2655ba20-9b0a-49de-b67d-e78ac69097db/scratchpad/portal-fase-a/public (versão 0.2.0, commit a083f60, 2026-10-05).
 exit 0
 ```
 
