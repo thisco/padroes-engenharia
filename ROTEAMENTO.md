@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v0.3.0: 6 práticas; 45 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v0.3.0: 8 práticas; 45 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna do momento e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -8,7 +8,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 
 | Domínio | Antes de escrever | Enquanto escreve | Antes do merge | Depois da entrega |
 |---|---|---|---|---|
-| Construir com IA (`construir-com-ia`) | P1-01 (só orienta), P1-03 (avisa), P1-04 (só orienta), P1-05 (avisa) | a definir | a definir | a definir |
+| Construir com IA (`construir-com-ia`) | P1-01 (só orienta), P1-03 (avisa), P1-04 (só orienta), P1-05 (avisa), P1-06 (pede aprovação), P1-07 (só orienta) | a definir | a definir | a definir |
 | Arquitetura e padrões de projeto (`arquitetura`) | a definir | a definir | a definir | a definir |
 | Contratos de API (`contratos-api`) | a definir | a definir | a definir | a definir |
 | Frontend e UX (`frontend-ux`) | a definir | a definir | a definir | a definir |
@@ -30,4 +30,6 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | P1-03 | Mantenha a constituição curta e carregada em todo turno | avisa | adotar | `steering:sdd-processo`, `skill:sdd-lifecycle` |
 | P1-04 | Escreva a spec como delta da mudança | só orienta | adotar | `skill:sdd-lifecycle` |
 | P1-05 | Marque a ambiguidade na spec e resolva antes do plano | avisa | experimentar | `skill:sdd-lifecycle` |
+| P1-06 | Registre quem aprovou a spec antes do plano | pede aprovação | adotar | `skill:sdd-lifecycle` |
+| P1-07 | Aplique o guia oficial do fornecedor ao adotar ou trocar de modelo | só orienta | experimentar | nada |
 | P2-01 | Toda chamada a modelo passa pelo gateway com chave virtual | só orienta | experimentar | nada |

@@ -46,6 +46,13 @@ execucoes:
   resultado: passou
   evidencia: 'Verificação de PR: 1 arquivo(s), nenhum achado.; saída 0.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-06-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-06-prompt, spec com Status aprovada e campos de aprovação vazios"
+  resultado: passou
+  evidencia: "1ª execução do verificar_pr.py: AVISO de aprovação sem registro; o agente confirmou zero [ESCLARECER], gravou só Aprovado por: Ana Souza e Aprovado em: 2026-10-05; commit d847ec9 só com a spec; 2ª execução: nenhum achado, saída 0, árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-06-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'
