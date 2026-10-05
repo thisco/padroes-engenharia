@@ -1608,7 +1608,7 @@ nova, com o build servido, as duas specs e sem este plano. Relatórios em
 
 Nada aqui faz merge, cria tag ou publica. O plano da fase B só é escrito depois da aprovação.
 
-- [ ] **Passo 1: Apresentar** em uma página: CHANGELOG; **Evidências** (M13) com os critérios
+- [x] **Passo 1: Apresentar** em uma página: CHANGELOG; **Evidências** (M13) com os critérios
   do §18 marcados; revisão adversarial e aceite (M14) com o tratamento; notas antes e depois
   (M15); R24 a R27 com o estado; as **propostas que pedem decisão** (status das 12 ferramentas e
   do starter; o caminho A, B ou C usado no job do GitLab; referências que ficaram [S]: as duas
@@ -1625,11 +1625,11 @@ Nada aqui faz merge, cria tag ou publica. O plano da fase B só é escrito depoi
   6. Quando criar a tag da versão (dispara o pacote offline): após o merge da A.5 ou ao fim da
      fase B.
   7. Localizar o repositório de origem do SGD, pré-requisito do caso interno da fase B.
-- [ ] **Passo 2: PAUSE A EXECUÇÃO** e pergunte: *"Você aprova a fase A.5 (o motor v1.1 e o molde
+- [x] **Passo 2: PAUSE A EXECUÇÃO** e pergunte: *"Você aprova a fase A.5 (o motor v1.1 e o molde
   de conteúdo) como está, para que eu escreva o plano da fase B? Há algo a ajustar antes? Quais
   status você confirma para as ferramentas?"* Sem resposta explícita, não escreva o plano B, não
   faça merge e não crie tag.
-- [ ] **Passo 3: Registrar** a data, quem aprovou, a decisão, os status confirmados (aplicados
+- [x] **Passo 3: Registrar** a data, quem aprovou, a decisão, os status confirmados (aplicados
   em commit próprio, pela curadoria, se mudarem) e o destino de cada pendência. Commit:
   `docs: checkpoint humano da fase A.5`.
 
@@ -1786,3 +1786,36 @@ git status --short               -> vazio
 ```
 
 Lote de correções finais (d592961, 011bfee, c88579e, d9f6054, a0c4a97, 0159a1d): achados da conferência final independente de 2026-10-05.
+
+## Checkpoint
+
+**Data:** 2026-10-05 · **Aprovou:** o dono do portal · **Decisão:** A.5 aprovada (motor v1.1 e
+molde de conteúdo), com todas as recomendações apresentadas. O plano da fase B pode ser escrito
+depois da frente sdd-scaffold 1.7.0 + sdd-lifecycle 2.1.0, que vem antes por decisão do dono.
+
+1. **Aprovação da A.5:** aprovada. As duas lacunas da DAD-01 no aceite do §18 têm destino: o
+   `verificar_pr.py` sem hospedagem vai para o item 2; o Exemplo sem `flyway validate` e sem a
+   consulta de conferência é correção de conteúdo na fase B, pela `curadoria-de-pratica`.
+2. **Scripts de mecanismo no portal:** hospedar em `/.well-known/mecanismos/`, com `PROCEDENCIA`
+   e sha256, como as skills. Entra no motor junto da troca do `componentes.yml` para o
+   sdd-scaffold 1.7.0, para que a cópia hospedada já seja a da versão nova e a fixação mude uma
+   vez só.
+3. **Status das ferramentas:** `kiro`, `antigravity` e `copilot` passam de `experimentar` para
+   `avaliar` (sem execução nesta fase: o Kiro exige login; Antigravity e Copilot não estão
+   instalados). Ficam como estão: `claude-code`, `codex`, `litellm` (`experimentar`);
+   `gitlab-ci-local` (`avaliar`); `flyway`, `alembic`, `gitleaks`, `sdd-scaffold`,
+   `sdd-lifecycle` e o starter `sdd-scaffold` (`adotar`), com a evidência de execução em
+   `verificacoes/` conferida por revisor independente. A mudança vai em commit próprio, pela
+   curadoria.
+4. **Kiro:** sem execução nesta fase, por exigir login.
+5. **Spec como delta arquivado × spec viva:** fica o delta arquivado (cenário A da análise da
+   prática SDD, §6), com o campo `Requisitos afetados` (M5) e o aviso C12 no scaffold 1.7.0.
+   Gatilho para reavaliar a spec viva: adoção em brownfield com dificuldade de onboarding, ou
+   conflito entre hotfix e delta arquivado. Registro em ADR 0003.
+6. **Pendências do GitLab:** nenhuma bloqueia o 1.7.0 nem a fase B; tratadas antes da
+   publicação. (1) o dono cria o projeto no GitLab Serpro e a MR é preparada; (2) handle real no
+   `CODEOWNERS` no lugar de `@nuarq`, a informar pelo dono; (3) seções do `CODEOWNERS` com
+   aprovação obrigatória, casando com as duas aprovações de risco alto; (4) Pages com acesso
+   restrito ao grupo interno; (5) schedule semanal do job `avisos` na segunda de manhã, na
+   `main`; (6) tag `v0.2.0` depois do merge na `main` e dos mínimos da fase B; (7) local do
+   repositório do SGD, a informar pelo dono.
