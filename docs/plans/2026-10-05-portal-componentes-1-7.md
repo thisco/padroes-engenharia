@@ -114,7 +114,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   portal servido (`python -m http.server` sobre `public/`). Os registros vão em `verificacoes/`.
 - [ ] **T13 (R6).** O prompt da receita roda em sessão nova, com o portal servido. Transcrição
   bruta em `$TESTE/transcricoes/`.
-- [ ] **T14 (R6).** O fluxo da DAD-01 vai até a trava da fase 7, com o `verificar_pr.py` vindo do
+- [x] **T14 (R6).** O fluxo da DAD-01 vai até a trava da fase 7, com o `verificar_pr.py` vindo do
   portal (a lacuna 1 do aceite).
 - [ ] **T15 (R8).** Prompt da `sdd-lifecycle`: sessão nova em `$TESTE/projeto-teste-17`, com o
   pedido de uma mudança Tier 2 (telefone no cadastro de cliente). Passou se a transcrição bruta
@@ -247,6 +247,28 @@ segredos > WRN leaks found: 1
 --- DAD-01: exemplos/DAD-01/gitlab-ci.yml em $TESTE/dad01-ci17, branch fix/2026-10-05-cpf-editado-2, saida=1
 normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
 normas-do-pr finished in 953 ms  FAIL 1
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
+```
+
+T14, fluxo da DAD-01 até a trava, em `$TESTE/dad01-fluxo17` (`verificar_pr.py` do portal servido,
+hash conferido com `sha256sum -c -`):
+
+```text
+$ git ls-tree -r --name-only origin/main | grep -E '(^|/)(migrations?|alembic)/'
+db/migration/V1__cria_cliente.sql
+db/migration/V2__cria_cpf.sql
+$ echo "1397e8b1...0488  scripts/verificar_pr.py" | sha256sum -c -
+scripts/verificar_pr.py: OK
+--- caminho errado, V2 editada: python3 scripts/verificar_pr.py --base origin/main, saida=1
+BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
+AVISO: a mudança altera schema e nenhum plano do PR declara a estratégia de rollback. Declare antes de executar: downgrade testado, redeploy da imagem anterior ou restore de backup.
+--- caminho certo, V3 e plano com Rollback
+$ git diff --name-status origin/main...HEAD
+A	db/migration/V3__amplia_cpf.sql
+A	docs/plans/2026-10-05-amplia-cpf.md
+$ python3 scripts/verificar_pr.py --base origin/main   (saida=0)
+Verificação de PR: 2 arquivo(s), nenhum achado.
 $ $V/python scripts/validar.py
 validação ok: nenhum erro.
 ```

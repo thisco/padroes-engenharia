@@ -137,6 +137,20 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: 'normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. normas-do-pr finished in 953 ms FAIL 1; saida=1. Saída bruta em curadoria-a5/saidas/c17-t12-dad01.txt.'
   data: 2026-10-05
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'fluxo da DAD-01 até a trava, o caminho errado: passo 1 (git ls-tree -r --name-only origin/main | grep -E ''(^|/)(migrations?|alembic)/''), edição da V2 numa branch fix/2026-10-05-cpf-editado e python3 scripts/verificar_pr.py --base origin/main'
+  ambiente: 'sdd-scaffold 1.7.0 (tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0), projeto gerado por criar_projeto.py com a skill sdd-lifecycle 3.0.0, com remoto bare local e V1 e V2 em origin/main; Python 3.14.8, git 2.50.1, macOS; o verificar_pr.py foi baixado do portal servido em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py com o comando do passo 6 da prática, e `sha256sum -c -` imprimiu `scripts/verificar_pr.py: OK` (sha256 1397e8b1ee5b...); fluxo seguido à mão pelo curador, sem agente'
+  resultado: falhou-como-esperado
+  evidencia: 'passo 1 listou db/migration/V1__cria_cliente.sql e db/migration/V2__cria_cpf.sql; verificar_pr.py saida=1 com "BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental." e o AVISO de rollback. Saída bruta em curadoria-a5/saidas/c17-t14-bloqueio.txt.'
+  data: 2026-10-05
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'fluxo da DAD-01 até a trava, o caminho certo: passos 3 a 6 (migration V3 corretiva, plano docs/plans/2026-10-05-amplia-cpf.md com a linha de tier e a seção Rollback, commit) e python3 scripts/verificar_pr.py --base origin/main'
+  ambiente: 'sdd-scaffold 1.7.0 (tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0), projeto gerado por criar_projeto.py com a skill sdd-lifecycle 3.0.0, com remoto bare local e V1 e V2 em origin/main; Python 3.14.8, git 2.50.1, macOS; o verificar_pr.py foi baixado do portal servido em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py com o comando do passo 6 da prática, e `sha256sum -c -` imprimiu `scripts/verificar_pr.py: OK` (sha256 1397e8b1ee5b...); fluxo seguido à mão pelo curador, sem agente'
+  resultado: passou
+  evidencia: 'git diff --name-status origin/main...HEAD: "A db/migration/V3__amplia_cpf.sql" e "A docs/plans/2026-10-05-amplia-cpf.md"; verificar_pr.py saida=0 com "Verificação de PR: 2 arquivo(s), nenhum achado." e sem linha BLOQUEIA. Saída bruta em curadoria-a5/saidas/c17-t14-certo.txt.'
+  data: 2026-10-05
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'
