@@ -1,0 +1,47 @@
+conteudo: P1-07
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "o guia do Gemini 3 sugere, para quem usava prompt elaborado como cadeia de pensamento para forçar o raciocínio do Gemini 2.5, testar o thinking_level alto"
+  ref: google-gemini-3-developer-guide
+  localizacao: "seção de migração do Gemini 2.5, 'Thinking level' (WebFetch em 2026-10-05; página atualizada em 2026-09-23 UTC)"
+  resultado: confirmada
+- texto: "o guia do Gemini 3 recomenda remover a temperature configurada explicitamente e usar o padrão 1.0, para evitar loops ou queda de desempenho em tarefas complexas"
+  ref: google-gemini-3-developer-guide
+  localizacao: "seção de migração do Gemini 2.5, 'Temperature settings'"
+  resultado: confirmada
+- texto: "o guia de prompting da Anthropic manda reduzir, na migração, o incentivo a ser mais minucioso ou a usar ferramentas com mais agressividade; os modelos 4.6 são mais proativos e podem reagir demais a instruções que o modelo anterior precisava"
+  ref: anthropic-prompting-best-practices
+  localizacao: "seção 'Migration considerations', item 6 (Tune anti-laziness prompting)"
+  resultado: confirmada
+- texto: "o guia da OpenAI para o GPT-6 manda remover temperature, top_p e top_logprobs quando o esforço de raciocínio não é none"
+  ref: openai-using-gpt-6
+  localizacao: "seção de migração, parâmetros sem suporte com esforço de raciocínio ativo"
+  resultado: confirmada
+  nota: "Página lida por resumo do WebFetch; a página não trata de remover instruções de prompt antigo nem de refazer avaliações, e a prática não lhe atribui isso."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-07/verificar-modelo.sh
+  comando: "sh scripts/verificar-modelo.sh, com docs/steering/modelo.md em esqueleto (campo Guia consultado vazio; commit 5d0bf3c)"
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-07, branch feat/2026-10-05-registro-do-modelo; sh e awk do macOS
+  resultado: falhou-como-esperado
+  evidencia: 'ERRO: campo ausente ou vazio: Guia consultado; saída 1.'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-07/verificar-modelo.sh
+  comando: "o mesmo comando, com o registro preenchido (commit 61254d0)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'OK: docs/steering/modelo.md; saída 0.'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-07/modelo.md
+  comando: "sh scripts/verificar-modelo.sh docs/steering/modelo.md (o registro é cópia exata do arquivo do exemplo, commit 61254d0)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'OK: docs/steering/modelo.md; saída 0.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []

@@ -1,0 +1,11 @@
+id: openai-using-gpt-6
+titulo: "Using GPT-6 (guia do modelo mais recente e migração)"
+organizacao: OpenAI
+url: https://developers.openai.com/api/docs/guides/latest-model
+tipo: vendor
+verificado_em: '2026-10-05'
+verificacao: V
+localizacao: "seção de migração sobre esforço de raciocínio e parâmetros que devem ser removidos"
+dominios:
+- construir-com-ia
+notas: "Documento vivo, sem data de publicação exibida. A página não trata de remover instruções de prompts antigos nem de refazer avaliações; essas afirmações não são atribuídas a ela."
