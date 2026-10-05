@@ -158,9 +158,9 @@ execucoes:
 - tipo: prompt
   prompt: receita-ligar-ci-gitlab-travas-prompt-1
   harness: claude-code
-  ambiente: 'sessão nova em /Users/thiago/curadoria-a5/receita17-prompt (projeto da 1.7.0 sem os dois scripts), com o portal servido em http://127.0.0.1:8000; macOS, sem sha256sum'
+  ambiente: 'sessão nova em /Users/thiago/curadoria-a5/receita17-prompt (projeto da 1.7.0 sem os dois scripts), com o portal servido em http://127.0.0.1:8000; macOS (/sbin/sha256sum existe e aceita -c, mas não lê a lista da entrada padrão). Execução em subagente com o contexto do repositório do portal: recebeu o CLAUDE.md, o CLAUDE.local.md e o lembrete de hook do graphify, sem efeito no resultado'
   resultado: passou
-  evidencia: 'O agente baixou verificar_pr.py e verificar_constituicao.py do portal e conferiu o sha256 contra o index.json (1.7.0, commit 06a382b) com shasum -a 256 -c, porque o macOS não tem sha256sum. Criou o .gitlab-ci.yml igual ao exemplo, num commit d628922 "ci: travas do processo no pipeline de MR" na branch ci/2026-10-05-travas; git diff --stat main..HEAD só com .gitlab-ci.yml e os dois scripts. Validou o YAML com /usr/bin/python3 (PyYAML 6.0.3); o gitlab-ci-local não estava instalado, então não rodou --list. Terminou citando os dois passos do GitLab (abrir a MR e marcar Pipelines must succeed). Transcrição bruta: curadoria-a5/transcricoes/receita-ligar-ci-gitlab-travas-prompt-17.bruta.jsonl.'
+  evidencia: 'O agente baixou verificar_pr.py e verificar_constituicao.py do portal e conferiu o sha256 contra o index.json (1.7.0, commit 06a382b) com shasum -a 256 -c (o sha256sum -c do macOS não lê a lista da entrada padrão). Criou o .gitlab-ci.yml igual ao exemplo, num commit d628922 "ci: travas do processo no pipeline de MR" na branch ci/2026-10-05-travas; git diff --stat main..HEAD só com .gitlab-ci.yml e os dois scripts. Validou o YAML com /usr/bin/python3 (PyYAML 6.0.3); o gitlab-ci-local não estava instalado, então não rodou --list. Terminou citando os dois passos do GitLab (abrir a MR e marcar Pipelines must succeed). Transcrição bruta: curadoria-a5/transcricoes/receita-ligar-ci-gitlab-travas-prompt-17.bruta.jsonl.'
   data: 2026-10-05
 revisao_adversarial:
   revisor: sessao-independente
