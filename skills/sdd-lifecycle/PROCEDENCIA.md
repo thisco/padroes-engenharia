@@ -3,11 +3,11 @@
 | Campo | Valor |
 |---|---|
 | Repositório | https://github.com/thisco/sdd-lifecycle |
-| Versão | 2.0.0 |
-| Commit | `1726652171f249bdaf86d7dcb6da23a1b7ae990b` |
+| Versão | 3.0.0 |
+| Commit | `5f6e9ad879f7abd11267547fb3f527e876b60140` |
 | Caminho de origem | `SKILL.md` |
-| Copiado em | 2026-10-01 |
-| SHA-256 | `67b0906d048eda5ef4b7c945d1e8527b02f866e8cd45a846e8e9555e6b5695e8` |
+| Copiado em | 2026-10-05 |
+| SHA-256 | `393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358` |
 | Licença | MIT |
 
 Cópia sem alteração. Não edite aqui: para adotar uma versão nova, atualize `componentes.yml`,

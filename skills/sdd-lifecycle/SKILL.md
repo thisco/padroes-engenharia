@@ -82,19 +82,28 @@ As fases abaixo são definidas uma única vez; variações por tier estão anota
 ## Fase 1 — Especificação (Tier 2)
 
 - Explore o código relevante antes de escrever qualquer coisa: componentes afetados, contratos
-  existentes, padrões do projeto.
+  existentes, padrões do projeto. Se houver PRD relacionado em `docs/prd/`, leia-o e cite-o no
+  cabeçalho da spec.
 - Se o pedido for ambíguo, refine com o usuário **uma pergunta por vez** (preferindo múltipla
   escolha), até fechar propósito, restrições e critérios de sucesso.
+- Toda dúvida que o usuário ainda não respondeu fica no arquivo, marcada com
+  `[ESCLARECER: pergunta]`. Ao receber a resposta, apague o marcador e registre a pergunta e a
+  resposta na seção `## Esclarecimentos`.
 - Redija a spec em `docs/specs/YYYY-MM-DD-nome-curto.md` como um **delta**: ela descreve a
   **mudança**, não o sistema inteiro. Conteúdo mínimo:
   - **Problema** — o que dói e por quê;
-  - **Requisitos** — numerados (R1, R2…), verificáveis;
-  - **Critérios de aceite** — checklist objetivo;
+  - **Requisitos** — linhas `**R<n>** …`, cada uma com ao menos um critério de aceite em GWT
+    (`Dado/Quando/Então`) ou EARS (`QUANDO … O SISTEMA DEVE …`). Exemplo:
+    `**R1** O login bloqueia a conta após 5 falhas.`
+    `- Critério: **Dado** 5 falhas seguidas, **Quando** vier a 6ª, **Então** a conta é bloqueada.`
+  - **Critérios de aceite** — checklist objetivo, opcional: complementa os critérios de cada
+    R<n>, não os substitui;
   - **Fora de escopo** — o que deliberadamente não entra.
 - Se a spec tocar entrada externa, auth, upload ou segredos, inclua uma seção de threat-model
   (o que um ator malicioso faria com esta superfície?).
 
-**Critério de saída:** spec redigida cobrindo problema, requisitos, aceite e fora de escopo.
+**Critério de saída:** spec redigida cobrindo problema, requisitos R<n> com critério, aceite e
+fora de escopo.
 
 ## Fase 2 — Gate arquitetural (Tier 2) — GATEKEEPER
 
@@ -124,12 +133,16 @@ arquitetural respondido.
 
 ## Fase 3 — Checkpoint humano da spec (Tier 2)
 
-- Apresente a spec ao usuário.
+- Só apresente a spec com zero marcadores `[ESCLARECER` abertos.
 - **PAUSE A EXECUÇÃO.** Pergunte explicitamente: *"Você aprova esta especificação, ou há
   regras de negócio/técnicas a ajustar antes do plano?"*
 - Não prossiga para a Fase 4 sem aprovação explícita.
+- Depois do "sim", grave no cabeçalho da spec `Status: aprovada`, `Aprovado por: <nome>` e
+  `Aprovado em: AAAA-MM-DD`, num commit próprio (`docs(specs): aprovar …`). O registro é feito
+  por quem aprova, ou a pedido explícito dele: aprovação escrita pelo agente sem pedido não vale.
 
-**Critério de saída:** aprovação humana registrada.
+**Critério de saída:** aprovação gravada no cabeçalho da spec (`Status`, `Aprovado por` e
+`Aprovado em`).
 
 ## Fase 4 — Plano (Tier 1 e 2)
 
@@ -143,7 +156,8 @@ prova o fix** (nome e o que ele verifica). Uma página no máximo.
 - lista exata de arquivos a criar/alterar, com assinaturas de novas funções/classes;
 - plano de testes por tarefa (o que cada teste prova);
 - tarefas como checkboxes markdown (`- [ ]`) — **único** mecanismo de rastreamento de
-  progresso; nenhum arquivo ou sistema paralelo;
+  progresso; nenhum arquivo ou sistema paralelo. Cada tarefa termina com os requisitos que
+  entrega, entre parênteses, `(R<n>)`; requisito sem tarefa é lacuna do plano;
 - checkpoints humanos explícitos entre fases de planos multi-fase;
 - a atualização do `CHANGELOG.md` como tarefa do plano.
 
@@ -170,7 +184,9 @@ respondidas (em Tier 1, respondidas aqui, já que a Fase 2 não roda).
   contrato. Sem subagentes, execute você mesmo — as regras não mudam.
 - **Ciclo TDD por tarefa do plano:**
   1. **Vermelho** — escreva o teste que expressa o comportamento desejado e **rode-o para
-     vê-lo falhar** (falha pelo motivo certo, não por erro de setup);
+     vê-lo falhar** (falha pelo motivo certo, não por erro de setup). No Tier 2, o teste cita o R<n> no
+     nome, na docstring ou num comentário `# cobre: R<n>`; citação não prova cobertura, só liga o
+     teste ao requisito;
   2. **Verde** — escreva o mínimo de código de produção para o teste passar;
   3. **Refatore** — melhore o desenho mantendo a suíte verde.
   - *Sem suíte de testes configurada?* Pare e informe o usuário: proponha um setup mínimo ou
@@ -181,8 +197,9 @@ respondidas (em Tier 1, respondidas aqui, já que a Fase 2 não roda).
   plano são inviáveis ou inseguros, é **proibido** improvisar contornos não documentados:
   1. aborte a implementação imediatamente;
   2. descreva o bloqueio com precisão;
-  3. retorne à Fase 1, atualize a spec (geralmente gerando uma ADR) e repita o checkpoint da
-     Fase 3 antes de voltar a codar.
+  3. retorne à Fase 1, atualize a spec (geralmente gerando uma ADR), volte o `Status` dela a
+     `rascunho` e repita o checkpoint da Fase 3, gravando a nova aprovação, antes de voltar a
+     codar. O mesmo vale ao reabrir a spec por escalação da Fase 7.
 
 **Critério de saída:** todas as tarefas do plano marcadas, suíte e linter verdes.
 
@@ -196,13 +213,15 @@ respondidas (em Tier 1, respondidas aqui, já que a Fase 2 não roda).
   o histórico da implementação), com um **modelo de raciocínio potente**, revisa a
   implementação **contra a spec, não contra o diff**: parte de cada requisito (R1, R2…) e
   verifica que foi de fato entregue, caçando requisitos não atendidos e desvios silenciosos.
-  O resultado é registrado no plano, em seção **"Revisão adversarial: YYYY-MM-DD — achados"**.
+  O resultado é registrado no plano, em seção **"Revisão adversarial: YYYY-MM-DD — achados"**,
+  com uma linha por R<n> na tabela `| R | veredito | evidência |`: veredito `atendido`,
+  `parcial` ou `não atendido`; evidência em `arquivo:linha` ou saída de teste.
 - **Tratamento do feedback:** problemas críticos voltam à Fase 6; problemas arquiteturais
-  escalam à Fase 1. Feedback tecnicamente questionável se discute com evidência, não se
-  implementa cegamente.
+  escalam à Fase 1, e o `Status` da spec volta a `rascunho`. Feedback
+  tecnicamente questionável se discute com evidência, não se implementa cegamente.
 
 **Critério de saída:** evidências coladas no plano; achados da revisão tratados ou
-justificados por escrito.
+justificados por escrito; no Tier 2, todo R<n> da spec está na tabela de vereditos.
 
 ## Fase 8 — Encerramento e destilação (todos os tiers)
 
@@ -211,7 +230,8 @@ sem spec, sem plano, sem branch dedicada, salvo regra contrária do repositório
 
 **Tiers 1 e 2:**
 
-1. **CHANGELOG antes do merge.** Atualize `CHANGELOG.md` no formato *Keep a Changelog*:
+1. **CHANGELOG e spec antes do merge.** No Tier 2, mude o `Status` da spec para `arquivada`
+   junto do changelog. Atualize `CHANGELOG.md` no formato *Keep a Changelog*:
    versão semântica incrementada, data, título e bullets em `### Adicionado` / `### Modificado`
    / `### Corrigido`. A entrada nasce na branch da feature — nunca depois do merge.
 2. **Commits convencionais.** `feat(escopo): …`, `fix(escopo): …`, `test(escopo): …` — em
@@ -222,11 +242,12 @@ sem spec, sem plano, sem branch dedicada, salvo regra contrária do repositório
    - conhecimento da spec que virou **permanente** → promova ao steering ou a uma ADR;
    - aprendizado operacional novo (gotcha, decisão, comando) → registre em
      `docs/PROJECT_MEMORY.md`, se o repo o mantém;
-   - a spec permanece **arquivada como histórico do delta** — ela não é fonte de verdade viva.
+   - a spec permanece **arquivada como histórico do delta** (passo 1) — ela não é fonte de
+     verdade viva.
 5. **Limpeza.** Apague a branch (e o worktree, se usado) após o merge.
 
-**Critério de saída:** merge concluído, changelog registrado, aprendizado destilado, branch
-removida.
+**Critério de saída:** merge concluído, changelog registrado, spec arquivada (Tier 2),
+aprendizado destilado, branch removida.
 
 ---
 
@@ -238,6 +259,9 @@ Features grandes atravessam sessões. Para retomar:
 2. Abra `docs/plans/YYYY-MM-DD-nome-curto.md` e localize a última tarefa marcada (`- [x]`).
 3. Confirme com `git log --oneline` quais commits já existem na branch.
 4. Se spec ou plano mudaram desde a última sessão, releia `docs/specs/` antes de continuar.
+   Confira o `Status` da spec e os marcadores: `rascunho` ou marcador `[ESCLARECER` aberto →
+   retome a Fase 1, 2 ou 3, conforme o ponto onde parou (o gate da Fase 2 nunca se pula);
+   `arquivada` → retome a Fase 8; `aprovada` → siga do plano.
 5. Retome da primeira tarefa desmarcada, na branch correta.
 
 ## Erros comuns
@@ -249,6 +273,8 @@ Features grandes atravessam sessões. Para retomar:
 - **Deflação de tier** — "é só um ajustinho" que muda contrato. O antídoto é o critério
   objetivo + escalação obrigatória.
 - **Pular o checkpoint (Fase 3)** — gerar plano ou código sem aprovação explícita da spec.
+- **Aprovar só na conversa** — sem registro no cabeçalho, a retomada não sabe que a spec foi
+  aprovada.
 - **Rastreabilidade quebrada** — não marcar os checkboxes do plano; inviabiliza retomada
   multi-sessão.
 - **TDD pulado em silêncio** — "não tem setup de teste" sem surfacear o gap ao usuário.

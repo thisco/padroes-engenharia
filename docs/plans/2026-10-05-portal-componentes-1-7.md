@@ -50,7 +50,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   `test_carregar.py`, `test_regras_mecanismo.py`, `test_regras_vinculos.py`,
   `test_paginas_espinha.py`, `test_saidas_roteamento.py` e `test_checar_links.py`, e também para
   `portal/gerador/regras.py`, que cita `1.6.1`.
-- [ ] **T2 (R2).** `skills/sdd-lifecycle/SKILL.md` recebe o conteúdo de
+- [x] **T2 (R2).** `skills/sdd-lifecycle/SKILL.md` recebe o conteúdo de
   `git show v3.0.0:SKILL.md`. As 5 cópias de `skills/*/PROCEDENCIA.md` e
   `constituicao/PROCEDENCIA.md` passam a citar a versão e o commit novos. Confira com `diff` que
   o conteúdo das outras 4 skills e da constituição é igual ao da tag. Se o `PROCEDENCIA` já

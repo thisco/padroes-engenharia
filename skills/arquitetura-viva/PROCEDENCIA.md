@@ -3,10 +3,10 @@
 | Campo | Valor |
 |---|---|
 | Repositório | https://github.com/thisco/sdd-scaffold |
-| Versão | 1.6.1 |
-| Commit | `a8ebdf3c6734f11f6763c182b2325fe227216b65` |
+| Versão | 1.7.0 |
+| Commit | `06a382b938af66230ce6299c1638b0ad055804f0` |
 | Caminho de origem | `template/skills/arquitetura-viva/SKILL.md` |
-| Copiado em | 2026-10-01 |
+| Copiado em | 2026-10-05 |
 | SHA-256 | `481c764067a994d4828a4f89168acb3631b982d88cb3055e8b4094d85d087f67` |
 | Licença | MIT |
 
