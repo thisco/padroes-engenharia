@@ -22,13 +22,13 @@ MECANISMO = f"sdd-scaffold:{ORIGEM}@1.7.0"
 PROCEDENCIA = "mecanismos/sdd-scaffold/PROCEDENCIA.md"
 
 
-def procedencia(versao="1.7.0", sha=SHA):
+def procedencia(versao="1.7.0", sha=SHA, commit=COMMIT):
     return (
         "# Procedência de `mecanismos/sdd-scaffold/`\n\n"
         "| Campo | Valor |\n|---|---|\n"
         "| Repositório | https://github.com/thisco/sdd-scaffold |\n"
         f"| Versão | {versao} |\n"
-        f"| Commit | `{COMMIT}` |\n"
+        f"| Commit | `{commit}` |\n"
         "| Copiado em | 2026-10-05 |\n"
         "| Licença | MIT |\n\n"
         "| Arquivo | Caminho de origem | SHA-256 |\n|---|---|---|\n"
@@ -36,11 +36,11 @@ def procedencia(versao="1.7.0", sha=SHA):
     )
 
 
-def montar(raiz, versao="1.7.0", sha=SHA):
+def montar(raiz, versao="1.7.0", sha=SHA, commit=COMMIT):
     pasta = raiz / "mecanismos" / "sdd-scaffold"
     pasta.mkdir(parents=True)
     (pasta / "verificar_pr.py").write_bytes(SCRIPT)
-    (pasta / "PROCEDENCIA.md").write_text(procedencia(versao, sha), encoding="utf-8")
+    (pasta / "PROCEDENCIA.md").write_text(procedencia(versao, sha, commit), encoding="utf-8")
 
 
 def rodar(raiz, *conteudos):
@@ -112,6 +112,19 @@ def test_hospedados_pega_versao_diferente_de_componentes(tmp_path):
             "versao",
             "R-MECANISMO-HOSPEDADO",
             "versão 1.6.1 difere da fixada (1.7.0)",
+        )
+    ]
+
+
+def test_hospedados_pega_commit_diferente_de_componentes(tmp_path):
+    outro = "a" * 40
+    montar(tmp_path, commit=outro)
+    assert rodar(tmp_path) == [
+        Erro(
+            PROCEDENCIA,
+            "commit",
+            "R-MECANISMO-HOSPEDADO",
+            f"commit {outro} difere do fixado ({COMMIT})",
         )
     ]
 

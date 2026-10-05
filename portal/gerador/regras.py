@@ -935,9 +935,9 @@ def regra_mecanismos_hospedados(
     """Os scripts de `mecanismos/` batem com o registro e com `componentes.yml`, e todo
     mecanismo externo de prática aponta para um arquivo hospedado.
 
-    Reprova quando o SHA-256 do arquivo difere do `PROCEDENCIA.md`, quando a versão registrada
-    difere da fixada em `componentes.yml` e quando `<componente>:<caminho>@<versao>` não tem
-    o caminho entre os arquivos de origem hospedados."""
+    Reprova quando o SHA-256 do arquivo difere do `PROCEDENCIA.md`, quando a versão ou o commit
+    registrados diferem dos fixados em `componentes.yml` e quando `<componente>:<caminho>@<versao>`
+    não tem o caminho entre os arquivos de origem hospedados."""
     erros: list[Erro] = []
     hospedados = carregar_mecanismos(contexto.raiz)
     vistos: set[str] = set()
@@ -955,9 +955,13 @@ def regra_mecanismos_hospedados(
                         "fora de componentes.yml",
                     )
                 )
-            elif m.versao != componente.versao:
-                valor = f"versão {m.versao} difere da fixada ({componente.versao})"
-                erros.append(Erro(registro, "versao", codigos.R_MECANISMO_HOSPEDADO, valor))
+            else:
+                if m.versao != componente.versao:
+                    valor = f"versão {m.versao} difere da fixada ({componente.versao})"
+                    erros.append(Erro(registro, "versao", codigos.R_MECANISMO_HOSPEDADO, valor))
+                if m.commit != componente.commit:
+                    valor = f"commit {m.commit} difere do fixado ({componente.commit})"
+                    erros.append(Erro(registro, "commit", codigos.R_MECANISMO_HOSPEDADO, valor))
         real = hashlib.sha256(m.conteudo).hexdigest()
         if real != m.sha256:
             valor = f"sha256 do arquivo é {real}, o registro diz {m.sha256}"
