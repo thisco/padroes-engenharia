@@ -130,6 +130,13 @@ execucoes:
     bruta do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.bruta.jsonl. Conferência independente
     em 2026-10-05; o caso sem remoto e a cópia do verificar_pr.py não foram exercitados nesta execução.'
   data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-05-cpf-editado-2, que edita a V2)'
+  ambiente: 'gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1; Python 3.14.8, git 2.50.1; projeto de teste gerado pelo sdd-scaffold 1.7.0 (tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0) com a skill sdd-lifecycle 3.0.0, remoto bare local; os dois scripts de mecanismo foram baixados do portal servido em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e o sha256 conferido com shasum -a 256 -c contra o index.json (verificar_pr.py 1397e8b1ee5b..., verificar_constituicao.py 8a3eeedf0edd...: OK)'
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. normas-do-pr finished in 953 ms FAIL 1; saida=1. Saída bruta em curadoria-a5/saidas/c17-t12-dad01.txt.'
+  data: 2026-10-05
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

@@ -109,7 +109,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 - [x] **T11 (R6).** Starter: `criar_projeto.py` da tag `v1.7.0` gera `$TESTE/projeto-teste-17`.
   Confira a skill v3.0.0 (o `PROCEDENCIA` da skill), `readlink` dos 4 pontos de montagem e o
   `verificar_constituicao.py`. O registro vai em `verificacoes/starter-sdd-scaffold.yaml`.
-- [ ] **T12 (R6).** Rode os jobs `gitlab-ci-local` da receita, com a prova da V2 editada, a branch
+- [x] **T12 (R6).** Rode os jobs `gitlab-ci-local` da receita, com a prova da V2 editada, a branch
   verde, a constituição adulterada e o segredo, mais o job da DAD-01 com os scripts baixados do
   portal servido (`python -m http.server` sobre `public/`). Os registros vão em `verificacoes/`.
 - [ ] **T13 (R6).** O prompt da receita roda em sessão nova, com o portal servido. Transcrição
@@ -215,6 +215,40 @@ $ grep -n '@AGENTS' CLAUDE.md
 $ python3 scripts/verificar_constituicao.py --raiz .
 Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
 saida=0
+```
+
+T12, jobs `gitlab-ci-local` 4.76.0 (Docker 29.5.2) em `$TESTE/ci17`, com os scripts baixados do
+portal servido (`http://127.0.0.1:8000`) e conferidos contra o `index.json`:
+
+```text
+$ shasum -a 256 -c  (hashes do index.json)
+scripts/verificar_pr.py: OK
+scripts/verificar_constituicao.py: OK
+$ gitlab-ci-local --list (MR)
+normas-do-pr               travas  on_success  false
+governanca                 travas  on_success  false
+segredos                   travas  on_success  false
+--- branch fix/2026-10-05-cpf-editado (V2 editada), normas-do-pr, saida=1
+normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
+normas-do-pr > AVISO: a mudança altera schema e nenhum plano do PR declara a estratégia de rollback. Declare antes de executar: downgrade testado, redeploy da imagem anterior ou restore de backup.
+normas-do-pr finished in 1.12 s  FAIL 1
+--- branch feat/2026-10-05-amplia-cpf (V3), saida=0 nos três
+normas-do-pr > Verificação de PR: 2 arquivo(s), nenhum achado.
+governanca > AGENTS.md com 5421 bytes (limite 30000)
+governanca > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
+segredos > 4 commits scanned.
+segredos > no leaks found
+--- branch teste/constituicao-adulterada, governanca, saida=1
+governanca > DIVERGÊNCIA: o bloco inline no AGENTS.md não corresponde a padrao-v1.0.
+--- branch teste/segredo, segredos, saida=1
+segredos > Finding:     GITHUB_TOKEN=REDACTED
+segredos > RuleID:      github-pat
+segredos > WRN leaks found: 1
+--- DAD-01: exemplos/DAD-01/gitlab-ci.yml em $TESTE/dad01-ci17, branch fix/2026-10-05-cpf-editado-2, saida=1
+normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
+normas-do-pr finished in 953 ms  FAIL 1
+$ $V/python scripts/validar.py
+validação ok: nenhum erro.
 ```
 
 ## Revisão adversarial: <data> — achados

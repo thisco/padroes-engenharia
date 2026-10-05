@@ -141,6 +141,20 @@ execucoes:
     agente em curadoria-a5/transcricoes/receita-ligar-ci-gitlab-travas-prompt-1.txt; uma rodada anterior,
     com a versão do prompt sem os casos de AGENTS.md e PyYAML ausentes, teve o mesmo resultado.'
   data: '2026-10-04'
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local --list --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main; depois os jobs normas-do-pr, governanca e segredos com --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main na branch feat/2026-10-05-amplia-cpf, que só soma uma migration nova V3 e um plano com Rollback'
+  ambiente: 'gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1; Python 3.14.8, git 2.50.1; projeto de teste gerado pelo sdd-scaffold 1.7.0 (tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0) com a skill sdd-lifecycle 3.0.0, remoto bare local; os dois scripts de mecanismo foram baixados do portal servido em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e o sha256 conferido com shasum -a 256 -c contra o index.json (verificar_pr.py 1397e8b1ee5b..., verificar_constituicao.py 8a3eeedf0edd...: OK)'
+  resultado: passou
+  evidencia: '--list: normas-do-pr, governanca e segredos no stage travas. normas-do-pr: "Verificação de PR: 2 arquivo(s), nenhum achado." e saida=0. governanca: "AGENTS.md com 5421 bytes (limite 30000)", "Constituição padrao-v1.0: bloco inline confere com o arquivo canônico." e saida=0. segredos: "4 commits scanned." e "no leaks found", saida=0. Saídas brutas em curadoria-a5/saidas/c17-t12-verde-<job>.txt.'
+  data: 2026-10-05
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local <job> --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (normas-do-pr na branch fix/2026-10-05-cpf-editado, que edita a V2; governanca na branch teste/constituicao-adulterada; segredos na branch teste/segredo)'
+  ambiente: 'gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagens python:3.11 e ghcr.io/gitleaks/gitleaks:v8.30.1; Python 3.14.8, git 2.50.1; projeto de teste gerado pelo sdd-scaffold 1.7.0 (tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0) com a skill sdd-lifecycle 3.0.0, remoto bare local; os dois scripts de mecanismo foram baixados do portal servido em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e o sha256 conferido com shasum -a 256 -c contra o index.json (verificar_pr.py 1397e8b1ee5b..., verificar_constituicao.py 8a3eeedf0edd...: OK); o token de teste foi gerado aleatoriamente e só existe na pasta de teste'
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr (V2 editada): "BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental." mais o AVISO de rollback, FAIL 1, saida=1. governanca (constituição adulterada): "DIVERGÊNCIA: o bloco inline no AGENTS.md não corresponde a padrao-v1.0.", FAIL 1, saida=1. segredos (segredo plantado): "RuleID:      github-pat", "Finding:     GITHUB_TOKEN=REDACTED", "WRN leaks found: 1", FAIL 1, saida=1.'
+  data: 2026-10-05
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'
