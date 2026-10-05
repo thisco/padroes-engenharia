@@ -5,6 +5,36 @@ Todas as mudanças relevantes deste repositório são registradas aqui. O format
 [Versionamento Semântico](https://semver.org/lang/pt-BR/): major para mudança de schema ou ID
 retirado, minor para conteúdo novo, patch para texto e links.
 
+## [0.3.0] - 2026-10-05
+
+Integração dos componentes `sdd-scaffold` 1.7.0 e `sdd-lifecycle` 3.0.0. Minor na série 0: há
+saída nova (`.well-known/mecanismos/`) e conteúdo novo, sem mudança de schema nem ID retirado.
+
+### Adicionado
+
+- Mecanismos hospedados: `mecanismos/sdd-scaffold/` traz `verificar_pr.py` e
+  `verificar_constituicao.py` como cópia da tag `v1.7.0`, com `PROCEDENCIA.md` e sha256. O portal
+  publica os arquivos e o `index.json` em `.well-known/mecanismos/`, e a regra de validação
+  reprova hash divergente, versão diferente de `componentes.yml` e `mecanismo:` que aponta para
+  arquivo não hospedado.
+- ADR 0003 (formato de spec delta arquivado) e ADR 0004 (revoga a D3: executáveis evoluem com o
+  portal).
+- Execuções registradas na 1.7.0: starter `sdd-scaffold`, jobs `gitlab-ci-local` da receita e da
+  DAD-01, fluxo da DAD-01 até a trava, prompt da receita do CI e prompt da `sdd-lifecycle`, com a
+  transcrição bruta.
+
+### Alterado
+
+- Componentes `sdd-scaffold` 1.7.0 e `sdd-lifecycle` 3.0.0 em `componentes.yml`; skill
+  `sdd-lifecycle` 3.0.0 e procedências atualizadas.
+- Referências do scaffold e da skill refixadas nos commits novos e reconferidas na tag.
+- Textos sobre `.agents/skills` e `@AGENTS.md` no starter, nas ferramentas `codex`,
+  `antigravity`, `claude-code`, `sdd-scaffold` e `sdd-lifecycle`, na P1-01 e no conceito `skill`.
+- Download dos scripts pelo portal, com conferência de sha256 (`shasum -a 256 -c` no macOS), na
+  DAD-01 e na receita do CI.
+- A ferramenta `sdd-lifecycle` passa a `adotar`, com a execução do prompt registrada.
+- `mecanismos/` entra como caminho de risco alto em `niveis-de-risco.yml` e no `CODEOWNERS`.
+
 ## [Não publicado]
 
 Destino: 0.2.0 (major na série 0, porque muda schema e `catalogo.json`; ADR 0001). A parte 2 da
