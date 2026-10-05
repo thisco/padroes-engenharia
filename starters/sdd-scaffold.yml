@@ -7,7 +7,7 @@ descricao: >-
   o projeto é de GitHub Actions (.github/workflows/qualidade.yml) [ref:sdd-scaffold-readme].
   No GitLab, a receita "Ligar o CI do GitLab com as travas" traz as três travas do CI do scaffold: normas do PR, governança e segredos.
 repo: https://github.com/thisco/sdd-scaffold
-versao: "1.6.1"
+versao: "1.7.0"
 comando: |
   # Requer Python 3.11+, git com user.name e user.email configurados e rede (o gerador
   # clona a skill sdd-lifecycle). O destino não pode ter uma pasta com o nome do projeto.

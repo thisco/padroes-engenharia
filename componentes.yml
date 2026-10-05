@@ -4,9 +4,9 @@
 componentes:
   sdd-scaffold:
     repo: https://github.com/thisco/sdd-scaffold
-    versao: "1.6.1"
-    commit: a8ebdf3c6734f11f6763c182b2325fe227216b65
+    versao: "1.7.0"
+    commit: 06a382b938af66230ce6299c1638b0ad055804f0
   sdd-lifecycle:
     repo: https://github.com/thisco/sdd-lifecycle
-    versao: "2.0.0"
-    commit: 1726652171f249bdaf86d7dcb6da23a1b7ae990b
+    versao: "3.0.0"
+    commit: 5f6e9ad879f7abd11267547fb3f527e876b60140

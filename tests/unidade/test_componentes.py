@@ -8,11 +8,11 @@ from portal.gerador.regras import validar_tudo
 
 def test_componentes_reais_sao_validos(repo_minimo):
     assert validar_componentes(repo_minimo) == []
-    assert carregar_componentes(repo_minimo)["sdd-scaffold"].versao == "1.6.1"
+    assert carregar_componentes(repo_minimo)["sdd-scaffold"].versao == "1.7.0"
 
 
 def test_componente_sem_versao_vira_erro_e_nao_excecao(repo_minimo, mutar):
-    mutar("componentes.yml", '    versao: "1.6.1"\n', "")
+    mutar("componentes.yml", '    versao: "1.7.0"\n', "")
     erros = validar_tudo(repo_minimo)
     assert (
         Erro(
@@ -27,6 +27,6 @@ def test_componente_sem_versao_vira_erro_e_nao_excecao(repo_minimo, mutar):
 
 
 def test_versao_com_prefixo_v_no_componentes_reprova(repo_minimo, mutar):
-    mutar("componentes.yml", 'versao: "1.6.1"', 'versao: "v1.6.1"')
+    mutar("componentes.yml", 'versao: "1.7.0"', 'versao: "v1.7.0"')
     (erro,) = validar_componentes(repo_minimo)
     assert (erro.campo, erro.regra) == ("componentes.sdd-scaffold.versao", "R-ESQUEMA")

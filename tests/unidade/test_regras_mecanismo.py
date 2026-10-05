@@ -11,8 +11,8 @@ ARQUIVO = "praticas/construir-com-ia/P1-01.md"
 SCAFFOLD = Componente(
     "sdd-scaffold",
     "https://github.com/thisco/sdd-scaffold",
-    "1.6.1",
-    "a8ebdf3c6734f11f6763c182b2325fe227216b65",
+    "1.7.0",
+    "06a382b938af66230ce6299c1638b0ad055804f0",
 )
 
 
@@ -39,7 +39,7 @@ def test_mecanismo_inocente_caminho_interno_existente(tmp_path):
 
 
 def test_mecanismo_inocente_componente_na_versao_fixada(tmp_path):
-    p = com_mecanismo("sdd-scaffold:template/scripts/verificar_pr.py@1.6.1")
+    p = com_mecanismo("sdd-scaffold:template/scripts/verificar_pr.py@1.7.0")
     assert rodar(regra_mecanismo, [p], tmp_path) == []
 
 
@@ -59,7 +59,7 @@ def test_mecanismo_pega_forca_acima_de_orienta_sem_mecanismo(tmp_path, forca):
         ("sdd-outro:x.py@1.0.0", "componente fora de componentes.yml"),
         (
             "sdd-scaffold:template/scripts/verificar_pr.py@1.6.0",
-            "versão diferente da fixada (1.6.1)",
+            "versão diferente da fixada (1.7.0)",
         ),
     ],
 )
@@ -142,7 +142,7 @@ def test_evitar_pega_corpo_sem_substituta_existente(tmp_path):
 
 
 def test_mecanismo_aceita_prefixo_v_na_versao(tmp_path):
-    p = com_mecanismo("sdd-scaffold:template/scripts/verificar_pr.py@v1.6.1")
+    p = com_mecanismo("sdd-scaffold:template/scripts/verificar_pr.py@v1.7.0")
     assert rodar(regra_mecanismo, [p], tmp_path) == []
 
 

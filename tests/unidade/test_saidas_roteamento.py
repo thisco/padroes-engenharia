@@ -12,7 +12,7 @@ DAD = fabrica.pratica(
         dominio="dados-migrations",
         momento="antes-do-merge",
         forca="bloqueia",
-        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.6.1",
+        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.7.0",
         aplica=["skill:migrations-reversiveis"],
     )
 )

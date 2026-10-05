@@ -13,8 +13,8 @@ HOJE = datetime.date(2026, 10, 1)
 SCAFFOLD = Componente(
     "sdd-scaffold",
     "https://github.com/thisco/sdd-scaffold",
-    "1.6.1",
-    "a8ebdf3c6734f11f6763c182b2325fe227216b65",
+    "1.7.0",
+    "06a382b938af66230ce6299c1638b0ad055804f0",
 )
 RAW = "https://raw.githubusercontent.com/thisco/sdd-scaffold"
 
@@ -109,7 +109,7 @@ def test_experimentar_so_com_referencias_s():
 
 
 def test_mecanismo_externo_conferido_no_commit_fixado():
-    mecanismo = "sdd-scaffold:template/scripts/verificar_pr.py@1.6.1"
+    mecanismo = "sdd-scaffold:template/scripts/verificar_pr.py@1.7.0"
     p = fabrica.pratica(fabrica.meta_pratica(forca="bloqueia", mecanismo=mecanismo))
     repo = Repositorio.de([p])
     url = f"{RAW}/{SCAFFOLD.commit}/template/scripts/verificar_pr.py"
@@ -120,7 +120,7 @@ def test_mecanismo_externo_conferido_no_commit_fixado():
         cl.Aviso(
             "mecanismo",
             "praticas/construir-com-ia/P1-01.md",
-            f"P1-01: {mecanismo}: caminho ausente no commit fixado a8ebdf3c6734",
+            f"P1-01: {mecanismo}: caminho ausente no commit fixado 06a382b938af",
         )
     ]
 
@@ -135,8 +135,8 @@ def test_mecanismo_interno_nao_e_conferido_aqui():
 @pytest.mark.parametrize(
     ("changelog", "esperado"),
     [
-        ("# Changelog\n\n## [1.6.1] - 2026-09-29\n", []),
-        ("## [Não publicado]\n\n## [1.7.0] - 2026-11-01\n## [1.6.1]\n", ["1.7.0 publicada"]),
+        ("# Changelog\n\n## [1.7.0] - 2026-09-29\n", []),
+        ("## [Não publicado]\n\n## [1.8.0] - 2026-11-01\n## [1.7.0]\n", ["1.8.0 publicada"]),
         ("## [2.0.0]\n## [1.10.0]\n", ["2.0.0 publicada"]),
     ],
 )

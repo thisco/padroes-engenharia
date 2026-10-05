@@ -145,7 +145,7 @@ def repo_exemplo(repo_minimo: Path) -> Path:
         dominio="dados-migrations",
         momento="antes-do-merge",
         forca="bloqueia",
-        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.6.1",
+        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.7.0",
     )
     exemplo = (
         "## Exemplo\n\n### Antes e depois\n\n```sql\nALTER TABLE x ADD COLUMN y int;\n```\n\n"

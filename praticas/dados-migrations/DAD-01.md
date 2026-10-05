@@ -6,7 +6,7 @@ dominio: dados-migrations
 subdominio: null
 momento: antes-do-merge
 forca: bloqueia
-mecanismo: sdd-scaffold:template/scripts/verificar_pr.py@1.6.1
+mecanismo: sdd-scaffold:template/scripts/verificar_pr.py@1.7.0
 status: adotar
 aplica: [skill:migrations-reversiveis]
 ferramentas_aprovadas: [flyway, alembic, sdd-scaffold]

@@ -149,14 +149,14 @@ def test_componentes_do_repositorio_real():
         "sdd-lifecycle": Componente(
             "sdd-lifecycle",
             "https://github.com/thisco/sdd-lifecycle",
-            "2.0.0",
-            "1726652171f249bdaf86d7dcb6da23a1b7ae990b",
+            "3.0.0",
+            "5f6e9ad879f7abd11267547fb3f527e876b60140",
         ),
         "sdd-scaffold": Componente(
             "sdd-scaffold",
             "https://github.com/thisco/sdd-scaffold",
-            "1.6.1",
-            "a8ebdf3c6734f11f6763c182b2325fe227216b65",
+            "1.7.0",
+            "06a382b938af66230ce6299c1638b0ad055804f0",
         ),
     }
 

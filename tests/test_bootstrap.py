@@ -35,8 +35,8 @@ def test_config_do_portal():
 def test_componentes_fixados_com_versao_e_commit():
     dados = yaml.safe_load((RAIZ / "componentes.yml").read_text(encoding="utf-8"))
     componentes = dados["componentes"]
-    assert componentes["sdd-scaffold"]["versao"] == "1.6.1"
-    assert componentes["sdd-lifecycle"]["versao"] == "2.0.0"
+    assert componentes["sdd-scaffold"]["versao"] == "1.7.0"
+    assert componentes["sdd-lifecycle"]["versao"] == "3.0.0"
     for item in componentes.values():
         assert item["repo"].startswith("https://github.com/thisco/")
         assert re.fullmatch(r"[0-9a-f]{40}", item["commit"])

@@ -44,7 +44,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
 ### Lote 1: motor (TDD)
 
-- [ ] **T1 (R1).** `componentes.yml` passa para as versões e os commits da tabela. Os testes do
+- [x] **T1 (R1).** `componentes.yml` passa para as versões e os commits da tabela. Os testes do
   motor que fixam `1.6.1` ou `a8ebdf3` leem a versão do arquivo ou passam a esperar a nova. Isso
   vale para `tests/conftest.py`, `test_bootstrap.py`, `test_componentes.py`,
   `test_carregar.py`, `test_regras_mecanismo.py`, `test_regras_vinculos.py`,

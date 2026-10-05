@@ -502,7 +502,7 @@ RAIZES_DE_MECANISMO = ("scripts/", "portal/", ".gitlab-ci.yml")
 
 
 def normalizar_versao(versao: str) -> str:
-    """`v1.6.1` e `1.6.1` são a mesma versão (§6.6 do delta)."""
+    """`v1.7.0` e `1.7.0` são a mesma versão (§6.6 do delta)."""
     return versao[1:] if versao[:1] in ("v", "V") else versao
 
 
