@@ -233,3 +233,5 @@ WRN leaks found: 1
   `AGENTS.md` sem marcadores, tire só a linha do `verificar_constituicao.py`.
 - **A MR editou uma migration e passou.** A pasta provavelmente fica fora de `migration/`,
   `migrations/` e `alembic/` [ref:sdd-scaffold-verificar-pr].
+- **`sha256sum: command not found`.** No macOS o comando não existe: use `shasum -a 256 -c` no
+  lugar de `sha256sum -c`, com as mesmas linhas de hash.

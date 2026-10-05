@@ -78,7 +78,8 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
    ```
 
    O `sha256sum -c` imprime `scripts/verificar_pr.py: OK` e sai com 0; qualquer outra saída
-   quer dizer que o arquivo não é o fixado, e ele não deve ser usado. A alternativa é o GitHub
+   quer dizer que o arquivo não é o fixado, e ele não deve ser usado. No macOS, use
+   `shasum -a 256 -c` no lugar de `sha256sum -c`. A alternativa é o GitHub
    na tag, em
    [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts/verificar_pr.py),
    com a mesma conferência de hash.
