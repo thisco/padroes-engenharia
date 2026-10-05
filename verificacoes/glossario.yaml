@@ -90,13 +90,13 @@ afirmacoes:
 - texto: 'Constituição: Princípios que valem para todos os projetos da organização, inline no AGENTS.md
     e conferidos contra uma cópia canônica.'
   ref: sdd-scaffold-readme
-  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, quatro pontos de montagem'
     e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: 'Drift: Divergência entre o diagrama, a infraestrutura como código e o ambiente local, apontada
     pelo drift check do scaffold.'
   ref: sdd-scaffold-readme
-  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, quatro pontos de montagem'
     e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: 'Migration: Mudança versionada do esquema do banco, ou migração, aplicada uma vez e em ordem.'

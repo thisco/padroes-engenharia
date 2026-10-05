@@ -1,5 +1,6 @@
+# 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: ferramenta-codex
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Codex lê o AGENTS.md e para de acrescentar arquivos quando o conjunto chega a 32 KiB (project_doc_max_bytes,
@@ -16,9 +17,9 @@ afirmacoes:
   ref: codex-skills
   localizacao: seção de localização das skills de repositório
   resultado: confirmada
-- texto: o scaffold monta .codex/skills; o README diz que o corte dos 32 KiB é silencioso
+- texto: o scaffold monta .codex/skills e .agents/skills; o README diz que o corte dos 32 KiB é silencioso
   ref: sdd-scaffold-readme
-  localizacao: README, 'Um corpo de skill, três pontos de montagem' e 'O que impede e o que orienta'
+  localizacao: README, 'Um corpo de skill, quatro pontos de montagem' e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
   ref: sdd-scaffold-readme

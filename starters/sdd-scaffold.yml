@@ -10,38 +10,64 @@ repo: https://github.com/thisco/sdd-scaffold
 versao: "1.7.0"
 comando: |
   # Requer Python 3.11+, git com user.name e user.email configurados e rede (o gerador
-  # clona a skill sdd-lifecycle). O destino não pode ter uma pasta com o nome do projeto.
-  git clone https://github.com/thisco/sdd-scaffold.git
-  git -C sdd-scaffold checkout a8ebdf3c6734f11f6763c182b2325fe227216b65
+  # clona a skill sdd-lifecycle, na tag v3.0.0). O destino não pode ter uma pasta com o nome do projeto.
+  git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git
+  git -C sdd-scaffold rev-parse HEAD   # deve imprimir 06a382b938af66230ce6299c1638b0ad055804f0
   python3 sdd-scaffold/criar_projeto.py --nome meu-projeto --destino ~/workspace \
     --stack "Python 3.11" --descricao "Descrição do projeto"
 prompt_para_agente: |
-  Crie um projeto novo a partir do sdd-scaffold e confira o resultado. Siga estes passos, um de cada
-  vez. O clone do passo 2 é permitido; antes do passo 3, peça minha confirmação.
-  1. Pergunte o nome do projeto, a pasta de destino, a stack e a descrição de uma frase. Não invente
-     nenhum dos quatro. A pasta `<destino>/<nome>` não pode existir.
-  2. Clone https://github.com/thisco/sdd-scaffold.git numa pasta temporária e faça o checkout do
-     commit a8ebdf3c6734f11f6763c182b2325fe227216b65 (versão 1.6.1 do scaffold).
-  3. Rode `python3 criar_projeto.py --nome <nome> --destino <destino> --stack "<stack>" --descricao "<descrição>"`
-     a partir da pasta clonada. Exige Python 3.11 ou superior, git com user.name e user.email e rede.
-  4. Confira que `.claude/skills`, `.codex/skills` e `.kiro/skills` são links para a pasta `skills/` e que
-     `skills/sdd-lifecycle/SKILL.md` existe. Sem rede o gerador cria o projeto sem essa skill; diga isso
-     se acontecer. A skill vem do HEAD do repositório dela no momento da geração.
-  5. Rode `python3 scripts/verificar_constituicao.py --raiz .` dentro de `<destino>/<nome>` e mostre a saída.
-  6. Liste os arquivos que ainda têm o marcador `<!-- preencher -->`, sem preenchê-los.
-  Ao final, mostre o que foi criado e o que ficou pendente, e não faça commit de nada além do que o
-  gerador já fez.
+  Quero instanciar o sdd-scaffold neste ambiente e deixar o projeto pronto para trabalhar. Siga
+  esta ordem e pare para eu confirmar antes de qualquer passo destrutivo.
+
+  1. Pergunte o nome do projeto, a stack (ex.: "Python 3.12 + FastAPI") e uma descrição de uma
+     linha. Se eu não souber a stack ou a descrição, siga com os defaults e deixe os marcadores
+     <!-- preencher --> para depois.
+
+  2. Clone o scaffold num diretório temporário e rode o gerador a partir dele (nada global):
+       git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git /tmp/sdd-scaffold
+       python3 /tmp/sdd-scaffold/criar_projeto.py --nome <nome> --destino . \
+         --stack "<stack>" --descricao "<descricao>"
+     O gerador copia o template, substitui os placeholders, instala a skill sdd-lifecycle em
+     skills/sdd-lifecycle/ a partir da tag fixada no repositório dela, roda git init e faz o
+     primeiro commit.
+
+  3. Entre na pasta <nome> criada e confirme a instalação:
+     - skills/sdd-lifecycle/SKILL.md existe. Se em vez disso houver skills/SKILL-CICLO-AUSENTE.md,
+       a origem estava inacessível: me avise e siga sem a skill do ciclo.
+     - .claude/skills, .codex/skills, .kiro/skills e .agents/skills apontam para skills/ (cada
+       harness enxerga as skills por um desses pontos de montagem; .agents/skills serve ao Codex e
+       ao Antigravity).
+     - AGENTS.md tem nome, stack e descrição já substituídos (é a constituição, lida a cada turno).
+
+  4. Leia AGENTS.md por completo e a skill sdd-lifecycle. A partir daqui, respeite a governança do
+     projeto: não edite a constituição (docs/constituicao/), as ADRs nem Arquitetura/mapa.yml por
+     conta própria. O hook de .claude/settings.json (Claude Code) e, se o harness for o Kiro,
+     o .kiro/permissions.yaml pedem confirmação ou negam esses caminhos.
+
+  5. Conduza a configuração pós-geração comigo: percorra os marcadores <!-- preencher --> e me
+     pergunte o que faltar para completá-los em docs/steering/ (comandos de teste e lint, mecanismo
+     de auth, escopos de commit, ordem de rebuild) e também em pyproject.toml, tests/README.md e
+     docs/prd/MODELO-prd.md (e em .kiro/permissions.yaml, se o harness for o Kiro).
+
+  6. Valide o que der para validar sozinho e me mostre a saída:
+       python3 scripts/verificar_constituicao.py --raiz .
+       pip install pyyaml && python3 scripts/verificar_drift_arquitetura.py
+     No primeiro run, com "componentes: []" vazio, o drift check aponta o módulo de exemplo como
+     "não mapeado" — isso é esperado e não bloqueia.
+
+  7. Ao final, liste o que ainda depende de mim: desenhar Arquitetura/arquitetura.drawio, mapear
+     Arquitetura/mapa.yml e escrever o PRD antes da primeira spec de Tier 2.
 praticas_aplicadas: [P1-01, DAD-01]
 receitas: [ligar-ci-gitlab-travas]
 dono: nuarq
 status: adotar
-referencias: [sdd-scaffold-readme]
+referencias: [sdd-scaffold-readme, sdd-scaffold-changelog]
 planta:
   - grupo: Governança
     quando: "Todo turno de qualquer agente."
     arquivo: Constituição e ponteiros
     caminhos: [AGENTS.md, CLAUDE.md, GEMINI.md, docs/constituicao/padrao-v1.0.md]
-    nota: "CLAUDE.md e GEMINI.md são stubs de quatro linhas que apontam para o AGENTS.md [ref:sdd-scaffold-readme]."
+    nota: "O GEMINI.md é um ponteiro de quatro linhas para o AGENTS.md [ref:sdd-scaffold-readme]. O CLAUDE.md também aponta para ele e, desde a 1.7.0, o importa com @AGENTS.md [ref:sdd-scaffold-changelog]."
     mecanismos:
       - forca: orienta
         texto: "o AGENTS.md entra no contexto do agente e o orienta [ref:sdd-scaffold-readme]"
@@ -62,9 +88,9 @@ planta:
     nota: "O arquivo fixa git_attribution desligado, o que protege o princípio de não citar marca de IA; não protege caminho de escrita [ref:sdd-scaffold-readme]."
   - grupo: Ciclo e skills
     quando: "Antes de escrever, enquanto escreve e antes do merge."
-    arquivo: Skills montadas nas três ferramentas
+    arquivo: Skills montadas nas ferramentas
     caminhos: [skills/sdd-lifecycle/, skills/arquitetura-viva/, skills/threat-model/, skills/migrations-reversiveis/, skills/estados-de-interface/]
-    nota: ".claude/skills, .codex/skills e .kiro/skills são links para a mesma pasta skills/ [ref:sdd-scaffold-readme]."
+    nota: ".claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para a mesma pasta skills/; o .agents/skills serve ao Codex e ao Antigravity [ref:sdd-scaffold-readme] [ref:sdd-scaffold-changelog]."
     mecanismos:
       - forca: orienta
         texto: "a skill entra no contexto como procedimento que o agente segue [ref:sdd-scaffold-readme]"

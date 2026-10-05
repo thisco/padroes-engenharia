@@ -1,5 +1,6 @@
+# 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: ferramenta-claude-code
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a partir da 2.1.277 o Claude Code lê o AGENTS.md direto, e só quando não há CLAUDE.md; com os
@@ -11,10 +12,9 @@ afirmacoes:
   ref: claude-code-skills
   localizacao: seção 'Choose where skills load', linha Project
   resultado: confirmada
-- texto: o CLAUDE.md do scaffold é um ponteiro de quatro linhas para o AGENTS.md; o link .claude/skills
-    aponta para skills/
+- texto: o link .claude/skills do scaffold aponta para skills/
   ref: sdd-scaffold-readme
-  localizacao: README, 'Por que os ponteiros são de quatro linhas' e 'Um corpo de skill, três pontos de
+  localizacao: README, 'Por que os ponteiros são de quatro linhas' e 'Um corpo de skill, quatro pontos de
     montagem'
   resultado: confirmada
 - texto: um CLAUDE.md que só manda ler o AGENTS.md faz o Claude ver o AGENTS.md apenas se decidir abri-lo;
@@ -26,11 +26,16 @@ afirmacoes:
   ref: claude-code-memory
   localizacao: seção 'CLAUDE.md vs auto memory'
   resultado: confirmada
-- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo, exceto a do ponteiro de quatro linhas do CLAUDE.md, tratada na T7'
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
   resultado: confirmada
   nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
+- texto: o CLAUDE.md do template importa a constituição com a linha @AGENTS.md desde a 1.7.0
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
+  resultado: confirmada
+  nota: 'Conferido também no arquivo: template/CLAUDE.md na tag v1.7.0 termina com @AGENTS.md. O README da mesma tag ainda chama os ponteiros de quatro linhas; vale o arquivo e o CHANGELOG.'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

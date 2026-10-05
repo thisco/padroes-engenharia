@@ -2,14 +2,14 @@ id: sdd-lifecycle
 titulo: sdd-lifecycle
 categoria: sdd
 status: experimentar
-versao_minima: "2.0.0"
+versao_minima: "3.0.0"
 dono: nuarq
 praticas: [P1-01]
 receitas: []
 como_instalar: |
   No projeto gerado pelo starter `sdd-scaffold`, a skill já vem em `skills/sdd-lifecycle/`
   [ref:sdd-scaffold-readme]. Fora dele, copie o `SKILL.md` do commit
-  1726652171f249bdaf86d7dcb6da23a1b7ae990b (versão 2.0.0, a de componentes.yml) para a pasta de
+  5f6e9ad879f7abd11267547fb3f527e876b60140 (versão 3.0.0, a de componentes.yml) para a pasta de
   skills do harness: o caminho de cada um está na página da ferramenta dele (Claude Code, Codex,
   Kiro, Antigravity ou Copilot).
 limites: |

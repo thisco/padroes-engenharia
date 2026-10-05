@@ -15,7 +15,7 @@ afirmacoes:
   resultado: confirmada
 - texto: O scaffold instala um hook que protege a governança.
   ref: sdd-scaffold-readme
-  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, quatro pontos de montagem'
     e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'

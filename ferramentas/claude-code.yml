@@ -14,10 +14,10 @@ como_instalar: |
   projeto ficam em `.claude/skills/<nome>/SKILL.md` [ref:claude-code-skills]. No projeto gerado pelo
   starter `sdd-scaffold` o link `.claude/skills` já aponta para `skills/` [ref:sdd-scaffold-readme].
 limites: |
-  O `CLAUDE.md` do scaffold é um ponteiro de quatro linhas para o `AGENTS.md`, escrito em texto e sem
-  `@AGENTS.md` [ref:sdd-scaffold-readme]; até o scaffold passar a importá-lo, acrescente a linha
-  `@AGENTS.md` ao `CLAUDE.md` do projeto [ref:claude-code-memory]. Um `CLAUDE.md` que só manda ler o `AGENTS.md` faz o Claude Code
+  O `CLAUDE.md` do scaffold importa o `AGENTS.md` com a linha `@AGENTS.md` desde a 1.7.0
+  [ref:sdd-scaffold-changelog]; num projeto de uma versão anterior do scaffold ou fora dele, acrescente
+  essa linha ao `CLAUDE.md` [ref:claude-code-memory]. Um `CLAUDE.md` que só manda ler o `AGENTS.md` faz o Claude Code
   ver o `AGENTS.md` apenas se decidir abrir o arquivo; a documentação recomenda o import `@AGENTS.md`
   [ref:claude-code-memory]. Para o Claude Code, `CLAUDE.md` é contexto, não configuração imposta; para
   bloquear uma ação, use um hook `PreToolUse` [ref:claude-code-memory].
-referencias: [claude-code-memory, claude-code-skills, sdd-scaffold-readme]
+referencias: [claude-code-memory, claude-code-skills, sdd-scaffold-readme, sdd-scaffold-changelog]

@@ -10,10 +10,11 @@ como_instalar: |
   Instale o Antigravity pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: o Antigravity lê `AGENTS.md` e `GEMINI.md`, e arquivos de `.agents/rules/`
   [ref:antigravity-rules]. Skills de workspace ficam em `.agents/skills/<pasta>/` [ref:antigravity-skills].
-  O scaffold monta só `.claude/skills`, `.codex/skills` e `.kiro/skills` [ref:sdd-scaffold-readme]
-  e ainda não monta `.agents/skills`: até isso mudar, no projeto gerado pelo starter `sdd-scaffold`,
-  aponte `.agents/skills` para `skills/` com `mkdir -p .agents && ln -s ../skills .agents/skills`
-  (o link não foi testado no Antigravity).
+  O scaffold monta `.agents/skills` como link para `skills/`, ao lado de `.claude/skills`,
+  `.codex/skills` e `.kiro/skills` [ref:sdd-scaffold-readme], então o projeto gerado pelo starter
+  `sdd-scaffold` já tem o caminho que o Antigravity documenta. Fora do scaffold, crie o link com
+  `mkdir -p .agents && ln -s ../skills .agents/skills` (o Antigravity não foi testado nesta
+  curadoria, nem com o link).
 limites: |
   `AGENTS.md` e `GEMINI.md` não usam frontmatter; todo `.md` dentro de `.agents/rules/` precisa de
   frontmatter com `trigger` igual a `model_decision`, `always_on`, `glob` ou `manual`, e sem ele a regra

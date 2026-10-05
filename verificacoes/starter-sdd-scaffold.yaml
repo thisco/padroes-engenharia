@@ -1,18 +1,19 @@
+# 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: starter-sdd-scaffold
-verificado_em: 2026-10-04
+verificado_em: '2026-10-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o projeto gerado traz AGENTS.md com a constituição, modelos de PRD, spec, plano e ADR, steering
     em docs/steering/, quatro skills de domínio, a sdd-lifecycle instalada na geração e verificadores
     em scripts/
   ref: sdd-scaffold-readme
-  localizacao: README, 'O que você recebe' e 'Um corpo de skill, três pontos de montagem'
+  localizacao: README, 'O que você recebe' e 'Um corpo de skill, quatro pontos de montagem'
   resultado: confirmada
 - texto: o CI pronto que acompanha o projeto é de GitHub Actions (.github/workflows/qualidade.yml)
   ref: sdd-scaffold-readme
   localizacao: README, 'O que você recebe' (última linha da árvore)
   resultado: confirmada
-- texto: CLAUDE.md e GEMINI.md são stubs de quatro linhas que apontam para o AGENTS.md
+- texto: o GEMINI.md é um ponteiro de quatro linhas para o AGENTS.md
   ref: sdd-scaffold-readme
   localizacao: README, 'Por que os ponteiros são de quatro linhas'
   resultado: confirmada
@@ -29,9 +30,10 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README, 'O que impede e o que orienta' (tabela de controles)
   resultado: confirmada
-- texto: .claude/skills, .codex/skills e .kiro/skills são links para a mesma pasta skills/
+- texto: .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para a mesma pasta skills/;
+    o .agents/skills serve ao Codex e ao Antigravity
   ref: sdd-scaffold-readme
-  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  localizacao: README, 'Um corpo de skill, quatro pontos de montagem'
   resultado: confirmada
 - texto: editar uma migration já aplicada reprova; spec sem threat-model, plano sem rollback e plano sem
     evidência de teste só avisam
@@ -42,11 +44,30 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README, 'Pós-geração', item 'Rodar o drift check'
   resultado: confirmada
-- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo, exceto as do ponteiro de quatro linhas do CLAUDE.md e dos pontos de montagem, tratadas na T7'
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
   resultado: confirmada
   nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
+- texto: o CLAUDE.md do template importa a constituição com a linha @AGENTS.md desde a 1.7.0
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
+  resultado: confirmada
+  nota: 'Conferido também no arquivo: template/CLAUDE.md na tag v1.7.0 termina com @AGENTS.md. O README da mesma tag ainda chama os ponteiros de quatro linhas; vale o arquivo e o CHANGELOG.'
+- texto: o scaffold monta .agents/skills como link para skills/, lido pelo Codex e pelo Antigravity
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Adicionado'
+  resultado: confirmada
+  nota: 'template/.agents/skills é um link simbólico para ../skills na tag v1.7.0 (git ls-tree: modo 120000).'
+- texto: o prompt_para_agente é o prompt da seção 'Instalar pelo próprio agente' do README da 1.7.0, que clona a tag v1.7.0
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Instalar pelo próprio agente'
+  resultado: confirmada
+  nota: 'Copiado sem alteração do bloco de texto do README. O comando do starter usa a mesma tag e confere o commit com git rev-parse HEAD. Os dois seguem sem execução registrada: é o lote 3 (T11 e T13).'
+- texto: o gerador instala a sdd-lifecycle pela tag v3.0.0, fixada no gerador
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A skill do ciclo é instalada, não copiada'
+  resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente
   data: 2026-10-04

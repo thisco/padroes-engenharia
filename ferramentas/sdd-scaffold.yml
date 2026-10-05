@@ -2,7 +2,7 @@ id: sdd-scaffold
 titulo: SDD scaffold
 categoria: sdd
 status: adotar
-versao_minima: "1.6.1"
+versao_minima: "1.7.0"
 dono: nuarq
 praticas: [P1-01, DAD-01]
 receitas: [ligar-ci-gitlab-travas]
@@ -13,6 +13,6 @@ como_instalar: |
 limites: |
   Requer Python 3.11 ou superior [ref:sdd-scaffold-readme]. O CI pronto que acompanha o projeto
   gerado é de GitHub Actions [ref:sdd-scaffold-readme]. O gerador instala a skill do ciclo a partir
-  do repositório dela, na versão vigente no dia, e não no commit fixado do scaffold
-  [ref:sdd-scaffold-readme].
+  do repositório dela, pela tag `v3.0.0` fixada no gerador, e não pela `main` da skill; a opção
+  `--versao-ciclo` troca a tag [ref:sdd-scaffold-readme].
 referencias: [sdd-scaffold-readme]

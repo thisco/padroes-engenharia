@@ -88,7 +88,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   são `sdd-scaffold-readme`, `-modelo-plano`, `-verificar-pr`, `-qualidade`, `sdd-lifecycle`,
   `sdd-lifecycle-repo`, `estados-de-interface` e `migrations-reversiveis`. Uma afirmação que
   mudou muda no texto e no registro.
-- [ ] **T7 (R7).** `.agents/skills` montado e `CLAUDE.md` com `@AGENTS.md`. Os arquivos são:
+- [x] **T7 (R7).** `.agents/skills` montado e `CLAUDE.md` com `@AGENTS.md`. Os arquivos são:
   - `starters/sdd-scaffold.yml`, com a versão, o comando e o `prompt_para_agente`, que passa a
     vir do README da 1.7.0;
   - `ferramentas/sdd-scaffold.yml` e `ferramentas/sdd-lifecycle.yml`, com a `versao_minima`;

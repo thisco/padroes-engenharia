@@ -61,9 +61,9 @@ afirmacoes:
   ref: antigravity-skills
   localizacao: seção de local do workspace
   resultado: confirmada
-- texto: o CLAUDE.md do scaffold é um ponteiro sem import do AGENTS.md
-  ref: sdd-scaffold-readme
-  localizacao: README, 'Por que os ponteiros são de quatro linhas'
+- texto: o scaffold 1.7.0 monta .agents/skills e o CLAUDE.md dele importa o AGENTS.md com @AGENTS.md
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Adicionado' e 'Modificado'
   resultado: confirmada
 - texto: com AGENTS.md e CLAUDE.md o Claude Code lê só o CLAUDE.md; o AGENTS.md entra por @AGENTS.md
   ref: claude-code-memory
@@ -85,7 +85,7 @@ afirmacoes:
   nota: git show v1.7.0:template/scripts/<arquivo> | shasum -a 256 em 2026-10-05; iguais ao PROCEDENCIA
     de mecanismos/sdd-scaffold e ao index.json gerado. O verificar_constituicao.py não mudou entre
     a8ebdf3 e v1.7.0 (git diff vazio).
-- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo, exceto a do CLAUDE.md sem import, tratada na T7'
+- texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
   resultado: confirmada

@@ -14,7 +14,7 @@ afirmacoes:
   resultado: confirmada
 - texto: no projeto do scaffold .claude/skills é um link para skills/
   ref: sdd-scaffold-readme
-  localizacao: README, 'Um corpo de skill, três pontos de montagem'
+  localizacao: README, 'Um corpo de skill, quatro pontos de montagem'
   resultado: confirmada
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
   ref: sdd-scaffold-readme

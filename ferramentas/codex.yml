@@ -10,11 +10,12 @@ como_instalar: |
   Instale o Codex pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: o Codex lê o `AGENTS.md` [ref:codex-agents-md], formato aberto que vários
   agentes leem [ref:agents-md]. Skills de repositório ficam em `.agents/skills`, que o Codex varre da
-  pasta de trabalho até a raiz do repositório [ref:codex-skills]. A página não cita `.codex/skills`, a
-  pasta que o scaffold monta [ref:sdd-scaffold-readme]; ainda assim, no teste do portal com o Codex
-  0.160.0, só com `.codex/skills` o Codex listou as cinco skills do scaffold (ver o registro de
-  verificação). Para seguir o caminho documentado, aponte também `.agents/skills` para `skills/`:
-  `mkdir -p .agents && ln -s ../skills .agents/skills`.
+  pasta de trabalho até a raiz do repositório [ref:codex-skills]. O scaffold monta `.agents/skills`
+  como link para `skills/`, ao lado de `.codex/skills` [ref:sdd-scaffold-readme]; num projeto fora do
+  scaffold, crie o link: `mkdir -p .agents && ln -s ../skills .agents/skills`. A página do Codex não cita
+  `.codex/skills`; no teste do portal com o Codex 0.160.0, num projeto do scaffold 1.6.1, que ainda não
+  montava `.agents/skills`, só com `.codex/skills` o Codex listou as cinco skills do scaffold (ver o
+  registro de verificação).
 limites: |
   O Codex para de acrescentar arquivos de instruções quando o conjunto chega a 32 KiB
   (`project_doc_max_bytes`, padrão) [ref:codex-agents-md]. O README do scaffold diz que o corte é silencioso;

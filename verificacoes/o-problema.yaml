@@ -137,7 +137,7 @@ afirmacoes:
   resultado: confirmada
 - texto: Threat-model em cinco perguntas e o gitleaks no pipeline.
   ref: sdd-scaffold-readme
-  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, quatro pontos de montagem'
     e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: Threat-model em cinco perguntas e o gitleaks no pipeline.

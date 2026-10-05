@@ -1,5 +1,6 @@
+# 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: ferramenta-antigravity
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Antigravity lê AGENTS.md e GEMINI.md e arquivos de .agents/rules/
@@ -15,9 +16,9 @@ afirmacoes:
   ref: antigravity-skills
   localizacao: seção de local do workspace
   resultado: confirmada
-- texto: o scaffold monta só .claude/skills, .codex/skills e .kiro/skills; o Antigravity não lê ANTIGRAVITY.md
+- texto: o scaffold monta .claude/skills, .codex/skills, .kiro/skills e .agents/skills; o Antigravity não lê ANTIGRAVITY.md
   ref: sdd-scaffold-readme
-  localizacao: README, 'Um corpo de skill...' e 'Por que os ponteiros são de quatro linhas'
+  localizacao: README, 'Um corpo de skill, quatro pontos de montagem' e 'Por que os ponteiros são de quatro linhas'
   resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente

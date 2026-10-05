@@ -1,5 +1,6 @@
+# 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: skill
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: O SKILL.md exige frontmatter com nome e descrição, e a descrição diz o que a skill faz e quando
@@ -9,7 +10,7 @@ afirmacoes:
   resultado: confirmada
 - texto: No scaffold, as pastas de skills de cada ferramenta são links para a mesma pasta skills/.
   ref: sdd-scaffold-readme
-  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, três pontos de montagem'
+  localizacao: seções 'O que você recebe', 'Quick start', 'Um corpo de skill, quatro pontos de montagem'
     e 'O que impede e o que orienta'
   resultado: confirmada
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
@@ -17,6 +18,10 @@ afirmacoes:
   localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
   resultado: confirmada
   nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
+- texto: no scaffold 1.7.0 as pastas de skills das ferramentas são quatro links (.claude, .codex, .kiro e .agents) para a mesma pasta skills/
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem'
+  resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

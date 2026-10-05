@@ -12,7 +12,7 @@ afirmacoes:
     resultado: confirmada
   - texto: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
     ref: sdd-lifecycle-repo
-    localizacao: "árvore do commit 1726652: AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md, docs/"
+    localizacao: "árvore da tag v3.0.0: AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md, docs/"
     resultado: confirmada
   - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
     ref: sdd-scaffold-readme

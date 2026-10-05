@@ -10,11 +10,11 @@ afirmacoes:
     ref: sdd-scaffold-readme
     localizacao: "README, 'O que você recebe'"
     resultado: confirmada
-  - texto: "o gerador instala a skill do ciclo a partir do repositório dela, na versão vigente no dia"
+  - texto: "o gerador instala a skill do ciclo a partir do repositório dela, pela tag v3.0.0 fixada no gerador (a opção --versao-ciclo troca a tag)"
     ref: sdd-scaffold-readme
     localizacao: "README, 'A skill do ciclo é instalada, não copiada'"
     resultado: confirmada
-  - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo, exceto a da versão da skill do ciclo, tratada na T7'
+  - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
     ref: sdd-scaffold-readme
     localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
     resultado: confirmada
