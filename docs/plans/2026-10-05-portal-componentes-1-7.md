@@ -106,7 +106,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
 - [x] **T10 (R6).** Rode `docker system df` e cole a saída. Se o uso passar de 80% do disco
   reservado, pare e peça limpeza ao dono.
-- [ ] **T11 (R6).** Starter: `criar_projeto.py` da tag `v1.7.0` gera `$TESTE/projeto-teste-17`.
+- [x] **T11 (R6).** Starter: `criar_projeto.py` da tag `v1.7.0` gera `$TESTE/projeto-teste-17`.
   Confira a skill v3.0.0 (o `PROCEDENCIA` da skill), `readlink` dos 4 pontos de montagem e o
   `verificar_constituicao.py`. O registro vai em `verificacoes/starter-sdd-scaffold.yaml`.
 - [ ] **T12 (R6).** Rode os jobs `gitlab-ci-local` da receita, com a prova da V2 editada, a branch
@@ -187,6 +187,34 @@ Images          92        24        30.9GB    10.37GB (33%)
 Containers      31        14        4.473GB   4.389GB (98%)
 Local Volumes   26        10        15.34GB   3.204GB (20%)
 Build Cache     296       0         13.62GB   1.72GB
+```
+
+T11, starter na tag `v1.7.0`, com a sdd-lifecycle na origem padrão (GitHub, tag `v3.0.0`):
+
+```text
+$ git clone --branch v1.7.0 ~/Documents/Workspace/repos/sdd-scaffold $TESTE/sdd-scaffold-17
+$ git -C $TESTE/sdd-scaffold-17 rev-parse HEAD
+06a382b938af66230ce6299c1638b0ad055804f0
+$ python3 $TESTE/sdd-scaffold-17/criar_projeto.py --nome projeto-teste-17 --destino $TESTE --stack "Python 3.11" --descricao "Projeto de teste da curadoria 1.7"
+✔ Projeto criado em /Users/thiago/curadoria-a5/projeto-teste-17
+Próximos passos: revisar AGENTS.md, preencher docs/steering/, desenhar Arquitetura/arquitetura.drawio
+saida=0
+$ cat skills/sdd-lifecycle/PROCEDENCIA.md   (linhas-chave)
+- **Versão pedida:** `v3.0.0`
+- **Revisão instalada:** `5f6e9ad`
+$ shasum -a 256 skills/sdd-lifecycle/SKILL.md ; git show v3.0.0:SKILL.md | shasum -a 256
+393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358  skills/sdd-lifecycle/SKILL.md
+393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358  -
+$ readlink .claude/skills .codex/skills .kiro/skills .agents/skills
+.claude/skills -> ../skills
+.codex/skills -> ../skills
+.kiro/skills -> ../skills
+.agents/skills -> ../skills
+$ grep -n '@AGENTS' CLAUDE.md
+6:@AGENTS.md
+$ python3 scripts/verificar_constituicao.py --raiz .
+Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
+saida=0
 ```
 
 ## Revisão adversarial: <data> — achados

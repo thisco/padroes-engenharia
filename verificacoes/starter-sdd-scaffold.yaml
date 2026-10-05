@@ -121,3 +121,23 @@ execucoes:
     padrao-v1.0: bloco inline confere com o arquivo canônico." e PASS. O prompt_para_agente do starter
     não foi executado nesta curadoria (instrução manual no lote do dono).'
   data: '2026-10-04'
+- tipo: arquivo
+  arquivo: starters/sdd-scaffold.yml
+  comando: python3 sdd-scaffold-17/criar_projeto.py --nome projeto-teste-17 --destino <pasta> --stack "Python
+    3.11" --descricao "Projeto de teste da curadoria 1.7" (origem do ciclo padrão, o GitHub na tag v3.0.0);
+    depois cat skills/sdd-lifecycle/PROCEDENCIA.md; shasum -a 256 skills/sdd-lifecycle/SKILL.md; readlink
+    .claude/skills .codex/skills .kiro/skills .agents/skills; grep -n '@AGENTS' CLAUDE.md; e python3 scripts/verificar_constituicao.py
+    --raiz .
+  ambiente: sdd-scaffold 1.7.0 (clone local na tag v1.7.0, commit 06a382b938af66230ce6299c1638b0ad055804f0);
+    sdd-lifecycle 3.0.0 baixada do GitHub pela origem padrão do gerador; Python 3.14.8, git 2.50.1, Docker
+    29.5.2, gitlab-ci-local 4.76.0, macOS
+  resultado: passou
+  evidencia: 'saída do gerador: "✔ Projeto criado em /Users/thiago/curadoria-a5/projeto-teste-17", saida=0;
+    git log: "feat: estrutura inicial de projeto-teste-17 via sdd-scaffold"; PROCEDENCIA da skill: "Versão
+    pedida: `v3.0.0`" e "Revisão instalada: `5f6e9ad`"; sha256 de skills/sdd-lifecycle/SKILL.md igual ao
+    de `git show v3.0.0:SKILL.md` (393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358);
+    readlink: ".claude/skills -> ../skills", ".codex/skills -> ../skills", ".kiro/skills -> ../skills",
+    ".agents/skills -> ../skills"; CLAUDE.md linha 6: "@AGENTS.md"; verificar_constituicao.py: "Constituição
+    padrao-v1.0: bloco inline confere com o arquivo canônico." saida=0. O prompt_para_agente do starter
+    não foi executado nesta entrada.'
+  data: 2026-10-05
