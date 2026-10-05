@@ -16,8 +16,8 @@ exemplos: [exemplos/DAD-01/gitlab-ci.yml]
 referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
 dono: nuarq
-revisado_em: 2026-10-04
-revisar_ate: 2027-04-04
+revisado_em: 2026-10-05
+revisar_ate: 2027-04-05
 ---
 
 ## O que fazer
@@ -66,10 +66,22 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
    código e não traz plano em docs/plans/".
 5. Ponha a migration na mesma MR do código que depende dela [ref:fowler-evodb].
 6. Se o pipeline do projeto ainda não tem a trava, ligue-a pela receita "Ligar o CI do GitLab
-   com as travas", que baixa o `verificar_pr.py` do scaffold. O script também vem no projeto
-   gerado pelo [starter sdd-scaffold](../starters/sdd-scaffold.html); sem o starter, copie
-   `scripts/verificar_pr.py` da versão fixada do scaffold, em
-   [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py).
+   com as travas", que baixa o `verificar_pr.py` do portal. O script também vem no projeto
+   gerado pelo [starter sdd-scaffold](../starters/sdd-scaffold.html). Sem o starter, baixe-o do
+   portal e confira o hash, que é o campo `sha256` de `/.well-known/mecanismos/index.json` e o do
+   arquivo na tag `v1.7.0` (troque `{URL do portal}` pelo endereço do portal publicado):
+
+   ```bash
+   mkdir -p scripts
+   curl -fsSL "{URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py" -o scripts/verificar_pr.py
+   echo "1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488  scripts/verificar_pr.py" | sha256sum -c -
+   ```
+
+   O `sha256sum -c` imprime `scripts/verificar_pr.py: OK` e sai com 0; qualquer outra saída
+   quer dizer que o arquivo não é o fixado, e ele não deve ser usado. A alternativa é o GitHub
+   na tag, em
+   [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts/verificar_pr.py),
+   com a mesma conferência de hash.
 
 ## Exemplo
 
@@ -140,7 +152,7 @@ Nunca edite, renomeie nem apague uma migration que já existe em origin/main. Pa
 efeito dela, crie a próxima migration da sequência e declare o rollback no plano.
 ```
 
-Prompt para pedir a mudança de uma migration:
+Prompt para pedir a mudança de uma migration (troque `{mudança}` e `{URL do portal}`):
 
 ```prompt
 Preciso mudar o efeito de uma migration, seguindo a prática DAD-01 do portal de padrões de
@@ -158,9 +170,11 @@ engenharia: {mudança}.
    "> **Tier:** <n> — <motivo>", e com uma seção "## Rollback" que diga como voltar o schema.
 5. Faça um commit com a migration nova e o plano.
 6. Rode python3 scripts/verificar_pr.py --base origin/main e me mostre a saída. Ela não pode
-   ter linha BLOQUEIA. Se scripts/verificar_pr.py não existir, copie-o de
-   https://raw.githubusercontent.com/thisco/sdd-scaffold/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts/verificar_pr.py
-   sem alterar o conteúdo.
+   ter linha BLOQUEIA. Se scripts/verificar_pr.py não existir, baixe-o de
+   {URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sem alterar o conteúdo,
+   e confira com sha256sum -c que o hash dele é
+   1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488. Se o hash não bater, não
+   use o arquivo e me avise.
 ```
 
 ### Por ferramenta
@@ -198,6 +212,9 @@ GitLab), esta:
 ```text
 BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
 ```
+
+Se a base de comparação não existir no clone, o script imprime `ERRO: base <base> não encontrada`
+em vez de seguir como se nada tivesse mudado, e sai com 2 [ref:sdd-scaffold-verificar-pr].
 
 Para testar a trava, altere uma migration existente numa branch descartável e abra a MR: o
 `normas-do-pr` precisa falhar.

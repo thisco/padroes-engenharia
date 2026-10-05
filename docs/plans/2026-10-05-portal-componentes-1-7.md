@@ -77,7 +77,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
 ### Lote 2: conteúdo (curadoria)
 
-- [ ] **T5 (R4).** A DAD-01 passa a `mecanismo: …@1.7.0`. Os textos de download passam a ser:
+- [x] **T5 (R4).** A DAD-01 passa a `mecanismo: …@1.7.0`. Os textos de download passam a ser:
   - `{URL do portal}/.well-known/mecanismos/sdd-scaffold/<script>` com
     `sha256sum -c`, usando o hash do `index.json`;
   - o GitHub na tag como alternativa.

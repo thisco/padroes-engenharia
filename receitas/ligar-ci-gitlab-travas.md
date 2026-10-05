@@ -29,7 +29,7 @@ referencias:
   - antigravity-skills
   - claude-code-memory
 dono: nuarq
-revisado_em: 2026-10-04
+revisado_em: 2026-10-05
 ---
 
 ## Resultado
@@ -67,14 +67,30 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
 
 ## Passos
 
-1. Baixe os dois scripts da versão fixada do scaffold, sem alterá-los:
+1. Baixe os dois scripts do portal, que os hospeda na versão fixada do scaffold (1.7.0), sem
+   alterá-los, e confira o hash de cada um antes de usar. Troque `{URL do portal}` pelo endereço
+   do portal publicado; os hashes são os campos `sha256` de
+   `{URL do portal}/.well-known/mecanismos/index.json` e os dos arquivos na tag `v1.7.0`:
 
    ```bash
    mkdir -p scripts
-   BASE=https://raw.githubusercontent.com/thisco/sdd-scaffold/a8ebdf3c6734f11f6763c182b2325fe227216b65/template/scripts
+   BASE="{URL do portal}/.well-known/mecanismos/sdd-scaffold"
    curl -fsSL "$BASE/verificar_pr.py" -o scripts/verificar_pr.py
    curl -fsSL "$BASE/verificar_constituicao.py" -o scripts/verificar_constituicao.py
+   sha256sum -c <<'HASHES'
+   1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488  scripts/verificar_pr.py
+   8a3eeedf0edd72d2d12d83087e2c8a67859683bd6786cd094f85f43bba03ebad  scripts/verificar_constituicao.py
+   HASHES
    ```
+
+   ```text
+   scripts/verificar_pr.py: OK
+   scripts/verificar_constituicao.py: OK
+   ```
+
+   Se algum arquivo não sair com `OK`, não use os scripts. A alternativa, com os mesmos hashes, é
+   o GitHub na tag: troque a linha `BASE` por
+   `BASE=https://raw.githubusercontent.com/thisco/sdd-scaffold/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts`.
 
    Num repositório com `AGENTS.md` sem a constituição entre marcadores, tire do job `governanca`
    a linha do `verificar_constituicao.py`. Num repositório sem `AGENTS.md`, remova o job
@@ -94,9 +110,11 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
      gitleaks e o diff contra a base precisam do histórico inteiro;
    - `entrypoint: [""]` troca o entrypoint da imagem do gitleaks para o job poder rodar o
      script [ref:gitlab-docker-entrypoint];
-   - a segunda linha `git rev-parse --verify` existe porque o `verificar_pr.py` não confere o
-     código de saída do `git diff`: sem a base no clone, ele imprime que não há arquivo
-     alterado e sai com 0. A linha faz o job falhar alto.
+   - a segunda linha `git rev-parse --verify` faz o job falhar alto, com a mensagem do git,
+     quando a base não está no clone. O `verificar_pr.py` da 1.7.0 também confere a base: sem
+     ela, imprime `ERRO: base origin/<alvo> não encontrada` e sai com 2
+     [ref:sdd-scaffold-verificar-pr]. A linha fica porque protege também quem usa uma cópia
+     mais antiga do script.
 3. Opcional: rode os jobs na sua máquina com `gitlab-ci-local`, que executa pipelines como
    shell ou Docker [ref:gitlab-ci-local-readme]. Na pasta do repositório, que precisa ter a
    branch `origin/main` para o `normas-do-pr` comparar. Os avisos sobre o remote `origin` e
@@ -140,8 +158,11 @@ com as travas" do portal de padrões de engenharia, em
 ci/AAAA-MM-DD-travas, com a data de hoje.
 
 1. Confira se existem scripts/verificar_pr.py e scripts/verificar_constituicao.py. Se faltar
-   algum, baixe-o da versão fixada na receita (commit
-   a8ebdf3c6734f11f6763c182b2325fe227216b65 do sdd-scaffold) e não altere o conteúdo.
+   algum, baixe-o de {URL do portal}/.well-known/mecanismos/sdd-scaffold/<arquivo>, sem alterar
+   o conteúdo, e confira com sha256sum -c o hash do campo sha256 de
+   {URL do portal}/.well-known/mecanismos/index.json para esse arquivo. Se o hash não bater,
+   não use o arquivo e me avise. Se o portal não responder, a alternativa é o commit
+   06a382b938af66230ce6299c1638b0ad055804f0 do sdd-scaffold no GitHub, com a mesma conferência.
 2. Se não houver .gitlab-ci.yml, crie-o com o conteúdo do arquivo de exemplo da receita. Se
    houver, acrescente o stage travas à lista de stages e os jobs normas-do-pr, governanca e
    segredos, mais o bloco .so-em-merge-request, sem mudar os jobs que já existem.

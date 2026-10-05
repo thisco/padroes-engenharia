@@ -1,6 +1,7 @@
 # Trava da DAD-01 no pipeline de merge request do GitLab.
 # É o job normas-do-pr da receita "Ligar o CI do GitLab com as travas".
-# Requer scripts/verificar_pr.py do sdd-scaffold 1.6.1 (commit a8ebdf3).
+# Requer scripts/verificar_pr.py do sdd-scaffold 1.7.0 (commit 06a382b), baixado do portal em
+# /.well-known/mecanismos/sdd-scaffold/verificar_pr.py, com o hash conferido.
 stages:
   - travas
 

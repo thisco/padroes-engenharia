@@ -1,7 +1,8 @@
 # Travas do processo SDD no pipeline de merge request do GitLab.
 # Receita: "Ligar o CI do GitLab com as travas" (portal de padrões de engenharia).
 # Requer no repositório: scripts/verificar_pr.py e scripts/verificar_constituicao.py do
-# sdd-scaffold 1.6.1 (commit a8ebdf3c6734f11f6763c182b2325fe227216b65) e o AGENTS.md.
+# sdd-scaffold 1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), baixados do portal em
+# /.well-known/mecanismos/sdd-scaffold/ com o hash conferido, e o AGENTS.md.
 stages:
   - travas
 
