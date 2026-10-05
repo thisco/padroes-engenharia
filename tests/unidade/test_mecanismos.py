@@ -161,6 +161,72 @@ def test_hospedados_ignora_mecanismo_interno(tmp_path):
     assert rodar(tmp_path, com_mecanismo("scripts/validar.py")) == []
 
 
+# regra: citações de arquivos hospedados em receitas, práticas e exemplos
+
+URL = ".well-known/mecanismos/sdd-scaffold"
+
+
+def receita_com(trecho):
+    return fabrica.receita(corpo=f"## Passos\n\n{trecho}\n")
+
+
+def test_hospedados_aceita_receita_que_cita_arquivo_hospedado(tmp_path):
+    montar(tmp_path)
+    assert rodar(tmp_path, receita_com(f"curl {{URL do portal}}/{URL}/verificar_pr.py")) == []
+
+
+def test_hospedados_ignora_indice_e_marcador_de_posicao(tmp_path):
+    montar(tmp_path)
+    trecho = f"{{URL do portal}}/.well-known/mecanismos/index.json e /{URL}/<arquivo>"
+    assert rodar(tmp_path, receita_com(trecho)) == []
+
+
+def test_hospedados_pega_receita_que_baixa_script_nao_hospedado(tmp_path):
+    montar(tmp_path)
+    erros = rodar(tmp_path, receita_com(f"curl /{URL}/proteger_governanca.py -o x"))
+    assert erros == [
+        Erro(
+            "receitas/ligar-ci.md",
+            "mecanismo",
+            "R-MECANISMO-HOSPEDADO",
+            f"{URL}/proteger_governanca.py: arquivo não hospedado em mecanismos/",
+        )
+    ]
+
+
+def test_hospedados_pega_componente_nao_hospedado_citado_em_pratica(tmp_path):
+    montar(tmp_path)
+    corpo = fabrica.CORPO_PRATICA + "\nBaixe de /.well-known/mecanismos/outro/x.py.\n"
+    erros = rodar(tmp_path, fabrica.pratica(corpo=corpo))
+    assert [e.regra for e in erros] == ["R-MECANISMO-HOSPEDADO"]
+    assert (
+        erros[0].valor == ".well-known/mecanismos/outro/x.py: arquivo não hospedado em mecanismos/"
+    )
+
+
+def test_hospedados_pega_exemplo_que_cita_arquivo_nao_hospedado(tmp_path):
+    montar(tmp_path)
+    exemplo = tmp_path / "exemplos" / "DAD-01" / "gitlab-ci.yml"
+    exemplo.parent.mkdir(parents=True)
+    exemplo.write_text(f"# baixe de /{URL}/sumiu.py\n", encoding="utf-8")
+    assert rodar(tmp_path) == [
+        Erro(
+            "exemplos/DAD-01/gitlab-ci.yml",
+            "mecanismo",
+            "R-MECANISMO-HOSPEDADO",
+            f"{URL}/sumiu.py: arquivo não hospedado em mecanismos/",
+        )
+    ]
+
+
+def test_hospedados_aceita_exemplo_que_cita_arquivo_hospedado(tmp_path):
+    montar(tmp_path)
+    exemplo = tmp_path / "exemplos" / "DAD-01" / "gitlab-ci.yml"
+    exemplo.parent.mkdir(parents=True)
+    exemplo.write_text(f"# baixe de /{URL}/verificar_pr.py\n", encoding="utf-8")
+    assert rodar(tmp_path) == []
+
+
 def test_hospedados_e_a_ultima_regra_registrada():
     assert REGRAS[-1] is regra_mecanismos_hospedados
 

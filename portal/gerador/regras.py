@@ -975,4 +975,32 @@ def regra_mecanismos_hospedados(
             erros.append(
                 Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO_HOSPEDADO, valor)
             )
+    arquivos = {(m.componente, m.arquivo) for m in hospedados}
+    for caminho, texto in _textos_com_citacoes(repo, contexto.raiz):
+        for citado in sorted(set(_citacoes_hospedadas(texto))):
+            if citado not in arquivos:
+                valor = f"{_PREFIXO_HOSPEDADO}/{citado[0]}/{citado[1]}: arquivo não hospedado em "
+                valor += f"{PASTA_MECANISMOS}/"
+                erros.append(Erro(caminho, "mecanismo", codigos.R_MECANISMO_HOSPEDADO, valor))
     return erros
+
+
+_PREFIXO_HOSPEDADO = ".well-known/mecanismos"
+CITACAO_HOSPEDADA = re.compile(
+    r"\.well-known/mecanismos/(?P<componente>[a-z0-9][a-z0-9-]*)/(?P<arquivo>[A-Za-z0-9_][\w.-]*)"
+)
+
+
+def _citacoes_hospedadas(texto: str) -> list[tuple[str, str]]:
+    """Os pares (componente, arquivo) citados como `/.well-known/mecanismos/<c>/<arquivo>`."""
+    return [(m["componente"], m["arquivo"].rstrip(".")) for m in CITACAO_HOSPEDADA.finditer(texto)]
+
+
+def _textos_com_citacoes(repo: Repositorio, raiz: Path) -> list[tuple[str, str]]:
+    """Corpo das práticas e receitas e os arquivos de `exemplos/`, com o caminho relativo."""
+    textos = [(c.caminho_relativo, c.corpo) for c in (*repo.praticas, *repo.receitas)]
+    for arquivo in sorted((raiz / "exemplos").rglob("*")):
+        if arquivo.is_file():
+            relativo = arquivo.relative_to(raiz).as_posix()
+            textos.append((relativo, arquivo.read_text(encoding="utf-8", errors="replace")))
+    return textos
