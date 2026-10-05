@@ -63,7 +63,7 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Instalar pelo próprio agente'
   resultado: confirmada
-  nota: 'Copiado sem alteração do bloco de texto do README. O comando do starter usa a mesma tag e confere o commit com git rev-parse HEAD. Os dois seguem sem execução registrada: é o lote 3 (T11 e T13).'
+  nota: 'Copiado sem alteração do bloco de texto do README. O comando do starter usa a mesma tag e confere o commit com git rev-parse HEAD. O comando do starter foi executado na 1.7.0 (execução de 2026-10-05 abaixo); o prompt_para_agente em si segue sem execução registrada.'
 - texto: o gerador instala a sdd-lifecycle pela tag v3.0.0, fixada no gerador
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'A skill do ciclo é instalada, não copiada'
