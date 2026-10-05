@@ -28,7 +28,7 @@ revisao_adversarial:
     tratamento: incluída no texto
   - afirmacao: versão não verificada
     problema: produto não instalado, sem execução
-    tratamento: dito no texto; o status segue experimentar
+    tratamento: dito no texto; o status passou a avaliar no checkpoint da A.5 (2026-10-05), por falta de execução
   - afirmacao: como_instalar não instala a ferramenta
     problema: não executável sem inventar
     tratamento: campo abre dizendo que a habilitação é pelo site do fornecedor

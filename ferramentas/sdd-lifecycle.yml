@@ -1,7 +1,7 @@
 id: sdd-lifecycle
 titulo: sdd-lifecycle
 categoria: sdd
-status: adotar
+status: experimentar
 versao_minima: "2.0.0"
 dono: nuarq
 praticas: [P1-01]

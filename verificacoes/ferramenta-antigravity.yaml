@@ -35,4 +35,4 @@ revisao_adversarial:
     tratamento: comando ln -s ../skills .agents/skills no texto
   - afirmacao: versão não verificada
     problema: produto não instalado, sem execução
-    tratamento: dito no texto de versao_minima e de limites; o status segue experimentar
+    tratamento: dito no texto de versao_minima e de limites; o status passou a avaliar no checkpoint da A.5 (2026-10-05), por falta de execução
