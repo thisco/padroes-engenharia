@@ -1,0 +1,49 @@
+conteudo: P1-05
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "toda dúvida sem resposta fica no arquivo marcada com [ESCLARECER: pergunta]; ao receber a resposta, apaga-se o marcador e registra-se a pergunta e a resposta em Esclarecimentos"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 1 (aberto na web no commit fixado)"
+  resultado: confirmada
+- texto: "a spec só é apresentada com zero marcadores [ESCLARECER abertos"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 3, primeiro item"
+  resultado: confirmada
+- texto: "o pedido ambíguo é refinado com o usuário uma pergunta por vez, até fechar propósito, restrições e critérios de sucesso"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 1, segundo item"
+  resultado: confirmada
+- texto: "o modelo de spec manda registrar pergunta e resposta em Esclarecimentos, uma sessão por data, no formato Sessão AAAA-MM-DD"
+  ref: sdd-scaffold-modelo-spec
+  localizacao: "MODELO-spec.md, comentário da seção Esclarecimentos"
+  resultado: confirmada
+  nota: "O resumo da página aberta na web não destacou o comentário; conferido no arquivo da tag v1.7.0 no clone local (git show v1.7.0)."
+- texto: "o verificar_pr.py avisa, sem bloquear, de marcador [ESCLARECER] aberto em spec aprovada ou citada por plano, e só quando a spec tem requisito R<n> ou Aprovado por; ignora comentário e código"
+  ref: sdd-scaffold-verificar-pr
+  localizacao: "checar_marcadores(), _artefato_novo(), _sem_codigo(); mensagem 'marcador(es) [ESCLARECER] aberto(s) numa spec aprovada ou citada por plano'"
+  resultado: confirmada
+- texto: "o Spec Kit usa o marcador [NEEDS CLARIFICATION] nos templates de spec para impedir que o modelo faça suposições plausíveis, mas possivelmente erradas"
+  ref: speckit-spec-driven
+  localizacao: "seção 'Template-Driven Quality', subseção 'Forcing Explicit Uncertainty Markers'"
+  resultado: confirmada
+  nota: "A página foi lida por resumo do WebFetch; a frase é paráfrase."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-05/2026-10-05-aviso-de-cancelamento.md
+  comando: "python3 verificar_pr.py --base main --raiz . (script baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 1397e8b1...0488, igual ao da tag v1.7.0), primeiro com a spec aprovada e o marcador aberto em R1 (commit 505655e)"
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-05, branch feat/2026-10-05-aviso-de-cancelamento; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'AVISO: docs/specs/2026-10-05-aviso-de-cancelamento.md: 1 marcador(es) [ESCLARECER] aberto(s) numa spec aprovada ou citada por plano. Resolva, apague o marcador e registre a resposta em Esclarecimentos.; saída 0 (aviso não bloqueia).'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-05/2026-10-05-aviso-de-cancelamento.md
+  comando: "o mesmo comando, depois de apagar o marcador, ajustar R1 e registrar a sessão em Esclarecimentos (o arquivo do exemplo é esse estado)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'Verificação de PR: 1 arquivo(s), nenhum achado.; saída 0.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
