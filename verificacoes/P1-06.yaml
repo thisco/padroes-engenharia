@@ -1,0 +1,52 @@
+conteudo: P1-06
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "no checkpoint da spec o agente pausa, pergunta se a spec é aprovada ou se há regras a ajustar, e não passa ao plano sem aprovação explícita"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 3, itens 2 e 3 (clone local, git show v3.0.0)"
+  resultado: confirmada
+- texto: "depois do sim, grava no cabeçalho Status aprovada, Aprovado por e Aprovado em, num commit próprio; o registro é feito por quem aprova ou a pedido explícito dele, e aprovação escrita pelo agente sem pedido não vale"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 3, quarto item e critério de saída"
+  resultado: confirmada
+- texto: "a spec só é apresentada com zero marcadores [ESCLARECER abertos"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 3, primeiro item"
+  resultado: confirmada
+- texto: "se a spec é reaberta por obstáculo (strict fallback), o status volta a rascunho e o checkpoint se repete com nova aprovação gravada"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 6, 'Strict fallback', passo 3"
+  resultado: confirmada
+- texto: "o modelo de spec tem Aprovado por e Aprovado em no cabeçalho e manda trocar o Status para aprovada e preencher os dois ao aprovar"
+  ref: sdd-scaffold-modelo-spec
+  localizacao: "MODELO-spec.md, cabeçalho e comentário da seção Requisitos (tag v1.7.0)"
+  resultado: confirmada
+- texto: "o verificar_pr.py avisa, sem bloquear, quando a spec tem Status aprovada e Aprovado por vazio ou ausente, só com requisito R<n> ou a linha Aprovado por presente; confere só Aprovado por, não Aprovado em"
+  ref: sdd-scaffold-verificar-pr
+  localizacao: "checar_aprovacao(), APROVADO_POR, _aprovada(), _artefato_novo() (tag v1.7.0)"
+  resultado: confirmada
+- texto: "o GitHub descreve o papel de quem desenvolve com o Spec Kit como verificar, e não só conduzir, a cada fase"
+  ref: github-blog-speckit
+  localizacao: "seção 'Implement', frase 'Your role isn't just to steer. It's to verify.'"
+  resultado: confirmada
+  nota: "A frase é paráfrase; a página fala em refletir e refinar em cada fase, não em campo de aprovação gravado."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-06/2026-10-05-exportar-pedidos-csv.md
+  comando: "python3 verificar_pr.py --base main --raiz . (script baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 1397e8b1...0488, igual ao da tag v1.7.0), com a spec em Status aprovada e Aprovado por vazio (commit 8b945e9)"
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-06, branch feat/2026-10-05-exportar-pedidos-csv; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'AVISO: docs/specs/2026-10-05-exportar-pedidos-csv.md: spec com Status aprovada e aprovação sem registro: preencha `Aprovado por` e `Aprovado em` no cabeçalho.; saída 0 (aviso não bloqueia).'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-06/2026-10-05-exportar-pedidos-csv.md
+  comando: "o mesmo comando, depois de preencher Aprovado por e Aprovado em (o arquivo do exemplo é esse estado, commit fc0156f)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'Verificação de PR: 1 arquivo(s), nenhum achado.; saída 0.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []

@@ -1,0 +1,11 @@
+id: github-blog-speckit
+titulo: "Spec-driven development with AI: Get started with a new open source toolkit"
+organizacao: GitHub
+url: https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/
+tipo: vendor
+publicado_em: 2025-09-02
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "seção 'Implement' (a frase sobre o papel de quem desenvolve ser verificar, em cada fase)"
+dominios: [construir-com-ia]
+notas: "Autoria: Den Delimarsky. Conflito de interesse: vendor do toolkit. A fonte descreve o papel de verificar a spec e o plano a cada fase, não um campo de aprovação gravado."
