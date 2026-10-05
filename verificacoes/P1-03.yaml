@@ -66,6 +66,13 @@ execucoes:
   resultado: passou
   evidencia: 'governanca > AGENTS.md com 5516 bytes (limite 30000); governanca > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.; governanca finished in 779 ms PASS governanca.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-03-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 com AGENTS.md de 36653 bytes (sdd-scaffold 1.7.0); {limite}=30000, {arquivo de destino}=procedimentos
+  resultado: passou
+  evidencia: 'AGENTS.md de 36653 para 5652 bytes numa rodada; a seção "Procedimentos detalhados (colados da wiki)" (linhas 92 a 291) foi movida sem alteração para docs/steering/procedimentos.md (31342 bytes) e trocada por uma linha de roteamento; constituição e tabela de roteamento intactas; verificar_constituicao.py --raiz . saiu com 0 ("Constituição padrao-v1.0: bloco inline confere com o arquivo canônico."); git status --short: só M AGENTS.md e ?? docs/steering/procedimentos.md; sem commit. Transcrição em curadoria-a5/transcricoes/P1-03-prompt-1.bruta.jsonl.'
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'
