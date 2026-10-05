@@ -43,6 +43,13 @@ execucoes:
   resultado: passou
   evidencia: 'Verificação de PR: 1 arquivo(s), nenhum achado.; saída 0.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-05-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) com a spec aprovada e 1 marcador aberto em R1; resposta fornecida: o e-mail sai nos dois casos"
+  resultado: passou
+  evidencia: "1ª execução do verificar_pr.py: AVISO de 1 marcador [ESCLARECER] aberto; o agente aplicou a resposta em R1, apagou o marcador e registrou a linha P e R em '### Sessão 2026-10-05'; achou ambiguidade real no critério de R1 (pedido não pago), deixou novo marcador sem escolher resposta e perguntou; commit 11fcf99 só com a spec; 2ª execução: o mesmo AVISO com 1 marcador; Status e aprovação intactos. Transcrição em curadoria-a5/transcricoes/P1-05-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'

@@ -112,5 +112,6 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
 - T1: ADR 0005 escrita e commitada.
 - T2 (P1-03): autor concluído (rascunho, fontes abertas, Exemplo executado em `gitlab-ci-local` 4.76.0, registro). (fechada: prompt testado, ver abaixo) `validar.py` saía com 1 erro, `R-PROMPT (P1-03-prompt-1: sem execução registrada)`, até o testador do prompt rodar; `gerar.py --saida public` fica bloqueado pelo mesmo erro. Repositório de teste: `~/curadoria-a5/b1-p1-03-prompt`.
 - T2 (P1-03) fechou: prompt P1-03-prompt-1 passou em sessão nova (36653 para 5652 bytes), registrado em `verificacoes/P1-03.yaml`; validar e gerar saem com 0.
+- T3 (P1-04) e T4 (P1-05) fecharam: prompts P1-04-prompt-1 e P1-05-prompt-1 passaram em sessão nova, registrados em `verificacoes/P1-04.yaml` e `verificacoes/P1-05.yaml`; validar e gerar saem com 0. Repositórios de teste: `~/curadoria-a5/b1-p1-04-prompt` e `~/curadoria-a5/b1-p1-05-prompt`.
 
 ## Conferência em lote: <data> — achados
