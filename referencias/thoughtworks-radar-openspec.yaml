@@ -1,0 +1,11 @@
+id: thoughtworks-radar-openspec
+titulo: "OpenSpec (Technology Radar)"
+organizacao: Thoughtworks
+url: https://www.thoughtworks.com/en-us/radar/tools/openspec
+tipo: analista
+versao: "Radar de abril de 2026, anel Assess"
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "bloco inteiro: anel Assess e trecho sobre deltas de spec em vez de uma especificação completa de saída"
+dominios: [construir-com-ia]
+notas: "Conteúdo do Radar: o portal parafraseia. A página foi lida por resumo do WebFetch."

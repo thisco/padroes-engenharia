@@ -1,0 +1,62 @@
+conteudo: P1-04
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a skill manda redigir a spec como um delta, que descreve a mudança e não o sistema inteiro
+  ref: sdd-lifecycle
+  localizacao: SKILL.md na tag v3.0.0, Fase 1 (aberto na web no commit fixado)
+  resultado: confirmada
+- texto: o conteúdo mínimo é problema, requisitos R<n> com critério de aceite em GWT ou EARS, e fora de escopo
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 1, lista de conteúdo mínimo
+  resultado: confirmada
+- texto: Tier 0 e Tier 1 seguem sem spec (spec é para Tier 2)
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0 (Matriz tier para fases) e título 'Fase 1 — Especificação (Tier 2)'
+  resultado: confirmada
+- texto: o registro de aprovação é gravado por quem aprova, ou a pedido explícito dele
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 3, último item
+  resultado: confirmada
+- texto: o cabeçalho do modelo de spec do scaffold diz que specs descrevem a mudança, não o sistema inteiro
+  ref: sdd-scaffold-modelo-spec
+  localizacao: MODELO-spec.md, cabeçalho
+  resultado: confirmada
+- texto: o modelo escreve o requisito como **R<n>** com linha Critério abaixo
+  ref: sdd-scaffold-modelo-spec
+  localizacao: MODELO-spec.md, seção Requisitos
+  resultado: confirmada
+- texto: o verificar_pr.py confere requisito R<n> válido, critério em cada requisito e aprovação gravada em spec aprovada, e só avisa, não bloqueia
+  ref: sdd-scaffold-verificar-pr
+  localizacao: checar_aprovacao(), checar_criterios(), requisitos(); checar_aprovacao e checar_criterios devolvem Achado(False, ...)
+  resultado: confirmada
+- texto: o OpenSpec escreve deltas (adicionados, modificados, removidos) e os funde na spec principal ao arquivar
+  ref: openspec-concepts
+  localizacao: seções 'Delta Specs', 'Delta Sections' e 'Archive'
+  resultado: confirmada
+- texto: a Thoughtworks descreve o OpenSpec como foco em deltas de spec em vez de uma especificação completa, adequado a sistemas existentes
+  ref: thoughtworks-radar-openspec
+  localizacao: bloco do Radar (anel Assess)
+  resultado: confirmada
+  nota: A página foi lida por resumo do WebFetch; a frase é paráfrase.
+- texto: num teste com o Kiro, um bug pequeno virou 4 histórias de usuário e 16 critérios de aceite, e o autor chamou a abordagem de marreta para quebrar noz
+  ref: bockeler-sdd-3-tools
+  localizacao: seção 'One workflow to fit all sizes?'
+  resultado: confirmada
+  nota: Relato de uma pessoa, apresentado no texto como tal e não como estudo.
+- texto: a Thoughtworks distingue spec-first (escrita antes e usada no fluxo) de spec-anchored (mantida depois da tarefa)
+  ref: bockeler-sdd-3-tools
+  localizacao: seção sobre os três níveis de SDD
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-04/2026-10-05-desconto-no-pedido.md
+  comando: python3 verificar_pr.py --base main --raiz . (script baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 1397e8b1...0488, igual ao da tag v1.7.0)
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-04, branch feat/2026-10-05-desconto-no-pedido com a spec commitada em docs/specs/; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'git diff --name-only main...HEAD lista só docs/specs/2026-10-05-desconto-no-pedido.md; saída: "Verificação de PR: 1 arquivo(s), nenhum achado."; saída 0.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []

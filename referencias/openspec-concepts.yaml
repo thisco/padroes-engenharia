@@ -1,0 +1,11 @@
+id: openspec-concepts
+titulo: "OpenSpec: conceitos (concepts.md)"
+organizacao: Fission-AI
+url: https://github.com/Fission-AI/OpenSpec/blob/main/docs/concepts.md
+tipo: vendor
+versao: "branch main, sem versão fixa"
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "seções 'Delta Specs', 'Delta Sections' e 'Archive' (subseção 'The Archive Process')"
+dominios: [construir-com-ia]
+notas: "Documento do branch main; o texto muda com o projeto. O portal parafraseia."

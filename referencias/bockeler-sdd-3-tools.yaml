@@ -1,0 +1,11 @@
+id: bockeler-sdd-3-tools
+titulo: "Understanding Spec-Driven-Development: Kiro, spec-kit, and Tessl"
+organizacao: Thoughtworks (martinfowler.com)
+url: https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html
+tipo: analista
+publicado_em: 2025-10-15
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "seção sobre os três níveis de SDD (spec-first, spec-anchored, spec-as-source) e seção 'One workflow to fit all sizes?'"
+dominios: [construir-com-ia]
+notas: "Lido por resumo do WebFetch; o portal parafraseia e não cita literal. A data de publicação vem da pesquisa de origem."

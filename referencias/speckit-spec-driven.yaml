@@ -5,6 +5,6 @@ url: https://github.com/github/spec-kit/blob/main/spec-driven.md
 tipo: vendor
 verificado_em: 2026-10-05
 verificacao: V
-localizacao: "seções sobre a constituição (memory/constitution.md), os nove artigos e os gates do template de plano"
+localizacao: "seções sobre a constituição (memory/constitution.md), os nove artigos e os gates do template de plano; seção 'Template-Driven Quality', subseção 'Forcing Explicit Uncertainty Markers' ([NEEDS CLARIFICATION])"
 dominios: [construir-com-ia]
 notas: "Documento do branch main, sem versão fixa; o texto muda com o projeto."
