@@ -1,0 +1,62 @@
+conteudo: P1-08
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a spec descreve a mudança, não o sistema inteiro; o conteúdo mínimo é problema, requisitos R<n> com critério de aceite e fora de escopo"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 1, itens sobre delta e 'Conteúdo mínimo' (aberto na web no commit fixado)"
+  resultado: confirmada
+- texto: "o plano do Tier 1 tem uma página no máximo; a skill não traz teto equivalente para a spec nem para o plano do Tier 2"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 4, 'Tier 1 — plano leve'; a segunda parte é ausência: busca por linhas, curta, curto, tamanho e enxut na tag v3.0.0 não acha limite para spec ou plano Tier 2"
+  resultado: confirmada
+  nota: "Afirmação de ausência, conferida por busca no clone local da tag v3.0.0 e por leitura das Fases 1 e 4."
+- texto: "a skill pede spec no Tier 2 (Fase 1 é 'Especificação (Tier 2)')"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, título da Fase 1 e Matriz tier → fases"
+  resultado: confirmada
+- texto: "o modelo de spec diz que specs descrevem a mudança, não o sistema inteiro, e traz a seção de requisitos R<n> com critério"
+  ref: sdd-scaffold-modelo-spec
+  localizacao: "MODELO-spec.md, linha 3 do cabeçalho (tag v1.7.0)"
+  resultado: confirmada
+- texto: "um relato com o Spec Kit: o desejo de mostrar a data atual numa aplicação de controle de horas gerou 8 arquivos e cerca de 1.300 linhas de texto, com repetições e casos de borda imaginários"
+  ref: marmelab-waterfall
+  localizacao: "seção 'The Markdown Awakens'"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch, com a frase em inglês ('8 files and 1,300 lines of text'); o portal parafraseia e diz que é relato de uma pessoa."
+- texto: "um relato com o Kiro: uma correção pequena virou 4 histórias de usuário e 16 critérios de aceite, comparada a usar uma marreta para quebrar uma noz"
+  ref: bockeler-sdd-3-tools
+  localizacao: "seção 'One workflow to fit all sizes?'"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; paráfrase, sem citação literal."
+- texto: "a Thoughtworks registrou que limitar a quantidade de arquivos markdown gerados ajudou a resolver parte dos problemas do Spec Kit"
+  ref: thoughtworks-radar-speckit
+  localizacao: "bloco do Radar sobre o GitHub Spec Kit, trecho sobre limitar arquivos markdown e a verbosidade do console"
+  resultado: parcial
+  nota: "A página diz que limitar os arquivos markdown gerados e reduzir a verbosidade do console ajudou em parte dos problemas; o texto do portal foi mantido nesse limite."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-08/medir-spec.py
+  comando: "python3 medir-spec.py spec-proporcional.md spec-inflada.md, dentro de exemplos/P1-08/ (Python do .venv do portal)"
+  ambiente: Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "spec-proporcional.md: 22 linhas (14 não vazias), 2 requisitos R<n>; spec-inflada.md: 74 linhas (45 não vazias), 9 requisitos R<n>; saída 0 nos dois casos."
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-08/spec-inflada.md
+  comando: "python3 medir-spec.py spec-inflada.md"
+  ambiente: Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "spec-inflada.md: 74 linhas (45 não vazias), 9 requisitos R<n>; saída 0 (o script informa e não reprova)."
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-08/spec-proporcional.md
+  comando: "python3 medir-spec.py spec-proporcional.md"
+  ambiente: Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "spec-proporcional.md: 22 linhas (14 não vazias), 2 requisitos R<n>; saída 0."
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
