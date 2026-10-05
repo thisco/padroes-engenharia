@@ -125,8 +125,8 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
 
 ### Fecho
 
-- [ ] **T17.** Revisão adversarial independente contra a spec, com a tabela por requisito.
-- [ ] **T18.** Conferência independente das transcrições (T13 e T15). Quem faz não julga.
+- [x] **T17.** Revisão adversarial independente contra a spec, com a tabela por requisito.
+- [x] **T18.** Conferência independente das transcrições (T13 e T15). Quem faz não julga.
 
 ## Evidências
 
@@ -299,7 +299,44 @@ portal gerado em <scratchpad>/portal-fase-a/public (versão 0.3.0, commit 0c444a
 exit 0
 ```
 
-## Revisão adversarial: <data> — achados
+## Revisão adversarial: 2026-10-05 — achados
+
+Registro do revisor independente (T17, modelo potente, 573 passed, builds idênticos) e do
+conferente das transcrições (T18).
 
 | R | veredito | evidência |
 |---|---|---|
+| R1 | parcial | `1.6.1` fora de verificacoes/: P1-01.md:148, ferramentas/codex.yml:16, referencias/sdd-scaffold-readme.yaml:11, sdd-scaffold-verificar-pr.yaml:11, tests/unidade/test_mecanismos.py:108,114 |
+| R2 | atendido | sha256 iguais às tags |
+| R3 | parcial | validador não reprova receita que baixa script não hospedado (regras.py:966 só olha praticas) |
+| R4 | atendido | DAD-01.md:9,71-84; receita:69-94,162; exemplos |
+| R5 | atendido | 6 referências conferidas na tag |
+| R6 | atendido | saidas c17-t12-dad01.txt e c17-t14-bloqueio.txt com BLOQUEIA real |
+| R7 | atendido | prompt_para_agente igual ao README v1.7.0 |
+| R8 | parcial | revisao_adversarial de ferramenta-sdd-lifecycle.yaml é de 2026-10-04 |
+| R9 | atendido | ADRs 0003/0004 novas |
+| R10 | parcial | CHANGELOG [0.3.0] acima de [Não publicado] (0.2.0) |
+
+Achados extras:
+
+1. Média: o commit de `mecanismos/*/PROCEDENCIA.md` não é comparado com `componentes.yml`.
+2. Média: ordem do CHANGELOG.
+3. Média: R3 em receitas e exemplos.
+4. Baixa: `verificacoes/starter-sdd-scaffold.yaml:66` diz que o comando segue sem execução.
+5. Baixa: hashes literais em receita:82-83 e DAD-01.md:77,177 sem conferência.
+6. Baixa: a página de ferramentas não cita o índice de mecanismos.
+7. Baixa: menções de `1.6.1` (R1).
+
+### Conferência independente das transcrições (T18)
+
+As execuções A (receita) e B (sdd-lifecycle) passaram; `passou` e `adotar` se sustentam.
+Divergências apontadas:
+
+- A receita (linhas 161 e 163) dizia que o macOS não tem `sha256sum`. Está errado:
+  `/sbin/sha256sum` existe e aceita `-c`; só falha lendo a lista da entrada padrão.
+- A "sessão nova" foi um subagente com o contexto do repositório do portal (recebeu `CLAUDE.md`,
+  `CLAUDE.local.md` e o lembrete de hook do graphify). Influência mínima em B e nenhuma em A.
+- `ferramenta-sdd-lifecycle.yaml:47` usa `prompt: sdd-lifecycle-prompt-1` na rodada 2, um id sem
+  prompt publicado.
+
+## Evidências: correções da revisão
