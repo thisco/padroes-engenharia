@@ -1784,3 +1784,5 @@ prompts: ['DAD-01', 'P1-01', 'P2-01', 'ligar-ci-gitlab-travas']   no html: True 
 sem .md: []   conceitos: 15   DAD-01 .md: True True   higiene ok   sem marcador cru no HTML
 git status --short               -> vazio
 ```
+
+Lote de correções finais (d592961, 011bfee, c88579e, d9f6054, a0c4a97, 0159a1d): achados da conferência final independente de 2026-10-05.
