@@ -60,6 +60,12 @@ afirmacoes:
   nota: 'Cobertura executada com a expressão copiada do commit fixado: db/migration/V2__cria_cpf.sql True;
     alembic/versions/a1b2_amplia_cpf.py True; app/migrations/0002_cpf.py True; db/changelog/002-cpf.xml
     False; db/migrate/002_cpf.rb False.'
+- texto: o verificador emite AVISO, sem bloquear, quando o PR altera código e o plano não traz seção de
+    evidências com saída de execução colada (ou não há plano em docs/plans/)
+  ref: sdd-scaffold-verificar-pr
+  localizacao: função analisar(), bloco toca_codigo; constante EVIDENCIA
+  resultado: confirmada
+  nota: Mensagens lidas no template/scripts/verificar_pr.py da cópia local do sdd-scaffold.
 - texto: a migration de desfazer do Flyway (prefixo U) só existe nas edições pagas (Teams); sem ela o
     rollback é uma migration corretiva testada num banco efêmero
   ref: flyway-undo
@@ -93,7 +99,8 @@ execucoes:
     Conferido pelo curador no repositório: git diff --name-status origin/main...HEAD = "A db/migration/V3__amplia_cpf_para_14.sql"
     e "A docs/plans/2026-10-04-cpf-14-chars.md"; a V3 tem VARCHAR(14); o plano começa por "> **Tier:**
     1 — ..." e tem "## Rollback"; "Verificação de PR: 2 arquivo(s), nenhum achado." com saida=0. Transcrição
-    bruta do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.bruta.jsonl.'
+    bruta do agente em curadoria-a5/transcricoes/DAD-01-prompt-1.bruta.jsonl. Conferência independente
+    em 2026-10-05; o caso sem remoto e a cópia do verificar_pr.py não foram exercitados nesta execução.'
   data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente

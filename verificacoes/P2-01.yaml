@@ -33,8 +33,8 @@ execucoes:
   arquivo: exemplos/P2-01/docker-compose.yml
   comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
     AI_GATEWAY_URL e AI_GATEWAY_KEY)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: passou
   evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
     imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
@@ -43,8 +43,8 @@ execucoes:
   arquivo: exemplos/P2-01/config.yaml
   comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
     AI_GATEWAY_URL e AI_GATEWAY_KEY)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: passou
   evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
     imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
@@ -53,18 +53,17 @@ execucoes:
   arquivo: exemplos/P2-01/emitir-chave.sh
   comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
     AI_GATEWAY_URL e AI_GATEWAY_KEY)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: passou
   evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
     imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
   data: '2026-10-04'
 - tipo: arquivo
   arquivo: exemplos/P2-01/cliente.py
-  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python cliente.py (com
-    AI_GATEWAY_URL e AI_GATEWAY_KEY)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  comando: python cliente.py (pasta gateway-teste/, venv, AI_GATEWAY_URL com GATEWAY_PORT)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: passou
   evidencia: 'gateway no ar ("I''m alive!" em /health/liveliness), chave emitida (prefixo sk-) e o cliente
     imprimiu "Resposta simulada pelo gateway: nenhum modelo real foi chamado.", saida=0.'
@@ -72,8 +71,8 @@ execucoes:
 - tipo: arquivo
   arquivo: exemplos/P2-01/cliente.py
   comando: python cliente.py simulado-restrito (chave emitida só para o modelo simulado)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: falhou-como-esperado
   evidencia: 'openai.PermissionDeniedError: Error code: 403 - {''error'': {''message'': "The requested
     model ''simulado-restrito'' is not available for this API key, or the model name is invalid. Check
@@ -82,17 +81,17 @@ execucoes:
   data: '2026-10-04'
 - tipo: arquivo
   arquivo: exemplos/P2-01/verificar-chamada-direta.sh
-  comando: bash verificar-chamada-direta.sh . (pasta do exemplo)
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  comando: bash scripts/verificar-chamada-direta.sh . (pasta do exemplo)
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: passou
   evidencia: 'P2-01: nenhuma chamada direta a provedor encontrada. saida=0'
   data: '2026-10-04'
 - tipo: arquivo
   arquivo: exemplos/P2-01/verificar-chamada-direta.sh
-  comando: bash verificar-chamada-direta.sh ruim (ruim/app.py com URL = "https://api.openai.com/v1")
-  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010,
-    porque a 4000 estava ocupada), SDK openai 3.24.0 em Python 3.14, macOS
+  comando: bash scripts/verificar-chamada-direta.sh ruim (ruim/app.py com URL = "https://api.openai.com/v1")
+  ambiente: Docker Compose com ghcr.io/berriai/litellm:v1.104.0 e postgres:16-alpine (GATEWAY_PORT=4010
+    no .env), openai 3.24.0 em venv, Python 3.14, macOS
   resultado: falhou-como-esperado
   evidencia: 'ruim/app.py:1:URL = "https://api.openai.com/v1" e P2-01: chamada direta a provedor ou chave
     de provedor encontrada (acima). saida=1'
@@ -102,12 +101,11 @@ execucoes:
   harness: claude-code
   resultado: passou
   evidencia: 'Subagente do Claude Code em sessão nova, só com o prompt e {modelo do catálogo} = simulado,
-    num repositório com app.py (OpenAI com base_url do provedor e model gpt-4o-mini), .env.example com
-    OPENAI_API_KEY= e .gitignore com .env. Conferido pelo curador: app.py e .env.example com AI_GATEWAY_URL
-    e AI_GATEWAY_KEY; verificar-chamada-direta.sh saiu com 0; git grep -nE sk-[A-Za-z0-9] vazio; último
-    commit "feat: chamadas a modelo pelo gateway de IA (P2-01)"; AI_GATEWAY_URL=http://localhost:4010
-    com a chave do teste, python app.py imprimiu a resposta simulada. O relatório do agente veio com o
-    texto "placeholder", então o registro vale pelo estado do repositório (transcricoes/P2-01-prompt-1.txt).'
+    em repositório com app.py (OpenAI direto), .env.example e .gitignore. Grep do passo 1 com 1 ocorrência
+    (app.py:5); app.py com AI_GATEWAY_URL/AI_GATEWAY_KEY e model simulado; .env.example só com as duas
+    variáveis vazias; .env ignorado (git check-ignore); grep do passo 4 vazio (exit 1); commit 15806eb
+    ''feat: chamadas a modelo pelo gateway de IA (P2-01)''. Conferido por revisor independente no repositório
+    (git grep vazio). Transcrição em curadoria-a5/transcricoes/P2-01-prompt-1.bruta.jsonl.'
   data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
