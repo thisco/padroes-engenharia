@@ -35,7 +35,7 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## Para agentes
 
-O portal publica `llms.txt`, `llms-full.txt`, `catalogo.json`, `roteamento.json`, `.well-known/skills/index.json` e um `.md` gêmeo de cada página. A página `para-agentes.html` traz o bloco para o `AGENTS.md` do seu projeto.
+O portal publica `llms.txt`, `llms-full.txt`, `catalogo.json`, `roteamento.json`, `.well-known/skills/index.json`, `.well-known/mecanismos/index.json` e um `.md` gêmeo de cada página. A página `para-agentes.html` traz o bloco para o `AGENTS.md` do seu projeto.
 
 ## Roteiro
 

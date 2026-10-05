@@ -11,6 +11,7 @@ As regras não confiam no tipo dos campos (o schema já reporta isso): leem com 
 
 from __future__ import annotations
 
+import hashlib
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -44,6 +45,8 @@ from portal.gerador.exemplos import (
     prompts_de,
     secoes,
 )
+from portal.gerador.mecanismos import PASTA as PASTA_MECANISMOS
+from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.ninhos import PECAS
 
 
@@ -919,4 +922,53 @@ def regra_skills(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         if pasta not in SKILLS_NASCIDAS_AQUI and not procedencia.is_file():
             valor = "cópia sem PROCEDENCIA.md (repositório, versão, commit e origem)"
             erros.append(Erro(f"skills/{pasta}/PROCEDENCIA.md", "arquivo", codigos.R_SKILL, valor))
+    return erros
+
+
+# Mecanismos hospedados (spec delta 1.7, R3) -----------------------------------------------------
+
+
+@regra
+def regra_mecanismos_hospedados(
+    repo: Repositorio, espinha: Espinha, contexto: Contexto
+) -> list[Erro]:
+    """Os scripts de `mecanismos/` batem com o registro e com `componentes.yml`, e todo
+    mecanismo externo de prática aponta para um arquivo hospedado.
+
+    Reprova quando o SHA-256 do arquivo difere do `PROCEDENCIA.md`, quando a versão registrada
+    difere da fixada em `componentes.yml` e quando `<componente>:<caminho>@<versao>` não tem
+    o caminho entre os arquivos de origem hospedados."""
+    erros: list[Erro] = []
+    hospedados = carregar_mecanismos(contexto.raiz)
+    vistos: set[str] = set()
+    for m in hospedados:
+        registro = f"{PASTA_MECANISMOS}/{m.componente}/PROCEDENCIA.md"
+        if m.componente not in vistos:
+            vistos.add(m.componente)
+            componente = contexto.componentes.get(m.componente)
+            if componente is None:
+                erros.append(
+                    Erro(
+                        registro,
+                        "componente",
+                        codigos.R_MECANISMO_HOSPEDADO,
+                        "fora de componentes.yml",
+                    )
+                )
+            elif m.versao != componente.versao:
+                valor = f"versão {m.versao} difere da fixada ({componente.versao})"
+                erros.append(Erro(registro, "versao", codigos.R_MECANISMO_HOSPEDADO, valor))
+        real = hashlib.sha256(m.conteudo).hexdigest()
+        if real != m.sha256:
+            valor = f"sha256 do arquivo é {real}, o registro diz {m.sha256}"
+            erros.append(Erro(registro, m.arquivo, codigos.R_MECANISMO_HOSPEDADO, valor))
+    origens = {(m.componente, m.origem) for m in hospedados}
+    for p in repo.praticas:
+        mecanismo = _texto(p.meta, "mecanismo")
+        externo = MECANISMO_EXTERNO.match(mecanismo) if mecanismo else None
+        if externo and (externo["componente"], externo["caminho"]) not in origens:
+            valor = f"{mecanismo}: arquivo não hospedado em {PASTA_MECANISMOS}/"
+            erros.append(
+                Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO_HOSPEDADO, valor)
+            )
     return erros

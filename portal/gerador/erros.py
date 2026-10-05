@@ -21,6 +21,7 @@ R_REF_INEXISTENTE = "R-REF-INEXISTENTE"
 R_REF_CONJUNTO = "R-REF-CONJUNTO"
 R_REFERENCIA = "R-REFERENCIA"
 R_MECANISMO = "R-MECANISMO"
+R_MECANISMO_HOSPEDADO = "R-MECANISMO-HOSPEDADO"
 R_ADOTAR = "R-ADOTAR"
 R_EVITAR = "R-EVITAR"
 R_VERIFICACAO = "R-VERIFICACAO"
@@ -50,6 +51,7 @@ DESCRICOES: dict[str, str] = {
     R_REF_CONJUNTO: "campo referencias diferente do conjunto citado no corpo",
     R_REFERENCIA: "referência com URL https inválida ou data impossível",
     R_MECANISMO: "força acima de orienta sem mecanismo resolvível",
+    R_MECANISMO_HOSPEDADO: "mecanismo hospedado divergente do registro, ou script não hospedado",
     R_ADOTAR: "status adotar sem referência forte nem caso interno",
     R_EVITAR: "status evitar sem indicar a prática que substitui",
     R_VERIFICACAO: "registro de verificação ausente, defasado, incompleto ou sem revisão",

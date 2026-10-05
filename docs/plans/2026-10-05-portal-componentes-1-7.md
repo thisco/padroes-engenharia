@@ -55,7 +55,7 @@ Reverter os commits deste plano na branch. Nada foi publicado: o merge na `main`
   `constituicao/PROCEDENCIA.md` passam a citar a versão e o commit novos. Confira com `diff` que
   o conteúdo das outras 4 skills e da constituição é igual ao da tag. Se o `PROCEDENCIA` já
   registra o sha256, ele é recalculado.
-- [ ] **T3 (R3).** Crie `mecanismos/sdd-scaffold/verificar_pr.py` e
+- [x] **T3 (R3).** Crie `mecanismos/sdd-scaffold/verificar_pr.py` e
   `mecanismos/sdd-scaffold/verificar_constituicao.py`, como cópia da tag (`template/scripts/`),
   e o `mecanismos/sdd-scaffold/PROCEDENCIA.md`. Ele traz o repositório, a versão, o commit e, por
   arquivo, o caminho de origem e o sha256.

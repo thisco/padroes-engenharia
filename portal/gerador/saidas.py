@@ -18,6 +18,7 @@ from typing import Any
 
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import caminho_seguro, expandir_inclusoes, inclusoes, linguagem_de
+from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
     categoria_nome,
@@ -497,6 +498,14 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
             href = site.url(f".well-known/skills/{s.chave}/SKILL.md")
             linhas.append(f"- [{s.meta['name']}]({href}): {s.meta['description']}")
         linhas.append("")
+    mecanismos = carregar_mecanismos(site.raiz)
+    if mecanismos:
+        indice = site.url(".well-known/mecanismos/index.json")
+        linhas += ["## Mecanismos", "", f"- [Índice]({indice}): scripts hospedados, com sha256"]
+        for m in mecanismos:
+            href = site.url(f".well-known/mecanismos/{m.componente}/{m.arquivo}")
+            linhas.append(f"- [{m.componente}/{m.arquivo}]({href}): {m.componente} {m.versao}")
+        linhas.append("")
     if constituicoes(site):
         linhas += ["## Constituição", ""]
         linhas += [f"- [{c}]({site.url(c)}): a constituição canônica" for c in constituicoes(site)]
@@ -814,7 +823,8 @@ def readme_md(site: Site) -> str:
         "5. Veja: `python -m http.server -d public 8000` e abra http://localhost:8000.",
         "## Para agentes\n\n"
         "O portal publica `llms.txt`, `llms-full.txt`, `catalogo.json`, `roteamento.json`, "
-        "`.well-known/skills/index.json` e um `.md` gêmeo de cada página. A página "
+        "`.well-known/skills/index.json`, `.well-known/mecanismos/index.json` e um `.md` gêmeo "
+        "de cada página. A página "
         "`para-agentes.html` traz o bloco para o `AGENTS.md` do seu projeto.",
         "## Roteiro\n\nO que vem depois da v0 não ganha pasta vazia:\n\n" + "\n".join(ROTEIRO),
     )
@@ -846,6 +856,25 @@ def indice_skills(site: Site) -> dict[str, Any]:
     return {"skills": skills}
 
 
+def indice_mecanismos(site: Site) -> dict[str, Any]:
+    """`.well-known/mecanismos/index.json`: componente, versão, commit, origem e sha256 de cada
+    script hospedado em `mecanismos/`."""
+    return {
+        "mecanismos": [
+            {
+                "componente": m.componente,
+                "versao": m.versao,
+                "commit": m.commit,
+                "arquivo": m.arquivo,
+                "origem": m.origem,
+                "url": f".well-known/mecanismos/{m.componente}/{m.arquivo}",
+                "sha256": hashlib.sha256(m.conteudo).hexdigest(),
+            }
+            for m in carregar_mecanismos(site.raiz)
+        ]
+    }
+
+
 def copiar(origem: Path, destino: Path) -> None:
     """Copia só os bytes (sem data nem permissão), para o build ser reprodutível."""
     destino.parent.mkdir(parents=True, exist_ok=True)
@@ -866,11 +895,15 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
         "ROTEAMENTO.md": roteamento_md(site),
         "README.md": readme_md(site),
         ".well-known/skills/index.json": para_json(indice_skills(site)),
+        ".well-known/mecanismos/index.json": para_json(indice_mecanismos(site)),
     }
     for relativo, texto in textos.items():
         escrever(saida, relativo, texto)
     for s in site.repo.skills:
         copiar(site.raiz / s.caminho_relativo, saida / ".well-known/skills" / s.chave / "SKILL.md")
+    for m in carregar_mecanismos(site.raiz):
+        destino = saida / ".well-known/mecanismos" / m.componente / m.arquivo
+        copiar(site.raiz / "mecanismos" / m.componente / m.arquivo, destino)
     copiar(site.raiz / "esquemas/catalogo.schema.json", saida / "esquemas/catalogo.schema.json")
     for constituicao in constituicoes(site):
         copiar(site.raiz / constituicao, saida / constituicao)

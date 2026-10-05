@@ -134,6 +134,7 @@ def repo_exemplo(repo_minimo: Path) -> Path:
     com mecanismo externo e uma de `ia-no-produto`), conceito, guia, caso, página e skill,
     todos com registro de verificação. É o repositório de exemplo do §13 da spec."""
     raiz = repo_minimo
+    shutil.copytree(fabrica.RAIZ / "mecanismos", raiz / "mecanismos")
     citacao = "Afirmação conferida na fonte [ref:ref-forte].\n"
     dominio = fabrica.meta_dominio(referencias=["ref-forte"])
     _com_registro(

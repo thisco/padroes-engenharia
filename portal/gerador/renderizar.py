@@ -701,6 +701,10 @@ def indices(site: Site) -> list[tuple[str, str]]:
         ("catalogo.json", "todos os itens com metadados, versão e commit"),
         ("esquemas/catalogo.schema.json", "o JSON Schema do catálogo"),
         (".well-known/skills/index.json", "as skills publicadas, com sha256 de cada arquivo"),
+        (
+            ".well-known/mecanismos/index.json",
+            "os scripts de mecanismo hospedados, com versão, commit e sha256",
+        ),
     ]
 
 
