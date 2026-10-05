@@ -46,7 +46,7 @@ from portal.gerador.exemplos import (
     secoes,
 )
 from portal.gerador.mecanismos import PASTA as PASTA_MECANISMOS
-from portal.gerador.mecanismos import carregar_mecanismos
+from portal.gerador.mecanismos import Mecanismo, carregar_mecanismos
 from portal.gerador.ninhos import PECAS
 
 
@@ -982,7 +982,36 @@ def regra_mecanismos_hospedados(
                 valor = f"{_PREFIXO_HOSPEDADO}/{citado[0]}/{citado[1]}: arquivo não hospedado em "
                 valor += f"{PASTA_MECANISMOS}/"
                 erros.append(Erro(caminho, "mecanismo", codigos.R_MECANISMO_HOSPEDADO, valor))
+        for arquivo, citado, esperado in _sha256_divergentes(texto, hospedados):
+            valor = f"{arquivo}: sha256 citado é {citado}, o registro diz {esperado}"
+            erros.append(Erro(caminho, "sha256", codigos.R_MECANISMO_HOSPEDADO, valor))
     return erros
+
+
+SHA256_LITERAL = re.compile(r"(?<![0-9a-fA-F])[0-9a-f]{64}(?![0-9a-fA-F])")
+_JANELA_SHA256 = 3
+
+
+def _sha256_divergentes(texto: str, hospedados: list[Mecanismo]) -> list[tuple[str, str, str]]:
+    """Hashes de 64 hex citados junto ao nome de um script hospedado que divergem do registro.
+
+    O nome é procurado na própria linha do hash e, se não houver, nas três linhas anteriores
+    (a mais próxima vence). Hash sem nome de script por perto não é conferido."""
+    linhas = texto.splitlines()
+    achados: list[tuple[str, str, str]] = []
+    for i, linha in enumerate(linhas):
+        for hash_ in SHA256_LITERAL.findall(linha):
+            for j in range(i, max(i - _JANELA_SHA256, 0) - 1, -1):
+                nomes = [
+                    m
+                    for m in hospedados
+                    if re.search(rf"(?<![\w.-]){re.escape(m.arquivo)}(?![\w-])", linhas[j])
+                ]
+                if nomes:
+                    if all(hash_ != m.sha256 for m in nomes):
+                        achados.append((nomes[0].arquivo, hash_, nomes[0].sha256))
+                    break
+    return achados
 
 
 _PREFIXO_HOSPEDADO = ".well-known/mecanismos"

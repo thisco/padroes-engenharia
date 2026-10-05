@@ -227,6 +227,48 @@ def test_hospedados_aceita_exemplo_que_cita_arquivo_hospedado(tmp_path):
     assert rodar(tmp_path) == []
 
 
+# regra: sha256 literal citado junto a um script hospedado
+
+
+def test_hospedados_aceita_sha256_literal_igual_ao_registro(tmp_path):
+    montar(tmp_path)
+    assert rodar(tmp_path, receita_com(f"{SHA}  scripts/verificar_pr.py")) == []
+
+
+def test_hospedados_pega_sha256_literal_divergente_na_receita(tmp_path):
+    montar(tmp_path)
+    erros = rodar(tmp_path, receita_com(f"{'1' * 64}  scripts/verificar_pr.py"))
+    assert erros == [
+        Erro(
+            "receitas/ligar-ci.md",
+            "sha256",
+            "R-MECANISMO-HOSPEDADO",
+            f"verificar_pr.py: sha256 citado é {'1' * 64}, o registro diz {SHA}",
+        )
+    ]
+
+
+def test_hospedados_pega_sha256_literal_na_linha_seguinte_ao_nome(tmp_path):
+    montar(tmp_path)
+    trecho = f"baixe o verificar_pr.py e confira que o hash dele é\n{'2' * 64}. Se não bater, pare."
+    erros = rodar(tmp_path, receita_com(trecho))
+    assert [e.campo for e in erros] == ["sha256"]
+
+
+def test_hospedados_ignora_sha256_sem_nome_de_script_por_perto(tmp_path):
+    montar(tmp_path)
+    assert rodar(tmp_path, receita_com(f"o hash {'3' * 64} de outra coisa")) == []
+
+
+def test_hospedados_pega_sha256_literal_divergente_em_exemplo(tmp_path):
+    montar(tmp_path)
+    exemplo = tmp_path / "exemplos" / "DAD-01" / "gitlab-ci.yml"
+    exemplo.parent.mkdir(parents=True)
+    exemplo.write_text(f"# {'4' * 64}  verificar_pr.py\n", encoding="utf-8")
+    erros = rodar(tmp_path)
+    assert [(e.arquivo, e.campo) for e in erros] == [("exemplos/DAD-01/gitlab-ci.yml", "sha256")]
+
+
 def test_hospedados_e_a_ultima_regra_registrada():
     assert REGRAS[-1] is regra_mecanismos_hospedados
 
