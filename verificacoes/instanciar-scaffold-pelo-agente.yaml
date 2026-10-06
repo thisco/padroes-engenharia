@@ -1,0 +1,62 @@
+conteudo: instanciar-scaffold-pelo-agente
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o agente clona o scaffold, roda o gerador, confere os pontos de montagem, lê a constituição e conduz a configuração pós-geração, numa sessão aberta na pasta onde o projeto vai ser criado
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Instalar pelo próprio agente (o agente se configura)', parágrafo de abertura
+  resultado: confirmada
+  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.'
+- texto: o gerador exige Python 3.11 ou mais novo
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Quick start' ('Requer Python 3.11+')
+  resultado: confirmada
+- texto: o gerador faz o primeiro commit do projeto e instala a skill do ciclo a partir do repositório dela
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Quick start', lista 'O que acontece'
+  resultado: confirmada
+  nota: 'Que o git precise de user.name e user.email e que a instalação da skill precise de rede é consequência desses dois passos e consta no comando do starter; o texto do guia não os atribui ao README.'
+- texto: o prompt clona o scaffold em /tmp/sdd-scaffold e gera o projeto com --destino .; para outra pasta troca-se --destino
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt da seção 'Instalar pelo próprio agente' (passo 2) e parágrafo seguinte ao prompt
+  resultado: confirmada
+- texto: o prompt pergunta nome, stack e descrição, e segue com defaults e marcadores <!-- preencher --> se a pessoa não souber
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt, passo 1
+  resultado: confirmada
+- texto: o prompt manda parar e esperar confirmação antes de qualquer passo destrutivo
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt, frase de abertura
+  resultado: confirmada
+- texto: a configuração pós-geração percorre os marcadores em docs/steering/, pyproject.toml, tests/README.md e docs/prd/MODELO-prd.md
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt, passo 5
+  resultado: confirmada
+- texto: .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem'
+  resultado: confirmada
+- texto: o gerador instala a sdd-lifecycle em skills/sdd-lifecycle/ pela tag v3.0.0 fixada no gerador e registra origem e revisão em PROCEDENCIA.md
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A skill do ciclo é instalada, não copiada'
+  resultado: confirmada
+- texto: com a origem inacessível a geração continua sem a skill e deixa skills/SKILL-CICLO-AUSENTE.md
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A skill do ciclo é instalada, não copiada', último parágrafo
+  resultado: confirmada
+- texto: a constituição fica inline no AGENTS.md entre marcadores, o verificar_constituicao.py confere o bloco contra a cópia canônica e imprime a linha de confere
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: ao final o agente lista o que depende da pessoa (desenhar arquitetura.drawio, mapear mapa.yml, escrever o PRD antes da primeira spec de Tier 2) e não edita constituição, ADRs nem mapa.yml por conta própria
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt, passos 4 e 7
+  resultado: confirmada
+- texto: o CLAUDE.md do template importa a constituição com @AGENTS.md desde a 1.7.0
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
