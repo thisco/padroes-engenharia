@@ -49,6 +49,18 @@ execucoes:
   evidencia: "script antes: aviso de spec citada fora do diff; o agente identificou R1 (corte em 200 caracteres) e acrescentou '## Adendo 2026-10-06' sem mexer em requisitos nem Status; commit 35d19d0 só com a spec; script depois: nenhum achado; pytest 3 passed. Transcrição em curadoria-a5/transcricoes/P1-10-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'Como aplicar passo 3 e prompt passo 4: rodar o script e sair ''sem aviso'' antes do commit
+      do passo 5 (P1-10.md:65 e 123)'
+    problema: '[médio] trazido do plano (1), reproduzido: o script compara ''git diff base...HEAD'', só
+      vê o commitado. Com o adendo ainda não commitado o aviso continua; com o plano não commitado sai
+      ''Requisitos afetados: 0 spec(s) citada(s), nenhum achado'', um verde falso. A ordem escrita não
+      leva à saída pedida sem inventar o commit.'
+    tratamento: 'sugerido: mandar commitar plano e spec antes de rodar o script, ou fazer o script olhar
+      a árvore de trabalho; avisar quando nenhum plano estiver no diff.'
+  - afirmacao: 'prompt manda commitar (docs(specs): ...) (P1-10.md)'
+    problema: '[baixo] trazido do plano (2): o commit do teste saiu com trailer Co-Authored-By do harness;
+      projetos que proíbem trailer precisam pedir a mensagem sem ele.'
+    tratamento: 'sugerido: acrescentar ''sem trailer de coautoria'' ao prompt, como faz a receita de skills.'

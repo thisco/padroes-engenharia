@@ -62,6 +62,30 @@ execucoes:
   evidencia: "verificar_pr antes e depois: nenhum achado; python3 -m pytest falhou (sem pytest no ambiente, nada foi instalado) e o agente chamou as duas funções de teste à mão, declarando que não substitui a suíte; tabela: R1 atendido (src/pedidos.py:4-6), R2 parcial (src/pedidos.py:9-11; o teste só cobre o caso com observação), a lacuna semeada; achados escritos no plano; commit 55bd1ce só com o plano. Transcrição em curadoria-a5/transcricoes/P1-09-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: '''A skill pede uma sessão ou agente independente, com contexto novo'' e ''o que varia
+      é quem a faz e com que modelo'' (P1-09.md:33 e 47-48)'
+    problema: '[médio] o SKILL.md do sdd-lifecycle (linhas 212-213) pede para o Tier 2 ''um modelo de
+      raciocínio potente''; o texto omite isso e conclui, com base na ADR 0005, que o modelo varia. A
+      ADR 0005 trata da curadoria do portal e diz que só prevalece sobre a skill nas fatias em que o dono
+      a aplicar; não vale como regra para quem adota o scaffold.'
+    tratamento: 'sugerido: citar o requisito de modelo da skill e apresentar a ADR 0005 só como contexto
+      do próprio portal. Decisão em T15.'
+  - afirmacao: 'Exemplo: spec proporcional do P1-08 ''já aprovada''; evidência src/pedidos.py:6 (P1-09.md:89)'
+    problema: '[médio] o Exemplo não é autocontido: não traz src/pedidos.py nem os testes, e a spec do
+      P1-08 está em rascunho sem campos de aprovação. A conferência montou arquivos fictícios para ver
+      ''nenhum achado'' (4 arquivo(s)); as evidências de arquivo:linha do plano não são reproduzíveis.'
+    tratamento: 'sugerido: incluir o código e os testes mínimos, ou dizer que o plano é ilustrativo e
+      que a spec precisa de Status aprovada e Aprovado por.'
+  - afirmacao: 'Como aplicar passo 2: ''ele também roda os testes'' (P1-09.md:68)'
+    problema: '[médio] trazido do plano (2): o preparo não traz pytest e o prompt assume python3 -m pytest
+      (testado: ''No module named pytest''). O Como aplicar não diz como instalar as dependências antes.'
+    tratamento: 'sugerido: passo 0 com a instalação das dependências do projeto, ou {comando de testes}
+      com o pré-requisito.'
+  - afirmacao: estudo com cinco revisores atribuiu achados a cláusula (P1-09.md:53-56) [ref:infoq-when-pays-off]
+    problema: '[baixo] a fonte sustenta (81% com baseline, 0% sem, p=0,043, n=5, ''directional''), mas
+      o mesmo estudo diz que o baseline não melhorou o recall (0,525 vs 0,518) e dobrou o tempo (48,4
+      vs 26,7 min); o texto não menciona o custo.'
+    tratamento: 'sugerido: acrescentar uma frase com recall igual e tempo maior.'

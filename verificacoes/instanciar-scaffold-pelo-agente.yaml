@@ -57,9 +57,23 @@ afirmacoes:
   localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: Passos 5 e 6 e Confira ao fim (guias/instanciar-scaffold-pelo-agente.md:52 e Confira)
+    problema: '[baixo] o passo 6 do prompt do README (pip install pyyaml e verificar_drift_arquitetura.py,
+      com ''não mapeado'' esperado no primeiro run) não aparece nos Passos nem no Confira; o leitor verá
+      o aviso sem saber que é esperado. O .kiro/permissions.yaml também entra na lista de marcadores do
+      README e não no guia.'
+    tratamento: 'sugerido: uma linha no passo 5 ou no Confira sobre o drift check do primeiro run.'
+  - afirmacao: 'prompt do starter: passo 6 usa pip install pyyaml'
+    problema: '[baixo] trazido do plano (2): falha no macOS sem pip no PATH; python3 -m pip é mais portável.
+      Correção no scaffold 1.8.0, o prompt é o do README.'
+    tratamento: levar ao scaffold 1.8.0; até lá, nota no guia.
+  - afirmacao: link para a prática P1-01 (guias/instanciar-scaffold-pelo-agente.md:119)
+    problema: '[médio] a URL ../praticas/construir-com-ia/P1-01.html dá 404: a página gerada é public/praticas/P1-01.html
+      (confirmado no HTML gerado). O validador e o gerador não pegam.'
+    tratamento: 'sugerido: usar ../praticas/P1-01.html; avaliar regra de link interno no validador (B.5).'
 execucoes:
 - tipo: prompt
   prompt: starter-sdd-scaffold-prompt-1

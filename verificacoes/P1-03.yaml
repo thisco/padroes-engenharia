@@ -74,6 +74,19 @@ execucoes:
   evidencia: 'AGENTS.md de 36653 para 5652 bytes numa rodada; a seção "Procedimentos detalhados (colados da wiki)" (linhas 92 a 291) foi movida sem alteração para docs/steering/procedimentos.md (31342 bytes) e trocada por uma linha de roteamento; constituição e tabela de roteamento intactas; verificar_constituicao.py --raiz . saiu com 0 ("Constituição padrao-v1.0: bloco inline confere com o arquivo canônico."); git status --short: só M AGENTS.md e ?? docs/steering/procedimentos.md; sem commit. Transcrição em curadoria-a5/transcricoes/P1-03-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'mecanismo: verificar_constituicao.py@1.7.0, força avisa (praticas/construir-com-ia/P1-03.md:8-9)'
+    problema: '[médio] o script não mede tamanho (sem o número 30000 no código; o texto de Como verificar
+      já admite). O limite de 30000 bytes mora no job governanca da receita, e o job reprova o pipeline,
+      não só avisa. O plano lista o mecanismo como ''job governanca'', o frontmatter diz outra coisa.'
+    tratamento: 'sugerido: mecanismo apontar o job governanca (ou os dois) e a força refletir que o job
+      bloqueia quando Pipelines must succeed está ligado. Decisão em T15.'
+  - afirmacao: 'Exemplo: 200 passos de procedimento levam o AGENTS.md de 5421 a 36653 bytes (P1-03.md:81)'
+    problema: '[médio] não reproduz sem inventar: com a linha mostrada (''Procedimento detalhado do passo
+      N: leia a spec, confira o plano, rode a suíte...'') 200 linhas dão 23053 bytes e o job passa. A
+      conferência precisou de linhas de ~150 bytes (49 linhas, 30973 bytes) para ver o FAIL no gitlab-ci-local
+      4.76.0, que então reproduziu ''grande demais'' como registrado.'
+    tratamento: 'sugerido: dizer o tamanho de cada linha, ou mandar encher o arquivo até passar de 30000
+      bytes e dar o comando que gera as linhas.'

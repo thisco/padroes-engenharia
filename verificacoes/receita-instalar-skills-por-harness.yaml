@@ -77,6 +77,25 @@ execucoes:
   evidencia: "listou as 5 skills; criou .claude, .codex, .kiro e .agents/skills apontando para ../skills (criou a pasta .agents; as outras já existiam com settings, requirements e permissions, intocados); acrescentou @AGENTS.md ao CLAUDE.md; readlink ../skills 4 vezes e ls dos 4 com as 5 skills; commit e36dec9 chore: monta os links de skills por harness, sem trailer, árvore limpa; terminou com o que depende do usuário. Transcrição em curadoria-a5/transcricoes/receita-instalar-skills-por-harness-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: montar-links.sh cria os quatro pontos em sequência (exemplos/instalar-skills-por-harness/montar-links.sh)
+    problema: '[baixo] reproduzido: com .kiro/skills como pasta de verdade, o script cria .claude e .codex,
+      e para com ERRO no .kiro, deixando estado parcial (rc 1). A receita diz que recusa a pasta, mas
+      não que deixa links criados.'
+    tratamento: 'sugerido: checar os quatro pontos antes de criar qualquer link, ou dizer no Se der errado
+      que o estado fica parcial.'
+  - afirmacao: o Claude Code lê o AGENTS.md direto a partir da v2.1.277 [ref:claude-code-memory] (receita:99)
+    problema: '[baixo] a fonte confirma, mas também diz que antes da v2.1.281 algumas sessões (Bedrock,
+      telemetria desativada) não carregam o AGENTS.md mesmo na 2.1.277; o texto omite.'
+    tratamento: 'sugerido: ''v2.1.277 ou mais nova (2.1.281 em Bedrock ou com telemetria desativada)''.'
+  - afirmacao: o gerar.py recusa receita sem execução de prompt, e a prévia exige servir a fonte (plano,
+      T11)
+    problema: '[médio] trazido do plano (1): motor sem modo de prévia deixa o R-PROMPT circular para receita
+      nova; não é defeito do conteúdo.'
+    tratamento: levar à B.5 (mudança de motor, revisão forte só então).
+  - afirmacao: Copilot segue link simbólico? (plano, T11 achado 3)
+    problema: '[baixo] trazido do plano: a documentação do Copilot não diz; o texto já avisa em Se der
+      errado. Kiro, Antigravity e Copilot sem execução registrada, dito na seção Confira.'
+    tratamento: sem ação; manter o aviso.

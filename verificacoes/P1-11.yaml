@@ -55,6 +55,14 @@ execucoes:
   evidencia: "script antes: dois avisos (Status aprovada; sem destilação); ADR docs/adr/0001-pedidos-nunca-sao-apagados.md (proposta), linha em PROJECT_MEMORY.md, Status arquivada; script depois: nenhum achado; pytest 4 passed; commit 4410222 com os 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-11-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: prompt manda commitar com spec, ADRs e memória (P1-11.md)
+    problema: '[baixo] trazido do plano (2): mesmo trailer Co-Authored-By do P1-10.'
+    tratamento: 'sugerido: mesmo ajuste do P1-10.'
+  - afirmacao: script confere destilação 'ADR, steering ou entrada em PROJECT_MEMORY' (P1-11.md:67)
+    problema: '[baixo] reproduzido: qualquer linha acrescentada a docs/PROJECT_MEMORY.md (testado com
+      ''- x'') ou qualquer arquivo de docs/steering/ zera o aviso; o texto cobre o limite só em termos
+      gerais.'
+    tratamento: 'sugerido: dizer no Como verificar que a presença do arquivo no diff basta para o script.'

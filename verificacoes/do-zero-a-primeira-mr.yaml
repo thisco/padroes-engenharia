@@ -55,9 +55,35 @@ afirmacoes:
   localizacao: README, subcomando git
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
+  revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: links ../praticas/construir-com-ia/P1-01, P1-04, P1-05, P1-06, P1-09 e P1-11.html (guias/do-zero-a-primeira-mr.md:71,
+      114 e demais)
+    problema: '[médio] seis links dão 404 no site gerado (as páginas de prática ficam em /praticas/P1-XX.html,
+      sem a pasta do domínio).'
+    tratamento: 'sugerido: trocar para ../praticas/P1-XX.html.'
+  - afirmacao: 'Passo 1: python3 scripts-do-scaffold/criar_projeto.py; base com app/precos.py, V1__cria_pedidos.sql
+      e remoto git init --bare (guias/do-zero-a-primeira-mr.md:49-65)'
+    problema: '[médio] o tutorial não é executável por quem lê sem inventar: scripts-do-scaffold/ não
+      existe (no scaffold é criar_projeto.py na raiz do clone); o conteúdo de app/precos.py, da migration
+      V1, dos testes, do PRD, da spec e do plano completos e o comando do remoto só são descritos. A execução
+      em si foi reproduzida: no commit 7f2b10f do projeto de teste o verificar_pr.py devolve ''BLOQUEIA:
+      migrations/V1__cria_pedidos.sql já existe na base e foi alterado'', e em d9d13f1 só avisos.'
+    tratamento: 'sugerido: dar o caminho real (criar_projeto.py do clone), o comando git init --bare e
+      o conteúdo mínimo dos arquivos base, ou publicar a pasta da execução como exemplo.'
+  - afirmacao: saída 'Projeto criado em /Users/thiago/curadoria-a5/...' (guias/do-zero-a-primeira-mr.md:54)
+    problema: '[baixo] caminho pessoal na saída publicada.'
+    tratamento: 'sugerido: trocar por /caminho/app-guia1.'
+  - afirmacao: 'T12 achados: .gitlab-ci-local/ sem ignore na receita ligar-ci; ruff acusa import sys nos
+      scripts do scaffold; PyYAML ausente no Python do sistema'
+    problema: '[baixo] trazidos do plano. O guia já manda ignorar .gitlab-ci-local/ e declara o ruff;
+      a receita ligar-ci (fatia anterior) não manda ignorar, e a validação do YAML depende de PyYAML.'
+    tratamento: 'sugerido: acrescentar o ignore à receita ligar-ci; ruff só no scaffold 1.8.0.'
+  - afirmacao: '6.1: revisão contra a spec pelo mesmo executor; aprovação por ''Ana Lima'' fictícia'
+    problema: '[baixo] declarado no guia (valor da revisão está na independência); sem ação além de manter
+      a declaração.'
+    tratamento: manter.
 execucoes:
 - tipo: arquivo
   arquivo: guias/do-zero-a-primeira-mr.md

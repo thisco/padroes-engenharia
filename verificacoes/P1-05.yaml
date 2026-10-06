@@ -51,6 +51,12 @@ execucoes:
   evidencia: "1ª execução do verificar_pr.py: AVISO de 1 marcador [ESCLARECER] aberto; o agente aplicou a resposta em R1, apagou o marcador e registrou a linha P e R em '### Sessão 2026-10-05'; achou ambiguidade real no critério de R1 (pedido não pago), deixou novo marcador sem escolher resposta e perguntou; commit 11fcf99 só com a spec; 2ª execução: o mesmo AVISO com 1 marcador; Status e aprovação intactos. Transcrição em curadoria-a5/transcricoes/P1-05-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'Como aplicar passo 3: grep -n ''ESCLARECER:'' docs/specs/*.md (P1-05.md:59)'
+    problema: '[baixo] o grep dá falso positivo que o verificar_pr.py não dá: acha docs/specs/MODELO-spec.md:49,
+      marcador em comentário HTML e em bloco de código (testado: o verificador sai com ''nenhum achado''
+      nesses casos, como o texto de Como verificar diz).'
+    tratamento: 'sugerido: chamar o grep de triagem e dizer que a conferência é o verificador, ou excluir
+      o MODELO-spec.md.'

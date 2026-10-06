@@ -92,7 +92,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   Execução registrada.
 - [x] **T13 (guia 2, "Instanciar o scaffold pelo próprio agente").** O prompt do README da 1.7.0,
   testado em sessão nova. Ele já é o `prompt_para_agente` do starter, sem duplicar texto.
-- [ ] **T14 (conferência em lote, ADR 0005).** Um agente novo, com modelo econômico, confere a
+- [x] **T14 (conferência em lote, ADR 0005).** Um agente novo, com modelo econômico, confere a
   fatia inteira. Ele segue o Como aplicar e o Exemplo de cada conteúdo num repositório vazio e
   lista o que exigiria inventar algo (§11.4). Também abre uma fonte por conteúdo, por amostragem.
   Os achados vão para a `revisao_adversarial` de cada registro e para este plano. Achado crítico
@@ -124,4 +124,135 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
 - T12 (guia do-zero-a-primeira-mr, também o tutorial) fechou: execução de ponta a ponta sem harness em `~/curadoria-a5/b1-guia1-exec/app-guia1` (scaffold 1.7.0): Tier 1, Tier 2 até o arquivamento, jobs `normas-do-pr`, `governanca` e `segredos` em PASS no gitlab-ci-local 4.76.0 (Docker) e a trava `BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado` (FAIL); registrada em `verificacoes/do-zero-a-primeira-mr.yaml`; validar e gerar saem com 0. A aprovação da spec foi gravada como "Ana Lima", pessoa fictícia, e a revisão contra a spec foi feita pelo mesmo executor (declarado no guia).
   Achados para a T14: (1) receita ligar-ci: o gitlab-ci-local cria `.gitlab-ci-local/` no projeto, e a receita não manda ignorá-la. (2) `ruff check .` acusa `import sys` não usado nos scripts `verificar_pr.py` e `verificar_constituicao.py` do scaffold 1.7.0 (os hashes fixados impedem editar); correção só no scaffold. (3) O Python do sistema pode não ter PyYAML, e o passo de validar o YAML da receita depende dele.
 
-## Conferência em lote: <data> — achados
+## Conferência em lote: 2026-10-06 — achados
+
+Conferente independente, modelo econômico, ADR 0005. Escopo: 11 conteúdos (P1-03 a P1-11, a receita
+`instalar-skills-por-harness` e os dois guias). Método: cópias de `projeto-teste-17` em
+`~/curadoria-a5/t14-<id>`, execução do Exemplo e do verificador de cada conteúdo, uma execução
+reproduzida por conteúdo contra a saída registrada, uma fonte aberta por conteúdo. Cada achado está
+na `revisao_adversarial` de `verificacoes/<chave>.yaml`, com a classe no começo do `problema`.
+Os achados anotados nas Evidências (T2 a T13) entraram nos registros, marcados "trazido do plano".
+
+**Resultado: 0 críticos, 13 médios, 19 baixos (32 achados).** Nenhum conteúdo ensina algo errado ou é
+inexecutável por completo, então a ADR 0005 não pede revisão com modelo forte. Os médios são
+ajustes de texto, de exemplo ou de fonte para a T15, mais um de motor (B.5).
+
+Execuções reproduzidas e fontes abertas, por conteúdo:
+
+| Conteúdo | Execução reproduzida | Fonte aberta |
+|---|---|---|
+| P1-03 | job `governanca` no gitlab-ci-local 4.76.0: 30973 bytes, FAIL como registrado; `verificar_constituicao.py` com sha256 igual ao hospedado | README do scaffold, "trunca em 32.768 bytes, sem avisar" (linha 107): confirma |
+| P1-04 | `verificar_pr.py` na spec do Exemplo: nenhum achado | Böckeler: 4 histórias e 16 critérios, "sledgehammer": confirma |
+| P1-05 | verificador com o marcador reinserido: AVISO; marcador em comentário e em bloco de código é ignorado | Spec Kit, `[NEEDS CLARIFICATION]`: confirma |
+| P1-06 | verificador na spec do Exemplo: nenhum achado; `Aprovado em` vazio passa, `Aprovado por` vazio avisa | GitHub Blog, papel de "verify" a cada fase: confirma |
+| P1-07 | `verificar-modelo.sh`: ERRO 1 sem registro, OK 0 com o `modelo.md` | guia do Gemini 3: confirma, mas a página está marcada como depreciada |
+| P1-08 | `medir-spec.py`: 74/45/9 e 22/14/2, como registrado | Marmelab: 8 arquivos e 1.300 linhas, repetições e casos imaginários: confirma |
+| P1-09 | verificador com spec e plano de dois requisitos: nenhum achado (4 arquivos) | InfoQ: 81% contra 0%, n=5: confirma, com omissão de recall e tempo |
+| P1-10 | script: aviso sem adendo; sem aviso com adendo commitado | síntese de campo: "#1 practical problem": confirma (fonte secundária) |
+| P1-11 | script: dois avisos; "nenhum achado" após arquivar e registrar memória | OpenSpec, arquivar funde o delta; Böckeler, spec-first e spec-anchored: confirma |
+| receita | `montar-links.sh`: quatro links, repetição sem erro, ERRO com pasta real | doc de memória do Claude Code, v2.1.277: confirma |
+| guia 2 | `verificar_constituicao.py --raiz .` com 0; `PROCEDENCIA.md` com `v3.0.0`; README sem commit pós-configuração | README do scaffold, prompt e `/tmp/sdd-scaffold`: confirma |
+| guia 1 | `verificar_pr.py --base origin/main` no commit com a V1 editada: `BLOQUEIA`; no commit corrigido, só avisos | README do gitleaks, `git log -p`: confirma |
+
+### P1-03
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-03 | ajustar | médio: o `mecanismo` aponta o `verificar_constituicao.py`, que não mede tamanho; o limite está no job `governanca`, que reprova o pipeline, e a força diz `avisa` |
+| | | médio: o Exemplo não reproduz os 36653 bytes com a linha mostrada (200 linhas dão 23053 e o job passa) |
+
+### P1-04
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-04 | ok | baixo: cita o caminho da ADR 0003 do portal, que o adotante não tem (vale também em P1-09, P1-10 e P1-11) |
+
+### P1-05
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-05 | ok | baixo: o `grep` do passo 3 dá falso positivo (`MODELO-spec.md`, comentário, bloco de código) que o verificador não dá |
+
+### P1-06
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-06 | ajustar | médio: força `pede-aprovacao` com mecanismo que só avisa e só confere `Aprovado por` |
+| | | baixo: "Ana Souza" é fictícia e o texto não diz |
+
+### P1-07
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-07 | ajustar | médio: a página do guia do Gemini 3 está marcada como depreciada e remete ao guia do Gemini 3.5 Flash |
+| | | médio: o Exemplo usa `gemini-3`, que não é id de modelo, e "aplica" `thinking_level: high`, que o guia diz ser o padrão |
+| | | baixo: passo 5 do prompt contradiz o passo 2; o texto não diz onde salvar `verificar-modelo.sh` |
+
+### P1-08
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-08 | ok | baixo: o prompt manda manter "campos de aprovação" que a spec do Exemplo não tem |
+| | | baixo: o texto não diz onde salvar `medir-spec.py` |
+
+### P1-09
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-09 | ajustar | médio: omite que a skill pede "modelo de raciocínio potente" no Tier 2 e usa a ADR 0005 do portal para dizer que o modelo varia |
+| | | médio: Exemplo não autocontido (sem `src/pedidos.py`, sem testes, spec de origem em rascunho) |
+| | | médio: o preparo não traz `pytest` e o Como aplicar não diz como instalar as dependências |
+| | | baixo: o estudo do InfoQ também mostra recall igual e o dobro do tempo, e o texto não diz |
+
+### P1-10
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-10 | ajustar | médio: o passo 4 do prompt espera "sem aviso" antes do commit, mas o script lê só o commitado; plano não commitado dá verde falso ("0 spec(s) citada(s)") |
+| | | baixo: commit do prompt sai com trailer de coautoria do harness |
+
+### P1-11
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P1-11 | ok | baixo: commit do prompt com trailer do harness |
+| | | baixo: qualquer linha em `PROJECT_MEMORY.md` ou qualquer arquivo de `docs/steering/` zera o aviso do script |
+
+### Receita "Instalar as skills por harness"
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| receita | ok | médio (motor, B.5): sem modo de prévia no `gerar.py`, o `R-PROMPT` é circular para receita nova |
+| | | baixo: o script deixa links parciais quando um ponto é pasta de verdade |
+| | | baixo: a v2.1.277 não basta em Bedrock ou com telemetria desativada (v2.1.281) |
+| | | baixo: Copilot e link simbólico sem confirmação (já avisado no texto) |
+
+### Guia "Instanciar o scaffold pelo próprio agente"
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| guia 2 | ajustar | médio: o link para a P1-01 (`../praticas/construir-com-ia/P1-01.html`) dá 404 |
+| | | baixo: o passo 6 do prompt (drift check, "não mapeado" esperado) não aparece no guia |
+| | | baixo: `pip install` do passo 6 falha no macOS sem `pip` (scaffold 1.8.0) |
+
+### Guia "Do zero à primeira MR com IA"
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| guia 1 | ajustar | médio: seis links para práticas dão 404 |
+| | | médio: não executável sem inventar: `scripts-do-scaffold/` não existe, e os arquivos-base, os testes, a spec e o remoto são descritos sem conteúdo ou comando |
+| | | baixo: caminho pessoal na saída publicada |
+| | | baixo: `.gitlab-ci-local/` sem ignore na receita ligar-ci, `ruff` no scaffold e PyYAML (trazidos do plano) |
+| | | baixo: revisão pelo mesmo executor e aprovação fictícia, já declaradas |
+
+### Para a T15
+
+1. Corrigir os links dos dois guias (`../praticas/P1-XX.html`) e levar à B.5 uma regra de link interno
+   no validador, porque o `validar.py` e o `gerar.py` saem com 0 com os 7 links quebrados.
+2. Ajustar `mecanismo` e força de P1-03 e P1-06, e o Exemplo de P1-03.
+3. Trocar a fonte do P1-07 e corrigir o id e o item "aplicado" do Exemplo.
+4. P1-09: citar o requisito de modelo da skill, tornar o Exemplo autocontido e tratar o `pytest`.
+5. P1-10: mandar commitar antes de rodar o script, ou ajustar o script.
+6. Dizer, em cada conteúdo com script no Exemplo, onde salvá-lo (`scripts/`).
+7. Guia 1: caminho real do gerador, comando do remoto e conteúdo mínimo dos arquivos-base.
+8. Levar à B.5: modo de prévia do `gerar.py`; ao scaffold 1.8.0: `python3 -m pip` e os scripts sem aviso do `ruff`.

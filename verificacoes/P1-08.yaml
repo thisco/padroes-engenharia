@@ -64,6 +64,13 @@ execucoes:
   evidencia: "medir-spec antes: 74 linhas (45 não vazias), 9 requisitos R<n>; o agente classificou cada R e seção (R1 a R3 dependem da mudança; R4 a R9 e 7 seções são extras) com motivo, sem inventar limite; reescreveu com Problema, R1 a R3 com os critérios originais e Não-objetivos; listou cada remoção com motivo; depois: 25 linhas (16 não vazias), 3 requisitos; commit 15a1e1c só com a spec; árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-08-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'prompt passo 3: ''mantenha o cabeçalho, inclusive Status e os campos de aprovação'' (P1-08.md:116)'
+    problema: '[baixo] trazido do plano (1): a spec do Exemplo (Status rascunho) não tem campos de aprovação.'
+    tratamento: 'sugerido: ''se existirem''.'
+  - afirmacao: 'Como aplicar passo 4: script do Exemplo (P1-08.md:66)'
+    problema: '[baixo] não diz onde salvar o script; o prompt assume scripts/medir-spec.py. O script rodou:
+      74 linhas (45 não vazias), 9 requisitos; 22 linhas (14), 2 requisitos, como registrado.'
+    tratamento: 'sugerido: ver achado de P1-07 sobre o local do script.'

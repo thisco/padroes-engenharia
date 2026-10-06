@@ -54,6 +54,16 @@ execucoes:
   evidencia: "1ª execução do verificar_pr.py: AVISO de aprovação sem registro; o agente confirmou zero [ESCLARECER], gravou só Aprovado por: Ana Souza e Aprovado em: 2026-10-05; commit d847ec9 só com a spec; 2ª execução: nenhum achado, saída 0, árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-06-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: força pede-aprovacao com mecanismo verificar_pr.py@1.7.0 (P1-06.md:8-9)
+    problema: '[médio] o mecanismo só avisa e só confere que ''Aprovado por'' tem texto (testado: ''Aprovado
+      em'' vazio passa; nome qualquer passa). Quem pede a aprovação é o checkpoint da Fase 3 da skill,
+      que o texto reconhece não ser conferido por script. A força fica acima do que o mecanismo faz.'
+    tratamento: 'sugerido: rebaixar a força para avisa, ou listar a Fase 3 da sdd-lifecycle como o mecanismo
+      de pedido e o script como o de registro. Decisão em T15.'
+  - afirmacao: 'Exemplo: ''Depois de a Ana pedir o registro'' (Ana Souza) (P1-06.md, Antes e depois)'
+    problema: '[baixo] o nome é fictício e o texto não diz; só o guia Do zero à primeira MR declara pessoa
+      fictícia.'
+    tratamento: 'sugerido: acrescentar ''nome fictício'' na primeira citação.'

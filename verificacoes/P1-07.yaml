@@ -49,6 +49,29 @@ execucoes:
   evidencia: "o agente abriu o guia do Gemini 3 (Last Updated 2026-09-23), aplicou só o mandado (app.py com thinking_level high, prompt sem 'Pense passo a passo', temperature=0 mantido), gravou docs/steering/modelo.md com Aplicadas, Não aplicadas com motivo e Não confirmado; sh scripts/verificar-modelo.sh saiu com OK; commit 7058e4f, 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-07-prompt-1.bruta.jsonl."
   data: '2026-10-05'
 revisao_adversarial:
-  revisor: pendente-conferencia-em-lote-t14
-  data: '2026-10-05'
-  achados: []
+  revisor: conferente independente, modelo econômico, ADR 0005
+  data: '2026-10-06'
+  achados:
+  - afirmacao: referência google-gemini-3-developer-guide sustenta as duas afirmações do Gemini 3 (P1-07.md:36
+      e seguintes)
+    problema: '[médio] a página aberta em 2026-10-06 traz ''Deprecation notice: This page is deprecated
+      and will be removed'' e aponta para o guia do Gemini 3.5 Flash. A seção ''Migration from Gemini
+      2.5'' confere com o texto (thinking_level high; remover temperature), mas a fonte está em fim de
+      vida.'
+    tratamento: 'sugerido: trocar pela página vigente e reconferir a seção de migração, ou registrar a
+      depreciação em notas da referência e no texto.'
+  - afirmacao: 'Exemplo: Versão ''gemini-3'' e aplicada ''thinking_level: high'' (exemplos/P1-07/modelo.md:4-9)'
+    problema: '[médio] trazido do plano (1): ''gemini-3'' não é id de modelo (o guia usa gemini-3.1-pro-preview
+      e gemini-3-flash-preview). Além disso, o guia diz que sem thinking_level o Gemini 3 já usa high,
+      então ''aplicar'' high é redundante e o exemplo de ''Aplicadas'' não muda comportamento.'
+    tratamento: 'sugerido: usar um id real no Exemplo e no prompt e trocar o item aplicado por algo que
+      altere o comportamento, ou dizer que é explícito por clareza.'
+  - afirmacao: 'prompt passo 5: ''não altere nenhum outro arquivo'' (P1-07.md:116)'
+    problema: '[baixo] trazido do plano (2): soa contraditório com o passo 2, que manda alterar arquivos
+      do projeto.'
+    tratamento: 'sugerido: ''além dos arquivos do passo 2 e do registro, não altere outros''.'
+  - afirmacao: 'Como aplicar passo 4 e prompt: scripts/verificar-modelo.sh'
+    problema: '[baixo] o texto não manda salvar o script do Exemplo em scripts/; sem isso o leitor inventa
+      o lugar (o script em si roda: ERRO com 1 sem o registro, OK com 0 com o modelo.md do Exemplo).'
+    tratamento: 'sugerido: dizer ''salve o script do Exemplo em scripts/verificar-modelo.sh''. O mesmo
+      vale para medir-spec.py, checar-requisitos-afetados.py e conferir-arquivamento.py.'
