@@ -1,5 +1,5 @@
 conteudo: receita-ligar-ci-gitlab-travas
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: os jobs rodam só em pipeline de merge request pela regra $CI_PIPELINE_SOURCE == merge_request_event;
@@ -90,11 +90,21 @@ afirmacoes:
   localizacao: README na tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), seções citadas neste registro
   resultado: confirmada
   nota: 'Seções conferidas na tag: ''O que você recebe'', ''Quick start'', ''O que impede e o que orienta'', ''A camada 0, e por que ela é inline'', ''Por que os ponteiros são de quatro linhas'' e ''Pós-geração''. Só a seção dos pontos de montagem mudou de título e de conteúdo (''quatro pontos'', com .agents/skills).'
+- texto: 'reconferência de 2026-10-06 na tag v1.7.1: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-readme neste conteúdo'
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), seções citadas neste registro
+  resultado: confirmada
+  nota: "Reconferido no README do clone local na tag v1.7.1. Mudou: o prompt da seção Instalar pelo próprio agente clona a tag v1.7.1, e a seção da trava de PR ganhou o limite dela e a seção Limite dos controles por ferramenta. As seções citadas neste registro seguem no arquivo."
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-qualidade neste conteúdo'
   ref: sdd-scaffold-qualidade
   localizacao: template/.github/workflows/qualidade.yml na tag v1.7.0, passos citados neste registro
   resultado: confirmada
   nota: git diff a8ebdf3 v1.7.0 em template/.github é vazio.
+- texto: 'reconferência de 2026-10-06 na tag v1.7.1: continuam no arquivo as afirmações já registradas sobre sdd-scaffold-qualidade neste conteúdo'
+  ref: sdd-scaffold-qualidade
+  localizacao: template/.github/workflows/qualidade.yml na tag v1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), seções citadas neste registro
+  resultado: confirmada
+  nota: "Reconferido no arquivo do clone local na tag v1.7.1. Mudou só o python3 para python3 -I nos passos que rodam script; o passo do limite do AGENTS.md e o job segredos não mudaram."
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
@@ -162,6 +172,34 @@ execucoes:
   resultado: passou
   evidencia: 'O agente baixou verificar_pr.py e verificar_constituicao.py do portal e conferiu o sha256 contra o index.json (1.7.0, commit 06a382b) com shasum -a 256 -c (o sha256sum -c do macOS não lê a lista da entrada padrão). Criou o .gitlab-ci.yml igual ao exemplo, num commit d628922 "ci: travas do processo no pipeline de MR" na branch ci/2026-10-05-travas; git diff --stat main..HEAD só com .gitlab-ci.yml e os dois scripts. Validou o YAML com /usr/bin/python3 (PyYAML 6.0.3); o gitlab-ci-local não estava instalado, então não rodou --list. Terminou citando os dois passos do GitLab (abrir a MR e marcar Pipelines must succeed). Transcrição bruta: curadoria-a5/transcricoes/receita-ligar-ci-gitlab-travas-prompt-17.bruta.jsonl.'
   data: 2026-10-05
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-edita-v2, que edita a V2)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr $ python3 -I scripts/verificar_pr.py --base "origin/$ALVO" > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. normas-do-pr finished in 956 ms FAIL 1; saida=1. Saída bruta em curadoria-a5/saidas/b1-t15b-editar.txt.'
+  data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-amplia-cpf, V3 corretiva)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: passou
+  evidencia: 'normas-do-pr $ python3 -I scripts/verificar_pr.py --base "origin/$ALVO" > Verificação de PR: 2 arquivo(s), nenhum achado. PASS normas-do-pr; saida=0 (V3 corretiva e plano com Tier e Rollback). Saída bruta em curadoria-a5/saidas/b1-t15b-verde.txt.'
+  data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local governanca --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-amplia-cpf)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: passou
+  evidencia: 'governanca $ python3 -I scripts/verificar_constituicao.py --raiz . > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico. PASS governanca; saida=0. Saída bruta em curadoria-a5/saidas/b1-t15b-gov.txt.'
+  data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-renomeia-v2, que renomeia a V2 com git mv e a edita)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: falhou-como-esperado
+  evidencia: "git diff --name-status origin/main...HEAD: R064 db/migration/V2__cria_cpf.sql db/migration/V2__cria_cpf_renomeada.sql (git mv e uma linha acrescentada). normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. FAIL 1; saida=1. Novo na 1.7.1: o mesmo cenário com o script da 1.7.0 deu só o AVISO de rollback (e mover a V2 para db/outro/ sem editar deu 'nenhum achado'). Saída bruta em curadoria-a5/saidas/b1-t15b-rename.txt."
+  data: 2026-10-06
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

@@ -54,6 +54,11 @@ afirmacoes:
   ref: gitleaks-readme
   localizacao: README, subcomando git
   resultado: confirmada
+- texto: a tag v1.7.1 não muda os comandos do guia; ela faz o verificador bloquear também a migration renomeada e roda os scripts do CI com python3 -I
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md na tag v1.7.1, entrada [1.7.1], itens 'Migration renomeada e editada passava pela trava' e 'Módulo plantado em scripts/ sequestrava o hook e os verificadores'
+  resultado: confirmada
+  nota: 'Conferido em 2026-10-06 no clone local (git diff v1.7.0 v1.7.1 --stat: só settings, workflows, Kiro, hook, verificar_pr.py, README e CHANGELOG mudam no template). O guia não foi reexecutado inteiro na 1.7.1; o verificar_pr.py foi rodado num projeto gerado pela tag, com a mesma linha BLOQUEIA do guia.'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'

@@ -1,5 +1,5 @@
 conteudo: DAD-01
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: migration já aplicada não é editada; corrige-se com uma migration corretiva incremental
@@ -74,34 +74,52 @@ afirmacoes:
   nota: 'A sequência com a V4 corretiva foi executada pela curadoria em PostgreSQL 16 efêmero com flyway/flyway:11:
     "Successfully applied 3 migrations ... now at version v3" e, depois da V4, "Successfully applied 1
     migration ... now at version v4" e cpf character varying(11).'
-- texto: 'na 1.7.0 o verificar_pr.py confere a base antes do diff; sem a base no clone imprime "ERRO:
+- texto: 'desde a 1.7.0 o verificar_pr.py confere a base antes do diff; sem a base no clone imprime "ERRO:
     base <base> não encontrada" e sai com 2 (na 1.6.1 o main não conferia)'
   ref: sdd-scaffold-verificar-pr
-  localizacao: tag v1.7.0, template/scripts/verificar_pr.py, função main()
+  localizacao: tags v1.7.0 e v1.7.1, template/scripts/verificar_pr.py, função main()
   resultado: confirmada
   nota: 'Mudou com a versão: na 1.6.1 (a8ebdf3) um clone sem a base imprimia que não havia arquivo
     alterado e saía com 0. O diff a8ebdf3..v1.7.0 do arquivo foi lido por inteiro; a conferência
-    da base é a única mudança de comportamento do script que o texto publicado descreve.'
+    da base é a única mudança de comportamento do script que o texto publicado descreve. A 1.7.1
+    mantém a conferência e só muda a lista de arquivos alterados (próxima afirmação).'
 - texto: as mensagens BLOQUEIA (migration alterada), AVISO de rollback e AVISO de evidência e a expressão
-    MIGRATION continuam iguais na 1.7.0
+    MIGRATION continuam iguais na 1.7.0 e na 1.7.1
   ref: sdd-scaffold-verificar-pr
-  localizacao: tag v1.7.0, template/scripts/verificar_pr.py, constantes MIGRATION e EVIDENCIA e função analisar()
+  localizacao: tags v1.7.0 e v1.7.1, template/scripts/verificar_pr.py, constantes MIGRATION e EVIDENCIA e função analisar()
   resultado: confirmada
   nota: 'git diff a8ebdf3 v1.7.0 -- template/scripts/verificar_pr.py: o diff só acrescenta a constante
     TESTE, as checagens de spec (requisito R<n>, aprovação, marcador ESCLARECER, critério), o rastreio
-    requisito-tarefa-teste, e a conferência da base; as mensagens citadas no texto não mudaram.'
-- texto: o verificar_pr.py hospedado no portal tem o sha256 1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488,
-    o mesmo do arquivo na tag v1.7.0 do GitHub
+    requisito-tarefa-teste, e a conferência da base; as mensagens citadas no texto não mudaram. O
+    diff v1.7.0 v1.7.1 do arquivo é uma linha, em main() (--no-renames).'
+- texto: o verificar_pr.py hospedado no portal tem o sha256 616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e,
+    o mesmo do arquivo na tag v1.7.1 do GitHub
   ref: sdd-scaffold-verificar-pr
-  localizacao: tag v1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), template/scripts/verificar_pr.py
+  localizacao: tag v1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), template/scripts/verificar_pr.py
   resultado: confirmada
-  nota: git show v1.7.0:template/scripts/verificar_pr.py | shasum -a 256 em 2026-10-05; igual ao
-    PROCEDENCIA de mecanismos/sdd-scaffold e ao index.json gerado.
+  nota: git show v1.7.1:template/scripts/verificar_pr.py | shasum -a 256 em 2026-10-06; igual ao
+    PROCEDENCIA de mecanismos/sdd-scaffold e ao index.json gerado. A tag v1.7.1 é anotada (objeto
+    dd5c551) e aponta para o commit cd121cd.
+- texto: na 1.7.1 o verificar_pr.py lista os arquivos alterados com --no-renames; renomear ou mover a migration bloqueia, porque o caminho antigo segue na lista, e na 1.7.0 isso passava
+  ref: sdd-scaffold-verificar-pr
+  localizacao: tag v1.7.1, template/scripts/verificar_pr.py, função main() (git diff --name-only --no-renames); CHANGELOG.md [1.7.1], 'Corrigido'
+  resultado: confirmada
+  nota: 'Executado em 2026-10-06 num projeto gerado pela tag v1.7.1, com remoto bare local e V1 e V2 em origin/main. Renomear a V2 na mesma pasta e editá-la, mover a V2 para db/outro/, apagar e editar: os quatro saem 1 com "BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado". Com o script da v1.7.0 na mesma branch: o rename com edição deu só o AVISO de rollback e o move para fora de db/migration/ deu "nenhum achado".'
+- texto: o job do template roda o script com python3 -I, e o README da 1.7.1 declara que a trava vale contra descuido e não contra má-fé, porque o job roda o script do próprio PR
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1, parágrafo 'Limite da trava de PR' (logo depois de 'Só o último bloqueia')
+  resultado: confirmada
+  nota: Lido no README do clone local na tag v1.7.1 (git diff v1.7.0 v1.7.1 -- README.md acrescenta o parágrafo); as duas mitigações do README são CODEOWNERS e proteção de branch em scripts/ e .github/, ou rodar o script da base.
 - texto: 'reconferência de 2026-10-05 na tag v1.7.0: continuam no arquivo as afirmações já registradas sobre migrations-reversiveis neste conteúdo'
   ref: migrations-reversiveis
   localizacao: template/skills/migrations-reversiveis/SKILL.md na tag v1.7.0
   resultado: confirmada
   nota: git diff a8ebdf3 v1.7.0 em template/skills é vazio; a cópia em skills/migrations-reversiveis tem o mesmo sha256.
+- texto: 'reconferência de 2026-10-06 na tag v1.7.1: continuam no arquivo as afirmações já registradas sobre migrations-reversiveis neste conteúdo'
+  ref: migrations-reversiveis
+  localizacao: template/skills/migrations-reversiveis/SKILL.md na tag v1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), seções citadas neste registro
+  resultado: confirmada
+  nota: "O arquivo é idêntico ao da v1.7.0 no clone local (git diff v1.7.0 v1.7.1 vazio neste caminho)."
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-01/gitlab-ci.yml
@@ -151,6 +169,27 @@ execucoes:
   resultado: passou
   evidencia: 'git diff --name-status origin/main...HEAD: "A db/migration/V3__amplia_cpf.sql" e "A docs/plans/2026-10-05-amplia-cpf.md"; verificar_pr.py saida=0 com "Verificação de PR: 2 arquivo(s), nenhum achado." e sem linha BLOQUEIA. Saída bruta em curadoria-a5/saidas/c17-t14-certo.txt.'
   data: 2026-10-05
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-edita-v2, que edita a V2)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: falhou-como-esperado
+  evidencia: 'normas-do-pr $ python3 -I scripts/verificar_pr.py --base "origin/$ALVO" > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. normas-do-pr finished in 956 ms FAIL 1; saida=1. Saída bruta em curadoria-a5/saidas/b1-t15b-editar.txt.'
+  data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-amplia-cpf, V3 corretiva)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: passou
+  evidencia: 'normas-do-pr $ python3 -I scripts/verificar_pr.py --base "origin/$ALVO" > Verificação de PR: 2 arquivo(s), nenhum achado. PASS normas-do-pr; saida=0 (V3 corretiva e plano com Tier e Rollback). Saída bruta em curadoria-a5/saidas/b1-t15b-verde.txt.'
+  data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/gitlab-ci.yml
+  comando: 'npx --yes gitlab-ci-local normas-do-pr --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main (na branch fix/2026-10-06-renomeia-v2, que renomeia a V2 com git mv e a edita)'
+  ambiente: 'sdd-scaffold 1.7.1 (tag anotada v1.7.1, commit cd121cd973945c486e63029496ed7ec879a18e32), projeto gerado por criar_projeto.py a partir do clone local da tag com a skill sdd-lifecycle 3.0.0, remoto bare local com V1 e V2 em origin/main, .gitlab-ci.yml igual a exemplos/ligar-ci-gitlab-travas/gitlab-ci.yml (python3 -I); gitlab-ci-local 4.76.0 com executor Docker (Docker 29.5.2), imagem python:3.11; Python 3.14.8, git 2.50.1, macOS; os dois scripts foram baixados do portal regerado em http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/ e conferidos com shasum -a 256 -c contra o index.json (verificar_pr.py 616cc4c2357a..., verificar_constituicao.py 8a3eeedf0edd...: OK). docker system df antes e depois das execuções com os mesmos totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 296)'
+  resultado: falhou-como-esperado
+  evidencia: "git diff --name-status origin/main...HEAD: R064 db/migration/V2__cria_cpf.sql db/migration/V2__cria_cpf_renomeada.sql (git mv e uma linha acrescentada). normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. FAIL 1; saida=1. Novo na 1.7.1: o mesmo cenário com o script da 1.7.0 deu só o AVISO de rollback (e mover a V2 para db/outro/ sem editar deu 'nenhum achado'). Saída bruta em curadoria-a5/saidas/b1-t15b-rename.txt."
+  data: 2026-10-06
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

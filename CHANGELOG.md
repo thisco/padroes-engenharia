@@ -7,7 +7,7 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
-Fatia B.1 do domínio Construir com IA, em andamento (falta o repino do scaffold 1.7.1).
+Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1.7.1.
 
 ### Adicionado
 
@@ -34,6 +34,16 @@ Fatia B.1 do domínio Construir com IA, em andamento (falta o repino do scaffold
   scripts e limites do verificador.
 - Guias: links para as práticas corrigidos (`../praticas/P1-XX.html`) e passos do tutorial com o
   conteúdo dos arquivos-base, o clone da tag e o remoto local.
+
+- Repino do `sdd-scaffold` para a 1.7.1 (commit `cd121cd`): `componentes.yml`, `mecanismos/sdd-scaffold/`
+  (o `verificar_pr.py` passa a ter o sha256 `616cc4c2...`; o `verificar_constituicao.py` não
+  mudou), as procedências das skills e da constituição, os pinos `@1.7.1`, o starter (versão,
+  comando e `prompt_para_agente`, igual ao do README da tag) e as dez referências do scaffold.
+- Exemplos `gitlab-ci.yml` da receita do CI, da DAD-01 e da P1-03 rodam os scripts com
+  `python3 -I`, como o CI do template. A receita e a DAD-01 dizem que a trava vale contra
+  descuido e não contra má-fé; a DAD-01 passa a dizer que renomear ou mover a migration também
+  bloqueia (na 1.7.0, passava). Reexecução no `gitlab-ci-local` 4.76.0, em registro novo:
+  `normas-do-pr` com BLOQUEIA para a V2 editada e para a V2 renomeada, caminho verde e `governanca`.
 
 ### Removido
 
