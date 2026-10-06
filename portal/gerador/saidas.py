@@ -16,12 +16,15 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+from portal.gerador.apresentacoes import PASTA as PASTA_APRESENTACOES
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import caminho_seguro, expandir_inclusoes, inclusoes, linguagem_de
 from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
     categoria_nome,
+    descricao_do_roteiro,
+    html_apresentacoes,
     html_comece_aqui,
     html_como_fazer,
     html_ferramenta,
@@ -30,7 +33,9 @@ from portal.gerador.paginas import (
     html_prompts,
     html_radar,
     html_receita,
+    html_roteiro,
     html_starter,
+    md_apresentacoes,
     md_comece_aqui,
     md_como_fazer,
     md_ferramenta,
@@ -39,8 +44,10 @@ from portal.gerador.paginas import (
     md_prompts,
     md_radar,
     md_receita,
+    md_roteiro,
     md_starter,
     prompts,
+    titulo_do_roteiro,
 )
 from portal.gerador.renderizar import (
     LISTAGENS,
@@ -94,9 +101,14 @@ SECOES = (
     "Guias",
     "Casos",
     "Glossário",
+    "Apresentações",
 )
 # Páginas geradas que ganham seção própria no llms.txt (as demais ficam em "Páginas").
-SECAO_DA_FIXA = {"prompts.html": "Prompts", "glossario.html": "Glossário"}
+SECAO_DA_FIXA = {
+    "prompts.html": "Prompts",
+    "glossario.html": "Glossário",
+    "apresentacoes.html": "Apresentações",
+}
 SECAO_POR_TIPO = {
     "conceito": "Conceitos",
     "guia": "Guias",
@@ -155,6 +167,18 @@ def montar_paginas(site: Site) -> list[Pagina]:
         titulo = titulo.removeprefix("# ")
         secao = SECAO_DA_FIXA.get(caminho, "Páginas")
         paginas.append(Pagina(caminho, titulo, secao, descricao, html(site), texto_md))
+    for a in site.apresentacoes:
+        if a.roteiro:
+            paginas.append(
+                Pagina(
+                    a.caminho_roteiro,
+                    titulo_do_roteiro(a),
+                    "Apresentações",
+                    descricao_do_roteiro(a),
+                    html_roteiro(site, a),
+                    md_roteiro(site, a),
+                )
+            )
     for c in site.repo.paginas:
         if c.chave not in ("inicio", "para-agentes"):
             paginas.append(pagina_de_conteudo(site, c))
@@ -836,6 +860,7 @@ def readme_md(site: Site) -> str:
 ESTATICOS = (
     ("portal/tema", "tema", ("*.css", "*.js", "*.svg")),
     ("portal/vendor/fonts", "vendor/fonts", ("*.ttf", "*.css", "*.md", "*.txt")),
+    ("portal/vendor/reveal", "vendor/reveal", ("*.css", "*.js", "*.md")),
 )
 
 
@@ -881,6 +906,17 @@ def copiar(origem: Path, destino: Path) -> None:
     destino.write_bytes(origem.read_bytes())
 
 
+def copiar_apresentacoes(site: Site, saida: Path) -> None:
+    """Copia `apresentacoes/<slug>/` inteira, sem transformar os arquivos. O `roteiro.md` de quem
+    declara roteiro fica de fora: a página Markdown gerada ocupa o lugar dele."""
+    for a in site.apresentacoes:
+        pasta = site.raiz / PASTA_APRESENTACOES / a.slug
+        roteiro = pasta / "roteiro.md" if a.roteiro else None
+        for arquivo in sorted(pasta.rglob("*")):
+            if arquivo.is_file() and not arquivo.is_symlink() and arquivo != roteiro:
+                copiar(arquivo, saida / PASTA_APRESENTACOES / a.slug / arquivo.relative_to(pasta))
+
+
 def emitir(site: Site, saida: Path) -> list[Pagina]:
     """Grava em `saida` todas as saídas do §7.2 e do §7.3 e devolve as páginas."""
     paginas = montar_paginas(site)
@@ -912,6 +948,7 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
     ):
         if arquivo.is_file() and not arquivo.is_symlink():
             copiar(arquivo, saida / arquivo.relative_to(site.raiz))
+    copiar_apresentacoes(site, saida)
     for origem, destino, padroes in ESTATICOS:
         for padrao in padroes:
             for arquivo in sorted((site.raiz / origem).glob(padrao)):
@@ -933,6 +970,7 @@ GERADORES: dict[str, tuple[Callable[[Site], str], Callable[[Site], str]]] = {
     "ferramentas.html": (html_radar, md_radar),
     "prompts.html": (html_prompts, md_prompts),
     "para-agentes.html": (html_para_agentes, md_para_agentes),
+    "apresentacoes.html": (html_apresentacoes, md_apresentacoes),
     **{
         caminho: (
             lambda site, c=caminho: html_listagem(site, c),

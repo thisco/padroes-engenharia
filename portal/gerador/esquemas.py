@@ -26,6 +26,7 @@ ESQUEMAS = (
     "starter",
     "ferramenta",
     "glossario",
+    "apresentacao",
 )
 
 # Tipo de conteúdo → schema. Skill não tem schema próprio: a regra R-SKILL cuida dela.

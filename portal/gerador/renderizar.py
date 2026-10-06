@@ -13,6 +13,7 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 from markupsafe import Markup
 
+from portal.gerador.apresentacoes import Apresentacao, carregar_apresentacoes
 from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import MARCADOR, numerar, sem_marcadores
@@ -53,6 +54,7 @@ PAGINAS_GERADAS: tuple[tuple[str, Callable[[Site], bool]], ...] = (
     ("conceitos.html", lambda s: bool(s.repo.conceitos)),
     ("glossario.html", lambda s: bool(s.repo.glossarios)),
     ("casos.html", lambda s: bool(s.repo.casos)),
+    ("apresentacoes.html", lambda s: bool(s.apresentacoes)),
     ("referencias.html", lambda s: True),
     ("para-agentes.html", lambda s: True),
 )
@@ -97,6 +99,7 @@ NAV = (
             ("Pessoas e normas", "pessoas-e-normas.html"),
             ("Glossário", "glossario.html"),
             ("Casos", "casos.html"),
+            ("Apresentações", "apresentacoes.html"),
         ),
     ),
     ("Para agentes", (("Para agentes", "para-agentes.html"),)),
@@ -123,6 +126,7 @@ class Site:
     espinha: Espinha
     catalogo: Catalogo
     ambiente: Environment
+    apresentacoes: tuple[Apresentacao, ...] = ()
 
     @property
     def repo(self) -> Repositorio:
@@ -144,7 +148,8 @@ class Site:
         dominios = {f"dominios/{f.slug}.html" for f in self.espinha.faixas}
         conteudos = {caminho_de(c) for c in self.repo.markdown() if c.tipo != "dominio"}
         yamls = {caminho_de(c) for c in [*self.repo.starters, *self.repo.ferramentas]}
-        return frozenset(paginas_publicadas(self)) | dominios | conteudos | yamls
+        roteiros = {a.caminho_roteiro for a in self.apresentacoes if a.roteiro}
+        return frozenset(paginas_publicadas(self)) | dominios | conteudos | yamls | roteiros
 
 
 def montar_site(
@@ -155,10 +160,14 @@ def montar_site(
     data: str,
     url_base: str,
     repo: Repositorio | None = None,
+    apresentacoes: tuple[Apresentacao, ...] | None = None,
 ) -> Site:
-    """Carrega configuração, espinha e conteúdo de `raiz` (ou usa `repo`, nos testes)."""
+    """Carrega configuração, espinha e conteúdo de `raiz` (ou usa `repo` e `apresentacoes`, nos
+    testes: com `repo` dado, as apresentações da raiz não entram)."""
     config = carregar_config(raiz)
     espinha = carregar_espinha(raiz / "esquemas" / "espinha.yml")
+    if apresentacoes is None:
+        apresentacoes = tuple(carregar_apresentacoes(raiz)) if repo is None else ()
     repo = carregar(raiz) if repo is None else repo
     if not eh_local(url_base):
         repo = _com_url_do_portal(repo, url_base.rstrip("/"))
@@ -183,6 +192,7 @@ def montar_site(
         espinha=espinha,
         catalogo=montar_catalogo(repo, espinha),
         ambiente=ambiente,
+        apresentacoes=apresentacoes,
     )
 
 

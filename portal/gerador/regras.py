@@ -23,6 +23,7 @@ from urllib.parse import urlsplit
 from markdown_it import MarkdownIt
 
 from portal.gerador import erros as codigos
+from portal.gerador.apresentacoes import chaves_de_verificacao, validar_apresentacoes
 from portal.gerador.carregar import (
     BLOCOS,
     TIPOS_YAML_PUBLICADOS,
@@ -805,16 +806,18 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     afirmação para cada id citado no corpo, nenhuma afirmação `nao-confirmada` e a
     `revisao_adversarial` registrada.
     Registro sem conteúdo correspondente também reprova: quase sempre é ID digitado errado.
+    O registro de uma apresentação (`apresentacao-<slug>`) tem a pasta como conteúdo.
     """
     erros: list[Erro] = []
     conteudos = {c.chave: c for c in repo.publicados()}
     registros: dict[str, Conteudo] = {}
+    apresentacoes = chaves_de_verificacao(contexto.raiz)
     for v in repo.verificacoes:
         alvo = _texto(v.meta, "conteudo")
         if alvo is None:
             continue
         registros.setdefault(alvo, v)
-        if alvo not in conteudos:
+        if alvo not in conteudos and alvo not in apresentacoes:
             valor = f"{alvo}: nenhum conteúdo com essa chave"
             erros.append(Erro(v.caminho_relativo, "conteudo", codigos.R_VERIFICACAO, valor))
     for chave, c in conteudos.items():
@@ -923,6 +926,16 @@ def regra_skills(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
             valor = "cópia sem PROCEDENCIA.md (repositório, versão, commit e origem)"
             erros.append(Erro(f"skills/{pasta}/PROCEDENCIA.md", "arquivo", codigos.R_SKILL, valor))
     return erros
+
+
+# Apresentações (delta das apresentações, R4) ---------------------------------------------------
+
+
+@regra
+def regra_apresentacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Cada pasta de `apresentacoes/` tem `apresentacao.yml` válido, `index.html`, as páginas e o
+    roteiro que o registro cita e nenhum recurso externo; as referências citadas existem."""
+    return validar_apresentacoes(contexto.raiz, frozenset(r.chave for r in repo.referencias))
 
 
 # Mecanismos hospedados (spec delta 1.7, R3) -----------------------------------------------------

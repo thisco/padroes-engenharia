@@ -8,39 +8,17 @@ Se o segundo falhar, a antiga volta.
 
 from __future__ import annotations
 
-import re
 import shutil
 from pathlib import Path
 
 from portal.gerador.erros import R_EXTERNO, Erro
+from portal.gerador.externos import EXTERNOS
 from portal.gerador.regras import validar_tudo
 from portal.gerador.renderizar import montar_site
 from portal.gerador.saidas import emitir
 
 # Gerados que também vivem na raiz do repositório (gravados por scripts/gerar.py).
 ARQUIVOS_DA_RAIZ = ("README.md", "ROTEAMENTO.md")
-
-# No CSS, `@import url(...)` já cai no padrão de `url(...)`; o de `@import` pega só a forma
-# com aspas, para não contar o mesmo recurso duas vezes.
-EXTERNOS = {
-    ".html": (
-        re.compile(r"<link\b[^>]*\bhref\s*=\s*[\"']?\s*(?:https?:)?//", re.I),
-        re.compile(r"<script\b[^>]*\bsrc\s*=\s*[\"']?\s*(?:https?:)?//", re.I),
-        re.compile(r"@import\s+(?:url\(\s*)?[\"']?\s*(?:https?:)?//", re.I),
-        # Imagem e mídia também são carregadas pelo navegador (um pixel de rastreio vindo do
-        # Markdown, por exemplo); `<a href>` fica de fora porque só navega.
-        re.compile(
-            r"<(?:img|iframe|source|video|audio|track|embed|object|input)\b[^>]*"
-            r"\b(?:src|poster|data)\s*=\s*[\"']?\s*(?:https?:)?//",
-            re.I,
-        ),
-        re.compile(r"\bsrcset\s*=\s*[\"'][^\"']*(?:https?:)?//", re.I),
-    ),
-    ".css": (
-        re.compile(r"@import\s+[\"']\s*(?:https?:)?//", re.I),
-        re.compile(r"url\(\s*[\"']?\s*(?:https?:)?//", re.I),
-    ),
-}
 
 
 def varrer_externos(pasta: Path) -> list[Erro]:

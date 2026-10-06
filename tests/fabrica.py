@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo, Repositorio
 from portal.gerador.espinha import Espinha, carregar_espinha
 from portal.gerador.renderizar import Site, montar_site
@@ -453,7 +454,64 @@ def skill(pasta: str, meta: dict[str, Any] | None = None) -> Conteudo:
     return Conteudo("skill", f"skills/{pasta}/SKILL.md", meta, "# Skill\n")
 
 
-def site(*conteudos: Conteudo, **build: str) -> Site:
+def meta_apresentacao(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "titulo": "Harness, SDD e o repositório como fonte de verdade",
+            "publico": "Equipe de engenharia do NUJOR",
+            "data": "2026-09-29",
+            "slides": 19,
+            "paginas": [{"arquivo": "comparativo.html", "titulo": "Comparativo dos harnesses"}],
+            "roteiro": "roteiro.md",
+            "referencias": [],
+            "revisado_em": "2026-10-06",
+        },
+        alteracoes,
+    )
+
+
+HTML_DECK = (
+    '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n'
+    "<title>Deck de teste</title>\n"
+    '<link rel="stylesheet" href="../../vendor/reveal/reveal.min.css">\n'
+    '<link rel="stylesheet" href="../../vendor/fonts/fonts.css">\n'
+    '<link rel="stylesheet" href="tema.css">\n</head>\n<body>\n'
+    '<div class="reveal"><div class="slides"><section><h1>Olá</h1></section></div></div>\n'
+    '<a href="https://exemplo.org">fonte</a>\n'
+    '<script src="../../vendor/reveal/reveal.min.js"></script>\n</body>\n</html>\n'
+)
+ROTEIRO_DECK = "# Roteiro de teste\n\n19 slides.\n\n## Abertura\n\nComece sem preâmbulo.\n"
+
+
+def escrever_apresentacao(
+    raiz: Path,
+    slug: str = "harness-sdd",
+    meta: dict[str, Any] | None = None,
+    *,
+    index: str | None = HTML_DECK,
+) -> Path:
+    """Grava `apresentacoes/<slug>/` em `raiz`: o deck, as páginas e o roteiro que o `meta`
+    cita, o `tema.css`, um arquivo binário e o `apresentacao.yml`. `index=None` não grava o
+    deck. Devolve a pasta."""
+    meta = meta_apresentacao() if meta is None else meta
+    pasta = raiz / "apresentacoes" / slug
+    pasta.mkdir(parents=True, exist_ok=True)
+    if index is not None:
+        (pasta / "index.html").write_text(index, encoding="utf-8")
+    for pagina in meta.get("paginas") or []:
+        (pasta / pagina["arquivo"]).write_text(HTML_DECK, encoding="utf-8")
+    if meta.get("roteiro"):
+        (pasta / meta["roteiro"]).write_text(ROTEIRO_DECK, encoding="utf-8")
+    (pasta / "tema.css").write_text(".reveal { color: #123; }\n", encoding="utf-8")
+    (pasta / "imagens").mkdir(exist_ok=True)
+    (pasta / "imagens" / "ponto.bin").write_bytes(bytes(range(256)))
+    gravado = {campo: valor for campo, valor in meta.items() if valor is not None}
+    texto = yaml.safe_dump(gravado, allow_unicode=True, sort_keys=False)
+    (pasta / "apresentacao.yml").write_text(texto, encoding="utf-8")
+    return pasta
+
+
+def site(*conteudos: Conteudo, apresentacoes: tuple[Apresentacao, ...] = (), **build: str) -> Site:
     """Um `Site` com os templates e o tema reais e só os conteúdos dados (para testes)."""
     parametros = {
         "versao": "0.1.0",
@@ -462,4 +520,6 @@ def site(*conteudos: Conteudo, **build: str) -> Site:
         "url_base": "https://portal.exemplo",
     }
     parametros.update(build)
-    return montar_site(RAIZ, repo=Repositorio.de(conteudos), **parametros)
+    return montar_site(
+        RAIZ, repo=Repositorio.de(conteudos), apresentacoes=apresentacoes, **parametros
+    )

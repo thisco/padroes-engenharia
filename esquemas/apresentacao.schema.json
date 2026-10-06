@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Apresentação",
+  "description": "apresentacoes/<slug>/apresentacao.yml (delta das apresentações R4): título, público, data, número de slides, páginas companheiras, roteiro opcional e referências do portal que sustentam o deck.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["titulo", "publico", "data", "slides", "paginas", "referencias", "revisado_em"],
+  "properties": {
+    "titulo": {"type": "string", "minLength": 1},
+    "publico": {"type": "string", "minLength": 1},
+    "data": {"$ref": "#/$defs/data"},
+    "slides": {"type": "integer", "minimum": 1},
+    "paginas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["arquivo", "titulo"],
+        "properties": {
+          "arquivo": {"type": "string", "minLength": 1},
+          "titulo": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "roteiro": {"type": "string", "minLength": 1},
+    "referencias": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
+    },
+    "revisado_em": {"$ref": "#/$defs/data"}
+  },
+  "$defs": {
+    "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+  }
+}

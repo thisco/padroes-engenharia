@@ -9,6 +9,7 @@ from portal.gerador.regras import (
     Contexto,
     regra_adotar,
     regra_agents,
+    regra_apresentacoes,
     regra_citacoes,
     regra_espinha,
     regra_evitar,
@@ -113,5 +114,6 @@ def test_validar_tudo_roda_todas_as_regras_na_ordem():
         regra_verificacao,
         regra_agents,
         regra_skills,
+        regra_apresentacoes,
         regra_mecanismos_hospedados,
     ]

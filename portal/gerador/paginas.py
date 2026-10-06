@@ -13,6 +13,7 @@ from typing import Any
 
 from markupsafe import Markup
 
+from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
 from portal.gerador.exemplos import expandir_inclusoes
@@ -28,6 +29,7 @@ from portal.gerador.renderizar import (
     descrever_ninho,
     listas_comece_aqui,
     pagina_generica,
+    para_md,
     renderizar,
     slug_termo,
     todos_os_prompts,
@@ -920,3 +922,88 @@ PAGINAS_ESTRUTURADAS: dict[
     "o-problema": (html_o_problema, md_o_problema),
     "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
 }
+
+
+# Apresentações (delta das apresentações, R3) -------------------------------------------------
+
+APRESENTACOES_DESCRICAO = (
+    "Apresentações do portal, em slides, com as páginas que as acompanham e o roteiro de cada uma."
+)
+
+
+def _dados_apresentacao(a: Apresentacao) -> dict[str, Any]:
+    pasta = f"apresentacoes/{a.slug}"
+    return {
+        "slug": a.slug,
+        "titulo": a.titulo,
+        "publico": a.publico,
+        "data": a.data,
+        "slides": plural(a.slides, "slide", "slides"),
+        "deck": a.caminho_deck,
+        "paginas": [{"titulo": p.titulo, "href": f"{pasta}/{p.arquivo}"} for p in a.paginas],
+        "roteiro": a.caminho_roteiro if a.roteiro else None,
+    }
+
+
+def html_apresentacoes(site: Site) -> str:
+    return renderizar(
+        site,
+        "apresentacoes.html",
+        "apresentacoes.html",
+        titulo="Apresentações",
+        descricao=APRESENTACOES_DESCRICAO,
+        apresentacoes=[_dados_apresentacao(a) for a in site.apresentacoes],
+    )
+
+
+def md_apresentacoes(site: Site) -> str:
+    blocos = []
+    for a in map(_dados_apresentacao, site.apresentacoes):
+        itens = [f"- [Abrir a apresentação]({a['deck']})"]
+        itens += [f"- [{p['titulo']}]({p['href']})" for p in a["paginas"]]
+        if a["roteiro"]:
+            itens.append(f"- [Roteiro]({para_md(a['roteiro'])})")
+        cabecalho = f"{a['publico']} · {a['data']} · {a['slides']}"
+        blocos.append(juntar(f"## {a['titulo']}", cabecalho, "\n".join(itens)))
+    return juntar("# Apresentações", APRESENTACOES_DESCRICAO, *blocos)
+
+
+def _titulo_e_corpo_do_roteiro(a: Apresentacao) -> tuple[str, str]:
+    """O título do roteiro (o `# ` da primeira linha, senão o da apresentação) e o resto."""
+    linhas = a.texto_roteiro.split("\n")
+    if linhas and linhas[0].startswith("# "):
+        return linhas[0][2:].strip(), "\n".join(linhas[1:]).strip("\n")
+    return f"Roteiro: {a.titulo}", a.texto_roteiro.strip("\n")
+
+
+def descricao_do_roteiro(a: Apresentacao) -> str:
+    return f"Roteiro de fala da apresentação “{a.titulo}”."
+
+
+def titulo_do_roteiro(a: Apresentacao) -> str:
+    return _titulo_e_corpo_do_roteiro(a)[0]
+
+
+def html_roteiro(site: Site, a: Apresentacao) -> str:
+    titulo, corpo = _titulo_e_corpo_do_roteiro(a)
+    itens = [{"titulo": a.titulo, "href": a.caminho_deck, "nota": ""}]
+    ligacao = {"titulo": "A apresentação", "itens": itens, "vazio": ""}
+    return pagina_generica(
+        site,
+        a.caminho_roteiro,
+        titulo,
+        descricao=descricao_do_roteiro(a),
+        trilha="Apresentações",
+        listas=[ligacao],
+        corpo=para_html(corpo),
+    )
+
+
+def md_roteiro(site: Site, a: Apresentacao) -> str:
+    titulo, corpo = _titulo_e_corpo_do_roteiro(a)
+    return juntar(
+        f"# {titulo}",
+        descricao_do_roteiro(a),
+        f"Apresentação: [{a.titulo}](index.html)",
+        corpo,
+    )

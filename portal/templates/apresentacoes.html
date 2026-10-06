@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ descricao }}</p>
+</div>
+{% for a in apresentacoes %}
+<section id="{{ a.slug }}" aria-label="{{ a.titulo }}">
+  <h2><a href="{{ raiz }}{{ a.deck }}">{{ a.titulo }}</a></h2>
+  <p class="ref-meta">{{ a.publico }} · {{ a.data }} · {{ a.slides }}</p>
+  <ul class="praticas">
+    <li><a href="{{ raiz }}{{ a.deck }}">Abrir a apresentação</a></li>
+{% for p in a.paginas %}
+    <li><a href="{{ raiz }}{{ p.href }}">{{ p.titulo }}</a></li>
+{% endfor %}
+{% if a.roteiro %}
+    <li><a href="{{ raiz }}{{ a.roteiro }}">Roteiro</a></li>
+{% endif %}
+  </ul>
+</section>
+{% endfor %}
+{% endblock %}
