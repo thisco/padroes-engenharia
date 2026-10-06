@@ -7,7 +7,7 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
-Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1.7.1.
+Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em andamento, com o repino do scaffold 1.7.1.
 
 ### Adicionado
 
@@ -23,6 +23,13 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
   página, seção no `llms.txt` e busca, e o reveal.js 4.5.0 em `portal/vendor/reveal/`. Entra o deck
   "Harness, SDD e o repositório como fonte de verdade", atualizado para o scaffold 1.7.1 e a skill
   3.0.0, com a reconciliação em `verificacoes/apresentacao-harness-sdd.yaml`.
+- Onze práticas da faixa IA no produto (fatia B.2), com Exemplo executado e registro em
+  `verificacoes/`: P2-02 (escopo e risco da aplicação), P2-03 (catálogo de modelos), P2-04 (máscara
+  de dado pessoal no gateway), P2-05 (evals como teste no CI), P2-06 (orçamento por chave virtual),
+  P3-01 (agência do agente), P3-02 (as quatro perguntas do CISO no threat-model), P3-03 (critério de
+  término, escopo e autonomia), P3-04 (agente somente-leitura com identidade própria), P3-05
+  (isolamento do conteúdo externo) e P3-06 (MCP fechado por padrão, com allowlist central). Os
+  prompts alterados na conferência em lote aguardam novo teste em sessão nova.
 
 ### Alterado
 
@@ -40,6 +47,12 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
   testes do Exemplo e o passo de instalar o `pytest`; P1-10: o script lê só o commitado, e o
   texto manda commitar o plano antes; P1-04, P1-05, P1-08 e P1-11: textos de triagem, local dos
   scripts e limites do verificador.
+- B.2, tratamento da conferência em lote: P2-04 mascara CPF com ponto, hífen ou espaço e e-mail e o
+  gateway registra só o veredito, sem o conteúdo da mensagem; P2-05 declara o alias do job real;
+  P3-02 traz o plano que o "nenhum achado" exige; P3-04 reprova `Bash` amplo em `allow` e hook sem o
+  script de governança; P3-06 obtém a allowlist de um repositório central em tag fixada, exige
+  versão fixada em `npx` e reprova configuração vazia; a referência `mcp-spec` fixa a revisão
+  2026-07-28; limites e textos dos prompts ajustados nas demais.
 - Guias: links para as práticas corrigidos (`../praticas/P1-XX.html`) e passos do tutorial com o
   conteúdo dos arquivos-base, o clone da tag e o remoto local.
 
