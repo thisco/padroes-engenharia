@@ -50,5 +50,8 @@ stash`); vão para a T10 da B.2.
 
 Capturas em `~/curadoria-a5/saidas/`: `ninho-produto-antes.png` (caixas de ~70px, texto quebrado
 palavra a palavra, setas soltas no meio) e `ninho-produto-depois.png` (fluxo em coluna, setas
-`↓` entre as caixas). `conceitos-largura-cheia.png`: o fluxo horizontal da página de Conceitos
-segue como antes, com as setas no topo das caixas.
+`↓` entre as caixas). `conceitos-inteira.png`: na página de Conceitos o fluxo da IA no produto
+**também passou a empilhar**, porque a coluna dele tem cerca de 600px, abaixo do limite de 640px
+do container query. Antes, nessa largura, as 4 caixas ficavam com uns 95px cada. O fluxo
+horizontal só aparece com a figura acima de 640px. Decisão do dono: manter o empilhamento ali,
+ou dar ao fluxo a largura inteira da página de Conceitos (mudança de template).
