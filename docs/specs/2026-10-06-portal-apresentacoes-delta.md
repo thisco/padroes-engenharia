@@ -37,7 +37,7 @@ A página lista cada apresentação com título, público, data, número de slid
 deck, para cada página companheira e para o roteiro, que o gerador renderiza como página
 Markdown comum.
 - Critério: **Dado** o menu, **Quando** há ao menos uma apresentação, **Então** o item aparece;
-  sem nenhuma, o item fica em itálico sem link (regra do §4.2).
+  sem nenhuma, o item não aparece (regra do delta v1.1: item sem conteúdo some do menu).
 
 **R4** Cada apresentação tem o arquivo `apresentacoes/<slug>/apresentacao.yml`, com `titulo`,
 `publico`, `data`, `slides`, `paginas` (lista de arquivo e título), `roteiro` (opcional),
