@@ -72,7 +72,7 @@ execucoes:
   evidencia: 'antes: quatro linhas "falta a declaração de término|escopo|parada|autonomia" e "P3-03: declarações
     ausentes ou incompletas (acima).", saída 1; o agente acrescentou as cinco seções com os itens informados, bloco
     e parágrafo intactos; depois "P3-03: as quatro declarações estão presentes.", saída 0; commit só com docs/steering/agente.md,
-    sem trailer; árvore limpa. Transcrição em curadoria-a5/transcricoes/P3-03-prompt-1.bruta.jsonl.'
+    sem trailer; árvore limpa. Transcrição em curadoria-a5/transcricoes/P3-03-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (passa a exigir shell único ou variáveis refeitas a cada comando); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

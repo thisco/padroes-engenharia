@@ -64,7 +64,7 @@ execucoes:
   evidencia: 'verificador antes: "docs/steering/agente.md: [Errno 2]..." e "P3-01: classificação incompleta ou incoerente
     (acima).", saída 1; o agente criou agente.md só com os dados informados e o parágrafo; depois "P3-01: agência
     classificada, com os controles do escopo.", saída 0; commit 30a9904 só com o arquivo, sem trailer. Rodou cada
-    comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl.'
+    comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (passa a exigir shell único ou variáveis refeitas a cada comando); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

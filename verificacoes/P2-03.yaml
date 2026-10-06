@@ -95,7 +95,7 @@ execucoes:
     incompleto ou vencido (acima).", saída 1; o agente criou as 2 entradas só com os dados informados (na do Bedrock,
     sem system_card, certificacoes e vedacao_*); depois, com --hoje 2026-10-06, "P2-03: catálogo completo e em dia.",
     saída 0; commit df87964 só com catalogo-modelos.yml. O agente usou "Claude Fable 5" como valor de modelo, que
-    o prompt não informava literal. Transcrição em curadoria-a5/transcricoes/P2-03-prompt-1.bruta.jsonl.'
+    o prompt não informava literal. Transcrição em curadoria-a5/transcricoes/P2-03-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (entradas 1 e 2 passam a trazer modelo: {modelo}); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

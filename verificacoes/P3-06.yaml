@@ -76,7 +76,7 @@ execucoes:
   resultado: passou
   evidencia: '1ª rodada: saída 1 (docs-internos com command diferente, busca-web fora da allowlist); busca-web removido
     e docs-internos restaurado; 2ª rodada: saída 0 (P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.);
-    commit ae59e5f só com mcp.json, sem trailer'
+    commit ae59e5f só com mcp.json, sem trailer Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (diz neste repositório, shell único e preparo descreve a pasta central/); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

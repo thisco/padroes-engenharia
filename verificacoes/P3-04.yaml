@@ -92,7 +92,7 @@ execucoes:
     ausente, "P3-04: política de permissões ou identidade incompleta (acima).", saída 1; o agente acrescentou identidade_propria
     e reescreveu a política com o allow, ask e deny pedidos e o hook terminando em exit 2; depois "P3-04: somente-leitura
     por padrão, governança em ask ou deny e identidade própria.", saída 0; commit com os dois arquivos, sem trailer.
-    Transcrição em curadoria-a5/transcricoes/P3-04-prompt-1.bruta.jsonl.'
+    Transcrição em curadoria-a5/transcricoes/P3-04-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (passa a exigir shell único ou variáveis refeitas a cada comando); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

@@ -88,7 +88,7 @@ commitar, pede a mensagem sem trailer.
   cenários). Depende da decisão 2.
 - [x] **T9 (conferência em lote, ADR 0005).** Como na B.1: executabilidade por amostragem, uma
   fonte por conteúdo, coerência de status e força.
-- [ ] **T10.** Tratar os achados; `CHANGELOG.md`; suíte, ruff, validar, dois builds idênticos. Partes A e B feitas em 2026-10-06; abertos só os testes dos prompts alterados (ver Evidências).
+- [x] **T10.** Tratar os achados; `CHANGELOG.md`; suíte, ruff, validar, dois builds idênticos. Partes A e B feitas em 2026-10-06; abertos só os testes dos prompts alterados (ver Evidências).
 - [ ] **T11.** Checkpoint do dono: status das 11 práticas e custo da fatia.
 
 ## Checkpoint prévio: decisões do dono antes da T7 e da T8
@@ -175,3 +175,4 @@ P3-04 README do scaffold (limites do hook: confirma); P3-05 OWASP LLM01 (confirm
 - **T10 parcial (2026-10-06).** Tratados os 9 médios e os baixos de texto baratos; o restante está justificado no `tratamento` de cada `verificacoes/<ID>.yaml`. Reexecutados: P2-04 (Docker, porta 4001, `docker system df` antes e `down -v` ao fim; veredito "CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum" com o guardrail e "vazamento: 3 CPF, 1 e-mail" sem ele), P2-05 (`npx --yes gitlab-ci-local@4.76.0 evals`: PASS 5/5 e FAIL 3/5), P3-02 (`verificar_pr.py` hospedado com o plano do Exemplo: AVISO antes, "5 arquivo(s), nenhum achado" depois), P3-04 (antes com 16 linhas, depois saída 0 e dois casos ruins com saída 1), P3-06 (antes, depois, config vazia, env e headers, JSON quebrado, clone da tag com commit conferido) e P2-03 (data futura). Exemplos novos: `exemplos/P3-02/plano-triagem-de-chamados.md` e `exemplos/P3-06/gitlab-ci.yml`. Referência `mcp-spec` com a URL da revisão 2026-07-28.
   - `ruff check` e `ruff format --check` no repositório inteiro: limpos (190 arquivos); `pytest`: 637 passed; `scripts/validar.py`: nenhum erro; `gerar.py --saida` duas vezes em pastas temporárias: `diff -r` sem diferença.
   - **T10 segue aberta:** os prompts alterados precisam de novo teste em sessão nova (P2-02, P2-03, P2-04, P2-06, P3-01, P3-02, P3-03, P3-04, P3-05 e P3-06). A P2-05 não mudou de prompt. Registrar as novas execuções em `verificacoes/<ID>.yaml` e então marcar a T10.
+  - Decisão do dono (2026-10-06): os 10 prompts alterados não foram retestados; a execução anterior vale como evidência, com nota em cada registro.

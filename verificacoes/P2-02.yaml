@@ -75,7 +75,7 @@ execucoes:
     incompleta ou incoerente (acima).", saída 1; o agente leu a spec e gravou alto-risco, dominio_de_impacto financas,
     categoria alto, revisao_profissional sim, revisor e aviso_texto como pedido, classificado_por Ana Souza, classificado_em
     2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md.
-    Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl.'
+    Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (lista de domínios alinhada à política e dominio_de_impacto como valor livre); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)

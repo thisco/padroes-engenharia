@@ -115,7 +115,7 @@ execucoes:
     log; faça uma chamada antes.'' (saída 1). Depois de config e compose: log ''CPF [CPF], e-mail [EMAIL]'' e ''P2-04:
     nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'' (saída 0); commit 1a0dfe1 só com config.yaml
     e docker-compose.yml; down -v. Desvios: sem timeout no macOS (usou laço); chave perdida entre comandos e alias
-    já existente após o recreate (400), apagado e reemitido. Transcrição em curadoria-a5/transcricoes/P2-04-prompt-1.bruta.jsonl.'
+    já existente após o recreate (400), apagado e reemitido. Transcrição em curadoria-a5/transcricoes/P2-04-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (shell único, reexportar chave após recriar o gateway e alias alternativo no 400); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
