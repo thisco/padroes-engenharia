@@ -1,0 +1,11 @@
+id: opentelemetry-logs-data-model
+titulo: Logs Data Model (OpenTelemetry Specification)
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/specs/otel/logs/data-model/
+tipo: padrao-aberto
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: campos do registro de log (Timestamp, TraceId, SpanId, SeverityText, SeverityNumber, Body, Attributes, Resource, EventName) e a correlação com traces
+dominios:
+- observabilidade
+notas: null

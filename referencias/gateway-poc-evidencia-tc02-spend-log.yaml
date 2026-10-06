@@ -1,0 +1,11 @@
+id: gateway-poc-evidencia-tc02-spend-log
+titulo: "Evidência TC-02 da avaliação do gateway: registro do log de gasto (gateway-poc v0.1.0)"
+organizacao: gateway-poc (github.com/thisco)
+url: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/avaliacao/cenarios/07-tooling/evidencias/TC-02-spend-log.json
+tipo: interno
+versao: "v0.1.0"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "campos request_id, call_type, spend, startTime, endTime, request_duration_ms, user_api_key_alias, requester_ip_address, messages e response"
+dominios: [observabilidade, ia-no-produto]
+notas: "Aberto na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef (tag v0.1.0) e conferido contra o clone local da tag. Um único registro de log de gasto de uma chamada de teste; messages e response vêm vazios, e a chave (api_key, user_api_key) vem como REDACTED."

@@ -1,0 +1,73 @@
+conteudo: OBS-01
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o modelo de dados de log do OpenTelemetry tem Timestamp (hora do evento na origem), SeverityText (nível como a origem o escreveu), TraceId e SpanId, Body, Attributes, Resource (origem do log) e EventName (tipo do evento)
+  ref: opentelemetry-logs-data-model
+  localizacao: campos do registro de log (Timestamp, TraceId, SpanId, SeverityText, Body, Attributes, Resource, EventName)
+  resultado: confirmada
+- texto: o TraceId do registro de log existe para a correlação entre o log e o trace
+  ref: opentelemetry-logs-data-model
+  localizacao: seção de correlação com traces (TraceId, SpanId, TraceFlags)
+  resultado: confirmada
+- texto: o registro do log de gasto de uma chamada de teste traz request_id, call_type, spend, startTime, endTime, request_duration_ms, user_api_key_alias e requester_ip_address
+  ref: gateway-poc-evidencia-tc02-spend-log
+  localizacao: JSON TC-02-spend-log.json (abertura na web e conferência contra o clone local da tag v0.1.0)
+  resultado: confirmada
+- texto: nesse registro, messages e response vêm vazios e a chave vem como REDACTED
+  ref: gateway-poc-evidencia-tc02-spend-log
+  localizacao: campos messages, response, api_key e user_api_key do mesmo JSON
+  resultado: confirmada
+- texto: a chamada de erro de tool aparece no mesmo log unificado de auditoria, com call_type, model, spend e startTime
+  ref: gateway-poc-cenario-07-tooling
+  localizacao: bloco de saída de TC-02 (log de auditoria) e §8
+  resultado: confirmada
+- texto: a mensagem de orçamento estourado expõe o alias da chave e o sufixo mascarado dela (Key=td03-erros-governanca (sk-...ItTQ))
+  ref: gateway-poc-cenario-07-tooling
+  localizacao: saída de TD-03b (README, bloco de erro de orçamento)
+  resultado: confirmada
+- texto: dado pessoal é a informação relacionada a pessoa natural identificada ou identificável, e a necessidade limita o tratamento ao mínimo para a finalidade
+  ref: lgpd
+  localizacao: art. 5º, I, e art. 6º, III
+  resultado: confirmada
+  nota: A página do Planalto recusou a conexão (ECONNRESET) nesta sessão; as duas passagens foram conferidas na releitura de 2026-10-06 registrada na referência lgpd (outra sessão, mesmo dia).
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/OBS-01/verificar-log.py
+  comando: python3 scripts/verificar-log.py <arquivo> nos dois estados (log-exemplo-ruim.jsonl e log-exemplo.jsonl), com arquivo vazio, inexistente, timestamp inválido, CPF colado e protocolo de 11 dígitos inválido
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'ruim: 7 achados em 4 linhas ("sem request_id nem trace_id", "campo de payload: payload", "CPF em claro", "e-mail em claro", "campo obrigatório ausente: timestamp", "linha não é JSON"), saída 1; bom: "OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal.", saída 0; arquivo vazio, inexistente e CPF colado com timestamp inválido: saída 1; protocolo 12345678901 (CPF inválido): saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-01/log-exemplo-ruim.jsonl
+  comando: python3 scripts/verificar-log.py log-exemplo-ruim.jsonl
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'OBS-01: 4 de 4 linhas fora do padrão (acima)., saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-01/log-exemplo.jsonl
+  comando: python3 scripts/verificar-log.py log-exemplo.jsonl
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal., saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-01/emitir-logs-antes.py
+  comando: python3 emitir-logs-antes.py > logs/app.jsonl; python3 scripts/verificar-log.py logs/app.jsonl
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'OBS-01: 3 de 3 linhas fora do padrão (acima)., saída 1 (sem timestamp, nivel e request_id nas 3 linhas, payload, CPF e e-mail em claro).'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-01/emitir-logs.py
+  comando: python3 emitir-logs.py > logs/app.jsonl; python3 scripts/verificar-log.py logs/app.jsonl
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: '3 linhas com o mesmo request_id, detalhe "e-mail rejeitado: [EMAIL]"; "OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal.", saída 0.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-06'
+  achados: []
