@@ -1,0 +1,93 @@
+conteudo: receita-adicionar-migration-corretiva
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: migration já aplicada nunca é editada, a correção é uma migration corretiva incremental; o rollback
+    é declarado no plano e o downgrade é testado em banco efêmero; estreitar tipo é mudança destrutiva
+    e exige ADR
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, regras 3 e 4, 'Estratégia de rollback no plano' e 'Mudança destrutiva'
+  resultado: confirmada
+- texto: o validate falha com diferença de nome, tipo ou checksum, com migration aplicada que sumiu do
+    disco e com migration resolvida e ainda não aplicada; o checksum é gravado na execução
+  ref: flyway-validate
+  localizacao: seção 'Description'
+  resultado: confirmada
+  nota: 'Execução real: com a V3 no disco e não aplicada, ''ERROR: Validate failed: Migrations have failed
+    validation / Detected resolved migration not applied to database: 3.'' e saída 1; depois do migrate,
+    ''Successfully validated 3 migrations''. O texto exato das mensagens não está na documentação; vem
+    da execução com o Flyway 11.20.3.'
+- texto: migration versionada tem o nome V<versão>__<descrição>.sql, se aplica uma vez e em ordem, e a
+    documentação recomenda não alterar a já aplicada e criar nova
+  ref: flyway-versionadas
+  localizacao: seções de nomenclatura, integridade por checksum e 'Best Practices'
+  resultado: confirmada
+- texto: a migration de desfazer do Flyway só existe nas edições pagas (Teams)
+  ref: flyway-undo
+  localizacao: 'abertura da página: ''EDITION: TEAMS'''
+  resultado: confirmada
+  nota: 'O rollback por migration nova (V4 que volta cpf para VARCHAR(11)) foi executado: now at version
+    v4 e character_maximum_length 11.'
+- texto: mudança incompatível com a aplicação em produção se divide em expandir, migrar e contrair
+  ref: fowler-parallel-change
+  localizacao: as três fases
+  resultado: confirmada
+- texto: alembic revision -m cria a revisão, com upgrade() e downgrade() preenchidos
+  ref: alembic-tutorial
+  localizacao: seções de criação do script e de downgrade
+  resultado: confirmada
+  nota: Mesma afirmação de DAD-01, reaberta a fonte em 2026-10-06.
+- texto: o verificar_pr.py bloqueia migration alterada que já existe na base, não bloqueia migration nova,
+    e só reconhece pastas migration/, migrations/ e alembic/; ao alterar código sem plano com evidência,
+    avisa
+  ref: sdd-scaffold-verificar-pr
+  localizacao: docstring, constante MIGRATION e função analisar() na tag v1.7.1
+  resultado: confirmada
+  nota: 'Executado: edição da V2 saiu 1 com ''BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base
+    e foi alterado...'' mais o AVISO de rollback; V3 e plano saíram 0 com ''Verificação de PR: 2 arquivo(s),
+    nenhum achado.'''
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/adicionar-migration-corretiva/executar.sh
+  comando: URL_PORTAL=http://127.0.0.1:8000 sh exemplos/adicionar-migration-corretiva/executar.sh
+  ambiente: 'Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; git 2.50.1; Python 3.14.8; macOS. Repositório de teste
+    temporário com remoto bare local, V1 e V2 em origin/main; verificar_pr.py baixado do portal servido
+    em http://127.0.0.1:8000 e conferido com shasum -a 256 -c (616cc4c2357a...: OK). docker system df
+    antes e depois com os mesmos totais; container e rede derrubados ao fim.'
+  resultado: passou
+  evidencia: 'saída 0; shasum: ''scripts/verificar_pr.py: OK''; passo 1 listou V1 e V2; edição da V2:
+    ''BLOQUEIA: ... já existe na base e foi alterado'' (saída 1); V3 e plano: validate com a V3 pendente
+    saiu 1 (''Detected resolved migration not applied to database: 3.''), depois ''Successfully applied
+    1 migration ... now at version v3'', ''Successfully validated 3 migrations'', histórico com versões
+    1, 2 e 3 em success t, rollback ''now at version v4'' com cpf VARCHAR(11), e ''Verificação de PR:
+    2 arquivo(s), nenhum achado.'' (saída 0). Saída bruta em curadoria-a5/saidas/b3-receita-corretiva.txt.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/adicionar-migration-corretiva/plano.md
+  comando: URL_PORTAL=http://127.0.0.1:8000 sh exemplos/adicionar-migration-corretiva/executar.sh
+  ambiente: 'Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; git 2.50.1; Python 3.14.8; macOS. Repositório de teste
+    temporário com remoto bare local, V1 e V2 em origin/main; verificar_pr.py baixado do portal servido
+    em http://127.0.0.1:8000 e conferido com shasum -a 256 -c (616cc4c2357a...: OK). docker system df
+    antes e depois com os mesmos totais; container e rede derrubados ao fim.'
+  resultado: passou
+  evidencia: copiado para docs/plans/2026-10-06-amplia-cpf.md pelo roteiro; o verificar_pr.py aceitou
+    a MR (saída 0) com a linha de tier, o Rollback e as Evidências.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/adicionar-migration-corretiva/rollback/V4__volta_cpf_para_11.sql
+  comando: URL_PORTAL=http://127.0.0.1:8000 sh exemplos/adicionar-migration-corretiva/executar.sh
+  ambiente: 'Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; git 2.50.1; Python 3.14.8; macOS. Repositório de teste
+    temporário com remoto bare local, V1 e V2 em origin/main; verificar_pr.py baixado do portal servido
+    em http://127.0.0.1:8000 e conferido com shasum -a 256 -c (616cc4c2357a...: OK). docker system df
+    antes e depois com os mesmos totais; container e rede derrubados ao fim.'
+  resultado: passou
+  evidencia: 'aplicada depois da V3 no banco efêmero: ''now at version v4'' e information_schema mostrando
+    cpf character varying com character_maximum_length 11.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote da T8 (ADR 0005)
+  data: '2026-10-06'
+  achados: []
