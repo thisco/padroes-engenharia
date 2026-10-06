@@ -1,0 +1,11 @@
+id: wcag-error-suggestion
+titulo: "Understanding Success Criterion 3.3.3: Error Suggestion (WCAG 2.2)"
+organizacao: W3C
+url: https://www.w3.org/WAI/WCAG22/Understanding/error-suggestion.html
+tipo: padrao-aberto
+versao: "2.2"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "texto do critério 3.3.3 (nível AA) e seção 'Intent'"
+dominios: [frontend-ux]
+notas: "O critério trata de erro de entrada de dados detectado automaticamente, não de qualquer erro de tela. Página aberta em 2026-10-06 por WebFetch."

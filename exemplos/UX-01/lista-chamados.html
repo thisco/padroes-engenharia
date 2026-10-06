@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Lista de chamados</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 34rem; margin: 2rem auto; padding: 0 1rem; }
+  nav button { margin-right: .5rem; }
+  section { border: 1px solid #ccc; border-radius: 6px; padding: 1.25rem; margin-top: 1rem; }
+  section[data-estado="erro"] { border-color: #b3261e; }
+  section[data-estado="erro"] h2 { color: #b3261e; }
+  ul { padding-left: 1.2rem; }
+</style>
+</head>
+<body>
+<h1>Meus chamados</h1>
+<nav aria-label="Estado de exemplo">
+  <button data-vai="carregando">Carregando</button>
+  <button data-vai="vazio">Vazio</button>
+  <button data-vai="erro">Erro</button>
+  <button data-vai="sucesso">Sucesso</button>
+</nav>
+
+<section data-estado="carregando" role="status" aria-busy="true" hidden>
+  <p id="msg-carregando">Carregando seus chamados...</p>
+  <p id="msg-demora" hidden>Está demorando mais que o normal. Você pode esperar ou tentar de novo.</p>
+</section>
+
+<section data-estado="vazio" hidden>
+  <h2>Você ainda não abriu nenhum chamado</h2>
+  <p>Aqui aparecem os chamados que você abrir, com o andamento de cada um. Para começar, abra o primeiro.</p>
+  <button>Abrir primeiro chamado</button>
+</section>
+
+<section data-estado="erro" role="alert" hidden>
+  <h2>Não foi possível carregar os chamados</h2>
+  <p>O serviço de chamados não respondeu. Seus chamados continuam salvos. Tente de novo; se persistir, avise o time de suporte.</p>
+  <button>Tentar de novo</button>
+</section>
+
+<section data-estado="sucesso" hidden>
+  <ul>
+    <li>#101 Impressora do 2º andar sem toner (Em andamento)</li>
+    <li>#102 Acesso à VPN expirado (Aberto)</li>
+    <li>#103 Troca de monitor (Concluído)</li>
+  </ul>
+</section>
+
+<script>
+  // Um único valor, `estado`, decide o que aparece: ?estado=vazio ou os botões acima.
+  const ESTADOS = ["carregando", "vazio", "erro", "sucesso"];
+  const LIMITE_MS = 10000; // o mesmo limite_segundos de dados-exemplo.json
+  let temporizador = null;
+
+  function renderizar(estado) {
+    if (!ESTADOS.includes(estado)) estado = "sucesso";
+    clearTimeout(temporizador);
+    document.querySelectorAll("section[data-estado]").forEach((s) => {
+      s.hidden = s.dataset.estado !== estado;
+    });
+    document.getElementById("msg-demora").hidden = true;
+    if (estado === "carregando") {
+      temporizador = setTimeout(() => {
+        document.getElementById("msg-demora").hidden = false;
+      }, LIMITE_MS);
+    }
+    document.body.dataset.estado = estado;
+  }
+
+  document.querySelectorAll("[data-vai]").forEach((b) => {
+    b.addEventListener("click", () => renderizar(b.dataset.vai));
+  });
+  renderizar(new URLSearchParams(location.search).get("estado") || "sucesso");
+</script>
+</body>
+</html>

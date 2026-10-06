@@ -1,0 +1,74 @@
+conteudo: UX-01
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a spec define os quatro estados de cada tela e de cada consulta, e uma página com três consultas tem doze estados
+  ref: estados-de-interface
+  localizacao: seção 'A regra'
+  resultado: confirmada
+- texto: carregando, vazio, erro e sucesso respondem às perguntas da tabela da regra
+  ref: estados-de-interface
+  localizacao: seção 'A regra', tabela
+  resultado: confirmada
+- texto: o vazio é a situação normal de quem começou, costuma ser a primeira tela, diz o que aparecerá e como criar o primeiro item
+  ref: estados-de-interface
+  localizacao: seção 'Estado vazio não é estado de erro'
+  resultado: confirmada
+- texto: a mensagem de erro diz o que aconteceu e o que fazer, não se desculpa, não culpa a pessoa, não mostra rastro de pilha e diz de quem depende a recuperação
+  ref: estados-de-interface
+  localizacao: seção 'Erro descreve e orienta'
+  resultado: confirmada
+- texto: carregando sem limite de tempo é indistinguível de travamento; vazio tratado como erro faz a pessoa nova achar que quebrou; erro com exceção crua vaza detalhe interno; estados só da página deixam a tela inconsistente
+  ref: estados-de-interface
+  localizacao: seção 'Erros comuns'
+  resultado: confirmada
+- texto: PR de interface que não trata os quatro estados explicitamente não passa em revisão
+  ref: estados-de-interface
+  localizacao: seção 'A regra', último parágrafo
+  resultado: confirmada
+- texto: se o steering não existir, não se inventa um design system e se pergunta qual usar
+  ref: estados-de-interface
+  localizacao: seção 'Parâmetros deste projeto'
+  resultado: confirmada
+- texto: estado vazio é o contêiner, tela ou painel cujo conteúdo ainda não existe ou não pode ser exibido
+  ref: nngroup-empty-states
+  localizacao: 'abertura, ''What Is an Empty State?'' (definição citada por paráfrase)'
+  resultado: confirmada
+- texto: o estado vazio serve para comunicar o estado do sistema, dar pistas de aprendizado e abrir caminhos diretos para as tarefas principais
+  ref: nngroup-empty-states
+  localizacao: os três títulos de diretriz do artigo
+  resultado: confirmada
+- texto: o estado vazio esclarece se o conteúdo está carregando ou indisponível
+  ref: nngroup-empty-states
+  localizacao: diretriz 'Use Empty States to Communicate System Status'
+  resultado: confirmada
+- texto: o WCAG 2.2, critério 3.3.3 (AA), exige as sugestões de correção conhecidas para erro de entrada detectado automaticamente, salvo se comprometer a segurança ou a finalidade do conteúdo
+  ref: wcag-error-suggestion
+  localizacao: texto do critério 3.3.3
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/UX-01/verificar-estados.py
+  comando: python3 scripts/verificar-estados.py --html frontend/antes.html --dados frontend/dados-exemplo/antes.json (HTML sem o estado vazio e dados com o vazio de texto igual ao do erro)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: "'estado vazio aparece 0 vez(es) (esperado 1)', 'vazio: texto de titulo/orientacao/acao não aparece na tela', 'o vazio tem o mesmo texto do erro (vazio não é erro)' e 'UX-01: a tela não tem os quatro estados completos (acima).', saída 1."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/UX-01/lista-chamados.html
+  comando: python3 scripts/verificar-estados.py --html frontend/lista-chamados.html --dados frontend/dados-exemplo/lista-chamados.json; página servida por python3 -m http.server 8014 e aberta no Playwright com ?estado=carregando|vazio|erro|sucesso
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Chromium do Playwright; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "verificador saída 0 ('UX-01: 4 estados presentes; o vazio orienta e é distinto do erro.'); as quatro capturas .playwright-mcp/ux-01-carregando.png, ux-01-vazio.png, ux-01-erro.png e ux-01-sucesso.png mostram um estado cada; único erro de console, o favicon.ico 404 do servidor local."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/UX-01/dados-exemplo.json
+  comando: python3 scripts/verificar-estados.py --html frontend/lista-chamados.html --dados frontend/dados-exemplo/lista-chamados.json (dados com os quatro estados)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "saída 0; os textos de título, orientação, descrição e ação de vazio e erro aparecem no elemento do estado correspondente do HTML."
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: pendente (conferência em lote, ADR 0005)
+  data: '2026-10-06'
+  achados: []

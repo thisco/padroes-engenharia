@@ -1,0 +1,11 @@
+id: nngroup-empty-states
+titulo: "Designing Empty States in Complex Applications: 3 Guidelines"
+organizacao: Nielsen Norman Group
+url: https://www.nngroup.com/articles/empty-state-interface-design/
+tipo: analista
+publicado_em: 2021-09-19
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "abertura ('What Is an Empty State?') e as três diretrizes: 'Use Empty States to Communicate System Status', '… to Provide Learning Cues' e '… to Provide Direct Pathways for Key Tasks'"
+dominios: [frontend-ux]
+notas: "Autora Kate Kaplan. Página aberta em 2026-10-06 por WebFetch (resumo do conteúdo da página)."

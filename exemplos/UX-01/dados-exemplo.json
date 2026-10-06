@@ -1,0 +1,25 @@
+{
+  "tela": "lista-chamados",
+  "carregando": {
+    "mensagem": "Carregando seus chamados...",
+    "limite_segundos": 10,
+    "mensagem_demora": "Está demorando mais que o normal. Você pode esperar ou tentar de novo."
+  },
+  "vazio": {
+    "titulo": "Você ainda não abriu nenhum chamado",
+    "orientacao": "Aqui aparecem os chamados que você abrir, com o andamento de cada um. Para começar, abra o primeiro.",
+    "acao": "Abrir primeiro chamado"
+  },
+  "erro": {
+    "titulo": "Não foi possível carregar os chamados",
+    "descricao": "O serviço de chamados não respondeu. Seus chamados continuam salvos. Tente de novo; se persistir, avise o time de suporte.",
+    "acao": "Tentar de novo"
+  },
+  "sucesso": {
+    "itens": [
+      {"id": 101, "titulo": "Impressora do 2º andar sem toner", "situacao": "Em andamento"},
+      {"id": 102, "titulo": "Acesso à VPN expirado", "situacao": "Aberto"},
+      {"id": 103, "titulo": "Troca de monitor", "situacao": "Concluído"}
+    ]
+  }
+}
