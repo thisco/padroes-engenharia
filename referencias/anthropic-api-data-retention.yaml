@@ -1,0 +1,10 @@
+id: anthropic-api-data-retention
+titulo: API and data retention
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/manage-claude/api-and-data-retention
+tipo: vendor
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "abertura (quem é o operador por canal), 'How Anthropic approaches data retention', 'Zero data retention (ZDR)', 'What ZDR does not cover' e 'Model-specific data retention requirements'"
+dominios: [ia-no-produto, privacidade-lgpd]
+notas: null

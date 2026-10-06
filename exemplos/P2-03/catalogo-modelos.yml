@@ -1,0 +1,24 @@
+# Catálogo de modelos: uma entrada por modelo e canal de consumo.
+- id: fable-5-api-direta
+  modelo: Claude Fable 5
+  canal: api-direta-anthropic
+  operador_dados: anthropic
+  retencao_dias: 30
+  zdr_elegivel: so-com-autorizacao
+  system_card: https://anthropic.com/claude-fable-5-mythos-5-system-card
+  certificacoes: [ISO 27001:2022, ISO/IEC 42001:2023, SOC 2 Type II]
+  vedacao_treinamento: sim
+  vedacao_origem: compromisso-do-fornecedor
+  uso_liberado: sim
+  verificado_em: 2026-10-06
+  fonte: https://platform.claude.com/docs/en/manage-claude/api-and-data-retention
+- id: fable-5-bedrock
+  modelo: Claude Fable 5
+  canal: amazon-bedrock
+  operador_dados: aws
+  retencao_dias: a-confirmar
+  zdr_elegivel: a-confirmar
+  uso_liberado: nao
+  motivo: retenção e certificações do canal seguem a documentação da AWS, ainda não conferida
+  verificado_em: 2026-10-06
+  fonte: https://platform.claude.com/docs/en/manage-claude/api-and-data-retention

@@ -1,0 +1,10 @@
+id: anthropic-system-cards
+titulo: Model system cards
+organizacao: Anthropic
+url: https://www.anthropic.com/system-cards
+tipo: vendor
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "lista de system cards e a entrada 'Claude Fable 5 and Mythos 5' (junho de 2026)"
+dominios: [ia-no-produto]
+notas: null

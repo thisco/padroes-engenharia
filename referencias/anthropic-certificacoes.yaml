@@ -1,0 +1,10 @@
+id: anthropic-certificacoes
+titulo: What certifications has Anthropic obtained?
+organizacao: Anthropic
+url: https://support.claude.com/en/articles/10015870-what-certifications-has-anthropic-obtained
+tipo: vendor
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "lista de certificações e indicação do Trust Portal"
+dominios: [ia-no-produto]
+notas: null

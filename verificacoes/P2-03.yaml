@@ -1,0 +1,91 @@
+conteudo: P2-03
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: na API direta, na plataforma na AWS e no Microsoft Foundry a Anthropic é a operadora dos dados; no Amazon Bedrock
+    e no Google Cloud a operadora é a nuvem
+  ref: anthropic-api-data-retention
+  localizacao: parágrafo de abertura da página
+  resultado: confirmada
+- texto: o conteúdo dos prompts e das respostas não é retido por padrão, e os Covered Models exigem retenção de 30 dias; compromisso
+    de nunca usar dado retido para treinamento sem permissão expressa
+  ref: anthropic-api-data-retention
+  localizacao: seção 'How Anthropic approaches data retention'
+  resultado: confirmada
+- texto: o ZDR é pedido ao time comercial e habilitado por organização; prompts e respostas não ficam armazenados após a resposta
+    da API
+  ref: anthropic-api-data-retention
+  localizacao: seção 'Zero data retention (ZDR)'
+  resultado: confirmada
+- texto: os Covered Models não estão disponíveis sob ZDR sem autorização expressa da Anthropic
+  ref: anthropic-api-data-retention
+  localizacao: seções 'What ZDR does not cover' e 'Model-specific data retention requirements'
+  resultado: confirmada
+- texto: mesmo com ZDR, conteúdo sinalizado pode ser retido por até 2 anos
+  ref: anthropic-api-data-retention
+  localizacao: seção 'Retention regardless of arrangement'
+  resultado: confirmada
+- texto: com ZDR, resultados dos classificadores de segurança do usuário continuam retidos
+  ref: anthropic-zdr-escopo
+  localizacao: seção do que o ZDR cobre, exceção dos classificadores
+  resultado: confirmada
+- texto: a Anthropic informa ISO 27001:2022, ISO/IEC 42001:2023 e SOC 2 Tipo I e II, e os relatórios são pedidos pelo Trust
+    Portal
+  ref: anthropic-certificacoes
+  localizacao: lista de certificações e seção dos relatórios
+  resultado: confirmada
+- texto: a Anthropic lista os system cards por modelo, e o do Claude Fable 5 se chama 'Claude Fable 5 and Mythos 5' (junho
+    de 2026), em anthropic.com/claude-fable-5-mythos-5-system-card
+  ref: anthropic-system-cards
+  localizacao: lista da página 'Model system cards'
+  resultado: confirmada
+- texto: controlador decide o tratamento, operador trata em nome do controlador (art. 5º, VI e VII); o operador segue as instruções
+    do controlador, que verifica o cumprimento (art. 39)
+  ref: lgpd
+  localizacao: art. 5º, VI e VII; art. 39
+  resultado: confirmada
+- texto: dados pessoais são eliminados após o término do tratamento, com exceções (art. 16), e a transferência internacional
+    só é permitida nos casos do art. 33
+  ref: lgpd
+  localizacao: art. 16 e art. 33, caput e incisos I e II
+  resultado: confirmada
+- texto: a leitura de que vedação de treinamento e prazo de retenção são instruções do controlador ao operador
+  ref: lgpd
+  localizacao: art. 39
+  resultado: parcial
+  nota: Interpretação do portal, dita no texto como tal; a lei não menciona treinamento de modelo.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P2-03/verificar-catalogo.py
+  comando: python3 scripts/verificar-catalogo.py catalogo-modelos.yml --hoje 2026-10-06 (entrada liberada com campos vazios
+    e verificado_em 2026-04-01)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: '8 linhas de erro (operador_dados vazio, verificado_em vencido há 188 dias, retencao_dias e demais campos) e
+    "P2-03: catálogo incompleto ou vencido (acima)."; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-03/verificar-catalogo.py
+  comando: python3 scripts/verificar-catalogo.py catalogo-modelos.yml --hoje 2027-02-01 (catálogo do exemplo, 118 dias depois)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'verificado_em vencido: 118 dias, o limite é 90, nas duas entradas; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-03/catalogo-modelos.yml
+  comando: python3 scripts/verificar-catalogo.py catalogo-modelos.yml --hoje 2026-10-06 (arquivo do exemplo copiado)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'P2-03: catálogo completo e em dia.; saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-03/verificar-catalogo.py
+  comando: python3 scripts/verificar-catalogo.py catalogo-modelos.yml --hoje 2026-10-06 (com o catálogo do exemplo)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'P2-03: catálogo completo e em dia.; saída 0.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []
