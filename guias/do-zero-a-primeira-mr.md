@@ -39,42 +39,82 @@ comandos da execução somaram cerca de 3,5 minutos, sem contar o tempo de escre
 ### 1. Gere o projeto
 
 O starter [SDD scaffold](../starters/sdd-scaffold.html) gera o projeto com o `criar_projeto.py`,
-que exige Python 3.11 ou mais novo e faz o primeiro commit [ref:sdd-scaffold-readme]. Para ter o
-agente conduzindo a instalação, siga o guia
+que exige Python 3.11 ou mais novo, rede e git com `user.name` e `user.email`, e faz o primeiro
+commit [ref:sdd-scaffold-readme]. Para ter o agente conduzindo a instalação, siga o guia
 [Instanciar o scaffold pelo próprio agente](instanciar-scaffold-pelo-agente.html). Para fazer
-na mão, com o scaffold clonado na tag `v1.7.0` (a execução usou um clone local; no seu caso,
-clone o repositório do starter):
+na mão, clone o scaffold na tag `v1.7.0` e rode o gerador, que fica na raiz do clone:
 
 ```bash
-python3 scripts-do-scaffold/criar_projeto.py --nome app-guia1 --destino . \
+git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git
+python3 sdd-scaffold/criar_projeto.py --nome app-guia1 --destino . \
   --stack "Python 3.11" --descricao "Projeto do guia 1"
+cd app-guia1
 ```
 
 ```text
-✔ Projeto criado em /Users/thiago/curadoria-a5/b1-guia1-exec/app-guia1
+✔ Projeto criado em /caminho/app-guia1
 ```
 
-Troque `scripts-do-scaffold/` pelo caminho do clone. A geração levou 1 segundo. O projeto
-nasce com `AGENTS.md`, `docs/steering/`, os modelos de spec e de plano, os quatro pontos de
-montagem de skills e os scripts de verificação [ref:sdd-scaffold-readme].
+A geração levou 1 segundo. O projeto nasce com `AGENTS.md`, `docs/steering/`, os modelos de
+spec e de plano, os quatro pontos de montagem de skills e os scripts de verificação
+[ref:sdd-scaffold-readme]. O gerador não instala `pytest`: crie um ambiente virtual com as
+dependências do projeto (o `requirements.txt` traz o `pyyaml`) e o `pytest`, e mantenha-o ativo
+nos passos seguintes. O `.venv/` já está no `.gitignore` do projeto.
 
-O projeto gerado não tem código de aplicação. Para ter o que mudar, a execução fez um commit
-direto na `main`, que serve de base do exemplo: `app/precos.py` com `formatar_preco(1999)`
-devolvendo `R$ 19.99`, e `migrations/V1__cria_pedidos.sql`. Também criou um remoto local
-(`git init --bare`) com a `main` empurrada, porque o `verificar_pr.py` compara com
-`origin/main`.
+```bash
+python3 -m venv .venv && . .venv/bin/activate
+python3 -m pip install -r requirements.txt pytest
+```
+
+O projeto gerado não tem código de aplicação. Para ter o que mudar, faça um commit direto na
+`main`, que serve de base do exemplo, com três arquivos: `app/__init__.py` (vazio),
+`app/precos.py` e `migrations/V1__cria_pedidos.sql`.
+
+```python
+# app/precos.py
+def formatar_preco(centavos: int) -> str:
+    """Formata um valor em centavos como texto em reais, por exemplo R$ 19,99."""
+    return f"R$ {centavos // 100}.{centavos % 100:02d}"
+```
+
+```sql
+-- migrations/V1__cria_pedidos.sql
+CREATE TABLE pedidos (
+    id INTEGER PRIMARY KEY,
+    cliente TEXT NOT NULL,
+    total_centavos INTEGER NOT NULL
+);
+```
+
+`formatar_preco(1999)` devolve `R$ 19.99`, o defeito que o passo 2 corrige. Depois crie o remoto
+local e empurre a `main`, porque o `verificar_pr.py` compara com `origin/main`:
+
+```bash
+git add -A && git commit -m "chore: base do exemplo com módulo de preços e migration V1"
+git init --bare ../origin.git
+git remote add origin ../origin.git
+git push -u origin main
+```
 
 ### 2. Uma mudança de Tier 1: a correção do preço
 
 Classifique antes de abrir qualquer arquivo de código. O preço sai com ponto, e o texto em
 reais usa vírgula: é uma correção localizada em um arquivo, sem mudança de contrato, então é
-Tier 1 [ref:sdd-lifecycle]. A prática [P1-01](../praticas/construir-com-ia/P1-01.html) traz os
+Tier 1 [ref:sdd-lifecycle]. A prática [P1-01](../praticas/P1-01.html) traz os
 critérios, e na dúvida entre dois tiers fica-se com o mais alto [ref:sdd-lifecycle]. O Tier 1
 não tem spec, e sim um plano leve com o teste que prova a correção [ref:sdd-scaffold-sdd-processo].
 
 1. Crie a branch `fix/2026-10-05-virgula-no-preco` e o plano `docs/plans/2026-10-05-virgula-no-preco.md`
    a partir do modelo, com a linha `> **Tier:** 1` [ref:sdd-scaffold-modelo-plano].
-2. Escreva o teste antes da correção e veja falhar:
+2. Escreva o teste antes da correção, em `tests/unidade/test_precos.py`, e veja falhar:
+
+   ```python
+   from app.precos import formatar_preco
+
+
+   def test_formatar_preco_usa_virgula():
+       assert formatar_preco(1999) == "R$ 19,99"
+   ```
 
    ```text
    $ python3 -m pytest -q tests/unidade/test_precos.py
@@ -106,12 +146,15 @@ botão de merge da MR.
 Guardar o CPF do cliente no pedido muda o schema e grava dado pessoal: é Tier 2, que passa por
 spec, aprovação humana, plano e revisão contra a spec [ref:sdd-lifecycle]. O scaffold pede o
 PRD antes da primeira spec de Tier 2 [ref:sdd-scaffold-readme]; a execução escreveu um PRD curto
-em `docs/prd/cpf-no-pedido.md`.
+em `docs/prd/cpf-no-pedido.md`, a partir de `docs/prd/MODELO-prd.md`, com Problema ("o pedido guarda só
+o nome do cliente; a emissão de nota exige o CPF e hoje alguém o digita à mão"), Resultado
+esperado, Restrições ("CPF é dado pessoal: não vai para log nem para mensagem de erro") e Fora
+de escopo ("validar o dígito verificador").
 
 **3.1 A spec como delta.** Copie `docs/specs/MODELO-spec.md` para
 `docs/specs/2026-10-05-cpf-no-pedido.md`. A spec descreve só a mudança, com cada requisito como
 `**R<n>**` e uma linha de critério logo abaixo [ref:sdd-scaffold-modelo-spec]. Prática:
-[P1-04](../praticas/construir-com-ia/P1-04.html). Os três requisitos da execução:
+[P1-04](../praticas/P1-04.html). Os três requisitos da execução:
 
 ```markdown
 **R1** Todo pedido novo guarda o CPF do cliente só com dígitos.
@@ -128,7 +171,7 @@ o CPF é dado pessoal e é persistido.
 **3.2 Marque a dúvida.** Uma pergunta sem resposta fica no texto como `[ESCLARECER: pergunta]`
 [ref:sdd-lifecycle]; a execução deixou `[ESCLARECER: o CPF é obrigatório em todo pedido novo, ou
 pode ficar vazio?]` na seção Esclarecimentos. Prática:
-[P1-05](../praticas/construir-com-ia/P1-05.html). Ao receber a resposta, apague o marcador e
+[P1-05](../praticas/P1-05.html). Ao receber a resposta, apague o marcador e
 registre pergunta e resposta, uma sessão por data [ref:sdd-scaffold-modelo-spec]:
 
 ```markdown
@@ -144,7 +187,7 @@ achado.
 pergunte se ela está aprovada. Sem o "sim" explícito da pessoa, não se passa ao plano
 [ref:sdd-lifecycle]. O registro (`Status`, `Aprovado por`, `Aprovado em`) é gravado por quem
 aprova, ou a pedido dele [ref:sdd-lifecycle]. Prática:
-[P1-06](../praticas/construir-com-ia/P1-06.html). Para mostrar o que o verificador pega, a
+[P1-06](../praticas/P1-06.html). Para mostrar o que o verificador pega, a
 execução marcou a spec como `aprovada` sem nome e com o marcador ainda aberto:
 
 ```text
@@ -175,7 +218,48 @@ elo entre requisito e teste, só avisando [ref:sdd-scaffold-verificar-pr]:
 AVISO: docs/specs/2026-10-05-cpf-no-pedido.md: R1 não é citado em teste alterado no PR: cite `# cobre: R1` no teste que o exercita. A citação aponta o requisito; não prova a cobertura.
 ```
 
-(a mesma linha saiu para R2 e R3). Escreva os testes com `# cobre: R<n>` e veja falharem:
+(a mesma linha saiu para R2 e R3). Escreva em `tests/unidade/test_pedidos.py` os testes, cada um com `# cobre: R<n>`, e veja falharem
+(com um `app/pedidos.py` provisório, que insere só `cliente` e `total_centavos`, a falha é de
+asserção e não de importação):
+
+```python
+import sqlite3
+from pathlib import Path
+
+import pytest
+
+from app.pedidos import criar_pedido
+
+MIGRATIONS = sorted(Path("migrations").glob("V*.sql"))
+
+
+def banco():
+    conexao = sqlite3.connect(":memory:")
+    for arquivo in MIGRATIONS:
+        conexao.executescript(arquivo.read_text(encoding="utf-8"))
+    return conexao
+
+
+def test_pedido_guarda_cpf_so_com_digitos():
+    # cobre: R1
+    conexao = banco()
+    criar_pedido(conexao, "Ana", 1999, "123.456.789-09")
+    assert conexao.execute("SELECT cpf FROM pedidos").fetchone() == ("12345678909",)
+
+
+def test_v2_acrescenta_a_coluna_cpf():
+    # cobre: R2
+    colunas = [linha[1] for linha in banco().execute("PRAGMA table_info(pedidos)")]
+    assert "cpf" in colunas
+
+
+def test_cpf_invalido_e_rejeitado_sem_ecoar_o_valor():
+    # cobre: R3
+    with pytest.raises(ValueError) as erro:
+        criar_pedido(banco(), "Ana", 1999, "123")
+    assert "123" not in str(erro.value)
+```
+
 
 ```text
 FAILED tests/unidade/test_pedidos.py::test_pedido_guarda_cpf_so_com_digitos
@@ -228,8 +312,27 @@ branch do CPF.
 ### 5. Veja a trava: a migration editada bloqueia
 
 Para fazer o teste do R2 passar, o atalho tentador é editar a migration que já existe. A execução
-acrescentou a coluna direto na `V1__cria_pedidos.sql`, implementou `app/pedidos.py`, viu os quatro
-testes passarem e empurrou a branch. O job `normas-do-pr`, rodado como acima, falhou:
+acrescentou `cpf TEXT` à `V1__cria_pedidos.sql`, trocou o `app/pedidos.py` pela versão abaixo, viu
+os quatro testes passarem e empurrou a branch.
+
+```python
+# app/pedidos.py
+def normalizar_cpf(texto: str) -> str:
+    """Devolve o CPF só com dígitos. A mensagem de erro não traz o valor recebido."""
+    digitos = "".join(c for c in texto if c.isdigit())
+    if len(digitos) != 11:
+        raise ValueError("CPF deve ter 11 dígitos")
+    return digitos
+
+
+def criar_pedido(conexao, cliente: str, total_centavos: int, cpf: str) -> int:
+    cursor = conexao.execute(
+        "INSERT INTO pedidos (cliente, total_centavos, cpf) VALUES (?, ?, ?)",
+        (cliente, total_centavos, normalizar_cpf(cpf)),
+    )
+    return cursor.lastrowid
+```
+ O job `normas-do-pr`, rodado como acima, falhou:
 
 ```text
 normas-do-pr > BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental.
@@ -262,7 +365,7 @@ O `verificar_pr.py` passou a sair com `Verificação de PR: 8 arquivo(s), nenhum
 escreveu o código) parte da spec, lista os `R<n>` e registra no plano, na seção
 `Revisão adversarial: <data> — achados`, uma linha por requisito com veredito e evidência
 [ref:sdd-lifecycle] [ref:sdd-scaffold-modelo-plano]. Prática:
-[P1-09](../praticas/construir-com-ia/P1-09.html). O verificador avisa quando falta requisito na
+[P1-09](../praticas/P1-09.html). O verificador avisa quando falta requisito na
 tabela. Com só R1 e R2 preenchidos:
 
 ```text
@@ -276,7 +379,7 @@ admite: o valor da revisão está na independência.
 **6.2 Arquivamento.** Antes do merge, a spec de Tier 2 passa de `aprovada` para `arquivada`, e o
 que é permanente vai para uma ADR ou para o steering, e o aprendizado operacional novo para
 `docs/PROJECT_MEMORY.md` [ref:sdd-lifecycle]. Prática:
-[P1-11](../praticas/construir-com-ia/P1-11.html), cujo exemplo traz o script
+[P1-11](../praticas/P1-11.html), cujo exemplo traz o script
 `conferir-arquivamento.py`, que a execução copiou para `scripts/`. Antes:
 
 ```text
@@ -296,6 +399,9 @@ Abra a MR, deixe o pipeline rodar e peça a aprovação de quem é dono da faixa
 
 ## O que a execução não cobriu
 
+- A reexecução de conferência dos passos 1, 2 e 5 (clone da tag, ambiente virtual, base, remoto,
+  teste que falha e passa, trava e correção) foi feita num projeto novo; a spec, o plano e os jobs
+  do CI do gitlab-ci-local vêm da execução original.
 - O processo foi conduzido à mão, sem harness de IA. A skill `sdd-lifecycle` conduz as mesmas
   fases com o agente [ref:sdd-lifecycle], mas este guia não registra uma sessão com agente.
 - Os jobs rodaram no gitlab-ci-local, e não num runner do GitLab; a MR e o merge foram simulados

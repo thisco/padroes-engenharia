@@ -6,7 +6,7 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seções 'Quick start' ('Requer Python 3.11+', lista 'O que acontece') e 'O que você recebe'
   resultado: confirmada
-  nota: 'Conferido também no projeto gerado na execução (git log com o commit inicial, árvore com AGENTS.md, docs/steering/, MODELO-spec.md, MODELO-plano.md, quatro links de skills, scripts/).'
+  nota: Conferido também no projeto gerado na execução (git log com o commit inicial, árvore com AGENTS.md, docs/steering/, MODELO-spec.md, MODELO-plano.md, quatro links de skills, scripts/).
 - texto: o scaffold pede o PRD antes da primeira spec de Tier 2
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, prompt da seção 'Instalar pelo próprio agente', passo 7
@@ -19,8 +19,8 @@ afirmacoes:
   ref: sdd-scaffold-sdd-processo
   localizacao: docs/steering/sdd-processo.md na tag v1.7.0, seção 'Tiers de rigor' (Tier 1)
   resultado: confirmada
-  nota: 'Lido no arquivo do projeto gerado na execução, que é o da tag v1.7.0.'
-- texto: "o plano parte do modelo com a linha de Tier no cabeçalho; o plano de Tier 2 traz Impacto Arquitetural, Estratégia de rollback, tarefas com (R<n>) e a seção 'Revisão adversarial: <data> — achados' com a tabela de veredito"
+  nota: Lido no arquivo do projeto gerado na execução, que é o da tag v1.7.0.
+- texto: 'o plano parte do modelo com a linha de Tier no cabeçalho; o plano de Tier 2 traz Impacto Arquitetural, Estratégia de rollback, tarefas com (R<n>) e a seção ''Revisão adversarial: <data> — achados'' com a tabela de veredito'
   ref: sdd-scaffold-modelo-plano
   localizacao: template/docs/plans/MODELO-plano.md na tag v1.7.0, cabeçalho e seções
   resultado: confirmada
@@ -28,7 +28,7 @@ afirmacoes:
   ref: sdd-scaffold-modelo-spec
   localizacao: MODELO-spec.md na tag v1.7.0, cabeçalho, seção Requisitos e comentário de Esclarecimentos
   resultado: confirmada
-- texto: "dúvida sem resposta fica como [ESCLARECER: pergunta]; o agente pausa no checkpoint, só passa ao plano com o sim explícito da pessoa, e o registro de aprovação é gravado por quem aprova ou a pedido dele"
+- texto: 'dúvida sem resposta fica como [ESCLARECER: pergunta]; o agente pausa no checkpoint, só passa ao plano com o sim explícito da pessoa, e o registro de aprovação é gravado por quem aprova ou a pedido dele'
   ref: sdd-lifecycle
   localizacao: SKILL.md na tag v3.0.0, Fase 1 e Fase 3, itens 2 a 4
   resultado: confirmada
@@ -36,7 +36,7 @@ afirmacoes:
   ref: sdd-scaffold-verificar-pr
   localizacao: template/scripts/verificar_pr.py na tag v1.7.0, analisar(), checar_aprovacao(), checar_marcadores(), analisar_rastreio(), MIGRATION
   resultado: confirmada
-  nota: 'Todas as mensagens citadas no guia foram produzidas pelo script na execução registrada abaixo.'
+  nota: Todas as mensagens citadas no guia foram produzidas pelo script na execução registrada abaixo.
 - texto: no Tier 2 o revisor é independente (sessão nova ou outra pessoa), parte da spec e registra uma linha por R no plano; a Fase 8 muda o Status da spec para arquivada antes do merge e destila o permanente para steering ou ADR e o aprendizado operacional para docs/PROJECT_MEMORY.md
   ref: sdd-lifecycle
   localizacao: SKILL.md na tag v3.0.0, Fase 7 (item 'Tier 2 — revisão adversarial') e Fase 8, passos 1 e 4
@@ -45,7 +45,7 @@ afirmacoes:
   ref: gitlab-mr-pipelines
   localizacao: documentação de pipelines de merge request, seções 'When they run' e de configuração
   resultado: confirmada
-  nota: 'Mesma afirmação já registrada em verificacoes/receita-ligar-ci-gitlab-travas.yaml.'
+  nota: Mesma afirmação já registrada em verificacoes/receita-ligar-ci-gitlab-travas.yaml.
 - texto: o gitlab-ci-local roda pipelines do GitLab na máquina local
   ref: gitlab-ci-local-readme
   localizacao: README, descrição e seção de executores
@@ -58,37 +58,33 @@ revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
-  - afirmacao: links ../praticas/construir-com-ia/P1-01, P1-04, P1-05, P1-06, P1-09 e P1-11.html (guias/do-zero-a-primeira-mr.md:71,
-      114 e demais)
-    problema: '[médio] seis links dão 404 no site gerado (as páginas de prática ficam em /praticas/P1-XX.html,
-      sem a pasta do domínio).'
-    tratamento: 'sugerido: trocar para ../praticas/P1-XX.html.'
-  - afirmacao: 'Passo 1: python3 scripts-do-scaffold/criar_projeto.py; base com app/precos.py, V1__cria_pedidos.sql
-      e remoto git init --bare (guias/do-zero-a-primeira-mr.md:49-65)'
-    problema: '[médio] o tutorial não é executável por quem lê sem inventar: scripts-do-scaffold/ não
-      existe (no scaffold é criar_projeto.py na raiz do clone); o conteúdo de app/precos.py, da migration
-      V1, dos testes, do PRD, da spec e do plano completos e o comando do remoto só são descritos. A execução
-      em si foi reproduzida: no commit 7f2b10f do projeto de teste o verificar_pr.py devolve ''BLOQUEIA:
-      migrations/V1__cria_pedidos.sql já existe na base e foi alterado'', e em d9d13f1 só avisos.'
-    tratamento: 'sugerido: dar o caminho real (criar_projeto.py do clone), o comando git init --bare e
-      o conteúdo mínimo dos arquivos base, ou publicar a pasta da execução como exemplo.'
+  - afirmacao: links ../praticas/construir-com-ia/P1-01, P1-04, P1-05, P1-06, P1-09 e P1-11.html (guias/do-zero-a-primeira-mr.md:71, 114 e demais)
+    problema: '[médio] seis links dão 404 no site gerado (as páginas de prática ficam em /praticas/P1-XX.html, sem a pasta do domínio).'
+    tratamento: 'Tratado em 2026-10-06: os seis links passaram a ../praticas/P1-XX.html e foram conferidos com curl no portal servido depois de regerar.'
+  - afirmacao: 'Passo 1: python3 scripts-do-scaffold/criar_projeto.py; base com app/precos.py, V1__cria_pedidos.sql e remoto git init --bare (guias/do-zero-a-primeira-mr.md:49-65)'
+    problema: '[médio] o tutorial não é executável por quem lê sem inventar: scripts-do-scaffold/ não existe (no scaffold é criar_projeto.py na raiz do clone); o conteúdo de app/precos.py, da migration V1, dos testes, do PRD, da spec e do plano completos e o comando do remoto só são descritos. A execução em si foi reproduzida: no commit 7f2b10f do projeto de teste o verificar_pr.py devolve ''BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado'', e em d9d13f1 só avisos.'
+    tratamento: 'Tratado em 2026-10-06: o passo 1 traz o clone da tag v1.7.0 e o criar_projeto.py na raiz do clone, o ambiente virtual com requirements.txt e pytest, o conteúdo de app/precos.py, da V1, do teste de preço, dos testes do CPF, de app/pedidos.py (provisório e final), da V2 e o git init --bare do remoto; o PRD foi resumido. Passos 1, 2 e 5 reexecutados num projeto novo (nova entrada em execucoes). Spec, plano completos e jobs do CI continuam vindos da execução original e o guia diz isso.'
   - afirmacao: saída 'Projeto criado em /Users/thiago/curadoria-a5/...' (guias/do-zero-a-primeira-mr.md:54)
     problema: '[baixo] caminho pessoal na saída publicada.'
-    tratamento: 'sugerido: trocar por /caminho/app-guia1.'
-  - afirmacao: 'T12 achados: .gitlab-ci-local/ sem ignore na receita ligar-ci; ruff acusa import sys nos
-      scripts do scaffold; PyYAML ausente no Python do sistema'
-    problema: '[baixo] trazidos do plano. O guia já manda ignorar .gitlab-ci-local/ e declara o ruff;
-      a receita ligar-ci (fatia anterior) não manda ignorar, e a validação do YAML depende de PyYAML.'
-    tratamento: 'sugerido: acrescentar o ignore à receita ligar-ci; ruff só no scaffold 1.8.0.'
+    tratamento: 'Tratado em 2026-10-06: a saída passou a mostrar /caminho/app-guia1.'
+  - afirmacao: 'T12 achados: .gitlab-ci-local/ sem ignore na receita ligar-ci; ruff acusa import sys nos scripts do scaffold; PyYAML ausente no Python do sistema'
+    problema: '[baixo] trazidos do plano. O guia já manda ignorar .gitlab-ci-local/ e declara o ruff; a receita ligar-ci (fatia anterior) não manda ignorar, e a validação do YAML depende de PyYAML.'
+    tratamento: 'Parcial: o guia já manda ignorar .gitlab-ci-local/. Não alterei a receita ligar-ci-gitlab-travas (fatia anterior, exige nova conferência dela); o ruff no scaffold é da 1.8.0 e o PyYAML entra pelo requirements.txt instalado no ambiente virtual do passo 1.'
   - afirmacao: '6.1: revisão contra a spec pelo mesmo executor; aprovação por ''Ana Lima'' fictícia'
-    problema: '[baixo] declarado no guia (valor da revisão está na independência); sem ação além de manter
-      a declaração.'
-    tratamento: manter.
+    problema: '[baixo] declarado no guia (valor da revisão está na independência); sem ação além de manter a declaração.'
+    tratamento: 'Mantido: a declaração de revisão pelo mesmo executor e de aprovação fictícia fica no guia.'
 execucoes:
 - tipo: arquivo
   arquivo: guias/do-zero-a-primeira-mr.md
-  comando: 'criar_projeto.py --nome app-guia1 --stack "Python 3.11"; verificar_pr.py --base origin/main em cada estado; npx gitlab-ci-local@4.76.0 normas-do-pr governanca segredos'
+  comando: criar_projeto.py --nome app-guia1 --stack "Python 3.11"; verificar_pr.py --base origin/main em cada estado; npx gitlab-ci-local@4.76.0 normas-do-pr governanca segredos
   ambiente: macOS, Python 3.14.8, Docker local, gitlab-ci-local 4.76.0, sdd-scaffold v1.7.0 (clone local); pasta ~/curadoria-a5/b1-guia1-exec/app-guia1, sem harness de IA
   resultado: passou
-  evidencia: "trava: 'BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado.' (FAIL normas-do-pr); com a V2 e a V1 restaurada: 'Verificação de PR: 8 arquivo(s), nenhum achado.'; jobs normas-do-pr, governanca e segredos em PASS"
+  evidencia: 'trava: ''BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado.'' (FAIL normas-do-pr); com a V2 e a V1 restaurada: ''Verificação de PR: 8 arquivo(s), nenhum achado.''; jobs normas-do-pr, governanca e segredos em PASS'
   data: '2026-10-05'
+- tipo: arquivo
+  arquivo: guias/do-zero-a-primeira-mr.md
+  comando: git clone --depth 1 --branch v1.7.0 do scaffold; criar_projeto.py --nome app-guia1 --destino .; ambiente virtual com requirements.txt e pytest; commit-base com app/precos.py e V1; git init --bare e push; teste de preço (falha, depois passa); verificar_pr.py --base origin/main; testes do CPF com app/pedidos.py provisório (3 failed); V1 editada com a versão final (4 passed e BLOQUEIA); V1 restaurada com V2 (4 passed, sem BLOQUEIA)
+  ambiente: macOS, Python 3.14.8, sdd-scaffold v1.7.0 (clone local da tag), projeto novo em pasta temporária; sem Docker e sem agente (os jobs do CI vêm da execução de 2026-10-05)
+  resultado: passou
+  evidencia: '1 failed, depois 1 passed no teste de preço; ''3 failed'' nos testes do CPF; ''4 passed'' e ''BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado.'' com a V1 editada; ''4 passed'' e nenhum BLOQUEIA com a V2.'
+  data: '2026-10-06'

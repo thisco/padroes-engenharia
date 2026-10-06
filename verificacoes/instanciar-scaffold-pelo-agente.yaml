@@ -1,12 +1,12 @@
 conteudo: instanciar-scaffold-pelo-agente
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o agente clona o scaffold, roda o gerador, confere os pontos de montagem, lê a constituição e conduz a configuração pós-geração, numa sessão aberta na pasta onde o projeto vai ser criado
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Instalar pelo próprio agente (o agente se configura)', parágrafo de abertura
   resultado: confirmada
-  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.'
+  nota: Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.
 - texto: o gerador exige Python 3.11 ou mais novo
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Quick start' ('Requer Python 3.11+')
@@ -15,7 +15,7 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Quick start', lista 'O que acontece'
   resultado: confirmada
-  nota: 'Que o git precise de user.name e user.email e que a instalação da skill precise de rede é consequência desses dois passos e consta no comando do starter; o texto do guia não os atribui ao README.'
+  nota: Que o git precise de user.name e user.email e que a instalação da skill precise de rede é consequência desses dois passos e consta no comando do starter; o texto do guia não os atribui ao README.
 - texto: o prompt clona o scaffold em /tmp/sdd-scaffold e gera o projeto com --destino .; para outra pasta troca-se --destino
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, prompt da seção 'Instalar pelo próprio agente' (passo 2) e parágrafo seguinte ao prompt
@@ -56,29 +56,32 @@ afirmacoes:
   ref: sdd-scaffold-changelog
   localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
   resultado: confirmada
+- texto: o prompt manda rodar verificar_constituicao.py e, depois de instalar o pyyaml, verificar_drift_arquitetura.py; no primeiro run, com componentes vazio, o drift check aponta o módulo de exemplo como 'não mapeado', o que é esperado e não bloqueia
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt da seção 'Instalar pelo próprio agente', passo 6, e checklist pós-geração
+  resultado: confirmada
+- texto: o .kiro/permissions.yaml também é um dos arquivos que a configuração pós-geração percorre, se o harness for o Kiro
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt, passo 5
+  resultado: confirmada
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
   - afirmacao: Passos 5 e 6 e Confira ao fim (guias/instanciar-scaffold-pelo-agente.md:52 e Confira)
-    problema: '[baixo] o passo 6 do prompt do README (pip install pyyaml e verificar_drift_arquitetura.py,
-      com ''não mapeado'' esperado no primeiro run) não aparece nos Passos nem no Confira; o leitor verá
-      o aviso sem saber que é esperado. O .kiro/permissions.yaml também entra na lista de marcadores do
-      README e não no guia.'
-    tratamento: 'sugerido: uma linha no passo 5 ou no Confira sobre o drift check do primeiro run.'
+    problema: '[baixo] o passo 6 do prompt do README (pip install pyyaml e verificar_drift_arquitetura.py, com ''não mapeado'' esperado no primeiro run) não aparece nos Passos nem no Confira; o leitor verá o aviso sem saber que é esperado. O .kiro/permissions.yaml também entra na lista de marcadores do README e não no guia.'
+    tratamento: 'Tratado em 2026-10-06: o guia ganhou um parágrafo sobre o passo 6 do prompt (PyYAML e o drift check, com ''não mapeado'' esperado no primeiro run) e menciona o .kiro/permissions.yaml.'
   - afirmacao: 'prompt do starter: passo 6 usa pip install pyyaml'
-    problema: '[baixo] trazido do plano (2): falha no macOS sem pip no PATH; python3 -m pip é mais portável.
-      Correção no scaffold 1.8.0, o prompt é o do README.'
-    tratamento: levar ao scaffold 1.8.0; até lá, nota no guia.
+    problema: '[baixo] trazido do plano (2): falha no macOS sem pip no PATH; python3 -m pip é mais portável. Correção no scaffold 1.8.0, o prompt é o do README.'
+    tratamento: Tratado em 2026-10-06 com nota no guia (python3 -m pip install pyyaml quando faltar o pip); a correção do prompt do starter fica para o scaffold 1.8.0, fora deste repositório.
   - afirmacao: link para a prática P1-01 (guias/instanciar-scaffold-pelo-agente.md:119)
-    problema: '[médio] a URL ../praticas/construir-com-ia/P1-01.html dá 404: a página gerada é public/praticas/P1-01.html
-      (confirmado no HTML gerado). O validador e o gerador não pegam.'
-    tratamento: 'sugerido: usar ../praticas/P1-01.html; avaliar regra de link interno no validador (B.5).'
+    problema: '[médio] a URL ../praticas/construir-com-ia/P1-01.html dá 404: a página gerada é public/praticas/P1-01.html (confirmado no HTML gerado). O validador e o gerador não pegam.'
+    tratamento: 'Tratado em 2026-10-06: o link passou a ../praticas/P1-01.html. A regra de link interno no validador vai para a B.5 (mudança de motor).'
 execucoes:
 - tipo: prompt
   prompt: starter-sdd-scaffold-prompt-1
   harness: claude-code
-  ambiente: "o prompt_para_agente do starter sdd-scaffold, que o guia usa; execução registrada em verificacoes/starter-sdd-scaffold.yaml, sessão nova em pasta vazia"
+  ambiente: o prompt_para_agente do starter sdd-scaffold, que o guia usa; execução registrada em verificacoes/starter-sdd-scaffold.yaml, sessão nova em pasta vazia
   resultado: passou
-  evidencia: "gerador ok (commit 1c95cd6), PROCEDENCIA.md com v3.0.0, 4 links para ../skills, constituição conferida com exit 0."
+  evidencia: gerador ok (commit 1c95cd6), PROCEDENCIA.md com v3.0.0, 4 links para ../skills, constituição conferida com exit 0.
   data: '2026-10-05'

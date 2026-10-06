@@ -99,6 +99,14 @@ python3 scripts/verificar_constituicao.py --raiz .
 Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
 ```
 
+O prompt também manda o agente rodar `scripts/verificar_drift_arquitetura.py`, que precisa do
+PyYAML. No primeiro run, com `componentes: []` vazio no `Arquitetura/mapa.yml`, o verificador
+aponta o módulo de exemplo como "não mapeado": isso é esperado e não bloqueia
+[ref:sdd-scaffold-readme]. O passo do prompt usa `pip install pyyaml`, que falha em máquina sem
+`pip` no PATH, como um macOS comum; nesse caso o agente deve usar `python3 -m pip install pyyaml`,
+e a correção no próprio prompt só vem numa versão futura do scaffold. O Kiro também tem o
+`.kiro/permissions.yaml` entre os marcadores a preencher [ref:sdd-scaffold-readme].
+
 Confira também que o `CLAUDE.md` termina com a linha `@AGENTS.md`, que o scaffold traz desde a
 1.7.0 [ref:sdd-scaffold-changelog].
 
@@ -116,4 +124,4 @@ preencheu nos marcadores e faça você o commit dessa configuração: o prompt n
 alterações da etapa de configuração, só o primeiro commit do gerador.
 
 Com o projeto pronto, o próximo passo é passar uma mudança pela skill `sdd-lifecycle`, o que a
-prática [P1-01](../praticas/construir-com-ia/P1-01.html) descreve.
+prática [P1-01](../praticas/P1-01.html) descreve.
