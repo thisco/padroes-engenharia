@@ -6,6 +6,6 @@ tipo: interno
 versao: "1.7.1"
 verificado_em: 2026-10-06
 verificacao: V
-localizacao: "cabeçalho (Specs descrevem a mudança, não o sistema inteiro), seção 'Requisitos' (R<n> com critério) e seção 'Esclarecimentos' (marcador [ESCLARECER: pergunta])"
+localizacao: "cabeçalho (Specs descrevem a mudança, não o sistema inteiro), seção 'Requisitos' (R<n> com critério) seção 'Esclarecimentos' (marcador [ESCLARECER: pergunta]) e seção 'Threat-model' (as cinco perguntas)"
 dominios: [construir-com-ia]
 notas: "Reconferido em 2026-10-06 na tag v1.7.1 (clone local, commit fixado; a URL do commit novo não foi aberta na web nesta sessão): o arquivo é idêntico ao da v1.7.0 (git diff v1.7.0 v1.7.1 vazio neste caminho), então valem as conferências já feitas."

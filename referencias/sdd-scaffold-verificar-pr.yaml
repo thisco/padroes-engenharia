@@ -6,6 +6,6 @@ tipo: interno
 versao: "1.7.1"
 verificado_em: 2026-10-06
 verificacao: V
-localizacao: "docstring (severidade BLOQUEIA), regex MIGRATION, função analisar(), função main() (conferência da base e lista de arquivos com --no-renames), checar_aprovacao(), checar_marcadores(), checar_criterios(), analisar_rastreio() e a regex LINHA_VEREDITO"
+localizacao: "docstring (severidade BLOQUEIA), regex MIGRATION, função analisar(), função main() (conferência da base e lista de arquivos com --no-renames), checar_aprovacao(), checar_marcadores(), checar_criterios(), analisar_rastreio(), a regex LINHA_VEREDITO, a regex SENSIVEL, secao_preenchida() e o aviso de threat-model em analisar()"
 dominios: [dados-migrations, ci-cd]
 notas: "Reconferido em 2026-10-06 no arquivo da tag v1.7.1 (clone local). É o mecanismo declarado em DAD-01 (componentes.yml fixa a versão 1.7.1) e o portal o hospeda em /.well-known/mecanismos/sdd-scaffold/, com o sha256 do arquivo da tag. Mudou desde a 1.7.0 uma linha, em main(): a lista de arquivos alterados vem de git diff --name-only --no-renames, de modo que a migration antiga de um rename segue na lista e a edição dela bloqueia. A regex MIGRATION, a constante EVIDENCIA e as mensagens de migration, rollback e evidência não mudaram."
