@@ -1,0 +1,11 @@
+id: sdd-scaffold-politica-de-permissoes
+titulo: "template/.claude/settings.json do sdd-scaffold (política de permissões do harness: ask, deny e hook)"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/template/.claude/settings.json
+tipo: interno
+versao: "1.7.1"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "blocos permissions.ask, permissions.deny e hooks.PreToolUse (o comando do hook termina em exit 2 se o script falha ou não existe)"
+dominios: [ia-no-produto, seguranca]
+notas: "Aberta na web em 2026-10-06 no commit fixado de componentes.yml e conferida com o arquivo da tag v1.7.1 (clone local). Não é hospedada pelo portal como mecanismo."

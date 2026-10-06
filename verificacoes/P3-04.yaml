@@ -1,0 +1,64 @@
+conteudo: P3-04
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'o guia do CISO recomenda conceder a menor capacidade que ainda completa a tarefa, retirar as ações destrutivas do conjunto de ferramentas (o agente não tenta o que não está na lista) e trata leitura e escrita como riscos diferentes'
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'Four questions to assess agentic AI risk', pergunta 2 ('Read-only is a different concern from read/write'; 'grant the narrowest capability that still completes the task'; 'It will never attempt an action that isn't in its tool list')"
+  resultado: confirmada
+- texto: 'o guia dá como exemplo permitir redigir documentos mas nunca enviá-los sozinho, e ler e buscar mas nunca apagar'
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'Case study: Claude Cowork'"
+  resultado: parcial
+  nota: 'A página trata o exemplo no estudo de caso de um produto; o texto do portal o usa como ilustração do padrão, sem atribuir ao guia uma regra geral.'
+- texto: 'o ambiente em que o laço do agente roda nunca deve guardar uma credencial que valha a pena roubar'
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'Case study: Claude Cowork' ('The environment the agent loop runs in should never hold a credential worth stealing')"
+  resultado: confirmada
+- texto: 'o guia descreve a conta de serviço de propósito único e privilégio mínimo e a pessoa responsável pelo resultado como posições claras, e o meio-termo, em que o agente leva a identidade delegada de uma pessoa a sistemas que ela não vê, como o ponto em que a responsabilidade fica ambígua'
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'The agentic identity spectrum'"
+  resultado: confirmada
+- texto: 'as ações do agente têm de se distinguir das de uma pessoa no sistema em que a equipe já investiga; um agente desalinhado é indistinguível de um ataque interno'
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seções 'Case study: Claude Cowork' ('Agent actions have to be distinguishable from user actions...') e 'Governing internal risks' ('indistinguishable from an insider attack')"
+  resultado: confirmada
+- texto: 'a OWASP lista a aprovação humana para ações de alto risco entre as mitigações da injeção de prompt'
+  ref: owasp-llm-top10
+  localizacao: "seção de prevenção e mitigação (itens 4, 5 e 6 da lista), já conferida na P3-02"
+  resultado: confirmada
+- texto: 'a política do template tem ask para a constituição, AGENTS.md, ADRs e mapa de arquitetura e para comandos de shell que os reescrevem; deny para a própria política, o hook, os verificadores e .github; e um hook PreToolUse cujo comando termina em exit 2 se o script falha ou não existe'
+  ref: sdd-scaffold-politica-de-permissoes
+  localizacao: "blocos permissions.ask, permissions.deny e hooks.PreToolUse do arquivo da tag v1.7.1"
+  resultado: confirmada
+- texto: 'o hook casa o caminho com a lista PROTEGIDOS, resolve .. e ignora a caixa, responde ask e trata entrada ilegível ou sem caminho como pedido de aprovação'
+  ref: sdd-scaffold-hook-proteger-governanca
+  localizacao: "PROTEGIDOS, relativo_ao_projeto(), caminho_protegido() e main()"
+  resultado: confirmada
+- texto: 'o arquivo declarativo de outro harness tem precedência deny sobre ask sobre allow e cobre só a escrita de arquivo (fs.write)'
+  ref: sdd-scaffold-permissoes-declarativas
+  localizacao: "comentário de abertura e regras com effect ask e deny"
+  resultado: confirmada
+- texto: 'dentro do repositório a trava vale contra descuido e não contra má-fé; para valer contra má-fé, a proteção tem de estar fora do repositório (CODEOWNERS, proteção de branch, política do harness gerida pela organização); o hook só vê as ferramentas de edição de arquivo, a escrita por shell passa por regras ask que cobrem o padrão direto e o indireto não é coberto; ask depende de alguém ler a pergunta e em modo sem confirmação não há quem responda'
+  ref: sdd-scaffold-readme
+  localizacao: "seção 'Limite dos controles por ferramenta' (em 'O que impede e o que orienta'), primeiro, segundo e último itens"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P3-04/verificar-permissoes.py
+  comando: python3 scripts/verificar-permissoes.py (política com allow Write(**), sem ask nem deny e hook sem exit 2; agente.md sem identidade_propria)
+  ambiente: cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-04-prompt; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: '"allow concede escrita ou shell irrestrito: Write(**)", dez linhas "não está em ask nem em deny" (cinco caminhos de governança mais a própria política, com Edit e Write), "o hook não falha fechado", "identidade_propria ausente" e "P3-04: política de permissões ou identidade incompleta (acima).", saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-04/permissoes-agente.json
+  comando: python3 scripts/verificar-permissoes.py (política do exemplo e docs/steering/agente.md do exemplo da P3-01, com identidade_propria svc-triagem-chamados)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'P3-04: somente-leitura por padrão, governança em ask ou deny e identidade própria.; saída 0. Com identidade_propria igual a classificado_por, saída 1 ("identidade_propria é a da pessoa").'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []

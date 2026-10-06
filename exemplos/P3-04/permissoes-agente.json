@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Grep(**)",
+      "Glob(**)"
+    ],
+    "ask": [
+      "Edit(AGENTS.md)",
+      "Write(AGENTS.md)",
+      "Edit(docs/constituicao/**)",
+      "Write(docs/constituicao/**)",
+      "Edit(docs/adr/**)",
+      "Write(docs/adr/**)",
+      "Edit(Arquitetura/mapa.yml)",
+      "Write(Arquitetura/mapa.yml)",
+      "Bash(sed -i:*)",
+      "Bash(tee:*)"
+    ],
+    "deny": [
+      "Edit(docs/steering/permissoes-agente.json)",
+      "Write(docs/steering/permissoes-agente.json)",
+      "Edit(scripts/proteger_governanca.py)",
+      "Write(scripts/proteger_governanca.py)",
+      "Edit(scripts/verificar_*.py)",
+      "Write(scripts/verificar_*.py)",
+      "Edit(.github/**)",
+      "Write(.github/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I scripts/proteger_governanca.py || { echo \"hook de governança falhou ou não existe; escrita bloqueada\" >&2; exit 2; }"
+          }
+        ]
+      }
+    ]
+  }
+}

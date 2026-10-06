@@ -1,0 +1,11 @@
+id: sdd-scaffold-permissoes-declarativas
+titulo: "template/.kiro/permissions.yaml do sdd-scaffold (permissões declarativas por caminho)"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/template/.kiro/permissions.yaml
+tipo: interno
+versao: "1.7.1"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "comentário de abertura (precedência deny sobre ask sobre allow; limite a fs.write) e regras com effect ask e deny"
+dominios: [ia-no-produto, seguranca]
+notas: "Aberta na web em 2026-10-06 no commit fixado de componentes.yml e conferida com o arquivo da tag v1.7.1 (clone local)."
