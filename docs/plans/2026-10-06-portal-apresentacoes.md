@@ -106,3 +106,14 @@ Conferente independente, modelo econômico (ADR 0005), 2026-10-06. Achados compl
 folga do slide 14 em 720p, versão do Claude Code no comparativo, omissão do teste do Codex com
 `.codex/skills`). Deck aberto em :8011 sem 404 além de `/favicon.ico`; capturas dos slides 1, 14 e 17
 em `.playwright-mcp/`.
+
+Amostra conferida (movida do registro, cujo schema só aceita revisor, data e achados):
+
+```yaml
+  conferencia:
+    amostra: '15 afirmações do registro cruzadas com componentes.yml, ferramentas/*.yml, a receita instalar-skills-por-harness, praticas P1-01/P1-03/P1-04 e os arquivos da tag v1.7.1 (CHANGELOG, README, template/AGENTS.md, template/docs/steering) e v3.0.0 do sdd-lifecycle'
+    resultado: 'versões, quatro pontos de montagem, .agents/skills para Codex e Antigravity, 88 linhas e 5399 bytes do AGENTS.md, 7 arquivos e 291 linhas de steering, rename com --no-renames, hook com CLAUDE_PROJECT_DIR e falha fechada, python3 -I, lista de protegidos, 32 KB do Codex, três tiers com o mais alto na dúvida, Spec Kit com caminho de bug, CLAUDE.md importa @AGENTS.md: todas confirmadas; nenhuma contradiz prática, conceito ou ferramenta do portal'
+    r6: 'nenhuma ocorrência de 1.6.1, 2.0.0, "três montagens", "três pontos" ou "ponteiro de 4 linhas" nas 5 páginas, no roteiro e no README; .codex/skills só aparece dentro da lista de quatro pontos (diagrama-scaffold.html:279, garantias-scaffold.html:293); 19 slides no index e 2 sections em cada companheira, iguais à origem; diff contra a origem só de versão, fato e reconciliação, mais o caminho de vendor e a remoção dos nomes de pessoas (índice, roteiro)'
+    navegador: 'servidor em :8011, sem 404 (só /favicon.ico), setas navegam, 19 slides, as 4 páginas carregam css, js e fontes; capturas t3-slide01.png, t3-slide14.png e t3-slide17.png'
+    varredura: 'nenhum nome de pessoa nem assistente de IA como autor em apresentacoes/harness-sdd; nenhum http(s) em src ou href'
+```
