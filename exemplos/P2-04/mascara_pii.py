@@ -1,4 +1,4 @@
-"""Guardrail de PII do gateway (P2-04): mascara CPF e e-mail antes de a requisição chegar ao modelo."""
+"""Guardrail de PII do gateway (P2-04): mascara CPF e e-mail antes de chegar ao modelo."""
 
 import logging
 import re
@@ -17,7 +17,7 @@ def cpf_valido(digitos: str) -> bool:
         return False
     for tamanho in (9, 10):
         soma = sum(
-            int(d) * p for d, p in zip(digitos[:tamanho], range(tamanho + 1, 1, -1))
+            int(d) * p for d, p in zip(digitos[:tamanho], range(tamanho + 1, 1, -1), strict=True)
         )
         if int(digitos[tamanho]) != (soma * 10 % 11) % 10:
             return False

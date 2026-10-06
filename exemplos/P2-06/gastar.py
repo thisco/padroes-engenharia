@@ -4,9 +4,7 @@ import os
 
 from openai import OpenAI, OpenAIError
 
-cliente = OpenAI(
-    base_url=os.environ["AI_GATEWAY_URL"], api_key=os.environ["AI_GATEWAY_KEY"]
-)
+cliente = OpenAI(base_url=os.environ["AI_GATEWAY_URL"], api_key=os.environ["AI_GATEWAY_KEY"])
 for n in range(1, 21):
     try:
         cliente.chat.completions.create(
