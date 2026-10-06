@@ -1,0 +1,11 @@
+id: anthropic-prompting-opus-5-5
+titulo: Prompting Claude Opus 5.5
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "seções 'Unattended agentic runs' (fim de turno em texto não prova que a tarefa acabou, lista de tarefas, condição de término, paradas desejadas, confirmação para ação arriscada) e 'Capabilities relevant to prompting' (item Communication)"
+dominios:
+- construir-com-ia
+notas: "Documento vivo, sem data de publicação exibida; guia de um modelo específico, e o portal cita só o que ele diz sobre declarar término e paradas, que a página apresenta como valendo para agentes sem supervisão."

@@ -4,9 +4,9 @@ organizacao: Anthropic
 url: https://www.anthropic.com/engineering/building-effective-agents
 tipo: vendor
 publicado_em: '2024-12-19'
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-06'
 verificacao: V
-localizacao: 'texto principal: definição de agente e de workflow, e o conselho de começar simples'
+localizacao: 'texto principal: definição de agente e de workflow, o conselho de começar simples e, na seção "Agents", a pausa para feedback humano, as condições de parada e o teste em sandbox'
 dominios:
 - construir-com-ia
 notas: null

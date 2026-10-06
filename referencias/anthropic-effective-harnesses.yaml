@@ -4,7 +4,7 @@ organizacao: Anthropic
 url: https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents
 tipo: vendor
 publicado_em: '2025-11-26'
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-06'
 verificacao: V
 localizacao: seções dos desafios (sessões sem memória, tudo de uma vez, vitória prematura, teste) e das
   soluções

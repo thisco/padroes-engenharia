@@ -3,9 +3,9 @@ titulo: Prompting best practices
 organizacao: Anthropic
 url: https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
 tipo: vendor
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificacao: V
-localizacao: "seção 'Migration considerations', itens 4 (thinking configuration) e 6 (anti-laziness prompting)"
+localizacao: "seções 'Balancing autonomy and safety' e 'Overeagerness' (em 'Agentic systems') e 'Migration considerations', itens 4 (thinking configuration) e 6 (anti-laziness prompting)"
 dominios:
 - construir-com-ia
 notas: "Documento vivo, sem data de publicação exibida; cobre os modelos Claude correntes listados na abertura da página e remete a um guia de migração por modelo."

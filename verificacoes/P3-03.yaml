@@ -1,0 +1,57 @@
+conteudo: P3-03
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'um agente novo, numa sessão seguinte, olhava o que já estava feito e dava o trabalho por concluído; a lista de funcionalidades começa toda como falhando, para dar um contorno do que é o trabalho completo'
+  ref: anthropic-effective-harnesses
+  localizacao: seções sobre a declaração prematura de vitória e sobre a lista de funcionalidades com campo passes
+  resultado: confirmada
+- texto: 'terminar a sessão com um commit e uma nota de andamento, para a próxima não reconstituir o trabalho'
+  ref: anthropic-effective-harnesses
+  localizacao: seção sobre ambiente limpo e documentação de progresso ('End the session by writing a git commit and progress update')
+  resultado: confirmada
+- texto: 'o guia descreve a tendência de alguns modelos a criar arquivos extras e abstrações não pedidas e propõe delimitar o escopo ao que foi pedido ou é claramente necessário'
+  ref: anthropic-prompting-best-practices
+  localizacao: seção 'Overeagerness' (em 'Agentic systems')
+  resultado: confirmada
+  nota: 'A página nomeia os modelos Opus 4.5 e 4.6 como os que têm a tendência; o texto do portal diz "alguns modelos".'
+- texto: 'sem orientação o modelo pode agir de forma difícil de reverter ou que afeta sistemas compartilhados (apagar arquivos, force-push, postar em serviços externos); o guia dá três grupos de exemplo: destrutivas, difíceis de reverter e visíveis a outros; e recomenda ações locais e reversíveis como editar arquivo e rodar testes'
+  ref: anthropic-prompting-best-practices
+  localizacao: seção 'Balancing autonomy and safety'
+  resultado: confirmada
+- texto: 'em execução sem supervisão, um fim de turno em texto é um relatório e não prova de que a tarefa acabou; mantenha as partes da tarefa numa lista (ferramenta ou arquivo); com itens abertos e sem bloqueio declarado, mande uma mensagem curta nomeando-os; pare após duas ou três continuações automáticas'
+  ref: anthropic-prompting-opus-5-5
+  localizacao: seção 'Unattended agentic runs', parágrafos 2 e 3
+  resultado: confirmada
+- texto: 'convém nomear as paradas desejadas, como quando nada avança sem a pessoa; a instrução de seguir trabalhando não anula a confirmação de ação arriscada ou destrutiva'
+  ref: anthropic-prompting-opus-5-5
+  localizacao: seção 'Unattended agentic runs', parágrafo 4 e o texto de exemplo ('This does not override the need for confirmation on risky or destructive actions')
+  resultado: confirmada
+- texto: 'os relatórios do modelo sobre trabalho agêntico dizem o que fez, o que achou e o que precisa da pessoa'
+  ref: anthropic-prompting-opus-5-5
+  localizacao: seção 'Capabilities relevant to prompting', item Communication
+  resultado: parcial
+  nota: 'A página descreve o comportamento do modelo, e não manda pedir esse formato; o texto do portal usa a descrição como modelo de relatório, sem atribuir à fonte uma regra.'
+- texto: 'a Anthropic cita condições de parada, como um número máximo de iterações, e a pausa para pedir retorno humano em pontos de controle ou diante de um bloqueio'
+  ref: anthropic-building-effective-agents
+  localizacao: seção 'Agents'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P3-03/verificar-instrucoes.py
+  comando: python3 scripts/verificar-instrucoes.py (docs/steering/agente.md só com o bloco de classificação da P3-01 e o parágrafo, sem as quatro seções)
+  ambiente: cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-03-prompt; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'quatro linhas "falta a declaração de término|escopo|parada|autonomia" e "P3-03: declarações ausentes ou incompletas (acima).", saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-03/agente.md
+  comando: python3 scripts/verificar-instrucoes.py docs/steering/agente.md (arquivo do exemplo copiado)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'P3-03: as quatro declarações estão presentes.; saída 0.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []

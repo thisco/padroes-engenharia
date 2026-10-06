@@ -4,8 +4,8 @@ organizacao: Anthropic
 url: https://claude.com/blog/ciso-guide-to-agentic-ai
 tipo: vendor
 publicado_em: 2026-07-17
-verificado_em: 2026-10-04
+verificado_em: 2026-10-06
 verificacao: V
-localizacao: "abertura (adoção paralela sem telemetria) e 'Four questions to assess agentic AI risk', pergunta 2"
+localizacao: "abertura (adoção paralela sem telemetria), 'The agentic identity spectrum', 'Four questions to assess agentic AI risk' (pergunta 2, leitura versus escrita) e 'Case study: Claude Cowork' (aprovação para enviar, credencial fora do ambiente do agente, ações distinguíveis das do usuário)"
 dominios: [ia-no-produto, seguranca]
 notas: null
