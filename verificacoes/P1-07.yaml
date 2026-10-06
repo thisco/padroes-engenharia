@@ -1,77 +1,74 @@
 conteudo: P1-07
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: "o guia do Gemini 3 sugere, para quem usava prompt elaborado como cadeia de pensamento para forçar o raciocínio do Gemini 2.5, testar o thinking_level alto"
-  ref: google-gemini-3-developer-guide
-  localizacao: "seção de migração do Gemini 2.5, 'Thinking level' (WebFetch em 2026-10-05; página atualizada em 2026-09-23 UTC)"
+- texto: o guia do Gemini 3.5 Flash sugere, para quem migra do Gemini 2.5 e usava prompt elaborado como cadeia de pensamento para forçar o raciocínio, tentar thinking_level medium ou high com prompts mais simples; o esforço padrão do modelo é medium
+  ref: google-gemini-3-5-flash-guia
+  localizacao: seção 'Migration checklist', item 'Migrate from Gemini 2.5' ('Simplify prompts'), e seção 'Behavioral changes' (esforço padrão medium) (aberta em 2026-10-06; página atualizada em 2026-09-23 UTC)
   resultado: confirmada
-- texto: "o guia do Gemini 3 recomenda remover a temperature configurada explicitamente e usar o padrão 1.0, para evitar loops ou queda de desempenho em tarefas complexas"
-  ref: google-gemini-3-developer-guide
-  localizacao: "seção de migração do Gemini 2.5, 'Temperature settings'"
+- texto: o guia do Gemini 3.5 Flash recomenda remover temperature, top_p e top_k da configuração, porque o raciocínio do Gemini 3 é otimizado para os valores padrão, e definir uma instrução de sistema com regras explícitas quando se quer determinismo
+  ref: google-gemini-3-5-flash-guia
+  localizacao: seção 'Sampling parameters (no longer recommended)' e item 'Remove temperature, top_p, top_k' da 'Migration checklist' (aberta em 2026-10-06)
   resultado: confirmada
-- texto: "o guia de prompting da Anthropic manda reduzir, na migração, o incentivo a ser mais minucioso ou a usar ferramentas com mais agressividade; os modelos 4.6 são mais proativos e podem reagir demais a instruções que o modelo anterior precisava"
+  nota: A fonte antiga (guia do Gemini 3) está marcada como depreciada e remete a esta página. O texto 'para evitar loops' do guia antigo não consta na página vigente e foi retirado da prática.
+- texto: o guia de prompting da Anthropic manda reduzir, na migração, o incentivo a ser mais minucioso ou a usar ferramentas com mais agressividade; os modelos 4.6 são mais proativos e podem reagir demais a instruções que o modelo anterior precisava
   ref: anthropic-prompting-best-practices
-  localizacao: "seção 'Migration considerations', item 6 (Tune anti-laziness prompting)"
+  localizacao: seção 'Migration considerations', item 6 (Tune anti-laziness prompting)
   resultado: confirmada
-- texto: "o guia da OpenAI para o GPT-6 manda remover temperature, top_p e top_logprobs quando o esforço de raciocínio não é none"
+- texto: o guia da OpenAI para o GPT-6 manda remover temperature, top_p e top_logprobs quando o esforço de raciocínio não é none
   ref: openai-using-gpt-6
-  localizacao: "seção de migração, parâmetros sem suporte com esforço de raciocínio ativo"
+  localizacao: seção de migração, parâmetros sem suporte com esforço de raciocínio ativo
   resultado: confirmada
-  nota: "Página lida por resumo do WebFetch; a página não trata de remover instruções de prompt antigo nem de refazer avaliações, e a prática não lhe atribui isso."
+  nota: Página lida por resumo do WebFetch; a página não trata de remover instruções de prompt antigo nem de refazer avaliações, e a prática não lhe atribui isso.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-07/verificar-modelo.sh
-  comando: "sh scripts/verificar-modelo.sh, com docs/steering/modelo.md em esqueleto (campo Guia consultado vazio; commit 5d0bf3c)"
-  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-07, branch feat/2026-10-05-registro-do-modelo; sh e awk do macOS
+  comando: sh scripts/verificar-modelo.sh, sem docs/steering/modelo.md
+  ambiente: projeto de teste em pasta temporária (sh e awk do macOS), com scripts/verificar-modelo.sh copiado do exemplo e docs/steering/modelo.md do exemplo (Gemini 3.5 Flash, gemini-3.5-flash)
   resultado: falhou-como-esperado
-  evidencia: 'ERRO: campo ausente ou vazio: Guia consultado; saída 1.'
-  data: '2026-10-05'
+  evidencia: 'ERRO: falta docs/steering/modelo.md; saída 1.'
+  data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P1-07/verificar-modelo.sh
-  comando: "o mesmo comando, com o registro preenchido (commit 61254d0)"
-  ambiente: o mesmo da execução anterior
+  comando: sh scripts/verificar-modelo.sh, com o registro em esqueleto (campo Guia consultado vazio)
+  ambiente: projeto de teste em pasta temporária (sh e awk do macOS), com scripts/verificar-modelo.sh copiado do exemplo e docs/steering/modelo.md do exemplo (Gemini 3.5 Flash, gemini-3.5-flash)
+  resultado: falhou-como-esperado
+  evidencia: 'ERRO: campo ausente ou vazio: Guia consultado; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P1-07/verificar-modelo.sh
+  comando: o mesmo comando, com o registro preenchido (cópia exata de exemplos/P1-07/modelo.md)
+  ambiente: projeto de teste em pasta temporária (sh e awk do macOS), com scripts/verificar-modelo.sh copiado do exemplo e docs/steering/modelo.md do exemplo (Gemini 3.5 Flash, gemini-3.5-flash)
   resultado: passou
   evidencia: 'OK: docs/steering/modelo.md; saída 0.'
-  data: '2026-10-05'
+  data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P1-07/modelo.md
-  comando: "sh scripts/verificar-modelo.sh docs/steering/modelo.md (o registro é cópia exata do arquivo do exemplo, commit 61254d0)"
-  ambiente: o mesmo da execução anterior
+  comando: sh scripts/verificar-modelo.sh docs/steering/modelo.md (cópia exata de exemplos/P1-07/modelo.md)
+  ambiente: projeto de teste em pasta temporária (sh e awk do macOS), com scripts/verificar-modelo.sh copiado do exemplo e docs/steering/modelo.md do exemplo (Gemini 3.5 Flash, gemini-3.5-flash)
   resultado: passou
   evidencia: 'OK: docs/steering/modelo.md; saída 0.'
-  data: '2026-10-05'
+  data: '2026-10-06'
 - tipo: prompt
   prompt: P1-07-prompt-1
   harness: claude-code
-  ambiente: "sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b1-p1-07-prompt com app.py do modelo anterior e prompt legado"
+  ambiente: sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b1-p1-07-prompt com app.py do modelo anterior e prompt legado
   resultado: passou
-  evidencia: "o agente abriu o guia do Gemini 3 (Last Updated 2026-09-23), aplicou só o mandado (app.py com thinking_level high, prompt sem 'Pense passo a passo', temperature=0 mantido), gravou docs/steering/modelo.md com Aplicadas, Não aplicadas com motivo e Não confirmado; sh scripts/verificar-modelo.sh saiu com OK; commit 7058e4f, 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-07-prompt-1.bruta.jsonl."
+  evidencia: o agente abriu o guia do Gemini 3 (Last Updated 2026-09-23), aplicou só o mandado (app.py com thinking_level high, prompt sem 'Pense passo a passo', temperature=0 mantido), gravou docs/steering/modelo.md com Aplicadas, Não aplicadas com motivo e Não confirmado; sh scripts/verificar-modelo.sh saiu com OK; commit 7058e4f, 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-07-prompt-1.bruta.jsonl.
   data: '2026-10-05'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
-  - afirmacao: referência google-gemini-3-developer-guide sustenta as duas afirmações do Gemini 3 (P1-07.md:36
-      e seguintes)
-    problema: '[médio] a página aberta em 2026-10-06 traz ''Deprecation notice: This page is deprecated
-      and will be removed'' e aponta para o guia do Gemini 3.5 Flash. A seção ''Migration from Gemini
-      2.5'' confere com o texto (thinking_level high; remover temperature), mas a fonte está em fim de
-      vida.'
-    tratamento: 'sugerido: trocar pela página vigente e reconferir a seção de migração, ou registrar a
-      depreciação em notas da referência e no texto.'
+  - afirmacao: referência google-gemini-3-developer-guide sustenta as duas afirmações do Gemini 3 (P1-07.md:36 e seguintes)
+    problema: '[médio] a página aberta em 2026-10-06 traz ''Deprecation notice: This page is deprecated and will be removed'' e aponta para o guia do Gemini 3.5 Flash. A seção ''Migration from Gemini 2.5'' confere com o texto (thinking_level high; remover temperature), mas a fonte está em fim de vida.'
+    tratamento: 'Tratado em 2026-10-06: a fonte foi trocada pela página vigente, ''What''s new in Gemini 3.5 Flash'' (referência google-gemini-3-5-flash-guia, aberta em 2026-10-06; a referência antiga, depreciada, foi removida). As duas afirmações foram reconferidas nela: migração do Gemini 2.5 (thinking_level medium ou high com prompts mais simples) e remoção de temperature, top_p e top_k.'
   - afirmacao: 'Exemplo: Versão ''gemini-3'' e aplicada ''thinking_level: high'' (exemplos/P1-07/modelo.md:4-9)'
-    problema: '[médio] trazido do plano (1): ''gemini-3'' não é id de modelo (o guia usa gemini-3.1-pro-preview
-      e gemini-3-flash-preview). Além disso, o guia diz que sem thinking_level o Gemini 3 já usa high,
-      então ''aplicar'' high é redundante e o exemplo de ''Aplicadas'' não muda comportamento.'
-    tratamento: 'sugerido: usar um id real no Exemplo e no prompt e trocar o item aplicado por algo que
-      altere o comportamento, ou dizer que é explícito por clareza.'
+    problema: '[médio] trazido do plano (1): ''gemini-3'' não é id de modelo (o guia usa gemini-3.1-pro-preview e gemini-3-flash-preview). Além disso, o guia diz que sem thinking_level o Gemini 3 já usa high, então ''aplicar'' high é redundante e o exemplo de ''Aplicadas'' não muda comportamento.'
+    tratamento: 'Tratado em 2026-10-06: o Exemplo e o texto usam o id real gemini-3.5-flash, e não ''gemini-3''. O thinking_level high deixou de ser redundante: o padrão do 3.5 Flash é medium, e o item aplicado diz isso. O bloco de prompt não mudou. O script foi reexecutado com o novo modelo.md (ERRO sem o arquivo, OK com ele, ERRO com o campo do guia vazio).'
   - afirmacao: 'prompt passo 5: ''não altere nenhum outro arquivo'' (P1-07.md:116)'
-    problema: '[baixo] trazido do plano (2): soa contraditório com o passo 2, que manda alterar arquivos
-      do projeto.'
-    tratamento: 'sugerido: ''além dos arquivos do passo 2 e do registro, não altere outros''.'
+    problema: '[baixo] trazido do plano (2): soa contraditório com o passo 2, que manda alterar arquivos do projeto.'
+    tratamento: 'Pendência (registrada, não corrigida): o passo 5 do prompt contradiz o passo 2, e o texto do bloco de prompt não pode mudar porque foi testado; reescrever o passo e refazer o teste do prompt fica para a próxima passagem desta prática.'
   - afirmacao: 'Como aplicar passo 4 e prompt: scripts/verificar-modelo.sh'
-    problema: '[baixo] o texto não manda salvar o script do Exemplo em scripts/; sem isso o leitor inventa
-      o lugar (o script em si roda: ERRO com 1 sem o registro, OK com 0 com o modelo.md do Exemplo).'
-    tratamento: 'sugerido: dizer ''salve o script do Exemplo em scripts/verificar-modelo.sh''. O mesmo
-      vale para medir-spec.py, checar-requisitos-afetados.py e conferir-arquivamento.py.'
+    problema: '[baixo] o texto não manda salvar o script do Exemplo em scripts/; sem isso o leitor inventa o lugar (o script em si roda: ERRO com 1 sem o registro, OK com 0 com o modelo.md do Exemplo).'
+    tratamento: 'Tratado em 2026-10-06: o passo 4 de Como aplicar manda salvar o script do Exemplo em scripts/verificar-modelo.sh; o mesmo foi feito para medir-spec.py (P1-08), checar-requisitos-afetados.py (P1-10) e conferir-arquivamento.py (P1-11).'
