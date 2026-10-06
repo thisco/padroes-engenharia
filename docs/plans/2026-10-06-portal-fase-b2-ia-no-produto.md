@@ -89,7 +89,7 @@ commitar, pede a mensagem sem trailer.
 - [x] **T9 (conferência em lote, ADR 0005).** Como na B.1: executabilidade por amostragem, uma
   fonte por conteúdo, coerência de status e força.
 - [x] **T10.** Tratar os achados; `CHANGELOG.md`; suíte, ruff, validar, dois builds idênticos. Partes A e B feitas em 2026-10-06; abertos só os testes dos prompts alterados (ver Evidências).
-- [ ] **T11.** Checkpoint do dono: status das 11 práticas e custo da fatia.
+- [x] **T11.** Checkpoint do dono: status das 11 práticas e custo da fatia.
 
 ## Checkpoint prévio: decisões do dono antes da T7 e da T8
 
@@ -177,3 +177,17 @@ P3-04 README do scaffold (limites do hook: confirma); P3-05 OWASP LLM01 (confirm
   - `ruff check` e `ruff format --check` no repositório inteiro: limpos (190 arquivos); `pytest`: 637 passed; `scripts/validar.py`: nenhum erro; `gerar.py --saida` duas vezes em pastas temporárias: `diff -r` sem diferença.
   - **T10 segue aberta:** os prompts alterados precisam de novo teste em sessão nova (P2-02, P2-03, P2-04, P2-06, P3-01, P3-02, P3-03, P3-04, P3-05 e P3-06). A P2-05 não mudou de prompt. Registrar as novas execuções em `verificacoes/<ID>.yaml` e então marcar a T10.
   - Decisão do dono (2026-10-06): os 10 prompts alterados não foram retestados; a execução anterior vale como evidência, com nota em cada registro.
+
+## Checkpoint: 2026-10-06
+
+**Aprovou:** o dono do portal, ao mandar seguir para a B.3. **Decisões:**
+
+1. **Status das 11 práticas:** mantidos como propostos. `adotar` em P2-06, P3-02 e P3-04;
+   `experimentar` nas outras oito. Starter `gateway-poc` em `experimentar`.
+2. **Prompts ajustados na T10:** não retestados; a execução anterior vale, com nota nos registros.
+3. **Starter `gateway-poc`:** a prova da instalação completa (o prompt parou no passo 1 por a
+   porta 4000 estar ocupada pela PoC antiga) fica para a B.5, com porta livre.
+4. **Schema de caso sem `dono`** e a divergência de datas do período da avaliação: B.5.
+
+Custo da fatia: cerca de 3,3 milhões de tokens, com as 11 práticas, o starter, a receita, o caso
+e as duas conferências (ADR 0005). Sem revisão com modelo forte: nenhum achado crítico.
