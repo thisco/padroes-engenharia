@@ -79,11 +79,32 @@ do agente de código e confere que a `.det` traz a classe `agente-de-codigo`; no
 
 ## Tarefas
 
-- [ ] Teste vermelho.
-- [ ] Template e CSS; teste verde; suíte, ruff, validar e gerar (dois builds idênticos).
-- [ ] Capturas (Playwright) e leitura delas; correções.
-- [ ] `CHANGELOG.md` em `[Não publicado]`, Corrigido.
+- [x] Teste vermelho.
+- [x] Template e CSS; teste verde; suíte, ruff, validar e gerar (dois builds idênticos).
+- [x] Capturas (Playwright) e leitura delas; correções.
+- [x] `CHANGELOG.md` em `[Não publicado]`, Corrigido.
 
 ## Evidências
 
-(preenchidas ao fim)
+Teste `test_pagina_de_peca_do_agente_da_ao_ninho_a_largura_do_desenho`: vermelho antes
+(`assert 'agente-de-codigo' in 'det'`), verde depois. Suíte: 635 passed. `ruff check`/`format
+--check`: só os erros anteriores em `exemplos/` (P2-03 e outros 4 scripts de exemplo).
+`validar.py`: ok. `gerar.py` em snapshot (`~/curadoria-a5/design-ninho`, HEAD + esta mudança):
+dois builds idênticos (`diff -r` vazio). A 400px, `scrollWidth` = 400 (sem rolagem horizontal).
+
+Na primeira captura o Hook e a Memória **em destaque** perderam o texto: a regra da peça
+apagada (`.cx.apaga .peca .linha`) pegava também as caixas de dentro do Agente apagado.
+Corrigido com o seletor de filho (`.cx.apaga > .peca .linha`) e coberto no teste.
+
+Capturas em `.playwright-mcp/` (checkout principal):
+- `subagente-antes.png`: o estado relatado (coluna de 320px, figura com 1500px de altura).
+- `subagente-depois-1280.png`, `hook-depois-1280.png`, `memoria-depois-1280.png`,
+  `sessao-depois-1280.png`: figura de 600px ao lado do texto, igual à da página de Conceitos, com
+  a peça em destaque; Hook azul e Memória escura legíveis.
+- `subagente-depois-900.png`: uma coluna, figura de 640px com sessão e subagente lado a lado e
+  as três caixas de execução em linha; texto embaixo.
+- `subagente-depois-400.png`: figura compacta (setas na horizontal entre Sessão e Subagente,
+  execução em coluna), sem rolagem horizontal.
+- `conceitos-depois-1280.png`: o ninho do agente na página de Conceitos não mudou. Observação
+  fora do escopo: ali a figura da IA no produto tem ~645px, acima do limite de 640px do container
+  query dela, e por isso aparece no fluxo horizontal com o Gateway em torre; não foi tocado aqui.

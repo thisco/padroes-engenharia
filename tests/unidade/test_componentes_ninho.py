@@ -135,3 +135,35 @@ def test_fluxo_do_produto_empilha_quando_a_figura_e_estreita():
     assert bloco, "falta o bloco @container do ninho de produto"
     assert re.search(r"\.fluxo\s*\{[^}]*flex-direction:\s*column", bloco.group(1))
     assert re.search(r"\.fluxo \.seta::after\s*\{[^}]*content:\s*\"↓\"", bloco.group(1))
+
+
+def test_pagina_de_peca_do_agente_da_ao_ninho_a_largura_do_desenho():
+    """O ninho completo foi desenhado para ~600px: na página de peça ele não fica preso na
+    coluna de 320px; a figura só compacta pela própria largura (container query, celular)."""
+    from portal.gerador.renderizar import html_conteudo
+
+    c = Conteudo(
+        "conceito",
+        "conceitos/subagente.md",
+        fabrica.meta_conceito(peca="subagente", ninho="agente-de-codigo"),
+        "x [ref:ref-forte].\n",
+    )
+    html = analisar(html_conteudo(fabrica.site(c, fabrica.referencia()), c))
+    assert "agente-de-codigo" in html.todos("section", classe="det")[0].attrs["class"]
+
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    base = re.search(r"^\.det\.agente-de-codigo\s*\{([^}]*)\}", css, re.M)
+    assert base and "320px" not in base.group(1)
+    largo = re.search(
+        r"@media \(min-width: \d+px\)\s*\{\s*\.det\.agente-de-codigo\s*\{[^}]*600px", css
+    )
+    assert largo, "a coluna de 600px só existe quando o viewport cabe"
+    assert re.search(r"\.ninho\.completo\s*\{[^}]*container-type:\s*inline-size", css)
+    compacto = re.findall(r"@container \(max-width: \d+px\)\s*\{(.*?)\n\}", css, re.S)
+    fila = r"\.ninho\.completo \.fila[^{]*\{[^}]*grid-template-columns"
+    assert any(re.search(fila, b) for b in compacto)
+    media = re.search(r"@media \(max-width: 900px\)\s*\{(.*?)\n\}", css, re.S).group(1)
+    assert ".ninho .fila" not in media, "a fila não empilha mais pelo viewport"
+    # só a caixa apagada; a peça em destaque mora dentro de caixas apagadas (agente, harness)
+    assert re.search(r"\.ninho \.cx\.apaga > \.peca \.linha[^{]*\{[^}]*var\(--tinta-2\)", css)
+    assert not re.search(r"\.ninho \.cx\.apaga \.peca", css)

@@ -346,7 +346,6 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
   .topo, .duas, .corpo { grid-template-columns: 1fr; gap: 20px; }
   .topo h1 { font-size: 34px; }
   .passos { grid-template-columns: 1fr 1fr; }
-  .ninho .fila, .ninho .exec { grid-template-columns: 1fr; }
   .fluxo { flex-direction: column; }
   .fluxo .seta::after { content: "↓"; }
   .fluxo .seta { max-width: none; }
@@ -407,3 +406,25 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
   .ninho.produto .cx.eval .peca { display: block; }
   .ninho.produto .cx.eval .peca .linha { display: block; text-align: left; }
 }
+
+/* 2026-10-06: o ninho completo foi desenhado para ~600px. Na página de peça do agente de código
+   ele ganha essa largura ao lado do texto quando o viewport cabe e, abaixo disso, vem em largura
+   cheia antes do texto. Quem compacta o desenho é a largura da própria figura (container query),
+   não a do viewport: abaixo de 520px a sessão e o subagente empilham com as setas na horizontal. */
+.det.agente-de-codigo { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1160px) {
+  .det.agente-de-codigo { grid-template-columns: minmax(0, 600px) minmax(0, 1fr); }
+}
+.ninho.completo { container-type: inline-size; }
+@container (max-width: 519px) {
+  .ninho.completo .fila, .ninho.completo .exec { grid-template-columns: minmax(0, 1fr); }
+  .ninho.completo .peca { display: block; }
+  .ninho.completo .peca .linha { display: block; text-align: left; }
+  .ninho.completo .setas { flex-direction: row; justify-content: center; gap: 24px; padding: 2px 0; }
+  .ninho.completo .setas .seta::after { content: " ↓"; display: inline; font-size: 15px; }
+  .ninho.completo .setas .seta.volta::before { content: "↑ "; display: inline; font-size: 15px; }
+  .ninho.completo .setas .seta.volta::after { content: none; }
+}
+/* peça apagada (só a própria caixa, não as de dentro): descrição e arquivos legíveis no fundo claro */
+.ninho .cx.apaga > .peca .linha { color: var(--tinta-2); }
+.ninho .cx.memoria.apaga .arqs code { background: var(--branco); color: var(--tinta-2); }

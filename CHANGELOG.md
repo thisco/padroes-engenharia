@@ -56,6 +56,11 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
 
 ### Corrigido
 
+- O ninho do agente de código nas páginas das 9 peças (`conceitos/<peca>.html`): sai da coluna de
+  320px e ganha a largura em que foi desenhado (600px ao lado do texto a partir de 1160px; acima
+  do texto abaixo disso). A `.fila` e a `.exec` só compactam pela largura da própria figura
+  (container query abaixo de 520px, no celular), com as setas "delega ↓ / ↑ devolve" entre
+  Sessão e Subagente. A peça apagada mantém legível a descrição do Hook e da Memória.
 - O ninho da IA no produto nas páginas das peças (`conceitos/<peca>.html`): na coluna de 320px o
   fluxo empilha pela largura da própria figura (container query), em vez de espremer 4 caixas e 3
   setas; no fluxo horizontal a seta alinha ao topo das caixas.
