@@ -1,5 +1,5 @@
 conteudo: P1-03
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a constituição fica inline no AGENTS.md porque a premissa precisa valer em todo turno, e o detalhe vai para docs/steering/, lido sob demanda pelas skills
@@ -54,18 +54,18 @@ afirmacoes:
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-03/gitlab-ci.yml
-  comando: npx --yes gitlab-ci-local@4.76.0 governanca --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event (cópia b1-p1-03, AGENTS.md com 36653 bytes)
-  ambiente: gitlab-ci-local 4.76.0 com executor Docker 29.5.2, imagem python:3.11; cópia de projeto-teste-17 (sdd-scaffold 1.7.0); scripts/verificar_constituicao.py com sha256 8a3eeedf...ebad; macOS
+  comando: npx --yes gitlab-ci-local@4.76.0 --no-color governanca --ignore-predefined-vars CI_PIPELINE_SOURCE --variable CI_PIPELINE_SOURCE=merge_request_event (projeto gerado p103, com 200 passos de ~190 bytes acrescentados ao AGENTS.md pelo comando do texto)
+  ambiente: gitlab-ci-local 4.76.0 com executor Docker, imagem python:3.11; projeto novo gerado pelo sdd-scaffold 1.7.0 em pasta temporária; scripts/verificar_constituicao.py com sha256 8a3eeedf...ebad; macOS
   resultado: falhou-como-esperado
-  evidencia: 'governanca > AGENTS.md com 36653 bytes (limite 30000); governanca > AGENTS.md grande demais; mova o detalhe para docs/steering/; governanca finished in 689 ms FAIL 1.'
-  data: '2026-10-05'
+  evidencia: governanca > AGENTS.md com 44419 bytes (limite 30000); governanca > AGENTS.md grande demais; mova o detalhe para docs/steering/; governanca finished in 667 ms FAIL 1.
+  data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P1-03/gitlab-ci.yml
-  comando: o mesmo comando, depois de mover os 200 passos para docs/steering/procedimentos.md e deixar uma linha de roteamento no AGENTS.md
+  comando: o mesmo comando, depois de mover os 200 passos para docs/steering/procedimentos.md (39012 bytes) e deixar uma linha de roteamento no AGENTS.md
   ambiente: o mesmo da execução anterior
   resultado: passou
-  evidencia: 'governanca > AGENTS.md com 5516 bytes (limite 30000); governanca > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.; governanca finished in 779 ms PASS governanca.'
-  data: '2026-10-05'
+  evidencia: 'governanca > AGENTS.md com 5482 bytes (limite 30000); governanca > Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.; governanca finished in 775 ms PASS governanca.'
+  data: '2026-10-06'
 - tipo: prompt
   prompt: P1-03-prompt-1
   harness: claude-code
@@ -78,15 +78,8 @@ revisao_adversarial:
   data: '2026-10-06'
   achados:
   - afirmacao: 'mecanismo: verificar_constituicao.py@1.7.0, força avisa (praticas/construir-com-ia/P1-03.md:8-9)'
-    problema: '[médio] o script não mede tamanho (sem o número 30000 no código; o texto de Como verificar
-      já admite). O limite de 30000 bytes mora no job governanca da receita, e o job reprova o pipeline,
-      não só avisa. O plano lista o mecanismo como ''job governanca'', o frontmatter diz outra coisa.'
-    tratamento: 'sugerido: mecanismo apontar o job governanca (ou os dois) e a força refletir que o job
-      bloqueia quando Pipelines must succeed está ligado. Decisão em T15.'
+    problema: '[médio] o script não mede tamanho (sem o número 30000 no código; o texto de Como verificar já admite). O limite de 30000 bytes mora no job governanca da receita, e o job reprova o pipeline, não só avisa. O plano lista o mecanismo como ''job governanca'', o frontmatter diz outra coisa.'
+    tratamento: 'Tratado em 2026-10-06: o job governanca não é um mecanismo que o portal registre (só script hospedado ou arquivo de scripts/, portal/ ou .gitlab-ci.yml do próprio repositório), e o verificar_constituicao.py não mede tamanho. A prática passou a força orienta com mecanismo null, e Como verificar explica que o verificador candidato é o job governanca, que reprova o pipeline (e só impede o merge com Pipelines must succeed).'
   - afirmacao: 'Exemplo: 200 passos de procedimento levam o AGENTS.md de 5421 a 36653 bytes (P1-03.md:81)'
-    problema: '[médio] não reproduz sem inventar: com a linha mostrada (''Procedimento detalhado do passo
-      N: leia a spec, confira o plano, rode a suíte...'') 200 linhas dão 23053 bytes e o job passa. A
-      conferência precisou de linhas de ~150 bytes (49 linhas, 30973 bytes) para ver o FAIL no gitlab-ci-local
-      4.76.0, que então reproduziu ''grande demais'' como registrado.'
-    tratamento: 'sugerido: dizer o tamanho de cada linha, ou mandar encher o arquivo até passar de 30000
-      bytes e dar o comando que gera as linhas.'
+    problema: '[médio] não reproduz sem inventar: com a linha mostrada (''Procedimento detalhado do passo N: leia a spec, confira o plano, rode a suíte...'') 200 linhas dão 23053 bytes e o job passa. A conferência precisou de linhas de ~150 bytes (49 linhas, 30973 bytes) para ver o FAIL no gitlab-ci-local 4.76.0, que então reproduziu ''grande demais'' como registrado.'
+    tratamento: 'Tratado em 2026-10-06: o Exemplo foi refeito com saída real. O texto dá o comando que gera as 200 linhas (cerca de 190 bytes cada) e os números medidos: AGENTS.md de 5387 para 44419 bytes, FAIL no gitlab-ci-local 4.76.0; depois de mover para docs/steering/procedimentos.md, 5482 bytes e PASS. As duas execuções de arquivo abaixo foram refeitas.'

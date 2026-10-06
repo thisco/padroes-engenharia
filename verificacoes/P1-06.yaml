@@ -1,47 +1,47 @@
 conteudo: P1-06
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: "no checkpoint da spec o agente pausa, pergunta se a spec é aprovada ou se há regras a ajustar, e não passa ao plano sem aprovação explícita"
+- texto: no checkpoint da spec o agente pausa, pergunta se a spec é aprovada ou se há regras a ajustar, e não passa ao plano sem aprovação explícita
   ref: sdd-lifecycle
-  localizacao: "SKILL.md na tag v3.0.0, Fase 3, itens 2 e 3 (clone local, git show v3.0.0)"
+  localizacao: SKILL.md na tag v3.0.0, Fase 3, itens 2 e 3 (clone local, git show v3.0.0)
   resultado: confirmada
-- texto: "depois do sim, grava no cabeçalho Status aprovada, Aprovado por e Aprovado em, num commit próprio; o registro é feito por quem aprova ou a pedido explícito dele, e aprovação escrita pelo agente sem pedido não vale"
+- texto: depois do sim, grava no cabeçalho Status aprovada, Aprovado por e Aprovado em, num commit próprio; o registro é feito por quem aprova ou a pedido explícito dele, e aprovação escrita pelo agente sem pedido não vale
   ref: sdd-lifecycle
-  localizacao: "SKILL.md, Fase 3, quarto item e critério de saída"
+  localizacao: SKILL.md, Fase 3, quarto item e critério de saída
   resultado: confirmada
-- texto: "a spec só é apresentada com zero marcadores [ESCLARECER abertos"
+- texto: a spec só é apresentada com zero marcadores [ESCLARECER abertos
   ref: sdd-lifecycle
-  localizacao: "SKILL.md, Fase 3, primeiro item"
+  localizacao: SKILL.md, Fase 3, primeiro item
   resultado: confirmada
-- texto: "se a spec é reaberta por obstáculo (strict fallback), o status volta a rascunho e o checkpoint se repete com nova aprovação gravada"
+- texto: se a spec é reaberta por obstáculo (strict fallback), o status volta a rascunho e o checkpoint se repete com nova aprovação gravada
   ref: sdd-lifecycle
-  localizacao: "SKILL.md, Fase 6, 'Strict fallback', passo 3"
+  localizacao: SKILL.md, Fase 6, 'Strict fallback', passo 3
   resultado: confirmada
-- texto: "o modelo de spec tem Aprovado por e Aprovado em no cabeçalho e manda trocar o Status para aprovada e preencher os dois ao aprovar"
+- texto: o modelo de spec tem Aprovado por e Aprovado em no cabeçalho e manda trocar o Status para aprovada e preencher os dois ao aprovar
   ref: sdd-scaffold-modelo-spec
-  localizacao: "MODELO-spec.md, cabeçalho e comentário da seção Requisitos (tag v1.7.0)"
+  localizacao: MODELO-spec.md, cabeçalho e comentário da seção Requisitos (tag v1.7.0)
   resultado: confirmada
-- texto: "o verificar_pr.py avisa, sem bloquear, quando a spec tem Status aprovada e Aprovado por vazio ou ausente, só com requisito R<n> ou a linha Aprovado por presente; confere só Aprovado por, não Aprovado em"
+- texto: o verificar_pr.py avisa, sem bloquear, quando a spec tem Status aprovada e Aprovado por vazio ou ausente, só com requisito R<n> ou a linha Aprovado por presente; confere só Aprovado por, não Aprovado em
   ref: sdd-scaffold-verificar-pr
-  localizacao: "checar_aprovacao(), APROVADO_POR, _aprovada(), _artefato_novo() (tag v1.7.0)"
+  localizacao: checar_aprovacao(), APROVADO_POR, _aprovada(), _artefato_novo() (tag v1.7.0)
   resultado: confirmada
-- texto: "o GitHub descreve o papel de quem desenvolve com o Spec Kit como verificar, e não só conduzir, a cada fase"
+- texto: o GitHub descreve o papel de quem desenvolve com o Spec Kit como verificar, e não só conduzir, a cada fase
   ref: github-blog-speckit
-  localizacao: "seção 'Implement', frase 'Your role isn't just to steer. It's to verify.'"
+  localizacao: seção 'Implement', frase 'Your role isn't just to steer. It's to verify.'
   resultado: confirmada
-  nota: "A frase é paráfrase; a página fala em refletir e refinar em cada fase, não em campo de aprovação gravado."
+  nota: A frase é paráfrase; a página fala em refletir e refinar em cada fase, não em campo de aprovação gravado.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-06/2026-10-05-exportar-pedidos-csv.md
-  comando: "python3 verificar_pr.py --base main --raiz . (script baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 1397e8b1...0488, igual ao da tag v1.7.0), com a spec em Status aprovada e Aprovado por vazio (commit 8b945e9)"
+  comando: python3 verificar_pr.py --base main --raiz . (script baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 1397e8b1...0488, igual ao da tag v1.7.0), com a spec em Status aprovada e Aprovado por vazio (commit 8b945e9)
   ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-06, branch feat/2026-10-05-exportar-pedidos-csv; Python 3.14.8; macOS
   resultado: falhou-como-esperado
   evidencia: 'AVISO: docs/specs/2026-10-05-exportar-pedidos-csv.md: spec com Status aprovada e aprovação sem registro: preencha `Aprovado por` e `Aprovado em` no cabeçalho.; saída 0 (aviso não bloqueia).'
   data: '2026-10-05'
 - tipo: arquivo
   arquivo: exemplos/P1-06/2026-10-05-exportar-pedidos-csv.md
-  comando: "o mesmo comando, depois de preencher Aprovado por e Aprovado em (o arquivo do exemplo é esse estado, commit fc0156f)"
+  comando: o mesmo comando, depois de preencher Aprovado por e Aprovado em (o arquivo do exemplo é esse estado, commit fc0156f)
   ambiente: o mesmo da execução anterior
   resultado: passou
   evidencia: 'Verificação de PR: 1 arquivo(s), nenhum achado.; saída 0.'
@@ -49,21 +49,17 @@ execucoes:
 - tipo: prompt
   prompt: P1-06-prompt-1
   harness: claude-code
-  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-06-prompt, spec com Status aprovada e campos de aprovação vazios"
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-06-prompt, spec com Status aprovada e campos de aprovação vazios
   resultado: passou
-  evidencia: "1ª execução do verificar_pr.py: AVISO de aprovação sem registro; o agente confirmou zero [ESCLARECER], gravou só Aprovado por: Ana Souza e Aprovado em: 2026-10-05; commit d847ec9 só com a spec; 2ª execução: nenhum achado, saída 0, árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-06-prompt-1.bruta.jsonl."
+  evidencia: '1ª execução do verificar_pr.py: AVISO de aprovação sem registro; o agente confirmou zero [ESCLARECER], gravou só Aprovado por: Ana Souza e Aprovado em: 2026-10-05; commit d847ec9 só com a spec; 2ª execução: nenhum achado, saída 0, árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-06-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
   - afirmacao: força pede-aprovacao com mecanismo verificar_pr.py@1.7.0 (P1-06.md:8-9)
-    problema: '[médio] o mecanismo só avisa e só confere que ''Aprovado por'' tem texto (testado: ''Aprovado
-      em'' vazio passa; nome qualquer passa). Quem pede a aprovação é o checkpoint da Fase 3 da skill,
-      que o texto reconhece não ser conferido por script. A força fica acima do que o mecanismo faz.'
-    tratamento: 'sugerido: rebaixar a força para avisa, ou listar a Fase 3 da sdd-lifecycle como o mecanismo
-      de pedido e o script como o de registro. Decisão em T15.'
+    problema: '[médio] o mecanismo só avisa e só confere que ''Aprovado por'' tem texto (testado: ''Aprovado em'' vazio passa; nome qualquer passa). Quem pede a aprovação é o checkpoint da Fase 3 da skill, que o texto reconhece não ser conferido por script. A força fica acima do que o mecanismo faz.'
+    tratamento: 'Tratado em 2026-10-06: a força passou de pede-aprovacao para avisa, porque o verificar_pr.py só avisa e só confere Aprovado por; o pedido de aprovação é o checkpoint da Fase 3 da sdd-lifecycle, humano e sem script, o que Como verificar diz. O mecanismo ficou.'
   - afirmacao: 'Exemplo: ''Depois de a Ana pedir o registro'' (Ana Souza) (P1-06.md, Antes e depois)'
-    problema: '[baixo] o nome é fictício e o texto não diz; só o guia Do zero à primeira MR declara pessoa
-      fictícia.'
-    tratamento: 'sugerido: acrescentar ''nome fictício'' na primeira citação.'
+    problema: '[baixo] o nome é fictício e o texto não diz; só o guia Do zero à primeira MR declara pessoa fictícia.'
+    tratamento: 'Tratado em 2026-10-06: a primeira citação passou a dizer ''Ana (nome fictício do exemplo)''.'
