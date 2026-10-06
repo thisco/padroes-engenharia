@@ -1,9 +1,8 @@
 # reveal.js e licença
 
 O reveal.js roda os slides de `apresentacoes/<slug>/`, offline e sem CDN (spec das apresentações,
-R2). Os dois arquivos vêm do kit NUJOR
-(`apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd/vendor/`), que os
-baixou do projeto, e não foram alterados.
+R2). Os dois arquivos vêm do deck de 2026-09-29,
+que os baixou do projeto, e não foram alterados.
 
 | Arquivo | Versão | SHA-256 |
 |---|---|---|

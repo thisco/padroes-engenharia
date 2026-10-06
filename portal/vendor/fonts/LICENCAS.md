@@ -1,8 +1,7 @@
 # Fontes do tema e licenças
 
 As fontes são servidas localmente (spec §9.1 e §9.3: nenhum recurso externo). Os arquivos vêm
-do kit NUJOR (`apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd/vendor/fonts/`),
-que os baixou do Google Fonts, e não foram alterados.
+do deck de 2026-09-29, que os baixou do Google Fonts, e não foram alterados.
 
 | Arquivo | Família | Peso | SHA-256 |
 |---|---|---|---|
