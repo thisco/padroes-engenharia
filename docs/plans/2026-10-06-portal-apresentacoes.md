@@ -95,3 +95,14 @@ Reverter os commits na branch; nada foi publicado.
 
 | R | veredito | evidência |
 |---|---|---|
+| R5 | atendido (médio: refs de "SÓ NO DECK" apontam fontes sem relação) | amostra de 15 afirmações confirmada contra componentes.yml, ferramentas, receita, práticas e tags v1.7.1 e v3.0.0; sem contradição com o portal |
+| R6 | atendido | sem 1.6.1, 2.0.0, "três montagens" ou "ponteiro de 4 linhas"; quatro pontos de montagem; 19 slides, paleta e desenho idênticos à origem; slide 14 com a revisão de segurança do 1.7.1 |
+
+### Conferência do conteúdo
+
+Conferente independente, modelo econômico (ADR 0005), 2026-10-06. Achados completos em
+`verificacoes/apresentacao-harness-sdd.yaml`, campo `revisao_adversarial`: nenhum crítico, 1 médio
+(refs do registro nas entradas "SÓ NO DECK"), 5 baixos (autoria da capa, redação do hook no slide 14,
+folga do slide 14 em 720p, versão do Claude Code no comparativo, omissão do teste do Codex com
+`.codex/skills`). Deck aberto em :8011 sem 404 além de `/favicon.ico`; capturas dos slides 1, 14 e 17
+em `.playwright-mcp/`.
