@@ -1,0 +1,29 @@
+# Gateway de IA de teste (P2-06): LiteLLM, o banco das chaves virtuais e modelos simulados.
+# Nenhum provedor real é chamado. Defina LITELLM_MASTER_KEY no .env antes de subir.
+# GATEWAY_PORT muda a porta do host (padrão 4000).
+services:
+  gateway:
+    image: ghcr.io/berriai/litellm:v1.104.0
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    ports:
+      - "${GATEWAY_PORT:-4000}:4000"
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?defina LITELLM_MASTER_KEY no .env}
+      DATABASE_URL: postgresql://litellm:litellm@db:5432/litellm
+    volumes:
+      - ./config.yaml:/app/config.yaml:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: litellm
+      POSTGRES_PASSWORD: litellm
+      POSTGRES_DB: litellm
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U litellm -d litellm"]
+      interval: 3s
+      timeout: 3s
+      retries: 20

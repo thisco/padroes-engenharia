@@ -1,0 +1,11 @@
+id: litellm-custom-pricing
+titulo: 'LiteLLM Proxy: custom pricing'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/custom_pricing
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "seção de custo por token no model_info (input_cost_per_token, output_cost_per_token)"
+dominios:
+- ia-no-produto
+notas: null

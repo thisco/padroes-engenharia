@@ -1,0 +1,10 @@
+# Gateway de teste da P2-06: um modelo simulado com custo por token declarado, para o gasto andar.
+model_list:
+  - model_name: simulado
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Resposta simulada pelo gateway: nenhum modelo real foi chamado."
+    model_info:
+      input_cost_per_token: 0.001
+      output_cost_per_token: 0.001

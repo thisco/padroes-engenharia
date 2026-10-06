@@ -1,0 +1,11 @@
+id: litellm-alerting
+titulo: 'LiteLLM Proxy: alerting'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/alerting
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "tipos de alerta (budget_alerts), seção de soft budget e ativação por Slack"
+dominios:
+- ia-no-produto
+notas: "O alerta não foi executado pela curadoria, pois exige o webhook do Slack."

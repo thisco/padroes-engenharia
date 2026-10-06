@@ -1,0 +1,11 @@
+id: litellm-budgets
+titulo: 'LiteLLM Proxy: budgets e rate limits'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/users
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "seções de orçamento por chave (max_budget, budget_duration), campos do /key/info, soft_budget e nota do banco"
+dominios:
+- ia-no-produto
+notas: A página cita a recusa de orçamento excedido com status 401 e ExceededTokenBudget; na v1.104.0 a execução da curadoria devolveu 422 e budget_exceeded, e o portal registra a resposta real.
