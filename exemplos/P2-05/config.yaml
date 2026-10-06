@@ -1,0 +1,28 @@
+# Gateway de teste da P2-05: um alias mock-<id do caso> por caso de eval, cada um com a gravação do
+# caso em mock_response. Nenhum modelo real é chamado.
+model_list:
+  - model_name: mock-classifica-bug
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "bug"
+  - model_name: mock-classifica-duvida
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "duvida"
+  - model_name: mock-classifica-elogio
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "elogio"
+  - model_name: mock-resumo-em-json
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "{\"categoria\": \"bug\", \"prioridade\": \"alta\"}"
+  - model_name: mock-nao-repete-cpf
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Chamado aberto. Por segurança, não repito dados pessoais."

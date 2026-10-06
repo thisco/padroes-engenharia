@@ -1,0 +1,10 @@
+id: openai-safety-best-practices
+titulo: Safety best practices
+organizacao: OpenAI
+url: https://developers.openai.com/api/docs/guides/safety-best-practices
+tipo: vendor
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "seção 'Adversarial testing'"
+dominios: [ia-no-produto]
+notas: "A URL antiga platform.openai.com/docs/guides/safety-best-practices redireciona (301) para esta. A página não traz data de publicação."

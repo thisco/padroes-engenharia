@@ -3,8 +3,8 @@ titulo: "Specify when jobs run with rules"
 organizacao: GitLab
 url: https://docs.gitlab.com/ci/jobs/job_rules/
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-06
 verificacao: V
-localizacao: "seção 'Avoid duplicate pipelines'"
+localizacao: "seções 'Avoid duplicate pipelines' e 'Run jobs for scheduled pipelines'"
 dominios: [ci-cd]
 notas: null

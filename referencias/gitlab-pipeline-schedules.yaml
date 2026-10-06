@@ -1,0 +1,10 @@
+id: gitlab-pipeline-schedules
+titulo: "Pipeline schedules"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/pipelines/schedules/
+tipo: vendor
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "abertura (pipelines por cron, independentes de mudança de código) e seção de variáveis do agendamento"
+dominios: [ci-cd]
+notas: null

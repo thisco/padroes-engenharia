@@ -1,0 +1,13 @@
+# Gateway de IA de teste (P2-05): só o LiteLLM com o modelo simulado, sem banco.
+# Defina LITELLM_MASTER_KEY no .env antes de subir. GATEWAY_PORT muda a porta do host (padrão 4002);
+# GATEWAY_CONFIG troca o arquivo de config (padrão config.yaml).
+services:
+  gateway:
+    image: ghcr.io/berriai/litellm:v1.104.0
+    command: ["--config", "/app/config.yaml", "--port", "4000"]
+    ports:
+      - "${GATEWAY_PORT:-4002}:4000"
+    environment:
+      LITELLM_MASTER_KEY: ${LITELLM_MASTER_KEY:?defina LITELLM_MASTER_KEY no .env}
+    volumes:
+      - ./${GATEWAY_CONFIG:-config.yaml}:/app/config.yaml:ro

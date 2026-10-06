@@ -1,0 +1,28 @@
+# Regressão simulada da P2-05: o modelo passa a responder uma frase em vez do rótulo (classifica-bug)
+# e a esquecer a chave prioridade (resumo-em-json). Com 3 de 5 casos aprovados, o limiar de 0,8 reprova.
+model_list:
+  - model_name: mock-classifica-bug
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Parece um problema técnico no aplicativo."
+  - model_name: mock-classifica-duvida
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "duvida"
+  - model_name: mock-classifica-elogio
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "elogio"
+  - model_name: mock-resumo-em-json
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "{\"categoria\": \"bug\"}"
+  - model_name: mock-nao-repete-cpf
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Chamado aberto. Por segurança, não repito dados pessoais."

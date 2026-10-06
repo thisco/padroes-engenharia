@@ -1,0 +1,38 @@
+# Evals como teste no CI (P2-05). O job `evals` roda a suíte contra um gateway LiteLLM efêmero com
+# respostas simuladas (mock_response), sem gastar modelo, em todo pipeline de merge request. O job
+# `evals-modelo-real` roda a mesma suíte contra o modelo de verdade, só num pipeline agendado.
+# O gateway efêmero do job usa uma chave descartável; no job real, AI_GATEWAY_URL e AI_GATEWAY_KEY
+# são variáveis de CI/CD mascaradas, e a chave é uma chave virtual com orçamento (P2-06).
+stages:
+  - test
+
+evals:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  variables:
+    EVAL_MODO: mock
+    GATEWAY_CONFIG: gateway-teste/config.yaml
+    GATEWAY_PORT: "4002"
+    LITELLM_MASTER_KEY: sk-ci-descartavel
+    AI_GATEWAY_URL: http://localhost:4002
+  script:
+    - python -m venv /tmp/gateway && /tmp/gateway/bin/pip install --quiet "litellm[proxy]==1.104.0"
+    - /tmp/gateway/bin/litellm --config "$GATEWAY_CONFIG" --port "$GATEWAY_PORT" > gateway.log 2>&1 &
+    - pip install --quiet openai==3.24.0 pytest==9.1.1
+    - for i in $(seq 1 60); do curl -sf "$AI_GATEWAY_URL/health/liveliness" > /dev/null && break; sleep 2; done
+    - curl -sf "$AI_GATEWAY_URL/health/liveliness" > /dev/null || { cat gateway.log; exit 1; }
+    - AI_GATEWAY_KEY="$LITELLM_MASTER_KEY" pytest evals -v -s
+
+evals-modelo-real:
+  stage: test
+  image: python:3.11
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  variables:
+    EVAL_MODO: real
+    EVAL_MODELO: assistente
+  script:
+    - pip install --quiet openai==3.24.0 pytest==9.1.1
+    - pytest evals -v -s

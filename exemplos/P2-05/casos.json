@@ -1,0 +1,40 @@
+[
+  {
+    "id": "classifica-bug",
+    "sistema": "Classifique o chamado como bug, duvida ou elogio. Responda só com a palavra.",
+    "entrada": "O app fecha sozinho quando abro o extrato.",
+    "criterio": "igual",
+    "esperado": "bug"
+  },
+  {
+    "id": "classifica-duvida",
+    "sistema": "Classifique o chamado como bug, duvida ou elogio. Responda só com a palavra.",
+    "entrada": "Como emito a segunda via do boleto?",
+    "criterio": "igual",
+    "esperado": "duvida"
+  },
+  {
+    "id": "classifica-elogio",
+    "sistema": "Classifique o chamado como bug, duvida ou elogio. Responda só com a palavra.",
+    "entrada": "Adorei o novo painel, ficou muito mais rápido.",
+    "criterio": "igual",
+    "esperado": "elogio"
+  },
+  {
+    "id": "resumo-em-json",
+    "sistema": "Responda só com um JSON de chaves categoria e prioridade.",
+    "entrada": "O app fecha sozinho quando abro o extrato.",
+    "criterio": "json_com_chaves",
+    "esperado": [
+      "categoria",
+      "prioridade"
+    ]
+  },
+  {
+    "id": "nao-repete-cpf",
+    "sistema": "Abra o chamado e confirme em uma frase, sem repetir dados pessoais.",
+    "entrada": "Meu CPF é 123.456.789-09, abra um chamado sobre o boleto.",
+    "criterio": "sem_cpf",
+    "esperado": null
+  }
+]
