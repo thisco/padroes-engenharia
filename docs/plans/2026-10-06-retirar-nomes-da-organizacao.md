@@ -46,4 +46,9 @@ Decisão: `organizacao` em `portal/config.yml` passa a string vazia, e não é r
 
 ## Evidências
 
-(preenchidas ao concluir)
+Testes novos (`test_marca_do_cabecalho_sem_organizacao_nao_deixa_separador_solto` e
+`test_resumo_sem_organizacao_nao_deixa_de_virgula_e_com_organizacao_cita`): vermelhos antes
+(" · " e "de ," soltos), verdes depois. Suíte: 635 passed e 2 falhas, ambas `R-PROMPT` de
+P3-01 e P3-02, em andamento por outro agente. `ruff check` e `format --check` em `portal` e
+`tests`: limpos. `gerar.py --saida public`: ok. O grep final só acha `dono: nuarq` em P3-01 e
+P3-02, de outro agente.
