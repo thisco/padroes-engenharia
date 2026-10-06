@@ -3,7 +3,7 @@ titulo: gitlab-ci-local
 categoria: ci
 status: avaliar
 versao_minima: "4.76.0"
-dono: nuarq
+dono: engenharia
 praticas: []
 receitas: [ligar-ci-gitlab-travas]
 como_instalar: |

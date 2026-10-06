@@ -2,7 +2,7 @@
 titulo: Construir software com IA sem perder a arquitetura
 descricao: 'Portal de padrões de engenharia para times que usam agentes de código: o que fazer, com que força e
   com que evidência.'
-lead: Práticas de engenharia para times que desenvolvem software com agentes de código, mantidas pelo NUARQ. Cada
+lead: Práticas de engenharia para times que desenvolvem software com agentes de código, mantidas pela equipe de engenharia. Cada
   prática diz o que fazer, com que força e de onde vem a evidência. Quem está começando vai em 'Comece aqui'; quem
   já está no meio de uma mudança escolhe o momento mais abaixo.
 caminhos:

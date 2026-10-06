@@ -20,7 +20,7 @@ revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'
   achados:
-  - afirmacao: linha cita guardrails; onde_mora cita a PoC do Serpro
+  - afirmacao: linha cita guardrails; onde_mora cita a PoC do gateway
     problema: fatos sem fonte no corpo
     tratamento: linha sem guardrails, corpo cita o guardrail do LiteLLM, onde_mora fala do exemplo do
       portal

@@ -3,7 +3,7 @@ titulo: Alembic
 categoria: migration
 status: adotar
 versao_minima: "1.20.0"
-dono: nuarq
+dono: engenharia
 praticas: [DAD-01]
 receitas: []
 como_instalar: |

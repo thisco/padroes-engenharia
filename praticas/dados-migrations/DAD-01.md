@@ -15,7 +15,7 @@ receitas: [ligar-ci-gitlab-travas]
 exemplos: [exemplos/DAD-01/gitlab-ci.yml]
 referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, sdd-scaffold-readme, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-05
 revisar_ate: 2027-04-05
 ---

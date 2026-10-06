@@ -3,7 +3,7 @@ titulo: Claude Code
 categoria: harness
 status: experimentar
 versao_minima: "2.1.277"
-dono: nuarq
+dono: engenharia
 praticas: [P1-01]
 receitas: [instalar-skills-por-harness]
 como_instalar: |

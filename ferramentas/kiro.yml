@@ -3,7 +3,7 @@ titulo: Kiro
 categoria: harness
 status: avaliar
 versao_minima: "2.27.0"
-dono: nuarq
+dono: engenharia
 praticas: [P1-01]
 receitas: [instalar-skills-por-harness]
 como_instalar: |

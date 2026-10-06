@@ -3,7 +3,7 @@ titulo: sdd-lifecycle
 categoria: sdd
 status: adotar
 versao_minima: "3.0.0"
-dono: nuarq
+dono: engenharia
 praticas: [P1-01]
 receitas: []
 como_instalar: |

@@ -29,7 +29,7 @@ referencias:
   - codex-skills
   - antigravity-skills
   - claude-code-memory
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-05
 ---
 

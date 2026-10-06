@@ -3,7 +3,7 @@ titulo: Gitleaks
 categoria: seguranca
 status: adotar
 versao_minima: "8.19.0"
-dono: nuarq
+dono: engenharia
 praticas: [DAD-01]
 receitas: [ligar-ci-gitlab-travas]
 como_instalar: |

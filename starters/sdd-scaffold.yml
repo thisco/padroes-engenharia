@@ -59,7 +59,7 @@ prompt_para_agente: |
      Arquitetura/mapa.yml e escrever o PRD antes da primeira spec de Tier 2.
 praticas_aplicadas: [P1-01, DAD-01]
 receitas: [ligar-ci-gitlab-travas, instalar-skills-por-harness]
-dono: nuarq
+dono: engenharia
 status: adotar
 referencias: [sdd-scaffold-readme, sdd-scaffold-changelog]
 planta:

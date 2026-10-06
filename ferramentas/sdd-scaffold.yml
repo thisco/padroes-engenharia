@@ -3,7 +3,7 @@ titulo: SDD scaffold
 categoria: sdd
 status: adotar
 versao_minima: "1.7.0"
-dono: nuarq
+dono: engenharia
 praticas: [P1-01, DAD-01]
 receitas: [ligar-ci-gitlab-travas]
 como_instalar: |

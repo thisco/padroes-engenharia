@@ -3,7 +3,7 @@ titulo: Flyway
 categoria: migration
 status: adotar
 versao_minima: "11.20.3"
-dono: nuarq
+dono: engenharia
 praticas: [DAD-01]
 receitas: []
 como_instalar: |

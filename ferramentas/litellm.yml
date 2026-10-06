@@ -3,7 +3,7 @@ titulo: LiteLLM
 categoria: gateway
 status: experimentar
 versao_minima: "1.104.0"
-dono: nuarq
+dono: engenharia
 praticas: [P2-01]
 receitas: []
 como_instalar: |

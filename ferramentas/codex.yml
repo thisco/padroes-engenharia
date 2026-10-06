@@ -3,7 +3,7 @@ titulo: Codex
 categoria: harness
 status: experimentar
 versao_minima: "0.160.0"
-dono: nuarq
+dono: engenharia
 praticas: [P1-01]
 receitas: [instalar-skills-por-harness]
 como_instalar: |

@@ -26,7 +26,7 @@ referencias:
   - antigravity-rules
   - copilot-skills
   - copilot-instructions
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-06
 ---
 
