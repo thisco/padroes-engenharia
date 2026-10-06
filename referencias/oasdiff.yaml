@@ -1,0 +1,10 @@
+id: oasdiff
+titulo: oasdiff
+organizacao: oasdiff
+url: https://github.com/oasdiff/oasdiff
+tipo: comunidade
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "README: descrição da ferramenta, subcomando breaking, opção --fail-on, integração com CI e licença Apache-2.0"
+dominios: [contratos-api]
+notas: "Ferramenta de código aberto que compara especificações OpenAPI; citada como alternativa ao verificador do exemplo. Não foi executada no portal."

@@ -1,0 +1,11 @@
+id: semver
+titulo: Versionamento Semântico 2.0.0
+organizacao: Semantic Versioning (Tom Preston-Werner)
+url: https://semver.org/lang/pt-BR/
+tipo: padrao-aberto
+versao: 2.0.0
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "resumo (Maior, Menor e Correção) e itens 1, 7 e 8 da especificação, na tradução para português do Brasil"
+dominios: [contratos-api]
+notas: "Lida a tradução pt-BR da página; a versão original em inglês é https://semver.org/."

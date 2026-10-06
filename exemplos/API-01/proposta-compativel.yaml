@@ -1,0 +1,76 @@
+# Proposta compatível: campo opcional novo (email) e endpoint novo. A versão sobe a minor.
+# Contrato v1 da API de clientes (fonte de verdade, versionado no repositório).
+# info.version é a versão do contrato: ela sobe a major quando a mudança é incompatível.
+openapi: 3.2.1
+info:
+  title: API de clientes
+  version: 1.1.0
+paths:
+  /clientes/{id}:
+    get:
+      summary: Consulta um cliente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: O cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "404":
+          description: Cliente inexistente
+  /clientes/{id}/historico:
+    get:
+      summary: Lista o histórico do cliente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: O histórico
+  /clientes:
+    post:
+      summary: Cadastra um cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteNovo"
+      responses:
+        "201":
+          description: O cliente criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+components:
+  schemas:
+    Cliente:
+      type: object
+      required: [id, nome]
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        telefone:
+          type: string
+        email:
+          type: string
+    ClienteNovo:
+      type: object
+      required: [nome]
+      properties:
+        nome:
+          type: string
+        telefone:
+          type: string

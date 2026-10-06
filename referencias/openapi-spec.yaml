@@ -6,7 +6,7 @@ tipo: padrao-aberto
 versao: 3.2.1
 verificado_em: '2026-10-06'
 verificacao: V
-localizacao: 'abertura: descrição de interface de API HTTP legível por pessoas e máquinas; seção 2 (Introduction), 4.1.1 (campo openapi), 4.2.1 (campo version do Info Object), 4.8 (Paths Object) e 4.10.1 (campo deprecated da operação)'
+localizacao: 'abertura: descrição de interface de API HTTP legível por pessoas e máquinas; seção 2 (Introduction), 3 (Format: JSON ou YAML), 4.1.1 (campo openapi), 4.2.1 (campo version do Info Object), 4.8 (Paths Object) e 4.10.1 (campo deprecated da operação)'
 dominios:
 - contratos-api
 notas: null

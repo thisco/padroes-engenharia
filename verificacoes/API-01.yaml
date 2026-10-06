@@ -1,0 +1,87 @@
+conteudo: API-01
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: uma descrição OpenAPI formaliza a superfície de uma API e a semântica dela
+  ref: openapi-spec
+  localizacao: seção 2 (Introduction), 'An OpenAPI Description (OAD) formally describes the surface of an API and its semantics' (versão 3.2.1)
+  resultado: confirmada
+- texto: a especificação define o info.version como a versão do documento OpenAPI, distinta da versão da especificação e da versão da API descrita
+  ref: openapi-spec
+  localizacao: seção 4.2.1 (Info Object, Fixed Fields), campo version
+  resultado: confirmada
+- texto: o documento OpenAPI é um objeto JSON que pode ser representado em JSON ou em YAML
+  ref: openapi-spec
+  localizacao: seção 3 (Format)
+  resultado: confirmada
+- texto: o campo deprecated da operação diz que os consumidores devem evitar usá-la
+  ref: openapi-spec
+  localizacao: seção 4.10.1 (Operation Object, Fixed Fields), campo deprecated ('Consumers SHOULD refrain from usage of the declared operation')
+  resultado: confirmada
+- texto: o software que usa o Versionamento Semântico deve declarar uma API pública, no código ou na documentação, desde que precisa e compreensiva
+  ref: semver
+  localizacao: item 1 da especificação (tradução pt-BR)
+  resultado: confirmada
+- texto: a versão maior sobe com mudanças incompatíveis na API, e a menor com funcionalidade nova compatível
+  ref: semver
+  localizacao: resumo e itens 7 e 8 da especificação (tradução pt-BR)
+  resultado: confirmada
+- texto: a versão menor deve subir quando uma funcionalidade da API pública é definida como descontinuada
+  ref: semver
+  localizacao: item 7 da especificação (tradução pt-BR)
+  resultado: confirmada
+- texto: a Fase 2 da skill sdd-lifecycle varre a spec por quebra de contrato de API e, se achar, bloqueia o fluxo, pede uma ADR no formato Nygard e aguarda a aprovação humana explícita
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Fase 2 — Gate arquitetural (Tier 2) — GATEKEEPER', item 1 ('Mudanças destrutivas')
+  resultado: confirmada
+- texto: o oasdiff tem o subcomando breaking, que mostra só as mudanças que quebram clientes existentes
+  ref: oasdiff
+  localizacao: README, descrição da ferramenta e subcomando breaking
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/API-01/openapi.yaml
+  comando: python3 scripts/comparar-contratos.py api/openapi.yaml api/proposta-compativel.yaml (o openapi.yaml como contrato vigente nas quatro execuções)
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec), com o verificador em scripts/; Python 3.14.8 com PyYAML 6.0.3; macOS
+  resultado: passou
+  evidencia: 'contrato lido como base das quatro comparações; com a proposta compatível, saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/API-01/proposta-compativel.yaml
+  comando: python3 scripts/comparar-contratos.py api/openapi.yaml api/proposta-compativel.yaml
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec); Python 3.14.8 com PyYAML 6.0.3; macOS
+  resultado: passou
+  evidencia: 'três linhas "compatível: ..." e "API-01: 3 mudança(s), todas compatíveis (versão 1.0.0 -> 1.1.0).", saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/API-01/proposta-sem-versao.yaml
+  comando: python3 scripts/comparar-contratos.py api/openapi.yaml api/proposta-sem-versao.yaml --adr docs/adr/0001-remove-telefone.md
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec); Python 3.14.8 com PyYAML 6.0.3; macOS
+  resultado: falhou-como-esperado
+  evidencia: '"INCOMPATÍVEL: campo da resposta removido: GET /clientes/{id} 200.telefone" (e POST /clientes 201), "API-01: 2 mudança(s) incompatível(is) sem versão major nova (1.0.0 -> 1.1.0)", saída 1, mesmo com a ADR.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/API-01/proposta-v2.yaml
+  comando: python3 scripts/comparar-contratos.py api/openapi.yaml api/proposta-v2.yaml, sem e com --adr docs/adr/0001-remove-telefone.md
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec); Python 3.14.8 com PyYAML 6.0.3; macOS
+  resultado: passou
+  evidencia: 'com --adr: "API-01: mudança incompatível com major nova (1.0.0 -> 2.0.0) e ADR docs/adr/0001-remove-telefone.md.", saída 0; sem --adr: "mas sem ADR: passe --adr com o arquivo que registra a decisão.", saída 1. Também saída 0 com o contrato convertido para JSON e o python3 sem PyYAML; com YAML e sem PyYAML, saída 1 e a mensagem pedindo o PyYAML.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/API-01/adr-0001-remove-telefone.md
+  comando: python3 scripts/comparar-contratos.py api/openapi.yaml api/proposta-v2.yaml --adr docs/adr/0001-remove-telefone.md
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec); Python 3.14.8 com PyYAML 6.0.3; macOS
+  resultado: passou
+  evidencia: 'o verificador aceita a mudança incompatível com a major nova quando o arquivo da ADR existe (saída 0); a ADR só precisa existir, o verificador não lê o conteúdo.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/API-01/comparar-contratos.py
+  comando: python3 scripts/comparar-contratos.py <base> <revisão> [--adr <arquivo>], nos casos acima e em quatro mudanças a mais (tipo de campo, campo passou a obrigatório na requisição, parâmetro novo e obrigatório, endpoint removido) e com info.version inválida e arquivo inexistente
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp/b3-api-01-exec) e contratos derivados em /tmp; Python 3.14.8; ruff do portal sem achados; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'as quatro mudanças a mais saem 1 com "INCOMPATÍVEL: ..." e "sem versão major nova"; info.version "x": "info.version precisa ser X.Y.Z", saída 1; arquivo inexistente: "não foi possível comparar", saída 1.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote da T8
+  data: '2026-10-06'
+  achados: []
