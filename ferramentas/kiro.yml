@@ -5,7 +5,7 @@ status: avaliar
 versao_minima: "2.27.0"
 dono: nuarq
 praticas: [P1-01]
-receitas: []
+receitas: [instalar-skills-por-harness]
 como_instalar: |
   Instale o Kiro pelo site do fornecedor; este campo cobre só a configuração do repositório. A versão
   é a do kiro-cli.

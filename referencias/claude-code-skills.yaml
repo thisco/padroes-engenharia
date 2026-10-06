@@ -3,7 +3,7 @@ titulo: "Extend Claude with skills"
 organizacao: Anthropic
 url: https://code.claude.com/docs/en/skills
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-05
 verificacao: V
 localizacao: "seções 'Choose where skills load' (tabela Project) e 'Create your first skill'"
 dominios: [construir-com-ia]

@@ -5,7 +5,7 @@ status: experimentar
 versao_minima: "0.160.0"
 dono: nuarq
 praticas: [P1-01]
-receitas: []
+receitas: [instalar-skills-por-harness]
 como_instalar: |
   Instale o Codex pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: o Codex lê o `AGENTS.md` [ref:codex-agents-md], formato aberto que vários

@@ -58,7 +58,7 @@ prompt_para_agente: |
   7. Ao final, liste o que ainda depende de mim: desenhar Arquitetura/arquitetura.drawio, mapear
      Arquitetura/mapa.yml e escrever o PRD antes da primeira spec de Tier 2.
 praticas_aplicadas: [P1-01, DAD-01]
-receitas: [ligar-ci-gitlab-travas]
+receitas: [ligar-ci-gitlab-travas, instalar-skills-por-harness]
 dono: nuarq
 status: adotar
 referencias: [sdd-scaffold-readme, sdd-scaffold-changelog]

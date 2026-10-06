@@ -5,7 +5,7 @@ status: avaliar
 versao_minima: "não verificada: produto não instalado na curadoria"
 dono: nuarq
 praticas: [P1-01]
-receitas: []
+receitas: [instalar-skills-por-harness]
 como_instalar: |
   Instale o Antigravity pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: o Antigravity lê `AGENTS.md` e `GEMINI.md`, e arquivos de `.agents/rules/`

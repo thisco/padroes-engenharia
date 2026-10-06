@@ -1,0 +1,75 @@
+conteudo: receita-instalar-skills-por-harness
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para o mesmo diretório skills/, e editar num lugar vale para todos, sem cópia que divirja
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem', primeiro parágrafo
+  resultado: confirmada
+  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.'
+- texto: uma cópia de skill pode divergir (o scaffold usa link justamente para não ter cópia)
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem' ('não existe cópia para divergir')
+  resultado: confirmada
+- texto: o .agents/skills entrou na 1.7.0 e é lido pelo Codex e pelo Antigravity; o CLAUDE.md do template importa o AGENTS.md com @AGENTS.md desde a 1.7.0
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0], 'Adicionado' e 'Modificado'
+  resultado: confirmada
+  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/CHANGELOG.md.'
+- texto: skills de projeto do Claude Code ficam em .claude/skills/<nome>/SKILL.md
+  ref: claude-code-skills
+  localizacao: seção 'Choose where skills load', linha Project da tabela
+  resultado: confirmada
+- texto: com AGENTS.md e CLAUDE.md na pasta o Claude Code lê só o CLAUDE.md; o import @AGENTS.md traz o AGENTS.md; sem CLAUDE.md lê o AGENTS.md direto, a partir da 2.1.277
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md', tabela de combinações e nota de versão
+  resultado: confirmada
+- texto: CLAUDE.md é contexto, não configuração imposta; para bloquear uma ação usa-se um hook PreToolUse
+  ref: claude-code-memory
+  localizacao: seção 'CLAUDE.md vs auto memory', segundo parágrafo
+  resultado: confirmada
+- texto: o Codex varre .agents/skills da pasta de trabalho até a raiz do repositório, e a página não cita .codex/skills como local de skills do repositório
+  ref: codex-skills
+  localizacao: seção de localização das skills de repositório
+  resultado: confirmada
+- texto: o Codex lê o AGENTS.md e para de acrescentar arquivos quando o conjunto chega a 32 KiB (project_doc_max_bytes, padrão)
+  ref: codex-agents-md
+  localizacao: seção sobre project_doc_max_bytes
+  resultado: confirmada
+- texto: skills de workspace do Kiro em .kiro/skills/<nome>/SKILL.md, com name igual à pasta, só minúsculas, números e hífens, até 64 caracteres
+  ref: kiro-skills
+  localizacao: seções de local do workspace e de campos do frontmatter ('Must match folder name')
+  resultado: confirmada
+- texto: o Kiro lê o AGENTS.md da raiz do workspace automaticamente e ele é sempre incluído, sem modos de inclusão
+  ref: kiro-steering
+  localizacao: seção 'Agents.md'
+  resultado: confirmada
+- texto: skills de workspace do Antigravity em .agents/skills/<pasta>/
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+- texto: o Antigravity lê AGENTS.md e GEMINI.md
+  ref: antigravity-rules
+  localizacao: seção de descoberta de regras por diretório
+  resultado: confirmada
+- texto: o Copilot aceita skills de projeto em .github/skills, .claude/skills ou .agents/skills; a página não menciona link simbólico; SKILL.md exige name e description
+  ref: copilot-skills
+  localizacao: seção de skills de projeto e de formato do SKILL.md
+  resultado: confirmada
+  nota: 'Ausência de menção a link simbólico conferida na página em 2026-10-05.'
+- texto: o Copilot lê AGENTS.md, ou um CLAUDE.md ou GEMINI.md na raiz
+  ref: copilot-instructions
+  localizacao: seção de instruções de agente
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/instalar-skills-por-harness/montar-links.sh
+  comando: bash montar-links.sh na raiz de uma cópia de projeto-teste-17 sem os quatro links (apagados com rm, e .agents removida) e sem a linha @AGENTS.md no CLAUDE.md; depois grep -qx '@AGENTS.md' CLAUDE.md || printf '\n@AGENTS.md\n' >> CLAUDE.md; readlink .claude/skills .codex/skills .kiro/skills .agents/skills; ls de cada <ponto>/skills; segunda rodada do script
+  ambiente: sdd-scaffold 1.7.0, cópia de projeto-teste-17 em ~/curadoria-a5/b1-receita-skills-exec; bash do macOS; git
+  resultado: passou
+  evidencia: 'antes, ls .claude/skills falhava (No such file) e .agents não existia; o script imprimiu os quatro "<ponto>/skills -> ../skills" com rc 0; a linha 7 do CLAUDE.md ficou "@AGENTS.md"; readlink: ../skills quatro vezes; ls de cada ponto: arquitetura-viva estados-de-interface migrations-reversiveis sdd-lifecycle threat-model (a mesma lista do ferramenta-claude-code e do ferramenta-codex); segunda rodada com rc 0; git status só com CLAUDE.md modificado (os links ficaram iguais aos commitados).'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []

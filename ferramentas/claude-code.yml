@@ -5,7 +5,7 @@ status: experimentar
 versao_minima: "2.1.277"
 dono: nuarq
 praticas: [P1-01]
-receitas: []
+receitas: [instalar-skills-por-harness]
 como_instalar: |
   Instale o Claude Code pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: a partir da 2.1.277 o Claude Code lê o `AGENTS.md` direto, mas só quando não

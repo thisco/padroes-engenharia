@@ -5,7 +5,7 @@ status: avaliar
 versao_minima: "não verificada: produto não instalado na curadoria"
 dono: nuarq
 praticas: [P1-01]
-receitas: []
+receitas: [instalar-skills-por-harness]
 como_instalar: |
   Habilite o Copilot pelo site do fornecedor; este campo cobre só a configuração do repositório.
   Instruções do projeto: o Copilot lê `.github/copilot-instructions.md`, arquivos `AGENTS.md` (vale o
