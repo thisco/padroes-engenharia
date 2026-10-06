@@ -49,6 +49,12 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
 
 - Referência `google-gemini-3-developer-guide` (página depreciada pelo fornecedor).
 
+### Corrigido
+
+- O ninho da IA no produto nas páginas das peças (`conceitos/<peca>.html`): na coluna de 320px o
+  fluxo empilha pela largura da própria figura (container query), em vez de espremer 4 caixas e 3
+  setas; no fluxo horizontal a seta alinha ao topo das caixas.
+
 ## [0.3.0] - 2026-10-05
 
 Integração dos componentes `sdd-scaffold` 1.7.0 e `sdd-lifecycle` 3.0.0. Minor na série 0: há

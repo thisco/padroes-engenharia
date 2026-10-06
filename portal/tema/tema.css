@@ -393,3 +393,17 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .st.experimentar { background: var(--gov-claro); border-color: var(--gov); border-style: dashed; }
 .st.avaliar { background: var(--ambar-claro); border-color: var(--ambar); color: var(--tinta); }
 .st.evitar { background: var(--branco); border-color: var(--erro); color: var(--erro); text-decoration: line-through; }
+
+/* 2026-10-06: na coluna de 320px da página de peça, o fluxo da IA no produto empilha pela largura
+   da própria figura (container query), e não só pela do viewport; no fluxo horizontal a seta
+   alinha ao topo das caixas em vez de flutuar no meio da mais alta. */
+.ninho.produto { container-type: inline-size; }
+.ninho.produto .fluxo .seta { align-self: start; margin-top: 10px; }
+@container (max-width: 640px) {
+  .ninho.produto .fluxo { flex-direction: column; }
+  .ninho.produto .fluxo .seta::after { content: "↓"; }
+  .ninho.produto .fluxo .seta { max-width: none; align-self: center; margin-top: 0; }
+  .ninho.produto .cx.gateway .exec { grid-template-columns: 1fr; }
+  .ninho.produto .cx.eval .peca { display: block; }
+  .ninho.produto .cx.eval .peca .linha { display: block; text-align: left; }
+}

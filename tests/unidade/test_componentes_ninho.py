@@ -124,3 +124,14 @@ def test_pagina_de_cada_peca_desenha_a_propria_peca_em_destaque():
             alvo = [n for n in html.todos(classe="alvo") if n.attrs.get("data-peca") == peca]
             assert alvo, f"{peca}: a peça em destaque não está no desenho"
             assert "apaga" not in alvo[0].attrs["class"], peca
+
+
+def test_fluxo_do_produto_empilha_quando_a_figura_e_estreita():
+    """Na coluna de 320px da página de peça, o fluxo horizontal vira coluna pela largura da
+    própria figura (container query), e não só pela largura do viewport."""
+    css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
+    assert re.search(r"\.ninho\.produto\s*\{[^}]*container-type:\s*inline-size", css)
+    bloco = re.search(r"@container[^{]*\{(.*?)\n\}", css, re.S)
+    assert bloco, "falta o bloco @container do ninho de produto"
+    assert re.search(r"\.fluxo\s*\{[^}]*flex-direction:\s*column", bloco.group(1))
+    assert re.search(r"\.fluxo \.seta::after\s*\{[^}]*content:\s*\"↓\"", bloco.group(1))
