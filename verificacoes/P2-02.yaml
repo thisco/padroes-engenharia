@@ -1,0 +1,60 @@
+conteudo: P2-02
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'a política de uso da Anthropic tem padrões universais, requisitos para casos de uso de alto risco e diretrizes adicionais por contexto'
+  ref: anthropic-usage-policy
+  localizacao: 'títulos ''Universal Usage Standards'', ''High-Risk Use Case Requirements'' e ''Additional Use Case Guidelines'' (vigência 2025-09-15)'
+  resultado: confirmada
+- texto: 'os domínios de alto risco são jurídico, saúde, seguros, finanças (incluindo aprovação de empréstimos), emprego e moradia, e avaliação acadêmica'
+  ref: anthropic-usage-policy
+  localizacao: 'seção ''High-Risk Use Case Requirements'', lista de domínios'
+  resultado: confirmada
+- texto: 'no alto risco, um profissional qualificado revisa o conteúdo ou a decisão antes da disseminação, e o destinatário é informado do uso de IA, no mínimo no início de cada sessão'
+  ref: anthropic-usage-policy
+  localizacao: 'seção ''High-Risk Use Case Requirements'', requisitos de humano no circuito e de divulgação'
+  resultado: confirmada
+- texto: 'o EU AI Act classifica em risco inaceitável (proibido), alto risco, risco limitado (transparência) e risco mínimo'
+  ref: eu-ai-act-resumo
+  localizacao: 'Four-point summary'
+  resultado: confirmada
+  nota: 'Fonte secundária (resumo do Future of Life Institute); o texto do EUR-Lex não abriu na verificação.'
+- texto: 'entre as áreas de alto risco estão emprego, educação e serviços essenciais (elegibilidade a benefícios, avaliação de crédito)'
+  ref: eu-ai-act-resumo
+  localizacao: 'lista de casos de uso de alto risco do Anexo III'
+  resultado: confirmada
+- texto: 'no risco limitado, quem fornece e quem opera garante que o usuário saiba que interage com IA (chatbots e deepfakes)'
+  ref: eu-ai-act-resumo
+  localizacao: "'Four-point summary', terceiro item"
+  resultado: confirmada
+- texto: 'o PL 2338/2023 está em tramitação na Câmara dos Deputados, com última ação listada em 2025-04-29; não há lei sancionada'
+  ref: pl-2338-congresso
+  localizacao: 'campos de situação, casa atual e última ação (lida em 2026-10-06)'
+  resultado: parcial
+  nota: 'A página não diz que ''não há lei''; isso se infere de a situação ser ''em tramitação''. O texto atribui a data à página e manda conferir de novo.'
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P2-02/verificar-classificacao.py
+  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (ia.md com alto-risco sem dominio_de_impacto, revisor e aviso)'
+  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  resultado: falhou-como-esperado
+  evidencia: 'três linhas "alto-risco exige ..." e "P2-02: classificação incompleta ou incoerente (acima)."; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-02/verificar-classificacao.py
+  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (com o conteúdo de exemplos/P2-02/ia.md)'
+  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  resultado: passou
+  evidencia: 'P2-02: classificação completa.; saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-02/ia.md
+  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (o arquivo do exemplo copiado para docs/steering/)'
+  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  resultado: passou
+  evidencia: 'P2-02: classificação completa.; saída 0.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: 'provisória, pendente da conferência em lote (T9, ADR 0005)'
+  data: '2026-10-06'
+  achados: []

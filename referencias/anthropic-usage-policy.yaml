@@ -1,0 +1,11 @@
+id: anthropic-usage-policy
+titulo: Usage Policy (política de uso)
+organizacao: Anthropic
+url: https://www.anthropic.com/legal/aup
+tipo: vendor
+publicado_em: 2025-09-15
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "seções 'Universal Usage Standards', 'High-Risk Use Case Requirements' e 'Additional Use Case Guidelines'"
+dominios: [ia-no-produto]
+notas: "A data é a de vigência informada na página. A página fala em 'high-risk use case requirements' e lista seis domínios."
