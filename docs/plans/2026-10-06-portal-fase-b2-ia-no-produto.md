@@ -69,7 +69,7 @@ que vem de fonte interna sem URL pública entra como [S] ou sai. Os preparos de 
 tudo o que o prompt usa, e os passos do prompt não se contradizem; quando o prompt manda
 commitar, pede a mensagem sem trailer.
 
-- [ ] **T1 (P2-02, P2-03).** Um autor, dois testadores.
+- [x] **T1 (P2-02, P2-03).** Um autor, dois testadores.
 - [ ] **T2 (P2-04, P2-06).** As duas usam o gateway: um Exemplo sobe o LiteLLM com a config de
   `exemplos/P2-01/` e mostra, com saída real, a máscara de PII e o bloqueio por orçamento.
 - [ ] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
@@ -107,4 +107,8 @@ commitar, pede a mensagem sem trailer.
 
 ## Evidências
 
+- **T1 fechou (2026-10-06).** P2-02 (a3b3557) e P2-03 (61ac2da) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P2-02 commit e4ef178, P2-03 commit df87964, ambos com saída 0 do verificador. Registros em `verificacoes/P2-02.yaml` e `verificacoes/P2-03.yaml`.
+
 ## Conferência em lote: <data> — achados
+
+- P2-03, prompt: o campo `modelo` não vem literal nos placeholders, e o agente o deduziu do pedido ("Claude Fable 5"). Informar o valor na entrada 1 e na 2.

@@ -54,6 +54,13 @@ execucoes:
   resultado: passou
   evidencia: 'P2-02: classificação completa.; saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P2-02-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p2-02-prompt, com a spec da triagem de empréstimo e o verificador'
+  resultado: passou
+  evidencia: 'verificador antes: "docs/steering/ia.md: [Errno 2] No such file or directory" e "P2-02: classificação incompleta ou incoerente (acima).", saída 1; o agente leu a spec e gravou alto-risco, dominio_de_impacto financas, categoria alto, revisao_profissional sim, revisor e aviso_texto como pedido, classificado_por Ana Souza, classificado_em 2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md. Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: 'provisória, pendente da conferência em lote (T9, ADR 0005)'
   data: '2026-10-06'

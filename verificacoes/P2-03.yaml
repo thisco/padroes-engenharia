@@ -85,6 +85,13 @@ execucoes:
   resultado: passou
   evidencia: 'P2-03: catálogo completo e em dia.; saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P2-03-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p2-03-prompt, com o verificador'
+  resultado: passou
+  evidencia: 'verificador antes: "catalogo-modelos.yml: [Errno 2] No such file or directory" e "P2-03: catálogo incompleto ou vencido (acima).", saída 1; o agente criou as 2 entradas só com os dados informados (na do Bedrock, sem system_card, certificacoes e vedacao_*); depois, com --hoje 2026-10-06, "P2-03: catálogo completo e em dia.", saída 0; commit df87964 só com catalogo-modelos.yml. O agente usou "Claude Fable 5" como valor de modelo, que o prompt não informava literal. Transcrição em curadoria-a5/transcricoes/P2-03-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'
