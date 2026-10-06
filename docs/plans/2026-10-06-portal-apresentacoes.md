@@ -59,10 +59,10 @@ Reverter os commits na branch; nada foi publicado.
   montagem, `R<n>` e aprovação, auditoria do slide 14 com a revisão de segurança do 1.7.1), sem
   mexer em desenho, paleta e estrutura; `verificacoes/apresentacao-harness-sdd.yaml` com a
   reconciliação de cada afirmação de fato. O deck abre no navegador do disco e do portal servido.
-- [ ] **T3 — revisão adversarial do motor** (agente novo, modelo forte) contra R1 a R4 e R7, com
+- [x] **T3 — revisão adversarial do motor** (agente novo, modelo forte) contra R1 a R4 e R7, com
   tabela por requisito; **conferência do conteúdo** (modelo econômico) contra R5 e R6, abrindo o
   deck no navegador e amostrando a reconciliação.
-- [ ] **T4 — fecho.** Tratar achados; `CHANGELOG.md`; suíte, ruff, validar, builds; evidências;
+- [x] **T4 — fecho.** Tratar achados; `CHANGELOG.md`; suíte, ruff, validar, builds; evidências;
   checkpoint do dono com o deck aberto.
 
 ## Evidências
@@ -143,3 +143,23 @@ Amostra conferida (movida do registro, cujo schema só aceita revisor, data e ac
     navegador: 'servidor em :8011, sem 404 (só /favicon.ico), setas navegam, 19 slides, as 4 páginas carregam css, js e fontes; capturas t3-slide01.png, t3-slide14.png e t3-slide17.png'
     varredura: 'nenhum nome de pessoa nem assistente de IA como autor em apresentacoes/harness-sdd; nenhum http(s) em src ou href'
 ```
+
+### T4 — tratamento dos achados (2026-10-06)
+
+- Motor (commits 3c4a09f e 1136c41), TDD: 15 testes vermelhos antes do código (ver `# cobre:` em
+  `tests/unidade/test_apresentacoes.py`), depois verde. Resolvidos: pasta-slug symlink e symlink
+  de arquivo ou subpasta (reprovam, não são copiados); `url(` externo em `style=` e `<style>`
+  (`externos.py`; o `@import` do HTML passou a pegar só a forma com aspas, como no CSS, para não
+  contar duas vezes); registro `verificacoes/apresentacao-<slug>.yaml` obrigatório
+  (`R-VERIFICACAO`); a cópia não publica README, `apresentacao.yml`, roteiro-fonte (pelo nome em
+  `roteiro`) nem ocultos; `roteiro.html` na pasta reprova; nome da pasta é slug. R3 da spec
+  corrigido. O achado info (`.js` sem varredura) segue como limite conhecido.
+- Conteúdo (commit do deck): capa "Thiago Oliveira"; hook com `$CLAUDE_PROJECT_DIR`; notas de
+  versão e do `.codex/skills` no comparativo; slide 14 com rodapé a 654 px (era 696) em 1280x720.
+  Justificado: a referência `harness-sdd-deck` não foi criada, porque o validador exige URL
+  `https` com domínio e a `url_base` do portal é `http://localhost:8000` (`R-REFERENCIA`); as
+  entradas "SÓ NO DECK" ficam parciais, com nota.
+- Suíte: 634 passed. `ruff check`: só `exemplos/P2-03`; `ruff format --check`: só `exemplos/`.
+  Snapshot do HEAD sem P2-04 e P2-06 (git init no snapshot para o `gerar`): `validar` ok, dois
+  `gerar` com `diff -r` vazio, `index.html` com os mesmos bytes, pasta publicada sem README nem
+  `apresentacao.yml`.
