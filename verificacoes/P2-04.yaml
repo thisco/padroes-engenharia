@@ -47,8 +47,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: 'resposta simulada impressa; log do gateway: MENSAGENS ENVIADAS AO MODELO com ''CPF [CPF], e-mail [EMAIL]'';
-    verificar-mascara.sh: ''P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'', saída 0.'
+  evidencia: 'reexecutado em T10 (porta 4001): gateway no ar, banco saudável; resposta simulada impressa; ''P2-04
+    VEREDITO: CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum''; saída 0; down -v ao fim.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/config.yaml
@@ -56,8 +56,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: 'resposta simulada impressa; log do gateway: MENSAGENS ENVIADAS AO MODELO com ''CPF [CPF], e-mail [EMAIL]'';
-    verificar-mascara.sh: ''P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'', saída 0.'
+  evidencia: 'reexecutado em T10: guardrail registrado, pedido com três CPFs e e-mail; veredito sem vazamento, saída
+    0.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/mascara_pii.py
@@ -66,8 +66,9 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: 'CPF com e e sem pontuação e e-mail mascarados; o número de 11 dígitos de dígito verificador inválido
-    ficou intacto: ''Protocolo 12345678901 aberto. CPF [CPF] e [EMAIL].'''
+  evidencia: 'reexecutado em T10: CPF com ponto e hífen, com espaços e com separadores mistos mascarados (3) e e-mail
+    (1); o protocolo 12345678901, de dígito verificador inválido, ficou intacto; o log traz só a contagem, sem o
+    texto da mensagem.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/emitir-chave.sh
@@ -75,7 +76,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: imprimiu a chave (prefixo sk-), saída 0.
+  evidencia: 'reexecutado em T10: imprimiu a chave (prefixo sk-), saída 0; após recriar o gateway, o mesmo alias
+    dá 400 e o alias app-teste-hml2 funcionou.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/enviar-cpf.py
@@ -83,7 +85,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: '''Resposta simulada pelo gateway: nenhum modelo real foi chamado.'', saída 0.'
+  evidencia: 'reexecutado em T10 com o pedido de três CPFs: ''Resposta simulada pelo gateway: nenhum modelo real
+    foi chamado.'', saída 0.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/verificar-mascara.sh
@@ -91,7 +94,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: passou
-  evidencia: 'P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.; saída 0.'
+  evidencia: 'reexecutado em T10: ''P2-04 VEREDITO: CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum''
+    e ''P2-04: nenhum CPF ou e-mail detectado nas mensagens enviadas ao modelo.''; saída 0.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-04/verificar-mascara.sh
@@ -99,8 +103,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
     (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
   resultado: falhou-como-esperado
-  evidencia: 'log com ''CPF 529.982.247-25, e-mail fulano@exemplo.com.br'' e ''P2-04: CPF ou e-mail chegou ao modelo
-    (acima).''; saída 1.'
+  evidencia: 'reexecutado em T10 (default_on: false, gateway recriado): ''P2-04 VEREDITO: CPF: 0 mascarados; e-mail:
+    0 mascarados; vazamento: 3 CPF, 1 e-mail'' e ''P2-04: CPF ou e-mail chegou ao modelo (acima).''; saída 1.'
   data: '2026-10-06'
 - tipo: prompt
   prompt: P2-04-prompt-1
@@ -117,18 +121,34 @@ revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
   achados:
-  - afirmacao: 'mascara_pii.py, async_log_success_event: log.warning("MENSAGENS ENVIADAS AO MODELO: %s", messages) (exemplos/P2-04/mascara_pii.py:46-48; Como verificar P2-04.md:173-195)'
-    problema: '[médio] o log do gateway imprime o conteúdo inteiro da mensagem. Reproduzido: com o guardrail ligado, "CPF 529 982 247 25", nome, telefone e endereço seguiram ao modelo e foram para o log em claro; só a máscara canônica foi trocada. Quem copia o guardrail leva dado pessoal para a observabilidade, o que contradiz a minimização que a prática ensina. O texto não cobre isso.'
-    tratamento: 'No Exemplo, logar só o veredito e a contagem de trocas (por exemplo "mascarados: 2 CPF, 1 e-mail") e ajustar o verificador para ler esse registro; se mantiver o log de conteúdo, dizer que é só do gateway de teste e que produção não registra prompt. Se o Exemplo mudar, reexecutar e registrar.'
+  - afirmacao: 'mascara_pii.py, async_log_success_event: log.warning("MENSAGENS ENVIADAS AO MODELO: %s", messages)
+      (exemplos/P2-04/mascara_pii.py:46-48; Como verificar P2-04.md:173-195)'
+    problema: '[médio] o log do gateway imprime o conteúdo inteiro da mensagem. Reproduzido: com o guardrail ligado,
+      "CPF 529 982 247 25", nome, telefone e endereço seguiram ao modelo e foram para o log em claro; só a máscara
+      canônica foi trocada. Quem copia o guardrail leva dado pessoal para a observabilidade, o que contradiz a minimização
+      que a prática ensina. O texto não cobre isso.'
+    tratamento: 'Tratado em T10: o guardrail registra só o veredito (''CPF: 3 mascarados; e-mail: 1 mascarado; vazamento:
+      nenhum''), nunca o conteúdo, e o verificador lê esse registro; Exemplo reexecutado com Docker (docker system
+      df antes, porta 4001, down -v ao fim).'
   - afirmacao: '"Ele pega o CPF com ou sem pontuação e o e-mail" (P2-04.md, Antes e depois)'
-    problema: '[médio] só os formatos canônicos: CPF com espaços ("529 982 247 25") ou separadores mistos ("529-982-247.25") passa sem máscara, e o verificador sai 0 nos dois casos (falso negativo; ele nem procura CPF sem pontuação). O texto cita "CPF de outro formato" entre o que não cobre, mas apresenta o verificador como prova.'
-    tratamento: Dizer no Como verificar que o verificador e o guardrail cobrem só CPF formatado ou com 11 dígitos colados e e-mail simples, e que um passe é ausência de achado, não prova; acrescentar um caso de teste com formato fora do padrão.
+    problema: '[médio] só os formatos canônicos: CPF com espaços ("529 982 247 25") ou separadores mistos ("529-982-247.25")
+      passa sem máscara, e o verificador sai 0 nos dois casos (falso negativo; ele nem procura CPF sem pontuação).
+      O texto cita "CPF de outro formato" entre o que não cobre, mas apresenta o verificador como prova.'
+    tratamento: 'Tratado em T10: a regex aceita ponto, hífen ou espaço em qualquer combinação (o Exemplo manda três
+      formatos e a contagem fecha em 3 CPFs; o protocolo de 11 dígitos inválido fica intacto); o texto lista os
+      formatos cobertos e os não cobertos e diz que o passe é ausência de achado.'
   - afirmacao: Prompt, passos 3 e 6 (trazido do plano)
-    problema: '[baixo] assume shell persistente (AI_GATEWAY_KEY se perde); após --force-recreate gateway o banco persiste e o alias app-teste-hml já existe (400 "Key with alias ... already exists", reproduzido).'
-    tratamento: Dizer para reexportar a chave ou reemitir com outro alias (app-teste-hml2) e apagar a chave antiga.
+    problema: '[baixo] assume shell persistente (AI_GATEWAY_KEY se perde); após --force-recreate gateway o banco
+      persiste e o alias app-teste-hml já existe (400 "Key with alias ... already exists", reproduzido).'
+    tratamento: 'Tratado em T10: o prompt manda usar um único shell ou refazer as variáveis, reexportar a chave
+      após recriar o gateway e emitir com o alias app-teste-hml2 se o 400 de alias existente aparecer. Prompt alterado:
+      aguarda novo teste em sessão nova.'
   - afirmacao: Fonte litellm-pii-masking (https://docs.litellm.ai/docs/proxy/guardrails/pii_masking_v2)
-    problema: '[baixo] confirmada: ações MASK e BLOCK, Presidio analisador e anonimizador em dois contêineres; a página fala em "All Presidio Entity Types" e não lista CPF, como o texto afirma.'
+    problema: '[baixo] confirmada: ações MASK e BLOCK, Presidio analisador e anonimizador em dois contêineres; a
+      página fala em "All Presidio Entity Types" e não lista CPF, como o texto afirma.'
     tratamento: Nenhum.
   - afirmacao: Execução (1 de 3 Docker, por amostragem)
-    problema: '[baixo] reproduzida em t9-p2-04 (LiteLLM v1.104.0, porta 4011, docker system df antes, compose down -v ao fim): com default_on true o verificador sai 0 e o log traz [CPF] e [EMAIL]; com default_on false sai 1 com a linha do "antes", ambos iguais ao texto.'
+    problema: '[baixo] reproduzida em t9-p2-04 (LiteLLM v1.104.0, porta 4011, docker system df antes, compose down
+      -v ao fim): com default_on true o verificador sai 0 e o log traz [CPF] e [EMAIL]; com default_on false sai
+      1 com a linha do "antes", ambos iguais ao texto.'
     tratamento: Nenhum.

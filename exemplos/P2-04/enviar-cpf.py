@@ -5,7 +5,10 @@ import os
 from openai import OpenAI
 
 cliente = OpenAI(base_url=os.environ["AI_GATEWAY_URL"], api_key=os.environ["AI_GATEWAY_KEY"])
-pedido = "O cliente Fulano, CPF 529.982.247-25, e-mail fulano@exemplo.com.br, pediu a 2a via."
+pedido = (
+    "O cliente Fulano, CPF 529.982.247-25, e-mail fulano@exemplo.com.br, pediu a 2a via. "
+    "Outros CPFs informados: 529 982 247 25 e 529-982-247.25. Protocolo 12345678901."
+)
 resposta = cliente.chat.completions.create(
     model="simulado", messages=[{"role": "user", "content": pedido}]
 )

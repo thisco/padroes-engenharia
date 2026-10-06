@@ -26,3 +26,10 @@ model_list:
       model: openai/simulado
       api_key: "nao-usada"
       mock_response: "Chamado aberto. Por segurança, não repito dados pessoais."
+
+# No gateway real, o que o job `evals-modelo-real` chama é o alias `assistente` (a variável EVAL_MODELO
+# do .gitlab-ci.yml). Declare-o no config.yaml desse gateway, ao lado dos aliases da aplicação:
+#  - model_name: assistente
+#    litellm_params:
+#      model: <provedor>/<modelo da aplicação>
+#      api_key: os.environ/CHAVE_DO_PROVEDOR

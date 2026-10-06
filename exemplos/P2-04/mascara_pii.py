@@ -7,7 +7,8 @@ from litellm.integrations.custom_guardrail import CustomGuardrail
 
 log = logging.getLogger("mascara_pii")
 
-CPF = re.compile(r"(?<!\d)(\d{3})\.?(\d{3})\.?(\d{3})-?(\d{2})(?!\d)")
+# Aceita ponto, hífen ou espaço (ou nada) entre os grupos, em qualquer combinação.
+CPF = re.compile(r"(?<!\d)(\d{3})[.\s-]?(\d{3})[.\s-]?(\d{3})[.\s-]?(\d{2})(?!\d)")
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 
 
@@ -31,6 +32,38 @@ def mascarar(texto: str) -> str:
     return EMAIL.sub("[EMAIL]", CPF.sub(troca_cpf, texto))
 
 
+def _textos(mensagens: list) -> list[str]:
+    """Os textos das mensagens, na forma de string ou de partes com `text`."""
+    achados = []
+    for mensagem in mensagens or []:
+        conteudo = mensagem.get("content")
+        if isinstance(conteudo, str):
+            achados.append(conteudo)
+        elif isinstance(conteudo, list):
+            achados += [
+                p["text"]
+                for p in conteudo
+                if isinstance(p, dict) and isinstance(p.get("text"), str)
+            ]
+    return achados
+
+
+def _qtd(n: int) -> str:
+    return f"{n} mascarado" + ("" if n == 1 else "s")
+
+
+def veredito(mensagens: list) -> str:
+    """Resume o que seguiu ao modelo, sem o conteúdo: contagem de marcadores e vazamento."""
+    texto = "\n".join(_textos(mensagens))
+    cpfs = sum(cpf_valido("".join(m.groups())) for m in CPF.finditer(texto))
+    emails = len(EMAIL.findall(texto))
+    vazou = [f"{n} {nome}" for n, nome in ((cpfs, "CPF"), (emails, "e-mail")) if n]
+    return (
+        f"CPF: {_qtd(texto.count('[CPF]'))}; e-mail: {_qtd(texto.count('[EMAIL]'))}; "
+        f"vazamento: {', '.join(vazou) or 'nenhum'}"
+    )
+
+
 class MascaraPII(CustomGuardrail):
     async def async_pre_call_hook(self, user_api_key_dict, cache, data, call_type):
         for mensagem in data.get("messages") or []:
@@ -44,5 +77,5 @@ class MascaraPII(CustomGuardrail):
         return data
 
     async def async_log_success_event(self, kwargs, response_obj, start_time, end_time):
-        # Registra o que de fato seguiu para o modelo, depois do guardrail.
-        log.warning("MENSAGENS ENVIADAS AO MODELO: %s", kwargs.get("messages"))
+        # Registra só o veredito do que seguiu ao modelo, nunca o conteúdo da mensagem.
+        log.warning("P2-04 VEREDITO: %s", veredito(kwargs.get("messages")))

@@ -54,8 +54,9 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (compose, GATEWAY_PORT=4002) e LiteLLM
     1.104.0 via pip no contêiner python:3.11 do gitlab-ci-local 4.76.0, openai 3.24.0, pytest 9.1.1, macOS
   resultado: passou
-  evidencia: PASSOU nos 5 casos, 'modo=mock aprovados=5/5 taxa=1.00 limiar=0.80', '1 passed in 0.71s', ' PASS  evals',
-    saída 0. Job evals-modelo-real não executado (sem modelo real nem agendamento).
+  evidencia: 'reexecutado em T10 (arquivo com o comentário do alias): PASSOU nos 5 casos, ''modo=mock aprovados=5/5
+    taxa=1.00 limiar=0.80'', ''1 passed in 0.46s'', '' PASS  evals'', saída 0. Job evals-modelo-real não executado
+    (sem modelo real nem agendamento).'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-05/gitlab-ci.yml
@@ -64,8 +65,8 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (compose, GATEWAY_PORT=4002) e LiteLLM
     1.104.0 via pip no contêiner python:3.11 do gitlab-ci-local 4.76.0, openai 3.24.0, pytest 9.1.1, macOS
   resultado: falhou-como-esperado
-  evidencia: 'FALHOU classifica-bug e resumo-em-json, ''aprovados=3/5 taxa=0.60 limiar=0.80'', ''AssertionError:
-    taxa 0.60 abaixo do limiar 0.80'', '' FAIL  evals'', saída 1.'
+  evidencia: 'reexecutado em T10 com o config alterado: ''FALHOU'' em classifica-bug e resumo-em-json, taxa 0.60
+    abaixo do limiar 0.80, '' FAIL  evals'', saída 1.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-05/test_evals.py
@@ -89,7 +90,7 @@ execucoes:
   ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (compose, GATEWAY_PORT=4002) e LiteLLM
     1.104.0 via pip no contêiner python:3.11 do gitlab-ci-local 4.76.0, openai 3.24.0, pytest 9.1.1, macOS
   resultado: passou
-  evidencia: '5 aliases mock-<id> respondem a gravação de cada caso: 5/5 aprovados.'
+  evidencia: 'reexecutado em T10 (com a entrada ''assistente'' em comentário): os 5 aliases mock-<id> aprovam 5/5.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-05/docker-compose.yml
@@ -123,20 +124,31 @@ revisao_adversarial:
   data: '2026-10-06'
   achados:
   - afirmacao: 'gitlab-ci.yml: job evals-modelo-real com EVAL_MODELO: assistente'
-    problema: '[médio] o alias "assistente" não existe em nenhum config do Exemplo; quem roda o job real precisa inventar a rota do gateway. O texto admite que o job não foi executado.'
-    tratamento: Dizer que o gateway real precisa expor um alias com esse nome (ou a variável EVAL_MODELO aponta o alias) e dar a linha de config de exemplo.
+    problema: '[médio] o alias "assistente" não existe em nenhum config do Exemplo; quem roda o job real precisa
+      inventar a rota do gateway. O texto admite que o job não foi executado.'
+    tratamento: 'Tratado em T10: o Exemplo declara o alias do job real: o gitlab-ci.yml comenta que EVAL_MODELO
+      é o alias que o gateway real expõe e o config.yaml traz, em comentário, a entrada ''assistente'' a declarar;
+      o texto do Como aplicar 7 diz o mesmo. Job evals reexecutado com npx --yes gitlab-ci-local@4.76.0: PASS (5/5,
+      taxa 1.00) e, com a regressão, FAIL (3/5, taxa 0.60, saída 1).'
   - afirmacao: 'Suíte: um único teste agrega os 5 casos (trazido do plano) (exemplos/P2-05/test_evals.py)'
-    problema: '[baixo] um caso reprovado não aparece como teste próprio no relatório do pytest; só o print por caso mostra.'
-    tratamento: Usar pytest.mark.parametrize por caso e um teste de limiar, ou registrar a limitação no Como verificar.
+    problema: '[baixo] um caso reprovado não aparece como teste próprio no relatório do pytest; só o print por caso
+      mostra.'
+    tratamento: 'Justificado: registrado como limite no Como verificar (um teste agrega os casos e o reprovado aparece
+      na linha FALHOU); parametrizar mudaria a suíte já executada e fica para a revalidação.'
   - afirmacao: 'Mock mode: eval contra mock_response'
-    problema: '[baixo] no modo mock o resultado é decidido pela gravação do config.yaml, então o job de PR confere o encanamento e não o prompt; o texto diz ("não o modelo"). Reprodução local: servidor falso que serve os mock_response dos dois configs deu 5/5 (1.00) e 3/5 (0.60, AssertionError) como registrado, mas o gitlab-ci-local e o Docker não foram reexecutados.'
-    tratamento: Nenhum além de manter o aviso; a execução em Docker fica coberta pelo registro.
+    problema: '[baixo] no modo mock o resultado é decidido pela gravação do config.yaml, então o job de PR confere
+      o encanamento e não o prompt; o texto diz ("não o modelo"). Reprodução local: servidor falso que serve os
+      mock_response dos dois configs deu 5/5 (1.00) e 3/5 (0.60, AssertionError) como registrado, mas o gitlab-ci-local
+      e o Docker não foram reexecutados.'
+    tratamento: Nenhum além de manter o aviso, que segue no texto.
   - afirmacao: Fonte anthropic-develop-tests (https://platform.claude.com/docs/en/test-and-evaluate/develop-tests)
-    problema: '[baixo] confirmada: critérios específicos e mensuráveis, casos que espelham a tarefa com bordas, correção automatizada, "volume over quality".'
+    problema: '[baixo] confirmada: critérios específicos e mensuráveis, casos que espelham a tarefa com bordas,
+      correção automatizada, "volume over quality".'
     tratamento: Nenhum.
   - afirmacao: Execução registrada (775678e, EVALS.md)
     problema: '[baixo] conferida: tabela 5/5 e 3/5, reprovados classifica-bug e resumo-em-json, igual aos configs.'
     tratamento: Nenhum.
   - afirmacao: Comando npx --yes gitlab-ci-local@4.76.0
     problema: '[baixo] executa pacote de terceiro da internet; a versão está fixada, mas não o hash.'
-    tratamento: Dizer que a versão fixada reduz o risco e recomendar o espelho interno ou instalar uma vez com verificação.
+    tratamento: 'Tratado em T10: o texto avisa que o npx --yes executa pacote de terceiro, que a versão fixada não
+      é um hash e recomenda espelho interno ou instalação única conferida.'

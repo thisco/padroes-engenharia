@@ -32,6 +32,7 @@ evals-modelo-real:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   variables:
     EVAL_MODO: real
+    # Alias que o gateway real expõe para o modelo da aplicação (veja o config.yaml do gateway).
     EVAL_MODELO: assistente
   script:
     - pip install --quiet openai==3.24.0 pytest==9.1.1
