@@ -7,7 +7,7 @@ from portal.gerador.erros import Erro
 from portal.gerador.regras import Contexto, regra_vinculos
 from tests import fabrica
 
-SCAFFOLD = Componente("sdd-scaffold", "https://github.com/thisco/sdd-scaffold", "1.7.0", "a" * 40)
+SCAFFOLD = Componente("sdd-scaffold", "https://github.com/thisco/sdd-scaffold", "1.7.1", "a" * 40)
 
 
 def rodar(*conteudos, raiz):
@@ -64,14 +64,14 @@ def test_peca_fora_do_ninho(tmp_path):
     ("alteracao", "valor"),
     [
         ({"id": "outro"}, "outro: componente fora de componentes.yml"),
-        ({"versao": "1.5.0"}, "versão 1.5.0 difere da fixada (1.7.0)"),
+        ({"versao": "1.5.0"}, "versão 1.5.0 difere da fixada (1.7.1)"),
         ({"repo": "https://github.com/x/y"}, "repo https://github.com/x/y difere do fixado"),
     ],
 )
 def test_starter_bate_com_componentes(tmp_path, alteracao, valor):
     erros = rodar(fabrica.starter(fabrica.meta_starter(**alteracao)), raiz=tmp_path)
     assert [e.valor for e in erros if e.regra == "R-COMPONENTE"] == [valor]
-    assert rodar(fabrica.starter(fabrica.meta_starter(versao="v1.7.0")), raiz=tmp_path) == []
+    assert rodar(fabrica.starter(fabrica.meta_starter(versao="v1.7.1")), raiz=tmp_path) == []
 
 
 def test_blocos_da_pagina(tmp_path):

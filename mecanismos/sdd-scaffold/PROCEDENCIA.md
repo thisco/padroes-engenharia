@@ -3,14 +3,14 @@
 | Campo | Valor |
 |---|---|
 | Repositório | https://github.com/thisco/sdd-scaffold |
-| Versão | 1.7.0 |
-| Commit | `06a382b938af66230ce6299c1638b0ad055804f0` |
-| Copiado em | 2026-10-05 |
+| Versão | 1.7.1 |
+| Commit | `cd121cd973945c486e63029496ed7ec879a18e32` |
+| Copiado em | 2026-10-06 |
 | Licença | MIT |
 
 | Arquivo | Caminho de origem | SHA-256 |
 |---|---|---|
-| `verificar_pr.py` | `template/scripts/verificar_pr.py` | `1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488` |
+| `verificar_pr.py` | `template/scripts/verificar_pr.py` | `616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e` |
 | `verificar_constituicao.py` | `template/scripts/verificar_constituicao.py` | `8a3eeedf0edd72d2d12d83087e2c8a67859683bd6786cd094f85f43bba03ebad` |
 
 Cópia sem alteração. Não edite aqui: o portal hospeda estes scripts em

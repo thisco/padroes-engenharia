@@ -7,12 +7,12 @@ descricao: >-
   o projeto é de GitHub Actions (.github/workflows/qualidade.yml) [ref:sdd-scaffold-readme].
   No GitLab, a receita "Ligar o CI do GitLab com as travas" traz as três travas do CI do scaffold: normas do PR, governança e segredos.
 repo: https://github.com/thisco/sdd-scaffold
-versao: "1.7.0"
+versao: "1.7.1"
 comando: |
   # Requer Python 3.11+, git com user.name e user.email configurados e rede (o gerador
   # clona a skill sdd-lifecycle, na tag v3.0.0). O destino não pode ter uma pasta com o nome do projeto.
-  git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git
-  git -C sdd-scaffold rev-parse HEAD   # deve imprimir 06a382b938af66230ce6299c1638b0ad055804f0
+  git clone --depth 1 --branch v1.7.1 https://github.com/thisco/sdd-scaffold.git
+  git -C sdd-scaffold rev-parse HEAD   # deve imprimir cd121cd973945c486e63029496ed7ec879a18e32
   python3 sdd-scaffold/criar_projeto.py --nome meu-projeto --destino ~/workspace \
     --stack "Python 3.11" --descricao "Descrição do projeto"
 prompt_para_agente: |
@@ -24,7 +24,7 @@ prompt_para_agente: |
      <!-- preencher --> para depois.
 
   2. Clone o scaffold num diretório temporário e rode o gerador a partir dele (nada global):
-       git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git /tmp/sdd-scaffold
+       git clone --depth 1 --branch v1.7.1 https://github.com/thisco/sdd-scaffold.git /tmp/sdd-scaffold
        python3 /tmp/sdd-scaffold/criar_projeto.py --nome <nome> --destino . \
          --stack "<stack>" --descricao "<descricao>"
      O gerador copia o template, substitui os placeholders, instala a skill sdd-lifecycle em
@@ -77,7 +77,7 @@ planta:
     quando: "Quando o agente tenta escrever num caminho protegido."
     arquivo: Proteção dos arquivos de governança
     caminhos: [scripts/proteger_governanca.py, .claude/settings.json, .kiro/permissions.yaml]
-    nota: "Hook no Claude Code e regra declarativa no Kiro, um por ferramenta [ref:sdd-scaffold-readme]."
+    nota: "Hook no Claude Code e regra declarativa no Kiro, um por ferramenta [ref:sdd-scaffold-readme]. A proteção vale contra descuido e não contra má-fé: a escrita indireta por shell não passa pelo hook, o Kiro cobre só a escrita de arquivo e, sem alguém para responder, a regra de pedir aprovação não protege [ref:sdd-scaffold-readme]."
     mecanismos:
       - forca: bloqueia
         texto: "o hook e a regra declarativa rodam fora do modelo [ref:sdd-scaffold-readme]"
@@ -101,7 +101,7 @@ planta:
     nota: "O CI que acompanha o projeto é de GitHub Actions [ref:sdd-scaffold-readme]."
     mecanismos:
       - forca: bloqueia
-        texto: "editar uma migration já aplicada reprova [ref:sdd-scaffold-readme]"
+        texto: "editar uma migration já aplicada reprova, e desde a 1.7.1 renomeá-la também [ref:sdd-scaffold-readme] [ref:sdd-scaffold-changelog]"
       - forca: avisa
         texto: "spec sem threat-model, plano sem rollback e plano sem evidência de teste só avisam [ref:sdd-scaffold-readme]"
   - grupo: Verificação

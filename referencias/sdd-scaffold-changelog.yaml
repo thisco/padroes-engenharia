@@ -1,11 +1,11 @@
 id: sdd-scaffold-changelog
-titulo: "CHANGELOG.md do sdd-scaffold (entrada 1.7.0)"
+titulo: "CHANGELOG.md do sdd-scaffold (entradas 1.7.0 e 1.7.1)"
 organizacao: sdd-scaffold (github.com/thisco)
-url: https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/CHANGELOG.md
+url: https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/CHANGELOG.md
 tipo: interno
-versao: "1.7.0"
-verificado_em: 2026-10-05
+versao: "1.7.1"
+verificado_em: 2026-10-06
 verificacao: V
-localizacao: "entrada [1.7.0], seções 'Adicionado' (ponto de montagem .agents/skills) e 'Modificado' (CLAUDE.md importa a constituição com @AGENTS.md)"
+localizacao: "entradas [1.7.0] e [1.7.1], seções 'Adicionado' (ponto de montagem .agents/skills) e 'Modificado' (CLAUDE.md importa a constituição com @AGENTS.md) da [1.7.0], e 'Corrigido' da [1.7.1]"
 dominios: [construir-com-ia]
-notas: "Lido no arquivo da tag v1.7.0 do clone local (commit fixado); a URL do commit não foi aberta na web nesta sessão. Conferido contra os arquivos do template na mesma tag: template/CLAUDE.md termina com a linha @AGENTS.md e template/.agents/skills é um link simbólico para ../skills."
+notas: "Lido no arquivo da tag v1.7.1 do clone local (commit fixado); a URL do commit não foi aberta na web nesta sessão. As entradas [1.7.0] seguem no arquivo (conferido contra template/CLAUDE.md, que termina com a linha @AGENTS.md, e template/.agents/skills, link simbólico para ../skills, ambos sem mudança na 1.7.1). A entrada [1.7.1] lista as correções de governança: o --no-renames do verificar_pr.py, o python3 -I nos scripts do hook e do CI e as listas de protegidos do hook, do settings e do Kiro."

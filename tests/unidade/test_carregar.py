@@ -155,8 +155,8 @@ def test_componentes_do_repositorio_real():
         "sdd-scaffold": Componente(
             "sdd-scaffold",
             "https://github.com/thisco/sdd-scaffold",
-            "1.7.0",
-            "06a382b938af66230ce6299c1638b0ad055804f0",
+            "1.7.1",
+            "cd121cd973945c486e63029496ed7ec879a18e32",
         ),
     }
 
