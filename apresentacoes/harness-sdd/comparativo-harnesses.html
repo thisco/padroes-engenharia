@@ -183,7 +183,7 @@ code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-liga
 
     <!-- 1 · instrução -->
     <div class="igual"><b>Instrução do projeto</b><span>um arquivo lido em todo turno</span></div>
-    <div class="c"><code>CLAUDE.md</code> em hierarquia, do global ao diretório<small>lê AGENTS.md só sem CLAUDE.md (desde a 2.1.277): por isso o ponteiro importa com <code>@AGENTS.md</code></small></div>
+    <div class="c"><code>CLAUDE.md</code> em hierarquia, do global ao diretório<small>lê AGENTS.md só sem CLAUDE.md (a coluna é da 2.1.267; o "desde a 2.1.277" vem de fonte posterior): por isso o ponteiro importa com <code>@AGENTS.md</code></small></div>
     <div class="c"><code>AGENTS.md</code> colado verbatim no prompt<small>trunca em 32 KB, sem avisar</small></div>
     <div class="c"><code>AGENTS.md</code> e <code>.kiro/steering/</code> com 4 modos de inclusão<small>na CLI os modos não funcionam: carrega tudo</small></div>
     <div class="c"><code>AGENTS.md</code> e <code>GEMINI.md</code>, do diretório atual até a raiz<small>mais <code>.agents/rules/</code>, cumulativos</small></div>
@@ -191,7 +191,7 @@ code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-liga
     <!-- 2 · skills -->
     <div class="igual"><b>Skills</b><span>procedimento carregado por gatilho</span></div>
     <div class="c"><code>SKILL.md</code> em <code>.claude/skills/</code><small>tools também são carregadas sob demanda</small></div>
-    <div class="c so"><code>SKILL.md</code> em <code>.agents/skills/</code><small>o prompt de sistema exige usar a skill que casa</small></div>
+    <div class="c so"><code>SKILL.md</code> em <code>.agents/skills/</code><small>o prompt de sistema exige usar a skill que casa; no teste do portal, <code>.codex/skills</code> também listou as skills</small></div>
     <div class="c"><code>SKILL.md</code> em <code>.kiro/skills/</code><small>padrão aberto Agent Skills</small></div>
     <div class="c nv">skills embutidas no produto, e <code>SKILL.md</code> em <code>.agents/skills/</code><small>caminho documentado, não testado no produto</small></div>
 

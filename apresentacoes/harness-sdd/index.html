@@ -16,7 +16,7 @@
   <h1>Harness, SDD e o repositório como fonte de verdade</h1>
   <p class="sub">Como construir software com agentes de IA sem perder a arquitetura no caminho, e por que o processo precisa continuar valendo quando a ferramenta muda.</p>
   <div class="assina">
-    <b>Quem fez a pesquisa de internos</b> · SUNNU/NUARQ<br>
+    <b>Thiago Oliveira</b> · SUNNU/NUARQ<br>
     Conversa técnica com a NUJOR
   </div>
 </section>
@@ -366,7 +366,7 @@ UnicodeDecodeError: 'utf-8' codec can't decode byte 0x87 in position 23
       <p>O verificador de PR aprovava o modelo de spec copiado e nunca preenchido.</p>
       <p>O projeto gerado não passava no próprio CI.</p>
       <p><strong>Os testes exercitavam o modelo mental do autor, e não o artefato real.</strong></p>
-      <p style="font-size:.8em;color:var(--papel-fosco)">A revisão de segurança do 1.7.1 repetiu o padrão: rename de migration passava pela trava, o hook passou a usar caminho absoluto e a falhar fechado, e um módulo plantado em <span class="ev">scripts/</span> é barrado por <span class="ev">python3 -I</span>.</p>
+      <p style="font-size:.72em;color:var(--papel-fosco)">A revisão de segurança do 1.7.1 repetiu o padrão: rename de migration passava pela trava, o comando do hook passou a usar <span class="ev">$CLAUDE_PROJECT_DIR</span> e falha fechado, e um módulo plantado em <span class="ev">scripts/</span> é barrado por <span class="ev">python3 -I</span>.</p>
     </div>
   </div>
   <p class="fonte">Encontrado por um agente auditor com instrução de construir, para cada mecanismo, o caso que ele deveria pegar e o caso inocente, sem partir do meu contexto. Corrigido, e os testes passaram a ler os arquivos reais do template. <span class="alerta">Ainda em aberto: os controles de Kiro e Codex não foram confirmados contra o produto. Até lá, trato como candidatos a inertes.</span></p>

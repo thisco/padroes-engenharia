@@ -79,7 +79,7 @@ O slide 14 é o pior caso, e o mais valioso: agora o teste estava verde e o cont
 nada. Mostre o bloco de código, pause, e deixe a sala ler as duas linhas. Depois a frase em
 negrito. Diga quem achou: um agente auditor instruído a construir o caso que o mecanismo deveria
 pegar, sem o seu contexto. Feche com uma frase sobre a revisão de segurança do 1.7.1, que repetiu o padrão: migration renomeada
-e editada passava pela trava, o hook agora usa caminho absoluto e falha fechado, e um módulo plantado
+e editada passava pela trava, o comando do hook passou a usar `$CLAUDE_PROJECT_DIR` e falha fechado, e um módulo plantado
 em `scripts/` é barrado por `python3 -I`. E diga o que ainda está aberto: Kiro e Codex não
 confirmados.
 
