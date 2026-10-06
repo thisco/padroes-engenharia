@@ -1,0 +1,11 @@
+id: gateway-poc-compose
+titulo: "poc/docker-compose.yml e poc/seed-demo.sh do gateway-poc"
+organizacao: gateway-poc (github.com/thisco)
+url: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/poc/docker-compose.yml
+tipo: interno
+versao: "0.1.0"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "poc/docker-compose.yml, serviços gateway, db e ollama; poc/seed-demo.sh, variável GW e criação dos times e das chaves"
+dominios: [ia-no-produto]
+notas: "Aberto na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef (tag v0.1.0). O seed-demo.sh do mesmo commit: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/poc/seed-demo.sh."

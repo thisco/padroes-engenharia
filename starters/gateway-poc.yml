@@ -1,0 +1,89 @@
+id: gateway-poc
+titulo: "gateway-poc: gateway de IA de referência com LiteLLM, PostgreSQL e Ollama"
+descricao: >-
+  Gateway de IA de referência em Docker Compose: LiteLLM, PostgreSQL e Ollama, com catálogo de
+  modelos, times, orçamento e chave virtual [ref:gateway-poc-readme]. O catálogo tem três camadas:
+  modelos de provedor SaaS, modelos abertos locais e um modelo simulado, o `simulado`, que
+  responde sem nenhum provedor [ref:gateway-poc-readme]. A API é compatível com a da OpenAI na
+  porta 4000, e a interface administrativa fica em /ui, com login `admin` e o valor de
+  `LITELLM_MASTER_KEY` [ref:gateway-poc-readme]. O `seed-demo.sh` cria dois times e duas chaves
+  virtuais [ref:gateway-poc-readme]. O repositório traz também uma avaliação das funcionalidades
+  do gateway, que este starter não usa [ref:gateway-poc-readme]. Limites da versão 0.1.0: o
+  compose fixa os nomes dos contêineres (`poc-gateway`, `poc-db`, `poc-ollama`) e a porta 4000
+  do host [ref:gateway-poc-compose], então ele não sobe ao lado de outra cópia da mesma PoC; o
+  `seed-demo.sh` chama sempre `http://localhost:4000` [ref:gateway-poc-compose]; o README pede
+  cerca de 8 GiB de memória para o Docker [ref:gateway-poc-readme]. É uma prova de conceito, e o
+  portal a trata como ponto de partida para o gateway de teste e para o estudo, não como
+  gateway de produção. A receita "Ligar uma aplicação ao gateway de IA" parte dele.
+repo: https://github.com/thisco/gateway-poc
+versao: "0.1.0"
+comando: |
+  # Requer Docker com Compose (cerca de 8 GiB de memória para o Docker), git e curl. Os nomes
+  # dos contêineres (poc-gateway, poc-db, poc-ollama) e a porta 4000 são fixos: não rode se
+  # outra cópia da PoC estiver no ar.
+  git clone --depth 1 --branch v0.1.0 https://github.com/thisco/gateway-poc.git
+  git -C gateway-poc rev-parse HEAD   # deve imprimir 571a091c8a8f9ff99aba89c064d69a36ff195bef
+  cd gateway-poc/poc
+  # O .env.example traz as duas chaves de exemplo, que o README manda trocar; as de provedor são opcionais.
+  printf 'LITELLM_MASTER_KEY=sk-poc-%s\nLITELLM_SALT_KEY=sk-poc-%s\n' "$(openssl rand -hex 16)" "$(openssl rand -hex 16)" > .env
+  docker compose up -d
+  docker exec poc-ollama ollama pull qwen2.5:0.5b   # modelo local, uma vez (cerca de 400 MB)
+  bash seed-demo.sh
+prompt_para_agente: |
+  Quero instalar o gateway de IA de referência gateway-poc (versão 0.1.0) neste ambiente e
+  conferir que ele responde. Use um único shell ou refaça as variáveis a cada comando. Pare e me
+  pergunte antes de qualquer passo destrutivo, e nunca derrube nem altere contêineres que não
+  foram criados por você.
+
+  1. Confira os pré-requisitos e mostre a saída: docker compose version, git --version e
+     curl --version. Depois confira o que já está no ar com docker ps --format '{{.Names}} {{.Ports}}'
+     e com lsof -nP -iTCP:4000 -sTCP:LISTEN. O compose do gateway-poc fixa a porta 4000 do host e
+     os nomes de contêiner poc-gateway, poc-db e poc-ollama. Se a porta 4000 estiver ocupada ou
+     houver contêiner com um desses nomes, PARE aqui, me diga o que encontrou e não derrube nada:
+     o starter 0.1.0 não sobe ao lado de outra cópia da PoC.
+
+  2. Clone a tag fixada num diretório novo do diretório atual e confira o commit:
+       git clone --depth 1 --branch v0.1.0 https://github.com/thisco/gateway-poc.git
+       git -C gateway-poc rev-parse HEAD
+     O commit precisa ser 571a091c8a8f9ff99aba89c064d69a36ff195bef. Se for outro, pare e me avise.
+
+  3. Entre em gateway-poc/poc e crie o .env com duas chaves novas, sem usar as de exemplo:
+       printf 'LITELLM_MASTER_KEY=sk-poc-%s\nLITELLM_SALT_KEY=sk-poc-%s\n' "$(openssl rand -hex 16)" "$(openssl rand -hex 16)" > .env
+     Confirme com git check-ignore .env que ele é ignorado pelo git, e não mostre o conteúdo dele
+     em nenhuma saída. As chaves de provedor (ANTHROPIC_API_KEY e as outras) são opcionais: sem
+     elas, só os modelos locais e o simulado respondem. Não peça nem invente chave de provedor.
+
+  4. Suba o gateway com docker compose up -d. Espere o health check passar:
+       until curl -sf http://localhost:4000/health/liveliness >/dev/null; do sleep 3; done
+     Se não passar em 3 minutos, mostre docker compose logs --no-log-prefix gateway (as últimas
+     40 linhas) e pare. O modelo local é opcional: me pergunte se eu quero baixar o qwen2.5:0.5b
+     (cerca de 400 MB, com docker exec poc-ollama ollama pull qwen2.5:0.5b) e só baixe se eu
+     disser que sim.
+
+  5. Rode bash seed-demo.sh. Ele cria dois times (equipe-dev e perfil-restrito) e duas chaves
+     virtuais, que ficam em .demo-keys, também ignorado pelo git. Não mostre as chaves.
+
+  6. Confira que o gateway funciona, carregando as chaves sem imprimi-las (set -a; . ./.env;
+     . ./.demo-keys; set +a) e mostrando só o código HTTP ou o início da resposta:
+     - a interface: curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4000/ui/ (esperado 200);
+     - o modelo simulado com a chave do perfil-restrito: chamada a /v1/chat/completions com
+       "model":"simulado" e Authorization: Bearer $RESTRITO_KEY (esperado: a resposta simulada);
+     - o bloqueio: a mesma chamada com "model":"fronteira-sonnet" (esperado: erro 403 de modelo
+       fora do perfil do time).
+
+  7. Emita uma chave virtual de teste com orçamento, usando a master key do .env, e mostre só o
+     alias e o orçamento, sem mostrar a chave:
+       curl -sf http://localhost:4000/key/generate -H "Authorization: Bearer $LITELLM_MASTER_KEY" \
+         -H "Content-Type: application/json" \
+         -d '{"key_alias":"teste-instalacao","models":["simulado"],"max_budget":1,"budget_duration":"30d"}'
+
+  8. Termine com uma lista do que ainda depende de mim: as chaves de provedor, se eu quiser os
+     modelos de fronteira; o download do modelo local, se eu não quis agora; guardar o .env e o
+     .demo-keys fora do repositório; e ligar a minha aplicação ao gateway (receita "Ligar uma
+     aplicação ao gateway de IA"). Diga também como derrubar só este ambiente (docker compose
+     down -v, dentro de gateway-poc/poc). Não faça commit de nada.
+praticas_aplicadas: [P2-01, P2-04, P2-06]
+receitas: [ligar-aplicacao-ao-gateway]
+dono: engenharia
+status: experimentar
+referencias: [gateway-poc-readme, gateway-poc-compose]

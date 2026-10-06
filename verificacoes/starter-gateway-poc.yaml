@@ -1,0 +1,100 @@
+# 2026-10-06: starter novo. Revisão adversarial provisória até a conferência em lote; o prompt_para_agente ainda não foi testado em sessão nova.
+conteudo: starter-gateway-poc
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o gateway é LiteLLM, PostgreSQL e Ollama, com catálogo de modelos, times, orçamento e chave virtual
+  ref: gateway-poc-readme
+  localizacao: README.md e poc/README.md no commit 571a091 (tag v0.1.0), README.md, 'Gateway de IA de
+    referência' e 'O que é'; poc/README.md, parágrafo de abertura
+  resultado: confirmada
+- texto: 'o catálogo tem três camadas: provedor SaaS, modelos abertos locais e um modelo simulado que
+    responde sem provedor'
+  ref: gateway-poc-readme
+  localizacao: README.md e poc/README.md no commit 571a091 (tag v0.1.0), poc/README.md, 'Catálogo de modelos
+    (3 camadas)'
+  resultado: confirmada
+- texto: API compatível com a da OpenAI na porta 4000, UI em /ui com login admin e o valor de LITELLM_MASTER_KEY
+  ref: gateway-poc-readme
+  localizacao: README.md e poc/README.md no commit 571a091 (tag v0.1.0), poc/README.md, 'Subir o ambiente'
+  resultado: confirmada
+- texto: o seed-demo.sh cria dois times e duas chaves virtuais
+  ref: gateway-poc-readme
+  localizacao: README.md, 'Como subir' (comentário do comando bash seed-demo.sh)
+  resultado: confirmada
+- texto: o repositório traz também uma avaliação das funcionalidades do gateway
+  ref: gateway-poc-readme
+  localizacao: README.md, 'O que é' (avaliacao/) e 'Avaliação'
+  resultado: confirmada
+- texto: o compose fixa os nomes de contêiner poc-gateway, poc-db e poc-ollama e a porta 4000 do host
+  ref: gateway-poc-compose
+  localizacao: poc/docker-compose.yml, serviços gateway (container_name e ports), db e ollama
+  resultado: confirmada
+  nota: Aberto na web no commit e conferido no arquivo local da tag; nesta curadoria o conflito foi reproduzido
+    (execução abaixo).
+- texto: o seed-demo.sh chama sempre http://localhost:4000
+  ref: gateway-poc-compose
+  localizacao: poc/seed-demo.sh, variável GW
+  resultado: confirmada
+- texto: o README pede cerca de 8 GiB de memória para o Docker
+  ref: gateway-poc-readme
+  localizacao: README.md, 'Como subir' (Requisitos); poc/README.md, 'Memória do Docker'
+  resultado: confirmada
+- texto: o README manda copiar .env.example, trocar as chaves e subir com docker compose up -d, baixar
+    o qwen2.5:0.5b com docker exec poc-ollama e rodar o seed-demo.sh; as chaves de provedor são opcionais
+  ref: gateway-poc-readme
+  localizacao: README.md, 'Como subir'; poc/.env.example, comentários
+  resultado: confirmada
+  nota: O .env.example fala em 'local-llama', nome que não existe no catálogo (o modelo local é local-qwen);
+    o texto do portal usa local-qwen, que é o nome do config.yaml.
+execucoes:
+- tipo: arquivo
+  arquivo: starters/gateway-poc.yml
+  comando: git clone --branch v0.1.0 https://github.com/thisco/gateway-poc.git gateway-poc-0.1.0; git
+    -C gateway-poc-0.1.0 rev-parse HEAD; git describe --tags
+  ambiente: git 2.50.1, macOS, rede
+  resultado: passou
+  evidencia: 'rev-parse HEAD: 571a091c8a8f9ff99aba89c064d69a36ff195bef; describe: v0.1.0 (clone completo;
+    o comando do starter usa --depth 1 na mesma tag).'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: starters/gateway-poc.yml
+  comando: cp .env.example .env; docker compose -p gateway-poc-teste config --quiet (cópia do clone, pasta
+    poc/)
+  ambiente: Docker Compose, Docker Desktop com 5,1 GiB de memória total, macOS
+  resultado: passou
+  evidencia: saída 0 (CONFIG_OK); docker compose config lista container_name poc-db, poc-gateway e poc-ollama
+    e a porta publicada 4000, imagem ghcr.io/berriai/litellm:main-stable.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: starters/gateway-poc.yml
+  comando: docker compose -p gateway-poc-teste create db (poc/, sem alteração, com outra cópia da PoC
+    no ar)
+  ambiente: mesmo ambiente; contêineres poc-gateway, poc-db, poc-ollama, poc-db-vectors, poc-vector-connector
+    e poc-agente-eco de outra cópia rodando, intocados
+  resultado: falhou-como-esperado
+  evidencia: 'Conflict. The container name "/poc-db" is already in use. O comando do starter, sem alteração,
+    não sobe ao lado de outra cópia da PoC: limite da versão 0.1.0, registrado na descrição do starter.
+    O projeto de teste foi removido com down -v e os seis contêineres da outra cópia seguiram no ar.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: starters/gateway-poc.yml
+  comando: 'cópia do clone com duas alterações: container_name removido do compose e porta do host 4010
+    (no compose e no GW do seed-demo.sh); .env com chaves novas; docker compose -p gateway-poc-teste up
+    -d gateway db; bash seed-demo.sh; curl em /ui/, em /v1/chat/completions com a chave do perfil-restrito
+    (modelos simulado e fronteira-sonnet)'
+  ambiente: LiteLLM 1.100.0 (ghcr.io/berriai/litellm:main-stable, imagem do cache local, sem pull), postgres:16-alpine,
+    projeto gateway-poc-teste; docker system df antes (imagens 92, contêineres 35, volumes 26) e depois
+    do down -v (os mesmos números)
+  resultado: passou
+  evidencia: 'health/liveliness 200 e health/readiness {status: healthy, db: connected}; seed-demo.sh
+    criou os dois times e as duas chaves (chave-equipe-dev e chave-perfil-restrito); /ui/ 200; simulado
+    com a chave do perfil-restrito respondeu a resposta simulada; fronteira-sonnet voltou team_model_access_denied
+    (403). Não executado: docker exec poc-ollama ollama pull qwen2.5:0.5b (400 MB, e risco de OOM com
+    5,1 GiB) e as chamadas aos modelos local-qwen e de provedor. O comando literal do starter não foi
+    executado por causa do conflito de nomes e de porta, e esta entrada é a execução da cópia alterada.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisoria-ate-a-conferencia-em-lote-T9
+  data: '2026-10-06'
+  achados: []

@@ -1,0 +1,11 @@
+id: gateway-poc-readme
+titulo: "README do gateway-poc (como subir, UI, memória, seed da demo e catálogo de modelos)"
+organizacao: gateway-poc (github.com/thisco)
+url: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/README.md
+tipo: interno
+versao: "0.1.0"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "README.md, seções 'O que é' e 'Como subir'; poc/README.md, seções 'Subir o ambiente', 'Profiles de avaliação', 'Catálogo de modelos (3 camadas)', 'Memória do Docker', 'Roteiro da demo' e 'Encerrar'"
+dominios: [ia-no-produto]
+notas: "Aberto na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef (tag v0.1.0). A página poc/README.md do mesmo commit é citada junto: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/poc/README.md. O README raiz cita o catálogo de 45 casos de avaliação; o portal não usa esses números aqui."

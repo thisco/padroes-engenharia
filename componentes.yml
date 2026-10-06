@@ -10,3 +10,7 @@ componentes:
     repo: https://github.com/thisco/sdd-lifecycle
     versao: "3.0.0"
     commit: 5f6e9ad879f7abd11267547fb3f527e876b60140
+  gateway-poc:
+    repo: https://github.com/thisco/gateway-poc
+    versao: "0.1.0"
+    commit: 571a091c8a8f9ff99aba89c064d69a36ff195bef
