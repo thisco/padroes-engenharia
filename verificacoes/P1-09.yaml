@@ -1,91 +1,87 @@
 conteudo: P1-09
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: "no Tier 2, a revisão é de uma sessão ou agente independente (contexto novo, sem o histórico da implementação), que revisa contra a spec e não contra o diff, partindo de cada requisito e caçando requisito não atendido e desvio silencioso"
+- texto: no Tier 2, a revisão é de uma sessão ou agente independente (contexto novo, sem o histórico da implementação), que revisa contra a spec e não contra o diff, partindo de cada requisito e caçando requisito não atendido e desvio silencioso
   ref: sdd-lifecycle
-  localizacao: "SKILL.md na tag v3.0.0, Fase 7, item 'Tier 2 — revisão adversarial' (aberto na web no commit fixado)"
+  localizacao: SKILL.md na tag v3.0.0, Fase 7, item 'Tier 2 — revisão adversarial' (aberto na web no commit fixado)
   resultado: confirmada
-- texto: "o resultado é registrado no plano, na seção 'Revisão adversarial: YYYY-MM-DD — achados', com uma linha por R na tabela | R | veredito | evidência |; veredito atendido, parcial ou não atendido; evidência em arquivo:linha ou saída de teste"
+- texto: 'o resultado é registrado no plano, na seção ''Revisão adversarial: YYYY-MM-DD — achados'', com uma linha por R na tabela | R | veredito | evidência |; veredito atendido, parcial ou não atendido; evidência em arquivo:linha ou saída de teste'
   ref: sdd-lifecycle
-  localizacao: "SKILL.md, Fase 7, mesmo item"
+  localizacao: SKILL.md, Fase 7, mesmo item
   resultado: confirmada
-- texto: "critério de saída da Fase 7: evidências coladas no plano, achados tratados ou justificados por escrito e, no Tier 2, todo R da spec na tabela de vereditos"
+- texto: 'critério de saída da Fase 7: evidências coladas no plano, achados tratados ou justificados por escrito e, no Tier 2, todo R da spec na tabela de vereditos'
   ref: sdd-lifecycle
-  localizacao: "SKILL.md, Fase 7, 'Critério de saída'"
+  localizacao: SKILL.md, Fase 7, 'Critério de saída'
   resultado: confirmada
-- texto: "o modelo de plano traz a seção 'Revisão adversarial: <data> — achados' com a tabela | R | veredito | evidência |, preenchida pelo revisor independente que confere a implementação contra a spec"
+- texto: 'o modelo de plano traz a seção ''Revisão adversarial: <data> — achados'' com a tabela | R | veredito | evidência |, preenchida pelo revisor independente que confere a implementação contra a spec'
   ref: sdd-scaffold-modelo-plano
-  localizacao: "MODELO-plano.md, seção 'Revisão adversarial' e comentário (tag v1.7.0)"
+  localizacao: MODELO-plano.md, seção 'Revisão adversarial' e comentário (tag v1.7.0)
   resultado: confirmada
-  nota: "O resumo da página aberta na web trouxe só o cabeçalho da tabela; o comentário da seção foi conferido no arquivo da tag v1.7.0 no clone local (git show v1.7.0)."
-- texto: "o verificar_pr.py avisa, sem bloquear, que R<n> está ausente da tabela de veredito quando o plano é de Tier 2 e a tabela tem linhas; não avisa com a tabela vazia"
+  nota: O resumo da página aberta na web trouxe só o cabeçalho da tabela; o comentário da seção foi conferido no arquivo da tag v1.7.0 no clone local (git show v1.7.0).
+- texto: o verificar_pr.py avisa, sem bloquear, que R<n> está ausente da tabela de veredito quando o plano é de Tier 2 e a tabela tem linhas; não avisa com a tabela vazia
   ref: sdd-scaffold-verificar-pr
-  localizacao: "analisar_rastreio() e LINHA_VEREDITO (tag v1.7.0); mensagem 'R<n> ausente da tabela de veredito da revisão adversarial'"
+  localizacao: analisar_rastreio() e LINHA_VEREDITO (tag v1.7.0); mensagem 'R<n> ausente da tabela de veredito da revisão adversarial'
   resultado: confirmada
-  nota: "Também executado: com a tabela só com o cabeçalho, nenhum achado (ver execuções e o repositório b1-p1-09-prompt)."
-- texto: "um estudo com cinco revisores: quem tinha um contrato nomeado atribuiu a maior parte dos achados a uma cláusula, e quem via só o código não atribuiu nenhum; resultado direcional, sem efeito calibrado"
+  nota: 'Também executado: com a tabela só com o cabeçalho, nenhum achado (ver execuções e o repositório b1-p1-09-prompt).'
+- texto: 'um estudo com cinco revisores: quem tinha um contrato nomeado atribuiu a maior parte dos achados a uma cláusula, e quem via só o código não atribuiu nenhum; resultado direcional, sem efeito calibrado'
   ref: infoq-when-pays-off
-  localizacao: "seção 'The Drift-Review Study: Recall vs. Attribution' e seção 'What it Costs and Where the Evidence Is Thin'"
+  localizacao: 'seção ''The Drift-Review Study: Recall vs. Attribution'' e seção ''What it Costs and Where the Evidence Is Thin'''
   resultado: confirmada
-  nota: "Lido por resumo do WebFetch (81% contra 0%, n=5, p=0,043 no teste pareado); o portal não repete os números e mantém a ressalva do autor."
-- texto: "o cc-sdd descreve, na v3.0, um revisor independente por tarefa"
+  nota: Lido por resumo do WebFetch (81% contra 0%, n=5, p=0,043 no teste pareado); o portal não repete os números e mantém a ressalva do autor.
+- texto: o cc-sdd descreve, na v3.0, um revisor independente por tarefa
   ref: cc-sdd
-  localizacao: "README, seção 'What's new in v3.0' (independent reviewer) e 'Common workflows' (per-task independent review no /kiro-impl)"
+  localizacao: README, seção 'What's new in v3.0' (independent reviewer) e 'Common workflows' (per-task independent review no /kiro-impl)
   resultado: confirmada
-  nota: "Lido por resumo do WebFetch; paráfrase."
-- texto: "com o Spec Kit, quem desenvolve revisa mudanças focadas em vez de grandes blocos de código"
+  nota: Lido por resumo do WebFetch; paráfrase.
+- texto: com o Spec Kit, quem desenvolve revisa mudanças focadas em vez de grandes blocos de código
   ref: github-blog-speckit
-  localizacao: "seção 'Implement': 'instead of reviewing thousand-line code dumps, you, the developer, review focused changes'"
+  localizacao: 'seção ''Implement'': ''instead of reviewing thousand-line code dumps, you, the developer, review focused changes'''
   resultado: confirmada
-  nota: "Lido por resumo do WebFetch; paráfrase."
+  nota: Lido por resumo do WebFetch; paráfrase.
+- texto: no Tier 2 a revisão adversarial é feita por sessão ou agente independente, com contexto novo e com um modelo de raciocínio potente
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 7, item 'Tier 2 — revisão adversarial' (linhas 211-213)
+  resultado: confirmada
+- texto: o estudo também mostra que o baseline não melhorou o recall (0,525 contra 0,518) e que a revisão com ele levou mais tempo (48,4 contra 26,7 minutos em média)
+  ref: infoq-when-pays-off
+  localizacao: Tabela 2 ('Baseline vs. Code-only drift review') e seção 'Recall Did Not Improve' (aberta em 2026-10-06)
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-09/2026-10-05-observacao-no-pedido-plano.md
-  comando: "python3 scripts/verificar_pr.py --base main (script do projeto de teste, sha256 1397e8b1...0488, igual ao da tag v1.7.0 e ao hospedado pelo portal), com o plano cuja tabela só tem R1 (commit 643553e)"
-  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-09, branch feat/2026-10-05-observacao-no-pedido, com spec aprovada (R1 e R2), implementação e dois testes; Python 3.14.8; macOS
+  comando: python3 scripts/verificar_pr.py --base main (script do projeto de teste, sha256 1397e8b1...0488, igual ao da tag v1.7.0 e ao hospedado pelo portal), com o plano cuja tabela só tem R1 (commit 643553e)
+  ambiente: projeto novo gerado pelo sdd-scaffold 1.7.0 em pasta temporária, com origin/main, branch feat/2026-10-05-observacao-no-pedido, spec aprovada (R1 e R2), src/pedidos.py, tests/unidade/test_pedidos.py (2 passed no pytest de um ambiente virtual) e o plano; 4 arquivos no diff; Python 3.14.8; macOS
   resultado: falhou-como-esperado
   evidencia: 'AVISO: docs/specs/2026-10-05-observacao-no-pedido.md: R2 ausente da tabela de veredito da revisão adversarial.; saída 0 (aviso não bloqueia).'
-  data: '2026-10-05'
+  data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P1-09/2026-10-05-observacao-no-pedido-plano.md
-  comando: "o mesmo comando, depois de acrescentar a linha de R2 à tabela (o arquivo do exemplo é esse estado, commit 777e979)"
-  ambiente: o mesmo da execução anterior
+  comando: o mesmo comando, depois de acrescentar a linha de R2 à tabela (o arquivo do exemplo é esse estado, commit 777e979)
+  ambiente: projeto novo gerado pelo sdd-scaffold 1.7.0 em pasta temporária, com origin/main, branch feat/2026-10-05-observacao-no-pedido, spec aprovada (R1 e R2), src/pedidos.py, tests/unidade/test_pedidos.py (2 passed no pytest de um ambiente virtual) e o plano; 4 arquivos no diff; Python 3.14.8; macOS
   resultado: passou
   evidencia: 'Verificação de PR: 4 arquivo(s), nenhum achado.; saída 0.'
-  data: '2026-10-05'
+  data: '2026-10-06'
 - tipo: prompt
   prompt: P1-09-prompt-1
   harness: claude-code
-  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-09-prompt, plano Tier 2 com a tabela de veredito vazia e teste só do caso com observação"
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-09-prompt, plano Tier 2 com a tabela de veredito vazia e teste só do caso com observação
   resultado: passou
-  evidencia: "verificar_pr antes e depois: nenhum achado; python3 -m pytest falhou (sem pytest no ambiente, nada foi instalado) e o agente chamou as duas funções de teste à mão, declarando que não substitui a suíte; tabela: R1 atendido (src/pedidos.py:4-6), R2 parcial (src/pedidos.py:9-11; o teste só cobre o caso com observação), a lacuna semeada; achados escritos no plano; commit 55bd1ce só com o plano. Transcrição em curadoria-a5/transcricoes/P1-09-prompt-1.bruta.jsonl."
+  evidencia: 'verificar_pr antes e depois: nenhum achado; python3 -m pytest falhou (sem pytest no ambiente, nada foi instalado) e o agente chamou as duas funções de teste à mão, declarando que não substitui a suíte; tabela: R1 atendido (src/pedidos.py:4-6), R2 parcial (src/pedidos.py:9-11; o teste só cobre o caso com observação), a lacuna semeada; achados escritos no plano; commit 55bd1ce só com o plano. Transcrição em curadoria-a5/transcricoes/P1-09-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
-  - afirmacao: '''A skill pede uma sessão ou agente independente, com contexto novo'' e ''o que varia
-      é quem a faz e com que modelo'' (P1-09.md:33 e 47-48)'
-    problema: '[médio] o SKILL.md do sdd-lifecycle (linhas 212-213) pede para o Tier 2 ''um modelo de
-      raciocínio potente''; o texto omite isso e conclui, com base na ADR 0005, que o modelo varia. A
-      ADR 0005 trata da curadoria do portal e diz que só prevalece sobre a skill nas fatias em que o dono
-      a aplicar; não vale como regra para quem adota o scaffold.'
-    tratamento: 'sugerido: citar o requisito de modelo da skill e apresentar a ADR 0005 só como contexto
-      do próprio portal. Decisão em T15.'
+  - afirmacao: '''A skill pede uma sessão ou agente independente, com contexto novo'' e ''o que varia é quem a faz e com que modelo'' (P1-09.md:33 e 47-48)'
+    problema: '[médio] o SKILL.md do sdd-lifecycle (linhas 212-213) pede para o Tier 2 ''um modelo de raciocínio potente''; o texto omite isso e conclui, com base na ADR 0005, que o modelo varia. A ADR 0005 trata da curadoria do portal e diz que só prevalece sobre a skill nas fatias em que o dono a aplicar; não vale como regra para quem adota o scaffold.'
+    tratamento: 'Tratado em 2026-10-06: o texto cita que a skill pede, no Tier 2, sessão independente com um modelo de raciocínio potente, e apresenta a ADR 0005 só como contexto da curadoria do próprio portal, que não vale como regra para quem adota o scaffold.'
   - afirmacao: 'Exemplo: spec proporcional do P1-08 ''já aprovada''; evidência src/pedidos.py:6 (P1-09.md:89)'
-    problema: '[médio] o Exemplo não é autocontido: não traz src/pedidos.py nem os testes, e a spec do
-      P1-08 está em rascunho sem campos de aprovação. A conferência montou arquivos fictícios para ver
-      ''nenhum achado'' (4 arquivo(s)); as evidências de arquivo:linha do plano não são reproduzíveis.'
-    tratamento: 'sugerido: incluir o código e os testes mínimos, ou dizer que o plano é ilustrativo e
-      que a spec precisa de Status aprovada e Aprovado por.'
+    problema: '[médio] o Exemplo não é autocontido: não traz src/pedidos.py nem os testes, e a spec do P1-08 está em rascunho sem campos de aprovação. A conferência montou arquivos fictícios para ver ''nenhum achado'' (4 arquivo(s)); as evidências de arquivo:linha do plano não são reproduzíveis.'
+    tratamento: 'Tratado em 2026-10-06: o Exemplo agora traz src/pedidos.py, o teste, o cabeçalho de aprovação da spec (nome fictício) e o modo de montar a branch; o verificador foi reexecutado num projeto novo do scaffold, com 4 arquivos no diff (AVISO de R2 ausente; depois, nenhum achado).'
   - afirmacao: 'Como aplicar passo 2: ''ele também roda os testes'' (P1-09.md:68)'
-    problema: '[médio] trazido do plano (2): o preparo não traz pytest e o prompt assume python3 -m pytest
-      (testado: ''No module named pytest''). O Como aplicar não diz como instalar as dependências antes.'
-    tratamento: 'sugerido: passo 0 com a instalação das dependências do projeto, ou {comando de testes}
-      com o pré-requisito.'
+    problema: '[médio] trazido do plano (2): o preparo não traz pytest e o prompt assume python3 -m pytest (testado: ''No module named pytest''). O Como aplicar não diz como instalar as dependências antes.'
+    tratamento: 'Tratado em 2026-10-06: Como aplicar ganhou o passo 1, que instala as dependências do projeto e o pytest num ambiente virtual antes da revisão.'
   - afirmacao: estudo com cinco revisores atribuiu achados a cláusula (P1-09.md:53-56) [ref:infoq-when-pays-off]
-    problema: '[baixo] a fonte sustenta (81% com baseline, 0% sem, p=0,043, n=5, ''directional''), mas
-      o mesmo estudo diz que o baseline não melhorou o recall (0,525 vs 0,518) e dobrou o tempo (48,4
-      vs 26,7 min); o texto não menciona o custo.'
-    tratamento: 'sugerido: acrescentar uma frase com recall igual e tempo maior.'
+    problema: '[baixo] a fonte sustenta (81% com baseline, 0% sem, p=0,043, n=5, ''directional''), mas o mesmo estudo diz que o baseline não melhorou o recall (0,525 vs 0,518) e dobrou o tempo (48,4 vs 26,7 min); o texto não menciona o custo.'
+    tratamento: 'Tratado em 2026-10-06: acrescentada a frase sobre recall igual (0,525 contra 0,518) e tempo maior (48,4 contra 26,7 min); números reconferidos na fonte em 2026-10-06.'

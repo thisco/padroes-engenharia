@@ -44,7 +44,8 @@ def main() -> int:
                       "mas não está no diff; acrescente a ela um '## Adendo AAAA-MM-DD'.")
                 avisos += 1
             elif not ADENDO.search(git("diff", f"{base}...HEAD", "--", spec)):
-                print(f"AVISO: {plano}: a spec {spec} está no diff, mas sem seção '## Adendo AAAA-MM-DD' nova.")
+                print(f"AVISO: {plano}: a spec {spec} está no diff, "
+                      "mas sem seção '## Adendo AAAA-MM-DD' nova.")
                 avisos += 1
     if not avisos:
         print(f"Requisitos afetados: {citadas} spec(s) citada(s), nenhum achado.")
