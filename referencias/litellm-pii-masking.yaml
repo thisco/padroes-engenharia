@@ -1,0 +1,11 @@
+id: litellm-pii-masking
+titulo: 'LiteLLM Proxy: PII masking with Presidio'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/guardrails/pii_masking_v2
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "seções de propósito, ações MASK e BLOCK, modos e requisito dos contêineres Presidio"
+dominios:
+- ia-no-produto
+notas: "A página não lista o CPF entre os tipos de entidade."

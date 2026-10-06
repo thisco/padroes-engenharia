@@ -1,0 +1,11 @@
+id: litellm-custom-guardrail
+titulo: 'LiteLLM Proxy: custom guardrail'
+organizacao: LiteLLM (BerriAI)
+url: https://docs.litellm.ai/docs/proxy/guardrails/custom_guardrail
+tipo: vendor
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "classe CustomGuardrail, ganchos (async_pre_call_hook, async_moderation_hook, apply_guardrail), registro no config.yaml e exemplo de modificação das mensagens em pre_call"
+dominios:
+- ia-no-produto
+notas: A página mostra a modificação de mensagens no pre_call; o uso de async_log_success_event para registrar as mensagens enviadas foi confirmado pela execução da curadoria, não pela página.

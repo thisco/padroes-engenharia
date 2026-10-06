@@ -1,0 +1,14 @@
+# Gateway de teste da P2-04: modelo simulado e um guardrail que mascara CPF e e-mail.
+model_list:
+  - model_name: simulado
+    litellm_params:
+      model: openai/simulado
+      api_key: "nao-usada"
+      mock_response: "Resposta simulada pelo gateway: nenhum modelo real foi chamado."
+
+guardrails:
+  - guardrail_name: mascara-pii
+    litellm_params:
+      guardrail: mascara_pii.MascaraPII
+      mode: pre_call
+      default_on: true

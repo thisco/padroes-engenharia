@@ -1,0 +1,108 @@
+conteudo: P2-04
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'o guardrail roda em modos como pre_call (antes da chamada ao modelo, sobre a entrada) e pode ficar ligado
+    por padrão com default_on; é registrado em guardrails: no config.yaml'
+  ref: litellm-guardrails
+  localizacao: seções de configuração em config.yaml e tipos de modo
+  resultado: confirmada
+- texto: 'a classe CustomGuardrail tem o gancho async_pre_call_hook, que roda antes da chamada e pode alterar as
+    mensagens; o registro é guardrail: <módulo>.<Classe> com mode no config.yaml'
+  ref: litellm-custom-guardrail
+  localizacao: seções de estrutura da classe, ganchos, registro no config.yaml e modificação das mensagens em pre_call
+  resultado: confirmada
+  nota: O uso de async_log_success_event para registrar as mensagens enviadas ao modelo foi confirmado pela execução,
+    não pela página.
+- texto: o guardrail com Presidio tem as ações MASK e BLOCK, pede os contêineres Presidio Analyzer e Anonymizer,
+    e a página não lista o CPF entre os tipos de entidade
+  ref: litellm-pii-masking
+  localizacao: seções de propósito, ações, modos e requisito dos contêineres
+  resultado: confirmada
+- texto: o proxy roda com Docker e um config.yaml montado
+  ref: litellm-proxy-docker
+  localizacao: seções de execução com Docker e config.yaml
+  resultado: confirmada
+- texto: o mock_response responde sem chamar o provedor (no proxy, confirmado pela execução)
+  ref: litellm-mock-response
+  localizacao: seção do parâmetro mock_response
+  resultado: confirmada
+  nota: A página documenta a biblioteca; o uso no config.yaml do proxy foi confirmado pela execução.
+- texto: 'dado pessoal é a informação relacionada a pessoa natural identificada ou identificável (art. 5º, I); tratamento
+    inclui a transmissão (art. 5º, X); princípio da necessidade: mínimo necessário, dados pertinentes, proporcionais
+    e não excessivos (art. 6º, III)'
+  ref: lgpd
+  localizacao: art. 5º, I e X; art. 6º, III
+  resultado: confirmada
+- texto: a leitura de que o CPF no prompt excede o mínimo quando a tarefa não o exige
+  ref: lgpd
+  localizacao: art. 6º, III
+  resultado: parcial
+  nota: Aplicação do princípio feita pelo portal e dita no texto como leitura do portal; a lei não cita prompt nem
+    modelo de linguagem.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P2-04/docker-compose.yml
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python enviar-cpf.py; bash verificar-mascara.sh
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: 'resposta simulada impressa; log do gateway: MENSAGENS ENVIADAS AO MODELO com ''CPF [CPF], e-mail [EMAIL]'';
+    verificar-mascara.sh: ''P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'', saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/config.yaml
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python enviar-cpf.py; bash verificar-mascara.sh
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: 'resposta simulada impressa; log do gateway: MENSAGENS ENVIADAS AO MODELO com ''CPF [CPF], e-mail [EMAIL]'';
+    verificar-mascara.sh: ''P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'', saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/mascara_pii.py
+  comando: docker compose up -d; bash emitir-chave.sh app-teste-hml simulado 5; python enviar-cpf.py; bash verificar-mascara.sh
+    (também com 'Protocolo 12345678901 aberto. CPF 52998224725 e ana.silva+x@ex.com.')
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: 'CPF com e e sem pontuação e e-mail mascarados; o número de 11 dígitos de dígito verificador inválido
+    ficou intacto: ''Protocolo 12345678901 aberto. CPF [CPF] e [EMAIL].'''
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/emitir-chave.sh
+  comando: bash emitir-chave.sh app-teste-hml simulado 5
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: imprimiu a chave (prefixo sk-), saída 0.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/enviar-cpf.py
+  comando: python enviar-cpf.py (venv, AI_GATEWAY_URL com GATEWAY_PORT=4001)
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: '''Resposta simulada pelo gateway: nenhum modelo real foi chamado.'', saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/verificar-mascara.sh
+  comando: bash verificar-mascara.sh (guardrail ligado)
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: passou
+  evidencia: 'P2-04: nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.; saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/verificar-mascara.sh
+  comando: 'bash verificar-mascara.sh (config.yaml com default_on: false, gateway reiniciado)'
+  ambiente: Docker 29.5.2 (Compose 5.1.3), ghcr.io/berriai/litellm:v1.104.0 (Python 3.13.16 no contêiner) e postgres:16-alpine
+    (GATEWAY_PORT=4001), openai 3.24.0 em venv, Python 3.14.8, macOS
+  resultado: falhou-como-esperado
+  evidencia: 'log com ''CPF 529.982.247-25, e-mail fulano@exemplo.com.br'' e ''P2-04: CPF ou e-mail chegou ao modelo
+    (acima).''; saída 1.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []
