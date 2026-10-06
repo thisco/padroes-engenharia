@@ -1,0 +1,81 @@
+conteudo: LGPD-01
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: dado pessoal é a informação relacionada a pessoa natural identificada ou identificável (art. 5º, I); dado pessoal
+    sensível é o dado sobre origem racial ou étnica, convicção religiosa, opinião política, filiação a sindicato ou
+    a organização de caráter religioso, filosófico ou político, dado referente à saúde ou à vida sexual, dado genético
+    ou biométrico, quando vinculado a uma pessoa natural (art. 5º, II)
+  ref: lgpd
+  localizacao: art. 5º, I e II (texto do Planalto lido em 2026-10-06)
+  resultado: confirmada
+- texto: armazenar é uma das operações de tratamento (art. 5º, X)
+  ref: lgpd
+  localizacao: art. 5º, X
+  resultado: confirmada
+- texto: princípio da finalidade (propósitos legítimos, específicos, explícitos e informados ao titular) e da necessidade
+    (mínimo necessário, dados pertinentes, proporcionais e não excessivos)
+  ref: lgpd
+  localizacao: art. 6º, I e III
+  resultado: confirmada
+- texto: controlador é quem toma as decisões sobre o tratamento, e operador é quem trata em nome do controlador (art.
+    5º, VI e VII); RIPD é a documentação do controlador com a descrição dos processos de tratamento que podem gerar
+    riscos às liberdades civis e aos direitos fundamentais e as medidas de mitigação (art. 5º, XVII)
+  ref: lgpd
+  localizacao: art. 5º, VI, VII e XVII
+  resultado: confirmada
+- texto: a leitura de que campo sem classe e sem finalidade é tratamento sem justificativa registrada
+  ref: lgpd
+  localizacao: art. 6º, I e III
+  resultado: parcial
+  nota: Leitura do portal, dita no texto; a lei não exige o registro por campo.
+- texto: o agente de tratamento é a organização, não os funcionários e equipes de trabalho, que atuam sob o poder
+    diretivo; e é definido para cada operação, de modo que a mesma organização pode ser controladora e operadora
+  ref: anpd-guia-agentes-tratamento
+  localizacao: seção 1, parágrafos 6 a 10 (versão 2.0, abril de 2022)
+  resultado: confirmada
+- texto: a ANPD recomenda elaborar o RIPD em todo contexto em que o tratamento possa gerar alto risco, preferencialmente
+    antes de o controlador iniciar o tratamento; o controlador é o responsável pela elaboração
+  ref: anpd-ripd
+  localizacao: perguntas 'Quem é o responsável pela elaboração', 'Em qual contexto a ANPD recomenda' e 'Quando elaborar o RIPD'
+  resultado: confirmada
+- texto: enquanto não há regulamento específico, o parâmetro de alto risco é o art. 4º da Resolução nº 2/2022 (um critério
+    geral e um específico, com os critérios listados); os critérios não são exaustivos e cabe ao controlador avaliar
+    o caso concreto
+  ref: anpd-ripd
+  localizacao: pergunta sobre o conceito de alto risco
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/V1__cria_cliente.sql
+  comando: python3 scripts/verificar-classificacao.py --schema db/migration --dados docs/steering/dados.md
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'o verificador leu os cinco campos de cliente (id, nome, cpf, email, condicao_saude) e, com o dados.md completo, imprimiu ''LGPD-01: 5 campos de schema, todos classificados.'', saída 0; com um V2 de ALTER TABLE ... ADD COLUMN telefone sem linha no registro, saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/dados.md
+  comando: python3 scripts/verificar-classificacao.py --schema db/migration --dados docs/steering/dados.md
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'estado depois: ''LGPD-01: 5 campos de schema, todos classificados.'', saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/dados.md
+  comando: python3 scripts/verificar-classificacao.py --schema db/migration --dados docs/steering/dados.md (dados.md só com cliente.id e cliente.nome)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'estado antes: ''cliente.cpf: sem classificação'', ''cliente.email: sem classificação'', ''cliente.condicao_saude: sem classificação'' e ''LGPD-01: campo sem classe, com classe inválida ou sem finalidade (acima).'', saída 1; também saída 1 com a classe ''confidencial'', com cliente.telefone pessoal e finalidade ''-'' e com o dados.md ausente.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/verificar-classificacao.py
+  comando: python3 scripts/verificar-classificacao.py --schema db/migration --dados docs/steering/dados.md (estados antes e depois)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'ruff check e ruff format --check sem achados; saída 1 no estado antes e 0 no estado depois, com as mensagens do texto.'
+  data: '2026-10-06'
+# prompt LGPD-01-prompt-1: ainda sem teste em sessão nova, por isso sem execução registrada.
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote (T8)
+  data: '2026-10-06'
+  achados: []

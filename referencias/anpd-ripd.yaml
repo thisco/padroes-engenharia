@@ -1,0 +1,11 @@
+id: anpd-ripd
+titulo: "Perguntas e respostas sobre o Relatório de Impacto à Proteção de Dados Pessoais (RIPD)"
+organizacao: Autoridade Nacional de Proteção de Dados (ANPD)
+url: https://www.gov.br/anpd/pt-br/canais_atendimento/agente-de-tratamento/relatorio-de-impacto-a-protecao-de-dados-pessoais-ripd/relatorio-de-impacto-a-protecao-de-dados-pessoais
+tipo: normativo
+publicado_em: '2023-04-06'
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: "perguntas 1 a 4 ('O que é o RIPD', 'Quem é o responsável pela elaboração', 'Em qual contexto a ANPD recomenda', 'Quando elaborar') e pergunta sobre o conceito de alto risco"
+dominios: [privacidade-lgpd]
+notas: "Página de orientação da ANPD, sem força de regulamento: ela própria diz que o cenário normativo é dinâmico. A página marca modificação em 23/09/2026. O texto foi lido por download direto do HTML (o conteúdo vem em JSON dentro da página)."

@@ -6,8 +6,8 @@ tipo: normativo
 publicado_em: '2018-08-14'
 verificado_em: '2026-10-06'
 verificacao: V
-localizacao: art. 5º, I (dado pessoal), X (tratamento), VI (controlador) e VII (operador); art. 6º, III (necessidade); art. 16 (eliminação); art. 33, caput (transferência internacional); art. 39 (instruções do controlador ao operador)
+localizacao: art. 5º, I (dado pessoal), II (dado pessoal sensível), X (tratamento), XVII (RIPD), VI (controlador) e VII (operador); art. 6º, I (finalidade) e III (necessidade); art. 38 (RIPD); art. 46 (segurança); art. 16 (eliminação); art. 33, caput (transferência internacional); art. 39 (instruções do controlador ao operador)
 dominios:
 - privacidade-lgpd
 notas: 'Verificação manual no navegador em 2026-10-04: o WebFetch recebeu ECONNREFUSED, e o texto dos
-  incisos I do art. 5º e III do art. 6º foi lido na própria página do Planalto. Releitura em 2026-10-06 por download direto da página do Planalto (arts. 5º VI e VII, 16, 33 e 39).'
+  incisos I do art. 5º e III do art. 6º foi lido na própria página do Planalto. Releitura em 2026-10-06 por download direto da página do Planalto (arts. 5º VI e VII, 16, 33 e 39). Releitura em 2026-10-06 por download direto da página do Planalto (arts. 5º II e XVII, 6º I, 38 e 46).'
