@@ -58,6 +58,13 @@ execucoes:
   resultado: passou
   evidencia: 'P3-04: somente-leitura por padrão, governança em ask ou deny e identidade própria.; saída 0. Com identidade_propria igual a classificado_por, saída 1 ("identidade_propria é a da pessoa").'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P3-04-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-04-prompt'
+  resultado: passou
+  evidencia: 'antes: allow com Write(**), caminhos de governança fora de ask e deny, hook sem exit 2, identidade ausente, "P3-04: política de permissões ou identidade incompleta (acima).", saída 1; o agente acrescentou identidade_propria e reescreveu a política com o allow, ask e deny pedidos e o hook terminando em exit 2; depois "P3-04: somente-leitura por padrão, governança em ask ou deny e identidade própria.", saída 0; commit com os dois arquivos, sem trailer. Transcrição em curadoria-a5/transcricoes/P3-04-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'

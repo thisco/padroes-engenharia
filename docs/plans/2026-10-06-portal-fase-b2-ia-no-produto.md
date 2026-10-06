@@ -75,7 +75,7 @@ commitar, pede a mensagem sem trailer.
 - [x] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
   (`gitlab-ci-local`), com `mock_response` do gateway para não gastar modelo.
 - [x] **T4 (P3-01, P3-02).** A P3-02 reaproveita a skill `threat-model` já publicada no índice.
-- [ ] **T5 (P3-03, P3-04).** O Exemplo da P3-04 mostra a política de permissões do template do
+- [x] **T5 (P3-03, P3-04).** O Exemplo da P3-04 mostra a política de permissões do template do
   scaffold 1.7.1 (`deny`, `ask`, hook) como caso concreto, sem nome de harness no corpo.
 - [ ] **T6 (P3-05, P3-06).** O Exemplo da P3-05 é um teste determinístico: conteúdo externo com
   instrução injetada chega isolado e marcado, e o verificador confere a marcação. O da P3-06 é um
@@ -117,6 +117,7 @@ criação do repositório e o push ficam com o dono.
 - **T4 fechou (2026-10-06).** P3-01 (1b3c601) e P3-02 (e63334c) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-01 commit 30a9904 (verificador 1 antes, 0 depois), P3-02 commit f3e7b48 (AVISO de threat-model antes, nenhum achado depois). P3-02 saiu com força avisa e mecanismo verificar_pr.py@1.7.1, pois o SKILL.md não é hospedado e o script só avisa.
 
 - **T3 fechou (2026-10-06).** P2-05 (f2fed64) com Exemplo executado: job `evals` no `gitlab-ci-local` PASS (5/5, taxa 1.00) e, com a regressão simulada, FAIL (3/5, taxa 0.60 < 0.80, saída 1); o job agendado `evals-modelo-real` não foi executado. Prompt testado em sessão nova (claude-code): commit 775678e só com `EVALS.md`. Achado de ambiente: `mock_response` no corpo da requisição ao proxy é ignorado, e o do `config.yaml` prevalece (um alias por caso). Registro em `verificacoes/P2-05.yaml`.
+- **T5 fechou (2026-10-06).** P3-03 (c52a4ff) e P3-04 (5a8d418) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-03 verificador 1 antes e 0 depois, commit só com docs/steering/agente.md; P3-04 verificador 1 antes e 0 depois, commit com a política e o agente.md. Ambas com força orienta e mecanismo null, pois o hook do scaffold não é hospedado. Registros em `verificacoes/P3-03.yaml` e `verificacoes/P3-04.yaml`.
 
 ## Conferência em lote: <data> — achados
 
@@ -129,3 +130,5 @@ criação do repositório e o push ficam com o dono.
 - P3-02, prompt: o agente removeu o comentário HTML de instrução da seção para pôr o parágrafo logo abaixo do título (limite do verificar_pr sobre subtítulo imediato); documentado no Como aplicar.
 - P3-01, prompt: o harness não persiste shell e o agente rodou cada comando em chamada separada; sem efeito no resultado, mas a declaração de shell único não se cumpre.
 - P2-05, suíte: um único teste agrega os 5 casos; um caso reprovado não aparece como teste próprio no relatório do pytest.
+- P3-03 e P3-04, prompts: o harness não persiste shell e o prompt diz "use um único shell"; a frase deve prever a alternativa ("ou refaça as variáveis a cada comando").
+- P3-04, prompt: o agente editou o JSON com a ferramenta de escrita do harness, e não por shell; sem efeito no resultado, mas o prompt supõe shell.
