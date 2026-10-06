@@ -1,0 +1,38 @@
+conteudo: avaliacao-gateway-de-ia
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 45 casos em 8 cenários (guardrails, policies, MCP, vector stores, skills, agentes e tool calling, tooling, decisão tipada); 42 Passa, 2 gap confirmado e 1 falha/gap
+  ref: gateway-poc-matriz
+  localizacao: tabela 'Matriz de resultados', 45 linhas contadas por script no clone da tag e página aberta na web no commit
+  resultado: confirmada
+  nota: Os 42 incluem Passa com ressalva e Passa como teste; nenhum veredito parcial.
+- texto: versão do pacote litellm 1.100.0, imagem main-stable; critérios de aceite; cenários e escopo; fase 2 com OmniRoute citada e não incluída
+  ref: gateway-poc-plano-avaliacao
+  localizacao: seções 'Escopo', 'Critérios gerais de aceite' e 'Ambiente'
+  resultado: confirmada
+- texto: LiteLLM recomendado para a PoC por entregar no tier gratuito chaves virtuais, times, orçamentos, PII com Presidio, multi-provedor
+  ref: gateway-poc-benchmark-gateways
+  localizacao: seção 'Para a PoC'
+  resultado: confirmada
+- texto: CPF e e-mail mascarados; CPF mascarado em argumento de tool call; log unificado de MCP e agente; padrões de acesso por recurso; gaps GR-04, SK-03, TI-01; SDKs sem adaptação; erros 403 e 429; decisão modal divergente
+  ref: gateway-poc-matriz
+  localizacao: linhas GR-01..03, TL-03, MC-02, AG-02, MC-03, VS-05, AG-03, TI-02, GR-04, SK-03, TI-01, TD-01..03, SO-05 e 'Síntese'
+  resultado: confirmada
+- texto: 364 tokens de prompt com contexto injetado contra cerca de 15 sem ele (VS-04); 11 execuções, 9 na decisão modal (SO-05)
+  ref: gateway-poc-matriz
+  localizacao: linhas VS-04 e SO-05
+  resultado: confirmada
+- texto: reconhecedores nativos do Presidio rodam em inglês e geram falsos positivos em português; tag móvel exige reexecutar contra versão fixa
+  ref: gateway-poc-matriz
+  localizacao: seção 'Síntese', gaps (2) e (3)
+  resultado: confirmada
+- texto: execuções entre 2026-09-10 e 2026-09-23
+  ref: gateway-poc-matriz
+  localizacao: READMEs dos cenários, linhas 'Execução real em' (01-07 em 09-10 e 09-11, 08 em 09-23); o README da raiz diz 09-10 a 09-11, divergente do cenário 08
+  resultado: parcial
+  nota: O período publicado segue o README do cenário 08; a divergência está anotada. A referência da matriz cobre o veredito, e a data vem do README do cenário no mesmo commit.
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-06'
+  achados: []
