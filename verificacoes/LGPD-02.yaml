@@ -101,7 +101,13 @@ execucoes:
   resultado: passou
   evidencia: 'prompt com [CPF] e [EMAIL]: sem achado; saída 0.'
   data: '2026-10-06'
-# prompt LGPD-02-prompt-1: ainda sem teste em sessão nova, por isso sem execução registrada.
+- tipo: prompt
+  prompt: LGPD-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-lgpd-02-prompt (cópia de projeto-teste-17)
+  resultado: passou
+  evidencia: "Antes: 6 linhas de CPF em claro e e-mail em claro em tests/fixtures/cliente.json, logs/atendimento.log e prompts/segunda-via.txt, saída 1. Trocou por [CPF] e [EMAIL] (cliente@example.com em tests/); depois 'LGPD-02: 7 arquivos varridos, nenhum CPF ou e-mail em claro.', saída 0. Commit c561f0f com os 3 arquivos, sem trailer; não escreveu o dado em lugar nenhum; lembrou que o dado segue no histórico do git (filter-repo ou BFG, e a pessoa encarregada). A troca em massa pegou protocolo=20261006001 (11 dígitos) como CPF e o agente restaurou antes do commit. Transcrição em curadoria-a5/transcricoes/LGPD-02-prompt-1.bruta.jsonl."
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote (T8)
   data: '2026-10-06'

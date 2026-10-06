@@ -64,7 +64,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
   rollback declarado no plano). Na DAD-01, o Exemplo ganha o `flyway validate` executado e a
   consulta `SELECT version, checksum, success FROM flyway_schema_history`, com saída real, sem
   mudar o prompt. `docker system df` antes.
-- [ ] **T2 (LGPD-01, LGPD-02, `_dominio.md` de privacidade-lgpd).** Exemplos: um registro de
+- [x] **T2 (LGPD-01, LGPD-02, `_dominio.md` de privacidade-lgpd).** Exemplos: um registro de
   classificação de dados do projeto com verificador; um teste que reprova fixture e log com CPF
   em claro (reaproveita a máscara da P2-04 sem gateway).
 - [ ] **T3 (API-01, API-02, `_dominio.md` de contratos-api).** Exemplos: contrato OpenAPI com
@@ -89,6 +89,13 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 
 ## Evidências
 
+**T2 fechada (2026-10-06).** Domínio `privacidade-lgpd` (c648746), LGPD-01 (84380e0) e LGPD-02
+(26df641), status `experimentar`, força `orienta`. Referências novas: `anpd-ripd`,
+`anpd-guia-agentes-tratamento`, `gateway-poc-cenario-02-policies` e
+`gateway-poc-cenario-04-vector-stores`; `lgpd` ampliada (Planalto reaberto em 2026-10-06). Verificadores
+rodados nos dois estados numa cópia de projeto-teste-17. Prompts testados em sessão nova
+(LGPD-01 commit e8a4776, LGPD-02 commit c561f0f), ambos `passou`.
+
 **T4 fechada (2026-10-06).** Domínio frontend-ux, UX-01 e UX-02 com exemplos executados nos dois
 estados (verificador sai 1 antes e 0 depois) e prompts testados em sessão nova (passou). UX-01
 em HTML sem framework, com capturas dos quatro estados em `.playwright-mcp/ux-01-*.png`.
@@ -97,3 +104,5 @@ Referências novas: `nngroup-empty-states` e `wcag-error-suggestion`. Decisão: 
 é a skill interna `estados-de-interface`; a promoção fica para o checkpoint do dono.
 
 ## Conferência em lote: <data> — achados
+
+- T2, LGPD-02: a troca em massa tratou `protocolo=20261006001` (11 dígitos) como CPF, e o agente restaurou antes do commit. O Como aplicar deve avisar que número de 11 dígitos não é CPF por si e que a máscara respeite o formato, ou o verificador deve reportar com contexto.

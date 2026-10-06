@@ -74,7 +74,13 @@ execucoes:
   resultado: passou
   evidencia: 'ruff check e ruff format --check sem achados; saída 1 no estado antes e 0 no estado depois, com as mensagens do texto.'
   data: '2026-10-06'
-# prompt LGPD-01-prompt-1: ainda sem teste em sessão nova, por isso sem execução registrada.
+- tipo: prompt
+  prompt: LGPD-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-lgpd-01-prompt (cópia de projeto-teste-17)
+  resultado: passou
+  evidencia: "Antes: cliente.cpf, cliente.email e cliente.condicao_saude sem classificação, 'LGPD-01: campo sem classe, com classe inválida ou sem finalidade (acima).', saída 1. Acrescentou as 3 linhas (cpf e email pessoal, condicao_saude sensível, com as finalidades do pedido); depois 'LGPD-01: 5 campos de schema, todos classificados.', saída 0. Disse que condicao_saude é sensível por ser dado de saúde e que o RIPD fica com o controlador. Commit e8a4776 só com docs/steering/dados.md, sem trailer. Transcrição em curadoria-a5/transcricoes/LGPD-01-prompt-1.bruta.jsonl."
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote (T8)
   data: '2026-10-06'
