@@ -2,8 +2,8 @@
 
 19 slides, cerca de 18 minutos de deck e 20 de terminal.
 
-Se você passar de 90 segundos num slide, siga. Fale para o Robson, o João, o Vitor e o
-Daniel; o Júnior e o Joaquim acompanham vendo o resultado. As tabelas estão ali para eles
+Se você passar de 90 segundos num slide, siga. Fale para quem executa os projetos e para a
+gerência do departamento; os demais acompanham vendo o resultado. As tabelas estão ali para eles
 lerem enquanto você fala outra coisa, então não leia tabela em voz alta.
 
 ## Abertura, slides 1 e 2, dois minutos
@@ -25,7 +25,7 @@ O slide 4 tem o gancho: os quatro tendem a aplicar o mesmo rigor a qualquer muda
 tem caminho próprio para bug, mas há relatos, com ele e com o Kiro, de correção pequena virando spec
 grande, e é assim que o time aprende a procurar o atalho. Daí a escolha de três tiers.
 
-Se o Joaquim puxar a conversa sobre ser mais simples que o Spec Kit, é aqui.
+Se um colega da divisão de execução puxar a conversa sobre ser mais simples que o Spec Kit, é aqui.
 
 ## Harness, slides 5 a 7, cinco minutos
 
