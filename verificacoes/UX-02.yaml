@@ -59,6 +59,13 @@ execucoes:
   resultado: passou
   evidencia: "as duas telas da seção Telas foram lidas e exigidas; sem a spec, saída 1 ('nenhuma spec com telas')."
   data: '2026-10-06'
+- tipo: prompt
+  prompt: UX-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-ux-02-prompt
+  resultado: passou
+  evidencia: "1ª rodada: saída 1 (vazio ausente em lista-chamados.md; detalhe-chamado sem protótipo); o agente acrescentou o Vazio e criou detalhe-chamado.md com os quatro estados, vazio e erro distintos; 2ª rodada: saída 0 (UX-02: 2 telas da spec, cada uma com protótipo dos quatro estados.); commit 661faa9 só com docs/prototipos/, sem trailer; o relatório lembrou a validação humana do protótipo."
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: pendente (conferência em lote, ADR 0005)
   data: '2026-10-06'

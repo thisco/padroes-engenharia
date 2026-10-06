@@ -68,6 +68,13 @@ execucoes:
   resultado: passou
   evidencia: "saída 0; os textos de título, orientação, descrição e ação de vazio e erro aparecem no elemento do estado correspondente do HTML."
   data: '2026-10-06'
+- tipo: prompt
+  prompt: UX-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-ux-01-prompt
+  resultado: passou
+  evidencia: "1ª rodada: saída 1 (estado vazio ausente no HTML e nos dados); o agente acrescentou o botão e a section data-estado=vazio e a chave vazio no JSON, com os mesmos textos, sem framework nem CDN; 2ª rodada: saída 0 (UX-01: 4 estados presentes; o vazio orienta e é distinto do erro.); commit só com os dois arquivos, sem trailer; árvore limpa."
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: pendente (conferência em lote, ADR 0005)
   data: '2026-10-06'

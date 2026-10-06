@@ -70,7 +70,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [ ] **T3 (API-01, API-02, `_dominio.md` de contratos-api).** Exemplos: contrato OpenAPI com
   versão e a regra de mudança incompatível; verificador de diff de contrato que reprova remoção
   de campo ou mudança de tipo, rodado nos dois estados; o job no `gitlab-ci-local`.
-- [ ] **T4 (UX-01, UX-02, `_dominio.md` de frontend-ux).** Exemplos: um componente com os quatro
+- [x] **T4 (UX-01, UX-02, `_dominio.md` de frontend-ux).** Exemplos: um componente com os quatro
   estados e um verificador que confere a presença dos quatro no código e no protótipo (texto ou
   HTML estático), rodado nos dois estados; sem framework de frontend imposto.
 - [ ] **T5 (OBS-01, OBS-02, `_dominio.md` de observabilidade).** Exemplos: um log JSON com
@@ -88,5 +88,12 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [ ] **T10.** Checkpoint do dono.
 
 ## Evidências
+
+**T4 fechada (2026-10-06).** Domínio frontend-ux, UX-01 e UX-02 com exemplos executados nos dois
+estados (verificador sai 1 antes e 0 depois) e prompts testados em sessão nova (passou). UX-01
+em HTML sem framework, com capturas dos quatro estados em `.playwright-mcp/ux-01-*.png`.
+Referências novas: `nngroup-empty-states` e `wcag-error-suggestion`. Decisão: UX-01 fica
+`experimentar`, porque o validador exige referência forte ou caso interno para `adotar` e a base
+é a skill interna `estados-de-interface`; a promoção fica para o checkpoint do dono.
 
 ## Conferência em lote: <data> — achados
