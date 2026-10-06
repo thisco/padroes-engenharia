@@ -1,0 +1,47 @@
+conteudo: P1-10
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a spec arquivada é histórico, e não fonte de verdade viva"
+  ref: sdd-scaffold-sdd-processo
+  localizacao: "seção 'Specs como deltas arquiváveis' (aberto na web no commit da tag v1.7.0)"
+  resultado: confirmada
+  nota: "Que a spec arquivada segue sendo lida por quem entra no projeto vem das consequências da ADR 0003 do portal, não da fonte."
+- texto: "o desvio entre spec e código é apontado, numa síntese de terceiros, como o principal problema prático do SDD"
+  ref: field-study-xu
+  localizacao: "seção 'Recurring failure modes (consensus across critical sources)': 'Spec drift is the #1 practical problem'"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; fonte de credibilidade média-baixa, citada só como indício."
+- texto: "o artigo descreve a reconciliação como passo humano: uma pessoa resolve cada desvio, corrigindo o código ou atualizando o desenho"
+  ref: infoq-when-pays-off
+  localizacao: "seção 'Treating the Specification as a Governance Baseline', pontos de controle 4 e 5 ('A human resolves each drift; fix the code or update the design')"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; paráfrase."
+- texto: "a Fase 8 da skill muda o Status da spec para arquivada (junto do changelog, antes do merge); a Fase 1 redige a spec como delta"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 8, passo 1; Fase 1"
+  resultado: confirmada
+- texto: "o campo Requisitos afetados no Tier 1 (M5) e o aviso de destilação ficam para a Release 2 (1.8.0) e não existem na 1.7.0"
+  ref: sdd-scaffold-spec-verificavel
+  localizacao: "seção 'Não-objetivos', item 'Fica para a Release 2 (1.8.0)'"
+  resultado: confirmada
+  nota: "Também conferido no clone local: git grep 'Requisitos afetados' na tag v1.7.0 só acha a menção nessa spec; o MODELO-plano.md da tag não tem a seção."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-10/checar-requisitos-afetados.py
+  comando: "python3 scripts/checar-requisitos-afetados.py --base main, na branch fix/2026-10-06-limite-da-observacao, com o hotfix e o plano com Requisitos afetados e a spec arquivada sem alteração"
+  ambiente: "cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-10; Python 3.14.8; macOS"
+  resultado: falhou-como-esperado
+  evidencia: "AVISO: docs/plans/2026-10-06-limite-da-observacao.md: a spec docs/specs/2026-10-05-observacao-no-pedido.md é citada em Requisitos afetados, mas não está no diff; saída 0 (aviso não bloqueia). Também rodado com a spec alterada sem '## Adendo': aviso 'está no diff, mas sem seção Adendo'."
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-10/checar-requisitos-afetados.py
+  comando: "o mesmo comando, depois de acrescentar o '## Adendo 2026-10-06' à spec (commit 9872511)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: "Requisitos afetados: 1 spec(s) citada(s), nenhum achado.; saída 0."
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
