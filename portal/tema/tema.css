@@ -398,7 +398,7 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
    alinha ao topo das caixas em vez de flutuar no meio da mais alta. */
 .ninho.produto { container-type: inline-size; }
 .ninho.produto .fluxo .seta { align-self: start; margin-top: 10px; }
-@container (max-width: 640px) {
+@container (max-width: 700px) {
   .ninho.produto .fluxo { flex-direction: column; }
   .ninho.produto .fluxo .seta::after { content: "↓"; }
   .ninho.produto .fluxo .seta { max-width: none; align-self: center; margin-top: 0; }
