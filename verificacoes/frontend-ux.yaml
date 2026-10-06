@@ -1,0 +1,12 @@
+conteudo: frontend-ux
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a skill pede a definição dos quatro estados de cada tela e de cada consulta, e o protótipo validado por uma pessoa antes da implementação
+  ref: estados-de-interface
+  localizacao: seções 'A regra' e 'Protótipo antes do código'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: pendente (conferência em lote, ADR 0005)
+  data: '2026-10-06'
+  achados: []
