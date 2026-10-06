@@ -102,6 +102,17 @@ execucoes:
   evidencia: 'log com ''CPF 529.982.247-25, e-mail fulano@exemplo.com.br'' e ''P2-04: CPF ou e-mail chegou ao modelo
     (acima).''; saída 1.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P2-04-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 com gateway-teste/
+  resultado: passou
+  evidencia: 'Antes do guardrail: resposta simulada e verificador ''P2-04: nenhuma mensagem enviada ao modelo no
+    log; faça uma chamada antes.'' (saída 1). Depois de config e compose: log ''CPF [CPF], e-mail [EMAIL]'' e ''P2-04:
+    nenhum CPF formatado ou e-mail nas mensagens enviadas ao modelo.'' (saída 0); commit 1a0dfe1 só com config.yaml
+    e docker-compose.yml; down -v. Desvios: sem timeout no macOS (usou laço); chave perdida entre comandos e alias
+    já existente após o recreate (400), apagado e reemitido. Transcrição em curadoria-a5/transcricoes/P2-04-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'

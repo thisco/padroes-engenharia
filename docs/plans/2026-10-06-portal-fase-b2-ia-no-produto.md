@@ -70,7 +70,7 @@ tudo o que o prompt usa, e os passos do prompt não se contradizem; quando o pro
 commitar, pede a mensagem sem trailer.
 
 - [x] **T1 (P2-02, P2-03).** Um autor, dois testadores.
-- [ ] **T2 (P2-04, P2-06).** As duas usam o gateway: um Exemplo sobe o LiteLLM com a config de
+- [x] **T2 (P2-04, P2-06).** As duas usam o gateway: um Exemplo sobe o LiteLLM com a config de
   `exemplos/P2-01/` e mostra, com saída real, a máscara de PII e o bloqueio por orçamento.
 - [ ] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
   (`gitlab-ci-local`), com `mock_response` do gateway para não gastar modelo.
@@ -113,7 +113,12 @@ criação do repositório e o push ficam com o dono.
 ## Evidências
 
 - **T1 fechou (2026-10-06).** P2-02 (a3b3557) e P2-03 (61ac2da) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P2-02 commit e4ef178, P2-03 commit df87964, ambos com saída 0 do verificador. Registros em `verificacoes/P2-02.yaml` e `verificacoes/P2-03.yaml`.
+- **T2 fechou (2026-10-06).** P2-04 (372aa47) e P2-06 (11775ba) com Exemplo executado e prompt testado em sessão nova (claude-code): P2-04 commit 1a0dfe1 (verificador 1 antes, 0 depois do guardrail), P2-06 commit 79847d6 (422 budget_exceeded, relatório 0.1240 de 0.1). Força orienta com mecanismo null, pois o validador reprova avisa sem mecanismo em scripts/. Registros em `verificacoes/P2-04.yaml` e `verificacoes/P2-06.yaml`.
 
 ## Conferência em lote: <data> — achados
 
 - P2-03, prompt: o campo `modelo` não vem literal nos placeholders, e o agente o deduziu do pedido ("Claude Fable 5"). Informar o valor na entrada 1 e na 2.
+- P2-04 e P2-06, prompts: assumem shell persistente entre passos (AI_GATEWAY_KEY se perde); dizer para reexportar ou reemitir.
+- P2-04, prompt: após `--force-recreate gateway` o banco persiste e o alias já existe (400); usar outro alias ou apagar a chave.
+- `timeout` não existe no macOS; nenhum texto deve usá-lo.
+- P2-04, segurança: `mascara_pii.py` cobre só formatos canônicos de CPF e e-mail (documentar o limite no Como verificar), e o log do gateway de teste imprime o conteúdo da mensagem, inclusive o que escapar da máscara; avaliar logar só o veredito ou a contagem e, se mudar o exemplo, reexecutar e registrar.

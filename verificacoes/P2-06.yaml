@@ -93,6 +93,16 @@ execucoes:
   resultado: passou
   evidencia: 'P2-06: todas as chaves virtuais têm orçamento.; saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P2-06-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 com gateway-teste/
+  resultado: passou
+  evidencia: 'gastar.py: chamadas 1 a 4 ok e a 5ª 422 budget_exceeded (Max budget: 0.1); relatorio-gasto: ''app-teste-hml:
+    gasto 0.1240 de 0.1'' na 2ª tentativa; verificar-orcamento acusou app-sem-teto (saída 1) e, após apagar, ''P2-06:
+    todas as chaves virtuais têm orçamento.'' (saída 0); ORCAMENTO.md sem chave; commit 79847d6 só com ele; down
+    -v. Desvio: chave perdida entre comandos, reemitida. Transcrição em curadoria-a5/transcricoes/P2-06-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'

@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v0.3.0: 14 práticas; 41 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v0.3.0: 16 práticas; 40 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna do momento e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -19,7 +19,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | CI/CD (`ci-cd`) | a definir | a definir | a definir | a definir |
 | Observabilidade e operação (`observabilidade`) | a definir | a definir | a definir | a definir |
 | Segurança (`seguranca`) | a definir | a definir | a definir | a definir |
-| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta) | P2-01 (só orienta) | a definir | a definir |
+| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta) | P2-01 (só orienta), P2-04 (só orienta) | a definir | P2-06 (só orienta) |
 
 ## Práticas
 
@@ -39,3 +39,5 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | P2-01 | Toda chamada a modelo passa pelo gateway com chave virtual | só orienta | experimentar | nada |
 | P2-02 | Classifique o escopo e o risco da aplicação antes de escrever | só orienta | experimentar | nada |
 | P2-03 | Registre no catálogo o modelo, a retenção e o operador dos dados | só orienta | experimentar | nada |
+| P2-04 | Mascare o dado pessoal antes de enviar ao modelo | só orienta | experimentar | nada |
+| P2-06 | Orçamento e alerta por chave virtual | só orienta | adotar | nada |
