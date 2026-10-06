@@ -124,6 +124,14 @@ sem menção a IA no código, commits sem trailer, testes gravam pastas reais e 
 | baixo | `docs/specs/2026-10-06-portal-apresentacoes-delta.md:40` | R3 diz "itálico sem link", mas o delta v1.1 aboliu o itálico; o motor some com o item (correto) | trocar o critério do R3 por "o item não aparece" |
 | info | `portal/gerador/externos.py:24` | `.js` do deck não é varrido (`fetch("https://…")` em script local passa), como no resto do portal | registrar como limite conhecido do R-EXTERNO |
 
+Conferência das correções (2026-10-06, snapshot `git archive HEAD` em `44615d0`): os 3 médios e os 4
+baixos resolvidos e provados em cópia (slug, arquivo, subpasta e link quebrado symlink →
+`R-APRESENTACAO`; `url(` em `style=`, `<style>` e `@import url(` → um erro cada, `@import "…"` →
+um; sem registro → `R-VERIFICACAO`; `roteiro.html` na pasta e `Meu Deck` reprovam; README, yml,
+roteiro-fonte e ocultos fora do `public/`; spec R3 corrigida); sem regressão: 634 passed, validar ok,
+dois builds idênticos, `cmp` igual nos 6 arquivos copiados, links ok, `llms.txt` e busca como antes,
+item some sem pasta; o `.js` continua fora da varredura (info).
+
 ### Conferência do conteúdo
 
 Conferente independente, modelo econômico (ADR 0005), 2026-10-06. Achados completos em
