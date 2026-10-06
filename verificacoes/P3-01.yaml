@@ -47,6 +47,13 @@ execucoes:
   resultado: passou
   evidencia: 'P3-01: agência classificada, com os controles do escopo.; saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P3-01-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-01-prompt, com o verificador'
+  resultado: passou
+  evidencia: 'verificador antes: "docs/steering/agente.md: [Errno 2]..." e "P3-01: classificação incompleta ou incoerente (acima).", saída 1; o agente criou agente.md só com os dados informados e o parágrafo; depois "P3-01: agência classificada, com os controles do escopo.", saída 0; commit 30a9904 só com o arquivo, sem trailer. Rodou cada comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'

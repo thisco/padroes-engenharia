@@ -74,7 +74,7 @@ commitar, pede a mensagem sem trailer.
   `exemplos/P2-01/` e mostra, com saída real, a máscara de PII e o bloqueio por orçamento.
 - [ ] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
   (`gitlab-ci-local`), com `mock_response` do gateway para não gastar modelo.
-- [ ] **T4 (P3-01, P3-02).** A P3-02 reaproveita a skill `threat-model` já publicada no índice.
+- [x] **T4 (P3-01, P3-02).** A P3-02 reaproveita a skill `threat-model` já publicada no índice.
 - [ ] **T5 (P3-03, P3-04).** O Exemplo da P3-04 mostra a política de permissões do template do
   scaffold 1.7.1 (`deny`, `ask`, hook) como caso concreto, sem nome de harness no corpo.
 - [ ] **T6 (P3-05, P3-06).** O Exemplo da P3-05 é um teste determinístico: conteúdo externo com
@@ -114,6 +114,7 @@ criação do repositório e o push ficam com o dono.
 
 - **T1 fechou (2026-10-06).** P2-02 (a3b3557) e P2-03 (61ac2da) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P2-02 commit e4ef178, P2-03 commit df87964, ambos com saída 0 do verificador. Registros em `verificacoes/P2-02.yaml` e `verificacoes/P2-03.yaml`.
 - **T2 fechou (2026-10-06).** P2-04 (372aa47) e P2-06 (11775ba) com Exemplo executado e prompt testado em sessão nova (claude-code): P2-04 commit 1a0dfe1 (verificador 1 antes, 0 depois do guardrail), P2-06 commit 79847d6 (422 budget_exceeded, relatório 0.1240 de 0.1). Força orienta com mecanismo null, pois o validador reprova avisa sem mecanismo em scripts/. Registros em `verificacoes/P2-04.yaml` e `verificacoes/P2-06.yaml`.
+- **T4 fechou (2026-10-06).** P3-01 (1b3c601) e P3-02 (e63334c) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-01 commit 30a9904 (verificador 1 antes, 0 depois), P3-02 commit f3e7b48 (AVISO de threat-model antes, nenhum achado depois). P3-02 saiu com força avisa e mecanismo verificar_pr.py@1.7.1, pois o SKILL.md não é hospedado e o script só avisa.
 
 ## Conferência em lote: <data> — achados
 
@@ -122,3 +123,6 @@ criação do repositório e o push ficam com o dono.
 - P2-04, prompt: após `--force-recreate gateway` o banco persiste e o alias já existe (400); usar outro alias ou apagar a chave.
 - `timeout` não existe no macOS; nenhum texto deve usá-lo.
 - P2-04, segurança: `mascara_pii.py` cobre só formatos canônicos de CPF e e-mail (documentar o limite no Como verificar), e o log do gateway de teste imprime o conteúdo da mensagem, inclusive o que escapar da máscara; avaliar logar só o veredito ou a contagem e, se mudar o exemplo, reexecutar e registrar.
+- P3-02, prompt: não traz o enunciado das 4 perguntas do CISO, e o agente as redigiu a partir das respostas; o prompt ou o preparo deve trazer o enunciado da fonte.
+- P3-02, prompt: o agente removeu o comentário HTML de instrução da seção para pôr o parágrafo logo abaixo do título (limite do verificar_pr sobre subtítulo imediato); documentado no Como aplicar.
+- P3-01, prompt: o harness não persiste shell e o agente rodou cada comando em chamada separada; sem efeito no resultado, mas a declaração de shell único não se cumpre.

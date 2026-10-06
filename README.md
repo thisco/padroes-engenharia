@@ -1,13 +1,13 @@
 # Padrões de Engenharia
 
-> Portal de padrões de engenharia de NUARQ · Serpro, com IA como guia. Versão 0.3.0.
+> Portal de padrões de engenharia, com IA como guia. Versão 0.3.0.
 
 Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se este arquivo divergir do gerado.
 
 ## O que há aqui
 
-- 16 práticas na espinha de 12 domínios × 4 momentos; 40 das 48 células a definir (`ROTEAMENTO.md`).
-- 99 referências, cada uma conferida na fonte, e 6 skills publicadas.
+- 18 práticas na espinha de 12 domínios × 4 momentos; 40 das 48 células a definir (`ROTEAMENTO.md`).
+- 102 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
@@ -23,7 +23,7 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 | Entrega e operação | CI/CD (`ci-cd`) | 0 |
 | Entrega e operação | Observabilidade e operação (`observabilidade`) | 0 |
 | Entrega e operação | Segurança (`seguranca`) | 0 |
-| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 5 |
+| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 7 |
 
 ## Como contribuir
 

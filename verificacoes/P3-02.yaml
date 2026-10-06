@@ -46,6 +46,13 @@ execucoes:
   resultado: passou
   evidencia: 'Verificação de PR: 5 arquivo(s), nenhum achado.; saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P3-02-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, cópia de projeto-teste-17 (verificar_pr.py 1.7.1) em ~/curadoria-a5/b2-p3-02-prompt, branch feat/2026-10-06-triagem-de-chamados'
+  resultado: passou
+  evidencia: 'antes: AVISO de superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py) sem threat-model; o agente reescreveu a seção com abertura, as 5 perguntas do scaffold e as 4 do CISO; depois "Verificação de PR: 5 arquivo(s), nenhum achado.", saída 0; commit f3e7b48 só com a spec, sem trailer; nenhum não sei. O agente redigiu o enunciado das 4 perguntas do CISO a partir das respostas, e removeu o comentário HTML da seção para pôr o parágrafo logo abaixo do título. Transcrição em curadoria-a5/transcricoes/P3-02-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'
