@@ -272,7 +272,7 @@ afirmacoes:
   localizacao: .github/workflows/ci.yml da tag v1.7.1
   resultado: parcial
   nota: 'Fonte do deck: workflow do scaffold, conferido em 2026-10-06 (matriz 3.11, 3.12, 3.13).'
-- texto: 'SÓ NO DECK: Panorama e as divisões da NUJOR como contexto da proposta (slides 18 e 19)'
+- texto: 'SÓ NO DECK: Panorama e as divisões de orçamentação e de execução como contexto da proposta (slides 18 e 19)'
   ref: sdd-lifecycle-repo
   localizacao: sem sustentação no portal
   resultado: parcial

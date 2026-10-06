@@ -1,6 +1,6 @@
 # Harness, SDD e o repositório como fonte de verdade
 
-- **Audiência:** NUJOR, divisões de orçamentação e de execução de projetos, com a gerência
+- **Audiência:** divisões de orçamentação e de execução de projetos, com a gerência
   do departamento na sala
 - **Slides:** 19, cerca de 18 min de deck e 20 min de terminal ao vivo
 - **Altitude:** dev, com gestor acompanhando
@@ -38,7 +38,7 @@ vêm de `vendor/` do portal, referenciado como `../../vendor/`. A pasta só abre
   código rodando fora do modelo. Âmbar tracejado marca o que orienta, que é texto dentro do
   modelo. A distinção do slide 7 vira o sistema visual e reaparece como régua vertical nos
   blocos.
-- **Âncora no azul Gov.br**, a mesma paleta que a NUJOR usou no protótipo Panorama.
+- **Âncora no azul Gov.br**, a mesma paleta do protótipo Panorama.
 - **O tipo sinaliza o que você está olhando.** Grotesca pesada para a afirmação, JetBrains
   Mono para a evidência: caminho, schema, exit code, saída de terminal.
 - **Numeração só onde o conteúdo é sequência**, ou seja, nas camadas e nos passos de brownfield.
@@ -47,9 +47,8 @@ vêm de `vendor/` do portal, referenciado como `../../vendor/`. A pasta só abre
 
 ## Procedência do conteúdo
 
-A pesquisa de internos dos cinco harnesses está em
-`serpro-cloud-ia-governance/docs/research/harness-internals/`, um documento por harness com
-cada afirmação marcada por origem (`[verificado]`, `[doc oficial]`, `[inferido]`) e as
+A pesquisa interna de internos dos cinco harnesses (não publicada) tem um documento por
+harness, com cada afirmação marcada por origem (`[verificado]`, `[doc oficial]`, `[inferido]`) e as
 lacunas declaradas, mais `00-matriz-comparativa.md`.
 
 O estudo do DeepSeek dsh é anterior:

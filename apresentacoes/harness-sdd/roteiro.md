@@ -1,4 +1,4 @@
-# Roteiro de apresentação, NUJOR
+# Roteiro de apresentação
 
 19 slides, cerca de 18 minutos de deck e 20 de terminal.
 
