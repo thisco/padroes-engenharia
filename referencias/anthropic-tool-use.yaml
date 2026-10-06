@@ -3,9 +3,9 @@ titulo: Tool use with Claude
 organizacao: Anthropic
 url: https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview
 tipo: vendor
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-06'
 verificacao: V
-localizacao: abertura e seção 'How tool use works'
+localizacao: "abertura (client tools, o recurso strict: true) e seção 'How tool use works'"
 dominios:
 - construir-com-ia
 notas: null

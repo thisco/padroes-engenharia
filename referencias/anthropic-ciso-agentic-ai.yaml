@@ -6,6 +6,6 @@ tipo: vendor
 publicado_em: 2026-07-17
 verificado_em: 2026-10-06
 verificacao: V
-localizacao: "abertura (adoção paralela sem telemetria), 'The agentic identity spectrum', 'Four questions to assess agentic AI risk' (pergunta 2, leitura versus escrita) e 'Case study: Claude Cowork' (aprovação para enviar, credencial fora do ambiente do agente, ações distinguíveis das do usuário)"
+localizacao: "abertura (adoção paralela sem telemetria), 'The agentic identity spectrum', 'Four questions to assess agentic AI risk' (pergunta 2, leitura versus escrita) e 'Four questions to assess agentic AI risk' (pergunta 1, o que é conteúdo não confiável), 'Governing internal risks' (injeção de prompt) e 'Case study: Claude Cowork' (aprovação para enviar, credencial fora do ambiente do agente, ações distinguíveis das do usuário, allowlist de conectores, allowlist de saída de rede)"
 dominios: [ia-no-produto, seguranca]
 notas: null

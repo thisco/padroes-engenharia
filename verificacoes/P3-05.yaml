@@ -1,0 +1,89 @@
+conteudo: P3-05
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a injeção indireta ocorre quando o modelo aceita entrada de fontes externas, como sites ou arquivos, e é a LLM01 da lista de 2025"
+  ref: owasp-llm-top10
+  localizacao: "título 'LLM01:2025 Prompt Injection' e seção 'Indirect Prompt Injections'"
+  resultado: confirmada
+- texto: "a OWASP recomenda separar e marcar com clareza o conteúdo não confiável, para limitar a influência dele"
+  ref: owasp-llm-top10
+  localizacao: "lista de prevenção e mitigação, item de segregação do conteúdo externo"
+  resultado: confirmada
+- texto: "a OWASP pede instruções específicas sobre o papel, as capacidades e as limitações do modelo no prompt do sistema"
+  ref: owasp-llm-top10
+  localizacao: "lista de prevenção e mitigação, item de restrição do comportamento do modelo"
+  resultado: confirmada
+- texto: "a OWASP pede formato de saída claro e código determinístico para validar a aderência a ele"
+  ref: owasp-llm-top10
+  localizacao: "lista de prevenção e mitigação, item de validação dos formatos de saída"
+  resultado: confirmada
+- texto: "a OWASP cita filtragem de entrada e de saída"
+  ref: owasp-llm-top10
+  localizacao: "lista de prevenção e mitigação, item de filtragem de entrada e de saída"
+  resultado: confirmada
+- texto: "a OWASP lista privilégio mínimo e aprovação humana para operações privilegiadas entre as mitigações"
+  ref: owasp-llm-top10
+  localizacao: "lista de prevenção e mitigação, itens de privilégio mínimo e de aprovação humana para ações de alto risco"
+  resultado: confirmada
+- texto: "a OWASP diz que não está claro se existe método infalível de prevenção, dada a natureza estocástica dos modelos"
+  ref: owasp-llm-top10
+  localizacao: "seção 'Prevention and Mitigation Strategies', frase de abertura"
+  resultado: confirmada
+  nota: "Conferido em 2026-10-06 com a página aberta; o texto citado resume a frase de abertura da seção."
+- texto: "o atacante esconde instruções dentro do conteúdo que o agente lê; conteúdo não confiável é tudo que um atacante poderia escrever ou alterar (e-mail de fora, web aberta, documento de terceiros, repositório público)"
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seções 'Governing internal risks' ('an attacker hides instructions inside content the agent reads') e 'Four questions to assess agentic AI risk' ('Untrusted means anything an attacker could plausibly write or alter')"
+  resultado: confirmada
+- texto: "o guia chama de controle mais forte contra a injeção a lista de destinos de rede permitidos, com todo o tráfego de saída por um proxy"
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'Case study: Claude Cowork' ('Egress allowlisting is your strongest control against prompt injection')"
+  resultado: confirmada
+- texto: "numa ferramenta do cliente o modelo devolve uma chamada estruturada (tool_use) e o código da aplicação a executa; strict: true faz as chamadas seguirem o esquema"
+  ref: anthropic-tool-use
+  localizacao: "seção 'How tool use works' (client tools) e a dica 'Guarantee schema conformance with strict tool use'"
+  resultado: confirmada
+- texto: "o guia de agentes descreve a pausa para feedback humano em pontos de checagem"
+  ref: anthropic-building-effective-agents
+  localizacao: "seção 'Agents' ('Agents can then pause for human feedback at checkpoints or when encountering blockers')"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P3-05/verificar-isolamento.py
+  comando: "python3 scripts/verificar-isolamento.py (montar_prompt.py cola o chamado como texto, sem envelope)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-05-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: falhou-como-esperado
+  evidencia: "preâmbulo ausente, \"conteúdo externo fora do envelope\" e \"trecho do conteúdo externo aparece fora do envelope\" para os dois chamados, \"chamado-0042.txt: instrução embutida acusada: 'Ignore as instruções'\" e \"P3-05: conteúdo externo sem isolamento no prompt (acima).\", saída 1."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-05/montar_prompt.py
+  comando: "python3 scripts/verificar-isolamento.py (montar_prompt.py do exemplo, com PREAMBULO e envelopar)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-05-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "P3-05: todo conteúdo externo está no envelope e a instrução embutida foi acusada., saída 0."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-05/isolar_conteudo.py
+  comando: "python3 scripts/verificar-isolamento.py (módulo importado por montar_prompt.py; neutralizar, envelopar e detectar_injecao)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-05-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "envelope <<<DADO_EXTERNO origem=chamado-0042.txt>>> ... <<<FIM_DADO_EXTERNO>>> no prompt montado e o detector acusa 'Ignore as instruções' no chamado-0042; saída 0."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-05/entradas/chamado-0041.txt
+  comando: "python3 scripts/verificar-isolamento.py (conteúdo de teste sem instrução embutida)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-05-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "dentro do envelope no estado envelopado, fora dele no estado cru; o detector não o acusa."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-05/entradas/chamado-0042.txt
+  comando: "python3 scripts/verificar-isolamento.py (conteúdo de teste com instrução embutida)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-05-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "dentro do envelope no estado envelopado; o detector acusa 'Ignore as instruções'; saída 0 (1 no estado cru)."
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []

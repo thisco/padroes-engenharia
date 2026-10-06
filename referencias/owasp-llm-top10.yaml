@@ -4,9 +4,9 @@ organizacao: OWASP GenAI Security Project
 url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 tipo: padrao-aberto
 versao: '2025'
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-06'
 verificacao: V
-localizacao: seção 'Indirect Prompt Injections'
+localizacao: "seção 'Indirect Prompt Injections' e lista de prevenção e mitigação (restringir o comportamento do modelo, validar formatos de saída, filtragem de entrada e saída, privilégio mínimo, aprovação humana, segregar conteúdo externo, testes adversariais)"
 dominios:
 - ia-no-produto
 notas: Lista de 2025; a página da LLM01 define injeção direta e indireta.
