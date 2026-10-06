@@ -2,43 +2,52 @@ conteudo: P3-01
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: 'os workflows orquestram modelos e ferramentas por caminhos de código predefinidos, e os agentes dirigem dinamicamente o próprio processo e o uso das ferramentas'
+- texto: os workflows orquestram modelos e ferramentas por caminhos de código predefinidos, e os agentes dirigem
+    dinamicamente o próprio processo e o uso das ferramentas
   ref: anthropic-building-effective-agents
   localizacao: seção 'Building blocks, workflows, and agents'
   resultado: confirmada
-- texto: 'a recomendação é achar a solução mais simples e só aumentar a complexidade quando preciso; a autonomia do agente traz custo maior e erros que se acumulam, e a fonte recomenda testes extensivos em sandbox e guardrails'
+- texto: a recomendação é achar a solução mais simples e só aumentar a complexidade quando preciso; a autonomia
+    do agente traz custo maior e erros que se acumulam, e a fonte recomenda testes extensivos em sandbox e guardrails
   ref: anthropic-building-effective-agents
   localizacao: seções 'When (and when not) to use agents' e 'Agents'
   resultado: confirmada
-- texto: 'a matriz tem quatro escopos: sem agência (somente leitura, pessoas iniciam), prescrita (recomenda e prepara, não executa sem autorização explícita), supervisionada (age dentro de limites, inclusive alterando o ambiente, sem nova aprovação a cada ação) e plena (autoiniciada, supervisão mínima)'
+- texto: 'a matriz tem quatro escopos: sem agência (somente leitura, pessoas iniciam), prescrita (recomenda e prepara,
+    não executa sem autorização explícita), supervisionada (age dentro de limites, inclusive alterando o ambiente,
+    sem nova aprovação a cada ação) e plena (autoiniciada, supervisão mínima)'
   ref: aws-agentic-scoping-matrix
-  localizacao: "seções 'Scope 1: No Agency' a 'Scope 4: Full Agency'"
+  localizacao: 'seções ''Scope 1: No Agency'' a ''Scope 4: Full Agency'''
   resultado: confirmada
-- texto: 'nos escopos baixos bastam autenticação básica do usuário e contas de serviço somente leitura; nos altos entram delegação sofisticada de identidade, verificação contínua e atestação da identidade do agente'
+- texto: nos escopos baixos bastam autenticação básica do usuário e contas de serviço somente leitura; nos altos
+    entram delegação sofisticada de identidade, verificação contínua e atestação da identidade do agente
   ref: aws-agentic-scoping-matrix
   localizacao: seção 'Six Critical Security Dimensions', dimensão Identity Context
   resultado: confirmada
-- texto: 'a regra quanto maior a agência, mais controle'
+- texto: a regra quanto maior a agência, mais controle
   ref: aws-agentic-scoping-matrix
   localizacao: seção 'Six Critical Security Dimensions' (os controles de identidade crescem com o escopo)
   resultado: parcial
-  nota: 'A página mostra o crescimento para a identidade; a frase geral é a leitura do portal para as seis dimensões, e o texto a apresenta como regra.'
-- texto: 'a pergunta sobre que ações o agente pode executar e em nome de quem, se só lê ou também escreve'
+  nota: A página mostra o crescimento para a identidade; a frase geral é a leitura do portal para as seis dimensões,
+    e o texto a apresenta como regra.
+- texto: a pergunta sobre que ações o agente pode executar e em nome de quem, se só lê ou também escreve
   ref: anthropic-ciso-agentic-ai
   localizacao: seção 'Four questions to assess agentic AI risk', pergunta 2
   resultado: confirmada
-- texto: 'a resposta à pergunta de ações e credenciais, feita só na revisão de segurança, obriga a refazer autenticação e fluxo de aprovação'
+- texto: a resposta à pergunta de ações e credenciais, feita só na revisão de segurança, obriga a refazer autenticação
+    e fluxo de aprovação
   ref: anthropic-ciso-agentic-ai
   localizacao: seção 'Four questions to assess agentic AI risk', pergunta 2
   resultado: parcial
-  nota: 'A fonte traz a pergunta; o custo de refazer é o cenário do portal, não afirmação da fonte.'
+  nota: A fonte traz a pergunta; o custo de refazer é o cenário do portal, não afirmação da fonte.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P3-01/verificar-agencia.py
-  comando: python3 scripts/verificar-agencia.py (docs/steering/agente.md com escopo agencia-supervisionada, identidade_propria nenhuma e aprovacao_humana_para vazia)
+  comando: python3 scripts/verificar-agencia.py (docs/steering/agente.md com escopo agencia-supervisionada, identidade_propria
+    nenhuma e aprovacao_humana_para vazia)
   ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
   resultado: falhou-como-esperado
-  evidencia: 'agencia-supervisionada exige aprovacao_humana_para preenchida; agencia-supervisionada exige identidade_propria preenchida; "P3-01: classificação incompleta ou incoerente (acima)."; saída 1.'
+  evidencia: 'agencia-supervisionada exige aprovacao_humana_para preenchida; agencia-supervisionada exige identidade_propria
+    preenchida; "P3-01: classificação incompleta ou incoerente (acima)."; saída 1.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P3-01/agente.md
@@ -50,9 +59,12 @@ execucoes:
 - tipo: prompt
   prompt: P3-01-prompt-1
   harness: claude-code
-  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-01-prompt, com o verificador'
+  ambiente: sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-01-prompt, com o verificador
   resultado: passou
-  evidencia: 'verificador antes: "docs/steering/agente.md: [Errno 2]..." e "P3-01: classificação incompleta ou incoerente (acima).", saída 1; o agente criou agente.md só com os dados informados e o parágrafo; depois "P3-01: agência classificada, com os controles do escopo.", saída 0; commit 30a9904 só com o arquivo, sem trailer. Rodou cada comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl.'
+  evidencia: 'verificador antes: "docs/steering/agente.md: [Errno 2]..." e "P3-01: classificação incompleta ou incoerente
+    (acima).", saída 1; o agente criou agente.md só com os dados informados e o parágrafo; depois "P3-01: agência
+    classificada, com os controles do escopo.", saída 0; commit 30a9904 só com o arquivo, sem trailer. Rodou cada
+    comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
@@ -60,10 +72,15 @@ revisao_adversarial:
   achados:
   - afirmacao: Prompt, "Use um único shell" (P3-01.md:145) (trazido do plano)
     problema: '[baixo] o harness não persiste shell e rodou cada comando em chamada separada; sem efeito no resultado.'
-    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+    tratamento: 'Tratado em T10: o prompt manda usar um único shell ou refazer as variáveis a cada comando. Prompt
+      alterado: aguarda novo teste em sessão nova.'
   - afirmacao: Verificador (exemplos/P3-01/verificar-agencia.py)
-    problema: '[baixo] aceita identidade_propria igual a classificado_por (só a P3-04 confere), aceita aprovacao_humana_para: sim, e "Nenhuma." com ponto não conta como vazio no escopo 1. Reproduzido em t9-p3-01.'
-    tratamento: Dizer no Como verificar que a identidade distinta de quem classificou é conferida pela P3-04.
+    problema: '[baixo] aceita identidade_propria igual a classificado_por (só a P3-04 confere), aceita aprovacao_humana_para:
+      sim, e "Nenhuma." com ponto não conta como vazio no escopo 1. Reproduzido em t9-p3-01.'
+    tratamento: 'Tratado em T10: o Como verificar diz que a identidade distinta de quem classificou é conferida
+      pela P3-04 e que o verificador aceita valores como ''sim'' em aprovacao_humana_para.'
   - afirmacao: Fonte aws-agentic-scoping-matrix (https://aws.amazon.com/ai/security/agentic-ai-scoping-matrix/)
-    problema: '[baixo] confirmada: quatro escopos (sem agência, prescrita, supervisionada, plena) e, nos baixos, autenticação básica e contas de serviço somente leitura; nos altos, delegação sofisticada, verificação contínua e atestação. Os campos do verificador são regra do portal, e o texto o diz.'
+    problema: '[baixo] confirmada: quatro escopos (sem agência, prescrita, supervisionada, plena) e, nos baixos,
+      autenticação básica e contas de serviço somente leitura; nos altos, delegação sofisticada, verificação contínua
+      e atestação. Os campos do verificador são regra do portal, e o texto o diz.'
     tratamento: Nenhum.

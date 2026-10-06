@@ -4,6 +4,7 @@
 Só informa; não aprova nem reprova (a prática orienta, não impõe limite). Saída sempre 0,
 salvo arquivo inexistente. Uso: python3 medir-spec.py spec-a.md [spec-b.md ...]
 """
+
 import re
 import sys
 from pathlib import Path

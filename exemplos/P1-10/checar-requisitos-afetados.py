@@ -6,6 +6,7 @@ lê a seção "## Requisitos afetados" de cada um e confere cada spec citada (do
 ela precisa estar no diff e trazer uma seção nova "## Adendo AAAA-MM-DD". Só avisa; a saída é 0,
 salvo base inexistente (2). Uso: python3 checar-requisitos-afetados.py [--base main]
 """
+
 import argparse
 import re
 import subprocess
@@ -40,12 +41,16 @@ def main() -> int:
         for spec in specs_citadas(open(plano, encoding="utf-8").read()):
             citadas += 1
             if spec not in alterados:
-                print(f"AVISO: {plano}: a spec {spec} é citada em Requisitos afetados, "
-                      "mas não está no diff; acrescente a ela um '## Adendo AAAA-MM-DD'.")
+                print(
+                    f"AVISO: {plano}: a spec {spec} é citada em Requisitos afetados, "
+                    "mas não está no diff; acrescente a ela um '## Adendo AAAA-MM-DD'."
+                )
                 avisos += 1
             elif not ADENDO.search(git("diff", f"{base}...HEAD", "--", spec)):
-                print(f"AVISO: {plano}: a spec {spec} está no diff, "
-                      "mas sem seção '## Adendo AAAA-MM-DD' nova.")
+                print(
+                    f"AVISO: {plano}: a spec {spec} está no diff, "
+                    "mas sem seção '## Adendo AAAA-MM-DD' nova."
+                )
                 avisos += 1
     if not avisos:
         print(f"Requisitos afetados: {citadas} spec(s) citada(s), nenhum achado.")

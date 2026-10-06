@@ -2,78 +2,103 @@ conteudo: P2-02
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: 'a política de uso da Anthropic tem padrões universais, requisitos para casos de uso de alto risco e diretrizes adicionais por contexto'
+- texto: a política de uso da Anthropic tem padrões universais, requisitos para casos de uso de alto risco e diretrizes
+    adicionais por contexto
   ref: anthropic-usage-policy
-  localizacao: 'títulos ''Universal Usage Standards'', ''High-Risk Use Case Requirements'' e ''Additional Use Case Guidelines'' (vigência 2025-09-15)'
+  localizacao: títulos 'Universal Usage Standards', 'High-Risk Use Case Requirements' e 'Additional Use Case Guidelines'
+    (vigência 2025-09-15)
   resultado: confirmada
-- texto: 'os domínios de alto risco são jurídico, saúde, seguros, finanças (incluindo aprovação de empréstimos), emprego e moradia, e avaliação acadêmica'
+- texto: os domínios de alto risco são jurídico, saúde, seguros, finanças (incluindo aprovação de empréstimos),
+    emprego e moradia, e avaliação acadêmica
   ref: anthropic-usage-policy
-  localizacao: 'seção ''High-Risk Use Case Requirements'', lista de domínios'
+  localizacao: seção 'High-Risk Use Case Requirements', lista de domínios
   resultado: confirmada
-- texto: 'no alto risco, um profissional qualificado revisa o conteúdo ou a decisão antes da disseminação, e o destinatário é informado do uso de IA, no mínimo no início de cada sessão'
+- texto: no alto risco, um profissional qualificado revisa o conteúdo ou a decisão antes da disseminação, e o destinatário
+    é informado do uso de IA, no mínimo no início de cada sessão
   ref: anthropic-usage-policy
-  localizacao: 'seção ''High-Risk Use Case Requirements'', requisitos de humano no circuito e de divulgação'
+  localizacao: seção 'High-Risk Use Case Requirements', requisitos de humano no circuito e de divulgação
   resultado: confirmada
-- texto: 'o EU AI Act classifica em risco inaceitável (proibido), alto risco, risco limitado (transparência) e risco mínimo'
+- texto: o EU AI Act classifica em risco inaceitável (proibido), alto risco, risco limitado (transparência) e risco
+    mínimo
   ref: eu-ai-act-resumo
-  localizacao: 'Four-point summary'
+  localizacao: Four-point summary
   resultado: confirmada
-  nota: 'Fonte secundária (resumo do Future of Life Institute); o texto do EUR-Lex não abriu na verificação.'
-- texto: 'entre as áreas de alto risco estão emprego, educação e serviços essenciais (elegibilidade a benefícios, avaliação de crédito)'
+  nota: Fonte secundária (resumo do Future of Life Institute); o texto do EUR-Lex não abriu na verificação.
+- texto: entre as áreas de alto risco estão emprego, educação e serviços essenciais (elegibilidade a benefícios,
+    avaliação de crédito)
   ref: eu-ai-act-resumo
-  localizacao: 'lista de casos de uso de alto risco do Anexo III'
+  localizacao: lista de casos de uso de alto risco do Anexo III
   resultado: confirmada
-- texto: 'no risco limitado, quem fornece e quem opera garante que o usuário saiba que interage com IA (chatbots e deepfakes)'
+- texto: no risco limitado, quem fornece e quem opera garante que o usuário saiba que interage com IA (chatbots
+    e deepfakes)
   ref: eu-ai-act-resumo
-  localizacao: "'Four-point summary', terceiro item"
+  localizacao: '''Four-point summary'', terceiro item'
   resultado: confirmada
-- texto: 'o PL 2338/2023 está em tramitação na Câmara dos Deputados, com última ação listada em 2025-04-29; não há lei sancionada'
+- texto: o PL 2338/2023 está em tramitação na Câmara dos Deputados, com última ação listada em 2025-04-29; não há
+    lei sancionada
   ref: pl-2338-congresso
-  localizacao: 'campos de situação, casa atual e última ação (lida em 2026-10-06)'
+  localizacao: campos de situação, casa atual e última ação (lida em 2026-10-06)
   resultado: parcial
-  nota: 'A página não diz que ''não há lei''; isso se infere de a situação ser ''em tramitação''. O texto atribui a data à página e manda conferir de novo.'
+  nota: A página não diz que 'não há lei'; isso se infere de a situação ser 'em tramitação'. O texto atribui a data
+    à página e manda conferir de novo.
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P2-02/verificar-classificacao.py
-  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (ia.md com alto-risco sem dominio_de_impacto, revisor e aviso)'
-  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  comando: python3 scripts/verificar-classificacao.py docs/steering/ia.md (ia.md com alto-risco sem dominio_de_impacto,
+    revisor e aviso)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
   resultado: falhou-como-esperado
-  evidencia: 'três linhas "alto-risco exige ..." e "P2-02: classificação incompleta ou incoerente (acima)."; saída 1.'
+  evidencia: 'três linhas "alto-risco exige ..." e "P2-02: classificação incompleta ou incoerente (acima)."; saída
+    1.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-02/verificar-classificacao.py
-  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (com o conteúdo de exemplos/P2-02/ia.md)'
-  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  comando: python3 scripts/verificar-classificacao.py docs/steering/ia.md (com o conteúdo de exemplos/P2-02/ia.md)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
   resultado: passou
   evidencia: 'P2-02: classificação completa.; saída 0.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P2-02/ia.md
-  comando: 'python3 scripts/verificar-classificacao.py docs/steering/ia.md (o arquivo do exemplo copiado para docs/steering/)'
-  ambiente: 'cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS'
+  comando: python3 scripts/verificar-classificacao.py docs/steering/ia.md (o arquivo do exemplo copiado para docs/steering/)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
   resultado: passou
   evidencia: 'P2-02: classificação completa.; saída 0.'
   data: '2026-10-06'
 - tipo: prompt
   prompt: P2-02-prompt-1
   harness: claude-code
-  ambiente: 'sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p2-02-prompt, com a spec da triagem de empréstimo e o verificador'
+  ambiente: sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b2-p2-02-prompt, com a spec da triagem de empréstimo
+    e o verificador
   resultado: passou
-  evidencia: 'verificador antes: "docs/steering/ia.md: [Errno 2] No such file or directory" e "P2-02: classificação incompleta ou incoerente (acima).", saída 1; o agente leu a spec e gravou alto-risco, dominio_de_impacto financas, categoria alto, revisao_profissional sim, revisor e aviso_texto como pedido, classificado_por Ana Souza, classificado_em 2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md. Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl.'
+  evidencia: 'verificador antes: "docs/steering/ia.md: [Errno 2] No such file or directory" e "P2-02: classificação
+    incompleta ou incoerente (acima).", saída 1; o agente leu a spec e gravou alto-risco, dominio_de_impacto financas,
+    categoria alto, revisao_profissional sim, revisor e aviso_texto como pedido, classificado_por Ana Souza, classificado_em
+    2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md.
+    Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
   achados:
   - afirmacao: 'Verificador: "classificação completa" (exemplos/P2-02/verificar-classificacao.py)'
-    problema: '[baixo] aceita escopo alto-risco com categoria_eu_ai_act minimo ou limitado, aceita data impossível (2026-13-45) e qualquer valor em dominio_de_impacto (o Exemplo usa decisao-financeira, o teste do prompt gravou financas). Reproduzido em t9-p2-02.'
-    tratamento: Documentar no Como verificar que não confere a coerência escopo x categoria, o calendário nem o vocabulário do domínio; ou listar os valores aceitos em dominio_de_impacto.
-  - afirmacao: 'Prompt, passo 3: "direito, saúde, seguro, finanças, emprego, moradia ou avaliação acadêmica" (P2-02.md, prompt)'
-    problema: '[baixo] a lista do prompt tem sete itens e a política (e o Como aplicar) tem seis domínios; o prompt não dá o valor de dominio_de_impacto, e o agente o deduziu.'
-    tratamento: Alinhar a lista do prompt aos seis domínios e pedir dominio_de_impacto com um valor livre explícito ("em minúsculas, com hífens").
+    problema: '[baixo] aceita escopo alto-risco com categoria_eu_ai_act minimo ou limitado, aceita data impossível
+      (2026-13-45) e qualquer valor em dominio_de_impacto (o Exemplo usa decisao-financeira, o teste do prompt gravou
+      financas). Reproduzido em t9-p2-02.'
+    tratamento: 'Tratado em T10: o Como verificar diz que o verificador não confere a coerência escopo x categoria,
+      o calendário nem o vocabulário de dominio_de_impacto (valor livre).'
+  - afirmacao: 'Prompt, passo 3: "direito, saúde, seguro, finanças, emprego, moradia ou avaliação acadêmica" (P2-02.md,
+      prompt)'
+    problema: '[baixo] a lista do prompt tem sete itens e a política (e o Como aplicar) tem seis domínios; o prompt
+      não dá o valor de dominio_de_impacto, e o agente o deduziu.'
+    tratamento: 'Tratado em T10: a lista do prompt segue os seis domínios e o prompt pede dominio_de_impacto como
+      valor livre, em minúsculas e com hífens. Prompt alterado: aguarda novo teste em sessão nova.'
   - afirmacao: Fonte anthropic-usage-policy (https://www.anthropic.com/legal/aup)
-    problema: '[baixo] confirmada: seis domínios de alto risco, revisão por profissional qualificado e aviso "no mínimo no início de cada sessão". A fonte aplica o aviso a ofertas diretas a pessoas ou consumidores; o texto o diz sem esse recorte.'
-    tratamento: Acrescentar "quando a oferta é direta a pessoas ou consumidores" ao requisito de aviso.
+    problema: '[baixo] confirmada: seis domínios de alto risco, revisão por profissional qualificado e aviso "no
+      mínimo no início de cada sessão". A fonte aplica o aviso a ofertas diretas a pessoas ou consumidores; o texto
+      o diz sem esse recorte.'
+    tratamento: 'Tratado em T10: o requisito de aviso ganhou o recorte ''quando a oferta é direta a pessoas ou consumidores''.'
   - afirmacao: Execução registrada (e4ef178)
-    problema: '[baixo] conferida: commit só com docs/steering/ia.md, campos e verificador 0 como registrado; antes/depois do verificador reproduzidos em t9-p2-02.'
+    problema: '[baixo] conferida: commit só com docs/steering/ia.md, campos e verificador 0 como registrado; antes/depois
+      do verificador reproduzidos em t9-p2-02.'
     tratamento: Nenhum.

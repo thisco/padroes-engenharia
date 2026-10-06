@@ -4,16 +4,22 @@
 Uso: python3 verificar-catalogo.py [catalogo-modelos.yml] [--hoje AAAA-MM-DD]
 O arquivo é um subconjunto plano de YAML: uma lista de entradas "- chave: valor", com campos
 de uma linha e listas entre colchetes. Sai com 0 se o catálogo está completo e em dia, e com 1
-se falta campo, se o valor é inválido ou se a data de verificação passou de 90 dias.
+se falta campo, se o valor é inválido, se a data de verificação está no futuro ou passou de 90 dias.
 """
+
 import datetime
-import re
 import sys
 
 PRAZO_DIAS = 90
 BASE = ["id", "modelo", "canal", "operador_dados", "uso_liberado", "verificado_em", "fonte"]
-LIBERADO = ["retencao_dias", "zdr_elegivel", "system_card", "certificacoes",
-            "vedacao_treinamento", "vedacao_origem"]
+LIBERADO = [
+    "retencao_dias",
+    "zdr_elegivel",
+    "system_card",
+    "certificacoes",
+    "vedacao_treinamento",
+    "vedacao_origem",
+]
 ZDR = {"sim", "nao", "so-com-autorizacao"}
 ORIGENS = {"clausula-contratual", "compromisso-do-fornecedor"}
 
@@ -51,7 +57,10 @@ def conferir(entradas, hoje):
         return ["catálogo vazio"]
     for e in entradas:
         nome = e.get("id") or "(sem id)"
-        falta = lambda campo, msg: erros.append(f"{nome}: {campo}: {msg}")
+
+        def falta(campo, msg, nome=nome):
+            erros.append(f"{nome}: {campo}: {msg}")
+
         for campo in BASE:
             if not e.get(campo):
                 falta(campo, "obrigatório e vazio")
@@ -61,6 +70,8 @@ def conferir(entradas, hoje):
         d = data(e.get("verificado_em"))
         if e.get("verificado_em") and d is None:
             falta("verificado_em", "use AAAA-MM-DD")
+        elif d and d > hoje:
+            falta("verificado_em", "data no futuro")
         elif d and (hoje - d).days > PRAZO_DIAS:
             falta("verificado_em", f"vencido: {(hoje - d).days} dias, o limite é {PRAZO_DIAS}")
         if e.get("fonte") and not str(e["fonte"]).startswith("https://"):
@@ -73,7 +84,8 @@ def conferir(entradas, hoje):
             for campo in LIBERADO:
                 if not e.get(campo) or e[campo] == "a-confirmar":
                     falta(campo, "obrigatório e conferido para liberar o uso")
-            if e.get("retencao_dias") not in (None, "", "a-confirmar") and not str(e["retencao_dias"]).isdigit():
+            retencao = e.get("retencao_dias")
+            if retencao not in (None, "", "a-confirmar") and not str(retencao).isdigit():
                 falta("retencao_dias", "use um número de dias (0 para retenção zero)")
             if e.get("zdr_elegivel") and e["zdr_elegivel"] not in ZDR | {"a-confirmar"}:
                 falta("zdr_elegivel", f"use {', '.join(sorted(ZDR))}")
@@ -94,7 +106,7 @@ if __name__ == "__main__":
     if "--hoje" in args:
         i = args.index("--hoje")
         hoje = datetime.date.fromisoformat(args[i + 1])
-        del args[i:i + 2]
+        del args[i : i + 2]
     caminho = args[0] if args else "catalogo-modelos.yml"
     try:
         erros = conferir(ler_entradas(caminho), hoje)

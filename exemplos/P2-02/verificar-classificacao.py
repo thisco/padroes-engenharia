@@ -4,6 +4,7 @@
 Uso: python3 verificar-classificacao.py [docs/steering/ia.md]
 Sai com 0 se a classificação está completa e coerente, e com 1 se falta ou sobra algo.
 """
+
 import re
 import sys
 

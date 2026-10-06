@@ -108,17 +108,24 @@ revisao_adversarial:
   data: '2026-10-06'
   achados:
   - afirmacao: 'verificar-orcamento.sh: curl "$GW/key/list?return_full_object=true&size=100" (exemplos/P2-06/verificar-orcamento.sh)'
-    problema: '[baixo] lê só as 100 primeiras chaves; acima disso o script diz "todas as chaves virtuais têm orçamento" sem ter visto todas.'
-    tratamento: Paginar ou avisar o limite no Como verificar.
+    problema: '[baixo] lê só as 100 primeiras chaves; acima disso o script diz "todas as chaves virtuais têm orçamento"
+      sem ter visto todas.'
+    tratamento: 'Tratado em T10: o Como verificar avisa do limite de 100 chaves e manda paginar a listagem; o script
+      não mudou.'
   - afirmacao: relatorio-gasto.sh <chave> (exemplos/P2-06/relatorio-gasto.sh)
-    problema: '[baixo] a chave da aplicação vai na URL (/key/info?key=) e na linha de comando, e aparece em histórico e log de acesso; o texto manda guardar o segredo no ambiente.'
-    tratamento: Passar a chave por cabeçalho ou stdin, ou avisar.
+    problema: '[baixo] a chave da aplicação vai na URL (/key/info?key=) e na linha de comando, e aparece em histórico
+      e log de acesso; o texto manda guardar o segredo no ambiente.'
+    tratamento: 'Tratado em T10: o Como verificar avisa que a chave aparece na URL, no histórico e no log de acesso
+      e manda usar só chave de teste ou passar por cabeçalho; o script não mudou.'
   - afirmacao: Prompt (trazido do plano)
     problema: '[baixo] assume shell persistente entre os passos 3 a 6 (AI_GATEWAY_KEY).'
-    tratamento: Dizer para reexportar ou reemitir. Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+    tratamento: 'Tratado em T10: o prompt manda usar um único shell ou refazer as variáveis a cada comando. Prompt
+      alterado: aguarda novo teste em sessão nova.'
   - afirmacao: Fonte litellm-budgets (https://docs.litellm.ai/docs/proxy/users)
-    problema: '[baixo] confirmada: max_budget nulo por padrão, 401 ExceededTokenBudget na documentação, spend em /key/info. O texto já avisa que a versão testada devolveu 422.'
+    problema: '[baixo] confirmada: max_budget nulo por padrão, 401 ExceededTokenBudget na documentação, spend em
+      /key/info. O texto já avisa que a versão testada devolveu 422.'
     tratamento: Nenhum.
   - afirmacao: status adotar com Exemplo executado
-    problema: '[baixo] coerente: Exemplo executado (422 budget_exceeded, 0.1240 de 0.1, ORCAMENTO.md conferido no commit 79847d6); força orienta e mecanismo null. Execução em Docker não repetida (amostra foi a P2-04).'
+    problema: '[baixo] coerente: Exemplo executado (422 budget_exceeded, 0.1240 de 0.1, ORCAMENTO.md conferido no
+      commit 79847d6); força orienta e mecanismo null. Execução em Docker não repetida (amostra foi a P2-04).'
     tratamento: Nenhum.

@@ -7,6 +7,7 @@ destilação (ADR em docs/adr/, steering em docs/steering/ ou entrada em docs/PR
 Só avisa; a saída é 0, salvo base inexistente (2).
 Uso: python3 conferir-arquivamento.py [--base main]
 """
+
 import argparse
 import re
 import subprocess
