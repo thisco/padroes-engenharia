@@ -141,3 +141,10 @@ execucoes:
     padrao-v1.0: bloco inline confere com o arquivo canônico." saida=0. O prompt_para_agente do starter
     não foi executado nesta entrada.'
   data: 2026-10-05
+- tipo: prompt
+  prompt: starter-sdd-scaffold-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova em pasta vazia (~/curadoria-a5/b1-guia2-prompt), rede, Python 3.14, git; respostas antecipadas app-guia2, Python 3.11 e Projeto de teste do guia 2"
+  resultado: passou
+  evidencia: "clone da tag v1.7.0 em /tmp/sdd-scaffold (describe v1.7.0); gerador ok, commit 1c95cd6; PROCEDENCIA.md com Versão pedida v3.0.0 e Revisão instalada 5f6e9ad; 4 links para ../skills; AGENTS.md substituído; listou os marcadores preencher com as perguntas, sem preencher; verificar_constituicao exit 0; o pip não existia no PATH e o drift check rodou com /usr/bin/python3 (PyYAML 6.0.3), exit 0, 1 divergência esperada do módulo exemplo-servico; listou os 3 pendentes do passo 7. Transcrição em curadoria-a5/transcricoes/starter-sdd-scaffold-prompt-17.bruta.jsonl."
+  data: '2026-10-05'

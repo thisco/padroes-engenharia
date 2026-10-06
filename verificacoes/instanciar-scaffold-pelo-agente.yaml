@@ -60,3 +60,11 @@ revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'
   achados: []
+execucoes:
+- tipo: prompt
+  prompt: starter-sdd-scaffold-prompt-1
+  harness: claude-code
+  ambiente: "o prompt_para_agente do starter sdd-scaffold, que o guia usa; execução registrada em verificacoes/starter-sdd-scaffold.yaml, sessão nova em pasta vazia"
+  resultado: passou
+  evidencia: "gerador ok (commit 1c95cd6), PROCEDENCIA.md com v3.0.0, 4 links para ../skills, constituição conferida com exit 0."
+  data: '2026-10-05'

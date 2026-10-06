@@ -69,6 +69,13 @@ execucoes:
   resultado: passou
   evidencia: 'antes, ls .claude/skills falhava (No such file) e .agents não existia; o script imprimiu os quatro "<ponto>/skills -> ../skills" com rc 0; a linha 7 do CLAUDE.md ficou "@AGENTS.md"; readlink: ../skills quatro vezes; ls de cada ponto: arquitetura-viva estados-de-interface migrations-reversiveis sdd-lifecycle threat-model (a mesma lista do ferramenta-claude-code e do ferramenta-codex); segunda rodada com rc 0; git status só com CLAUDE.md modificado (os links ficaram iguais aos commitados).'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: receita-instalar-skills-por-harness-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) sem os quatro links nem @AGENTS.md, em ~/curadoria-a5/b1-receita-skills-prompt; a receita foi servida da fonte do worktree em http://127.0.0.1:8001/receitas/instalar-skills-por-harness.md, sem a inclusão do exemplo expandida, porque o gerar recusa a receita sem execução de prompt registrada (R-PROMPT)"
+  resultado: passou
+  evidencia: "listou as 5 skills; criou .claude, .codex, .kiro e .agents/skills apontando para ../skills (criou a pasta .agents; as outras já existiam com settings, requirements e permissions, intocados); acrescentou @AGENTS.md ao CLAUDE.md; readlink ../skills 4 vezes e ls dos 4 com as 5 skills; commit e36dec9 chore: monta os links de skills por harness, sem trailer, árvore limpa; terminou com o que depende do usuário. Transcrição em curadoria-a5/transcricoes/receita-instalar-skills-por-harness-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'

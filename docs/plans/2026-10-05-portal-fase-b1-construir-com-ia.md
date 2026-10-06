@@ -79,7 +79,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   agentes:
   - o **autor**: rascunho, fontes, Exemplo executado e registro;
   - o **testador do prompt**: sessão nova, que recebe só o prompt.
-- [ ] **T11 (receita "Instalar as skills por harness").** Pontos de montagem `.claude`,
+- [x] **T11 (receita "Instalar as skills por harness").** Pontos de montagem `.claude`,
   `.codex`, `.kiro` e `.agents` na 1.7.0. O `@AGENTS.md` no `CLAUDE.md`. As ferramentas da
   categoria `harness`. Execução com o projeto da 1.7.0, que já tem os quatro links.
 - [ ] **T12 (guia 1, "Do zero à primeira MR com IA", e tutorial).** Ponta a ponta com o starter
@@ -90,7 +90,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   4. mostrar a trava.
 
   Execução registrada.
-- [ ] **T13 (guia 2, "Instanciar o scaffold pelo próprio agente").** O prompt do README da 1.7.0,
+- [x] **T13 (guia 2, "Instanciar o scaffold pelo próprio agente").** O prompt do README da 1.7.0,
   testado em sessão nova. Ele já é o `prompt_para_agente` do starter, sem duplicar texto.
 - [ ] **T14 (conferência em lote, ADR 0005).** Um agente novo, com modelo econômico, confere a
   fatia inteira. Ele segue o Como aplicar e o Exemplo de cada conteúdo num repositório vazio e
@@ -119,5 +119,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   Achados para a T14: (1) P1-08: o prompt manda manter "os campos de aprovação", mas a spec do preparo não tinha esses campos. (2) P1-09: o preparo não traz pytest e o prompt assume `python3 -m pytest`; o Como aplicar deve dizer como instalar as dependências antes.
 - T9 (P1-10) e T10 (P1-11) fecharam: prompts P1-10-prompt-1 e P1-11-prompt-1 passaram em sessão nova, registrados em `verificacoes/P1-10.yaml` e `verificacoes/P1-11.yaml`; validar e gerar saem com 0. P1-03 a P1-11 fechadas. Repositórios de teste: `~/curadoria-a5/b1-p1-10-prompt` e `~/curadoria-a5/b1-p1-11-prompt`.
   Achados para a T14: (1) P1-10: o passo 4 do prompt espera "sem aviso" antes do commit do passo 5, mas o script compara o que está commitado; ajustar a ordem dos passos. (2) P1-10 e P1-11: o commit no repositório de teste saiu com trailer Co-Authored-By (padrão do harness, fora do portal); os prompts que mandam commitar podem pedir a mensagem sem trailer quando o projeto exigir.
+- T11 (receita instalar-skills-por-harness) e T13 (guia instanciar-scaffold-pelo-agente) fecharam: o script do exemplo foi executado numa cópia de projeto-teste-17 sem os links, e os prompts receita-instalar-skills-por-harness-prompt-1 e starter-sdd-scaffold-prompt-1 passaram em sessão nova (claude-code), registrados em `verificacoes/receita-instalar-skills-por-harness.yaml`, `verificacoes/starter-sdd-scaffold.yaml` e `verificacoes/instanciar-scaffold-pelo-agente.yaml`; validar e gerar saem com 0. A receita foi servida da fonte do worktree (porta 8001, sem a inclusão do exemplo expandida), porque o gerar recusa receita sem execução de prompt. Repositórios de teste: `~/curadoria-a5/b1-receita-skills-prompt` e `~/curadoria-a5/b1-guia2-prompt`.
+  Achados para a T14: (1) motor: o `gerar.py` não tem modo de prévia, o que obriga servir a fonte para testar o prompt de uma receita nova (R-PROMPT circular); levar à B.5. (2) Starter: o passo 6 do prompt usa `pip install`, que falha no macOS sem `pip` no PATH; `python3 -m pip` é mais portável, e a correção é no scaffold 1.8.0 (o prompt é o do README). (3) Receita: a documentação do Copilot não diz se ele segue link simbólico; o texto já avisa.
 
 ## Conferência em lote: <data> — achados
