@@ -63,6 +63,13 @@ execucoes:
   resultado: passou
   evidencia: 'medir-spec antes: 74 linhas (45 não vazias), 9 requisitos R<n>; o agente classificou cada R e seção (R1 a R3 dependem da mudança; R4 a R9 e 7 seções são extras) com motivo, sem inventar limite; reescreveu com Problema, R1 a R3 com os critérios originais e Não-objetivos; listou cada remoção com motivo; depois: 25 linhas (16 não vazias), 3 requisitos; commit 15a1e1c só com a spec; árvore limpa. Transcrição em curadoria-a5/transcricoes/P1-08-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-08-prompt-2
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-08-prompt, spec inflada de 74 linhas e 9 requisitos; prompt corrigido (cabeçalho com 'se existirem')
+  resultado: passou
+  evidencia: 'medir-spec antes: 74 linhas (45 não vazias), 9 requisitos R<n>; R1 a R3 dependem da mudança, R4 a R9 e as seções extras são extras; reescrita com Problema, R1 a R3 em Dado/Quando/Então e Não-objetivos, cabeçalho intacto; removidos listados com motivo; depois: 25 linhas (16 não vazias), 3 requisitos; commit 965da73 só com a spec. O commit no repositório de teste saiu com o trailer padrão do harness (o prompt não pede o contrário). Transcrição em curadoria-a5/transcricoes/P1-08-prompt-2.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'

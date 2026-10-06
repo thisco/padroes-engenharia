@@ -56,6 +56,13 @@ execucoes:
   resultado: passou
   evidencia: o agente abriu o guia do Gemini 3 (Last Updated 2026-09-23), aplicou só o mandado (app.py com thinking_level high, prompt sem 'Pense passo a passo', temperature=0 mantido), gravou docs/steering/modelo.md com Aplicadas, Não aplicadas com motivo e Não confirmado; sh scripts/verificar-modelo.sh saiu com OK; commit 7058e4f, 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-07-prompt-1.bruta.jsonl.
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-07-prompt-2
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 em ~/curadoria-a5/b1-p1-07-prompt, app.py do modelo anterior e prompt legado; prompt corrigido (passo 5 com exceções)
+  resultado: passou
+  evidencia: 'o agente abriu o guia (whats-new-gemini-3.5), trocou app.py para gemini-3.5-flash com ThinkingConfig(thinking_level high), manteve temperature=0, removeu do prompt a frase ''Pense passo a passo'' inteira e avisou; gravou docs/steering/modelo.md com Aplicadas, Não aplicadas (temperature, com motivo) e não confirmado na versão; sh scripts/verificar-modelo.sh saiu com OK; commit f5ff34a só com os 3 arquivos, o passo 5 corrigido foi respeitado. O commit no repositório de teste saiu com o trailer padrão do harness (o prompt não pede o contrário). Transcrição em curadoria-a5/transcricoes/P1-07-prompt-2.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'

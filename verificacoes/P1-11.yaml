@@ -54,6 +54,13 @@ execucoes:
   resultado: passou
   evidencia: 'script antes: dois avisos (Status aprovada; sem destilação); ADR docs/adr/0001-pedidos-nunca-sao-apagados.md (proposta), linha em PROJECT_MEMORY.md, Status arquivada; script depois: nenhum achado; pytest 4 passed; commit 4410222 com os 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-11-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-11-prompt-2
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-11-prompt, spec aprovada, sem ADR nem memória; prompt corrigido (commit sem trailer)
+  resultado: passou
+  evidencia: 'script antes: dois avisos (Status aprovada; sem destilação); ADR docs/adr/0001-cancelamento-logico-de-pedidos.md (proposta, 2026-10-07), linha em PROJECT_MEMORY.md (status ausente = pendente), Status arquivada; depois: ''Arquivamento: 1 spec(s) conferida(s), nenhum achado.'', saída 0; pytest 4 passed; commit e1b2eb8 com os 3 arquivos, sem trailer. Transcrição em curadoria-a5/transcricoes/P1-11-prompt-2.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'

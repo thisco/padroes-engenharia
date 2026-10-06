@@ -278,6 +278,9 @@ Execuções reproduzidas e fontes abertas, por conteúdo:
    `adotar` porque o portal pratica o formato (ADR 0003), mesmo com fonte de fornecedor.
 2. **Os 4 prompts com defeito pequeno** (P1-07 passo 5; P1-08 "se existirem"; P1-10 ordem dos
    passos 4 e 5; P1-10 e P1-11 commit sem trailer): corrigir e testar de novo em sessão nova.
+   Feito: texto corrigido no commit 0c49c9f; prompts reexecutados em sessão nova (claude-code, 2026-10-06) e
+   registrados como `<ID>-prompt-2`, todos passaram. Commits nos repositórios de teste: P1-07 f5ff34a,
+   P1-08 965da73, P1-10 71c804f, P1-11 e1b2eb8.
 3. **Reexecuções na 1.7.1:** não repetir agora os prompts da receita do CI e do starter nem o
    percurso do guia 1. Os registros dizem a versão de cada execução, e o que mudou na 1.7.1
    (`--no-renames`, `python3 -I`, a tag do clone) foi provado pelos jobs reexecutados na T15.

@@ -55,6 +55,13 @@ execucoes:
   resultado: passou
   evidencia: 'plano não commitado: ''Requisitos afetados: 0 spec(s) citada(s), nenhum achado.''; plano commitado sem adendo e adendo não commitado: AVISO de spec não está no diff; tudo commitado: ''Requisitos afetados: 1 spec(s) citada(s), nenhum achado.''; saída 0 em todos.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P1-10-prompt-2
+  harness: claude-code
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-10-prompt, hotfix commitado, spec arquivada sem adendo; prompt corrigido (commit antes do script, sem trailer)
+  resultado: passou
+  evidencia: 'script antes: aviso de spec citada fora do diff; o agente acrescentou ''## Adendo 2026-10-06'' ao R1 (corte em 200 caracteres), sem mexer em requisitos nem Status; commit 71c804f só com a spec, sem trailer, antes de rodar o script de novo; depois: ''Requisitos afetados: 1 spec(s) citada(s), nenhum achado.'', saída 0; pytest 3 passed. Transcrição em curadoria-a5/transcricoes/P1-10-prompt-2.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
