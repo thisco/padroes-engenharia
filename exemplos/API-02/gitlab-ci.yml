@@ -1,0 +1,27 @@
+# Job `contrato` (API-02): reprova a merge request que quebra o contrato da API sem versão
+# major nova e ADR, e que deixa a implementação divergir do contrato.
+# Requer no repositório: api/openapi.yaml (o contrato), api/servico.py (a implementação),
+# tests/test_contrato.py (o teste de contrato) e scripts/comparar-contratos.py (o verificador
+# da API-01, sem alterações). O `python3 -I` roda o script em modo isolado.
+stages:
+  - travas
+
+.so-em-merge-request:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+contrato:
+  extends: .so-em-merge-request
+  stage: travas
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - pip install --quiet --disable-pip-version-check pyyaml==6.0.3
+    - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
+    - git rev-parse --verify "refs/remotes/origin/$ALVO"
+    - git show "origin/$ALVO:api/openapi.yaml" > /tmp/openapi-base.yaml
+    - ADR=$(git diff --name-only --diff-filter=A "origin/$ALVO" HEAD -- 'docs/adr/*.md' | head -n 1)
+    - python3 -I scripts/comparar-contratos.py /tmp/openapi-base.yaml api/openapi.yaml --adr "$ADR"
+    - python3 -m unittest tests/test_contrato.py
