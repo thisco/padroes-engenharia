@@ -1,0 +1,11 @@
+id: gateway-poc-cenario-02-policies
+titulo: "Cenário 02 da avaliação do gateway: guardrail policies (gateway-poc v0.1.0)"
+organizacao: gateway-poc (github.com/thisco)
+url: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/avaliacao/cenarios/02-policies/README.md
+tipo: interno
+versao: "v0.1.0"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "seções '3. Planejamento' (guardrails mascara-pii e mascara-pii-log), '4. Dados de análise' (CPF sintético) e achado 4 (falso positivo de NER em português)"
+dominios: [privacidade-lgpd, ia-no-produto]
+notas: "Aberto na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef (tag v0.1.0). Snapshot de 2026-10-06 de um repositório de avaliação."

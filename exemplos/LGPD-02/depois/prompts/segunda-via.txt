@@ -1,0 +1,2 @@
+Responda ao cliente com CPF [CPF] e e-mail [EMAIL], explicando como pedir a segunda via do
+boleto.

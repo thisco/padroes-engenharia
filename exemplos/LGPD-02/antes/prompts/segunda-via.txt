@@ -1,0 +1,2 @@
+Responda ao cliente com CPF 111 444 777 35 e e-mail ana.souza@empresa.com.br, explicando como
+pedir a segunda via do boleto.

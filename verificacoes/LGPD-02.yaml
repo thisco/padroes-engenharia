@@ -1,0 +1,108 @@
+conteudo: LGPD-02
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: tratamento é toda operação com dado pessoal, incluindo armazenamento, arquivamento e transmissão (art. 5º,
+    X)
+  ref: lgpd
+  localizacao: art. 5º, X
+  resultado: confirmada
+- texto: princípio da necessidade (art. 6º, III) e da segurança, com medidas técnicas e administrativas aptas a proteger
+    os dados de acessos não autorizados (art. 6º, VII); as medidas de segurança devem ser observadas desde a concepção
+    do produto até a execução (art. 46, § 2º)
+  ref: lgpd
+  localizacao: art. 6º, III e VII; art. 46, § 2º
+  resultado: confirmada
+- texto: a leitura de que dado pessoal em teste, log e prompt amplia onde o dado existe sem a tarefa precisar
+  ref: lgpd
+  localizacao: art. 5º, X; art. 6º, III
+  resultado: parcial
+  nota: Leitura do portal, dita no texto; a lei não cita teste, log nem prompt.
+- texto: o CPF do payload da avaliação era gerado e não correspondia a pessoa física
+  ref: gateway-poc-cenario-02-policies
+  localizacao: seção '4. Dados de análise'
+  resultado: confirmada
+- texto: mascara-pii (pre_call) e mascara-pii-log (logging_only) são guardrails separados, ambos com default_on false
+  ref: gateway-poc-cenario-02-policies
+  localizacao: seção '3. Planejamento', pré-requisitos
+  resultado: confirmada
+- texto: o detector por reconhecimento de entidades trocou 'autorizada' por <LOCATION> no texto devolvido, um falso
+    positivo em português
+  ref: gateway-poc-cenario-02-policies
+  localizacao: caso PO-04 e achado 4
+  resultado: confirmada
+- texto: o corpus do vector store era uma política de uso de IA fictícia (dados fictícios)
+  ref: gateway-poc-cenario-04-vector-stores
+  localizacao: seção de dados de análise
+  resultado: confirmada
+- texto: uma chave sem permissão de vector store conseguiu ler o store inteiro
+  ref: gateway-poc-cenario-04-vector-stores
+  localizacao: caso VS-05
+  resultado: confirmada
+- texto: a leitura de que o mesmo acesso exporia dado pessoal, se ele estivesse no índice
+  ref: gateway-poc-cenario-04-vector-stores
+  localizacao: caso VS-05
+  resultado: parcial
+  nota: Leitura do portal, dita no texto; o corpus da avaliação não tinha dado pessoal.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/verificar-dado-em-claro.py
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estados antes e depois)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'ruff check e ruff format --check sem achados; estado depois: ''LGPD-02: 8 arquivos varridos, nenhum CPF ou e-mail em claro.'', saída 0; raiz sem tests, logs e prompts: saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/antes/tests/fixtures/cliente.json
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'tests/fixtures/cliente.json:1: CPF em claro e e-mail em claro; saída 1, sem imprimir o dado.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/antes/logs/atendimento.log
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'logs/atendimento.log:1: CPF em claro e e-mail em claro (a linha 2, com protocolo de 11 dígitos de verificador inválido, não é acusada); saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/antes/prompts/segunda-via.txt
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'prompts/segunda-via.txt:1: CPF em claro (com espaços) e e-mail em claro; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/depois/tests/fixtures/cliente.json
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado depois)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'marcador [CPF] e e-mail cliente@example.com: sem achado; saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/depois/tests/sintetico.py
+  comando: python3 -c "import sintetico; print(sintetico.cpf_sintetico(0))" em tests/ (e cpf_valido do verificador sobre as sementes 0 a 2)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'três CPFs de 11 dígitos gerados (sementes 0, 1 e 2), todos com dígitos verificadores válidos segundo o verificador; o arquivo em si não traz CPF literal e passa na varredura.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/depois/logs/atendimento.log
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado depois)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'marcadores [CPF] e [EMAIL] no payload: sem achado; saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/depois/prompts/segunda-via.txt
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado depois)
+  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'prompt com [CPF] e [EMAIL]: sem achado; saída 0.'
+  data: '2026-10-06'
+# prompt LGPD-02-prompt-1: ainda sem teste em sessão nova, por isso sem execução registrada.
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote (T8)
+  data: '2026-10-06'
+  achados: []

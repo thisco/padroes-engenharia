@@ -1,0 +1,11 @@
+id: gateway-poc-cenario-04-vector-stores
+titulo: "Cenário 04 da avaliação do gateway: vector stores (gateway-poc v0.1.0)"
+organizacao: gateway-poc (github.com/thisco)
+url: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/avaliacao/cenarios/04-vector-stores/README.md
+tipo: interno
+versao: "v0.1.0"
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "seção de dados de análise (corpus sintético, dados fictícios) e caso VS-05 (chave sem permissão de vector store leu o store inteiro)"
+dominios: [privacidade-lgpd, ia-no-produto]
+notas: "Aberto na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef (tag v0.1.0). O corpus da avaliação era uma política de uso fictícia, sem dado pessoal."
