@@ -68,10 +68,10 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
 
 ## Passos
 
-1. Baixe os dois scripts do portal, que os hospeda na versão fixada do scaffold (1.7.0), sem
+1. Baixe os dois scripts do portal, que os hospeda na versão fixada do scaffold (1.7.1), sem
    alterá-los, e confira o hash de cada um antes de usar. Troque `{URL do portal}` pelo endereço
    do portal publicado; os hashes são os campos `sha256` de
-   `{URL do portal}/.well-known/mecanismos/index.json` e os dos arquivos na tag `v1.7.0`:
+   `{URL do portal}/.well-known/mecanismos/index.json` e os dos arquivos na tag `v1.7.1`:
 
    ```bash
    mkdir -p scripts
@@ -79,7 +79,7 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
    curl -fsSL "$BASE/verificar_pr.py" -o scripts/verificar_pr.py
    curl -fsSL "$BASE/verificar_constituicao.py" -o scripts/verificar_constituicao.py
    sha256sum -c <<'HASHES'
-   1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488  scripts/verificar_pr.py
+   616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py
    8a3eeedf0edd72d2d12d83087e2c8a67859683bd6786cd094f85f43bba03ebad  scripts/verificar_constituicao.py
    HASHES
    ```
@@ -91,7 +91,7 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
 
    Se algum arquivo não sair com `OK`, não use os scripts. A alternativa, com os mesmos hashes, é
    o GitHub na tag: troque a linha `BASE` por
-   `BASE=https://raw.githubusercontent.com/thisco/sdd-scaffold/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts`.
+   `BASE=https://raw.githubusercontent.com/thisco/sdd-scaffold/cd121cd973945c486e63029496ed7ec879a18e32/template/scripts`.
 
    Num repositório com `AGENTS.md` sem a constituição entre marcadores, tire do job `governanca`
    a linha do `verificar_constituicao.py`. Num repositório sem `AGENTS.md`, remova o job
@@ -111,11 +111,20 @@ Num projeto gerado pelo starter `sdd-scaffold` os dois já existem. Se faltarem,
      gitleaks e o diff contra a base precisam do histórico inteiro;
    - `entrypoint: [""]` troca o entrypoint da imagem do gitleaks para o job poder rodar o
      script [ref:gitlab-docker-entrypoint];
+   - os jobs rodam os scripts com `python3 -I` (modo isolado), como o CI do template da 1.7.1: sem
+     ele, `python3 scripts/x.py` põe `scripts/` no início do caminho de importação, e um módulo
+     plantado ali, como `scripts/json.py`, sequestraria o verificador [ref:sdd-scaffold-readme];
    - a segunda linha `git rev-parse --verify` faz o job falhar alto, com a mensagem do git,
-     quando a base não está no clone. O `verificar_pr.py` da 1.7.0 também confere a base: sem
+     quando a base não está no clone. O `verificar_pr.py` da 1.7.1 também confere a base: sem
      ela, imprime `ERRO: base origin/<alvo> não encontrada` e sai com 2
      [ref:sdd-scaffold-verificar-pr]. A linha fica porque protege também quem usa uma cópia
      mais antiga do script.
+
+   A trava vale contra descuido e não contra má-fé: o job roda o `verificar_pr.py` da própria
+   MR, então quem altera o script na MR altera também o que o avalia. O README do scaffold
+   aponta duas mitigações: CODEOWNERS e proteção de branch em `scripts/` e `.github/`, ou rodar o
+   script da base, com `git show origin/<alvo>:scripts/verificar_pr.py | python3 -I - --base origin/<alvo>`
+   [ref:sdd-scaffold-readme].
 3. Opcional: rode os jobs na sua máquina com `gitlab-ci-local`, que executa pipelines como
    shell ou Docker [ref:gitlab-ci-local-readme]. Na pasta do repositório, que precisa ter a
    branch `origin/main` para o `normas-do-pr` comparar. Os avisos sobre o remote `origin` e
@@ -163,7 +172,7 @@ ci/AAAA-MM-DD-travas, com a data de hoje.
    o conteúdo, e confira com sha256sum -c o hash do campo sha256 de
    {URL do portal}/.well-known/mecanismos/index.json para esse arquivo. Se o hash não bater,
    não use o arquivo e me avise. Se o portal não responder, a alternativa é o commit
-   06a382b938af66230ce6299c1638b0ad055804f0 do sdd-scaffold no GitHub, com a mesma conferência.
+   cd121cd973945c486e63029496ed7ec879a18e32 do sdd-scaffold no GitHub, com a mesma conferência.
 2. Se não houver .gitlab-ci.yml, crie-o com o conteúdo do arquivo de exemplo da receita. Se
    houver, acrescente o stage travas à lista de stages e os jobs normas-do-pr, governanca e
    segredos, mais o bloco .so-em-merge-request, sem mudar os jobs que já existem.
@@ -223,7 +232,7 @@ WRN leaks found: 1
 - **O `segredos` acusa um segredo antigo.** Revogue o segredo no serviço de origem. Para
   silenciar um achado já tratado, acrescente a impressão digital dele ao `.gitleaksignore`,
   recurso que a documentação marca como experimental [ref:gitleaks-readme].
-- **O agente não segue o `AGENTS.md` ou não vê as skills do projeto.** O scaffold 1.7.0 monta
+- **O agente não segue o `AGENTS.md` ou não vê as skills do projeto.** O scaffold, desde a 1.7.0, monta
   `.agents/skills`, a pasta que o Codex e o Antigravity documentam [ref:codex-skills]
   [ref:antigravity-skills], e o `CLAUDE.md` dele importa o `AGENTS.md` com `@AGENTS.md`
   [ref:sdd-scaffold-changelog]. Num projeto de uma versão anterior ou fora do scaffold, aponte
@@ -231,6 +240,9 @@ WRN leaks found: 1
   arquivos, o Claude Code lê só o `CLAUDE.md` [ref:claude-code-memory].
 - **O repositório não tem constituição.** Sem `AGENTS.md`, remova o job `governanca`; com
   `AGENTS.md` sem marcadores, tire só a linha do `verificar_constituicao.py`.
+- **Renomear a migration passou.** Na 1.7.0 o rename escondia a migration antiga; a 1.7.1 lista os
+  arquivos com `git diff --name-only --no-renames`, e renomear ou mover a migration também bloqueia
+  [ref:sdd-scaffold-verificar-pr]. Com um script da 1.7.0 ou anterior, atualize-o pelo passo 1.
 - **A MR editou uma migration e passou.** A pasta provavelmente fica fora de `migration/`,
   `migrations/` e `alembic/` [ref:sdd-scaffold-verificar-pr].
 - **`sha256sum -c` não confere no macOS.** No macOS, o `sha256sum -c` não lê a lista da entrada

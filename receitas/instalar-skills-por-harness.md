@@ -32,7 +32,7 @@ revisado_em: 2026-10-06
 
 ## Resultado
 
-Uma pasta `skills/` na raiz e quatro links para ela, um por ponto de montagem. O scaffold 1.7.0
+Uma pasta `skills/` na raiz e quatro links para ela, um por ponto de montagem. O scaffold, desde a 1.7.0,
 monta exatamente isso: `.claude/skills`, `.codex/skills`, `.kiro/skills` e `.agents/skills` são
 links para o mesmo diretório `skills/`, então editar a skill num lugar vale para todos e não
 existe cópia para divergir [ref:sdd-scaffold-readme]. O `.agents/skills` entrou na 1.7.0 e é lido
@@ -53,7 +53,7 @@ o `.claude/skills`, que o scaffold já monta.
 
 ## Antes de começar
 
-Num projeto gerado pelo starter `sdd-scaffold` na versão 1.7.0 os quatro links já existem, e esta
+Num projeto gerado pelo starter `sdd-scaffold` na versão 1.7.1 os quatro links já existem, e esta
 receita serve para conferir ou reparar. Ela é necessária num projeto de uma versão anterior ou
 fora do scaffold, onde você cria os links à mão. Confira que a pasta `skills/` existe e que cada
 skill tem uma pasta com `SKILL.md`:
@@ -70,7 +70,7 @@ sdd-lifecycle
 threat-model
 ```
 
-Esses são os nomes das skills do scaffold 1.7.0 com a `sdd-lifecycle` instalada; o seu projeto
+Esses são os nomes das skills do scaffold 1.7.1 (as mesmas da 1.7.0) com a `sdd-lifecycle` instalada; o seu projeto
 lista as skills que tiver. Se `skills/` não existir, a receita não se aplica: crie as skills
 primeiro. O Claude Code lê cada skill de uma pasta com `SKILL.md` [ref:claude-code-skills].
 
@@ -137,7 +137,7 @@ chore/AAAA-MM-DD-skills-por-harness, com a data de hoje.
 
 ## Confira
 
-Com o scaffold 1.7.0, os quatro `readlink` imprimem o mesmo alvo, e cada pasta lista as mesmas
+Com o scaffold 1.7.0 ou 1.7.1, os quatro `readlink` imprimem o mesmo alvo, e cada pasta lista as mesmas
 skills (aqui, as cinco do scaffold com a `sdd-lifecycle`):
 
 ```text

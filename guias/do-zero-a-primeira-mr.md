@@ -2,7 +2,7 @@
 titulo: Do zero à primeira MR com IA
 tipo: tutorial
 publico: Quem vai começar um projeto novo com um agente de código e quer chegar à primeira merge request com o processo SDD funcionando
-resultado_esperado: "Um projeto gerado pelo sdd-scaffold 1.7.0 com uma correção de Tier 1 e uma mudança de Tier 2 (spec aprovada por uma pessoa, plano, revisão contra a spec e spec arquivada), o CI do GitLab com as três travas ligado, e a prova de que editar uma migration já aplicada bloqueia a MR."
+resultado_esperado: "Um projeto gerado pelo sdd-scaffold 1.7.1 com uma correção de Tier 1 e uma mudança de Tier 2 (spec aprovada por uma pessoa, plano, revisão contra a spec e spec arquivada), o CI do GitLab com as três travas ligado, e a prova de que editar uma migration já aplicada bloqueia a MR."
 starter: sdd-scaffold
 pre_requisitos:
   - Python 3.11 ou mais novo, git com user.name e user.email configurados, curl e acesso à rede
@@ -16,6 +16,7 @@ referencias:
   - sdd-scaffold-modelo-spec
   - sdd-scaffold-modelo-plano
   - sdd-scaffold-verificar-pr
+  - sdd-scaffold-changelog
   - sdd-scaffold-sdd-processo
   - gitlab-mr-pipelines
   - gitlab-ci-local-readme
@@ -30,7 +31,9 @@ repete o que está nelas: cada passo diz o que fazer e aponta para a página que
 
 Todos os comandos e todas as saídas abaixo vêm de uma execução feita de ponta a ponta com o
 sdd-scaffold 1.7.0, sem agente de IA: os artefatos de cada passo (planos, spec, aprovação) foram
-escritos à mão, e o `verificar_pr.py` e o gitlab-ci-local rodaram de verdade. Com um agente, ele
+escritos à mão, e o `verificar_pr.py` e o gitlab-ci-local rodaram de verdade. O clone do passo 1
+pede a tag v1.7.1, que não muda esses comandos: ela faz o verificador também bloquear a migration
+renomeada e roda os scripts do CI com `python3 -I` [ref:sdd-scaffold-changelog]. Com um agente, ele
 escreve esses arquivos e você confere e aprova; os comandos de verificação são os mesmos. Os
 comandos da execução somaram cerca de 3,5 minutos, sem contar o tempo de escrever os arquivos.
 
@@ -42,10 +45,10 @@ O starter [SDD scaffold](../starters/sdd-scaffold.html) gera o projeto com o `cr
 que exige Python 3.11 ou mais novo, rede e git com `user.name` e `user.email`, e faz o primeiro
 commit [ref:sdd-scaffold-readme]. Para ter o agente conduzindo a instalação, siga o guia
 [Instanciar o scaffold pelo próprio agente](instanciar-scaffold-pelo-agente.html). Para fazer
-na mão, clone o scaffold na tag `v1.7.0` e rode o gerador, que fica na raiz do clone:
+na mão, clone o scaffold na tag `v1.7.1` e rode o gerador, que fica na raiz do clone:
 
 ```bash
-git clone --depth 1 --branch v1.7.0 https://github.com/thisco/sdd-scaffold.git
+git clone --depth 1 --branch v1.7.1 https://github.com/thisco/sdd-scaffold.git
 python3 sdd-scaffold/criar_projeto.py --nome app-guia1 --destino . \
   --stack "Python 3.11" --descricao "Projeto do guia 1"
 cd app-guia1

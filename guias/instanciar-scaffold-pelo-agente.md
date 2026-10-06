@@ -21,7 +21,7 @@ pasta onde o projeto vai nascer, cola um prompt, e o agente clona o scaffold, ro
 confere a instalação, lê a constituição e conduz a configuração pós-geração [ref:sdd-scaffold-readme].
 Este guia cobre o preparo, o que conferir no fim e o que continua sendo seu. O prompt em si não
 mora aqui: ele é o `prompt_para_agente` do starter
-[SDD scaffold](../starters/sdd-scaffold.html), na versão 1.7.0, e é lá que você o copia.
+[SDD scaffold](../starters/sdd-scaffold.html), na versão 1.7.1, e é lá que você o copia.
 
 ## Passos
 

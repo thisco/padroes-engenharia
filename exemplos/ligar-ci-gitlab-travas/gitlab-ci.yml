@@ -1,8 +1,9 @@
 # Travas do processo SDD no pipeline de merge request do GitLab.
 # Receita: "Ligar o CI do GitLab com as travas" (portal de padrões de engenharia).
 # Requer no repositório: scripts/verificar_pr.py e scripts/verificar_constituicao.py do
-# sdd-scaffold 1.7.0 (commit 06a382b938af66230ce6299c1638b0ad055804f0), baixados do portal em
-# /.well-known/mecanismos/sdd-scaffold/ com o hash conferido, e o AGENTS.md.
+# sdd-scaffold 1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), baixados do portal em
+# /.well-known/mecanismos/sdd-scaffold/ com o hash conferido, e o AGENTS.md. O `python3 -I` roda o
+# script em modo isolado, como o CI do template, para que um módulo plantado em scripts/ não o sequestre.
 stages:
   - travas
 
@@ -22,7 +23,7 @@ normas-do-pr:
     - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
     - git rev-parse --verify "refs/remotes/origin/$ALVO"
-    - python3 scripts/verificar_pr.py --base "origin/$ALVO"
+    - python3 -I scripts/verificar_pr.py --base "origin/$ALVO"
 
 # Bloqueia AGENTS.md grande demais e constituição inline adulterada.
 governanca:
@@ -33,7 +34,7 @@ governanca:
     - TAMANHO=$(wc -c < AGENTS.md)
     - echo "AGENTS.md com $TAMANHO bytes (limite 30000)"
     - if [ "$TAMANHO" -ge 30000 ]; then echo "AGENTS.md grande demais; mova o detalhe para docs/steering/"; exit 1; fi
-    - python3 scripts/verificar_constituicao.py --raiz .
+    - python3 -I scripts/verificar_constituicao.py --raiz .
 
 # Bloqueia segredo em qualquer commit do histórico.
 segredos:

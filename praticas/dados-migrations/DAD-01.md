@@ -6,14 +6,14 @@ dominio: dados-migrations
 subdominio: null
 momento: antes-do-merge
 forca: bloqueia
-mecanismo: sdd-scaffold:template/scripts/verificar_pr.py@1.7.0
+mecanismo: sdd-scaffold:template/scripts/verificar_pr.py@1.7.1
 status: adotar
 aplica: [skill:migrations-reversiveis]
 ferramentas_aprovadas: [flyway, alembic, sdd-scaffold]
 starter: sdd-scaffold
 receitas: [ligar-ci-gitlab-travas]
 exemplos: [exemplos/DAD-01/gitlab-ci.yml]
-referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, alembic-tutorial, alembic-batch]
+referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, sdd-scaffold-readme, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
 dono: nuarq
 revisado_em: 2026-10-05
@@ -69,19 +69,19 @@ validação falha quando o arquivo local passa a ter checksum diferente do que f
    com as travas", que baixa o `verificar_pr.py` do portal. O script também vem no projeto
    gerado pelo [starter sdd-scaffold](../starters/sdd-scaffold.html). Sem o starter, baixe-o do
    portal e confira o hash, que é o campo `sha256` de `/.well-known/mecanismos/index.json` e o do
-   arquivo na tag `v1.7.0` (troque `{URL do portal}` pelo endereço do portal publicado):
+   arquivo na tag `v1.7.1` (troque `{URL do portal}` pelo endereço do portal publicado):
 
    ```bash
    mkdir -p scripts
    curl -fsSL "{URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py" -o scripts/verificar_pr.py
-   echo "1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488  scripts/verificar_pr.py" | sha256sum -c -
+   echo "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py" | sha256sum -c -
    ```
 
    O `sha256sum -c` imprime `scripts/verificar_pr.py: OK` e sai com 0; qualquer outra saída
    quer dizer que o arquivo não é o fixado, e ele não deve ser usado. No macOS, o
    `sha256sum -c` não lê a lista da entrada padrão: grave a linha `<hash>  <arquivo>` num arquivo
    e passe-o, ou use `shasum -a 256 -c`. A alternativa é o GitHub na tag, em
-   [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/06a382b938af66230ce6299c1638b0ad055804f0/template/scripts/verificar_pr.py),
+   [`template/scripts/`](https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/template/scripts/verificar_pr.py),
    com a mesma conferência de hash.
 
 ## Exemplo
@@ -174,7 +174,7 @@ engenharia: {mudança}.
    ter linha BLOQUEIA. Se scripts/verificar_pr.py não existir, baixe-o de
    {URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sem alterar o conteúdo,
    e confira com sha256sum -c que o hash dele é
-   1397e8b1ee5b67871e33c439f868e149f064822858317bb5010a5787ec050488. Se o hash não bater, não
+   616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e. Se o hash não bater, não
    use o arquivo e me avise.
 ```
 
@@ -223,9 +223,14 @@ Para testar a trava, altere uma migration existente numa branch descartável e a
 O que a trava não cobre: ela reconhece como migration todo arquivo sob uma pasta
 `migration/`, `migrations/` ou `alembic/` [ref:sdd-scaffold-verificar-pr]. Pastas com outro
 nome, como `db/changelog/`, `db/migrate/` ou uma pasta de revisões do Alembic com outro nome,
-ficam fora, e a edição passa. Nos testes da curadoria, apagar a V2 foi bloqueado, mas renomear
-a V2 e movê-la para fora da pasta `db/migration/` passaram, com no máximo o aviso de rollback.
-A trava só olha o caminho do arquivo, não o banco. No projeto com Flyway, `flyway validate` no
+ficam fora, e a edição passa. Nos testes da curadoria com a 1.7.1, apagar a V2, renomeá-la e
+editá-la bloquearam, e mover a V2 para fora da pasta `db/migration/` também: a lista de arquivos
+alterados sai de `git diff --name-only --no-renames`, então o caminho antigo continua nela
+[ref:sdd-scaffold-verificar-pr]. Na 1.7.0, esse último caso e o renomear passavam, com no máximo
+o aviso de rollback.
+A trava só olha o caminho do arquivo, não o banco. Ela vale contra descuido e não contra má-fé:
+o job roda o `verificar_pr.py` do próprio PR, e quem o altera no PR altera o que o avalia; a
+receita "Ligar o CI do GitLab com as travas" traz as mitigações [ref:sdd-scaffold-readme]. No projeto com Flyway, `flyway validate` no
 pipeline é uma segunda trava, no banco [ref:flyway-validate]; ele também falha quando a MR traz
 uma migration ainda não aplicada naquele banco [ref:flyway-validate], então rode-o contra um
 banco em que as migrations anteriores já foram aplicadas e cuide da ordem com o `migrate`.

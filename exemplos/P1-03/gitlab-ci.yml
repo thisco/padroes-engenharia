@@ -1,6 +1,6 @@
 # Trava do tamanho da constituição no pipeline de merge request do GitLab.
 # Prática P1-03. É o job `governanca` da receita "Ligar o CI do GitLab com as travas".
-# Requer scripts/verificar_constituicao.py do sdd-scaffold 1.7.0, baixado do portal em
+# Requer scripts/verificar_constituicao.py do sdd-scaffold 1.7.1, baixado do portal em
 # /.well-known/mecanismos/sdd-scaffold/ com o hash conferido, e o AGENTS.md na raiz.
 stages:
   - travas
@@ -14,4 +14,4 @@ governanca:
     - TAMANHO=$(wc -c < AGENTS.md)
     - echo "AGENTS.md com $TAMANHO bytes (limite 30000)"
     - if [ "$TAMANHO" -ge 30000 ]; then echo "AGENTS.md grande demais; mova o detalhe para docs/steering/"; exit 1; fi
-    - python3 scripts/verificar_constituicao.py --raiz .
+    - python3 -I scripts/verificar_constituicao.py --raiz .
