@@ -77,7 +77,7 @@ commitar, pede a mensagem sem trailer.
 - [x] **T4 (P3-01, P3-02).** A P3-02 reaproveita a skill `threat-model` já publicada no índice.
 - [x] **T5 (P3-03, P3-04).** O Exemplo da P3-04 mostra a política de permissões do template do
   scaffold 1.7.1 (`deny`, `ask`, hook) como caso concreto, sem nome de harness no corpo.
-- [ ] **T6 (P3-05, P3-06).** O Exemplo da P3-05 é um teste determinístico: conteúdo externo com
+- [x] **T6 (P3-05, P3-06).** O Exemplo da P3-05 é um teste determinístico: conteúdo externo com
   instrução injetada chega isolado e marcado, e o verificador confere a marcação. O da P3-06 é um
   verificador de allowlist de servidores MCP numa configuração de projeto.
 - [ ] **T7 (starter `gateway-poc` e receita "Ligar uma aplicação ao gateway de IA").** Depende
@@ -119,6 +119,8 @@ criação do repositório e o push ficam com o dono.
 - **T3 fechou (2026-10-06).** P2-05 (f2fed64) com Exemplo executado: job `evals` no `gitlab-ci-local` PASS (5/5, taxa 1.00) e, com a regressão simulada, FAIL (3/5, taxa 0.60 < 0.80, saída 1); o job agendado `evals-modelo-real` não foi executado. Prompt testado em sessão nova (claude-code): commit 775678e só com `EVALS.md`. Achado de ambiente: `mock_response` no corpo da requisição ao proxy é ignorado, e o do `config.yaml` prevalece (um alias por caso). Registro em `verificacoes/P2-05.yaml`.
 - **T5 fechou (2026-10-06).** P3-03 (c52a4ff) e P3-04 (5a8d418) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-03 verificador 1 antes e 0 depois, commit só com docs/steering/agente.md; P3-04 verificador 1 antes e 0 depois, commit com a política e o agente.md. Ambas com força orienta e mecanismo null, pois o hook do scaffold não é hospedado. Registros em `verificacoes/P3-03.yaml` e `verificacoes/P3-04.yaml`.
 
+- **T6 fechou (2026-10-06).** P3-05 (563f1fe) e P3-06 (2b2c758) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-05 commit 8d5f8ec (verificador 1 antes, 0 depois), P3-06 commit ae59e5f (1 antes, 0 depois). Registros em `verificacoes/P3-05.yaml` e `verificacoes/P3-06.yaml`.
+
 ## Conferência em lote: <data> — achados
 
 - P2-03, prompt: o campo `modelo` não vem literal nos placeholders, e o agente o deduziu do pedido ("Claude Fable 5"). Informar o valor na entrada 1 e na 2.
@@ -132,3 +134,7 @@ criação do repositório e o push ficam com o dono.
 - P2-05, suíte: um único teste agrega os 5 casos; um caso reprovado não aparece como teste próprio no relatório do pytest.
 - P3-03 e P3-04, prompts: o harness não persiste shell e o prompt diz "use um único shell"; a frase deve prever a alternativa ("ou refaça as variáveis a cada comando").
 - P3-04, prompt: o agente editou o JSON com a ferramenta de escrita do harness, e não por shell; sem efeito no resultado, mas o prompt supõe shell.
+- P3-06, prompt: diz "ao projeto projeto-teste-17", mas o preparo não tem pasta com esse nome (o agente trabalhou na raiz); corrigir o texto na T10.
+- P3-05 e P3-06, prompts: "único shell" não é literal no harness.
+- P3-06, segurança: a allowlist central dentro do mesmo repositório pode ser autoaprovada por quem edita o projeto; a prática deve dizer que ela mora fora do repositório ou protegida por CODEOWNERS. O verificador deixa escapes semânticos (`env`, variáveis, URL com redirecionamento); documentar o limite.
+- P3-05, Exemplo: o estado "antes" tem o prompt com conteúdo cru (esperado); o Exemplo publicado deve deixar claro que é o estado reprovado.

@@ -44,6 +44,13 @@ execucoes:
   resultado: passou
   evidencia: "as duas entradas passam na checagem de origem, revisado_em, revisado_contra e command ou url; saída 0."
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P3-06-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b2-p3-06-prompt
+  resultado: passou
+  evidencia: "1ª rodada: saída 1 (docs-internos com command diferente, busca-web fora da allowlist); busca-web removido e docs-internos restaurado; 2ª rodada: saída 0 (P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.); commit ae59e5f só com mcp.json, sem trailer"
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'

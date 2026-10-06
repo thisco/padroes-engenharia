@@ -83,6 +83,13 @@ execucoes:
   resultado: passou
   evidencia: "dentro do envelope no estado envelopado; o detector acusa 'Ignore as instruções'; saída 0 (1 no estado cru)."
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P3-05-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b2-p3-05-prompt
+  resultado: passou
+  evidencia: "1ª rodada: saída 1 com preâmbulo ausente e conteúdo fora do envelope; import, PREAMBULO e envelopar aplicados; 2ª rodada: saída 0 (P3-05: todo conteúdo externo está no envelope e a instrução embutida foi acusada.); commit 8d5f8ec só com agente/montar_prompt.py, sem trailer"
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
   data: '2026-10-06'
