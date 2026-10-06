@@ -18,6 +18,11 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
 - Os guias "Instanciar o scaffold pelo próprio agente" e "Do zero à primeira MR com IA" (o
   tutorial), com execução de ponta a ponta no scaffold 1.7.0.
 - Referência `google-gemini-3-5-flash-guia`, a página vigente do guia do Gemini.
+- Apresentações no grupo Entender (`apresentacoes.html`): o tipo `apresentacoes/<slug>/` com
+  `apresentacao.yml`, cópia estática da pasta, regra `R-APRESENTACAO`, roteiro renderizado como
+  página, seção no `llms.txt` e busca, e o reveal.js 4.5.0 em `portal/vendor/reveal/`. Entra o deck
+  "Harness, SDD e o repositório como fonte de verdade", atualizado para o scaffold 1.7.1 e a skill
+  3.0.0, com a reconciliação em `verificacoes/apresentacao-harness-sdd.yaml`.
 
 ### Alterado
 
@@ -54,6 +59,12 @@ Fatia B.1 do domínio Construir com IA, em andamento, com o repino do scaffold 1
 - O ninho da IA no produto nas páginas das peças (`conceitos/<peca>.html`): na coluna de 320px o
   fluxo empilha pela largura da própria figura (container query), em vez de espremer 4 caixas e 3
   setas; no fluxo horizontal a seta alinha ao topo das caixas.
+- Apresentações: pasta-slug ou arquivo que seja symlink reprova e não é copiado; nome da pasta
+  precisa ser slug; `url(` externo em `style=` e `<style>` do HTML é pego pelo `R-EXTERNO`; sem
+  `verificacoes/apresentacao-<slug>.yaml` reprova; a cópia não publica `README.md`,
+  `apresentacao.yml`, o roteiro-fonte nem arquivos ocultos, e `roteiro.html` na pasta reprova.
+- Deck: capa com o autor, redação do hook no slide 14, notas de versão no comparativo e folga do
+  slide 14 em 1280x720.
 
 ## [0.3.0] - 2026-10-05
 
