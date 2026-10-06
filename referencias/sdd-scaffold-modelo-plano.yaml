@@ -6,6 +6,6 @@ tipo: interno
 versao: "1.7.0"
 verificado_em: 2026-10-05
 verificacao: V
-localizacao: "cabeçalho do modelo, linha '> **Tier:** 1 | 2'"
+localizacao: "cabeçalho do modelo, linha '> **Tier:** 1 | 2', e seção 'Revisão adversarial' (tabela | R | veredito | evidência |)"
 dominios: [construir-com-ia]
 notas: "Reconferido em 2026-10-05 no arquivo da tag v1.7.0 (clone local): a linha 3 segue sendo `> **Tier:** 1 | 2`. O modelo mudou só em Tarefas (cada tarefa termina com o requisito entre parênteses) e na Revisão adversarial (tabela de veredito por requisito)."

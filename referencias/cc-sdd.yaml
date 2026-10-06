@@ -1,0 +1,11 @@
+id: cc-sdd
+titulo: "gotalab/cc-sdd"
+organizacao: gotalab
+url: https://github.com/gotalab/cc-sdd
+tipo: comunidade
+versao: "3.0"
+verificado_em: 2026-10-05
+verificacao: V
+localizacao: "README, seção 'What's new in v3.0' e seção 'Common workflows'"
+dominios: [construir-com-ia]
+notas: "Projeto individual de código aberto, inspirado no Kiro. O README descreve a revisão independente por tarefa dentro do /kiro-impl, e não um comando de validação separado. Lido por resumo do WebFetch."

@@ -1,0 +1,60 @@
+conteudo: P1-09
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "no Tier 2, a revisão é de uma sessão ou agente independente (contexto novo, sem o histórico da implementação), que revisa contra a spec e não contra o diff, partindo de cada requisito e caçando requisito não atendido e desvio silencioso"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 7, item 'Tier 2 — revisão adversarial' (aberto na web no commit fixado)"
+  resultado: confirmada
+- texto: "o resultado é registrado no plano, na seção 'Revisão adversarial: YYYY-MM-DD — achados', com uma linha por R na tabela | R | veredito | evidência |; veredito atendido, parcial ou não atendido; evidência em arquivo:linha ou saída de teste"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 7, mesmo item"
+  resultado: confirmada
+- texto: "critério de saída da Fase 7: evidências coladas no plano, achados tratados ou justificados por escrito e, no Tier 2, todo R da spec na tabela de vereditos"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 7, 'Critério de saída'"
+  resultado: confirmada
+- texto: "o modelo de plano traz a seção 'Revisão adversarial: <data> — achados' com a tabela | R | veredito | evidência |, preenchida pelo revisor independente que confere a implementação contra a spec"
+  ref: sdd-scaffold-modelo-plano
+  localizacao: "MODELO-plano.md, seção 'Revisão adversarial' e comentário (tag v1.7.0)"
+  resultado: confirmada
+  nota: "O resumo da página aberta na web trouxe só o cabeçalho da tabela; o comentário da seção foi conferido no arquivo da tag v1.7.0 no clone local (git show v1.7.0)."
+- texto: "o verificar_pr.py avisa, sem bloquear, que R<n> está ausente da tabela de veredito quando o plano é de Tier 2 e a tabela tem linhas; não avisa com a tabela vazia"
+  ref: sdd-scaffold-verificar-pr
+  localizacao: "analisar_rastreio() e LINHA_VEREDITO (tag v1.7.0); mensagem 'R<n> ausente da tabela de veredito da revisão adversarial'"
+  resultado: confirmada
+  nota: "Também executado: com a tabela só com o cabeçalho, nenhum achado (ver execuções e o repositório b1-p1-09-prompt)."
+- texto: "um estudo com cinco revisores: quem tinha um contrato nomeado atribuiu a maior parte dos achados a uma cláusula, e quem via só o código não atribuiu nenhum; resultado direcional, sem efeito calibrado"
+  ref: infoq-when-pays-off
+  localizacao: "seção 'The Drift-Review Study: Recall vs. Attribution' e seção 'What it Costs and Where the Evidence Is Thin'"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch (81% contra 0%, n=5, p=0,043 no teste pareado); o portal não repete os números e mantém a ressalva do autor."
+- texto: "o cc-sdd descreve, na v3.0, um revisor independente por tarefa"
+  ref: cc-sdd
+  localizacao: "README, seção 'What's new in v3.0' (independent reviewer) e 'Common workflows' (per-task independent review no /kiro-impl)"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; paráfrase."
+- texto: "com o Spec Kit, quem desenvolve revisa mudanças focadas em vez de grandes blocos de código"
+  ref: github-blog-speckit
+  localizacao: "seção 'Implement': 'instead of reviewing thousand-line code dumps, you, the developer, review focused changes'"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; paráfrase."
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-09/2026-10-05-observacao-no-pedido-plano.md
+  comando: "python3 scripts/verificar_pr.py --base main (script do projeto de teste, sha256 1397e8b1...0488, igual ao da tag v1.7.0 e ao hospedado pelo portal), com o plano cuja tabela só tem R1 (commit 643553e)"
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-09, branch feat/2026-10-05-observacao-no-pedido, com spec aprovada (R1 e R2), implementação e dois testes; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'AVISO: docs/specs/2026-10-05-observacao-no-pedido.md: R2 ausente da tabela de veredito da revisão adversarial.; saída 0 (aviso não bloqueia).'
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-09/2026-10-05-observacao-no-pedido-plano.md
+  comando: "o mesmo comando, depois de acrescentar a linha de R2 à tabela (o arquivo do exemplo é esse estado, commit 777e979)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: 'Verificação de PR: 4 arquivo(s), nenhum achado.; saída 0.'
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
