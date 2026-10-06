@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "docs-internos": {
+      "command": "python3",
+      "args": ["-m", "servidor_docs"]
+    },
+    "rastreador-de-chamados": {
+      "url": "https://mcp.rastreador.example/v1"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+conteudo: P3-06
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "o servidor MCP oferece recursos (contexto e dados), prompts (mensagens com modelo para a pessoa) e ferramentas (funções que o modelo executa)"
+  ref: mcp-spec
+  localizacao: "seção 'Key Details', 'Features' (versão 2026-07-28)"
+  resultado: confirmada
+- texto: "as ferramentas representam execução arbitrária de código, e as descrições do comportamento delas, como as anotações, devem ser tidas como não confiáveis, a menos que venham de um servidor confiável"
+  ref: mcp-spec
+  localizacao: "seção 'Security and Trust & Safety', 'Tool Safety'"
+  resultado: confirmada
+- texto: "o host precisa obter o consentimento explícito da pessoa antes de invocar qualquer ferramenta"
+  ref: mcp-spec
+  localizacao: "seção 'Security and Trust & Safety', 'Tool Safety'"
+  resultado: confirmada
+- texto: "o protocolo não impõe os princípios de segurança por si só; quem implementa deve montar fluxos de consentimento e autorização"
+  ref: mcp-spec
+  localizacao: "seção 'Security and Trust & Safety', 'Implementation Guidelines' ('MCP itself cannot enforce these security principles at the protocol level')"
+  resultado: confirmada
+- texto: "a lista de conectores (MCPs) permitidos traça a fronteira dos dados, ao definir a quais sistemas o agente chega"
+  ref: anthropic-ciso-agentic-ai
+  localizacao: "seção 'Case study: Claude Cowork' ('Connector allowlists draw your data boundary')"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P3-06/verificar-allowlist.py
+  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (mcp.json com docs-internos de outro command e o busca-web fora da lista)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: falhou-como-esperado
+  evidencia: "\"docs-internos: command difere do aprovado ('npx' em vez de 'python3')\", \"args difere\", \"busca-web: servidor fora da allowlist\" e \"P3-06: servidor MCP fora da allowlist ou diferente do aprovado (acima).\", saída 1."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-06/mcp.json
+  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (mcp.json do exemplo, só com os dois servidores aprovados)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado., saída 0."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-06/mcp-allowlist.yml
+  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (allowlist com os dois servidores fictícios, com origem, revisão e critério)"
+  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  resultado: passou
+  evidencia: "as duas entradas passam na checagem de origem, revisado_em, revisado_contra e command ou url; saída 0."
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  data: '2026-10-06'
+  achados: []

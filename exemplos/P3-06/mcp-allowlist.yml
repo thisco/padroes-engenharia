@@ -1,0 +1,15 @@
+# Allowlist central de servidores MCP. Vive num repositório da engenharia, versionado, e só muda
+# por pedido de revisão. Os servidores abaixo são fictícios.
+versao: 1
+servidores:
+  - nome: docs-internos
+    origem: proprio
+    command: python3
+    args: ["-m", "servidor_docs"]
+    revisado_em: 2026-10-06
+    revisado_contra: criterios-mcp-v1
+  - nome: rastreador-de-chamados
+    origem: fornecedor-confiavel
+    url: https://mcp.rastreador.example/v1
+    revisado_em: 2026-10-06
+    revisado_contra: criterios-mcp-v1
