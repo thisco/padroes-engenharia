@@ -27,7 +27,7 @@ referencias:
   - copilot-skills
   - copilot-instructions
 dono: nuarq
-revisado_em: 2026-10-05
+revisado_em: 2026-10-06
 ---
 
 ## Resultado
@@ -96,7 +96,8 @@ primeiro. O Claude Code lê cada skill de uma pasta com `SKILL.md` [ref:claude-c
    ```
 
    Se não houver `CLAUDE.md`, pule este passo: sem ele, o Claude Code lê o `AGENTS.md` direto, a
-   partir da versão 2.1.277 [ref:claude-code-memory].
+   partir da versão 2.1.277 (2.1.281 em sessão no Amazon Bedrock ou com telemetria desativada)
+   [ref:claude-code-memory].
 3. Confira os links e as skills que cada um enxerga (a seção Confira mostra a saída esperada):
 
    ```bash
@@ -159,7 +160,10 @@ Antigravity e Copilot não têm essa execução registrada.
 - **O `readlink` imprime `../skills` mas o `ls` diz que não há arquivo.** O alvo é relativo à
   pasta do link, então `../skills` só resolve quando `skills/` está na raiz, ao lado de
   `.claude`, `.codex`, `.kiro` e `.agents`. Rode o script na raiz.
-- **Um dos caminhos já é uma pasta de verdade.** O script para com `ERRO`. Mova o conteúdo para
+- **Um dos caminhos já é uma pasta de verdade.** O script para com `ERRO` no primeiro ponto que
+  encontra assim, e os pontos anteriores da sequência (`.claude`, `.codex`, `.kiro`, `.agents`) já
+  ficaram como link: o estado fica parcial até você corrigir e rodar de novo, o que é seguro, porque
+  o script refaz os links existentes. Mova o conteúdo para
   `skills/`, apague a pasta e rode de novo; um `ln -s` por cima criaria o link dentro dela.
 - **O Codex não lista as skills.** A documentação do Codex cita `.agents/skills`, varrida da pasta
   de trabalho até a raiz do repositório, e não cita `.codex/skills` [ref:codex-skills]. Abra o

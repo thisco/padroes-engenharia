@@ -1,5 +1,5 @@
 conteudo: P1-04
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a skill manda redigir a spec como um delta, que descreve a mudança e não o sistema inteiro
@@ -59,17 +59,14 @@ execucoes:
 - tipo: prompt
   prompt: P1-04-prompt-1
   harness: claude-code
-  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0); mudança do campo desconto em GET /pedidos/{id}, data 2026-10-05, nome desconto-no-pedido"
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0); mudança do campo desconto em GET /pedidos/{id}, data 2026-10-05, nome desconto-no-pedido
   resultado: passou
-  evidencia: "branch feat/2026-10-05-desconto-no-pedido, commit 0904894 só com docs/specs/2026-10-05-desconto-no-pedido.md, árvore limpa; R1 e R2 com critério em Dado/Quando/Então, Não-objetivos preenchidos, Threat-model 'não se aplica' com motivo, Status rascunho e aprovação vazia, 4 marcadores [ESCLARECER] sem resposta inventada; verificar_pr.py --base main: 'Verificação de PR: 1 arquivo(s), nenhum achado.', saída 0. Transcrição em curadoria-a5/transcricoes/P1-04-prompt-1.bruta.jsonl."
+  evidencia: 'branch feat/2026-10-05-desconto-no-pedido, commit 0904894 só com docs/specs/2026-10-05-desconto-no-pedido.md, árvore limpa; R1 e R2 com critério em Dado/Quando/Então, Não-objetivos preenchidos, Threat-model ''não se aplica'' com motivo, Status rascunho e aprovação vazia, 4 marcadores [ESCLARECER] sem resposta inventada; verificar_pr.py --base main: ''Verificação de PR: 1 arquivo(s), nenhum achado.'', saída 0. Transcrição em curadoria-a5/transcricoes/P1-04-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
-  - afirmacao: decisão de não manter spec viva está na ADR 0003 do portal (docs/adr/0003-formato-de-spec-delta-arquivado.md)
-      (P1-04.md:41)
-    problema: '[baixo] quem adota o scaffold não tem esse arquivo no repositório dele; o caminho só existe
-      no portal. O mesmo vale para a ADR 0005 em P1-09 e a ADR 0003 em P1-10 e P1-11.'
-    tratamento: 'sugerido: resumir a decisão em uma frase no texto e deixar o caminho da ADR só como ponteiro
-      para o portal.'
+  - afirmacao: decisão de não manter spec viva está na ADR 0003 do portal (docs/adr/0003-formato-de-spec-delta-arquivado.md) (P1-04.md:41)
+    problema: '[baixo] quem adota o scaffold não tem esse arquivo no repositório dele; o caminho só existe no portal. O mesmo vale para a ADR 0005 em P1-09 e a ADR 0003 em P1-10 e P1-11.'
+    tratamento: 'Tratado em 2026-10-06: a decisão foi resumida em uma frase no texto (a spec é aprovada, implementada e arquivada, sem spec viva), e o caminho da ADR 0003 ficou como ponteiro para o repositório do portal, dito expressamente.'

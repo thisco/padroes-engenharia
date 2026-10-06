@@ -4,7 +4,8 @@
 Para cada plano alterado no diff (docs/plans/AAAA-MM-DD-*.md), lê a spec citada em
 "Spec relacionada" e confere duas coisas: o Status dela é "arquivada", e o diff traz ao menos uma
 destilação (ADR em docs/adr/, steering em docs/steering/ ou entrada em docs/PROJECT_MEMORY.md).
-Só avisa; a saída é 0, salvo base inexistente (2). Uso: python3 conferir-arquivamento.py [--base main]
+Só avisa; a saída é 0, salvo base inexistente (2).
+Uso: python3 conferir-arquivamento.py [--base main]
 """
 import argparse
 import re
@@ -42,7 +43,8 @@ def main() -> int:
         spec = citada.group(1)
         status = STATUS.search(open(spec, encoding="utf-8").read())
         if not status or status.group(1) != "arquivada":
-            print(f"AVISO: {spec}: Status é '{status.group(1) if status else 'ausente'}', não 'arquivada'.")
+            atual = status.group(1) if status else "ausente"
+            print(f"AVISO: {spec}: Status é '{atual}', não 'arquivada'.")
             avisos += 1
     if conferidas and not destilou:
         print("AVISO: o diff não traz ADR, steering nem entrada em docs/PROJECT_MEMORY.md.")

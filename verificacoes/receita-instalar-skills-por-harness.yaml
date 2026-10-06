@@ -1,12 +1,12 @@
 conteudo: receita-instalar-skills-por-harness
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para o mesmo diretório skills/, e editar num lugar vale para todos, sem cópia que divirja
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem', primeiro parágrafo
   resultado: confirmada
-  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.'
+  nota: Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/README.md e conferido contra o clone local da tag.
 - texto: uma cópia de skill pode divergir (o scaffold usa link justamente para não ter cópia)
   ref: sdd-scaffold-readme
   localizacao: README na tag v1.7.0, seção 'Um corpo de skill, quatro pontos de montagem' ('não existe cópia para divergir')
@@ -15,7 +15,7 @@ afirmacoes:
   ref: sdd-scaffold-changelog
   localizacao: CHANGELOG.md, [1.7.0], 'Adicionado' e 'Modificado'
   resultado: confirmada
-  nota: 'Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/CHANGELOG.md.'
+  nota: Aberto na web em github.com/thisco/sdd-scaffold/blob/v1.7.0/CHANGELOG.md.
 - texto: skills de projeto do Claude Code ficam em .claude/skills/<nome>/SKILL.md
   ref: claude-code-skills
   localizacao: seção 'Choose where skills load', linha Project da tabela
@@ -56,10 +56,14 @@ afirmacoes:
   ref: copilot-skills
   localizacao: seção de skills de projeto e de formato do SKILL.md
   resultado: confirmada
-  nota: 'Ausência de menção a link simbólico conferida na página em 2026-10-05.'
+  nota: Ausência de menção a link simbólico conferida na página em 2026-10-05.
 - texto: o Copilot lê AGENTS.md, ou um CLAUDE.md ou GEMINI.md na raiz
   ref: copilot-instructions
   localizacao: seção de instruções de agente
+  resultado: confirmada
+- texto: antes da v2.1.281, sessões no Amazon Bedrock ou com telemetria desativada leem só o CLAUDE.md, e nelas a atualização para a v2.1.281 é a saída
+  ref: claude-code-memory
+  localizacao: seção sobre AGENTS.md, lista de causas de 'Claude reads CLAUDE.md files only' e passo de verificação da versão (aberta em 2026-10-06)
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -72,30 +76,23 @@ execucoes:
 - tipo: prompt
   prompt: receita-instalar-skills-por-harness-prompt-1
   harness: claude-code
-  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) sem os quatro links nem @AGENTS.md, em ~/curadoria-a5/b1-receita-skills-prompt; a receita foi servida da fonte do worktree em http://127.0.0.1:8001/receitas/instalar-skills-por-harness.md, sem a inclusão do exemplo expandida, porque o gerar recusa a receita sem execução de prompt registrada (R-PROMPT)"
+  ambiente: sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) sem os quatro links nem @AGENTS.md, em ~/curadoria-a5/b1-receita-skills-prompt; a receita foi servida da fonte do worktree em http://127.0.0.1:8001/receitas/instalar-skills-por-harness.md, sem a inclusão do exemplo expandida, porque o gerar recusa a receita sem execução de prompt registrada (R-PROMPT)
   resultado: passou
-  evidencia: "listou as 5 skills; criou .claude, .codex, .kiro e .agents/skills apontando para ../skills (criou a pasta .agents; as outras já existiam com settings, requirements e permissions, intocados); acrescentou @AGENTS.md ao CLAUDE.md; readlink ../skills 4 vezes e ls dos 4 com as 5 skills; commit e36dec9 chore: monta os links de skills por harness, sem trailer, árvore limpa; terminou com o que depende do usuário. Transcrição em curadoria-a5/transcricoes/receita-instalar-skills-por-harness-prompt-1.bruta.jsonl."
+  evidencia: 'listou as 5 skills; criou .claude, .codex, .kiro e .agents/skills apontando para ../skills (criou a pasta .agents; as outras já existiam com settings, requirements e permissions, intocados); acrescentou @AGENTS.md ao CLAUDE.md; readlink ../skills 4 vezes e ls dos 4 com as 5 skills; commit e36dec9 chore: monta os links de skills por harness, sem trailer, árvore limpa; terminou com o que depende do usuário. Transcrição em curadoria-a5/transcricoes/receita-instalar-skills-por-harness-prompt-1.bruta.jsonl.'
   data: '2026-10-05'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
   data: '2026-10-06'
   achados:
   - afirmacao: montar-links.sh cria os quatro pontos em sequência (exemplos/instalar-skills-por-harness/montar-links.sh)
-    problema: '[baixo] reproduzido: com .kiro/skills como pasta de verdade, o script cria .claude e .codex,
-      e para com ERRO no .kiro, deixando estado parcial (rc 1). A receita diz que recusa a pasta, mas
-      não que deixa links criados.'
-    tratamento: 'sugerido: checar os quatro pontos antes de criar qualquer link, ou dizer no Se der errado
-      que o estado fica parcial.'
+    problema: '[baixo] reproduzido: com .kiro/skills como pasta de verdade, o script cria .claude e .codex, e para com ERRO no .kiro, deixando estado parcial (rc 1). A receita diz que recusa a pasta, mas não que deixa links criados.'
+    tratamento: 'Tratado em 2026-10-06: Se der errado diz que o script para no primeiro ponto que é pasta de verdade, que os pontos anteriores ficam como link (estado parcial) e que rodar de novo é seguro.'
   - afirmacao: o Claude Code lê o AGENTS.md direto a partir da v2.1.277 [ref:claude-code-memory] (receita:99)
-    problema: '[baixo] a fonte confirma, mas também diz que antes da v2.1.281 algumas sessões (Bedrock,
-      telemetria desativada) não carregam o AGENTS.md mesmo na 2.1.277; o texto omite.'
-    tratamento: 'sugerido: ''v2.1.277 ou mais nova (2.1.281 em Bedrock ou com telemetria desativada)''.'
-  - afirmacao: o gerar.py recusa receita sem execução de prompt, e a prévia exige servir a fonte (plano,
-      T11)
-    problema: '[médio] trazido do plano (1): motor sem modo de prévia deixa o R-PROMPT circular para receita
-      nova; não é defeito do conteúdo.'
-    tratamento: levar à B.5 (mudança de motor, revisão forte só então).
+    problema: '[baixo] a fonte confirma, mas também diz que antes da v2.1.281 algumas sessões (Bedrock, telemetria desativada) não carregam o AGENTS.md mesmo na 2.1.277; o texto omite.'
+    tratamento: 'Tratado em 2026-10-06: o passo do CLAUDE.md diz ''versão 2.1.277 (2.1.281 em sessão no Amazon Bedrock ou com telemetria desativada)''; conferido na página de memória do Claude Code em 2026-10-06.'
+  - afirmacao: o gerar.py recusa receita sem execução de prompt, e a prévia exige servir a fonte (plano, T11)
+    problema: '[médio] trazido do plano (1): motor sem modo de prévia deixa o R-PROMPT circular para receita nova; não é defeito do conteúdo.'
+    tratamento: 'Levado à B.5 (mudança de motor, modo de prévia do gerar.py): fora do escopo desta passagem de conteúdo e depende de revisão forte, conforme a ADR 0005.'
   - afirmacao: Copilot segue link simbólico? (plano, T11 achado 3)
-    problema: '[baixo] trazido do plano: a documentação do Copilot não diz; o texto já avisa em Se der
-      errado. Kiro, Antigravity e Copilot sem execução registrada, dito na seção Confira.'
-    tratamento: sem ação; manter o aviso.
+    problema: '[baixo] trazido do plano: a documentação do Copilot não diz; o texto já avisa em Se der errado. Kiro, Antigravity e Copilot sem execução registrada, dito na seção Confira.'
+    tratamento: 'Sem ação: a documentação do Copilot não diz se ele segue link simbólico; o aviso fica em Se der errado e Kiro, Antigravity e Copilot seguem sem execução registrada, dito em Confira.'
