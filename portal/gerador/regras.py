@@ -23,7 +23,11 @@ from urllib.parse import urlsplit
 from markdown_it import MarkdownIt
 
 from portal.gerador import erros as codigos
-from portal.gerador.apresentacoes import chaves_de_verificacao, validar_apresentacoes
+from portal.gerador.apresentacoes import (
+    chaves_de_verificacao,
+    chaves_exigidas,
+    validar_apresentacoes,
+)
 from portal.gerador.carregar import (
     BLOCOS,
     TIPOS_YAML_PUBLICADOS,
@@ -806,7 +810,8 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     afirmação para cada id citado no corpo, nenhuma afirmação `nao-confirmada` e a
     `revisao_adversarial` registrada.
     Registro sem conteúdo correspondente também reprova: quase sempre é ID digitado errado.
-    O registro de uma apresentação (`apresentacao-<slug>`) tem a pasta como conteúdo.
+    O registro de uma apresentação (`apresentacao-<slug>`) tem a pasta como conteúdo, e toda
+    pasta com `apresentacao.yml` precisa dele.
     """
     erros: list[Erro] = []
     conteudos = {c.chave: c for c in repo.publicados()}
@@ -830,6 +835,10 @@ def regra_verificacao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
             erros.append(Erro(c.caminho_relativo, "verificacao", codigos.R_VERIFICACAO, valor))
             continue
         erros += _problemas_do_registro(v, c, citados)
+    for chave in sorted(chaves_exigidas(contexto.raiz) - registros.keys()):
+        valor = f"sem registro em verificacoes/{chave}.yaml"
+        pasta = f"apresentacoes/{chave.removeprefix('apresentacao-')}"
+        erros.append(Erro(pasta, "verificacao", codigos.R_VERIFICACAO, valor))
     return erros
 
 

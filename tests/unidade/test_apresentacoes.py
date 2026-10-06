@@ -92,6 +92,8 @@ def test_copia_a_pasta_byte_a_byte(repo_minimo, tmp_path):
     # o roteiro sai como página Markdown comum, e não como cópia do arquivo-fonte
     assert copiado.pop("roteiro.md") != esperado.pop("roteiro.md")
     assert copiado.pop("roteiro.html")
+    # o registro interno não é publicado (achado da revisão do motor)
+    esperado.pop("apresentacao.yml")
     assert copiado == esperado
     assert (saida / PASTA / "index.html").read_bytes() == fabrica.HTML_DECK.encode()
 
@@ -337,6 +339,123 @@ def test_registro_de_verificacao_da_apresentacao_tem_a_pasta_como_conteudo(repo_
         yaml.safe_dump(fabrica.meta_verificacao(conteudo="apresentacao-fantasma")), encoding="utf-8"
     )
     erros = validar_tudo(repo_minimo)
-    assert [(e.regra, e.valor) for e in erros] == [
-        ("R-VERIFICACAO", "apresentacao-fantasma: nenhum conteúdo com essa chave")
+    assert sorted((e.regra, e.valor) for e in erros) == [
+        ("R-VERIFICACAO", "apresentacao-fantasma: nenhum conteúdo com essa chave"),
+        ("R-VERIFICACAO", "sem registro em verificacoes/apresentacao-harness-sdd.yaml"),
+    ]
+
+
+# achados da revisão adversarial do motor (T3/T4)
+
+
+# cobre: achado médio, pasta-slug symlink (R1)
+def test_pasta_slug_symlink_para_fora_reprova_e_nao_e_copiada(repo_minimo, tmp_path):
+    fabrica.escrever_apresentacao(repo_minimo, "real")
+    fora = fabrica.escrever_apresentacao(repo_minimo, "alvo")
+    shutil.move(str(fora), str(tmp_path / "fora"))
+    (tmp_path / "fora" / "segredo.txt").write_text("segredo", encoding="utf-8")
+    (repo_minimo / "apresentacoes" / "espelho").symlink_to(tmp_path / "fora")
+    (repo_minimo / "verificacoes" / "apresentacao-alvo.yaml").unlink()
+    assert [e.arquivo for e in erros_da_regra(repo_minimo)] == ["apresentacoes/espelho"]
+    saida = tmp_path / "public"
+    assert [e.regra for e in construir(repo_minimo, saida, **PARAMETROS)] == ["R-APRESENTACAO"]
+    assert not saida.exists()
+    assert [a.slug for a in carregar_apresentacoes(repo_minimo)] == ["real"]
+
+
+# cobre: achado médio, symlink dentro da pasta (R1)
+@pytest.mark.parametrize("tipo", ["arquivo", "subpasta"])
+def test_symlink_dentro_da_pasta_reprova(repo_minimo, tmp_path, tipo):
+    pasta = fabrica.escrever_apresentacao(repo_minimo)
+    if tipo == "arquivo":
+        alvo = tmp_path / "externo.txt"
+        alvo.write_text("x", encoding="utf-8")
+    else:
+        alvo = tmp_path / "externa"
+        alvo.mkdir()
+    (pasta / "ligacao").symlink_to(alvo)
+    assert [(e.arquivo, e.valor) for e in erros_da_regra(repo_minimo)] == [
+        (f"{PASTA}/ligacao", "symlink")
+    ]
+
+
+# cobre: baixo, nome da pasta é slug (R1)
+@pytest.mark.parametrize("nome", ["Meu Deck", "Deck", "-deck", "deck_1"])
+def test_nome_da_pasta_fora_do_formato_slug_reprova(repo_minimo, nome):
+    fabrica.escrever_apresentacao(repo_minimo, nome)
+    assert [(e.arquivo, e.valor) for e in erros_da_regra(repo_minimo)] == [
+        (
+            f"apresentacoes/{nome}",
+            "o nome da pasta precisa ser um slug (minúsculas, dígitos e hífen)",
+        )
+    ]
+
+
+# cobre: médio, url() inline no HTML (R2)
+@pytest.mark.parametrize(
+    "inline",
+    [
+        '<div style="background:url(https://rastro.exemplo/p.png)">x</div>',
+        "<style>.a{background: url( 'http://rastro.exemplo/p.png' )}</style>",
+        '<div style="background:url(//rastro.exemplo/p.png)">x</div>',
+    ],
+)
+def test_url_externa_inline_no_html_reprova(repo_minimo, inline):
+    fabrica.escrever_apresentacao(repo_minimo, index=fabrica.HTML_DECK + inline + "\n")
+    erros = erros_da_regra(repo_minimo)
+    assert [(e.arquivo, e.campo) for e in erros] == [(f"{PASTA}/index.html", "recurso externo")]
+
+
+# cobre: médio, url() local no HTML passa (R2)
+def test_url_local_inline_no_html_passa(repo_minimo):
+    inline = '<div style="background:url(imagens/ponto.bin)">x</div>\n'
+    fabrica.escrever_apresentacao(repo_minimo, index=fabrica.HTML_DECK + inline)
+    assert erros_da_regra(repo_minimo) == []
+
+
+# cobre: médio, registro de reconciliação obrigatório (R5)
+def test_apresentacao_sem_registro_de_verificacao_reprova(repo_minimo):
+    fabrica.escrever_apresentacao(repo_minimo)
+    assert validar_tudo(repo_minimo) == []
+    (repo_minimo / "verificacoes" / "apresentacao-harness-sdd.yaml").unlink()
+    erros = validar_tudo(repo_minimo)
+    assert [(e.arquivo, e.regra) for e in erros] == [(PASTA, "R-VERIFICACAO")]
+    assert "verificacoes/apresentacao-harness-sdd.yaml" in erros[0].valor
+
+
+# cobre: baixo, o que a cópia não publica (R1)
+def test_copia_nao_publica_interno_oculto_nem_roteiro_cru(repo_minimo, tmp_path):
+    pasta = fabrica.escrever_apresentacao(repo_minimo)
+    (pasta / "README.md").write_text("interno\n", encoding="utf-8")
+    (pasta / ".DS_Store").write_bytes(b"\x00")
+    (pasta / "imagens" / ".oculto").write_bytes(b"\x00")
+    saida = gerar(repo_minimo, tmp_path / "public")
+    publicados = set(arquivos(saida / PASTA))
+    assert publicados == {
+        "index.html",
+        "comparativo.html",
+        "tema.css",
+        "imagens/ponto.bin",
+        "roteiro.html",
+        "roteiro.md",
+    }
+
+
+# cobre: baixo, exclusão pelo nome em `roteiro` (R1)
+def test_roteiro_com_outro_nome_nao_e_copiado_cru(repo_minimo, tmp_path):
+    meta = fabrica.meta_apresentacao(roteiro="notas.md")
+    fabrica.escrever_apresentacao(repo_minimo, meta=meta)
+    saida = gerar(repo_minimo, tmp_path / "public")
+    publicados = set(arquivos(saida / PASTA))
+    assert "notas.md" not in publicados
+    assert {"roteiro.html", "roteiro.md"} <= publicados
+    assert (saida / PASTA / "roteiro.md").read_text(encoding="utf-8").startswith("# Roteiro")
+
+
+# cobre: baixo, conflito com o roteiro gerado (R1)
+def test_roteiro_html_na_pasta_reprova(repo_minimo):
+    pasta = fabrica.escrever_apresentacao(repo_minimo)
+    (pasta / "roteiro.html").write_text("<p>conflito</p>\n", encoding="utf-8")
+    assert [(e.arquivo, e.campo) for e in erros_da_regra(repo_minimo)] == [
+        (f"{PASTA}/roteiro.html", "conflito com o roteiro gerado")
     ]

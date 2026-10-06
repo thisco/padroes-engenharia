@@ -489,10 +489,12 @@ def escrever_apresentacao(
     meta: dict[str, Any] | None = None,
     *,
     index: str | None = HTML_DECK,
+    verificacao: bool = True,
 ) -> Path:
     """Grava `apresentacoes/<slug>/` em `raiz`: o deck, as páginas e o roteiro que o `meta`
     cita, o `tema.css`, um arquivo binário e o `apresentacao.yml`. `index=None` não grava o
-    deck. Devolve a pasta."""
+    deck; `verificacao=False` não grava o `verificacoes/apresentacao-<slug>.yaml` que a
+    regra exige. Devolve a pasta."""
     meta = meta_apresentacao() if meta is None else meta
     pasta = raiz / "apresentacoes" / slug
     pasta.mkdir(parents=True, exist_ok=True)
@@ -508,6 +510,11 @@ def escrever_apresentacao(
     gravado = {campo: valor for campo, valor in meta.items() if valor is not None}
     texto = yaml.safe_dump(gravado, allow_unicode=True, sort_keys=False)
     (pasta / "apresentacao.yml").write_text(texto, encoding="utf-8")
+    if verificacao:
+        registro = raiz / "verificacoes" / f"apresentacao-{slug}.yaml"
+        registro.parent.mkdir(parents=True, exist_ok=True)
+        dados = meta_verificacao(conteudo=f"apresentacao-{slug}")
+        registro.write_text(yaml.safe_dump(dados, allow_unicode=True), encoding="utf-8")
     return pasta
 
 

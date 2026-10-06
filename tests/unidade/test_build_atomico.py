@@ -49,7 +49,7 @@ def test_externo_pega_link_script_import_e_url_do_css(tmp_path):
     assert varrer_externos(tmp_path) == [
         Erro("a/pagina.html", "linha 2", "R-EXTERNO", '<link rel="stylesheet" href="https://'),
         Erro("a/pagina.html", "linha 4", "R-EXTERNO", "<script src=//"),
-        Erro("a/pagina.html", "linha 5", "R-EXTERNO", '@import url("http://'),
+        Erro("a/pagina.html", "linha 5", "R-EXTERNO", 'url("http://'),
         Erro("tema/tema.css", "linha 1", "R-EXTERNO", '@import "//'),
         Erro("tema/tema.css", "linha 2", "R-EXTERNO", "url(https://"),
     ]

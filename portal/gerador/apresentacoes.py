@@ -8,6 +8,7 @@ a pasta é `saidas.py`, e quem renderiza a página de lista e o roteiro é `pagi
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -21,6 +22,11 @@ PASTA = "apresentacoes"
 REGISTRO = "apresentacao.yml"
 DECK = "index.html"
 ROTEIRO_PADRAO = "roteiro.md"
+ROTEIRO_GERADO = "roteiro.html"
+SLUG = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+# Arquivos da pasta que o build não publica: o README é da equipe e o `apresentacao.yml` é o
+# registro interno. Arquivos ocultos (`.DS_Store`) também ficam de fora.
+NAO_PUBLICADOS = frozenset({"README.md", REGISTRO, ROTEIRO_PADRAO})
 
 
 @dataclass(frozen=True)
@@ -53,12 +59,48 @@ class Apresentacao:
     @property
     def caminho_roteiro(self) -> str:
         """Caminho HTML da página do roteiro, que o gerador renderiza do Markdown."""
-        return f"{PASTA}/{self.slug}/roteiro.html"
+        return f"{PASTA}/{self.slug}/{ROTEIRO_GERADO}"
+
+    def publicado(self, relativo: Path) -> bool:
+        """Se o arquivo da pasta (caminho relativo a ela) vai para o `public/`: fora ficam o
+        README, o `apresentacao.yml`, o roteiro-fonte (pelo nome do registro) e os ocultos."""
+        nomes = NAO_PUBLICADOS | ({self.roteiro} if self.roteiro else set())
+        return relativo.as_posix() not in nomes and not any(
+            parte.startswith(".") for parte in relativo.parts
+        )
 
 
 def _pastas(raiz: Path) -> list[Path]:
     base = raiz / PASTA
     return sorted(p for p in base.iterdir() if p.is_dir()) if base.is_dir() else []
+
+
+def _problema_da_pasta(pasta: Path) -> str | None:
+    """Por que a pasta não pode ser publicada: nome fora do formato slug, ou symlink (ou
+    caminho real fora de `apresentacoes/`), que copiaria conteúdo de fora do repositório."""
+    if not SLUG.match(pasta.name):
+        return "o nome da pasta precisa ser um slug (minúsculas, dígitos e hífen)"
+    if pasta.is_symlink() or not pasta.resolve().is_relative_to(pasta.parent.resolve()):
+        return "symlink"
+    return None
+
+
+def _links(pasta: Path) -> list[Path]:
+    """Symlinks (de arquivo ou de subpasta) dentro da pasta: o build não os segue."""
+    return sorted(p for p in pasta.rglob("*") if p.is_symlink())
+
+
+def pastas_validas(raiz: Path) -> list[Path]:
+    """As pastas de `apresentacoes/` que o build publica: slug válido e sem symlink na raiz."""
+    return [p for p in _pastas(Path(raiz)) if _problema_da_pasta(p) is None]
+
+
+def chaves_exigidas(raiz: Path) -> frozenset[str]:
+    """As chaves `apresentacao-<slug>` que precisam de `verificacoes/<chave>.yaml` (R5): as
+    pastas publicáveis que têm `apresentacao.yml`."""
+    return frozenset(
+        f"apresentacao-{p.name}" for p in pastas_validas(raiz) if (p / REGISTRO).is_file()
+    )
 
 
 def chaves_de_verificacao(raiz: Path) -> frozenset[str]:
@@ -86,7 +128,7 @@ def carregar_apresentacoes(raiz: Path) -> list[Apresentacao]:
     raiz = Path(raiz)
     validador = carregar_validador(raiz / "esquemas", "apresentacao")
     resultado: list[Apresentacao] = []
-    for pasta in _pastas(raiz):
+    for pasta in pastas_validas(raiz):
         registro = pasta / REGISTRO
         if not registro.is_file():
             continue
@@ -124,7 +166,7 @@ def _externos(pasta: Path, raiz: Path) -> list[Erro]:
     erros: list[Erro] = []
     for arquivo in sorted(pasta.rglob("*")):
         padroes = EXTERNOS.get(arquivo.suffix, ())
-        if not padroes or not arquivo.is_file():
+        if not padroes or arquivo.is_symlink() or not arquivo.is_file():
             continue
         texto = arquivo.read_text(encoding="utf-8", errors="replace")
         relativo = arquivo.relative_to(raiz).as_posix()
@@ -138,8 +180,9 @@ def _externos(pasta: Path, raiz: Path) -> list[Erro]:
 
 
 def validar_apresentacoes(raiz: Path, referencias: frozenset[str] = frozenset()) -> list[Erro]:
-    """R-APRESENTACAO: pasta sem `apresentacao.yml`, sem `index.html`, com página ou roteiro
-    citado que não existe na pasta, ou com recurso externo; e o registro contra o schema.
+    """R-APRESENTACAO: pasta com nome fora do formato slug ou symlink, symlink dentro dela,
+    `roteiro.html` (o nome da página gerada), sem `apresentacao.yml`, sem `index.html`, com página
+    ou roteiro citado que não existe na pasta, ou com recurso externo; e o registro contra o schema.
 
     `referencias` são os IDs de `referencias/`; o campo `referencias` do registro precisa
     apontar para eles."""
@@ -149,6 +192,16 @@ def validar_apresentacoes(raiz: Path, referencias: frozenset[str] = frozenset())
     for pasta in _pastas(raiz):
         base = pasta.relative_to(raiz).as_posix()
         registro = f"{base}/{REGISTRO}"
+        if problema := _problema_da_pasta(pasta):
+            erros.append(Erro(base, "pasta", R_APRESENTACAO, problema))
+            continue
+        for ligacao in _links(pasta):
+            erros.append(
+                Erro(ligacao.relative_to(raiz).as_posix(), "arquivo", R_APRESENTACAO, "symlink")
+            )
+        if (pasta / ROTEIRO_GERADO).exists():
+            alvo = f"{base}/{ROTEIRO_GERADO}"
+            erros.append(Erro(alvo, "conflito com o roteiro gerado", R_APRESENTACAO, "remova"))
         if not (pasta / DECK).is_file():
             erros.append(Erro(base, DECK, R_APRESENTACAO, "ausente"))
         erros += _externos(pasta, raiz)

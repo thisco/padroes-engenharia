@@ -907,14 +907,15 @@ def copiar(origem: Path, destino: Path) -> None:
 
 
 def copiar_apresentacoes(site: Site, saida: Path) -> None:
-    """Copia `apresentacoes/<slug>/` inteira, sem transformar os arquivos. O `roteiro.md` de quem
-    declara roteiro fica de fora: a página Markdown gerada ocupa o lugar dele."""
+    """Copia `apresentacoes/<slug>/` sem transformar os arquivos. Ficam de fora o README, o
+    `apresentacao.yml`, o roteiro-fonte (a página Markdown gerada ocupa o lugar dele), os ocultos
+    e qualquer symlink."""
     for a in site.apresentacoes:
         pasta = site.raiz / PASTA_APRESENTACOES / a.slug
-        roteiro = pasta / "roteiro.md" if a.roteiro else None
         for arquivo in sorted(pasta.rglob("*")):
-            if arquivo.is_file() and not arquivo.is_symlink() and arquivo != roteiro:
-                copiar(arquivo, saida / PASTA_APRESENTACOES / a.slug / arquivo.relative_to(pasta))
+            relativo = arquivo.relative_to(pasta)
+            if arquivo.is_file() and not arquivo.is_symlink() and a.publicado(relativo):
+                copiar(arquivo, saida / PASTA_APRESENTACOES / a.slug / relativo)
 
 
 def emitir(site: Site, saida: Path) -> list[Pagina]:
