@@ -110,9 +110,13 @@ execucoes:
 - tipo: prompt
   prompt: P2-05-prompt-1
   harness: claude-code
-  ambiente: PENDENTE
+  ambiente: sessão nova, cópia de projeto-teste-17 com gateway-teste/ e evals/
   resultado: passou
-  evidencia: 'PENDENTE: o chamador testa em sessão nova, cópia de projeto-teste-17 com gateway-teste/ e evals/ (~/curadoria-a5/b2-p2-05-prompt)'
+  evidencia: 'Shell não persistente: o agente refez as variáveis a cada comando, como o prompt previa. .env ignorado;
+    gateway na 4002; passo 4: 5/5, taxa 1.00, limiar 0.80, ''1 passed'' (saída 0); passo 5 com config-regressao.yaml:
+    3/5, taxa 0.60, reprovaram classifica-bug e resumo-em-json, ''AssertionError: taxa 0.60 abaixo do limiar 0.80'',
+    saída 1; passo 6: de volta a 5/5, saída 0; EVALS.md com tabela de 2 linhas sem chaves; commit 775678e só com
+    ele; down -v; árvore limpa. Transcrição em curadoria-a5/transcricoes/P2-05-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, pendente da conferência em lote (T9, ADR 0005)

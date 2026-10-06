@@ -72,7 +72,7 @@ commitar, pede a mensagem sem trailer.
 - [x] **T1 (P2-02, P2-03).** Um autor, dois testadores.
 - [x] **T2 (P2-04, P2-06).** As duas usam o gateway: um Exemplo sobe o LiteLLM com a config de
   `exemplos/P2-01/` e mostra, com saída real, a máscara de PII e o bloqueio por orçamento.
-- [ ] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
+- [x] **T3 (P2-05).** O Exemplo é uma suíte de evals mínima rodando no CI local
   (`gitlab-ci-local`), com `mock_response` do gateway para não gastar modelo.
 - [x] **T4 (P3-01, P3-02).** A P3-02 reaproveita a skill `threat-model` já publicada no índice.
 - [ ] **T5 (P3-03, P3-04).** O Exemplo da P3-04 mostra a política de permissões do template do
@@ -116,6 +116,8 @@ criação do repositório e o push ficam com o dono.
 - **T2 fechou (2026-10-06).** P2-04 (372aa47) e P2-06 (11775ba) com Exemplo executado e prompt testado em sessão nova (claude-code): P2-04 commit 1a0dfe1 (verificador 1 antes, 0 depois do guardrail), P2-06 commit 79847d6 (422 budget_exceeded, relatório 0.1240 de 0.1). Força orienta com mecanismo null, pois o validador reprova avisa sem mecanismo em scripts/. Registros em `verificacoes/P2-04.yaml` e `verificacoes/P2-06.yaml`.
 - **T4 fechou (2026-10-06).** P3-01 (1b3c601) e P3-02 (e63334c) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-01 commit 30a9904 (verificador 1 antes, 0 depois), P3-02 commit f3e7b48 (AVISO de threat-model antes, nenhum achado depois). P3-02 saiu com força avisa e mecanismo verificar_pr.py@1.7.1, pois o SKILL.md não é hospedado e o script só avisa.
 
+- **T3 fechou (2026-10-06).** P2-05 (f2fed64) com Exemplo executado: job `evals` no `gitlab-ci-local` PASS (5/5, taxa 1.00) e, com a regressão simulada, FAIL (3/5, taxa 0.60 < 0.80, saída 1); o job agendado `evals-modelo-real` não foi executado. Prompt testado em sessão nova (claude-code): commit 775678e só com `EVALS.md`. Achado de ambiente: `mock_response` no corpo da requisição ao proxy é ignorado, e o do `config.yaml` prevalece (um alias por caso). Registro em `verificacoes/P2-05.yaml`.
+
 ## Conferência em lote: <data> — achados
 
 - P2-03, prompt: o campo `modelo` não vem literal nos placeholders, e o agente o deduziu do pedido ("Claude Fable 5"). Informar o valor na entrada 1 e na 2.
@@ -126,3 +128,4 @@ criação do repositório e o push ficam com o dono.
 - P3-02, prompt: não traz o enunciado das 4 perguntas do CISO, e o agente as redigiu a partir das respostas; o prompt ou o preparo deve trazer o enunciado da fonte.
 - P3-02, prompt: o agente removeu o comentário HTML de instrução da seção para pôr o parágrafo logo abaixo do título (limite do verificar_pr sobre subtítulo imediato); documentado no Como aplicar.
 - P3-01, prompt: o harness não persiste shell e o agente rodou cada comando em chamada separada; sem efeito no resultado, mas a declaração de shell único não se cumpre.
+- P2-05, suíte: um único teste agrega os 5 casos; um caso reprovado não aparece como teste próprio no relatório do pytest.
