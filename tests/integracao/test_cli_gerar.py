@@ -55,11 +55,11 @@ def test_url_base_do_config_ou_da_linha_de_comando(repo_minimo, tmp_path):
     saida = tmp_path / "site"
     cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD])
     assert "http://localhost:8000/roteamento.json" in (saida / "llms.txt").read_text("utf-8")
-    url = ["--url-base", "https://nuarq.pages.exemplo/padroes"]
+    url = ["--url-base", "https://exemplo.pages.exemplo/padroes"]
     cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD, *url])
-    assert "https://nuarq.pages.exemplo/padroes/roteamento.json" in (saida / "llms.txt").read_text(
-        "utf-8"
-    )
+    assert "https://exemplo.pages.exemplo/padroes/roteamento.json" in (
+        saida / "llms.txt"
+    ).read_text("utf-8")
 
 
 def test_erro_de_validacao_sai_1_e_nao_toca_a_raiz(repo_minimo, mutar, tmp_path, capsys):

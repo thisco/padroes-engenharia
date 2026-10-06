@@ -14,7 +14,7 @@
 <body>
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 <header class="barra">
-  <a class="marca" href="{{ raiz }}index.html">{{ site.nome }} · {{ site.organizacao }}</a>
+  <a class="marca" href="{{ raiz }}index.html">{{ site.nome }}{% if site.organizacao %} · {{ site.organizacao }}{% endif %}</a>
   <details class="menu" open>
     <summary>Menu</summary>
     <nav class="nav" aria-label="Navegação principal">

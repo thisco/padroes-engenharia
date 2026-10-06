@@ -48,7 +48,7 @@ def repo_minimo(tmp_path: Path) -> Path:
         _yaml(
             {
                 "nome": "Padrões de Engenharia",
-                "organizacao": "NUARQ · Serpro",
+                "organizacao": "Exemplo",
                 "versao": "0.1.0",
                 "url_base": "http://localhost:8000",
             }

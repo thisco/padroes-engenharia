@@ -110,7 +110,9 @@
     <li>{{ fato }}</li>
 {% endfor %}
   </ul>
+{% if site.organizacao %}
   <p class="lead">Mantido por {{ site.organizacao }}.</p>
+{% endif %}
 </section>
 {% endif %}
 <section aria-label="Estado">

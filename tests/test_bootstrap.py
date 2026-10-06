@@ -26,7 +26,7 @@ def test_config_do_portal():
     config = yaml.safe_load((RAIZ / "portal" / "config.yml").read_text(encoding="utf-8"))
     assert config == {
         "nome": "Padrões de Engenharia",
-        "organizacao": "NUARQ · Serpro",
+        "organizacao": "",
         "versao": "0.3.0",
         "url_base": "http://localhost:8000",
     }

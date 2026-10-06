@@ -20,7 +20,7 @@ def test_repo_minimo_e_valido(repo_minimo):
     ("mutacoes", "codigo"),
     [
         ([(PRATICA, "---\nid:", "id:")], "R-FRONTMATTER"),
-        ([(PRATICA, "dono: nuarq", "dono: Nu Arq")], "R-ESQUEMA"),
+        ([(PRATICA, "dono: engenharia", "dono: Eng Arq")], "R-ESQUEMA"),
         ([(PRATICA, "## Como aplicar", "## Como usar")], "R-SECOES"),
         ([(PRATICA, "momento: antes-de-escrever", "momento: durante")], "R-ESPINHA"),
         ([(PRATICA, "id: P1-01", "id: P1-1")], "R-ID-FORMATO"),

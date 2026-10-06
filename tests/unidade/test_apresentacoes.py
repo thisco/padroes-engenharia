@@ -160,7 +160,7 @@ def test_pagina_lista_deck_paginas_e_roteiro(raiz):
     md = md_apresentacoes(site)
     for texto in (html, md):
         assert "Harness, SDD e o repositório como fonte de verdade" in texto
-        assert "Equipe de engenharia do NUJOR" in texto
+        assert "Equipe de engenharia" in texto
         assert "2026-09-29" in texto
         assert "19 slides" in texto
         assert "Comparativo dos harnesses" in texto

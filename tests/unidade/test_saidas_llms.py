@@ -1,9 +1,10 @@
 """llms.txt e llms-full.txt: todas as páginas, no formato do llmstxt.org, com versão e commit."""
 
+import dataclasses
 import re
 
 from portal.gerador.carregar import Conteudo
-from portal.gerador.saidas import llms_full, llms_txt, montar_paginas
+from portal.gerador.saidas import llms_full, llms_txt, montar_paginas, readme_md
 from tests import fabrica
 
 
@@ -21,7 +22,7 @@ def test_llms_txt_tem_h1_blockquote_com_versao_e_commit():
     texto = llms_txt(s, paginas)
     linhas = texto.splitlines()
     assert linhas[0] == "# Padrões de Engenharia"
-    assert linhas[2].startswith("> Portal de padrões de engenharia de NUARQ · Serpro")
+    assert linhas[2].startswith("> Portal de padrões de engenharia, com IA como guia.")
     assert f"commit {fabrica.COMMIT}" in linhas[2]
     assert "https://portal.exemplo/roteamento.json" in texto
 
@@ -69,3 +70,18 @@ def test_llms_full_concatena_todo_md_com_a_fonte():
     for p in paginas:
         assert p.md in texto
     assert "[ref:ref-forte]" in texto
+
+
+def test_resumo_sem_organizacao_nao_deixa_de_virgula_e_com_organizacao_cita():
+    s, paginas = site_e_paginas()
+    vazio = dataclasses.replace(s, organizacao="")
+    assert "engenharia de ," not in llms_txt(vazio, paginas)
+    assert "engenharia de ," not in readme_md(vazio)
+    assert (
+        llms_txt(vazio, paginas)
+        .splitlines()[2]
+        .startswith("> Portal de padrões de engenharia, com IA como guia.")
+    )
+    com = dataclasses.replace(s, organizacao="Acme")
+    assert "> Portal de padrões de engenharia de Acme, com IA como guia." in llms_txt(com, paginas)
+    assert "> Portal de padrões de engenharia de Acme, com IA como guia." in readme_md(com)

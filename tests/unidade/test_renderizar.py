@@ -1,5 +1,6 @@
 """Renderização: o Site, o ambiente Jinja2, a página base e os componentes do tema."""
 
+import dataclasses
 import re
 
 from portal.gerador.carregar import Conteudo
@@ -23,7 +24,7 @@ def test_config_e_identidade_do_site():
     s = fabrica.site()
     assert (s.nome, s.organizacao, s.commit_curto) == (
         "Padrões de Engenharia",
-        "NUARQ · Serpro",
+        "",
         "0123456",
     )
     assert s.url("llms.txt") == "https://portal.exemplo/llms.txt"
@@ -106,3 +107,12 @@ def test_grupo_do_menu_nao_abre_sozinho_sobre_o_conteudo():
     html = renderizar(fabrica.site(fabrica.pratica()), "base.html", "espinha.html", titulo="E")
     assert '<details class="grupo">' in html
     assert '<details class="grupo" open' not in html
+
+
+def test_marca_do_cabecalho_sem_organizacao_nao_deixa_separador_solto():
+    vazio = dataclasses.replace(fabrica.site(), organizacao="")
+    html = renderizar(vazio, "base.html", "index.html", titulo="Início")
+    assert '<a class="marca" href="index.html">Padrões de Engenharia</a>' in html
+    com = dataclasses.replace(fabrica.site(), organizacao="Acme")
+    html = renderizar(com, "base.html", "index.html", titulo="Início")
+    assert '<a class="marca" href="index.html">Padrões de Engenharia · Acme</a>' in html

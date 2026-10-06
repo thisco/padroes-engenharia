@@ -493,13 +493,18 @@ def md_para_agentes(site: Site) -> str:
 # llms.txt e llms-full.txt (Tarefa 23) ------------------------------------------------------
 
 
+def _de(site: Site) -> str:
+    """O trecho "de <organização>", ou nada quando o portal não tem organização configurada."""
+    return f" de {site.organizacao}" if site.organizacao else ""
+
+
 def llms_txt(site: Site, paginas: list[Pagina]) -> str:
     """Índice no formato llms.txt (https://llmstxt.org/): H1, resumo em blockquote, detalhes e
     seções H2 com `- [título](url): descrição`, apontando o `.md` gêmeo de cada página."""
     linhas = [
         f"# {site.nome}",
         "",
-        f"> Portal de padrões de engenharia de {site.organizacao}, com IA como guia. "
+        f"> Portal de padrões de engenharia{_de(site)}, com IA como guia. "
         f"Versão {site.versao}, commit {site.commit}, gerado em {site.data}.",
         "",
         "Cada página HTML tem um `.md` gêmeo no mesmo caminho, e os links abaixo apontam para "
@@ -823,8 +828,7 @@ def readme_md(site: Site) -> str:
         linhas.append(f"| {faixa.grupo} | {faixa.titulo} (`{faixa.slug}`) | {n} |")
     return _juntar(
         f"# {site.nome}",
-        f"> Portal de padrões de engenharia de {site.organizacao}, com IA como guia. "
-        f"Versão {site.versao}.",
+        f"> Portal de padrões de engenharia{_de(site)}, com IA como guia. Versão {site.versao}.",
         f"{AVISO_GERADO} O validador reprova se este arquivo divergir do gerado.",
         "## O que há aqui\n\n"
         f"- {plural(total, 'prática', 'práticas')} na espinha de "
