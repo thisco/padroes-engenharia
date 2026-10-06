@@ -1,0 +1,68 @@
+conteudo: do-zero-a-primeira-mr
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o criar_projeto.py exige Python 3.11 ou mais novo e faz o primeiro commit; o projeto nasce com a constituição, o steering, os modelos de spec e de plano, os pontos de montagem de skills e os scripts de verificação
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, seções 'Quick start' ('Requer Python 3.11+', lista 'O que acontece') e 'O que você recebe'
+  resultado: confirmada
+  nota: 'Conferido também no projeto gerado na execução (git log com o commit inicial, árvore com AGENTS.md, docs/steering/, MODELO-spec.md, MODELO-plano.md, quatro links de skills, scripts/).'
+- texto: o scaffold pede o PRD antes da primeira spec de Tier 2
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.0, prompt da seção 'Instalar pelo próprio agente', passo 7
+  resultado: confirmada
+- texto: Tier 1 é correção localizada, sem spec e com plano leve; Tier 2 é estrutural e passa por spec, aprovação, plano e revisão; na dúvida fica-se com o tier mais alto
+  ref: sdd-lifecycle
+  localizacao: SKILL.md na tag v3.0.0, Fase 0, passo 4 e 'Matriz tier → fases'
+  resultado: confirmada
+- texto: o Tier 1 tem plano leve com o teste que prova o fix e não tem spec separada
+  ref: sdd-scaffold-sdd-processo
+  localizacao: docs/steering/sdd-processo.md na tag v1.7.0, seção 'Tiers de rigor' (Tier 1)
+  resultado: confirmada
+  nota: 'Lido no arquivo do projeto gerado na execução, que é o da tag v1.7.0.'
+- texto: "o plano parte do modelo com a linha de Tier no cabeçalho; o plano de Tier 2 traz Impacto Arquitetural, Estratégia de rollback, tarefas com (R<n>) e a seção 'Revisão adversarial: <data> — achados' com a tabela de veredito"
+  ref: sdd-scaffold-modelo-plano
+  localizacao: template/docs/plans/MODELO-plano.md na tag v1.7.0, cabeçalho e seções
+  resultado: confirmada
+- texto: a spec descreve só a mudança, com requisito **R<n>** e linha Critério; o Esclarecimentos registra pergunta e resposta por sessão com data
+  ref: sdd-scaffold-modelo-spec
+  localizacao: MODELO-spec.md na tag v1.7.0, cabeçalho, seção Requisitos e comentário de Esclarecimentos
+  resultado: confirmada
+- texto: "dúvida sem resposta fica como [ESCLARECER: pergunta]; o agente pausa no checkpoint, só passa ao plano com o sim explícito da pessoa, e o registro de aprovação é gravado por quem aprova ou a pedido dele"
+  ref: sdd-lifecycle
+  localizacao: SKILL.md na tag v3.0.0, Fase 1 e Fase 3, itens 2 a 4
+  resultado: confirmada
+- texto: o verificar_pr.py avisa de marcador aberto só em spec aprovada ou citada por plano, avisa de aprovação sem registro, avisa de R<n> sem teste citado e ausente da tabela de veredito, e bloqueia só migration existente na base que foi alterada, em pastas migration, migrations ou alembic
+  ref: sdd-scaffold-verificar-pr
+  localizacao: template/scripts/verificar_pr.py na tag v1.7.0, analisar(), checar_aprovacao(), checar_marcadores(), analisar_rastreio(), MIGRATION
+  resultado: confirmada
+  nota: 'Todas as mensagens citadas no guia foram produzidas pelo script na execução registrada abaixo.'
+- texto: no Tier 2 o revisor é independente (sessão nova ou outra pessoa), parte da spec e registra uma linha por R no plano; a Fase 8 muda o Status da spec para arquivada antes do merge e destila o permanente para steering ou ADR e o aprendizado operacional para docs/PROJECT_MEMORY.md
+  ref: sdd-lifecycle
+  localizacao: SKILL.md na tag v3.0.0, Fase 7 (item 'Tier 2 — revisão adversarial') e Fase 8, passos 1 e 4
+  resultado: confirmada
+- texto: os jobs de CI só rodam em pipeline de merge request, pela regra merge_request_event
+  ref: gitlab-mr-pipelines
+  localizacao: documentação de pipelines de merge request, seções 'When they run' e de configuração
+  resultado: confirmada
+  nota: 'Mesma afirmação já registrada em verificacoes/receita-ligar-ci-gitlab-travas.yaml.'
+- texto: o gitlab-ci-local roda pipelines do GitLab na máquina local
+  ref: gitlab-ci-local-readme
+  localizacao: README, descrição e seção de executores
+  resultado: confirmada
+- texto: o job segredos usa o gitleaks, que varre o histórico
+  ref: gitleaks-readme
+  localizacao: README, subcomando git
+  resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-06'
+  achados: []
+execucoes:
+- tipo: arquivo
+  arquivo: guias/do-zero-a-primeira-mr.md
+  comando: 'criar_projeto.py --nome app-guia1 --stack "Python 3.11"; verificar_pr.py --base origin/main em cada estado; npx gitlab-ci-local@4.76.0 normas-do-pr governanca segredos'
+  ambiente: macOS, Python 3.14.8, Docker local, gitlab-ci-local 4.76.0, sdd-scaffold v1.7.0 (clone local); pasta ~/curadoria-a5/b1-guia1-exec/app-guia1, sem harness de IA
+  resultado: passou
+  evidencia: "trava: 'BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado.' (FAIL normas-do-pr); com a V2 e a V1 restaurada: 'Verificação de PR: 8 arquivo(s), nenhum achado.'; jobs normas-do-pr, governanca e segredos em PASS"
+  data: '2026-10-05'
