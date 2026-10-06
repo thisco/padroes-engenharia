@@ -14,7 +14,7 @@ descricao: >-
   `seed-demo.sh` chama sempre `http://localhost:4000` [ref:gateway-poc-compose]; o README pede
   cerca de 8 GiB de memória para o Docker [ref:gateway-poc-readme]. É uma prova de conceito, e o
   portal a trata como ponto de partida para o gateway de teste e para o estudo, não como
-  gateway de produção. A receita "Ligar uma aplicação ao gateway de IA" parte dele.
+  gateway de produção. O prompt para o agente foi testado só até a trava do passo 1, que para quando a porta 4000 ou os nomes de contêiner estão ocupados; a instalação completa por ele segue pendente de uma máquina com a porta livre. A receita "Ligar uma aplicação ao gateway de IA" parte dele.
 repo: https://github.com/thisco/gateway-poc
 versao: "0.1.0"
 comando: |

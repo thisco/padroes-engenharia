@@ -94,6 +94,18 @@ execucoes:
     5,1 GiB) e as chamadas aos modelos local-qwen e de provedor. O comando literal do starter não foi
     executado por causa do conflito de nomes e de porta, e esta entrada é a execução da cópia alterada.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: starter-gateway-poc-prompt-1
+  harness: claude-code
+  ambiente: sessão nova em pasta vazia (~/curadoria-a5/b2-starter-gateway-prompt), com outra cópia da
+    PoC no ar (poc-gateway na porta 4000 e os contêineres poc-db e poc-ollama)
+  resultado: falhou-como-esperado
+  evidencia: 'o agente conferiu os pré-requisitos (Compose v5.1.3, git 2.50.1, curl 8.7.1), achou a porta
+    4000 ocupada pelo poc-gateway e os três nomes de contêiner em uso, e parou no passo 1 como o prompt
+    manda, sem clonar nem derrubar nada; a pasta de teste ficou vazia e os 6 contêineres poc-* seguiram
+    intactos. Isto prova a trava do passo 1, não a instalação: a execução completa do prompt segue pendente
+    de máquina ou porta livre. Transcrição em curadoria-a5/transcricoes/starter-gateway-poc-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisoria-ate-a-conferencia-em-lote-T9
   data: '2026-10-06'

@@ -11,6 +11,8 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
 
 ### Adicionado
 
+- O starter `gateway-poc` (gateway de IA de referência, tag v0.1.0), a receita "Ligar uma aplicação
+  ao gateway de IA" e o caso da avaliação do gateway de IA.
 - Nove práticas, P1-03 a P1-11: constituição curta, spec proporcional, esclarecimentos, aprovação
   da spec, guia do fornecedor do modelo, revisão contra a spec, reconciliação do drift e
   destilação ao arquivar, cada uma com Exemplo executado e prompt testado em sessão nova.

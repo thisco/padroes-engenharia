@@ -131,6 +131,22 @@ execucoes:
     Também: modelo fora da lista (fronteira-sonnet) com a chave voltou HTTP 403, e verificar-orcamento.sh
     listou chave-perfil-restrito e chave-equipe-dev (chaves do seed, orçamento no time) e saiu 1.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: receita-ligar-aplicacao-ao-gateway-prompt-1
+  harness: claude-code
+  ambiente: sessão nova em ~/curadoria-a5/b2-receita-gateway-prompt (cópia commitada do projeto-teste-17
+    com cliente.py), gateway de teste em :4010 (cópia do gateway-poc v0.1.0, LiteLLM 1.100.0) subido antes
+    pelo coordenador e derrubado depois
+  resultado: passou
+  evidencia: 'health "I''m alive!"; chave virtual alias b2-receita-gateway-prompt, models [simulado],
+    max_budget 5/30d, sem recusa de alias; .env criado e ignorado; .env.example sem OPENAI_API_KEY e ANTHROPIC_API_KEY,
+    com AI_GATEWAY_URL= e AI_GATEWAY_KEY= vazias; cliente.py já lia as variáveis e usava model simulado;
+    venv com openai==3.24.0 e resposta simulada do gateway; log com "P2-04 VEREDITO: CPF: 3 mascarados;
+    e-mail: 1 mascarado; vazamento: nenhum" (havia uma linha anterior de 0 mascarados, de outra execução,
+    e o agente não a confundiu); chamadas 1 a 7 ok e a 8ª recusada com 429 budget_exceeded (Current cost:
+    5.4, Max budget: 5.0); /key/info spend 5.4 e max_budget 5.0; commit 0a06b44 só com .env.example, scripts/enviar-cpf.py
+    e scripts/gastar.py; árvore limpa; nenhuma chave impressa. Transcrição em curadoria-a5/transcricoes/receita-ligar-aplicacao-ao-gateway-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisoria-ate-a-conferencia-em-lote-T9
   data: '2026-10-06'

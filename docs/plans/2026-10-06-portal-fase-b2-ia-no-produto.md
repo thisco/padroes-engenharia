@@ -80,10 +80,10 @@ commitar, pede a mensagem sem trailer.
 - [x] **T6 (P3-05, P3-06).** O Exemplo da P3-05 é um teste determinístico: conteúdo externo com
   instrução injetada chega isolado e marcado, e o verificador confere a marcação. O da P3-06 é um
   verificador de allowlist de servidores MCP numa configuração de projeto.
-- [ ] **T7 (starter `gateway-poc` e receita "Ligar uma aplicação ao gateway de IA").** Depende
+- [x] **T7 (starter `gateway-poc` e receita "Ligar uma aplicação ao gateway de IA").** Depende
   da decisão 1 do checkpoint prévio (abaixo). A receita encadeia P2-01, P2-04 e P2-06 e usa o
   compose do starter.
-- [ ] **T8 (caso "Avaliação do gateway de IA").** Pelo schema de caso: `origem`, `periodo`,
+- [x] **T8 (caso "Avaliação do gateway de IA").** Pelo schema de caso: `origem`, `periodo`,
   `numeros` com `fonte` e `data`. Os números vêm de `matriz-consolidada.md` (45 casos, 8
   cenários). Depende da decisão 2.
 - [x] **T9 (conferência em lote, ADR 0005).** Como na B.1: executabilidade por amostragem, uma
@@ -112,6 +112,7 @@ criação do repositório e o push ficam com o dono.
 
 ## Evidências
 
+- **T7 e T8 fecharam (2026-10-06).** Starter `gateway-poc` (ea1049f) e receita (18f2421), com a cópia alterada do compose (porta 4010) rodando a receita de ponta a ponta e o prompt da receita testado em sessão nova (claude-code, commit 0a06b44 do preparo); o prompt do starter só provou a trava do passo 1 (a instalação completa depende de porta 4000 livre). Caso da avaliação em d347746. Achados para a conferência final: recusa por orçamento 429 (LiteLLM 1.100.0) x 422 (1.104.0); profile `guardrails` (Presidio) necessário para o veredito; `.env.example` da PoC cita `local-llama` inexistente; `verificar-orcamento.sh` lista as 2 chaves do seed (orçamento de time).
 - **T1 fechou (2026-10-06).** P2-02 (a3b3557) e P2-03 (61ac2da) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P2-02 commit e4ef178, P2-03 commit df87964, ambos com saída 0 do verificador. Registros em `verificacoes/P2-02.yaml` e `verificacoes/P2-03.yaml`.
 - **T2 fechou (2026-10-06).** P2-04 (372aa47) e P2-06 (11775ba) com Exemplo executado e prompt testado em sessão nova (claude-code): P2-04 commit 1a0dfe1 (verificador 1 antes, 0 depois do guardrail), P2-06 commit 79847d6 (422 budget_exceeded, relatório 0.1240 de 0.1). Força orienta com mecanismo null, pois o validador reprova avisa sem mecanismo em scripts/. Registros em `verificacoes/P2-04.yaml` e `verificacoes/P2-06.yaml`.
 - **T4 fechou (2026-10-06).** P3-01 (1b3c601) e P3-02 (e63334c) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-01 commit 30a9904 (verificador 1 antes, 0 depois), P3-02 commit f3e7b48 (AVISO de threat-model antes, nenhum achado depois). P3-02 saiu com força avisa e mecanismo verificar_pr.py@1.7.1, pois o SKILL.md não é hospedado e o script só avisa.
