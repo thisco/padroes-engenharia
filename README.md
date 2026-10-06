@@ -6,13 +6,13 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## O que há aqui
 
-- 8 práticas na espinha de 12 domínios × 4 momentos; 45 das 48 células a definir (`ROTEAMENTO.md`).
-- 81 referências, cada uma conferida na fonte, e 6 skills publicadas.
+- 10 práticas na espinha de 12 domínios × 4 momentos; 43 das 48 células a definir (`ROTEAMENTO.md`).
+- 84 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
 |---|---|---|
-| Guia | Construir com IA (`construir-com-ia`) | 6 |
+| Guia | Construir com IA (`construir-com-ia`) | 8 |
 | Desenho | Arquitetura e padrões de projeto (`arquitetura`) | 0 |
 | Desenho | Contratos de API (`contratos-api`) | 0 |
 | Desenho | Frontend e UX (`frontend-ux`) | 0 |

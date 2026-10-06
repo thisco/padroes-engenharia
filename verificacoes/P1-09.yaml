@@ -54,6 +54,13 @@ execucoes:
   resultado: passou
   evidencia: 'Verificação de PR: 4 arquivo(s), nenhum achado.; saída 0.'
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-09-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-09-prompt, plano Tier 2 com a tabela de veredito vazia e teste só do caso com observação"
+  resultado: passou
+  evidencia: "verificar_pr antes e depois: nenhum achado; python3 -m pytest falhou (sem pytest no ambiente, nada foi instalado) e o agente chamou as duas funções de teste à mão, declarando que não substitui a suíte; tabela: R1 atendido (src/pedidos.py:4-6), R2 parcial (src/pedidos.py:9-11; o teste só cobre o caso com observação), a lacuna semeada; achados escritos no plano; commit 55bd1ce só com o plano. Transcrição em curadoria-a5/transcricoes/P1-09-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'
