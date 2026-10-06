@@ -33,6 +33,44 @@ afirmacoes:
   resultado: parcial
   nota: O período publicado segue o README do cenário 08; a divergência está anotada. A referência da matriz cobre o veredito, e a data vem do README do cenário no mesmo commit.
 revisao_adversarial:
-  revisor: sessao-independente
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: numeros[] contra a matriz da tag (clone local e página aberta na web)
+    problema: '[baixo] confirmado: 45 linhas de caso (45 ids), 8 cenários, 42 com "Passa" (incluindo ressalva e
+      "como teste"), 3 de falha ou gap (GR-04 Falha / gap; SK-03 e TI-01 Gap confirmado), 0 parciais, VS-04 com
+      364 contra cerca de 15 tokens e SO-05 com 11 execuções e decisão modal 9/10. Todo número tem fonte e data.'
+    tratamento: Nenhum.
+  - afirmacao: período 2026-09-10 a 2026-09-23
+    problema: '[baixo] confere com os READMEs dos cenários (01 a 06 em 09-10, 05 e 07 em 09-11, 08 em 09-23). O
+      README raiz da tag diz "execuções entre 2026-09-10 e 2026-09-11", e a divergência já está anotada no registro
+      como "parcial".'
+    tratamento: Nenhum.
+  - afirmacao: 'texto: "Dos 45 casos, 42 passam, 2 são gap confirmado e 1 é falha ou gap"'
+    problema: '[baixo] a conta fecha (42 + 3 = 45), mas "Passa" inclui casos "como teste" cujo achado é um problema
+      (VS-05, TI-02, SO-02, SO-03, SO-05); o texto avisa. O número 3 de `numeros[]` agrupa falha e gap, e o texto
+      os separa em 2 e 1, o que é coerente.'
+    tratamento: Nenhum.
+  - afirmacao: 'P2-06: "o orçamento por chave recusou a chamada com erro 429"'
+    problema: '[baixo] vem da matriz (TD-03), mas a P2-06 e a receita registram 422 em LiteLLM v1.104.0, e a receita
+      avisa que o código muda com a versão; o caso afirma 429 sem essa ressalva.'
+    tratamento: 'Pendente: acrescentar "na versão 1.100.0" ao bullet da P2-06, ou citar a variação.'
+  - afirmacao: 'higiene: ROI, LinkedIn e nomes de organização'
+    problema: '[baixo] nenhuma ocorrência de "171% ROI", LinkedIn, NUARQ, NUJOR ou Serpro no caso, nos registros
+      e nas referências gateway-poc-*; o campo `origem` aponta para o repositório e o commit, e o texto fala em
+      "uma prova de conceito de gateway de IA". Varredura feita no texto da tag nos mesmos termos: nenhuma ocorrência.
+      Dados de teste sintéticos.'
+    tratamento: Nenhum.
+  - afirmacao: 'fontes: gateway-poc-matriz, aberta na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef'
+    problema: '[baixo] confirmada: 45 casos em oito cenários e os vereditos de GR-04, SK-03, TI-01, VS-04 e SO-05.
+      A tag v0.1.0 existe (peeled 571a091c), e o commit de componentes.yml e das cinco referências gateway-poc-*
+      é o mesmo.'
+    tratamento: Nenhum.
+  - afirmacao: Executabilidade por leitura (§11.4)
+    problema: '[baixo] o caso não tem passo a executar; nada exigiria inventar algo. O leitor que quiser reproduzir
+      segue os cenários do repositório, que o caso não ensina.'
+    tratamento: Nenhum.
+  - afirmacao: revisor anterior "sessao-independente" neste registro
+    problema: '[baixo] o revisor anterior era uma sessão da própria curadoria, sem a ADR 0005; esta conferência
+      substitui o bloco.'
+    tratamento: Nenhum.

@@ -107,6 +107,43 @@ execucoes:
     de máquina ou porta livre. Transcrição em curadoria-a5/transcricoes/starter-gateway-poc-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisoria-ate-a-conferencia-em-lote-T9
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: comando do starter (starters/gateway-poc.yml, linhas 20-31)
+    problema: '[baixo] confirmado contra o README da tag (cd poc, .env, docker compose up -d, pull do qwen2.5:0.5b,
+      seed-demo.sh). A troca de `cp .env.example .env` por `printf` com chaves novas é desvio declarado no comentário
+      do comando; o clone com --depth 1 na tag foi conferido (HEAD 571a091c).'
+    tratamento: Nenhum.
+  - afirmacao: prompt_para_agente corresponde ao testado (starter-gateway-poc-prompt-1)
+    problema: '[baixo] a transcrição confere: o agente parou no passo 1 (porta 4000 ocupada por poc-gateway, nomes
+      poc-gateway, poc-db e poc-ollama em uso) e não alterou nada. O texto testado tem uma linha a mais, as "Respostas
+      antecipadas do usuário", que não é publicada; o resto é idêntico. Os passos 2 a 8 nunca rodaram por esse prompt
+      (só pela cópia alterada, na execução anterior).'
+    tratamento: 'Nenhum: a descrição do starter já declara que só a trava do passo 1 foi provada.'
+  - afirmacao: prompt passo 4, o health check (linhas 56-58)
+    problema: '[médio] o prompt manda parar se o health check não passar em 3 minutos, mas o laço `until curl ...;
+      do sleep 3; done` não tem limite, e `timeout` não existe no macOS. Quem segue o texto precisa inventar o corte
+      dos 3 minutos; um gateway que não sobe deixa o agente preso no laço.'
+    tratamento: 'Pendente: trocar o laço por um com contador (por exemplo 60 voltas de 3 s) no prompt e no comando.
+      Não é crítico: o prompt manda mostrar os logs e parar, e o laço só falha em gateway que nunca fica pronto.'
+  - afirmacao: limites declarados na descrição (porta e nomes fixos, seed no localhost:4000, 8 GiB)
+    problema: '[baixo] confirmados no compose da tag, aberto na web (container_name poc-gateway, poc-db e poc-ollama,
+      porta 4000:4000). A descrição não cita o profile `guardrails`, o `.env.example` com `local-llama` (o catálogo
+      tem `local-qwen`; a nota está só neste registro) nem o 429 x 422 do orçamento; os três pesam para a receita,
+      que os declara, e não para o starter. O `docker-compose.yml` fixa também `name: governanca-ia-poc` e nomes
+      `poc-presidio-*` nos profiles, que não aparecem no texto.'
+    tratamento: Nenhum.
+  - afirmacao: status experimentar
+    problema: '[baixo] coerente: a instalação completa por este prompt não foi provada (só a trava e a cópia alterada,
+      com Compose, seed, /ui e 403), e o texto diz isso. Não passar a adotar sem uma execução do comando literal
+      com a porta 4000 livre.'
+    tratamento: Nenhum.
+  - afirmacao: comentário de cabeçalho deste registro
+    problema: '[baixo] o cabeçalho ainda diz que o prompt não foi testado em sessão nova e que a revisão é provisória;
+      as execuções abaixo e esta revisão o superam.'
+    tratamento: 'Nenhum: o comentário é histórico; o conteúdo do registro vale.'
+  - afirmacao: fonte gateway-poc-readme e gateway-poc-compose, abertas na web no commit 571a091c8a8f9ff99aba89c064d69a36ff195bef
+    problema: '[baixo] confirmadas: o README da tag manda reservar cerca de 8 GiB, a API na 4000 e a UI em /ui;
+      a tag v0.1.0 existe e aponta (peeled) para o commit de componentes.yml.'
+    tratamento: Nenhum.

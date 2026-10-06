@@ -173,6 +173,20 @@ P3-04 README do scaffold (limites do hook: confirma); P3-05 OWASP LLM01 (confirm
 | | | médio: `npx -y` sem versão e hash fixados aprova o que o registro servir |
 | | | baixo: "projeto-teste-17"/"{nome do projeto}" sem pasta no preparo; URL `latest` do MCP |
 
+### Starter, receita e caso
+
+Conferente independente, modelo econômico, ADR 0005 (2026-10-06). Escopo: `gateway-poc`, a receita "Ligar uma aplicação ao gateway de IA" e o caso "Avaliação do gateway de IA". Método: a execução registrada foi conferida contra as transcrições e as saídas citadas (sem subir Docker), os números do caso foram recontados na matriz do clone da tag, e uma fonte de cada conteúdo foi aberta na web no commit `571a091c8a8f9ff99aba89c064d69a36ff195bef`. A tag `v0.1.0` existe e aponta para esse commit, o mesmo de `componentes.yml` e das cinco referências `gateway-poc-*`. Cada achado está na `revisao_adversarial` do registro, com a gravidade no começo do `problema`.
+
+**Resultado: 0 críticos, 3 médios, 23 baixos.** O caso bate com a matriz (45 casos, 8 cenários, 42 passam, 3 falham ou são gap: GR-04, SK-03 e TI-01; VS-04 com 364 tokens; SO-05 com 11 execuções) e não cita nenhuma organização. A transcrição do starter confirma a trava do passo 1. O prompt da receita é o testado, salvo os placeholders.
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| starter `gateway-poc` | ok, com ajuste | médio: o prompt manda parar após 3 minutos de health check, mas o laço `until` não tem limite; baixo: só a trava do passo 1 foi provada, a descrição não cita o profile `guardrails`, o `local-llama` do `.env.example` nem o 429 x 422 (a receita os cita); `experimentar` coerente |
+| receita ligar-aplicacao-ao-gateway | ok, com ajuste | médio: o prompt manda commitar sem pedir "sem trailer" (o commit testado levou os trailers); médio: leitura sem inventar tem lacunas pequenas (`cd` e `<pasta-da-aplicação>` do passo 3, limite do health check); baixo: 403 do passo 7 depois do orçamento estourado sem ordem registrada; porta ocupada e guardrail não registrado cobertos em "Se der errado" |
+| caso avaliacao-gateway-de-ia | ok | baixo: o bullet da P2-06 diz 429 sem a ressalva da versão (a P2-06 registra 422); período com a divergência do README raiz já anotada |
+
+Tratamento: os 3 médios e os baixos de texto ficam para a T10 (ajustar texto; o prompt do starter e o da receita, se mudarem, pedem novo teste). Nenhum é crítico, então a ADR 0005 não pede revisão com modelo forte.
+
 - **T10 parcial (2026-10-06).** Tratados os 9 médios e os baixos de texto baratos; o restante está justificado no `tratamento` de cada `verificacoes/<ID>.yaml`. Reexecutados: P2-04 (Docker, porta 4001, `docker system df` antes e `down -v` ao fim; veredito "CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum" com o guardrail e "vazamento: 3 CPF, 1 e-mail" sem ele), P2-05 (`npx --yes gitlab-ci-local@4.76.0 evals`: PASS 5/5 e FAIL 3/5), P3-02 (`verificar_pr.py` hospedado com o plano do Exemplo: AVISO antes, "5 arquivo(s), nenhum achado" depois), P3-04 (antes com 16 linhas, depois saída 0 e dois casos ruins com saída 1), P3-06 (antes, depois, config vazia, env e headers, JSON quebrado, clone da tag com commit conferido) e P2-03 (data futura). Exemplos novos: `exemplos/P3-02/plano-triagem-de-chamados.md` e `exemplos/P3-06/gitlab-ci.yml`. Referência `mcp-spec` com a URL da revisão 2026-07-28.
   - `ruff check` e `ruff format --check` no repositório inteiro: limpos (190 arquivos); `pytest`: 637 passed; `scripts/validar.py`: nenhum erro; `gerar.py --saida` duas vezes em pastas temporárias: `diff -r` sem diferença.
   - **T10 segue aberta:** os prompts alterados precisam de novo teste em sessão nova (P2-02, P2-03, P2-04, P2-06, P3-01, P3-02, P3-03, P3-04, P3-05 e P3-06). A P2-05 não mudou de prompt. Registrar as novas execuções em `verificacoes/<ID>.yaml` e então marcar a T10.
