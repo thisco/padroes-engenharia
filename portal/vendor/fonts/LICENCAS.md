@@ -28,3 +28,9 @@ com o aviso de copyright de cada projeto, acompanha os arquivos:
 
 A OFL permite usar, redistribuir e embutir as fontes; não permite vendê-las sozinhas, e versões
 modificadas não podem usar o nome reservado da fonte.
+
+## reveal.js
+
+O reveal.js 4.5.0 (Hakim El Hattab, licença MIT) mora em `../reveal/`, com versão, SHA-256 e o
+texto da licença em `../reveal/LICENCAS.md`. Roda os decks de `apresentacoes/` e usa estas mesmas
+fontes.
