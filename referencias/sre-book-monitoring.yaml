@@ -1,0 +1,11 @@
+id: sre-book-monitoring
+titulo: Monitoring Distributed Systems (SRE book)
+organizacao: Google
+url: https://sre.google/sre-book/monitoring-distributed-systems/
+tipo: analista
+verificado_em: '2026-10-06'
+verificacao: V
+localizacao: seções 'The Four Golden Signals', 'Symptoms Versus Causes' e 'Tying These Principles Together' (alerta urgente e acionável)
+dominios:
+- observabilidade
+notas: null

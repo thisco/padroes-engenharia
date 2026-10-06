@@ -1,0 +1,58 @@
+conteudo: OBS-02
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o SLI é uma medida quantitativa, bem definida, de um aspecto do nível de serviço entregue, e o SLO é um valor-alvo, ou uma faixa de valores, para esse nível, medido por um SLI
+  ref: sre-book-slo
+  localizacao: seções 'Indicators' e 'Objectives'
+  resultado: confirmada
+- texto: é melhor admitir um orçamento de erro, a taxa à qual os SLOs podem ser descumpridos, e acompanhá-lo diária ou semanalmente
+  ref: sre-book-slo
+  localizacao: seção 'Objectives' (erro orçado)
+  resultado: confirmada
+  nota: O erro orçado de 0,5% para um objetivo de 99,5% é a conta do portal (100 menos o objetivo), e não uma afirmação da fonte.
+- texto: escolher e publicar SLOs para os usuários define a expectativa de desempenho do serviço
+  ref: sre-book-slo
+  localizacao: seção 'SLOs Set Expectations'
+  resultado: confirmada
+- texto: o livro orienta a monitorar o sintoma (o que está quebrado) e não a causa
+  ref: sre-book-monitoring
+  localizacao: seção 'Symptoms Versus Causes'
+  resultado: confirmada
+- texto: toda página precisa ser acionável, e cada vez que o pager toca a pessoa precisa poder reagir com urgência; o alerta deve detectar condição urgente e acionável que afeta usuários, e a pessoa deve poder agir em resposta
+  ref: sre-book-monitoring
+  localizacao: seção 'Tying These Principles Together'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/OBS-02/verificar-slo.py
+  comando: python3 scripts/verificar-slo.py docs/steering/slo.yml nos estados antes e depois, com runbook sem a seção Ação, runbook que não cita o alerta, alerta sem aciona, arquivo inexistente
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'antes: "runbook inexistente" e "alerta fora de um SLO", saída 1; runbook sem Ação: "runbook sem a seção ''Ação'' preenchida", saída 1; sem nome do alerta no runbook: saída 1; sem aciona: saída 1; arquivo inexistente: saída 1; depois: "disponibilidade-segunda-via: objetivo 99.5% em 28 dias, erro orçado 0.50%" e "OBS-02: 1 SLO(s), com alerta, quem aciona e runbook completos.", saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-02/slo-antes.yml
+  comando: python3 scripts/verificar-slo.py docs/steering/slo.yml (com slo-antes.yml copiado para esse caminho e sem docs/runbooks/)
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'taxa-de-erro-alta: runbook inexistente (docs/runbooks/taxa-de-erro-alta.md); cpu-acima-de-80: alerta fora de um SLO; saída 1.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-02/slo.yml
+  comando: python3 scripts/verificar-slo.py docs/steering/slo.yml (com slo.yml e o runbook do exemplo)
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'erro orçado 0.50%, "OBS-02: 1 SLO(s), com alerta, quem aciona e runbook completos.", saída 0.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/OBS-02/runbook-taxa-de-erro-alta.md
+  comando: python3 scripts/verificar-slo.py docs/steering/slo.yml (com o runbook copiado para docs/runbooks/taxa-de-erro-alta.md)
+  ambiente: cópia de projeto-teste-17 em /tmp/obs-t5/p; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'as três seções e o nome do alerta presentes, saída 0; com o nome do alerta trocado no texto, "o runbook não cita o nome do alerta", saída 1.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-06'
+  achados: []

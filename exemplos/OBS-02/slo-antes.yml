@@ -1,0 +1,15 @@
+# O mesmo serviço antes da OBS-02: o SLO existe, mas o runbook do alerta não existe e há um alerta solto, sem SLO.
+servico: api-boletos
+slos:
+  - id: disponibilidade-segunda-via
+    sli: "proporção de requisições a /boletos/segunda-via que respondem com status abaixo de 500"
+    objetivo: 99.5
+    janela_dias: 28
+    alertas:
+      - nome: taxa-de-erro-alta
+        condicao: "a taxa de respostas 5xx em 10 minutos consome mais de 5% do erro orçado da janela"
+        aciona: plantao-engenharia
+        runbook: docs/runbooks/taxa-de-erro-alta.md
+alertas:
+  - nome: cpu-acima-de-80
+    condicao: "uso de CPU acima de 80% por 5 minutos"

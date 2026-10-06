@@ -1,0 +1,13 @@
+# SLO do serviço, com o alerta e o runbook ligados (prática OBS-02).
+# Os números são de exemplo: cada time define os seus a partir do que o usuário precisa.
+servico: api-boletos
+slos:
+  - id: disponibilidade-segunda-via
+    sli: "proporção de requisições a /boletos/segunda-via que respondem com status abaixo de 500"
+    objetivo: 99.5
+    janela_dias: 28
+    alertas:
+      - nome: taxa-de-erro-alta
+        condicao: "a taxa de respostas 5xx em 10 minutos consome mais de 5% do erro orçado da janela"
+        aciona: plantao-engenharia
+        runbook: docs/runbooks/taxa-de-erro-alta.md
