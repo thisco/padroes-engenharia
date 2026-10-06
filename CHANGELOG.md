@@ -7,6 +7,38 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+Fatia B.1 do domínio Construir com IA, em andamento (falta o repino do scaffold 1.7.1).
+
+### Adicionado
+
+- Nove práticas, P1-03 a P1-11: constituição curta, spec proporcional, esclarecimentos, aprovação
+  da spec, guia do fornecedor do modelo, revisão contra a spec, reconciliação do drift e
+  destilação ao arquivar, cada uma com Exemplo executado e prompt testado em sessão nova.
+- A receita "Instalar as skills por harness", com o script de montagem dos links.
+- Os guias "Instanciar o scaffold pelo próprio agente" e "Do zero à primeira MR com IA" (o
+  tutorial), com execução de ponta a ponta no scaffold 1.7.0.
+- Referência `google-gemini-3-5-flash-guia`, a página vigente do guia do Gemini.
+
+### Alterado
+
+- P1-03: força `orienta` e `mecanismo` nulo, porque o limite de tamanho mora no job `governanca`
+  da receita do CI, e não no `verificar_constituicao.py`; Exemplo refeito com a saída real
+  (44419 para 5482 bytes).
+- P1-06: força `avisa`, coerente com o `verificar_pr.py`; o pedido de aprovação é o checkpoint
+  humano da skill.
+- P1-07: fonte trocada pelo guia vigente do Gemini 3.5 Flash, com o id `gemini-3.5-flash` no
+  Exemplo.
+- P1-09: cita o modelo de raciocínio potente que a skill pede no Tier 2, traz o código e os
+  testes do Exemplo e o passo de instalar o `pytest`; P1-10: o script lê só o commitado, e o
+  texto manda commitar o plano antes; P1-04, P1-05, P1-08 e P1-11: textos de triagem, local dos
+  scripts e limites do verificador.
+- Guias: links para as práticas corrigidos (`../praticas/P1-XX.html`) e passos do tutorial com o
+  conteúdo dos arquivos-base, o clone da tag e o remoto local.
+
+### Removido
+
+- Referência `google-gemini-3-developer-guide` (página depreciada pelo fornecedor).
+
 ## [0.3.0] - 2026-10-05
 
 Integração dos componentes `sdd-scaffold` 1.7.0 e `sdd-lifecycle` 3.0.0. Minor na série 0: há
