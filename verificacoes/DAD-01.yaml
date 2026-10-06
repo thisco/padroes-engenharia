@@ -120,6 +120,19 @@ afirmacoes:
   localizacao: template/skills/migrations-reversiveis/SKILL.md na tag v1.7.1 (commit cd121cd973945c486e63029496ed7ec879a18e32), seções citadas neste registro
   resultado: confirmada
   nota: "O arquivo é idêntico ao da v1.7.0 no clone local (git diff v1.7.0 v1.7.1 vazio neste caminho)."
+- texto: o Flyway guarda o checksum de cada migration aplicada na tabela flyway_schema_history; a consulta
+    de conferência lista versão, descrição, checksum e sucesso
+  ref: flyway-versionadas
+  localizacao: seção 'Checksum Integrity' (a tabela flyway_schema_history guarda o checksum)
+  resultado: confirmada
+  nota: Reaberta em 2026-10-06. As colunas version, description, checksum e success foram conferidas na
+    execução (consulta rodada no PostgreSQL 16.13 com o Flyway 11.20.3); a documentação não lista as colunas.
+- texto: depois da V3, com a V2 restaurada, flyway validate imprime 'Successfully validated 3 migrations'
+  ref: flyway-validate
+  localizacao: seção 'Description' (o resultado de sucesso)
+  resultado: confirmada
+  nota: 'A documentação indica o sucesso por validationSuccessful: true; o texto ''Successfully validated
+    N migrations'' vem da execução de 2026-10-06 com o Flyway 11.20.3.'
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-01/gitlab-ci.yml
@@ -190,6 +203,58 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: "git diff --name-status origin/main...HEAD: R064 db/migration/V2__cria_cpf.sql db/migration/V2__cria_cpf_renomeada.sql (git mv e uma linha acrescentada). normas-do-pr > BLOQUEIA: db/migration/V2__cria_cpf.sql já existe na base e foi alterado. Migration aplicada não se edita: crie uma migration corretiva incremental. FAIL 1; saida=1. Novo na 1.7.1: o mesmo cenário com o script da 1.7.0 deu só o AVISO de rollback (e mover a V2 para db/outro/ sem editar deu 'nenhum achado'). Saída bruta em curadoria-a5/saidas/b1-t15b-rename.txt."
   data: 2026-10-06
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/V1__cria_cliente.sql
+  comando: sh exemplos/DAD-01/executar-validate.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais; container e rede derrubados ao fim.
+  resultado: passou
+  evidencia: 'V1 e V2 aplicadas juntas: ''Successfully applied 2 migrations to schema "public", now at
+    version v2''.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/V2__cria_cpf.sql
+  comando: sh exemplos/DAD-01/executar-validate.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais; container e rede derrubados ao fim.
+  resultado: passou
+  evidencia: aplicada na V2 (cpf VARCHAR(11)); checksum -1946493639 em flyway_schema_history, o mesmo
+    'Applied to database' da mensagem de erro do Exemplo.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/errado/V2__cria_cpf.sql
+  comando: sh exemplos/DAD-01/executar-validate.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais; container e rede derrubados ao fim.
+  resultado: falhou-como-esperado
+  evidencia: 'com a V2 editada no disco, flyway validate saiu 1: ''ERROR: Validate failed: Migrations
+    have failed validation'', ''Migration checksum mismatch for migration version 2'', ''-> Applied to
+    database : -1946493639'', ''-> Resolved locally    : -1926160430''.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/V3__amplia_cpf.sql
+  comando: sh exemplos/DAD-01/executar-validate.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais; container e rede derrubados ao fim.
+  resultado: passou
+  evidencia: 'V2 restaurada e V3 aplicada: ''now at version v3''; ''Successfully validated 3 migrations'';
+    SELECT version, description, checksum, success FROM flyway_schema_history ORDER BY installed_rank
+    devolveu (1, cria cliente, -1324170801, t), (2, cria cpf, -1946493639, t), (3, amplia cpf, -1967976891,
+    t).'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/executar-validate.sh
+  comando: sh exemplos/DAD-01/executar-validate.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais; container e rede derrubados ao fim.
+  resultado: passou
+  evidencia: saída 0 nas três seções; saída bruta em curadoria-a5/saidas/b3-dad01-validate.txt.
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

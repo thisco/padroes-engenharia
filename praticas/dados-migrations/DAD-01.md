@@ -12,12 +12,18 @@ aplica: [skill:migrations-reversiveis]
 ferramentas_aprovadas: [flyway, alembic, sdd-scaffold]
 starter: sdd-scaffold
 receitas: [ligar-ci-gitlab-travas]
-exemplos: [exemplos/DAD-01/gitlab-ci.yml]
+exemplos:
+  - exemplos/DAD-01/gitlab-ci.yml
+  - exemplos/DAD-01/V1__cria_cliente.sql
+  - exemplos/DAD-01/V2__cria_cpf.sql
+  - exemplos/DAD-01/V3__amplia_cpf.sql
+  - exemplos/DAD-01/errado/V2__cria_cpf.sql
+  - exemplos/DAD-01/executar-validate.sh
 referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, sdd-scaffold-readme, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
 dono: engenharia
-revisado_em: 2026-10-05
-revisar_ate: 2027-04-05
+revisado_em: 2026-10-06
+revisar_ate: 2027-04-06
 ---
 
 ## O que fazer
@@ -116,6 +122,36 @@ Certo, uma V3 nova (`db/migration/V3__amplia_cpf.sql`):
 ```sql
 ALTER TABLE cliente ALTER COLUMN cpf TYPE VARCHAR(14);
 ```
+
+Com a V2 restaurada e a V3 aplicada, o `flyway validate` passa. Saída da mesma execução (o texto
+da mensagem de sucesso vem da execução, não da documentação):
+
+```text
+Successfully applied 1 migration to schema "public", now at version v3
+Successfully validated 3 migrations
+```
+
+O Flyway guarda o checksum de cada migration aplicada na tabela `flyway_schema_history`
+[ref:flyway-versionadas]. A consulta de conferência mostra a V2 com o mesmo checksum de antes
+da correção (o `Applied to database` da mensagem de erro acima) e a V3 como migration nova, todas
+com `success` verdadeiro:
+
+```sql
+SELECT version, description, checksum, success FROM flyway_schema_history ORDER BY installed_rank;
+```
+
+```text
+ version | description  |  checksum   | success
+---------+--------------+-------------+---------
+ 1       | cria cliente | -1324170801 | t
+ 2       | cria cpf     | -1946493639 | t
+ 3       | amplia cpf   | -1967976891 | t
+```
+
+O roteiro dessa execução, num PostgreSQL efêmero com a imagem do Flyway (as migrations estão em
+`exemplos/DAD-01/`):
+
+<!-- incluir: exemplos/DAD-01/executar-validate.sh -->
 
 ### Para o agente
 
