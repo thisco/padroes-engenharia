@@ -105,6 +105,11 @@ commitar, pede a mensagem sem trailer.
    - (b) referência `tipo: interno` com a URL futura do GitLab Serpro, marcada [S] até existir;
    - (c) adiar o caso para a B.5.
 
+**Decisões do dono (2026-10-06):** 1a e 2a. A PoC e o relatório da avaliação vão para um
+repositório próprio, `thisco/gateway-poc`, com tag; o starter e as referências do caso apontam
+para ele. O conteúdo é preparado localmente, com varredura de segredos e de dados internos, e a
+criação do repositório e o push ficam com o dono.
+
 ## Evidências
 
 - **T1 fechou (2026-10-06).** P2-02 (a3b3557) e P2-03 (61ac2da) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P2-02 commit e4ef178, P2-03 commit df87964, ambos com saída 0 do verificador. Registros em `verificacoes/P2-02.yaml` e `verificacoes/P2-03.yaml`.

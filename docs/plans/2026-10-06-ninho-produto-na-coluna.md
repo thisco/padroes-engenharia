@@ -55,3 +55,5 @@ palavra a palavra, setas soltas no meio) e `ninho-produto-depois.png` (fluxo em 
 do container query. Antes, nessa largura, as 4 caixas ficavam com uns 95px cada. O fluxo
 horizontal só aparece com a figura acima de 640px. Decisão do dono: manter o empilhamento ali,
 ou dar ao fluxo a largura inteira da página de Conceitos (mudança de template).
+
+**Decisão do dono (2026-10-06):** manter o empilhamento também na página de Conceitos.
