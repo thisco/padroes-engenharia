@@ -1,0 +1,283 @@
+# Reconciliação do deck harness-sdd (spec das apresentações, R5). Provisória: a revisão adversarial é a conferência T3.
+# Entradas "SÓ NO DECK" não têm sustentação no portal; o campo ref aponta a referência mais próxima e o resultado é parcial.
+conteudo: apresentacao-harness-sdd
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: sdd-scaffold 1.7.1 e sdd-lifecycle 3.0.0 são as versões atuais (capa dos rodapés do diagrama
+    e das garantias; slide 19)
+  ref: sdd-scaffold-changelog
+  localizacao: entradas [1.7.1] e [1.7.0]; componentes.yml fixa 1.7.1 e 3.0.0
+  resultado: confirmada
+  nota: Versões e commits fixados em componentes.yml; ferramentas/sdd-scaffold.yml e sdd-lifecycle.yml.
+- texto: o gerador instala a skill sdd-lifecycle na geração do projeto (slide 19, diagrama)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Quick start'
+  resultado: confirmada
+- texto: quatro pontos de montagem das skills (.claude, .codex, .kiro, .agents), todos links para skills/
+    (slide 9, diagrama, garantias, roteiro)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Um corpo de skill, quatro pontos de montagem'
+  resultado: confirmada
+- texto: o ponto .agents/skills entrou na 1.7.0 e é lido por Codex e Antigravity (comparativo, slide 6)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.0], Adicionado: ''Ponto de montagem .agents/skills'''
+  resultado: confirmada
+- texto: o Codex lê skills de repositório em .agents/skills
+  ref: codex-skills
+  localizacao: seção de localização das skills de repositório
+  resultado: confirmada
+  nota: 'Receita instalar-skills-por-harness: a página do Codex não cita .codex/skills.'
+- texto: o Antigravity lê skills de workspace em .agents/skills
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+- texto: 'quatro skills no scaffold: arquitetura-viva, threat-model, migrations-reversiveis, estados-de-interface
+    (slides 9 e 19, diagrama)'
+  ref: sdd-scaffold-readme
+  localizacao: README, tabela das quatro skills em 'Um corpo de skill, quatro pontos de montagem'
+  resultado: confirmada
+- texto: a skill do ciclo tem nove fases (Fase 0 a 8) e a matriz de tier (roteiro)
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, 'Matriz tier → fases' e Fases 0 a 8
+  resultado: confirmada
+- texto: três tiers (0 trivial, 1 pequeno, 2 estrutural) e na dúvida o tier mais alto (slides 4 e 11,
+    diagrama)
+  ref: sdd-lifecycle
+  localizacao: SKILL.md, Fase 0, passo 4
+  resultado: confirmada
+- texto: a spec tem requisitos R<n>, cada um com critério de aceite (slide 17, diagrama, roteiro)
+  ref: sdd-scaffold-modelo-spec
+  localizacao: seção 'Requisitos' (R<n> com critério)
+  resultado: confirmada
+- texto: a spec registra a aprovação com Aprovado por e Aprovado em (slide 17, roteiro)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.0], Adicionado: ''Registro da aprovação'''
+  resultado: confirmada
+- texto: o verificador de PR avisa requisito sem critério, spec aprovada sem aprovador e marcador [ESCLARECER]
+    aberto (slide 17, diagrama, garantias)
+  ref: sdd-scaffold-verificar-pr
+  localizacao: checar_aprovacao(), checar_marcadores(), checar_criterios()
+  resultado: confirmada
+- texto: o verificador de PR avisa quando a tabela de veredito está incompleta e quando requisito não
+    tem tarefa (diagrama, garantias)
+  ref: sdd-scaffold-verificar-pr
+  localizacao: analisar_rastreio() e LINHA_VEREDITO
+  resultado: confirmada
+- texto: só a edição de migration já aplicada bloqueia no verificador de PR; threat-model, rollback e
+    evidência avisam (slide 17, diagrama)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: o rename de migration deixou de escapar da trava (--no-renames) na 1.7.1 (slide 14)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.1], Corrigido: ''Migration renomeada e editada passava pela trava'''
+  resultado: confirmada
+- texto: 'o hook usa caminho absoluto via CLAUDE_PROJECT_DIR e falha fechado: entrada ilegível vira ask
+    e script quebrado ou ausente bloqueia (slide 14)'
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.1], Corrigido: ''O hook falhava inerte'' e ''O hook agora falha fechado''; [1.6.1],
+    Corrigido: ''O hook de governança estava inerte'''
+  resultado: confirmada
+- texto: módulo plantado em scripts/ sequestraria o hook; o hook e os jobs do CI rodam com python3 -I
+    (slide 14, garantias)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.1], Corrigido: ''Módulo plantado em scripts/ sequestrava o hook'''
+  resultado: confirmada
+- texto: o hook e as permissões de .claude/settings.json protegem também scripts/verificar_*.py, .github/**
+    e .claude/settings.local.json (diagrama)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.1], Corrigido: ''Protegidos a mais no hook'''
+  resultado: confirmada
+- texto: 'o hook de governança é mecanismo que impede: código fora do modelo que pode bloquear a chamada
+    (slides 7 e 14)'
+  ref: claude-code-hooks
+  localizacao: 'PreToolUse: código de saída 2 bloqueia a chamada'
+  resultado: confirmada
+- texto: CLAUDE.md é contexto, não configuração imposta; só hook ou permissão impede (slide 7)
+  ref: claude-code-memory
+  localizacao: seção 'CLAUDE.md vs auto memory'
+  resultado: confirmada
+- texto: o CLAUDE.md do scaffold importa o AGENTS.md com @AGENTS.md; o GEMINI.md é ponteiro curto (diagrama,
+    comparativo)
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.7.0], Modificado: ''O CLAUDE.md do template importa a constituição com @AGENTS.md'''
+  resultado: confirmada
+- texto: o Claude Code lê AGENTS.md só sem CLAUDE.md na pasta (desde a 2.1.277) (comparativo)
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md'
+  resultado: confirmada
+  nota: Mudança de texto do comparativo em 2026-10-06; a versão inspecionada no deck é 2.1.267.
+- texto: AGENTS.md é lido pelo Codex (verbatim) e trunca em 32 KB (comparativo, slide 9)
+  ref: codex-agents-md
+  localizacao: limite project_doc_max_bytes
+  resultado: confirmada
+- texto: o corte do Codex em 32 KB é silencioso
+  ref: sdd-scaffold-readme
+  localizacao: README, 'As quatro camadas de governança'
+  resultado: parcial
+  nota: Observação do scaffold; a documentação do Codex não afirma o silêncio.
+- texto: o AGENTS.md do scaffold tem 88 linhas e 5,4 KB; o CI reprova acima de 30 KB (diagrama)
+  ref: sdd-scaffold-qualidade
+  localizacao: passo 'AGENTS.md dentro do limite de contexto'
+  resultado: confirmada
+  nota: 'Conferido contra template/AGENTS.md da tag v1.7.1: 88 linhas, 5399 bytes.'
+- texto: docs/steering/ tem 7 arquivos e 291 linhas no template (diagrama)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'O que você recebe'
+  resultado: parcial
+  nota: Contagem de linhas conferida na tag v1.7.1 (template/docs/steering/*.md); o README lista os arquivos,
+    não as linhas.
+- texto: o Kiro lê AGENTS.md e .kiro/steering/ (comparativo, slides 6 e 8)
+  ref: kiro-steering
+  localizacao: seções 'Workspace steering' e 'Agents.md'
+  resultado: confirmada
+- texto: o AGENTS.md não tem modos de inclusão no Kiro e entra sempre; o steering tem modos de inclusão
+    (comparativo)
+  ref: kiro-steering
+  localizacao: seção 'Agents.md'
+  resultado: confirmada
+- texto: skills do Kiro em .kiro/skills, padrão aberto Agent Skills (comparativo, slide 6)
+  ref: kiro-skills
+  localizacao: seções de local do workspace
+  resultado: confirmada
+- texto: o Antigravity lê AGENTS.md, GEMINI.md e .agents/rules/ (comparativo, slides 6 e 8)
+  ref: antigravity-rules
+  localizacao: descoberta de regras por diretório
+  resultado: confirmada
+- texto: ANTIGRAVITY.md nunca foi lido por ferramenta alguma e saiu do template (slide 8)
+  ref: sdd-scaffold-readme
+  localizacao: README, 'Por que os ponteiros são de quatro linhas' (aviso sobre ANTIGRAVITY.md)
+  resultado: parcial
+  nota: Observação do scaffold, que a página oficial de regras não faz.
+- texto: SKILL.md é padrão aberto, com frontmatter de nome e descrição (slide 8, comparativo)
+  ref: agent-skills-spec
+  localizacao: frontmatter do SKILL.md
+  resultado: confirmada
+- texto: o AGENTS.md é formato aberto lido por vários agentes (slide 8)
+  ref: agents-md
+  localizacao: página do padrão
+  resultado: confirmada
+- texto: o Spec Kit tem processo próprio de correção de bug que dispensa o fluxo de feature (slide 4,
+    texto novo)
+  ref: spec-kit
+  localizacao: README, 'Bug fixing'
+  resultado: confirmada
+- texto: 'relato do Kiro: correção pequena virou 4 histórias de usuário e 16 critérios de aceite (slide
+    4, texto novo)'
+  ref: bockeler-sdd-3-tools
+  localizacao: seção sobre o Kiro e a correção de bug
+  resultado: confirmada
+- texto: 'Kiro Specs: requirements.md, design.md, tasks.md, três fases (slide 3, comparativo)'
+  ref: kiro-steering
+  localizacao: seção de specs
+  resultado: parcial
+  nota: 'Confirmado pelo deck em 4 repositórios reais; a página de steering não descreve as specs. SÓ
+    NO DECK: a verificação local de 2026-09-29.'
+- texto: 'SÓ NO DECK: Spec Kit: constituição, spec, plano e tarefas; OpenSpec: spec versionada como fonte;
+    BMAD: PRD, arquitetura e histórias com personas (slide 3)'
+  ref: spec-kit
+  localizacao: documentação pública dos projetos, conforme o rodapé do slide 3
+  resultado: parcial
+  nota: 'Fonte do deck: documentação pública de cada projeto, lida em 2026-09; o portal cita só o Spec
+    Kit.'
+- texto: 'SÓ NO DECK: Claude Code 2.1.267 e Codex 0.157.1 foram inspecionados na instalação local, com
+    prompt de sistema e declarações de tool lidos do transcript e dos rollouts (slides 5 e 6, comparativo)'
+  ref: claude-code-hooks
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: pesquisa harness-internals (inspeção local), cada afirmação marcada por origem.'
+- texto: 'SÓ NO DECK: prompt de sistema do Claude Code de cerca de 3,5 mil tokens e contexto injetado
+    na casa das dezenas de milhares (slide 5)'
+  ref: claude-code-memory
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: harness-internals, medição local.'
+- texto: 'SÓ NO DECK: contenção por harness: Seatbelt e Landlock no Codex, sandbox do Claude Code inativo
+    na sessão inspecionada, permissions.yaml do Kiro com deny > ask > allow guardado na home, terminal
+    do Antigravity sem rede por padrão (slide 7, comparativo)'
+  ref: claude-code-hooks
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: harness-internals e doc oficial de cada produto; o deck declara o sandbox do Claude
+    Code como não afirmável (roteiro, Cinco coisas para não afirmar).'
+- texto: 'SÓ NO DECK: Codex: .git, .agents e .codex somente leitura no modo de escrita restrita (slide
+    7, comparativo)'
+  ref: codex-skills
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: harness-internals, inspeção do binário.'
+- texto: 'SÓ NO DECK: na CLI do Kiro os modos de inclusão do steering não funcionam e tudo é carregado
+    (comparativo, roteiro)'
+  ref: kiro-steering
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: harness-internals, observação na CLI.'
+- texto: 'SÓ NO DECK: o pacote de skills instalado no Kiro da máquina do autor é o mesmo do Claude Code,
+    sem alteração (slide 8, comparativo)'
+  ref: kiro-skills
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: observação local do autor, 2026-09. O deck afirma SKILL.md rodando em Claude Code,
+    Codex e Kiro; no Antigravity fica como não verificado.'
+- texto: 'SÓ NO DECK: Antigravity: subagente de browser com Chrome real, artifacts, brain/<uuid>, dois
+    incidentes de segurança públicos (slides 6 e 7, comparativo)'
+  ref: antigravity-rules
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: doc oficial e arquivos em disco, harness-internals.'
+- texto: 'SÓ NO DECK: Claude Code: plan mode, JSONL por projeto, memory/MEMORY.md; Codex: rollouts, ~/.codex/memories
+    vazio (comparativo)'
+  ref: claude-code-memory
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: harness-internals, inspeção local.'
+- texto: 'SÓ NO DECK: DeepSeek dsh 0.1.5-rc.1: retrato anterior, não reconfirmado (slide 6, rodapés)'
+  ref: claude-code-hooks
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: llama-lab/docs/estudo-harnesses-2026-09-10.md; o deck declara que não foi reconfirmado
+    e não o usa como estado atual.'
+- texto: 'SÓ NO DECK: o caso do .DS_Store: o teste test_criar_projeto estava vermelho por UnicodeDecodeError
+    (slide 13)'
+  ref: sdd-scaffold-changelog
+  localizacao: sem sustentação direta no portal
+  resultado: parcial
+  nota: 'Fonte do deck: histórico do repositório sdd-scaffold e relato do autor; a 1.6.1 documenta o CI
+    próprio e o projeto gerado que não passava no CI.'
+- texto: 'SÓ NO DECK: o teste da constituição sem skills: sete exigências, seis cumpridas, checkpoints
+    humanos pulados com desvio declarado, corrida de concorrência achada na revisão (slide 15)'
+  ref: sdd-scaffold-readme
+  localizacao: README, ADR-0001 do scaffold
+  resultado: parcial
+  nota: 'Fonte do deck: teste empírico do autor registrado no ADR-0001 do scaffold; o README cita apenas
+    que o agente cumpriu a constituição sem skills. Foi um caso só, e o deck diz isso.'
+- texto: 'SÓ NO DECK: drift check: 120 linhas de Python, só pyyaml; manifesto malformado sai com 1; nó
+    desenhado sem componente não é reportado (slide 16)'
+  ref: sdd-scaffold-readme
+  localizacao: README, Quick start (pyyaml) e roteiro 'Cinco coisas para não afirmar'
+  resultado: parcial
+  nota: 'Fonte do deck: leitura de template/scripts/verificar_drift_arquitetura.py na tag v1.7.1 (120
+    linhas, conferido em 2026-10-06).'
+- texto: 'SÓ NO DECK: o agente auditor com instrução de construir o caso que o mecanismo deveria pegar
+    encontrou os três achados da 1.6.1 (slide 14)'
+  ref: sdd-scaffold-changelog
+  localizacao: '[1.6.1] ''Correções de achados da primeira auditoria'''
+  resultado: parcial
+  nota: 'Fonte: docs/auditorias/2026-09-29-auditoria.md do scaffold; o portal cita a entrada 1.6.1 do
+    changelog.'
+- texto: 'SÓ NO DECK: o CI próprio do scaffold roda em matriz de três versões de Python e um job gera
+    um projeto de ponta a ponta (slide 13)'
+  ref: sdd-scaffold-changelog
+  localizacao: .github/workflows/ci.yml da tag v1.7.1
+  resultado: parcial
+  nota: 'Fonte do deck: workflow do scaffold, conferido em 2026-10-06 (matriz 3.11, 3.12, 3.13).'
+- texto: 'SÓ NO DECK: Panorama e as divisões da NUJOR como contexto da proposta (slides 18 e 19)'
+  ref: sdd-lifecycle-repo
+  localizacao: sem sustentação no portal
+  resultado: parcial
+  nota: 'Fonte do deck: contexto da apresentação, não é afirmação técnica.'
+revisao_adversarial:
+  revisor: pendente-T3
+  data: '2026-10-06'
+  achados: []

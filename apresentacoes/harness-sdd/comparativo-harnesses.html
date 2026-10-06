@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quatro harnesses, a mesma anatomia</title>
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<style>
+/* ── Comparativo de harnesses ────────────────────────────────────────────────
+   A primeira coluna diz o que é igual, uma vez só. As quatro seguintes dizem
+   como cada fornecedor implementa aquilo. O traço que só um deles tem ganha
+   a régua azul sólida; o que não foi verificado ganha hachura.
+   Fonte: serpro-cloud-ia-governance/docs/research/harness-internals/
+   ─────────────────────────────────────────────────────────────────────────── */
+:root{
+  --papel:#E8EDF2; --papel-2:#DDE4EC;
+  --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+  --gov:#1351B4; --gov-claro:#D3E0F5;
+  --ambar:#B06F12; --ambar-claro:#F3E3C6;
+  --incerto:#8C96A3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papel);color:var(--tinta)}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-ligatures:none;font-size:11.5px;
+  background:rgba(10,26,47,.06);padding:1px 4px;border-radius:2px;white-space:nowrap}
+.folha{max-width:1680px;margin:0 auto;padding:44px 48px 40px}
+
+/* ── cabeçalho: quem lê o quê ───────────────────────────────────────────── */
+.topo{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:56px;align-items:end;
+  padding-bottom:26px;border-bottom:2px solid var(--tinta)}
+.topo h1{margin:0;font-size:52px;line-height:.98;letter-spacing:-.035em;font-weight:800;max-width:15ch}
+.topo p{margin:14px 0 0;font-size:17px;color:var(--tinta-2);max-width:60ch}
+.quem h2{margin:0 0 8px;font-size:14px;font-weight:600}
+.quem table{border-collapse:collapse;font-size:13px}
+.quem th{font-weight:600;color:var(--tinta-2);padding:0 10px 6px;text-align:center;font-size:12px}
+.quem th:first-child{text-align:left;padding-left:0}
+.quem td{padding:5px 10px;border-top:1px solid var(--regra);text-align:center}
+.quem td:first-child{text-align:left;padding-left:0}
+.quem td:last-child{text-align:left;color:var(--tinta-2);font-size:12.5px;padding-left:16px}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:1.5px solid var(--tinta-3);vertical-align:middle}
+.dot.nv{background:repeating-linear-gradient(135deg,transparent 0 2px,var(--incerto) 2px 3px)}
+.dot.on{background:var(--gov);border-color:var(--gov)}
+.quem tr.comum td{background:var(--gov-claro)}
+.quem tr.comum td:first-child code{background:#fff}
+
+/* ── a matriz ───────────────────────────────────────────────────────────── */
+.matriz{display:grid;grid-template-columns:230px repeat(4,minmax(0,1fr));margin-top:28px}
+.matriz > div{padding:12px 16px;border-top:1px solid var(--regra)}
+.matriz > .igual{padding-left:0;border-top-color:var(--tinta)}
+.matriz > .h{border-top:none;padding-top:0;padding-bottom:14px}
+
+.h h2{margin:0;font-size:22px;letter-spacing:-.022em}
+.h .forn{font-size:13px;color:var(--tinta-2)}
+.h .forn code{margin-left:4px}
+.h.igual h2{font-size:15px;color:var(--tinta-2);font-weight:600;letter-spacing:0;margin-top:6px}
+
+/* árvores de pastas */
+.arvore{margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:11.5px;line-height:1.65;color:var(--tinta)}
+.arvore p{margin:8px 0 2px;font-family:"Inter",sans-serif;font-size:11.5px;font-weight:600;color:var(--tinta-3)}
+.arvore p:first-child{margin-top:0}
+.arvore div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arvore div::before{content:"";display:inline-block;width:8px;height:8px;border-left:1px solid var(--tinta-3);
+  border-bottom:1px solid var(--tinta-3);margin-right:6px;transform:translateY(-3px)}
+.arvore .raiz{font-weight:600}
+.arvore .raiz::before{content:none}
+.arvore .fora{color:var(--gov);font-weight:600}
+.arvore small{font-family:"Inter",sans-serif;color:var(--tinta-3);font-size:11px;margin-left:4px}
+
+/* linhas do comparativo */
+.igual b{display:block;font-size:15px;letter-spacing:-.01em}
+.igual span{display:block;font-size:12.5px;color:var(--tinta-2);margin-top:2px}
+.c{font-size:13.5px;color:var(--tinta)}
+.c small{display:block;color:var(--tinta-2);font-size:12.5px;margin-top:2px}
+.c.so{border-left:3px solid var(--gov);background:linear-gradient(90deg,var(--gov-claro),transparent 80%)}
+.c.so::before{content:"só ele";display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--gov);
+  padding:2px 6px;border-radius:2px;margin:0 7px 5px 0}
+.c.nv{color:var(--tinta-2);background:repeating-linear-gradient(135deg,transparent 0 5px,rgba(140,150,163,.16) 5px 6px)}
+.c.nv::after{content:"não verificado";display:block;font-size:10.5px;font-weight:600;color:var(--tinta-3);margin-top:4px}
+.c.nada{color:var(--tinta-3)}
+.linha-hover{display:contents}
+
+/* ── leitura final ──────────────────────────────────────────────────────── */
+.leitura{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px;margin-top:30px;padding-top:20px;
+  border-top:2px solid var(--tinta)}
+.leitura h3{margin:0 0 4px;font-size:17px;letter-spacing:-.015em}
+.leitura p{margin:0;font-size:13.5px;color:var(--tinta-2);max-width:52ch}
+.legenda{display:flex;gap:18px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--tinta-2);margin-top:14px}
+.legenda i{display:inline-block;width:22px;height:14px;vertical-align:middle;margin-right:6px}
+.legenda .l-so{border-left:3px solid var(--gov);background:var(--gov-claro)}
+.legenda .l-nv{background:repeating-linear-gradient(135deg,transparent 0 4px,rgba(140,150,163,.4) 4px 5px);border:1px solid var(--regra)}
+
+.rodape{margin-top:26px;padding-top:12px;border-top:1px solid var(--regra);font-size:12px;color:var(--tinta-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+@media (max-width:1280px){
+  .folha{padding:28px 20px}
+  .topo{grid-template-columns:1fr;gap:24px}
+  .topo h1{font-size:40px}
+  .matriz{grid-template-columns:170px repeat(4,minmax(220px,1fr));overflow-x:auto}
+  .leitura{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<main class="folha">
+
+  <header class="topo">
+    <div>
+      <h1>Quatro harnesses, a mesma anatomia</h1>
+      <p>Todos têm as mesmas peças: um arquivo de instrução, skills, subagentes, uma regra que contém o agente, planejamento, sessão gravada em disco. A primeira coluna diz o que é igual. As outras quatro mostram onde cada fornecedor põe a peça e o que só ele faz.</p>
+    </div>
+    <div class="quem">
+      <h2>Quem lê qual arquivo, nativamente</h2>
+      <table aria-label="Arquivos lidos nativamente por cada harness">
+        <tr><th></th><th>Claude Code</th><th>Codex</th><th>Kiro</th><th>Antigravity</th><th></th></tr>
+        <tr class="comum"><td><code>AGENTS.md</code></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot on" aria-label="sim"></span></td><td>premissa do projeto</td></tr>
+        <tr><td><code>CLAUDE.md</code></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot" aria-label="não"></span></td><td>ponteiro curto</td></tr>
+        <tr><td><code>GEMINI.md</code></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot" aria-label="não"></span></td><td><span class="dot on" aria-label="sim"></span></td><td>ponteiro curto</td></tr>
+        <tr class="comum"><td><code>SKILL.md</code></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot on" aria-label="sim"></span></td><td><span class="dot nv" aria-label="não verificado"></span></td><td>procedimento</td></tr>
+      </table>
+    </div>
+  </header>
+
+  <section class="matriz" aria-label="Comparativo por peça">
+
+    <!-- cabeçalhos e pastas -->
+    <div class="h igual"><h2>O que é igual</h2></div>
+
+    <div class="h">
+      <h2>Claude Code</h2><div class="forn">Anthropic<code>2.1.267</code></div>
+      <div class="arvore">
+        <p>no repositório</p>
+        <div class="raiz">CLAUDE.md</div>
+        <div class="raiz">.claude/</div>
+        <div>settings.json</div><div>skills/</div><div>agents/</div>
+        <p>na sua home</p>
+        <div class="raiz">~/.claude/</div>
+        <div>settings.json</div><div>CLAUDE.md</div><div>projects/&lt;slug&gt;/ <small>sessões e memory/</small></div><div>plans/</div>
+      </div>
+    </div>
+
+    <div class="h">
+      <h2>Codex CLI</h2><div class="forn">OpenAI<code>0.157.1</code></div>
+      <div class="arvore">
+        <p>no repositório</p>
+        <div class="raiz">AGENTS.md</div>
+        <div class="raiz">.codex/</div>
+        <div>skills/</div>
+        <div class="raiz">.agents/ <small>somente leitura no sandbox</small></div>
+        <p>na sua home</p>
+        <div class="raiz">~/.codex/</div>
+        <div>config.toml</div><div>AGENTS.md</div><div>rules/*.rules</div><div>sessions/ <small>rollout-*.jsonl</small></div>
+      </div>
+    </div>
+
+    <div class="h">
+      <h2>Kiro</h2><div class="forn">AWS</div>
+      <div class="arvore">
+        <p>no repositório</p>
+        <div class="raiz">AGENTS.md</div>
+        <div class="raiz">.kiro/</div>
+        <div>steering/</div><div>specs/</div><div>skills/</div><div>agents/ <small>e hooks/</small></div>
+        <p>na sua home</p>
+        <div class="raiz">~/.kiro/</div>
+        <div class="fora">settings/permissions.yaml</div><div class="fora">workspace-roots/&lt;hash&gt;/</div><div>skills/</div><div>sessions/cli/*.jsonl</div>
+      </div>
+    </div>
+
+    <div class="h">
+      <h2>Antigravity</h2><div class="forn">Google</div>
+      <div class="arvore">
+        <p>no repositório</p>
+        <div class="raiz">AGENTS.md</div>
+        <div class="raiz">GEMINI.md</div>
+        <div class="raiz">.agents/</div>
+        <div>rules/*.md</div>
+        <p>na sua home</p>
+        <div class="raiz">~/.gemini/</div>
+        <div>GEMINI.md</div><div>config/</div><div>antigravity-cli/brain/&lt;uuid&gt;/ <small>sessão</small></div>
+      </div>
+    </div>
+
+    <!-- 1 · instrução -->
+    <div class="igual"><b>Instrução do projeto</b><span>um arquivo lido em todo turno</span></div>
+    <div class="c"><code>CLAUDE.md</code> em hierarquia, do global ao diretório<small>lê AGENTS.md só sem CLAUDE.md (desde a 2.1.277): por isso o ponteiro importa com <code>@AGENTS.md</code></small></div>
+    <div class="c"><code>AGENTS.md</code> colado verbatim no prompt<small>trunca em 32 KB, sem avisar</small></div>
+    <div class="c"><code>AGENTS.md</code> e <code>.kiro/steering/</code> com 4 modos de inclusão<small>na CLI os modos não funcionam: carrega tudo</small></div>
+    <div class="c"><code>AGENTS.md</code> e <code>GEMINI.md</code>, do diretório atual até a raiz<small>mais <code>.agents/rules/</code>, cumulativos</small></div>
+
+    <!-- 2 · skills -->
+    <div class="igual"><b>Skills</b><span>procedimento carregado por gatilho</span></div>
+    <div class="c"><code>SKILL.md</code> em <code>.claude/skills/</code><small>tools também são carregadas sob demanda</small></div>
+    <div class="c so"><code>SKILL.md</code> em <code>.agents/skills/</code><small>o prompt de sistema exige usar a skill que casa</small></div>
+    <div class="c"><code>SKILL.md</code> em <code>.kiro/skills/</code><small>padrão aberto Agent Skills</small></div>
+    <div class="c nv">skills embutidas no produto, e <code>SKILL.md</code> em <code>.agents/skills/</code><small>caminho documentado, não testado no produto</small></div>
+
+    <!-- 3 · subagentes -->
+    <div class="igual"><b>Subagentes</b><span>outra sessão, com contexto próprio</span></div>
+    <div class="c">definidos em <code>.claude/agents/*.md</code><small>modelo, tools e prompt por agente</small></div>
+    <div class="c nv">papéis em <code>.agents/</code><small>visto no binário</small></div>
+    <div class="c">agentes customizados em <code>.kiro/agents/</code><small>tools e allowedTools por agente</small></div>
+    <div class="c so">sessão limpa em worktree: herda, ramifica ou compartilha<small>o browser é um subagente com Chrome real</small></div>
+
+    <!-- 4 · contenção -->
+    <div class="igual"><b>Contenção</b><span>a regra que impede, fora do modelo</span></div>
+    <div class="c">hook <code>PreToolUse</code> e permissões <code>deny &gt; ask &gt; allow</code><small>o sandbox estava inativo na sessão inspecionada</small></div>
+    <div class="c so">sandbox de kernel: Seatbelt, Landlock<small><code>.git</code> <code>.agents</code> <code>.codex</code> somente leitura</small></div>
+    <div class="c"><code>permissions.yaml</code>, <code>deny &gt; ask &gt; allow</code><small>guardado fora do repositório, de propósito</small></div>
+    <div class="c">terminal sem rede por padrão<small>dois incidentes de segurança públicos</small></div>
+
+    <!-- 5 · planejamento -->
+    <div class="igual"><b>Planejamento</b><span>o plano sai do contexto e vai para o disco</span></div>
+    <div class="c">plan mode e lista de tarefas<small>plano em <code>~/.claude/plans/</code></small></div>
+    <div class="c nada">sem artefato de plano próprio observado</div>
+    <div class="c so">specs: <code>requirements.md</code> <code>design.md</code> <code>tasks.md</code><small>tarefa de checkpoint que pausa para aprovação</small></div>
+    <div class="c">artifacts: tarefa, plano, walkthrough<small>entregável da sessão, não memória</small></div>
+
+    <!-- 6 · sessão -->
+    <div class="igual"><b>Sessão gravada</b><span>transcript em disco, retomável</span></div>
+    <div class="c">JSONL por projeto<small>estado de tarefa e plano fora do contexto, reinjetado</small></div>
+    <div class="c">rollouts versionados<small>registram a versão da CLI</small></div>
+    <div class="c">JSONL da CLI<small>compactação pelo runtime</small></div>
+    <div class="c">um diretório por conversa em <code>brain/</code><small>transcript resumido e completo</small></div>
+
+    <!-- 7 · memória -->
+    <div class="igual"><b>Memória automática</b><span>o que o produto guarda sozinho</span></div>
+    <div class="c"><code>memory/MEMORY.md</code> como índice<small>por projeto, fora do repositório</small></div>
+    <div class="c nv"><code>~/.codex/memories/</code><small>vazio nesta máquina</small></div>
+    <div class="c nada">nenhuma além do steering</div>
+    <div class="c nv">knowledge items gerados ao fim da sessão<small>vazio nesta máquina</small></div>
+  </section>
+
+  <section class="leitura" aria-label="Leitura">
+    <div>
+      <h3>O que é portátil</h3>
+      <p><code>AGENTS.md</code> é lido por três dos quatro, e o quarto aceita um ponteiro curto que importa o arquivo. <code>SKILL.md</code> roda comprovadamente em três: as skills do Kiro desta máquina são o mesmo pacote do Claude Code, sem alteração. É nisso que o scaffold se apoia.</p>
+    </div>
+    <div>
+      <h3>O que não é</h3>
+      <p>A contenção. Cada um guarda a regra que impede num lugar e num formato diferente, e só o Codex isola no kernel. Governança que depende disso precisa ser escrita uma vez por ferramenta, e testada em cada uma.</p>
+    </div>
+    <div>
+      <h3>O detalhe que custa caro</h3>
+      <p>O Kiro guarda <code>permissions.yaml</code> na home, fora do repositório, para que uma regra não possa ser injetada por arquivo versionado. Um <code>permissions.yaml</code> commitado no repositório pode nunca ser lido.</p>
+      <div class="legenda"><span><i class="l-so"></i>traço que só ele tem</span><span><i class="l-nv"></i>não verificado</span></div>
+    </div>
+  </section>
+
+  <footer class="rodape">
+    <span>Claude Code e Codex inspecionados na instalação local; Kiro e Antigravity pela documentação oficial e pelos arquivos em disco. DeepSeek dsh fica de fora: o retrato é anterior e não foi reconfirmado.</span>
+    <span>Fonte: harness-internals, um documento por harness com cada afirmação marcada por origem.</span>
+  </footer>
+</main>
+</body>
+</html>

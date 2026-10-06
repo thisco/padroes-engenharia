@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O que o sdd-scaffold garante</title>
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<style>
+/* ── Garantias do sdd-scaffold ───────────────────────────────────────────────
+   Mesma gramática da planta: azul sólido impede (código fora do modelo),
+   âmbar tracejado orienta (texto dentro do modelo). As colunas são as fases
+   de uma entrega, e por isso são sequência. A barra do topo é o único
+   elemento de destaque: quanto das garantias é mecanismo, e quanto é texto.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root{
+  --papel:#E8EDF2; --papel-2:#DDE4EC;
+  --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+  --gov:#1351B4; --gov-claro:#D3E0F5;
+  --ambar:#B06F12; --ambar-claro:#F3E3C6;
+  --incerto:#8C96A3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papel);color:var(--tinta)}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-ligatures:none;font-size:11.5px;
+  background:rgba(10,26,47,.06);padding:1px 5px;border-radius:2px}
+.folha{max-width:1680px;margin:0 auto;padding:44px 48px 40px}
+
+/* ── cabeçalho ──────────────────────────────────────────────────────────── */
+.topo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:56px;align-items:end;
+  padding-bottom:28px;border-bottom:2px solid var(--tinta)}
+.topo h1{margin:0;font-size:52px;line-height:.98;letter-spacing:-.035em;font-weight:800;max-width:15ch}
+.topo p{margin:14px 0 0;font-size:17px;color:var(--tinta-2);max-width:56ch}
+
+/* a barra de força: o elemento memorável */
+.forca h2{margin:0 0 10px;font-size:15px;font-weight:600}
+.barra{display:flex;height:46px;border:2px solid var(--tinta);border-radius:2px;overflow:hidden}
+.barra > div{display:flex;align-items:center;padding:0 12px;font-weight:700;font-size:14px;white-space:nowrap;
+  flex:var(--n) 1 0;transform-origin:left;animation:cresce .7s calc(var(--i) * 120ms + 200ms) cubic-bezier(.2,.8,.2,1) both}
+.barra .b{background:var(--gov);color:#fff}
+.barra .p{background:#fff;color:var(--gov);box-shadow:inset 0 0 0 2px var(--gov)}
+.barra .a{background:var(--gov-claro);color:var(--gov)}
+.barra .o{background:repeating-linear-gradient(90deg,var(--ambar-claro) 0 10px,#F8EEDB 10px 12px);color:var(--ambar)}
+@keyframes cresce{from{transform:scaleX(0);opacity:0}}
+.barra-leg{display:flex;justify-content:space-between;margin-top:8px;font-size:12.5px;color:var(--tinta-2)}
+.forca p.leitura{margin:12px 0 0;font-size:14px;color:var(--tinta);max-width:64ch}
+
+/* ── efeitos ────────────────────────────────────────────────────────────── */
+.ef{display:inline-block;font-size:11px;font-weight:600;line-height:1;padding:5px 7px;border-radius:2px;white-space:nowrap}
+.ef.bloqueia{background:var(--gov);color:#fff;border:2px solid var(--gov)}
+.ef.pede{color:var(--gov);border:2px solid var(--gov)}
+.ef.avisa{color:var(--gov);border:1px solid var(--gov);background:var(--gov-claro);padding:6px 8px}
+.ef.orienta{color:var(--ambar);border:1.5px dashed var(--ambar)}
+.ef.incerto{color:var(--tinta-2);border:1px solid var(--incerto);
+  background:repeating-linear-gradient(135deg,transparent 0 4px,rgba(140,150,163,.28) 4px 5px)}
+
+/* ── as fases ───────────────────────────────────────────────────────────── */
+.fases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:30px;position:relative}
+.fase{padding:0 22px;border-left:1px solid var(--regra)}
+.fase:first-child{padding-left:0;border-left:none}
+.fase:last-child{padding-right:0}
+.fase > header{position:relative;padding:18px 0 14px;border-top:3px solid var(--tinta)}
+.fase > header::before{content:"";position:absolute;top:-9px;left:0;width:15px;height:15px;border-radius:50%;
+  background:var(--papel);border:3px solid var(--tinta)}
+.fase:not(:first-child) > header::before{left:-8px}
+.fase h2{margin:0;font-size:21px;letter-spacing:-.02em}
+.fase h2 span{font-family:"JetBrains Mono",monospace;font-size:13px;font-weight:600;color:var(--tinta-3);margin-right:8px}
+.fase > header p{margin:3px 0 0;font-size:13px;color:var(--tinta-2)}
+
+.g{padding:13px 0 14px;border-top:1px solid var(--regra)}
+.g h3{margin:0;font-size:16px;letter-spacing:-.012em;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.g h3 .ef{flex:none}
+.g p{margin:4px 0 0;font-size:13.5px;color:var(--tinta-2);max-width:48ch}
+.g .onde{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.g .extra{margin-top:7px;display:grid;gap:4px}
+.g .extra div{display:flex;gap:8px;align-items:baseline;font-size:12.5px;color:var(--tinta-2)}
+.g.proposta h3::after{content:none}
+.nova{font-size:11px;font-weight:600;color:var(--tinta-3);margin-left:6px;white-space:nowrap}
+
+/* ── o que ainda não garante ────────────────────────────────────────────── */
+.falta{margin-top:34px;padding-top:20px;border-top:2px solid var(--tinta);display:grid;
+  grid-template-columns:320px minmax(0,1fr);gap:40px}
+.falta h2{margin:0;font-size:21px;letter-spacing:-.02em}
+.falta > div > p{margin:6px 0 0;font-size:13.5px;color:var(--tinta-2)}
+.falta ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 22px}
+.falta li{padding:10px 0 10px 14px;border-top:1px solid var(--regra);font-size:13.5px;position:relative}
+.falta li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:7px;border:1px solid var(--incerto);
+  background:repeating-linear-gradient(135deg,transparent 0 2px,var(--incerto) 2px 3px)}
+.falta li b{display:block;font-size:14px}
+.falta li span{color:var(--tinta-2);font-size:12.5px}
+
+.rodape{margin-top:28px;padding-top:12px;border-top:1px solid var(--regra);font-size:12px;color:var(--tinta-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+@media (prefers-reduced-motion:reduce){.barra > div{animation:none}}
+@media (max-width:1180px){
+  .folha{padding:28px 20px}
+  .topo,.falta{grid-template-columns:1fr;gap:24px}
+  .topo h1{font-size:40px}
+  .fases{grid-template-columns:1fr 1fr;row-gap:24px}
+  .fase:nth-child(3){padding-left:0;border-left:none}
+  .falta ul{grid-template-columns:1fr 1fr}
+}
+@media (max-width:700px){
+  .fases,.falta ul{grid-template-columns:1fr}
+  .fase{padding:0;border-left:none}
+  .fase > header::before{left:0 !important}
+  .barra > div{font-size:12px;padding:0 6px}
+}
+@media print{.barra > div{animation:none}}
+</style>
+</head>
+<body>
+<main class="folha">
+
+  <header class="topo">
+    <div>
+      <h1>O que o sdd-scaffold garante</h1>
+      <p>Vinte e duas garantias, na ordem em que aparecem numa entrega. Cada uma diz o que evita, onde mora no repositório e com que força é cobrada: por código que roda fora do modelo, ou só por texto que o agente lê.</p>
+    </div>
+    <div class="forca">
+      <h2>Com que força cada garantia é cobrada</h2>
+      <div class="barra" role="img" aria-label="7 bloqueiam, 2 pedem aprovação, 4 avisam, 9 só orientam">
+        <div class="b" style="--n:7;--i:0">7 bloqueiam</div>
+        <div class="p" style="--n:2;--i:1">2</div>
+        <div class="a" style="--n:4;--i:2">4 avisam</div>
+        <div class="o" style="--n:9;--i:3">9 só orientam</div>
+      </div>
+      <div class="barra-leg"><span>código fora do modelo</span><span>2 pedem aprovação</span><span>texto dentro do modelo</span></div>
+      <p class="leitura">Mais de um terço depende de o agente seguir o texto. No teste feito sem nenhuma skill, ele seguiu. Mas é a parte âmbar que precisa de revisão humana, porque nenhum job vai acusar a falta dela.</p>
+    </div>
+  </header>
+
+  <section class="fases" aria-label="Garantias por fase da entrega">
+
+    <!-- ── 1 · antes de escrever ─────────────────────────────────────────── -->
+    <div class="fase">
+      <header><h2><span>1</span>Antes de escrever</h2><p>Reduz a chance de o agente derivar.</p></header>
+
+      <div class="g">
+        <h3>Brainstorm antes de qualquer feature <span class="ef orienta">só orienta</span></h3>
+        <p>Intenção e alternativas exploradas antes da primeira linha, com o steering do domínio carregado.</p>
+        <div class="onde"><code>skills/sdd-lifecycle</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Tiers de SDD <span class="ef orienta">só orienta</span></h3>
+        <p>Typo vai direto, feature passa por spec e ADR. O rigor acompanha o risco, e na dúvida vale o tier mais alto.</p>
+        <div class="onde"><code>AGENTS.md</code><code>docs/steering/sdd-processo.md</code></div>
+      </div>
+
+      <div class="g">
+        <h3>PRD e spec com threat-model <span class="ef avisa">avisa</span></h3>
+        <p>O porquê e o quê escritos e aprovados. Se a mudança toca auth, upload, IaC ou entrada externa, a spec responde às cinco perguntas.</p>
+        <div class="onde"><code>docs/prd/</code><code>docs/specs/</code><code>skills/threat-model</code></div>
+        <div class="extra"><div><span class="ef avisa">avisa</span>requisito sem critério, spec aprovada sem aprovador, <code>[ESCLARECER]</code> aberto</div></div>
+      </div>
+
+      <div class="g">
+        <h3>Arquitetura e bibliotecas declaradas <span class="ef bloqueia">bloqueia</span></h3>
+        <p>Estrutura e decisões-chave escritas; dependência só entra declarada, e o CI instala congelado. Biblioteca que não está no arquivo quebra a suíte.</p>
+        <div class="onde"><code>docs/steering/arquitetura.md</code><code>requirements.txt</code><code>pyproject.toml</code></div>
+        <div class="extra"><div><span class="ef avisa">avisa</span>pip-audit sobre as dependências declaradas</div></div>
+      </div>
+
+      <div class="g">
+        <h3>Proibido improvisar <span class="ef pede">pede aprovação</span></h3>
+        <p>Spec inviável volta para a especificação e gera ADR. O contorno silencioso reverteria uma decisão que ninguém decidiu reverter.</p>
+        <div class="onde"><code>docs/adr/</code></div>
+      </div>
+    </div>
+
+    <!-- ── 2 · enquanto escreve ──────────────────────────────────────────── -->
+    <div class="fase">
+      <header><h2><span>2</span>Enquanto escreve</h2><p>Limita o dano e descobre a quebra cedo.</p></header>
+
+      <div class="g">
+        <h3>Worktree e branch por mudança <span class="ef orienta">só orienta</span></h3>
+        <p>Sessões paralelas não se pisam, e o diff da entrega é o diff da branch. Nome na convenção, a partir da main.</p>
+        <div class="onde"><code>feat|fix/AAAA-MM-DD-nome</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Testes em três camadas <span class="ef bloqueia">bloqueia</span></h3>
+        <p>Unitário, integração e ponta a ponta, escritos antes do código. Seed determinístico e fixture versionada: regressão que ninguém reproduz não é regressão.</p>
+        <div class="onde"><code>tests/unidade/</code><code>tests/integracao/</code><code>tests/e2e/</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Infra local com Docker Compose <span class="ef avisa">avisa</span></h3>
+        <p>O ambiente completo sobe na máquina, e quebra aqui do mesmo jeito que quebraria lá. Cada serviço está mapeado a um componente.</p>
+        <div class="onde"><code>infra/local/docker-compose.yml</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Migrations com rollback, testadas localmente <span class="ef bloqueia">bloqueia</span></h3>
+        <p>Toda migration desfaz o que fez, com rollback declarado antes de rodar. Mudança destrutiva usa expandir e contrair.</p>
+        <div class="onde"><code>skills/migrations-reversiveis</code></div>
+        <div class="extra">
+          <div><span class="ef bloqueia">bloqueia</span>editar migration já aplicada</div>
+          <div><span class="ef avisa">avisa</span>schema mudou e o plano não declara rollback</div>
+        </div>
+      </div>
+
+      <div class="g">
+        <h3>A governança não se autoedita <span class="ef pede">pede aprovação</span><span class="nova">sugestão</span></h3>
+        <p>O agente escreve código, testes, specs e planos. Constituição, ADRs, mapa e CI só mudam quando uma pessoa aprova.</p>
+        <div class="onde"><code>.claude/settings.json</code><code>scripts/proteger_governanca.py</code></div>
+        <div class="extra"><div><span class="ef bloqueia">bloqueia</span>o hook falha fechado e roda com <code>python3 -I</code>, caminho absoluto</div><div><span class="ef incerto">não confirmado</span>as regras equivalentes de Kiro e Codex</div></div>
+      </div>
+
+      <div class="g">
+        <h3>Os quatro estados de tela <span class="ef orienta">só orienta</span><span class="nova">sugestão</span></h3>
+        <p>Carregando, vazio, erro e com dados, em toda tela. Vazio não é erro. Protótipo aprovado antes do código.</p>
+        <div class="onde"><code>skills/estados-de-interface</code></div>
+      </div>
+    </div>
+
+    <!-- ── 3 · antes do merge ────────────────────────────────────────────── -->
+    <div class="fase">
+      <header><h2><span>3</span>Antes do merge</h2><p>Nada fecha sem evidência.</p></header>
+
+      <div class="g">
+        <h3>IaC e CI/CD <span class="ef bloqueia">bloqueia</span></h3>
+        <p>A infraestrutura de nuvem é código em OpenTofu, e cada PR roda testes, lint e os verificadores. O agente não edita os próprios workflows.</p>
+        <div class="onde"><code>infra/cloud/</code><code>.github/workflows/qualidade.yml</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Drift de arquitetura <span class="ef avisa">avisa</span></h3>
+        <p>Diagrama, IaC e compose descrevem o mesmo sistema. Divergência aparece no PR sem travar o merge, para continuar sendo lida.</p>
+        <div class="onde"><code>Arquitetura/mapa.yml</code><code>verificar_drift_arquitetura.py</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Drift de segurança <span class="ef bloqueia">bloqueia</span></h3>
+        <p>Segredo no histórico reprova. Superfície sensível sem threat-model e dependência vulnerável são apontadas no PR.</p>
+        <div class="onde"><code>gitleaks</code><code>verificar_pr.py</code><code>pip-audit</code></div>
+        <div class="extra"><div><span class="ef avisa">avisa</span>threat-model ausente e vulnerabilidade de dependência</div></div>
+      </div>
+
+      <div class="g">
+        <h3>Evidência colada no plano <span class="ef avisa">avisa</span><span class="nova">sugestão</span></h3>
+        <p>Saída de teste e lint colada antes de concluir. "Funciona na minha máquina" não é evidência.</p>
+        <div class="onde"><code>docs/plans/</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Revisão adversarial contra a spec <span class="ef orienta">só orienta</span></h3>
+        <p>No Tier 2, alguém revisa partindo da spec, e não do diff. É assim que aparece o requisito esquecido em silêncio.</p>
+        <div class="onde"><code>docs/specs/</code></div>
+        <div class="extra"><div><span class="ef avisa">avisa</span>tabela de veredito incompleta</div></div>
+      </div>
+
+      <div class="g">
+        <h3>Constituição íntegra <span class="ef bloqueia">bloqueia</span><span class="nova">sugestão</span></h3>
+        <p>O bloco inline confere com a cópia canônica. Editar localmente reprova; estar numa versão antiga só avisa.</p>
+        <div class="onde"><code>docs/constituicao/</code><code>verificar_constituicao.py</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Sem lock-in de ferramenta <span class="ef bloqueia">bloqueia</span><span class="nova">sugestão</span></h3>
+        <p>Uma fonte de governança lida por qualquer agente. O CI falha se o AGENTS.md passar do limite que o Codex trunca, ou se um ponteiro quebrar.</p>
+        <div class="onde"><code>AGENTS.md</code><code>CLAUDE.md</code><code>GEMINI.md</code></div>
+      </div>
+    </div>
+
+    <!-- ── 4 · depois da entrega ─────────────────────────────────────────── -->
+    <div class="fase">
+      <header><h2><span>4</span>Depois da entrega</h2><p>O mesmo erro não volta.</p></header>
+
+      <div class="g">
+        <h3>Memória destilada <span class="ef orienta">só orienta</span><span class="nova">sugestão</span></h3>
+        <p>Uma página lida no início de cada sessão. O que amadurece sobe para o steering ou para uma ADR e sai dela.</p>
+        <div class="onde"><code>docs/PROJECT_MEMORY.md</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Todo bug vira regra escrita <span class="ef orienta">só orienta</span><span class="nova">sugestão</span></h3>
+        <p>Teste de regressão que falha antes e passa depois, e o gotcha registrado para a próxima sessão.</p>
+        <div class="onde"><code>docs/steering/troubleshooting.md</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Histórico de mudança legível <span class="ef orienta">só orienta</span><span class="nova">sugestão</span></h3>
+        <p>CHANGELOG no formato Keep a Changelog e commits convencionais, atualizados antes do merge.</p>
+        <div class="onde"><code>CHANGELOG.md</code><code>docs/release-notes/</code></div>
+      </div>
+
+      <div class="g">
+        <h3>Procedimento que acumula <span class="ef orienta">só orienta</span><span class="nova">sugestão</span></h3>
+        <p>Skill local que prova valor em dois projetos sobe por PR ao repositório comum. A melhoria de um time chega ao outro sem cópia.</p>
+        <div class="onde"><code>skills/</code><code>.claude/skills</code><code>.codex/skills</code><code>.kiro/skills</code><code>.agents/skills</code></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="falta" aria-label="O que o scaffold ainda não garante">
+    <div>
+      <h2>O que ainda não garante</h2>
+      <p>Práticas que valem a pena e que hoje ficam por conta de cada projeto. Declarar a lacuna é mais barato do que descobri-la em produção.</p>
+    </div>
+    <ul>
+      <li><b>Teste de mutação</b><span>mede se a suíte pega regressão quando o próprio agente escreveu os testes</span></li>
+      <li><b>Golden file</b><span>snapshot de saída gerada, como planilha ou relatório</span></li>
+      <li><b>Piso de cobertura por módulo</b><span>o global esconde o módulo sem teste</span></li>
+      <li><b>Teste de contrato</b><span>API e integração externa não mudam em silêncio</span></li>
+      <li><b>Proteção de branch</b><span>check obrigatório configurado no GitHub, fora do repositório</span></li>
+      <li><b>Rollback de deploy</b><span>feature flag para desligar um incremento sem reverter o release</span></li>
+      <li><b>commitlint</b><span>a convenção de commit hoje é só texto</span></li>
+      <li><b>Drift de código contra arquitetura</b><span>import que atravessa camada proibida, como faz o tach</span></li>
+    </ul>
+  </section>
+
+  <footer class="rodape">
+    <span>sdd-scaffold v1.7.1 e sdd-lifecycle 3.0.0. Cada garantia mostra a força principal; as secundárias aparecem logo abaixo dela. Itens marcados como sugestão complementam a lista original.</span>
+    <span>Um controle que ninguém viu disparar é texto com extensão .py.</span>
+  </footer>
+</main>
+</body>
+</html>

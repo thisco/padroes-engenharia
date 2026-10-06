@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A planta do sdd-scaffold</title>
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<style>
+/* ── Planta do sdd-scaffold ──────────────────────────────────────────────────
+   Tese visual: o repositório fica no centro. À esquerda, quando cada arquivo
+   entra no contexto do agente (texto, orienta). À direita, o código que roda
+   fora do modelo e age sobre o mesmo arquivo (impede, ou só avisa).
+   A fronteira do modelo é a linha entre a primeira e a segunda coluna.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root{
+  --papel:#E8EDF2;      /* papel frio de prancheta, não creme */
+  --papel-2:#DDE4EC;
+  --tinta:#0A1A2F;      /* navy do deck */
+  --tinta-2:#43556B;
+  --tinta-3:#7A8A9D;
+  --regra:#C3CDD8;
+  --gov:#1351B4;        /* impede: código fora do modelo */
+  --gov-claro:#D3E0F5;
+  --ambar:#B06F12;      /* orienta: texto dentro do modelo (escurecido para contraste no claro) */
+  --ambar-claro:#F3E3C6;
+  --incerto:#8C96A3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papel);color:var(--tinta)}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.45;
+  -webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-ligatures:none}
+
+.folha{max-width:1680px;margin:0 auto;padding:44px 48px 40px}
+
+/* ── cabeçalho ──────────────────────────────────────────────────────────── */
+.topo{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:end;
+  padding-bottom:26px;border-bottom:2px solid var(--tinta)}
+.topo h1{margin:0;font-size:52px;line-height:.98;letter-spacing:-.035em;font-weight:800;max-width:16ch}
+.topo p{margin:14px 0 0;font-size:17px;color:var(--tinta-2);max-width:62ch}
+.legenda{display:grid;grid-template-columns:auto 1fr;gap:9px 14px;align-items:center;font-size:13px;
+  color:var(--tinta-2);min-width:390px}
+.legenda dt{justify-self:start}
+.legenda dd{margin:0}
+
+/* ── efeitos: a gramática da coluna da direita ─────────────────────────── */
+.ef{display:inline-block;font-size:11.5px;font-weight:600;line-height:1;padding:5px 8px 5px;
+  border-radius:2px;white-space:nowrap;letter-spacing:.005em}
+.ef.bloqueia{background:var(--gov);color:#fff;border:2px solid var(--gov)}
+.ef.pede{color:var(--gov);border:2px solid var(--gov);background:transparent}
+.ef.avisa{color:var(--gov);border:1px solid var(--gov);background:var(--gov-claro);padding:6px 9px}
+.ef.orienta{color:var(--ambar);border:1.5px dashed var(--ambar);background:transparent}
+.ef.incerto{color:var(--tinta-2);border:1px solid var(--incerto);
+  background:repeating-linear-gradient(135deg,transparent 0 4px,rgba(140,150,163,.28) 4px 5px)}
+
+/* ── a planta: três colunas e a fronteira ──────────────────────────────── */
+.planta{position:relative;display:grid;grid-template-columns:400px minmax(0,1fr) 480px;
+  column-gap:0;margin-top:30px}
+.col-cab{padding:0 26px 12px;font-size:13px;color:var(--tinta-2);align-self:end}
+.col-cab b{display:block;font-size:19px;color:var(--tinta);letter-spacing:-.015em;margin-bottom:2px}
+.col-cab.esq{padding-left:0}
+.col-cab.dir{padding-right:0}
+
+/* a fronteira do modelo */
+.fronteira{position:absolute;top:0;bottom:0;left:400px;width:0;border-left:3px solid var(--tinta);
+  pointer-events:none}
+.fronteira span{position:absolute;top:50%;left:-3px;transform:translate(-50%,-50%) rotate(-90deg);
+  background:var(--papel);padding:4px 14px;font-size:12px;font-weight:600;white-space:nowrap;color:var(--tinta)}
+
+.grupo{grid-column:1/-1;display:grid;grid-template-columns:400px 1fr 480px;
+  border-top:1px solid var(--tinta);margin-top:6px}
+.grupo h2{grid-column:2;margin:0;padding:10px 26px 6px;font-size:13px;font-weight:600;color:var(--tinta-2)}
+.grupo h2 + .regua{grid-column:1}
+
+.linha{grid-column:1/-1;display:grid;grid-template-columns:400px minmax(0,1fr) 480px;
+  border-top:1px solid var(--regra);transition:background-color .15s}
+.linha:hover,.linha:focus-within{background:var(--papel-2)}
+.linha > div{padding:13px 26px}
+.linha > .esq{padding-left:0}
+.linha > .dir{padding-right:0}
+
+/* centro: o arquivo */
+.arq h3{margin:0 0 3px;font-size:16px;font-weight:700;letter-spacing:-.012em}
+.arq h3 small{font-weight:400;color:var(--tinta-3);font-size:13px;margin-left:6px}
+.arq .caminhos{margin:0;font-size:12.5px;color:var(--tinta);line-height:1.6}
+.arq .caminhos code{background:rgba(10,26,47,.06);padding:1px 5px;border-radius:2px;white-space:nowrap}
+.arq .nota{margin:4px 0 0;font-size:13px;color:var(--tinta-2);max-width:60ch}
+.monta{display:inline-flex;gap:0;align-items:center;margin-top:5px;font-size:12px;color:var(--tinta-2)}
+.monta svg{margin:0 6px}
+
+/* direita: mecanismos */
+.mecs{display:grid;gap:7px}
+.mec{display:grid;grid-template-columns:118px 1fr;gap:10px;align-items:baseline;font-size:13px}
+.mec .ef{justify-self:start}
+.mec code{font-size:12px}
+.mec span.txt{color:var(--tinta-2)}
+.mec span.txt code{color:var(--tinta)}
+
+/* esquerda: presença no contexto, turno a turno */
+.turnos-cab{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;padding:0 0 6px;
+  font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--tinta-3);text-align:center}
+.faixa{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:3px}
+.faixa i{display:block;height:22px;border:1px solid var(--regra);background:transparent;border-radius:1px}
+.faixa i.on{background:var(--ambar);border-color:var(--ambar);
+  animation:acende .01s calc(var(--t) * 170ms + 500ms) both}
+.faixa i.on.leve{background:var(--ambar-claro);border:1.5px dashed var(--ambar)}
+@keyframes acende{from{background:transparent;border-color:var(--regra)}}
+.esq .quando{font-size:12.5px;color:var(--tinta-2);margin-top:6px}
+.esq .quando b{color:var(--ambar);font-weight:600}
+.esq .escreve{border-left:2px dashed var(--ambar);padding:2px 0 2px 12px;font-size:13px;color:var(--tinta-2)}
+.esq .escreve b{color:var(--tinta);font-weight:600}
+
+/* o cursor de turno: a única animação não disparada por ação */
+.cursor{position:absolute;top:0;bottom:0;width:2px;background:var(--tinta);opacity:0;pointer-events:none;
+  animation:varre 2.2s .45s cubic-bezier(.4,0,.6,1) forwards}
+@keyframes varre{
+  0%{opacity:.9;transform:translateX(0)}
+  96%{opacity:.9;transform:translateX(var(--fim))}
+  100%{opacity:0;transform:translateX(var(--fim))}
+}
+
+/* ── o ciclo e o CI ─────────────────────────────────────────────────────── */
+.base{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:48px;margin-top:34px;
+  padding-top:22px;border-top:2px solid var(--tinta)}
+.base h2{margin:0 0 4px;font-size:19px;letter-spacing:-.015em}
+.base > div > p{margin:0 0 14px;font-size:13px;color:var(--tinta-2);max-width:70ch}
+.tier{display:grid;grid-template-columns:62px 1fr;align-items:center;gap:12px;padding:8px 0;
+  border-top:1px solid var(--regra)}
+.tier > b{font-size:14px}
+.passos{display:flex;flex-wrap:wrap;align-items:center;gap:0;margin:0;padding:0;list-style:none}
+.passos li{display:flex;align-items:center;font-size:12.5px;font-family:"JetBrains Mono",monospace}
+.passos li + li::before{content:"";display:block;width:16px;height:1px;background:var(--tinta-3);margin:0 3px}
+.passos li span{padding:4px 7px;border:1px solid var(--tinta-3);border-radius:2px;background:#F4F7FA}
+.passos li.humano span{border:2px solid var(--tinta);font-weight:600}
+.tier small{grid-column:2;font-size:12px;color:var(--tinta-3);margin-top:-2px}
+
+.ci{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px 22px}
+.ci .mec{grid-template-columns:96px 1fr}
+
+.rodape{margin-top:30px;padding-top:12px;border-top:1px solid var(--regra);font-size:12px;color:var(--tinta-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+a{color:var(--gov)}
+:focus-visible{outline:2px solid var(--gov);outline-offset:2px}
+
+@media (prefers-reduced-motion:reduce){
+  .faixa i.on{animation:none}
+  .cursor{display:none}
+}
+
+/* ── telas estreitas: as colunas empilham, a fronteira vira horizontal ─── */
+@media (max-width:1180px){
+  .folha{padding:28px 20px}
+  .topo{grid-template-columns:1fr}
+  .topo h1{font-size:40px}
+  .legenda{min-width:0}
+  .planta,.linha,.grupo{grid-template-columns:1fr}
+  .fronteira,.cursor,.col-cab{display:none}
+  .grupo h2{grid-column:1;padding-left:0}
+  .linha > div{padding:10px 0}
+  .linha > .esq{order:2}
+  .linha > .arq{order:1}
+  .linha > .dir{order:3;border-top:3px solid var(--tinta);padding-top:12px;margin-bottom:8px}
+  .base{grid-template-columns:1fr}
+  .ci{grid-template-columns:1fr}
+}
+@media print{
+  .faixa i.on{animation:none} .cursor{display:none}
+  .folha{padding:16px}
+}
+</style>
+</head>
+<body>
+<main class="folha">
+
+  <header class="topo">
+    <div>
+      <h1>A planta do sdd-scaffold</h1>
+      <p>O repositório está no centro. À esquerda, quando cada arquivo entra no contexto do agente. À direita, o código que roda fora do modelo e age sobre o mesmo arquivo. A linha grossa é a fronteira do modelo: o que está à esquerda dela orienta, o que está à direita impede ou avisa.</p>
+    </div>
+    <dl class="legenda" aria-label="Legenda">
+      <dt><span class="ef bloqueia">bloqueia</span></dt><dd>o job falha e o merge não passa</dd>
+      <dt><span class="ef pede">pede aprovação</span></dt><dd>a ferramenta para e uma pessoa decide</dd>
+      <dt><span class="ef avisa">avisa</span></dt><dd>reporta, não trava; envolve julgamento</dd>
+      <dt><span class="ef orienta">só orienta</span></dt><dd>texto no contexto, sem mecanismo por trás</dd>
+      <dt><span class="ef incerto">não confirmado</span></dt><dd>escrito, mas ainda não visto disparando no produto</dd>
+    </dl>
+  </header>
+
+  <section class="planta" aria-label="Planta: contexto do agente, repositório e mecanismos">
+    <div class="fronteira" aria-hidden="true"><span>fronteira do modelo</span></div>
+
+    <div class="col-cab esq">
+      <b>O que o agente lê</b>
+      presença no contexto ao longo de uma sessão
+      <div class="turnos-cab" aria-hidden="true" style="margin-top:10px">
+        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+      </div>
+    </div>
+    <div class="col-cab"><b>O repositório</b>a fonte de verdade, em texto aberto</div>
+    <div class="col-cab dir"><b>O que roda fora do modelo</b>hook, permissão e CI agindo sobre o arquivo</div>
+
+    <!-- ── governança: lida pelo agente ──────────────────────────────────── -->
+    <div class="grupo"><h2>Governança, lida pelo agente</h2></div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq">
+        <div class="faixa" role="img" aria-label="Presente nos 12 turnos">
+          <i class="on" style="--t:0"></i><i class="on" style="--t:1"></i><i class="on" style="--t:2"></i><i class="on" style="--t:3"></i><i class="on" style="--t:4"></i><i class="on" style="--t:5"></i><i class="on" style="--t:6"></i><i class="on" style="--t:7"></i><i class="on" style="--t:8"></i><i class="on" style="--t:9"></i><i class="on" style="--t:10"></i><i class="on" style="--t:11"></i>
+        </div>
+        <div class="quando"><b>Todo turno.</b> Vai inline, dentro do AGENTS.md.</div>
+      </div>
+      <div class="arq">
+        <h3>Constituição<small>camada 0, vale para todos os projetos</small></h3>
+        <p class="caminhos"><code>docs/constituicao/padrao-v1.0.md</code> copiada entre marcadores no <code>AGENTS.md</code></p>
+        <p class="nota">Oito princípios: SDD por tier, nenhuma marca de IA, pt-BR, proibido improvisar, segurança, Arquitetura Viva, memória, a governança não se autoedita.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt"><code>verificar_constituicao.py</code> reprova se o bloco inline divergir da cópia canônica</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">o mesmo script, quando a organização publicou versão mais nova</span></div>
+        <div class="mec"><span class="ef pede">pede aprovação</span><span class="txt">hook e permissões do Claude Code antes de editar</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq">
+        <div class="faixa" role="img" aria-label="Presente nos 12 turnos">
+          <i class="on" style="--t:0"></i><i class="on" style="--t:1"></i><i class="on" style="--t:2"></i><i class="on" style="--t:3"></i><i class="on" style="--t:4"></i><i class="on" style="--t:5"></i><i class="on" style="--t:6"></i><i class="on" style="--t:7"></i><i class="on" style="--t:8"></i><i class="on" style="--t:9"></i><i class="on" style="--t:10"></i><i class="on" style="--t:11"></i>
+        </div>
+        <div class="quando"><b>Todo turno.</b> Lido nativamente por Codex, Kiro e Antigravity.</div>
+      </div>
+      <div class="arq">
+        <h3>Premissa<small>camada 1, deste projeto</small></h3>
+        <p class="caminhos"><code>AGENTS.md</code> 88 linhas, 5,4 KB</p>
+        <div class="monta" aria-label="CLAUDE.md e GEMINI.md apontam para AGENTS.md">
+          <code>CLAUDE.md</code>&nbsp;·&nbsp;<code>GEMINI.md</code>
+          <svg width="34" height="10" viewBox="0 0 34 10" aria-hidden="true"><path d="M0 5h30M25 1l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+          ponteiros curtos para o AGENTS.md
+        </div>
+        <p class="nota">Stack, estado, mapa do repositório e a tabela de roteamento para skills e steering.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">CI acima de 30 KB. O Codex trunca em 32 KB sem avisar</span></div>
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">CI se um ponteiro estiver quebrado ou inerte</span></div>
+        <div class="mec"><span class="ef pede">pede aprovação</span><span class="txt">hook e permissões antes de editar os três arquivos</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq">
+        <div class="faixa" role="img" aria-label="Presente só no turno 1">
+          <i class="on" style="--t:0"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="quando"><b>Início da sessão.</b> Atualizada ao encerrar sessão complexa.</div>
+      </div>
+      <div class="arq">
+        <h3>Memória quente<small>cerca de uma página</small></h3>
+        <p class="caminhos"><code>docs/PROJECT_MEMORY.md</code></p>
+        <p class="nota">Aprendizado maduro sobe para o steering ou para uma ADR e sai daqui.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef orienta">só orienta</span><span class="txt">nenhum mecanismo confere se ela foi lida ou atualizada</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq">
+        <div class="faixa" role="img" aria-label="Presente nos turnos 3, 7 e 8, quando o gatilho casa">
+          <i></i><i></i><i class="on" style="--t:2"></i><i></i><i></i><i></i><i class="on" style="--t:6"></i><i class="on" style="--t:7"></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="quando"><b>Por gatilho.</b> Só quando a descrição da skill casa com a tarefa.</div>
+      </div>
+      <div class="arq">
+        <h3>Procedimento<small>camada 2, vale para todos os projetos</small></h3>
+        <p class="caminhos"><code>skills/arquitetura-viva</code> <code>skills/threat-model</code> <code>skills/migrations-reversiveis</code> <code>skills/estados-de-interface</code> e <code>skills/sdd-lifecycle</code>, instalada na geração</p>
+        <div class="monta" aria-label="Um corpo montado em quatro caminhos">
+          <code>skills/</code>
+          <svg width="34" height="10" viewBox="0 0 34 10" aria-hidden="true"><path d="M0 5h30M25 1l5 4-5 4" fill="none" stroke="currentColor" stroke-width="1.3"/></svg>
+          <code>.claude/skills</code>&nbsp;<code>.codex/skills</code>&nbsp;<code>.kiro/skills</code>&nbsp;<code>.agents/skills</code>
+        </div>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt"><code>arquitetura-viva</code> é conferida pelo drift check</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt"><code>threat-model</code> pelo verificador de PR, e gitleaks para segredo</span></div>
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt"><code>migrations-reversiveis</code>: migration já aplicada não se edita</span></div>
+        <div class="mec"><span class="ef orienta">só orienta</span><span class="txt"><code>estados-de-interface</code> depende da revisão de PR</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq">
+        <div class="faixa" role="img" aria-label="Presente nos turnos 3 e 8, quando a skill manda ler">
+          <i></i><i></i><i class="on leve" style="--t:2"></i><i></i><i></i><i></i><i></i><i class="on leve" style="--t:7"></i><i></i><i></i><i></i><i></i>
+        </div>
+        <div class="quando"><b>Quando a skill manda.</b> Sem o arquivo, a skill usa os próprios defaults.</div>
+      </div>
+      <div class="arq">
+        <h3>Parâmetro<small>camada 3, deste projeto</small></h3>
+        <p class="caminhos"><code>docs/steering/</code> 7 arquivos, 291 linhas</p>
+        <p class="nota">Comandos reais de teste e lint, mecanismo de auth, serviços, ordem de rebuild, gotchas. O que muda de projeto para projeto.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef orienta">só orienta</span><span class="txt">o conteúdo é do projeto; a skill verificada é quem carrega a norma</span></div>
+      </div>
+    </div>
+
+    <!-- ── trabalho: escrito pelo agente ─────────────────────────────────── -->
+    <div class="grupo"><h2>Trabalho, escrito pelo agente</h2></div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Tier 2, antes do código.</b> PRD diz o porquê; a spec diz o quê, com as cinco perguntas de threat-model como seção própria.</div></div>
+      <div class="arq">
+        <h3>Intenção e contrato</h3>
+        <p class="caminhos"><code>docs/prd/</code> <code>docs/specs/</code></p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">diff toca auth, upload, IaC ou entrada externa e a spec não responde o threat-model</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">requisito <code>R&lt;n&gt;</code> sem critério, spec aprovada sem <code>Aprovado por</code> ou com <code>[ESCLARECER]</code> aberto</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Tier 1 ou mais.</b> Impacto arquitetural, e a evidência de teste e lint colada antes de concluir.</div></div>
+      <div class="arq">
+        <h3>Plano</h3>
+        <p class="caminhos"><code>docs/plans/</code></p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">código mudou e o plano não traz evidência de teste</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">schema mudou e o plano não declara rollback</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">tabela de veredito sem algum requisito, ou requisito sem tarefa</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Decisão estrutural, ou spec inviável.</b> Proibido improvisar: o trabalho volta para a especificação.</div></div>
+      <div class="arq">
+        <h3>Decisão registrada</h3>
+        <p class="caminhos"><code>docs/adr/</code></p>
+        <p class="nota">ADR é histórico. A revisão entra como apêndice, o texto original fica.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef pede">pede aprovação</span><span class="txt">editar ADR já registrada</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Mudança de schema.</b> Reversível, rollback declarado antes de rodar, expandir e contrair.</div></div>
+      <div class="arq">
+        <h3>Migrations</h3>
+        <p class="caminhos">migrations do projeto</p>
+        <p class="nota">Editar uma migration que já rodou corrompe o histórico de quem aplicou a anterior.</p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">o único portão duro do verificador de PR: é inequívoco e difícil de desfazer</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Mudança estrutural.</b> Código, diagrama, IaC e compose atualizados na mesma branch.</div></div>
+      <div class="arq">
+        <h3>Arquitetura Viva</h3>
+        <p class="caminhos"><code>Arquitetura/mapa.yml</code> amarra <code>arquitetura.drawio</code>, <code>infra/cloud/</code> OpenTofu e <code>infra/local/docker-compose.yml</code></p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt"><code>verificar_drift_arquitetura.py</code> reporta divergência sem travar o merge</span></div>
+        <div class="mec"><span class="ef pede">pede aprovação</span><span class="txt">editar o mapa ou o diagrama</span></div>
+      </div>
+    </div>
+
+    <div class="linha" tabindex="0">
+      <div class="esq"><div class="escreve"><b>Nunca, por conta própria.</b> O agente não desarma o controle que o vigia.</div></div>
+      <div class="arq">
+        <h3>Os próprios controles</h3>
+        <p class="caminhos"><code>.claude/settings.json</code> <code>scripts/proteger_governanca.py</code> <code>scripts/verificar_*.py</code> <code>.github/</code> <code>.kiro/permissions.yaml</code> <code>.codex/requirements.toml</code></p>
+      </div>
+      <div class="dir mecs">
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">Claude Code nega editar a própria configuração, o hook, os verificadores e o <code>.github/</code></span></div>
+        <div class="mec"><span class="ef incerto">não confirmado</span><span class="txt">regras do Kiro e <code>git_attribution</code> do Codex: nome e local ainda não vistos no produto</span></div>
+      </div>
+    </div>
+
+    <div class="cursor" aria-hidden="true" style="left:0;--fim:392px"></div>
+  </section>
+
+  <!-- ── o ciclo e o CI ──────────────────────────────────────────────────── -->
+  <section class="base" aria-label="O ciclo por tier e o CI de toda PR">
+    <div>
+      <h2>O ciclo, com rigor proporcional ao risco</h2>
+      <p>Na dúvida, o tier mais alto. Toda entrega nasce numa branch <code>feat|fix/AAAA-MM-DD-nome</code> e termina com o CHANGELOG atualizado. Bordas grossas marcam onde uma pessoa aprova.</p>
+      <div class="tier"><b>Tier 0</b>
+        <ol class="passos"><li><span>mudança trivial</span></li><li><span>PR</span></li></ol>
+      </div>
+      <div class="tier"><b>Tier 1</b>
+        <ol class="passos"><li><span>plano</span></li><li><span>TDD</span></li><li><span>evidência no plano</span></li><li><span>PR</span></li></ol>
+      </div>
+      <div class="tier"><b>Tier 2</b>
+        <ol class="passos"><li class="humano"><span>PRD</span></li><li class="humano"><span>spec</span></li><li><span>plano</span></li><li class="humano"><span>checkpoints</span></li><li><span>TDD</span></li><li><span>ADR</span></li><li><span>revisão contra a spec</span></li><li class="humano"><span>PR</span></li></ol>
+        <small>A revisão adversarial parte da spec, não do diff: é assim que o requisito esquecido aparece.</small>
+      </div>
+    </div>
+    <div>
+      <h2>O que roda em toda PR</h2>
+      <p>Jobs do <code>qualidade.yml</code> no projeto gerado. Só falha o que é inequívoco.</p>
+      <div class="ci">
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">suíte com dependências congeladas</span></div>
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">ruff, lint e formato</span></div>
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">gitleaks, segredo no histórico</span></div>
+        <div class="mec"><span class="ef bloqueia">bloqueia</span><span class="txt">governança carregável e constituição</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">mypy, tipos</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">pip-audit, dependências</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">normas do PR, exceto migration</span></div>
+        <div class="mec"><span class="ef avisa">avisa</span><span class="txt">drift de arquitetura</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="rodape">
+    <span>sdd-scaffold v1.7.1 e sdd-lifecycle 3.0.0. Gerado por <code>criar_projeto.py</code>, stdlib pura; o drift check é a única peça que usa PyYAML.</span>
+    <span>Um arquivo que parece controle e não é custa depuração a alguém. Por isso existe a coluna da direita.</span>
+  </footer>
+</main>
+</body>
+</html>

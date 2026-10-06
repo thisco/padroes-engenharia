@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Os conceitos e os problemas</title>
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<style>
+/* ── Conceitos e problemas ───────────────────────────────────────────────────
+   À esquerda, como o agente funciona: caixas aninhadas, porque cada conceito
+   contém o anterior. A borda da sessão é o que importa: só atravessa o que
+   está em disco. À direita, o que dá errado, como cadeia de causa: código
+   rápido gera drift e regressão, e a garantia de qualidade responde aos dois.
+   ─────────────────────────────────────────────────────────────────────────── */
+:root{
+  --papel:#E8EDF2; --papel-2:#DDE4EC;
+  --tinta:#0A1A2F; --tinta-2:#43556B; --tinta-3:#7A8A9D; --regra:#C3CDD8;
+  --gov:#1351B4; --gov-claro:#D3E0F5;
+  --ambar:#B06F12; --ambar-claro:#F3E3C6;
+  --erro:#B8452E;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--papel);color:var(--tinta)}
+body{font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-variant-ligatures:none;font-size:12px;
+  background:rgba(10,26,47,.06);padding:1px 5px;border-radius:2px}
+.folha{max-width:1680px;margin:0 auto;padding:44px 48px 40px}
+
+.topo{padding-bottom:26px;border-bottom:2px solid var(--tinta);display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:end}
+.topo h1{margin:0;font-size:52px;line-height:.98;letter-spacing:-.035em;font-weight:800;max-width:14ch}
+.topo p{margin:0;font-size:17px;color:var(--tinta-2);max-width:58ch}
+
+.corpo{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:56px;margin-top:30px}
+.corpo > section > h2{margin:0 0 4px;font-size:24px;letter-spacing:-.02em}
+.corpo > section > p.lead{margin:0 0 20px;font-size:14px;color:var(--tinta-2);max-width:60ch}
+
+/* ── o ninho: agente de código ─────────────────────────────────────────── */
+.caixa{position:relative;border-radius:3px}
+.caixa > .rot{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:10px}
+.caixa > .rot b{font-size:18px;letter-spacing:-.015em}
+.caixa > .rot span{font-size:13px;color:var(--tinta-2);text-align:right;max-width:44ch}
+
+.agente{border:2px solid var(--tinta);padding:18px 18px 18px}
+.memoria{margin-top:0}
+.sessao{border:2px dashed var(--ambar);background:rgba(243,227,198,.35);padding:16px}
+.sessao > .rot b{color:var(--ambar)}
+.harness{border:2px solid var(--gov);background:#F4F7FB;padding:16px}
+.harness > .rot b{color:var(--gov)}
+.modelo{border:1px solid var(--tinta-3);background:#fff;padding:14px 16px;text-align:center}
+.modelo b{display:block;font-size:17px}
+.modelo span{font-size:13px;color:var(--tinta-2)}
+.fluxo{display:flex;justify-content:center;gap:10px;align-items:center;margin:8px 0;font-size:12px;color:var(--gov)}
+.fluxo svg{flex:none}
+.ferramentas{display:grid;gap:6px;margin-top:10px}
+.ferramentas div{border:1px solid var(--gov);border-radius:2px;padding:6px 8px;font-size:12.5px;color:var(--tinta);background:#fff}
+.ferramentas div small{display:block;color:var(--tinta-3);font-size:11.5px}
+.compacta{margin-top:10px;display:flex;gap:10px;align-items:center;font-size:12.5px;color:var(--tinta-2)}
+.janela{display:flex;gap:2px;flex:none}
+.janela i{display:block;width:10px;height:14px;background:var(--ambar);border-radius:1px}
+.janela i.v{background:transparent;border:1px solid var(--ambar)}
+.janela i.c{background:var(--ambar-claro);border:1px dashed var(--ambar)}
+
+
+.linha-sessao{display:grid;grid-template-columns:minmax(0,1fr) 44px 170px;align-items:center;gap:6px}
+.delega svg{display:block}
+.subs{display:grid;gap:6px}
+.sub{border:1.5px dashed var(--ambar);background:rgba(243,227,198,.35);border-radius:3px;padding:7px 10px}
+.sub b{display:block;font-size:13px;color:var(--ambar)}
+.sub span{font-size:11.5px;color:var(--tinta-2)}
+.subs p{margin:2px 0 0;font-size:11.5px;color:var(--tinta-2);line-height:1.3}
+@media (max-width:640px){.linha-sessao{grid-template-columns:1fr}.delega{display:none}.exec{grid-template-columns:1fr}}
+
+.exec{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:14px;margin-top:12px}
+.grupo-exec > p{margin:0 0 6px;font-size:12px;font-weight:600;color:var(--gov)}
+.grupo-exec .ferramentas{grid-template-columns:1fr 1fr;margin-top:0}
+.grupo-exec.remoto{padding-left:14px;border-left:1px solid var(--regra)}
+.grupo-exec.remoto .ferramentas{grid-template-columns:1fr}
+.grupo-exec.remoto .ferramentas div{border-style:dashed;background:var(--papel)}
+.mesmo{margin:10px 0 0;font-size:12.5px;color:var(--tinta-2)}
+
+/* a travessia: o que sobrevive à sessão */
+.travessia{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;margin:14px 0 0}
+.travessia svg{flex:none}
+.travessia p{margin:0;font-size:13.5px;color:var(--tinta)}
+.disco{margin-top:12px;border:2px solid var(--tinta);background:var(--tinta);color:var(--papel);padding:14px 16px;border-radius:3px}
+.disco .rot{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.disco .rot b{font-size:18px}
+.disco .rot span{font-size:13px;color:#B8C6D6}
+.disco .arqs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.disco code{background:rgba(255,255,255,.1);color:#E3EAF2}
+
+/* ── a cadeia: o que dá errado ─────────────────────────────────────────── */
+.cadeia{display:grid;gap:0}
+.elo{display:grid;grid-template-columns:120px minmax(0,1fr);gap:22px;padding:18px 0;border-top:1px solid var(--regra)}
+.elo:first-child{border-top:2px solid var(--tinta)}
+.elo .fig{align-self:start}
+.elo h3{margin:0;font-size:20px;letter-spacing:-.018em}
+.elo .def{margin:4px 0 0;font-size:14.5px;color:var(--tinta);max-width:54ch}
+.elo .sint{margin:8px 0 0;font-size:13px;color:var(--tinta-2);max-width:56ch}
+.elo .sint b{color:var(--tinta);font-weight:600}
+.causa{display:flex;align-items:center;gap:10px;padding:2px 0 2px 142px;font-size:12.5px;color:var(--tinta-3)}
+.causa svg{flex:none}
+.elo.resposta{border-top:3px solid var(--gov);background:linear-gradient(var(--gov-claro),var(--gov-claro)) no-repeat 0 0/100% 100%;
+  padding:18px 18px;margin-top:6px}
+.elo.resposta h3{color:var(--gov)}
+.elo.resposta .fig{padding-left:0}
+.elo.resposta ul{margin:10px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 18px}
+.elo.resposta li{font-size:13px;color:var(--tinta);padding-left:14px;position:relative}
+.elo.resposta li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;background:var(--gov)}
+
+/* o drift se desenha: a única animação sem ação do usuário */
+.deriva path{stroke-dasharray:140;stroke-dashoffset:140;animation:desenha 1.4s .4s cubic-bezier(.2,.8,.2,1) forwards}
+.deriva path:nth-of-type(2){animation-delay:.55s}
+.deriva path:nth-of-type(3){animation-delay:.7s}
+@keyframes desenha{to{stroke-dashoffset:0}}
+
+.rodape{margin-top:30px;padding-top:12px;border-top:1px solid var(--regra);font-size:12px;color:var(--tinta-3);
+  display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+
+@media (prefers-reduced-motion:reduce){.deriva path{animation:none;stroke-dashoffset:0}}
+@media print{.deriva path{animation:none;stroke-dashoffset:0}}
+@media (max-width:1180px){
+  .folha{padding:28px 20px}
+  .topo,.corpo{grid-template-columns:1fr;gap:28px}
+  .topo h1{font-size:40px}
+}
+@media (max-width:640px){
+  .ferramentas,.elo.resposta ul{grid-template-columns:1fr}
+  .elo{grid-template-columns:1fr}
+  .causa{padding-left:0}
+}
+</style>
+</head>
+<body>
+<main class="folha">
+
+  <header class="topo">
+    <h1>Os conceitos e os problemas</h1>
+    <p>À esquerda, as peças de um agente de código, uma dentro da outra. À direita, o que dá errado quando ele escreve mais rápido do que o time revisa, e o que responde a isso.</p>
+  </header>
+
+  <div class="corpo">
+
+    <!-- ── conceitos ─────────────────────────────────────────────────────── -->
+    <section aria-label="Como o agente de código funciona">
+      <h2>Como o agente funciona</h2>
+      <p class="lead">O harness roda a sessão, e a sessão contém o modelo. A borda que importa é a da sessão: quando ela acaba, só continua o que foi gravado.</p>
+
+      <div class="caixa agente">
+        <div class="rot"><b>Agente de código</b><span>modelo e harness trabalhando no seu repositório</span></div>
+
+        <div class="caixa harness">
+          <div class="rot"><b>Harness</b><span>o programa em volta do modelo. Continua entre sessões e decide o que o modelo vê e o que pode fazer</span></div>
+
+          <div class="linha-sessao">
+            <div class="caixa sessao">
+              <div class="rot"><b>Sessão</b><span>uma janela de contexto</span></div>
+              <div class="modelo">
+                <b>Modelo</b>
+                <span>só produz texto. Pede a ação; quem executa, ou recusa, é o harness</span>
+              </div>
+              <div class="compacta">
+                <span class="janela" aria-hidden="true"><i class="c"></i><i class="c"></i><i class="c"></i><i></i><i></i><i></i><i></i><i class="v"></i><i class="v"></i></span>
+                Enche, o começo é resumido, e no fim a sessão some.
+              </div>
+            </div>
+
+            <div class="delega" aria-hidden="true">
+              <svg width="44" height="60" viewBox="0 0 44 60"><path d="M2 18h36M32 13l6 5-6 5" fill="none" stroke="#B06F12" stroke-width="1.4"/><path d="M42 44H6M12 39l-6 5 6 5" fill="none" stroke="#B06F12" stroke-width="1.4" stroke-dasharray="3 2"/></svg>
+            </div>
+
+            <div class="subs" aria-label="Subagentes">
+              <div class="sub"><b>Subagente</b><span>contexto próprio</span></div>
+              <div class="sub"><b>Subagente</b><span>contexto próprio</span></div>
+              <p>recebe a tarefa, devolve só o resultado</p>
+            </div>
+          </div>
+
+          <div class="exec">
+            <div class="grupo-exec">
+              <p>o harness executa, na sua máquina</p>
+              <div class="ferramentas">
+                <div>lê e edita arquivo<small>aplica o patch</small></div>
+                <div>roda comando<small>teste, build, git</small></div>
+                <div>monta o contexto<small>AGENTS.md, skills</small></div>
+                <div>aplica permissão<small>hook, sandbox</small></div>
+              </div>
+            </div>
+            <div class="grupo-exec remoto">
+              <p>o fornecedor executa, no servidor</p>
+              <div class="ferramentas">
+                <div>busca na web<small>Anthropic, OpenAI, Google</small></div>
+                <div>execução de código<small>sandbox do fornecedor</small></div>
+              </div>
+            </div>
+          </div>
+          <p class="mesmo">Para o modelo, é o mesmo pedido de ação. Muda quem executa, e portanto onde a regra de permissão precisa morar.</p>
+        </div>
+
+        <div class="travessia">
+          <svg width="30" height="44" viewBox="0 0 30 44" aria-hidden="true"><path d="M15 42V6M9 12l6-7 6 7" fill="none" stroke="#0A1A2F" stroke-width="2"/></svg>
+          <p><b>Só atravessa a sessão o que foi gravado.</b> O harness relê isto no início de cada sessão; decisão tomada em conversa e não escrita precisa ser reconquistada.</p>
+        </div>
+
+        <div class="disco">
+          <div class="rot"><b>Memória</b><span>o que sobrevive, porque foi gravado fora da sessão</span></div>
+          <div class="arqs"><code>AGENTS.md</code><code>docs/PROJECT_MEMORY.md</code><code>docs/adr/</code><code>docs/plans/</code><code>docs/steering/</code><code>skills/</code><code>git log</code></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── problemas ─────────────────────────────────────────────────────── -->
+    <section aria-label="O que dá errado e o que responde">
+      <h2>O que dá errado</h2>
+      <p class="lead">Uma causa, duas consequências, uma resposta.</p>
+
+      <div class="cadeia">
+        <div class="elo">
+          <svg class="fig" width="120" height="70" viewBox="0 0 120 70" aria-hidden="true">
+            <g fill="none" stroke="#0A1A2F" stroke-width="1.5">
+              <path d="M6 12h70M6 22h96M6 32h58M6 42h84M6 52h66M6 62h100" stroke-opacity=".85"/>
+            </g>
+            <path d="M112 6v58" stroke="#B8452E" stroke-width="2" stroke-dasharray="3 3"/>
+          </svg>
+          <div>
+            <h3>Código rápido</h3>
+            <p class="def">Mil linhas nascem em segundos. A velocidade é real e boa, mas chega antes da revisão.</p>
+            <p class="sint"><b>Como aparece:</b> código que passa no teste da vez e ninguém sabe explicar por que existe, nem qual decisão ele reverteu.</p>
+          </div>
+        </div>
+
+        <div class="causa" aria-hidden="true"><svg width="12" height="20" viewBox="0 0 12 20"><path d="M6 0v16M2 12l4 5 4-5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>gera</div>
+
+        <div class="elo">
+          <svg class="fig deriva" width="120" height="70" viewBox="0 0 120 70" aria-hidden="true">
+            <path d="M4 35 C40 35 60 34 116 10" fill="none" stroke="#1351B4" stroke-width="2"/>
+            <path d="M4 35 C40 35 70 36 116 36" fill="none" stroke="#B06F12" stroke-width="2"/>
+            <path d="M4 35 C40 35 60 37 116 62" fill="none" stroke="#0A1A2F" stroke-width="2"/>
+            <circle cx="4" cy="35" r="3" fill="#0A1A2F"/>
+          </svg>
+          <div>
+            <h3>Drift</h3>
+            <p class="def">A documentação diz uma coisa, o diagrama outra, a infraestrutura faz uma terceira. Cada uma foi verdade um dia; nenhuma é verdade agora.</p>
+            <p class="sint"><b>Como aparece:</b> o único jeito confiável de saber o que o sistema faz passa a ser ler o código inteiro de novo.</p>
+          </div>
+        </div>
+
+        <div class="causa" aria-hidden="true"><svg width="12" height="20" viewBox="0 0 12 20"><path d="M6 0v16M2 12l4 5 4-5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>e</div>
+
+        <div class="elo">
+          <svg class="fig" width="120" height="70" viewBox="0 0 120 70" aria-hidden="true">
+            <path d="M8 36l10 10 20-22" fill="none" stroke="#1351B4" stroke-width="3"/>
+            <path d="M52 35h24M70 29l6 6-6 6" fill="none" stroke="#7A8A9D" stroke-width="1.5"/>
+            <path d="M90 22l22 26M112 22l-22 26" fill="none" stroke="#B8452E" stroke-width="3"/>
+          </svg>
+          <div>
+            <h3>Regressão</h3>
+            <p class="def">O que funcionava para de funcionar. Com agente, o caso típico é refazer a mesma coisa de outro jeito e perder o caso de borda que o jeito antigo tratava.</p>
+            <p class="sint"><b>Como aparece:</b> teste que só passa na sua máquina, dado aleatório sem seed, bug que volta todo mês.</p>
+          </div>
+        </div>
+
+        <div class="causa" aria-hidden="true"><svg width="12" height="20" viewBox="0 0 12 20"><path d="M6 0v16M2 12l4 5 4-5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>respondidos por</div>
+
+        <div class="elo resposta">
+          <svg class="fig" width="120" height="70" viewBox="0 0 120 70" aria-hidden="true">
+            <rect x="10" y="8" width="54" height="54" fill="none" stroke="#1351B4" stroke-width="3"/>
+            <path d="M22 36l9 9 20-22" fill="none" stroke="#1351B4" stroke-width="3"/>
+            <path d="M74 20h36M74 35h28M74 50h32" stroke="#1351B4" stroke-width="1.5"/>
+          </svg>
+          <div>
+            <h3>Garantia de qualidade</h3>
+            <p class="def">Evidência no lugar de confiança. Nada fecha sem prova colada, e a própria prova precisa ser testada contra o artefato real.</p>
+            <ul>
+              <li>spec antes do código, com rigor por tier</li>
+              <li>testes unitários, de integração e ponta a ponta</li>
+              <li>drift check entre diagrama, IaC e compose</li>
+              <li>revisão adversarial contra a spec</li>
+              <li>controle que roda fora do modelo</li>
+              <li>o que foi aprendido, gravado em disco</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="rodape">
+    <span>Parte 1 de 3. A planta mostra onde cada peça mora no repositório; as garantias mostram com que força cada uma é cobrada.</span>
+    <span>Claude Code, Codex, Kiro e Antigravity são harnesses. O modelo por trás pode ser o mesmo.</span>
+  </footer>
+</main>
+</body>
+</html>

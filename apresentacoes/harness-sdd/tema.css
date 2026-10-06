@@ -1,0 +1,145 @@
+/* ── Tema NUJOR ─────────────────────────────────────────────────────────────
+   A paleta carrega o argumento do deck:
+     azul sólido  = mecanismo que bloqueia (código, fora do modelo)
+     âmbar tracejado = orientação (texto, dentro do modelo)
+   Âncora: azul institucional Gov.br, a mesma paleta do protótipo Panorama.
+   ──────────────────────────────────────────────────────────────────────── */
+:root{
+  --fundo:#0A1A2F;        /* navy real, não preto tingido */
+  --fundo-2:#0E2440;
+  --gov:#1351B4;          /* Gov.br primário — camada que impede */
+  --gov-luz:#7FB0FF;
+  --ambar:#E9A23B;        /* camada que orienta */
+  --ambar-fosco:#8A6220;
+  --papel:#E3EAF2;
+  --papel-fosco:#93A6BC;
+  --verde:#4FB286;
+  --vermelho:#E06C53;
+  --regra:#1E3757;
+}
+.reveal-viewport{background:var(--fundo)}
+.reveal{
+  font-family:"Helvetica Neue","Inter",system-ui,sans-serif;
+  font-size:32px; color:var(--papel);
+  -webkit-font-smoothing:antialiased;
+}
+.reveal .slides{text-align:left}
+.reveal .slides section{
+  height:700px; padding:8px 40px 0 0; box-sizing:border-box;
+  display:flex; flex-direction:column;
+}
+/* o reveal escreve display:block inline no slide visível, o que desligava o flex:
+   a capa não centralizava e a nota de rodapé não descia para a base */
+.reveal .slides > section[style*="display: block"]{display:flex !important}
+
+/* ── tipografia: a afirmação ─────────────────────────────────────────────── */
+.reveal h1,.reveal h2,.reveal h3{
+  font-family:"Helvetica Neue","Inter",system-ui,sans-serif;
+  color:var(--papel); text-transform:none; letter-spacing:-.022em;
+  font-weight:700; line-height:1.04; margin:0 0 .45em 0; text-shadow:none;
+}
+.reveal h1{font-size:2.35em;letter-spacing:-.032em;font-weight:800}
+.reveal h2{font-size:1.5em}
+.reveal h3{font-size:1em;font-weight:600;letter-spacing:-.01em;color:var(--gov-luz)}
+.reveal p,.reveal li{line-height:1.5;max-width:42ch}
+.reveal .largo p,.reveal .largo li{max-width:none}
+.reveal strong{color:#fff;font-weight:700}
+.reveal em{color:var(--ambar);font-style:normal}
+
+/* ── tipografia: a evidência ─────────────────────────────────────────────── */
+.reveal code,.reveal .mono,.reveal pre,.reveal table td.ev{
+  font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-variant-ligatures:none;
+}
+.reveal code{font-size:.82em;color:var(--gov-luz);background:rgba(19,81,180,.16);
+  padding:.08em .34em;border-radius:2px}
+.reveal pre{font-size:.5em;line-height:1.42;box-shadow:none;background:var(--fundo-2);
+  border:1px solid var(--regra);border-left:3px solid var(--gov);padding:.9em 1.1em;width:100%;
+  box-sizing:border-box;margin:.4em 0}
+.reveal pre code{background:none;color:var(--papel);padding:0;font-size:1em;max-height:none}
+
+/* ── a régua de contenção: dispositivo de assinatura ────────────────────── */
+.bloco{border-left:3px solid var(--gov);padding-left:1.1rem}
+.bloco.orienta{border-left-style:dashed;border-left-color:var(--ambar)}
+/* antes do slide 7 a cor ainda não tem significado: coluna de contraste fica neutra */
+.bloco.neutro{border-left:1px solid var(--papel-fosco)}
+.bloco.neutro h3{color:var(--papel)}
+.camada{font-size:.5em;color:var(--papel-fosco);margin:0 0 1.6em 0;letter-spacing:.01em}
+.camada b{color:var(--gov-luz);font-weight:600}
+.camada.orienta b{color:var(--ambar)}
+
+/* ── tabelas: evidência densa, sem cards ────────────────────────────────── */
+.reveal table{font-size:.56em;border-collapse:collapse;width:100%;margin:.3em 0}
+.reveal table th{
+  font-weight:600;color:var(--gov-luz);text-align:left;
+  border-bottom:1px solid var(--gov);padding:.5em .7em .4em 0;vertical-align:bottom}
+.reveal table td{border-bottom:1px solid var(--regra);padding:.5em .7em .5em 0;vertical-align:top}
+.reveal table tr:last-child td{border-bottom:none}
+.reveal table td.ev{font-size:.94em;color:var(--papel-fosco)}
+.reveal table td b{color:#fff}
+/* tabela que é o conteúdo do slide: legível do fundo da sala */
+.reveal table.grande{font-size:.7em}
+.reveal table.grande td,.reveal table.grande th{padding-top:.62em;padding-bottom:.62em}
+.sim{color:var(--verde)} .nao{color:var(--vermelho)} .meio{color:var(--ambar)}
+
+/* ── grade de duas colunas quando a comparação é o conteúdo ─────────────── */
+.duas{display:grid;grid-template-columns:1fr 1fr;gap:2.2rem;align-items:start}
+.tres{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;align-items:start}
+.duas p,.duas li,.tres p,.tres li{max-width:none}
+.duas p,.tres p{margin:.45em 0;line-height:1.38}
+.duas h3,.tres h3{margin-bottom:.35em}
+/* slide com muito texto: reduz o corpo em vez de deixar a base estourar */
+.denso .duas p,.denso .tres p,.denso .passos li{font-size:.84em}
+
+/* ── numeração: só onde o conteúdo É sequência ──────────────────────────── */
+.passos{list-style:none;margin:0;padding:0;counter-reset:p}
+.passos li{counter-increment:p;position:relative;padding-left:2.4rem;margin:.55em 0}
+.passos li::before{
+  content:counter(p);position:absolute;left:0;top:.06em;
+  font-family:"JetBrains Mono",monospace;font-size:.72em;font-weight:700;
+  color:var(--gov-luz);border:1px solid var(--gov);border-radius:2px;
+  width:1.5em;height:1.5em;display:grid;place-items:center}
+
+/* ── capa ───────────────────────────────────────────────────────────────── */
+.capa{justify-content:center}
+.capa h1{max-width:26ch}
+.capa .sub{font-size:.66em;color:var(--papel-fosco);max-width:46ch;margin-top:.2em}
+.capa .assina{margin-top:2.4rem;font-size:.46em;color:var(--papel-fosco);
+  font-family:"JetBrains Mono",monospace;border-top:1px solid var(--regra);padding-top:1rem}
+.capa .assina b{color:var(--papel);font-weight:500}
+
+/* ── a linha de contenção do slide 7: a única motion do deck ────────────── */
+.fronteira{position:relative;margin:2.6rem 0 1.4rem}
+.fronteira hr{border:none;border-top:2px solid var(--gov);margin:0;
+  transform-origin:left center;transform:scaleX(0)}
+.present .fronteira hr{animation:desenha .9s .35s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes desenha{to{transform:scaleX(1)}}
+.fronteira span{position:absolute;right:0;top:-1.9em;font-size:.44em;
+  font-family:"JetBrains Mono",monospace;color:var(--gov-luz)}
+@media (prefers-reduced-motion:reduce){
+  .present .fronteira hr{animation:none;transform:scaleX(1)}
+}
+
+/* ── notas de rodapé de slide: procedência e ressalva ───────────────────── */
+.reveal .slides section p.fonte{margin:auto 0 0 0;padding:1.1rem 5.5rem 0 0;font-size:.4em;
+  color:var(--papel-fosco);font-family:"JetBrains Mono",monospace;max-width:none;
+  line-height:1.55;border-top:1px solid var(--regra)}
+.fonte .alerta{color:var(--ambar)}
+.reveal .progress{color:var(--gov)}
+.reveal .controls{color:var(--gov-luz)}
+
+/* ── slides 11 e 12: prática, força, efeito ─────────────────────────────── */
+.pratica h3{font-size:.82em;margin:0 0 .5em;padding-bottom:.4em;border-bottom:2px solid var(--gov)}
+.pratica ul{list-style:none;margin:0;padding:0}
+.pratica li{display:grid;grid-template-columns:1fr auto;column-gap:.6em;row-gap:.12em;align-items:baseline;
+  padding:.5em 0;border-bottom:1px solid var(--regra);max-width:none}
+.pratica li b{font-size:.7em;font-weight:700;color:#fff;line-height:1.25}
+.pratica li b code{font-size:.8em}
+.pratica li small{grid-column:1/-1;font-size:.54em;color:var(--papel-fosco);line-height:1.35}
+.reveal .ef{display:inline-block;font-family:"Inter",sans-serif;font-size:.42em;font-weight:600;line-height:1;
+  padding:.38em .6em;border-radius:2px;white-space:nowrap;vertical-align:middle}
+.reveal .ef.bloqueia{background:var(--gov);color:#fff;border:2px solid var(--gov)}
+.reveal .ef.pede{color:var(--gov-luz);border:2px solid var(--gov-luz)}
+.reveal .ef.avisa{color:var(--gov-luz);border:1px solid var(--gov);background:rgba(19,81,180,.18)}
+.reveal .ef.orienta{color:var(--ambar);border:1.5px dashed var(--ambar)}
+.reveal .fonte.legenda-ef .ef{font-size:1em;margin-right:.3em}

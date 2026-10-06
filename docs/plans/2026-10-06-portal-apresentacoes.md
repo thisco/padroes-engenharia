@@ -54,7 +54,7 @@ Reverter os commits na branch; nada foi publicado.
 - [ ] **T1 (R1, R2, R3, R4, R7) — motor, TDD.** Vendor do reveal.js com licença; schema;
   carregador; regra; cópia no build; `NAV`; template e página; roteiro renderizado; `llms.txt`
   e busca. Suíte, ruff, validar e dois builds idênticos.
-- [ ] **T2 (R5, R6) — conteúdo.** Copiar o deck para `apresentacoes/harness-sdd/`; reescrever os
+- [x] **T2 (R5, R6) — conteúdo.** Copiar o deck para `apresentacoes/harness-sdd/`; reescrever os
   caminhos de vendor; `apresentacao.yml`; atualizar os textos para 1.7.1 e 3.0.0 (pontos de
   montagem, `R<n>` e aprovação, auditoria do slide 14 com a revisão de segurança do 1.7.1), sem
   mexer em desenho, paleta e estrutura; `verificacoes/apresentacao-harness-sdd.yaml` com a
@@ -66,6 +66,12 @@ Reverter os commits na branch; nada foi publicado.
   checkpoint do dono com o deck aberto.
 
 ## Evidências
+
+- T2 (2026-10-06): `apresentacoes/harness-sdd/` com os 5 HTMLs, `tema.css`, `roteiro.md`, `README.md` e
+  `apresentacao.yml`; vendor reescrito para `../../vendor/` (sem `http` em src/href, sem 404 de
+  css/js/fontes num servidor com `vendor/reveal` e `vendor/fonts` na raiz). `validar.py` reprova só
+  `verificacoes/apresentacao-harness-sdd.yaml` com `R-VERIFICACAO (nenhum conteúdo com essa chave)`,
+  porque o motor ainda não conhece o tipo apresentação; `revisao_adversarial` provisória, pendente da T3.
 
 ## Revisão adversarial: <data> — achados
 

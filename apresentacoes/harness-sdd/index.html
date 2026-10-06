@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harness, SDD e o repositório como fonte de verdade · NUJOR 2026</title>
+<link rel="stylesheet" href="../../vendor/reveal/reveal.min.css">
+<link rel="stylesheet" href="../../vendor/fonts/fonts.css">
+<link rel="stylesheet" href="tema.css">
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<!-- 1 ─ CAPA ─────────────────────────────────────────────────────────────── -->
+<section class="capa">
+  <h1>Harness, SDD e o repositório como fonte de verdade</h1>
+  <p class="sub">Como construir software com agentes de IA sem perder a arquitetura no caminho, e por que o processo precisa continuar valendo quando a ferramenta muda.</p>
+  <div class="assina">
+    <b>Thiago Oliveira</b> · SUNNU/NUARQ<br>
+    Conversa técnica com a NUJOR
+  </div>
+</section>
+
+<!-- 2 ─ O PROBLEMA ──────────────────────────────────────────────────────── -->
+<section>
+  <h2>Agentes escrevem mais rápido do que qualquer time revisa</h2>
+  <div class="duas">
+    <div class="bloco">
+      <p>A velocidade é real e é boa. O problema é que ela chega antes da revisão.</p>
+      <p>O sintoma mais caro é o <strong>drift</strong>: a documentação diz uma coisa, o diagrama diz outra, a infraestrutura faz uma terceira. Cada um foi verdadeiro em algum momento. Nenhum é verdadeiro agora.</p>
+    </div>
+    <div class="bloco neutro">
+      <h3>Como isso aparece no dia a dia</h3>
+      <p>Mil linhas nascem em segundos e levam meses para alguém entender.</p>
+      <p>Sem contexto arquitetural, o agente escreve código que passa no teste e não se encaixa em nada.</p>
+      <p>A decisão que vocês tomaram ontem não existe na sessão de hoje.</p>
+    </div>
+  </div>
+  <p class="fonte">Depois que o drift se instala, a única forma confiável de saber o que o sistema faz é ler o código inteiro de novo. Que era justamente o trabalho que a documentação existia para poupar.</p>
+</section>
+
+<!-- 3 ─ OS MODELOS DE SDD ───────────────────────────────────────────────── -->
+<section class="largo">
+  <h2>Os modelos de <em>spec-driven development</em> que estudamos</h2>
+  <table class="grande">
+    <tr><th>Modelo</th><th>Artefato central</th><th>Forma do fluxo</th><th>Acoplamento a ferramenta</th></tr>
+    <tr>
+      <td><b>GitHub Spec Kit</b></td>
+      <td class="ev">constituição + spec + plano + tarefas</td>
+      <td>Fases fixas, dirigidas por comandos do assistente</td>
+      <td class="meio">Comandos próprios por ferramenta</td>
+    </tr>
+    <tr>
+      <td><b>OpenSpec</b></td>
+      <td class="ev">spec versionada como fonte de verdade</td>
+      <td>Proposta de mudança contra a spec vigente</td>
+      <td class="sim">Diretório no repositório</td>
+    </tr>
+    <tr>
+      <td><b>BMAD Method</b></td>
+      <td class="ev">PRD + arquitetura + histórias</td>
+      <td>Personas de agente encenando papéis de time ágil</td>
+      <td class="meio">Depende do elenco de agentes</td>
+    </tr>
+    <tr>
+      <td><b>Kiro Specs</b> (AWS)</td>
+      <td class="ev">requirements.md · design.md · tasks.md</td>
+      <td>Três fases com checkpoint que pausa</td>
+      <td class="nao">Runtime proprietário</td>
+    </tr>
+  </table>
+  <p class="fonte">Kiro verificado localmente em 4 repositórios reais (estrutura de arquivos, <span class="ev">.config.kiro</span>, tarefas com <span class="ev">_Requisitos: N.M_</span>). Os outros três, pela documentação pública dos projetos.</p>
+</section>
+
+<!-- 4 ─ O QUE CADA UM ACERTA ────────────────────────────────────────────── -->
+<section>
+  <h2>Onde os quatro convergem, e onde eles custam caro</h2>
+  <div class="duas">
+    <div class="bloco">
+      <h3>Acertam</h3>
+      <p>Escrever o que se quer antes de como fazer. Deixar a intenção revisável por uma pessoa enquanto ainda não existe código. Manter rastro do requisito até a implementação.</p>
+    </div>
+    <div class="bloco neutro">
+      <h3>Pesam</h3>
+      <p>Tendem a aplicar o <strong>mesmo rigor a toda mudança</strong>. O Spec Kit tem caminho próprio para bug, mas há relatos, com ele e com o Kiro, de correção pequena virando spec grande. Quando isso acontece algumas vezes, o time começa a procurar o atalho.</p>
+    </div>
+  </div>
+  <div class="fronteira"><hr><span>a escolha que fizemos</span></div>
+  <p><strong>O rigor acompanha o risco.</strong> Mudança trivial segue direto. Mudança pequena ganha um plano leve. Mudança estrutural exige spec aprovada, gate arquitetural e revisão adversarial. São três tiers, em vez de cinco fases para tudo.</p>
+</section>
+
+<!-- 5 ─ O QUE É UM HARNESS ──────────────────────────────────────────────── -->
+<section>
+  <h2>O que é um <em>harness</em></h2>
+  <div class="duas">
+    <div class="bloco">
+      <p>O modelo só produz texto. Quem lê arquivo, roda comando, aplica patch, guarda memória e decide o que entra no contexto é o <strong>harness</strong>, o programa em volta do modelo.</p>
+      <p>Por isso a escolha do harness pesa mais do que parece: ela define quais ações o agente consegue executar e quais ele é impedido de executar, independente de qual modelo está por trás.</p>
+    </div>
+    <div class="bloco neutro">
+      <h3>Os sete eixos que fomos investigar</h3>
+      <p class="mono" style="font-size:.52em;line-height:1.9;color:var(--papel-fosco)">
+      1 · loop do agente<br>
+      2 · schema de tool call<br>
+      3 · execução de shell<br>
+      4 · memória: sessão e longo prazo<br>
+      5 · tarefas e planejamento<br>
+      6 · validações e guardrails<br>
+      7 · skills e extensibilidade</p>
+    </div>
+  </div>
+  <p class="fonte">Os cinco compartilham um padrão: prompt de sistema pequeno e contexto injetado grande. No Claude Code o prompt tem cerca de 3,5 mil tokens e carrega a política que muda pouco. O estado que muda a cada turno entra pelo contexto, na casa das dezenas de milhares.</p>
+</section>
+
+<!-- 6 ─ COMO CADA FERRAMENTA IMPLEMENTA ─────────────────────────────────── -->
+<section class="largo">
+  <h2>Cinco harnesses, abertos por dentro</h2>
+  <table class="grande">
+    <tr><th>Harness</th><th>Memória de projeto</th><th>Skills</th><th>Sessão</th><th>Traço distintivo</th></tr>
+    <tr>
+      <td><b>Claude Code</b><br><span class="ev" style="font-size:.8em">2.1.267</span></td>
+      <td class="ev">CLAUDE.md + memory/</td>
+      <td class="sim">SKILL.md nativo</td>
+      <td class="ev">JSONL + estado em disco</td>
+      <td>Hooks que bloqueiam a tool antes de ela rodar</td>
+    </tr>
+    <tr>
+      <td><b>Codex CLI</b><br><span class="ev" style="font-size:.8em">0.157.1</span></td>
+      <td class="ev">AGENTS.md verbatim</td>
+      <td class="sim">SKILL.md, uso exigido</td>
+      <td class="ev">rollouts versionados</td>
+      <td>Sandbox de kernel: Seatbelt e Landlock</td>
+    </tr>
+    <tr>
+      <td><b>Kiro</b></td>
+      <td class="ev">.kiro/steering/ + AGENTS.md</td>
+      <td class="sim">padrão aberto Agent Skills</td>
+      <td class="ev">compactação pelo runtime</td>
+      <td>Specs com checkpoint que pausa</td>
+    </tr>
+    <tr>
+      <td><b>Antigravity</b></td>
+      <td class="ev">AGENTS.md · GEMINI.md</td>
+      <td class="meio">embutidas; <span class="ev">.agents/skills</span> documentado</td>
+      <td class="ev">artifacts em markdown</td>
+      <td>Subagente de browser com Chrome real</td>
+    </tr>
+    <tr>
+      <td><b>DeepSeek dsh</b><br><span class="ev" style="font-size:.8em">0.1.5-rc.1</span></td>
+      <td class="ev">não verificado</td>
+      <td class="meio">plugins do kernel Cordis</td>
+      <td class="ev">log append-only, replay e fork</td>
+      <td>Delega outros harnesses como subagentes</td>
+    </tr>
+  </table>
+  <p class="fonte">Claude Code e Codex foram inspecionados na instalação local: o prompt de sistema e as declarações de tool saíram do próprio transcript e dos rollouts, não da documentação. Kiro e Antigravity vieram de doc oficial mais os artefatos que estavam no disco. <span class="alerta">A linha do dsh é um retrato anterior e não foi reconfirmada. O projeto lança a cada um ou dois dias.</span></p>
+</section>
+
+<!-- 7 ─ CONTENÇÃO ───────────────────────────────────────────────────────── -->
+<section class="largo">
+  <h2>Contenção: onde mora a regra que impede</h2>
+  <table>
+    <tr><th>Harness</th><th>Mecanismo</th><th>Camada</th></tr>
+    <tr><td><b>Codex CLI</b></td><td>Perfil de sandbox do sistema operacional: Seatbelt no macOS, Landlock e seccomp no Linux. No modo de escrita restrita, <span class="ev">.git</span>, <span class="ev">.agents</span> e <span class="ev">.codex</span> ficam somente-leitura</td><td class="sim">kernel</td></tr>
+    <tr><td><b>Antigravity</b></td><td>Terminal sem rede por padrão</td><td class="meio">runtime</td></tr>
+    <tr><td><b>Claude Code</b></td><td>Sistema de permissão e hooks <span class="ev">PreToolUse</span>, que rodam fora do modelo e podem negar a chamada</td><td class="meio">processo</td></tr>
+    <tr><td><b>Kiro</b></td><td>Regra declarativa em <span class="ev">permissions.yaml</span>, com precedência <span class="ev">deny &gt; ask &gt; allow</span>, nos escopos de usuário e de workspace</td><td class="meio">política</td></tr>
+    <tr><td><b>DeepSeek dsh</b></td><td>Plugin de aprovação. O sandbox não restringe saída de rede</td><td class="nao">plugin</td></tr>
+  </table>
+  <div class="fronteira"><hr><span>a distinção que importa para governança</span></div>
+  <div class="duas">
+    <div class="bloco"><h3>Impede</h3><p>É código rodando fora do modelo: hook, sandbox, regra de permissão, check de CI. O agente não consegue argumentar com ele.</p></div>
+    <div class="bloco orienta"><h3>Orienta</h3><p>É texto dentro do modelo: constituição, steering, instrução de prompt. Funciona quando o agente segue, e ele costuma seguir.</p></div>
+  </div>
+  <p class="fonte">Só o Codex isola no kernel. Os outros quatro dependem de uma regra estar escrita corretamente. Vale saber em qual das duas camadas cada controle de vocês está hoje. <span class="alerta">No Claude Code o sandbox estava inativo na sessão que inspecionei: escrita fora do diretório e acesso à rede funcionaram normalmente.</span></p>
+</section>
+
+<!-- 8 ─ A PROVA DO AGNOSTICISMO ─────────────────────────────────────────── -->
+<section class="largo">
+  <h2>O agnosticismo deixou de ser tese</h2>
+  <div class="duas">
+    <div class="bloco">
+      <p>As skills instaladas no Kiro desta máquina são <strong>o mesmo pacote de skills do Claude Code, rodando sem nenhuma alteração</strong>.</p>
+      <p>O formato <span class="ev">SKILL.md</span> virou padrão aberto, então o mesmo arquivo é lido por ferramentas de fornecedores concorrentes. Isso já funciona hoje, com as licenças que vocês têm.</p>
+    </div>
+    <div>
+      <table>
+        <tr><th>Arquivo</th><th>Lido nativamente por</th></tr>
+        <tr><td class="ev">AGENTS.md</td><td>Codex CLI · Kiro · Antigravity</td></tr>
+        <tr><td class="ev">CLAUDE.md</td><td>Claude Code</td></tr>
+        <tr><td class="ev">GEMINI.md</td><td>Antigravity · Gemini CLI</td></tr>
+        <tr><td class="ev">SKILL.md</td><td>Claude Code · Codex · Kiro</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="fronteira"><hr><span>o denominador comum real, hoje</span></div>
+  <p><span class="ev" style="color:var(--gov-luz)">AGENTS.md</span> guarda a premissa do projeto. <span class="ev" style="color:var(--gov-luz)">SKILL.md</span> guarda o procedimento. É o maior conjunto comum entre as ferramentas que vocês vão usar nos próximos meses.</p>
+  <p class="fonte"><span class="alerta">Um erro meu:</span> o <span class="ev">ANTIGRAVITY.md</span> que eu emitia no scaffold nunca foi lido por ferramenta nenhuma. O Antigravity lê <span class="ev">AGENTS.md</span> e <span class="ev">GEMINI.md</span>. Confirmei na skill embutida do próprio produto, na documentação oficial, e numa sessão gravada onde o arquivo estava lá e o agente nunca o abriu. Saiu do template.</p>
+</section>
+
+<!-- 9 ─ AS QUATRO CAMADAS ───────────────────────────────────────────────── -->
+<section class="largo">
+  <h2>O scaffold em quatro camadas</h2>
+  <p style="max-width:70ch;margin-top:0">A governança é classificada por <strong>quando o conteúdo entra no contexto</strong> e por <strong>quem a compartilha</strong>, e não pelo assunto de que ela trata.</p>
+  <table>
+    <tr><th>Camada</th><th>Onde mora</th><th>Quando entra</th><th>Vale para</th><th>Conteúdo</th></tr>
+    <tr>
+      <td><b>0 · Constituição</b></td>
+      <td class="ev">bloco inline no AGENTS.md<br>cópia canônica versionada</td>
+      <td class="sim">sempre</td>
+      <td>todos os projetos</td>
+      <td>SDD por tier, pt-BR, proibido improvisar, governança não se autoedita</td>
+    </tr>
+    <tr>
+      <td><b>1 · Premissa</b></td>
+      <td class="ev">AGENTS.md<br>+ CLAUDE.md · GEMINI.md</td>
+      <td class="sim">sempre</td>
+      <td>um projeto</td>
+      <td>Stack, estado, mapa do repo, tabela de roteamento</td>
+    </tr>
+    <tr>
+      <td><b>2 · Procedimento</b></td>
+      <td class="ev">skills/*/SKILL.md<br>um corpo, quatro montagens</td>
+      <td class="meio">por gatilho</td>
+      <td>todos os projetos</td>
+      <td>arquitetura-viva · threat-model · migrations-reversiveis · estados-de-interface</td>
+    </tr>
+    <tr>
+      <td><b>3 · Parâmetro</b></td>
+      <td class="ev">docs/steering/*.md<br>curtos, no repositório</td>
+      <td class="meio">quando a skill manda</td>
+      <td>um projeto</td>
+      <td>Comandos reais, auth, serviços, contratos de saída</td>
+    </tr>
+  </table>
+  <div class="fronteira"><hr><span>o critério que decide</span></div>
+  <p><strong>Premissa não pode morar em skill.</strong> A skill só aparece quando o gatilho casa. Uma regra como "este projeto é em pt-BR e usa Postgres 16" precisa valer em todo turno, inclusive naqueles em que nenhum gatilho casou.</p>
+  <p class="fonte">Constituição inline, e não include remoto, porque só uma ferramenta implementa include; o CI confere que a cópia não divergiu. Decisão e alternativas no <span class="ev">ADR-0001</span>.</p>
+</section>
+
+<!-- 10 ─ AS SEIS CAMADAS DA REGRESSÃO ──────────────────────────────────── -->
+<section>
+  <h2>"E se a IA refizer a mesma coisa de outro jeito?"</h2>
+  <p style="max-width:58ch">É a pergunta certa, e nenhuma técnica isolada responde. O que responde são seis camadas, e cada uma cobre uma pergunta diferente.</p>
+  <table style="font-size:.56em">
+    <tr><th>#</th><th>Camada</th><th>A pergunta que ela responde</th></tr>
+    <tr><td class="ev">1</td><td><b>Antes de escrever</b></td><td>Reduz a chance de derivar?</td></tr>
+    <tr><td class="ev">2</td><td><b>Isolamento</b></td><td>Limita o raio de dano?</td></tr>
+    <tr><td class="ev">3</td><td><b>As provas</b></td><td>Eu descubro que quebrou?</td></tr>
+    <tr><td class="ev">4</td><td><b>Ambiente reproduzível</b></td><td>Quebrou aqui e lá igual?</td></tr>
+    <tr><td class="ev">5</td><td><b>Bloqueio mecânico</b></td><td>Alguma coisa impede, ou só pede?</td></tr>
+    <tr><td class="ev">6</td><td><b>Memória</b></td><td>O mesmo bug volta?</td></tr>
+  </table>
+  <p class="fonte">Nenhuma camada resolve sozinha. Ter a 3 sem a 4 produz teste que passa só na sua máquina. Ter a 5 sem a 3 bloqueia sem saber do quê. Ter a 1 sem a 6 faz o time repetir a mesma discussão todo mês.</p>
+</section>
+
+<!-- 11 ─ CAMADAS 1 a 3 ─────────────────────────────────────────────────── -->
+<section class="largo">
+  <p class="camada"><b>camadas 1 a 3</b> · reduzir a chance · limitar o dano · detectar a quebra</p>
+  <h2>Antes e durante o código</h2>
+  <div class="tres">
+  <div class="pratica">
+    <h3>1 · Antes de escrever</h3>
+    <ul>
+      <li><b>Brainstorm antes da feature</b><span class="ef orienta">orienta</span><small>intenção antes da primeira linha</small></li>
+      <li><b>Tier de SDD</b><span class="ef orienta">orienta</span><small>rigor proporcional ao risco</small></li>
+      <li><b>PRD e spec com threat-model</b><span class="ef avisa">avisa</span><small>requisito escrito, não inventado</small></li>
+      <li><b>Bibliotecas declaradas</b><span class="ef bloqueia">bloqueia</span><small>dependência fora do arquivo quebra a suíte</small></li>
+    </ul>
+  </div>
+  <div class="pratica">
+    <h3>2 · Isolamento</h3>
+    <ul>
+      <li><b>Worktree por mudança</b><span class="ef orienta">orienta</span><small>sessões paralelas não se pisam</small></li>
+      <li><b>Branch <code>feat|fix/data-nome</code></b><span class="ef orienta">orienta</span><small>o diff da entrega é o diff da branch</small></li>
+    </ul>
+  </div>
+  <div class="pratica">
+    <h3>3 · As provas</h3>
+    <ul>
+      <li><b>Unitário, integração, e2e</b><span class="ef bloqueia">bloqueia</span><small>suíte roda em todo PR</small></li>
+      <li><b>Seed determinístico</b><span class="ef orienta">orienta</span><small>regressão que alguém reproduz</small></li>
+      <li><b>Evidência colada no plano</b><span class="ef avisa">avisa</span><small>"funciona aqui" não conta</small></li>
+      <li><b>Revisão adversarial</b><span class="ef orienta">orienta</span><small>parte da spec, não do diff</small></li>
+    </ul>
+  </div>
+  </div>
+  <p class="fonte legenda-ef"><span class="ef bloqueia">bloqueia</span> o CI falha &nbsp; <span class="ef pede">pede aprovação</span> uma pessoa decide &nbsp; <span class="ef avisa">avisa</span> reporta sem travar &nbsp; <span class="ef orienta">orienta</span> só texto, ninguém confere</p>
+</section>
+
+<!-- 12 ─ CAMADAS 4 a 6 ─────────────────────────────────────────────────── -->
+<section class="largo">
+  <p class="camada"><b>camadas 4 a 6</b> · reproduzir · impedir · não repetir</p>
+  <h2>O que reproduz, o que impede, o que lembra</h2>
+  <div class="tres">
+  <div class="pratica">
+    <h3>4 · Ambiente reproduzível</h3>
+    <ul>
+      <li><b>Docker Compose local</b><span class="ef avisa">avisa</span><small>o sistema inteiro na máquina</small></li>
+      <li><b>Migrations com rollback</b><span class="ef bloqueia">bloqueia</span><small>migration aplicada não se edita</small></li>
+      <li><b>IaC em OpenTofu</b><span class="ef avisa">avisa</span><small>a nuvem descrita em código</small></li>
+      <li><b>Instalação congelada no CI</b><span class="ef bloqueia">bloqueia</span><small>mesma versão aqui e lá</small></li>
+    </ul>
+  </div>
+  <div class="pratica">
+    <h3>5 · Bloqueio mecânico</h3>
+    <ul>
+      <li><b>Drift de arquitetura</b><span class="ef avisa">avisa</span><small>diagrama, IaC e compose batem</small></li>
+      <li><b>Drift de segurança</b><span class="ef bloqueia">bloqueia</span><small>gitleaks reprova segredo</small></li>
+      <li><b>Governança protegida</b><span class="ef pede">pede aprovação</span><small>agente não edita constituição, ADR, CI</small></li>
+      <li><b>CI/CD</b><span class="ef bloqueia">bloqueia</span><small>o agente não edita os workflows</small></li>
+    </ul>
+  </div>
+  <div class="pratica">
+    <h3>6 · Memória</h3>
+    <ul>
+      <li><b>ADR</b><span class="ef pede">pede aprovação</span><small>a decisão tem dono e data</small></li>
+      <li><b>Memória quente</b><span class="ef orienta">orienta</span><small>lida no início da sessão</small></li>
+      <li><b>Bug vira regra</b><span class="ef orienta">orienta</span><small>o mesmo erro não volta</small></li>
+    </ul>
+  </div>
+  </div>
+  <p class="fonte legenda-ef"><span class="ef bloqueia">bloqueia</span> o CI falha &nbsp; <span class="ef pede">pede aprovação</span> uma pessoa decide &nbsp; <span class="ef avisa">avisa</span> reporta sem travar &nbsp; <span class="ef orienta">orienta</span> só texto, ninguém confere</p>
+</section>
+
+<!-- 13 ─ O CASO REAL ───────────────────────────────────────────────────── -->
+<section class="largo">
+  <p class="camada"><b>camada 3 sem camada 5</b> · o que eu encontrei no meu próprio scaffold</p>
+  <h2>O teste estava certo. Ninguém rodava.</h2>
+  <pre><code>$ pytest
+FAILED test_criar_projeto.py::test_gera_projeto_sem_placeholders_residuais
+FAILED test_criar_projeto.py::test_git_inicializado_com_commit
+UnicodeDecodeError: 'utf-8' codec can't decode byte 0x87 in position 23
+
+# Path(".DS_Store").suffix == ""  e  ""  está na lista de extensões de texto
+# → o gerador tentava decodificar 6.148 bytes binários como UTF-8</code></pre>
+  <div class="duas" style="margin-top:1.2rem">
+    <div class="bloco neutro">
+      <p>O gerador do scaffold <strong>não criava mais projeto nenhum</strong> em qualquer Mac cuja pasta tivesse sido aberta no Finder.</p>
+      <p>O teste que acusava isso estava lá, correto e vermelho, havia semanas.</p>
+    </div>
+    <div class="bloco">
+      <p>O que faltava era a parte mais barata: <strong>o repositório não tinha CI para si mesmo</strong>, só para os projetos que ele gera.</p>
+      <p>Ninguém rodava a suíte, então ninguém via o vermelho.</p>
+    </div>
+  </div>
+  <p class="fonte">Corrigido com teste de regressão para cada achado, CI próprio numa matriz de três versões de Python e um job que gera um projeto de ponta a ponta. O mesmo padrão aparece em qualquer repositório que cuida melhor do que produz do que de si mesmo.</p>
+</section>
+
+<!-- 14 ─ O TESTE VERDE ────────────────────────────────────────────────── -->
+<section class="largo">
+  <p class="camada"><b>camada 5 com o teste errado</b> · o que um auditor independente encontrou depois</p>
+  <h2>O teste verde que certificava um controle inerte</h2>
+  <div class="duas">
+    <div>
+      <pre><code># o que o teste mandava para o hook
+{"file_path": "AGENTS.md"}             → ask
+
+# o que o harness manda de verdade
+{"file_path": "/…/projeto/AGENTS.md"}  → livre</code></pre>
+      <p style="font-size:.66em;color:var(--papel-fosco)">O hook comparava caminho relativo. O Claude Code envia caminho absoluto. O teste passava porque alimentava o formato que eu imaginei.</p>
+    </div>
+    <div class="bloco">
+      <h3>Três achados, a mesma causa</h3>
+      <p>O hook de governança não disparava em uso real.</p>
+      <p>O verificador de PR aprovava o modelo de spec copiado e nunca preenchido.</p>
+      <p>O projeto gerado não passava no próprio CI.</p>
+      <p><strong>Os testes exercitavam o modelo mental do autor, e não o artefato real.</strong></p>
+      <p style="font-size:.8em;color:var(--papel-fosco)">A revisão de segurança do 1.7.1 repetiu o padrão: rename de migration passava pela trava, o hook passou a usar caminho absoluto e a falhar fechado, e um módulo plantado em <span class="ev">scripts/</span> é barrado por <span class="ev">python3 -I</span>.</p>
+    </div>
+  </div>
+  <p class="fonte">Encontrado por um agente auditor com instrução de construir, para cada mecanismo, o caso que ele deveria pegar e o caso inocente, sem partir do meu contexto. Corrigido, e os testes passaram a ler os arquivos reais do template. <span class="alerta">Ainda em aberto: os controles de Kiro e Codex não foram confirmados contra o produto. Até lá, trato como candidatos a inertes.</span></p>
+</section>
+
+<!-- 15 ─ O TESTE DA CONSTITUIÇÃO ─────────────────────────────────────── -->
+<section class="largo denso">
+  <p class="camada orienta"><b>o outro lado</b> · o que acontece com a constituição e nenhuma skill</p>
+  <h2>Antes de converter steering em skill, eu testei se precisava</h2>
+  <div class="duas">
+    <div class="bloco orienta">
+      <h3>A montagem</h3>
+      <p>Projeto gerado pelo scaffold, com <span class="ev">AGENTS.md</span> e os sete arquivos de steering. <strong>Nenhuma skill instalada.</strong></p>
+      <p>Tarefa de Tier 2: domínio novo, Postgres, endpoint novo e infraestrutura. Com pressão explícita: demo no mesmo dia, sozinho, cliente grande.</p>
+      <p>Na revisão adversarial ele achou uma <strong>corrida de concorrência</strong> que ninguém pediu para procurar, e corrigiu com bloqueio de linha no banco.</p>
+    </div>
+    <div>
+      <table style="font-size:.6em">
+        <tr><th>O que a constituição exige</th><th>Fez?</th></tr>
+        <tr><td>Classificar o tier antes de começar</td><td class="sim">sim</td></tr>
+        <tr><td>Spec antes do código</td><td class="sim">sim</td></tr>
+        <tr><td>Branch na convenção</td><td class="sim">sim</td></tr>
+        <tr><td>ADR para decisão estrutural</td><td class="sim">sim</td></tr>
+        <tr><td>Testes e evidência no plano</td><td class="sim">sim</td></tr>
+        <tr><td>Revisão adversarial contra a spec</td><td class="sim">sim</td></tr>
+        <tr><td>Parar nos checkpoints humanos</td><td class="nao">não, e declarou o desvio</td></tr>
+      </table>
+    </div>
+  </div>
+  <p class="fonte">Foi um caso só, então não dá para generalizar. Mas derrubou a justificativa que eu tinha: supunha que sem mecanismo o agente ignoraria o roteamento, e ele não ignorou. As skills entraram por reuso entre projetos, não por correção. <span class="alerta">O mesmo teste achou um defeito real: o projeto gerado não dizia onde o código-fonte morava, e a suíte quebrava no CI.</span></p>
+</section>
+
+<!-- 16 ─ ARQUITETURA VIVA ──────────────────────────────────────────────── -->
+<section class="largo denso">
+  <h2>Arquitetura Viva: o diagrama que não pode mentir</h2>
+  <div class="duas">
+    <div class="bloco">
+      <p>Um manifesto declara, para cada componente, seus três avatares: nó no diagrama, módulo de IaC, serviço no compose. Um verificador compara e relata divergência.</p>
+      <p>O ciclo fecha na <strong>mesma branch</strong>: separar em PRs diferentes é como o drift começa.</p>
+      <p><strong>Divergência não trava o merge.</strong> Quando um check bloqueia, a primeira reação do time é procurar como desligá-lo. Reportando, ele continua sendo lido.</p>
+    </div>
+    <div>
+      <pre><code># Arquitetura/mapa.yml
+componentes:
+  - nome: aplicacao
+    drawio_label: "Aplicação"   # nó no diagrama
+    tofu_modulo: app            # infra/cloud/modules/app
+    compose_servicos: [app]     # serviço no compose
+
+  - nome: dados
+    drawio_label: "Dados"
+    tofu_modulo: database
+    compose_servicos: [db]</code></pre>
+      <pre><code>$ python3 scripts/verificar_drift_arquitetura.py
+⚠ 1 divergência(s) de arquitetura detectada(s):
+  - módulo OpenTofu 'exemplo-servico' existe em
+    infra/cloud/modules/ mas não está no mapa.yml
+$ echo $?
+0</code></pre>
+    </div>
+  </div>
+  <p class="fonte">120 linhas de Python, só <span class="ev">pyyaml</span>. Nenhum dos cinco harnesses traz algo parecido de fábrica. <span class="alerta">Limite conhecido: manifesto malformado ainda derruba o script com traceback, e nó desenhado sem componente no mapa não é reportado.</span></p>
+</section>
+
+<!-- 17 ─ DESIGN, SEGURANÇA E PRD ───────────────────────────────────────── -->
+<section class="largo">
+  <h2>Onde entram arquitetura, segurança e o PRD</h2>
+  <table>
+    <tr><th>Etapa</th><th>Artefato</th><th>O que ela impede</th></tr>
+    <tr><td><b>Intenção</b></td><td class="ev">docs/prd/</td><td>Spec que inventa requisito porque ninguém escreveu qual era o problema</td></tr>
+    <tr><td><b>Especificação</b></td><td class="ev">docs/specs/</td><td>Código que resolve outra coisa. O contrato fica revisável antes de existir implementação: requisitos <span class="ev">R&lt;n&gt;</span>, cada um com critério de aceite, e a aprovação registrada (<span class="ev">Aprovado por</span> e <span class="ev">em</span>)</td></tr>
+    <tr><td><b>Gate arquitetural</b></td><td class="ev">docs/adr/</td><td>Mudança destrutiva silenciosa. Se a spec fere uma decisão vigente, o trabalho para e gera ADR</td></tr>
+    <tr><td><b>Ameaça</b></td><td class="ev">skill threat-model</td><td>Entrada externa sem validação, segredo em commit. As cinco perguntas viram seção obrigatória da spec, e o verificador de PR avisa quando a mudança toca superfície sensível sem respondê-las</td></tr>
+    <tr><td><b>Plano</b></td><td class="ev">docs/plans/</td><td>Implementação sem evidência: teste e lint colados no plano, e rollback declarado quando mexe em schema</td></tr>
+    <tr><td><b>Revisão</b></td><td class="ev">revisão adversarial</td><td>Auto-aprovação. A revisão é feita contra a spec, com um veredito por requisito, e não contra o gosto de quem revisa</td></tr>
+  </table>
+  <div class="fronteira"><hr><span>a regra que sustenta o resto</span></div>
+  <p><strong>Proibido improvisar.</strong> Se a spec se provar inviável durante a implementação, o trabalho para e volta para a especificação, normalmente gerando um ADR. O instinto do agente é contornar o obstáculo e seguir. Cada contorno desses reverte uma decisão de arquitetura sem que ninguém tenha decidido revertê-la.</p>
+  <p class="fonte">Do que o verificador de PR confere, só a edição de migration já aplicada <b style="color:var(--gov-luz)">bloqueia</b>: é inequívoca e difícil de desfazer. Threat-model, rollback e evidência <span class="alerta">avisam</span>, e também o marcador <span class="ev">[ESCLARECER]</span> aberto e a tabela de veredito incompleta, porque envolvem julgamento, e portão que reprova por julgamento ensina o time a contorná-lo.</p>
+</section>
+
+<!-- 18 ─ BROWNFIELD ────────────────────────────────────────────────────── -->
+<section class="largo denso">
+  <h2>Brownfield: por onde começar quando já existe código</h2>
+  <div class="duas">
+    <div class="bloco">
+      <ol class="passos">
+        <li><strong>Especificar o que já existe</strong>, antes de especificar o que se quer. Essa primeira spec vira a rede de segurança.</li>
+        <li><strong>Constituição primeiro</strong>, em uma página: <span class="ev">AGENTS.md</span> e os dois ponteiros.</li>
+        <li><strong>Um ciclo completo numa fatia pequena e real</strong>, do brainstorm ao PR, com o time junto.</li>
+        <li><strong>Depois</strong> o steering, destilado do que doeu no ciclo.</li>
+        <li><strong>Só então</strong> automatizar o drift, os hooks e o piso de cobertura.</li>
+      </ol>
+    </div>
+    <div class="bloco neutro">
+      <h3>Reaproveitar ou refazer?</h3>
+      <p>Código que já rodou em produção carrega uma informação que nenhuma spec captura: os casos de borda que alguém descobriu apanhando. Começar do zero joga isso fora e cobra de novo o mesmo preço.</p>
+      <p>O caminho que funcionou aqui foi <strong>envolver o código existente</strong>: a spec descreve o que ele faz hoje, os testes travam esse comportamento, e só então a mudança acontece com rede embaixo.</p>
+    </div>
+  </div>
+  <p class="fonte">A ordem importa mais do que os artefatos. Steering escrito antes do primeiro ciclo documenta o processo que você imagina ter. Escrito depois, ele documenta o processo que você tem de fato.</p>
+</section>
+
+<!-- 19 ─ COMPARTILHAR ──────────────────────────────────────────────────── -->
+<section class="largo denso">
+  <h2>O que dá para compartilhar a partir de hoje</h2>
+  <div class="duas">
+    <div class="bloco">
+      <h3>O que já existe e é público</h3>
+      <p><span class="ev">sdd-scaffold</span> 1.7.1: constituição versionada, quatro skills, verificadores e CI. Um comando gera o projeto e instala a skill do ciclo.</p>
+      <p><span class="ev">sdd-lifecycle</span> 3.0.0: a skill que conduz o ciclo, e funciona com qualquer agente.</p>
+      <p>A pesquisa dos cinco harnesses, com cada afirmação marcada por origem, e a auditoria do próprio scaffold.</p>
+    </div>
+    <div class="bloco orienta">
+      <h3>O que eu proponho construir junto</h3>
+      <p><strong>Um repositório de skills comum</strong> às duas áreas, com o procedimento compartilhado e os parâmetros ficando em cada projeto.</p>
+      <p><strong>Skill local sobe por PR</strong> depois de provar valor em dois projetos. É assim que o conhecimento acumula em vez de ser reinventado em cada área.</p>
+      <p><strong>Sessões de ciclo completo</strong> numa fatia real do Panorama, com o time junto.</p>
+    </div>
+  </div>
+  <div class="fronteira"><hr><span>o convite</span></div>
+  <p>O scaffold é opinativo e tem pontos errados que vocês vão enxergar antes de mim. <strong>Abram PR discordando.</strong></p>
+</section>
+
+</div></div>
+<script src="../../vendor/reveal/reveal.min.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true, slideNumber: 'c/t', transition: 'none',
+    controlsTutorial: false, center: false,
+    width: 1440, height: 810, margin: 0.07
+  });
+</script>
+</body>
+</html>

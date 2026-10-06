@@ -1,0 +1,36 @@
+titulo: Harness, SDD e o repositório como fonte de verdade
+publico: NUJOR, divisões de orçamentação e de execução de projetos
+data: 2026-09-29
+slides: 19
+paginas:
+  - arquivo: conceitos-e-problemas.html
+    titulo: Os conceitos e os problemas
+  - arquivo: comparativo-harnesses.html
+    titulo: Quatro harnesses, a mesma anatomia
+  - arquivo: diagrama-scaffold.html
+    titulo: A planta do sdd-scaffold
+  - arquivo: garantias-scaffold.html
+    titulo: O que o sdd-scaffold garante
+roteiro: roteiro.md
+referencias:
+  - agent-skills-spec
+  - agents-md
+  - antigravity-rules
+  - antigravity-skills
+  - claude-code-hooks
+  - claude-code-memory
+  - claude-code-skills
+  - codex-agents-md
+  - codex-skills
+  - kiro-skills
+  - kiro-steering
+  - sdd-lifecycle
+  - sdd-lifecycle-repo
+  - sdd-scaffold-changelog
+  - sdd-scaffold-modelo-spec
+  - sdd-scaffold-qualidade
+  - sdd-scaffold-readme
+  - sdd-scaffold-verificar-pr
+  - spec-kit
+  - bockeler-sdd-3-tools
+revisado_em: 2026-10-06
