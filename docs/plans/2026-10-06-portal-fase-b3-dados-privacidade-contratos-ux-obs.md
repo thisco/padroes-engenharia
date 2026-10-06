@@ -82,6 +82,9 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
   automáticos como itens obrigatórios.
 - [ ] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono na B.2),
   com nota no registro.
+  Inclui os 3 médios herdados da conferência do starter, da receita e do caso da B.2
+  (`c5ae0e0`): laço `until` do health check sem limite no starter e na receita; passo 7 do
+  prompt da receita sem "sem trailer"; `cd` e `<pasta-da-aplicação>` ausentes no passo 3.
 - [ ] **T10.** Checkpoint do dono.
 
 ## Evidências
