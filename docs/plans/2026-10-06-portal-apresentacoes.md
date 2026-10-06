@@ -51,7 +51,7 @@ Reverter os commits na branch; nada foi publicado.
 
 ## Tarefas
 
-- [ ] **T1 (R1, R2, R3, R4, R7) — motor, TDD.** Vendor do reveal.js com licença; schema;
+- [x] **T1 (R1, R2, R3, R4, R7) — motor, TDD.** Vendor do reveal.js com licença; schema;
   carregador; regra; cópia no build; `NAV`; template e página; roteiro renderizado; `llms.txt`
   e busca. Suíte, ruff, validar e dois builds idênticos.
 - [x] **T2 (R5, R6) — conteúdo.** Copiar o deck para `apresentacoes/harness-sdd/`; reescrever os
@@ -66,6 +66,24 @@ Reverter os commits na branch; nada foi publicado.
   checkpoint do dono com o deck aberto.
 
 ## Evidências
+
+### T1 — motor (commits 57cee02 e 5173a48)
+
+- Vermelho: `tests/unidade/test_apresentacoes.py` não coletava (`ModuleNotFoundError:
+  portal.gerador.apresentacoes`) antes do código.
+- Verde: `pytest -q`: 619 passed (588 antes; 30 testes novos em `test_apresentacoes.py`, um por
+  requisito com `# cobre: R<n>`, mais o parâmetro do schema em `test_esquemas.py`).
+- `ruff check .`: só os erros anteriores em `exemplos/` (P2-03 e P2-04, fora do escopo);
+  nenhum em `portal/`, `tests/` e `esquemas/`. `ruff format --check .`: só 7 arquivos de
+  `exemplos/`, todos de outros conteúdos.
+- `python scripts/validar.py`: validação ok: nenhum erro.
+- `python scripts/gerar.py --saida` duas vezes (/tmp/pub1 e /tmp/pub2): `diff -r` sem diferença;
+  `README.md` e `ROTEAMENTO.md` não mudaram. `public/apresentacoes/harness-sdd/index.html` tem os
+  mesmos bytes do original (`cmp`); `public/vendor/reveal/` traz CSS, JS e `LICENCAS.md`;
+  `llms.txt` tem a seção Apresentações com a página e o roteiro.
+- reveal.js 4.5.0, bytes idênticos aos do deck: `reveal.min.css`
+  `50c92ac663c9b6ed944155350650120c993e9a82d6e85117790157bd5aa8e3cd`, `reveal.min.js`
+  `ff9c77379675d2c09ee964050e09f1a3d6a562fdfc4f54428523d2e7eea23b46`.
 
 - T2 (2026-10-06): `apresentacoes/harness-sdd/` com os 5 HTMLs, `tema.css`, `roteiro.md`, `README.md` e
   `apresentacao.yml`; vendor reescrito para `../../vendor/` (sem `http` em src/href, sem 404 de
