@@ -41,6 +41,13 @@ execucoes:
   resultado: passou
   evidencia: "Requisitos afetados: 1 spec(s) citada(s), nenhum achado.; saída 0."
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-10-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-10-prompt, hotfix commitado, spec arquivada sem adendo"
+  resultado: passou
+  evidencia: "script antes: aviso de spec citada fora do diff; o agente identificou R1 (corte em 200 caracteres) e acrescentou '## Adendo 2026-10-06' sem mexer em requisitos nem Status; commit 35d19d0 só com a spec; script depois: nenhum achado; pytest 3 passed. Transcrição em curadoria-a5/transcricoes/P1-10-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'

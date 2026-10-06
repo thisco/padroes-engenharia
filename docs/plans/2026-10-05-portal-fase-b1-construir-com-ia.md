@@ -75,7 +75,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
 
   Consequência a registrar: a skill `curadoria-de-pratica` cita a revisão por conteúdo, e o
   ajuste de texto dela fica para a B.5, porque `skills/` é risco alto.
-- [ ] **T2 a T10 (P1-03 a P1-11).** Uma tarefa por prática, na ordem da tabela, com dois
+- [x] **T2 a T10 (P1-03 a P1-11).** Uma tarefa por prática, na ordem da tabela, com dois
   agentes:
   - o **autor**: rascunho, fontes, Exemplo executado e registro;
   - o **testador do prompt**: sessão nova, que recebe só o prompt.
@@ -117,5 +117,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   Achados para a T14: (1) o preparo da P1-07 usou o id `gemini-3`, que o guia não lista; o agente escolheu `gemini-3-flash-preview` e explicou; corrigir o Exemplo e o prompt se citarem `gemini-3` como id. (2) O passo 5 do prompt da P1-07 ("não altere nenhum outro arquivo") soa contraditório com o passo 2; não alterado, porque foi testado assim.
 - T7 (P1-08) e T8 (P1-09) fecharam: prompts P1-08-prompt-1 e P1-09-prompt-1 passaram em sessão nova, registrados em `verificacoes/P1-08.yaml` e `verificacoes/P1-09.yaml`; validar e gerar saem com 0. Repositórios de teste: `~/curadoria-a5/b1-p1-08-prompt` e `~/curadoria-a5/b1-p1-09-prompt`.
   Achados para a T14: (1) P1-08: o prompt manda manter "os campos de aprovação", mas a spec do preparo não tinha esses campos. (2) P1-09: o preparo não traz pytest e o prompt assume `python3 -m pytest`; o Como aplicar deve dizer como instalar as dependências antes.
+- T9 (P1-10) e T10 (P1-11) fecharam: prompts P1-10-prompt-1 e P1-11-prompt-1 passaram em sessão nova, registrados em `verificacoes/P1-10.yaml` e `verificacoes/P1-11.yaml`; validar e gerar saem com 0. P1-03 a P1-11 fechadas. Repositórios de teste: `~/curadoria-a5/b1-p1-10-prompt` e `~/curadoria-a5/b1-p1-11-prompt`.
+  Achados para a T14: (1) P1-10: o passo 4 do prompt espera "sem aviso" antes do commit do passo 5, mas o script compara o que está commitado; ajustar a ordem dos passos. (2) P1-10 e P1-11: o commit no repositório de teste saiu com trailer Co-Authored-By (padrão do harness, fora do portal); os prompts que mandam commitar podem pedir a mensagem sem trailer quando o projeto exigir.
 
 ## Conferência em lote: <data> — achados

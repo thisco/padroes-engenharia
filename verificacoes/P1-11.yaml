@@ -47,6 +47,13 @@ execucoes:
   resultado: passou
   evidencia: "Arquivamento: 1 spec(s) conferida(s), nenhum achado.; saída 0."
   data: '2026-10-05'
+- tipo: prompt
+  prompt: P1-11-prompt-1
+  harness: claude-code
+  ambiente: "sessão nova, cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-11-prompt, spec aprovada, sem ADR nem memória"
+  resultado: passou
+  evidencia: "script antes: dois avisos (Status aprovada; sem destilação); ADR docs/adr/0001-pedidos-nunca-sao-apagados.md (proposta), linha em PROJECT_MEMORY.md, Status arquivada; script depois: nenhum achado; pytest 4 passed; commit 4410222 com os 3 arquivos. Transcrição em curadoria-a5/transcricoes/P1-11-prompt-1.bruta.jsonl."
+  data: '2026-10-05'
 revisao_adversarial:
   revisor: pendente-conferencia-em-lote-t14
   data: '2026-10-05'
