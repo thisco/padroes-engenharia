@@ -104,7 +104,7 @@ próprio. As execuções acontecem em `$TESTE=~/curadoria-a5`, em cópias de `pr
   - checkpoint e revisão do Tier 2, via P1-06 e P1-09.
 
   Também `CHANGELOG.md` em `[Não publicado]`, suíte, ruff, validar e dois builds idênticos.
-- [ ] **T16.** Checkpoint do dono: status das 9 práticas, lacunas cobertas e custo da fatia em
+- [x] **T16.** Checkpoint do dono: status das 9 práticas, lacunas cobertas e custo da fatia em
   tokens, para decidir o ritmo da B.2.
 
 ## Evidências
@@ -268,3 +268,20 @@ Execuções reproduzidas e fontes abertas, por conteúdo:
 6. Dizer, em cada conteúdo com script no Exemplo, onde salvá-lo (`scripts/`).
 7. Guia 1: caminho real do gerador, comando do remoto e conteúdo mínimo dos arquivos-base.
 8. Levar à B.5: modo de prévia do `gerar.py`; ao scaffold 1.8.0: `python3 -m pip` e os scripts sem aviso do `ruff`.
+
+## Checkpoint: 2026-10-06
+
+**Aprovou:** o dono do portal. **Decisões:**
+
+1. **Status das 9 práticas:** mantidos como propostos. P1-03, P1-04, P1-06, P1-09 e P1-11 em
+   `adotar`; P1-05 e P1-07 em `experimentar`; P1-08 e P1-10 em `avaliar`. A P1-04 fica em
+   `adotar` porque o portal pratica o formato (ADR 0003), mesmo com fonte de fornecedor.
+2. **Os 4 prompts com defeito pequeno** (P1-07 passo 5; P1-08 "se existirem"; P1-10 ordem dos
+   passos 4 e 5; P1-10 e P1-11 commit sem trailer): corrigir e testar de novo em sessão nova.
+3. **Reexecuções na 1.7.1:** não repetir agora os prompts da receita do CI e do starter nem o
+   percurso do guia 1. Os registros dizem a versão de cada execução, e o que mudou na 1.7.1
+   (`--no-renames`, `python3 -I`, a tag do clone) foi provado pelos jobs reexecutados na T15.
+
+Lacunas do aceite cobertas: modelo de spec e de plano (P1-04, P1-05, P1-06), critério de tier
+(P1-01 e guia 1), checkpoint e revisão do Tier 2 (P1-06 e P1-09). Custo da fatia: cerca de 2,6
+milhões de tokens; conferência em lote (ADR 0005) mantida para a B.2.
