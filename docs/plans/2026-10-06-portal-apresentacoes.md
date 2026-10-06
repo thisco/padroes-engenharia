@@ -91,12 +91,38 @@ Reverter os commits na branch; nada foi publicado.
   `verificacoes/apresentacao-harness-sdd.yaml` com `R-VERIFICACAO (nenhum conteúdo com essa chave)`,
   porque o motor ainda não conhece o tipo apresentação; `revisao_adversarial` provisória, pendente da T3.
 
-## Revisão adversarial: <data> — achados
+## Revisão adversarial: 2026-10-06 — achados
 
 | R | veredito | evidência |
 |---|---|---|
+| R1 | atendido com ressalva (médio: slug symlink) | snapshot d7752da: `gerar.py` duas vezes, `diff -r` vazio; `cmp` igual nos 5 HTMLs, `tema.css`, `README.md` e `apresentacao.yml`; `roteiro.md` publicado é o gêmeo gerado; symlink de arquivo e de subpasta ficam fora; pasta-slug symlink copia diretório externo |
+| R2 | atendido com ressalva (médio: `url()` inline no HTML) | `public/vendor/reveal/` com CSS, JS e `LICENCAS.md`; os 6 `../../vendor/…` resolvem a partir de `apresentacoes/harness-sdd/`; sha256 dos dois arquivos bate com `LICENCAS.md`; cabeçalho e `vt="4.5.0"` confirmam a versão; `url(https:)` no `tema.css` e `<img src="https:">` reprovam; `style="…url(https:)"` e `<style>` inline passam |
+| R3 | atendido (spec desatualizada no "itálico") | Apresentações logo após Casos/Glossário no grupo Entender; sem `apresentacoes/` o item e a página somem (regra do delta v1.1, não itálico); página com título, público, data, "19 slides", deck, 4 companheiras e roteiro; todos os links existem em `public/` |
+| R4 | atendido | provado em cópias: sem yml, página inexistente, `../x.html`, `/etc/hosts`, sem `index.html`, roteiro inexistente → `R-APRESENTACAO`; campo extra na raiz e em `paginas[]` → `R-ESQUEMA`; referência inexistente → `R-REF-INEXISTENTE`; pasta vazia reprova |
+| R7 | atendido | `llms.txt` com `## Apresentações` (página e `roteiro.md`); `busca.json` tem só `apresentacoes.html` e `harness-sdd/roteiro.html`, nenhum slide |
 | R5 | atendido (médio: refs de "SÓ NO DECK" apontam fontes sem relação) | amostra de 15 afirmações confirmada contra componentes.yml, ferramentas, receita, práticas e tags v1.7.1 e v3.0.0; sem contradição com o portal |
 | R6 | atendido | sem 1.6.1, 2.0.0, "três montagens" ou "ponteiro de 4 linhas"; quatro pontos de montagem; 19 slides, paleta e desenho idênticos à origem; slide 14 com a revisão de segurança do 1.7.1 |
+
+### Revisão do motor
+
+Revisor independente, contexto novo, 2026-10-06, contra R1 a R4 e R7 no snapshot `d7752da`
+(`git archive` em pasta temporária; o worktree tem conteúdo de outras tarefas em andamento).
+Suíte: 619 passed; `validar.py` ok; build 2,55 s contra 2,82 s antes do motor (`315027c`).
+Regressão: `EXTERNOS` movido sem mudança de padrão; `catalogo.json` e `roteamento.json` iguais aos
+de antes; fora da navegação, só `llms.txt`, `llms-full.txt`, `busca.json` e o `LICENCAS.md` das
+fontes mudaram. Registro órfão `apresentacao-fantasma` reprova (`R-VERIFICACAO`). Nomes em PT-BR,
+sem menção a IA no código, commits sem trailer, testes gravam pastas reais e rodam `construir`.
+
+| Severidade | Arquivo:linha | Achado | Correção |
+|---|---|---|---|
+| médio | `portal/gerador/apresentacoes.py:59` | pasta-slug que é symlink para fora do repositório passa na validação e é copiada inteira (`apresentacoes/espelho -> ../fora/deck` publicou `segredo.txt`) | em `_pastas`, reprovar com `R-APRESENTACAO` a pasta com `is_symlink()` ou cujo `resolve()` saia de `apresentacoes/` |
+| médio | `portal/gerador/externos.py:11` | os padrões de `.html` não pegam `url(...)` em `style="…"` nem em `<style>` inline; deck com `background:url(https://…)` passou em `validar.py` e em `gerar.py` | acrescentar `url\(\s*["']?\s*(?:https?:)?//` aos padrões de `.html` |
+| médio | `portal/gerador/regras.py:823` | apresentação sem `verificacoes/apresentacao-<slug>.yaml` passa (rc 0): a reconciliação do R5 não é obrigatória | em `regra_verificacao`, exigir registro para cada pasta com `apresentacao.yml` |
+| baixo | `portal/gerador/saidas.py:914` | `roteiro.html` da pasta sobrescreve em silêncio a página gerada do roteiro (cópia roda depois de `escrever_paginas`); a exclusão usa `roteiro.md` fixo, não `a.roteiro` | excluir `pasta / a.roteiro` e reprovar arquivo que colida com `roteiro.html` ou `roteiro.md` gerados |
+| baixo | `portal/gerador/saidas.py:909` | a cópia publica arquivos não listados: `README.md` interno, `apresentacao.yml` e qualquer oculto (`.DS_Store`) | decidir e, se for o caso, pular `apresentacao.yml` e arquivos que começam com `.` |
+| baixo | `portal/gerador/apresentacoes.py:59` | nome da pasta não é validado como slug (`apresentacoes/Meu Deck` passa; URL com espaço) | exigir `^[a-z0-9][a-z0-9-]*$` no nome da pasta |
+| baixo | `docs/specs/2026-10-06-portal-apresentacoes-delta.md:40` | R3 diz "itálico sem link", mas o delta v1.1 aboliu o itálico; o motor some com o item (correto) | trocar o critério do R3 por "o item não aparece" |
+| info | `portal/gerador/externos.py:24` | `.js` do deck não é varrido (`fetch("https://…")` em script local passa), como no resto do portal | registrar como limite conhecido do R-EXTERNO |
 
 ### Conferência do conteúdo
 
