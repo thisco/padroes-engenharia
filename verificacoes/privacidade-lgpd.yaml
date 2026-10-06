@@ -1,0 +1,18 @@
+conteudo: privacidade-lgpd
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: dado pessoal é a informação relacionada a pessoa natural identificada ou identificável (art. 5º, I); o tratamento
+    inclui coleta, armazenamento e transmissão (art. 5º, X)
+  ref: lgpd
+  localizacao: art. 5º, I e X
+  resultado: confirmada
+- texto: a leitura de que gravar, registrar e enviar a um modelo são tratamento
+  ref: lgpd
+  localizacao: art. 5º, X
+  resultado: parcial
+  nota: Aplicação feita pelo portal e dita no texto como leitura do portal; a lei lista as operações, sem citar log nem modelo.
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote (T8)
+  data: '2026-10-06'
+  achados: []
