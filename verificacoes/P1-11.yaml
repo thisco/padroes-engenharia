@@ -1,0 +1,53 @@
+conteudo: P1-11
+verificado_em: '2026-10-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "no Tier 2, a Fase 8 muda o Status da spec para arquivada junto do changelog, antes do merge"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md na tag v3.0.0, Fase 8, 'Tiers 1 e 2', passo 1"
+  resultado: confirmada
+- texto: "destilação: o permanente é promovido ao steering ou a uma ADR; o aprendizado operacional novo vai para docs/PROJECT_MEMORY.md, se o repo o mantém; a spec fica arquivada como histórico do delta, e não como fonte de verdade viva"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, Fase 8, passo 4 ('Destilação (o passo que a maioria pula)')"
+  resultado: confirmada
+- texto: "'merge sem destilação' é erro comum: o projeto reaprende do zero na sessão seguinte"
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md, seção 'Erros comuns'"
+  resultado: confirmada
+- texto: "o steering do scaffold diz que o conhecimento permanente é promovido ao steering ou a uma ADR e que a spec antiga é histórico"
+  ref: sdd-scaffold-sdd-processo
+  localizacao: "seção 'Specs como deltas arquiváveis' (aberto na web no commit da tag v1.7.0)"
+  resultado: confirmada
+- texto: "o OpenSpec, ao arquivar, aplica as seções do delta às specs principais, que passam a ser a fonte de verdade"
+  ref: openspec-concepts
+  localizacao: "seção 'What Happens When You Archive': 'Each delta spec section (ADDED/MODIFIED/REMOVED) is applied to the corresponding main spec'"
+  resultado: parcial
+  nota: "A fonte confirma a aplicação do delta à spec principal; 'fonte de verdade' é a leitura do portal (a página fala em specs principais). Texto mantido como paráfrase."
+- texto: "spec-anchored: a spec persiste e é editada ao longo da vida da feature; spec-first: a spec é descartada e uma nova descreve a mudança seguinte"
+  ref: bockeler-sdd-3-tools
+  localizacao: "seção 'Three Levels of Spec-Driven Development' (spec-first, spec-anchored, spec-as-source)"
+  resultado: confirmada
+  nota: "Lido por resumo do WebFetch; paráfrase, sem citação literal."
+- texto: "o aviso de destilação (C12) do scaffold está previsto para a 1.8.0 e não existe na 1.7.0"
+  ref: sdd-scaffold-spec-verificavel
+  localizacao: "seção 'Não-objetivos', item 'Fica para a Release 2 (1.8.0)': 'C12, o aviso de destilação'"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P1-11/conferir-arquivamento.py
+  comando: "python3 scripts/conferir-arquivamento.py --base main, na branch feat/2026-10-07-cancelamento-de-pedido, com a spec em Status aprovada e sem ADR nem memória no diff"
+  ambiente: "cópia de projeto-teste-17 (sdd-scaffold 1.7.0) em ~/curadoria-a5/b1-p1-11; Python 3.14.8; macOS"
+  resultado: falhou-como-esperado
+  evidencia: "AVISO: ... Status é 'aprovada', não 'arquivada'. e AVISO: o diff não traz ADR, steering nem entrada em docs/PROJECT_MEMORY.md.; saída 0 (aviso não bloqueia)."
+  data: '2026-10-05'
+- tipo: arquivo
+  arquivo: exemplos/P1-11/conferir-arquivamento.py
+  comando: "o mesmo comando, depois de arquivar a spec e acrescentar a ADR 0001 e a entrada de memória (commit a11029f)"
+  ambiente: o mesmo da execução anterior
+  resultado: passou
+  evidencia: "Arquivamento: 1 spec(s) conferida(s), nenhum achado.; saída 0."
+  data: '2026-10-05'
+revisao_adversarial:
+  revisor: pendente-conferencia-em-lote-t14
+  data: '2026-10-05'
+  achados: []
