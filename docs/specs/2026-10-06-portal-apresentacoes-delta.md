@@ -2,9 +2,9 @@
 
 > **Tier:** 2 (acrescenta um item à navegação do §4.2, um tipo de conteúdo estático e uma saída
 > do motor; `portal/` é risco alto).
-> **Status:** em revisão
-> **Aprovado por:**
-> **Aprovado em:**
+> **Status:** aprovada
+> **Aprovado por:** thiago
+> **Aprovado em:** 2026-10-06
 > **Data:** 2026-10-06
 > **Altera:** §4.2 (navegação), §5 (repositório), §7.2 (saídas para pessoas) e §11 (curadoria)
 > da spec v1.0 na redação do delta v1.1. O que este delta não menciona continua como está.
