@@ -1,0 +1,65 @@
+conteudo: UX-02
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: página nova exige protótipo validado por uma pessoa antes da implementação, e revisar protótipo custa minutos enquanto revisar a página implementada custa uma rodada inteira
+  ref: estados-de-interface
+  localizacao: seção 'Protótipo antes do código'
+  resultado: confirmada
+- texto: o protótipo é o artefato de aprovação de design
+  ref: estados-de-interface
+  localizacao: seção 'Protótipo antes do código'
+  resultado: confirmada
+- texto: o diretório dos protótipos e o design system são parâmetros do steering do projeto, e sem ele se pergunta em vez de inventar
+  ref: estados-de-interface
+  localizacao: seção 'Parâmetros deste projeto'
+  resultado: confirmada
+- texto: a regra dos quatro estados vale para cada tela
+  ref: estados-de-interface
+  localizacao: seção 'A regra'
+  resultado: confirmada
+- texto: o estado vazio é a primeira tela que muita gente vê, convida a agir, e a tela que só diz 'nenhum resultado' desperdiça o momento de ensinar o sistema
+  ref: estados-de-interface
+  localizacao: seção 'Estado vazio não é estado de erro'
+  resultado: confirmada
+- texto: os estados vazio, erro e carregando costumam ser escritos depois, sob pressão, e por isso ficam ruins; vazio tratado como erro faz a pessoa nova achar que quebrou
+  ref: estados-de-interface
+  localizacao: abertura e tabela 'Erros comuns'
+  resultado: confirmada
+- texto: o estado vazio serve para dar pistas de aprendizado e caminhos diretos para as tarefas principais
+  ref: nngroup-empty-states
+  localizacao: diretrizes 'Provide Learning Cues' e 'Provide Direct Pathways for Key Tasks'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/UX-02/verificar-prototipos.py
+  comando: python3 scripts/verificar-prototipos.py (spec com duas telas; lista-chamados.md sem o estado vazio; detalhe-chamado sem protótipo)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: "'docs/prototipos/lista-chamados.md: estado vazio ausente ou sem texto', 'a tela detalhe-chamado não tem protótipo' e 'UX-02: tela da spec sem protótipo completo (acima).', saída 1. Também saída 1 sem nenhuma spec com a seção Telas."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/UX-02/prototipo-lista-chamados.md
+  comando: python3 scripts/verificar-prototipos.py (com este protótipo em docs/prototipos/lista-chamados.md e o HTML do detalhe)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "'UX-02: 2 telas da spec, cada uma com protótipo dos quatro estados.', saída 0."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/UX-02/prototipo-detalhe-chamado.html
+  comando: python3 scripts/verificar-prototipos.py (com este protótipo em docs/prototipos/detalhe-chamado.html e o Markdown da lista)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "saída 0 junto com o protótipo da lista."
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/UX-02/spec-chamados.md
+  comando: python3 scripts/verificar-prototipos.py (spec copiada para docs/specs/2026-10-06-chamados.md)
+  ambiente: cópia de projeto-teste-17 em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: "as duas telas da seção Telas foram lidas e exigidas; sem a spec, saída 1 ('nenhuma spec com telas')."
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: pendente (conferência em lote, ADR 0005)
+  data: '2026-10-06'
+  achados: []

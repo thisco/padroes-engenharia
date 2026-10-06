@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Protótipo: detalhe-chamado</title></head>
+<body>
+<h1>Protótipo: detalhe-chamado</h1>
+<section data-estado="carregando"><p>Carregando o chamado...</p></section>
+<section data-estado="vazio">
+  <h2>Este chamado ainda não tem respostas</h2>
+  <p>O time responde em até um dia útil. Você pode acrescentar detalhes abaixo.</p>
+  <button>Acrescentar detalhe</button>
+</section>
+<section data-estado="erro">
+  <h2>Não foi possível abrir o chamado</h2>
+  <p>O chamado pode ter sido removido ou o serviço não respondeu. Volte à lista ou tente de novo.</p>
+  <button>Tentar de novo</button>
+</section>
+<section data-estado="sucesso"><p>Histórico do chamado e campo de resposta.</p></section>
+</body>
+</html>
