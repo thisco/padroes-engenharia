@@ -1,0 +1,137 @@
+# 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. O prompt da seção Com o agente ainda não foi testado em sessão nova; revisão adversarial provisória até a conferência em lote.
+conteudo: receita-ligar-aplicacao-ao-gateway
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a chave virtual dá à aplicação uma identidade no gateway, com modelos e orçamento próprios, e
+    o gasto é acompanhado por chave
+  ref: litellm-virtual-keys
+  localizacao: seções 'Spend Tracking' (key via /key/info), 'Upperbound /key/generate params' e 'Model
+    Access Control'
+  resultado: confirmada
+  nota: Página aberta de novo em 2026-10-06; a restrição de modelos por chave é a da seção citada na P2-01
+    e foi exercitada na execução (403 fora da lista).
+- texto: o seed-demo.sh cria dois times e duas chaves virtuais; o modelo simulado responde sem provedor;
+    os modelos de provedor pedem chave de provedor no .env; UI em /ui com login admin e LITELLM_MASTER_KEY
+  ref: gateway-poc-readme
+  localizacao: README.md, 'Como subir'; poc/README.md, 'Subir o ambiente' e 'Catálogo de modelos (3 camadas)'
+  resultado: confirmada
+- texto: o compose do starter fixa a porta 4000 e os nomes de contêiner poc-gateway, poc-db e poc-ollama;
+    o seed-demo.sh chama sempre localhost:4000; o config.yaml tem a lista guardrails, um dos itens logging_only;
+    as chaves do seed têm orçamento do time
+  ref: gateway-poc-compose
+  localizacao: poc/docker-compose.yml; poc/gateway/config.yaml, bloco guardrails; poc/seed-demo.sh (criação
+    dos times com max_budget e das chaves sem max_budget)
+  resultado: confirmada
+- texto: os contêineres do Presidio ficam atrás do profile guardrails e pedem mais memória; o README recomenda
+    8 GiB e descreve o OOM do gateway
+  ref: gateway-poc-readme
+  localizacao: poc/README.md, 'Profiles de avaliação' e 'Memória do Docker'
+  resultado: confirmada
+- texto: derrubar o ambiente do starter apaga os volumes com docker compose down -v
+  ref: gateway-poc-readme
+  localizacao: poc/README.md, 'Encerrar'
+  resultado: confirmada
+- texto: o gateway é compatível com o formato da API da OpenAI e um SDK da OpenAI funciona apontando para
+    ele; o orçamento só é aplicado com banco
+  ref: litellm-proxy-docker
+  localizacao: seções 'Call the gateway from your app' e 'Budgets are not enforced without a database'
+  resultado: confirmada
+- texto: a chave tem max_budget e budget_duration; o proxy só aplica o teto com banco; o código HTTP da
+    recusa muda com a versão
+  ref: litellm-budgets
+  localizacao: seções 'Add budgets to keys', 'Add budget duration to keys' e 'Budgets require a database'
+  resultado: confirmada
+  nota: A página mostra a recusa como Authentication Error ExceededTokenBudget; na execução com o LiteLLM
+    1.100.0 foi 429 budget_exceeded, e na v1.104.0 da P2-06 foi 422.
+- texto: o guardrail de PII é uma classe CustomGuardrail cujo gancho async_pre_call_hook roda antes da
+    chamada e pode alterar as mensagens
+  ref: litellm-custom-guardrail
+  localizacao: 'seções ''1. Write a CustomGuardrail Class'', ''2. Pass your custom guardrail class in
+    LiteLLM config.yaml'' e ''Advanced: Individual Event Hooks'''
+  resultado: confirmada
+- texto: o guardrail é registrado no config.yaml com mode pre_call e default_on true
+  ref: litellm-guardrails
+  localizacao: seções '1. Define guardrails on your LiteLLM config.yaml', 'Supported values for mode (Event
+    Hooks)' e 'Default On Guardrails'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P2-01/emitir-chave.sh
+  comando: bash emitir-chave.sh minha-app-hml simulado 5 (com LITELLM_MASTER_KEY do .env, AI_GATEWAY_URL=http://localhost:4010)
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: saída 0 e uma chave sk-...; repetir um alias existente fez o curl -f falhar sem mensagem,
+    e a chamada direta mostrou o erro 400 "Key with alias 'app-teste-hml' already exists".
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-01/cliente.py
+  comando: python cliente.py (com AI_GATEWAY_URL e AI_GATEWAY_KEY da chave emitida)
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: Resposta simulada pelo gateway de IA da PoC — nenhum modelo real foi chamado. Esta chamada
+    foi autenticada, autorizada, contabilizada e registrada para auditoria.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/mascara_pii.py
+  comando: copiado para poc/, registrado no config.yaml (default_on true) e montado por docker-compose.override.yml;
+    docker compose --profile guardrails up -d --force-recreate gateway
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: 'guardrails/list: mascara-pii-cpf (default_on True), mascara-pii e mascara-pii-log (False);
+    com o Presidio do profile no ar o veredito apareceu no log. Sem o profile, o log registrou LoggingWorker
+    error: Presidio PII analysis failed: ClientConnectorDNSError e nenhum veredito (observado antes de
+    subir o profile).'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/enviar-cpf.py
+  comando: python enviar-cpf.py (chave minha-app-hml, orçamento 5)
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: a chamada retornou a resposta simulada; o veredito do log registrou a mensagem enviada ao
+    modelo.
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-04/verificar-mascara.sh
+  comando: sleep 3; bash verificar-mascara.sh (em poc/, COMPOSE_PROJECT_NAME=gateway-poc-teste)
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: 'saída 0: "P2-04 VEREDITO: CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum" e "P2-04:
+    nenhum CPF ou e-mail detectado nas mensagens enviadas ao modelo."'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-06/gastar.py
+  comando: python gastar.py (chave minha-app-hml, orçamento 5, depois de 2 chamadas dos passos 3 e 5)
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: 'chamadas 1 a 7 ok; chamada 8: RateLimitError 429 budget_exceeded, Current cost: 5.4000000000001815,
+    Max budget: 5.0. Cada chamada ao simulado custou 0,6. Com o Presidio fora do ar, em execução anterior,
+    o orçamento da chave também cortou, mas o relatório ficou em 0.0000.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P2-06/relatorio-gasto.sh
+  comando: bash relatorio-gasto.sh "$AI_GATEWAY_KEY" logo após a recusa e de novo após 12 s
+  ambiente: LiteLLM 1.100.0 (main-stable, cache local), postgres:16-alpine, copia do gateway-poc v0.1.0
+    com container_name removido, porta 4010, docker-compose.override.yml e item mascara-pii-cpf no config.yaml,
+    profile guardrails (Presidio) no ar, openai 3.24.0 em Python 3.14, macOS; COMPOSE_PROJECT_NAME=gateway-poc-teste
+  resultado: passou
+  evidencia: '"minha-app-hml: gasto 1.8000 de 5.0" e, após 12 s, "minha-app-hml: gasto 5.4000 de 5.0".
+    Também: modelo fora da lista (fronteira-sonnet) com a chave voltou HTTP 403, e verificar-orcamento.sh
+    listou chave-perfil-restrito e chave-equipe-dev (chaves do seed, orçamento no time) e saiu 1.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisoria-ate-a-conferencia-em-lote-T9
+  data: '2026-10-06'
+  achados: []

@@ -5,7 +5,7 @@ status: experimentar
 versao_minima: "1.104.0"
 dono: engenharia
 praticas: [P2-01]
-receitas: []
+receitas: [ligar-aplicacao-ao-gateway]
 como_instalar: |
   Suba o proxy com Docker e um `config.yaml` montado no container, como no `docker-compose.yml` e
   no `config.yaml` do Exemplo da P2-01 [ref:litellm-proxy-docker]. As chaves virtuais pedem um
