@@ -93,6 +93,18 @@ execucoes:
   evidencia: 'verificador antes: "catalogo-modelos.yml: [Errno 2] No such file or directory" e "P2-03: catálogo incompleto ou vencido (acima).", saída 1; o agente criou as 2 entradas só com os dados informados (na do Bedrock, sem system_card, certificacoes e vedacao_*); depois, com --hoje 2026-10-06, "P2-03: catálogo completo e em dia.", saída 0; commit df87964 só com catalogo-modelos.yml. O agente usou "Claude Fable 5" como valor de modelo, que o prompt não informava literal. Transcrição em curadoria-a5/transcricoes/P2-03-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: Prompt P2-03, entrada {modelo} (trazido do plano)
+    problema: '[baixo] o campo modelo não vem literal nos placeholders das entradas 1 e 2, e o agente o deduziu do pedido ("Claude Fable 5").'
+    tratamento: 'Informar o valor de modelo na entrada 1 e na 2 ("modelo: {modelo}").'
+  - afirmacao: Verificador (exemplos/P2-03/verificar-catalogo.py)
+    problema: '[baixo] aceita verificado_em no futuro (2030-01-01), e vedacao_origem: clausula-contratual sem nenhuma prova da cláusula (o texto já admite o segundo). Sem --hoje usa a data da máquina. Reproduzido em t9-p2-03.'
+    tratamento: Rejeitar data futura; manter o limite já escrito para a cláusula.
+  - afirmacao: 'Exemplo: "Claude Fable 5" e 30 dias de retenção como Covered Model [ref:anthropic-api-data-retention]'
+    problema: '[baixo] fonte aberta e confirmada: a página lista Claude Fable 5 entre os Covered Models, exige 30 dias, não os oferece sob ZDR salvo autorização, e a Anthropic é a operadora na API direta (Bedrock e Google Cloud: a nuvem). O nome de modelo aparece no corpo como dado de catálogo, não como harness.'
+    tratamento: Nenhum; manter o nome só como dado do catálogo.
+  - afirmacao: Execução registrada (df87964)
+    problema: '[baixo] conferida: commit só com catalogo-modelos.yml; os 188 dias e as oito linhas do "antes" reproduzidos (2026-04-01 até 2026-10-06).'
+    tratamento: Nenhum.

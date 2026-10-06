@@ -66,6 +66,24 @@ execucoes:
   evidencia: 'antes: allow com Write(**), caminhos de governança fora de ask e deny, hook sem exit 2, identidade ausente, "P3-04: política de permissões ou identidade incompleta (acima).", saída 1; o agente acrescentou identidade_propria e reescreveu a política com o allow, ask e deny pedidos e o hook terminando em exit 2; depois "P3-04: somente-leitura por padrão, governança em ask ou deny e identidade própria.", saída 0; commit com os dois arquivos, sem trailer. Transcrição em curadoria-a5/transcricoes/P3-04-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Verificador: "política de permissões ... completa" (exemplos/P3-04/verificar-permissoes.py)'
+    problema: '[médio] prova a presença de regras, não a semântica do harness. Reproduzido: passa com Bash(python3:*) em allow (execução livre de escrita), com o hook "echo "exit 2"" (a checagem é a substring "exit 2") e sem nenhum deny do próprio verificador. Os limites do Como verificar dizem que ele "lê arquivos", mas não citam esses escapes.'
+    tratamento: 'No Como verificar, listar os escapes: allow de Bash com curinga, hook que só contém "exit 2" no texto, e padrão de regra que o harness não interpreta como o fnmatch do script. Exigir que o comando do hook comece pelo script de governança e que allow não tenha Bash.'
+  - afirmacao: '"escrita por comando de shell passa por regras ask que cobrem o padrão direto (redirecionamento, cp, mv, sed -i)" (P3-04.md, Como aplicar 5) x exemplos/P3-04/permissoes-agente.json'
+    problema: '[médio] a escrita por terminal fora de Edit/Write é só mencionada: a política do Exemplo traz ask apenas para sed -i e tee, sem redirecionamento, cp nem mv, e o verificador não confere nenhum Bash em ask. O texto descreve o template do scaffold, e o Exemplo é um recorte menor.'
+    tratamento: Acrescentar ao ask do Exemplo Bash(cp:*), Bash(mv:*) e o redirecionamento, ou dizer que o recorte não os traz e que o verificador não os exige.
+  - afirmacao: deny com Edit(scripts/verificar_*.py) (exemplos/P3-04/permissoes-agente.json)
+    problema: '[baixo] o padrão verificar_*.py não casa com scripts/verificar-permissoes.py (hífen), o verificador do próprio Exemplo; fnmatch falso, reproduzido. Também .github/** em Exemplo cuja CI é GitLab.'
+    tratamento: Usar scripts/verificar-*.py e .gitlab-ci.yml, ou citar o hífen e o sublinhado.
+  - afirmacao: '"Antes": "10 ao todo" (P3-04.md, Antes e depois; verificacoes/P3-04.yaml, evidência)'
+    problema: '[baixo] com cinco caminhos mais a própria política e Edit e Write, são 12 linhas, e foi o que a reprodução deu (t9-p3-04); a evidência diz "dez linhas ... cinco caminhos mais a própria política".'
+    tratamento: Corrigir o número (12) ou dizer que a política já negava a si mesma.
+  - afirmacao: 'Prompt: "único shell" e escrita por ferramenta (trazido do plano)'
+    problema: '[baixo] o agente editou o JSON pela ferramenta de escrita do harness, não por shell; o prompt supõe shell.'
+    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+  - afirmacao: Fonte sdd-scaffold-readme (README da tag, commit cd121cd)
+    problema: '[baixo] confirmada: o hook só enxerga as ferramentas de edição, a escrita por shell passa por ask direto, o indireto não é coberto, ask sem interação não tem quem responda, e os controles protegem contra descuido, não má-fé (CODEOWNERS, proteção de branch, política da organização). O texto cobre isso. Status adotar com Exemplo executado e força orienta com mecanismo null coerentes.'
+    tratamento: Nenhum.

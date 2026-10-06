@@ -55,6 +55,15 @@ execucoes:
   evidencia: 'verificador antes: "docs/steering/agente.md: [Errno 2]..." e "P3-01: classificação incompleta ou incoerente (acima).", saída 1; o agente criou agente.md só com os dados informados e o parágrafo; depois "P3-01: agência classificada, com os controles do escopo.", saída 0; commit 30a9904 só com o arquivo, sem trailer. Rodou cada comando em chamada separada, sem efeito no resultado. Transcrição em curadoria-a5/transcricoes/P3-01-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: Prompt, "Use um único shell" (P3-01.md:145) (trazido do plano)
+    problema: '[baixo] o harness não persiste shell e rodou cada comando em chamada separada; sem efeito no resultado.'
+    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+  - afirmacao: Verificador (exemplos/P3-01/verificar-agencia.py)
+    problema: '[baixo] aceita identidade_propria igual a classificado_por (só a P3-04 confere), aceita aprovacao_humana_para: sim, e "Nenhuma." com ponto não conta como vazio no escopo 1. Reproduzido em t9-p3-01.'
+    tratamento: Dizer no Como verificar que a identidade distinta de quem classificou é conferida pela P3-04.
+  - afirmacao: Fonte aws-agentic-scoping-matrix (https://aws.amazon.com/ai/security/agentic-ai-scoping-matrix/)
+    problema: '[baixo] confirmada: quatro escopos (sem agência, prescrita, supervisionada, plena) e, nos baixos, autenticação básica e contas de serviço somente leitura; nos altos, delegação sofisticada, verificação contínua e atestação. Os campos do verificador são regra do portal, e o texto o diz.'
+    tratamento: Nenhum.

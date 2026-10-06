@@ -59,6 +59,18 @@ execucoes:
   evidencia: 'antes: quatro linhas "falta a declaração de término|escopo|parada|autonomia" e "P3-03: declarações ausentes ou incompletas (acima).", saída 1; o agente acrescentou as cinco seções com os itens informados, bloco e parágrafo intactos; depois "P3-03: as quatro declarações estão presentes.", saída 0; commit só com docs/steering/agente.md, sem trailer; árvore limpa. Transcrição em curadoria-a5/transcricoes/P3-03-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Prompt: "Use um único shell" (P3-03.md:124) (trazido do plano)'
+    problema: '[baixo] o harness não persiste shell.'
+    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+  - afirmacao: Verificador (exemplos/P3-03/verificar-instrucoes.py)
+    problema: '[baixo] prova só presença: "- ok" como linha de chegada e "nada em produção" como parada passam. O texto já diz que ele prova só a presença.'
+    tratamento: Nenhum além de manter o aviso.
+  - afirmacao: Fonte anthropic-effective-harnesses (https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)
+    problema: '[baixo] confirmada: "a later agent instance would look around, see that progress had been made, and declare the job done" e o fim de sessão com commit e nota de andamento.'
+    tratamento: Nenhum.
+  - afirmacao: Execução registrada (68a91af)
+    problema: '[baixo] conferida: commit só com docs/steering/agente.md (28 linhas); antes (4 ausências) e depois reproduzidos em t9-p3-03.'
+    tratamento: Nenhum.

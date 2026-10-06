@@ -62,6 +62,18 @@ execucoes:
   evidencia: 'verificador antes: "docs/steering/ia.md: [Errno 2] No such file or directory" e "P2-02: classificação incompleta ou incoerente (acima).", saída 1; o agente leu a spec e gravou alto-risco, dominio_de_impacto financas, categoria alto, revisao_profissional sim, revisor e aviso_texto como pedido, classificado_por Ana Souza, classificado_em 2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md. Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: 'provisória, pendente da conferência em lote (T9, ADR 0005)'
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Verificador: "classificação completa" (exemplos/P2-02/verificar-classificacao.py)'
+    problema: '[baixo] aceita escopo alto-risco com categoria_eu_ai_act minimo ou limitado, aceita data impossível (2026-13-45) e qualquer valor em dominio_de_impacto (o Exemplo usa decisao-financeira, o teste do prompt gravou financas). Reproduzido em t9-p2-02.'
+    tratamento: Documentar no Como verificar que não confere a coerência escopo x categoria, o calendário nem o vocabulário do domínio; ou listar os valores aceitos em dominio_de_impacto.
+  - afirmacao: 'Prompt, passo 3: "direito, saúde, seguro, finanças, emprego, moradia ou avaliação acadêmica" (P2-02.md, prompt)'
+    problema: '[baixo] a lista do prompt tem sete itens e a política (e o Como aplicar) tem seis domínios; o prompt não dá o valor de dominio_de_impacto, e o agente o deduziu.'
+    tratamento: Alinhar a lista do prompt aos seis domínios e pedir dominio_de_impacto com um valor livre explícito ("em minúsculas, com hífens").
+  - afirmacao: Fonte anthropic-usage-policy (https://www.anthropic.com/legal/aup)
+    problema: '[baixo] confirmada: seis domínios de alto risco, revisão por profissional qualificado e aviso "no mínimo no início de cada sessão". A fonte aplica o aviso a ofertas diretas a pessoas ou consumidores; o texto o diz sem esse recorte.'
+    tratamento: Acrescentar "quando a oferta é direta a pessoas ou consumidores" ao requisito de aviso.
+  - afirmacao: Execução registrada (e4ef178)
+    problema: '[baixo] conferida: commit só com docs/steering/ia.md, campos e verificador 0 como registrado; antes/depois do verificador reproduzidos em t9-p2-02.'
+    tratamento: Nenhum.

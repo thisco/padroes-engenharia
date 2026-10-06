@@ -54,6 +54,21 @@ execucoes:
   evidencia: 'antes: AVISO de superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py) sem threat-model; o agente reescreveu a seção com abertura, as 5 perguntas do scaffold e as 4 do CISO; depois "Verificação de PR: 5 arquivo(s), nenhum achado.", saída 0; commit f3e7b48 só com a spec, sem trailer; nenhum não sei. O agente redigiu o enunciado das 4 perguntas do CISO a partir das respostas, e removeu o comentário HTML da seção para pôr o parágrafo logo abaixo do título. Transcrição em curadoria-a5/transcricoes/P3-02-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Exemplo "depois": "Verificação de PR: 5 arquivo(s), nenhum achado." (P3-02.md, Antes e depois)'
+    problema: '[médio] os 5 arquivos incluem um plano em docs/plans/, que nem o Exemplo nem o Como aplicar trazem. Reproduzido em t9-p3-02 com o verificar_pr.py hospedado: spec + webhook + teste dão ainda o AVISO "altera código e não traz plano em docs/plans/". O leitor não chega ao "nenhum achado" sem inventar o plano.'
+    tratamento: No Exemplo, listar os cinco arquivos do PR (plano, spec, __init__, webhook e teste) ou dizer que o aviso de plano é separado e esperado.
+  - afirmacao: 'Prompt: não traz o enunciado das 4 perguntas do CISO (trazido do plano)'
+    problema: '[baixo] o agente as redigiu a partir das respostas fornecidas; o enunciado está no corpo da prática, não no prompt.'
+    tratamento: Pôr o enunciado das quatro perguntas (da fonte, até 30 palavras por citação) no prompt ou no preparo.
+  - afirmacao: 'Prompt: o agente removeu o comentário HTML de instrução (trazido do plano)'
+    problema: '[baixo] o comentário não conta como parágrafo e o verificador exige texto antes do primeiro subtítulo; já documentado no Como aplicar item 6.'
+    tratamento: Nenhum.
+  - afirmacao: '"Único shell" (P3-02.md:119) e verificar_pr.py do preparo'
+    problema: '[baixo] o verificar_pr.py de projeto-teste-17 difere do hospedado 1.7.1 (falta --no-renames na linha 401; sha256 distinto). Quem usa a cópia do scaffold antigo recebe um script diferente do citado.'
+    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05). Dizer para baixar o script hospedado, e não usar a cópia do projeto.
+  - afirmacao: Fonte anthropic-ciso-agentic-ai (https://claude.com/blog/ciso-guide-to-agentic-ai)
+    problema: '[baixo] confirmada: as quatro perguntas (conteúdo não confiável, ações e em nome de quem, raio de dano = alcance x gravidade, observabilidade). Status adotar, força avisa e mecanismo hospedado (mecanismos/sdd-scaffold/verificar_pr.py, 1.7.1) coerentes; execução do antes (AVISO) reproduzida.'
+    tratamento: Nenhum.

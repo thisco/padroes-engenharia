@@ -52,6 +52,24 @@ execucoes:
   evidencia: "1ª rodada: saída 1 (docs-internos com command diferente, busca-web fora da allowlist); busca-web removido e docs-internos restaurado; 2ª rodada: saída 0 (P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.); commit ae59e5f só com mcp.json, sem trailer"
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Como aplicar 3 e Prompt: --allowlist central/mcp-allowlist.yml; "uma cópia da allowlist central" (P3-06.md:117-125)'
+    problema: '[médio] a allowlist usada no CI é uma cópia dentro do mesmo repositório do projeto; quem edita o mcp.json edita a cópia e se autoaprova. O texto diz que a lista mora num repositório da engenharia e cita "política gerida pela organização", mas não diz que a cópia local é autoaprovável nem pede CODEOWNERS ou obtenção por versão fixada fora do alcance do projeto (a P3-04 diz).'
+    tratamento: 'Dizer que a cópia local não é fonte de confiança: o CI baixa a lista do repositório central numa versão fixada com hash, ou o arquivo fica sob CODEOWNERS da engenharia e fora do alcance de quem edita o projeto.'
+  - afirmacao: Verificador "todos na allowlist e iguais ao aprovado" (exemplos/P3-06/verificar-allowlist.py)
+    problema: '[médio] escapes semânticos reproduzidos em t9-p3-06: env, cwd e headers extras no servidor passam (só command, args e url são comparados); config com chave "servers" ou vazia sai 0 com "0 servidores ... todos na allowlist" (falha aberta); python3 -m servidor_docs resolve o módulo a partir do diretório do projeto, que controla o código; YAML malformado cai em traceback. O texto afirma que ele não prova segurança, mas não cita esses casos.'
+    tratamento: Comparar também env, cwd, headers e type, reprovar config sem mcpServers ou vazia quando se espera servidor, tratar erro de leitura com saída 1, e listar o resto como limite.
+  - afirmacao: 'Exemplo "antes": "npx", ["-y", "servidor-docs-comunitario"] (P3-06.md, Antes e depois)'
+    problema: '[médio] npx -y executa pacote de terceiro sem confirmação; o texto o mostra como o servidor reprovado, mas não avisa que entrada de allowlist com npx -y e sem versão fixada aprova o que o registro servir no dia (o limite "versão nova do mesmo pacote passa" cobre só em parte).'
+    tratamento: Dizer que entrada com npx -y exige versão e hash fixados, e preferir servidor próprio.
+  - afirmacao: 'Prompt: "ao projeto {nome do projeto}" (P3-06.md:119) (trazido do plano)'
+    problema: '[baixo] o preparo não tem pasta com o nome do projeto (o agente trabalhou na raiz); o prompt cita "projeto-teste-17" no teste.'
+    tratamento: Trocar por "neste repositório" e corrigir na T10; "único shell" também não é literal.
+  - afirmacao: Fonte mcp-spec (https://modelcontextprotocol.io/specification/latest)
+    problema: '[baixo] confirmada: ferramentas representam execução arbitrária de código, anotações não confiáveis salvo servidor confiável, consentimento explícito antes de invocar ferramenta, o protocolo não impõe os princípios. A URL é "latest" e a página cita a revisão 2026-07-28, então o conteúdo muda.'
+    tratamento: Fixar a URL da revisão (/specification/2026-07-28) na referência.
+  - afirmacao: Execução registrada (ae59e5f)
+    problema: '[baixo] conferida: commit só com mcp.json (2 inserções, 5 remoções); antes (3 linhas) e depois reproduzidos em t9-p3-06.'
+    tratamento: Nenhum.

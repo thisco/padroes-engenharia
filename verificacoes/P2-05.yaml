@@ -119,6 +119,24 @@ execucoes:
     ele; down -v; árvore limpa. Transcrição em curadoria-a5/transcricoes/P2-05-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'gitlab-ci.yml: job evals-modelo-real com EVAL_MODELO: assistente'
+    problema: '[médio] o alias "assistente" não existe em nenhum config do Exemplo; quem roda o job real precisa inventar a rota do gateway. O texto admite que o job não foi executado.'
+    tratamento: Dizer que o gateway real precisa expor um alias com esse nome (ou a variável EVAL_MODELO aponta o alias) e dar a linha de config de exemplo.
+  - afirmacao: 'Suíte: um único teste agrega os 5 casos (trazido do plano) (exemplos/P2-05/test_evals.py)'
+    problema: '[baixo] um caso reprovado não aparece como teste próprio no relatório do pytest; só o print por caso mostra.'
+    tratamento: Usar pytest.mark.parametrize por caso e um teste de limiar, ou registrar a limitação no Como verificar.
+  - afirmacao: 'Mock mode: eval contra mock_response'
+    problema: '[baixo] no modo mock o resultado é decidido pela gravação do config.yaml, então o job de PR confere o encanamento e não o prompt; o texto diz ("não o modelo"). Reprodução local: servidor falso que serve os mock_response dos dois configs deu 5/5 (1.00) e 3/5 (0.60, AssertionError) como registrado, mas o gitlab-ci-local e o Docker não foram reexecutados.'
+    tratamento: Nenhum além de manter o aviso; a execução em Docker fica coberta pelo registro.
+  - afirmacao: Fonte anthropic-develop-tests (https://platform.claude.com/docs/en/test-and-evaluate/develop-tests)
+    problema: '[baixo] confirmada: critérios específicos e mensuráveis, casos que espelham a tarefa com bordas, correção automatizada, "volume over quality".'
+    tratamento: Nenhum.
+  - afirmacao: Execução registrada (775678e, EVALS.md)
+    problema: '[baixo] conferida: tabela 5/5 e 3/5, reprovados classifica-bug e resumo-em-json, igual aos configs.'
+    tratamento: Nenhum.
+  - afirmacao: Comando npx --yes gitlab-ci-local@4.76.0
+    problema: '[baixo] executa pacote de terceiro da internet; a versão está fixada, mas não o hash.'
+    tratamento: Dizer que a versão fixada reduz o risco e recomendar o espelho interno ou instalar uma vez com verificação.

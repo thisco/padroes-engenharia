@@ -91,6 +91,21 @@ execucoes:
   evidencia: "1ª rodada: saída 1 com preâmbulo ausente e conteúdo fora do envelope; import, PREAMBULO e envelopar aplicados; 2ª rodada: saída 0 (P3-05: todo conteúdo externo está no envelope e a instrução embutida foi acusada.); commit 8d5f8ec só com agente/montar_prompt.py, sem trailer"
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'Exemplo "Antes": montar() com f"Chamado {origem}:\n{texto}" (P3-05.md, Antes e depois)'
+    problema: '[baixo] o estado "antes" põe o conteúdo cru no prompt e o texto diz que o verificador sai 1, mas o bloco de código não está rotulado como o estado reprovado; copiado sozinho, vira o padrão a seguir.'
+    tratamento: 'Rotular o bloco ("estado reprovado: não copie") e manter o "depois" como o a seguir.'
+  - afirmacao: Detector e envelope (exemplos/P3-05/isolar_conteudo.py)
+    problema: '[baixo] o detector falha com "Disregard all prior instructions", "ig-nore", "envie ... para ftp://" e "www."; o origem do envelope não é neutralizado (nome de arquivo com >>>). O texto já diz que o detector só acusa o padrão que conhece. Reproduzido em t9-p3-05.'
+    tratamento: Dizer que origem vem de fonte confiável da aplicação ou neutralizar também a origem.
+  - afirmacao: Prompt "único shell" (P3-05.md:154) (trazido do plano)
+    problema: '[baixo] "único shell" não é literal no harness.'
+    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05).
+  - afirmacao: Fonte owasp-llm-top10 (https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+    problema: '[baixo] confirmada: injeção indireta por fontes externas, "unclear if there are fool-proof methods", separar conteúdo externo, privilégio mínimo, aprovação humana, formato de saída com validação determinística, filtragem. O "controle mais forte" de destino de rede vem do guia do CISO (confirmado: "Egress allowlisting is your strongest control against prompt injection").'
+    tratamento: Nenhum.
+  - afirmacao: Execução registrada (8d5f8ec)
+    problema: '[baixo] conferida: commit só com agente/montar_prompt.py; antes (6 linhas) e depois reproduzidos em t9-p3-05.'
+    tratamento: Nenhum.

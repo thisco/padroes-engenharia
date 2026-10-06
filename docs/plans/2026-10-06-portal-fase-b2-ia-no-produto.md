@@ -86,7 +86,7 @@ commitar, pede a mensagem sem trailer.
 - [ ] **T8 (caso "Avaliação do gateway de IA").** Pelo schema de caso: `origem`, `periodo`,
   `numeros` com `fonte` e `data`. Os números vêm de `matriz-consolidada.md` (45 casos, 8
   cenários). Depende da decisão 2.
-- [ ] **T9 (conferência em lote, ADR 0005).** Como na B.1: executabilidade por amostragem, uma
+- [x] **T9 (conferência em lote, ADR 0005).** Como na B.1: executabilidade por amostragem, uma
   fonte por conteúdo, coerência de status e força.
 - [ ] **T10.** Tratar os achados; `CHANGELOG.md`; suíte, ruff, validar, dois builds idênticos.
 - [ ] **T11.** Checkpoint do dono: status das 11 práticas e custo da fatia.
@@ -121,20 +121,53 @@ criação do repositório e o push ficam com o dono.
 
 - **T6 fechou (2026-10-06).** P3-05 (563f1fe) e P3-06 (2b2c758) com Exemplo executado nos dois estados e prompt testado em sessão nova (claude-code): P3-05 commit 8d5f8ec (verificador 1 antes, 0 depois), P3-06 commit ae59e5f (1 antes, 0 depois). Registros em `verificacoes/P3-05.yaml` e `verificacoes/P3-06.yaml`.
 
-## Conferência em lote: <data> — achados
+## Conferência em lote: 2026-10-06 — achados
 
-- P2-03, prompt: o campo `modelo` não vem literal nos placeholders, e o agente o deduziu do pedido ("Claude Fable 5"). Informar o valor na entrada 1 e na 2.
-- P2-04 e P2-06, prompts: assumem shell persistente entre passos (AI_GATEWAY_KEY se perde); dizer para reexportar ou reemitir.
-- P2-04, prompt: após `--force-recreate gateway` o banco persiste e o alias já existe (400); usar outro alias ou apagar a chave.
-- `timeout` não existe no macOS; nenhum texto deve usá-lo.
-- P2-04, segurança: `mascara_pii.py` cobre só formatos canônicos de CPF e e-mail (documentar o limite no Como verificar), e o log do gateway de teste imprime o conteúdo da mensagem, inclusive o que escapar da máscara; avaliar logar só o veredito ou a contagem e, se mudar o exemplo, reexecutar e registrar.
-- P3-02, prompt: não traz o enunciado das 4 perguntas do CISO, e o agente as redigiu a partir das respostas; o prompt ou o preparo deve trazer o enunciado da fonte.
-- P3-02, prompt: o agente removeu o comentário HTML de instrução da seção para pôr o parágrafo logo abaixo do título (limite do verificar_pr sobre subtítulo imediato); documentado no Como aplicar.
-- P3-01, prompt: o harness não persiste shell e o agente rodou cada comando em chamada separada; sem efeito no resultado, mas a declaração de shell único não se cumpre.
-- P2-05, suíte: um único teste agrega os 5 casos; um caso reprovado não aparece como teste próprio no relatório do pytest.
-- P3-03 e P3-04, prompts: o harness não persiste shell e o prompt diz "use um único shell"; a frase deve prever a alternativa ("ou refaça as variáveis a cada comando").
-- P3-04, prompt: o agente editou o JSON com a ferramenta de escrita do harness, e não por shell; sem efeito no resultado, mas o prompt supõe shell.
-- P3-06, prompt: diz "ao projeto projeto-teste-17", mas o preparo não tem pasta com esse nome (o agente trabalhou na raiz); corrigir o texto na T10.
-- P3-05 e P3-06, prompts: "único shell" não é literal no harness.
-- P3-06, segurança: a allowlist central dentro do mesmo repositório pode ser autoaprovada por quem edita o projeto; a prática deve dizer que ela mora fora do repositório ou protegida por CODEOWNERS. O verificador deixa escapes semânticos (`env`, variáveis, URL com redirecionamento); documentar o limite.
-- P3-05, Exemplo: o estado "antes" tem o prompt com conteúdo cru (esperado); o Exemplo publicado deve deixar claro que é o estado reprovado.
+Conferente independente, modelo econômico, ADR 0005. Escopo: 11 conteúdos (P2-02 a P2-06 e P3-01 a
+P3-06). Método: cópias de `projeto-teste-17` em `~/curadoria-a5/t9-<id>`, execução do Exemplo e do
+verificador de cada conteúdo, uma execução registrada conferida por conteúdo (commit e saída), uma
+fonte aberta por conteúdo. Docker por amostragem de 1 (P2-04, com `docker system df` antes e
+`compose down -v` ao fim); a suíte da P2-05 foi reproduzida sem Docker, contra um servidor local que
+serve os `mock_response`, e a P2-06 não foi reexecutada. Cada achado está na `revisao_adversarial` de
+`verificacoes/<ID>.yaml`, com a gravidade no começo do `problema`. Os achados anotados nas
+Evidências e os da revisão de segurança automática entraram nos registros.
+
+**Resultado: 0 críticos, 9 médios, 44 baixos (53 registros, parte deles confirmações com
+tratamento "Nenhum").** Nenhum conteúdo ensina algo errado ou é inexecutável, então a ADR 0005 não
+pede revisão com modelo forte. Os médios são ajustes de texto ou de Exemplo para a T10; o da P2-04
+(log com conteúdo) pede reexecução se o Exemplo mudar. Nenhum texto cita NUARQ, NUJOR ou Serpro, todos
+têm `dono: engenharia`, e nenhum corpo nomeia harness (o "Claude Fable 5" da P2-03 é dado de
+catálogo). `timeout` não aparece em nenhum texto. Status e força coerentes com a evidência: os
+três `adotar` (P2-06, P3-02, P3-04) têm Exemplo executado, e o único `avisa` (P3-02) tem mecanismo
+hospedado.
+
+Fontes abertas: P2-02 política de uso (seis domínios, aviso no início da sessão: confirma, só para
+oferta direta a consumidores); P2-03 retenção (Fable 5 é Covered Model, 30 dias: confirma); P2-04
+`pii_masking_v2` (MASK/BLOCK, Presidio, sem CPF listado: confirma); P2-05 develop-tests (confirma);
+P2-06 budgets (401 `ExceededTokenBudget`, `max_budget` nulo: confirma); P3-01 matriz da AWS
+(confirma); P3-02 guia do CISO (quatro perguntas: confirma); P3-03 harnesses longos (confirma);
+P3-04 README do scaffold (limites do hook: confirma); P3-05 OWASP LLM01 (confirma); P3-06 MCP
+(confirma; URL `latest` muda).
+
+| Conteúdo | Veredito | Achados |
+|---|---|---|
+| P2-02 | ok | baixo: verificador aceita escopo x categoria incoerente, data impossível e domínio livre; lista de sete domínios no prompt contra seis; aviso da fonte é para oferta direta |
+| P2-03 | ok | baixo: `modelo` sem valor literal no prompt; verificador aceita data futura |
+| P2-04 | ajustar | médio: o log do gateway imprime o conteúdo da mensagem, e o que escapa da máscara (CPF com espaços, nome, telefone, endereço) vai em claro para a observabilidade, sem aviso no texto |
+| | | médio: máscara e verificador só cobrem formato canônico; "CPF de outro formato" passa e o verificador sai 0 |
+| | | baixo: shell único e alias existente (400) após `--force-recreate` |
+| P2-05 | ajustar | médio: o job real usa o alias `assistente`, que nenhum config do Exemplo declara |
+| | | baixo: teste único agrega os casos; `npx` de terceiro; mock decide o resultado |
+| P2-06 | ok | baixo: `size=100` trunca a lista de chaves; chave na URL e na linha de comando; shell persistente |
+| P3-01 | ok | baixo: "único shell" não se cumpre; verificador não confere identidade distinta de quem classificou |
+| P3-02 | ajustar | médio: o "nenhum achado" exige um plano em `docs/plans/` que o Exemplo não traz (o AVISO de plano aparece) |
+| | | baixo: prompt sem o enunciado das 4 perguntas; `verificar_pr.py` do preparo difere do hospedado |
+| P3-03 | ok | baixo: "único shell"; verificador só prova presença (`- ok` passa) |
+| P3-04 | ajustar | médio: o verificador prova presença de regras, não a semântica (`Bash(python3:*)` em allow e hook com `"exit 2"` no texto passam) |
+| | | médio: escrita por terminal fora de Edit/Write só mencionada; o Exemplo traz ask só de `sed -i` e `tee` |
+| | | baixo: `verificar_*.py` não casa `verificar-permissoes.py`; "10 ao todo" são 12; shell e ferramenta de escrita |
+| P3-05 | ok | baixo: bloco "antes" não rotulado como o estado reprovado (prompt com conteúdo cru); detector curto; origem do envelope não neutralizada |
+| P3-06 | ajustar | médio: a allowlist do CI é cópia no mesmo repositório e se autoaprova; falta CODEOWNERS ou versão fixada fora do projeto |
+| | | médio: o verificador deixa escapes (`env`, `cwd`, `headers`, config sem `mcpServers` sai 0, `python3 -m` local) |
+| | | médio: `npx -y` sem versão e hash fixados aprova o que o registro servir |
+| | | baixo: "projeto-teste-17"/"{nome do projeto}" sem pasta no preparo; URL `latest` do MCP |

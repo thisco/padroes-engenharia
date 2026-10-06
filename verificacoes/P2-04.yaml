@@ -114,6 +114,21 @@ execucoes:
     já existente após o recreate (400), apagado e reemitido. Transcrição em curadoria-a5/transcricoes/P2-04-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, pendente da conferência em lote (T9, ADR 0005)
+  revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'mascara_pii.py, async_log_success_event: log.warning("MENSAGENS ENVIADAS AO MODELO: %s", messages) (exemplos/P2-04/mascara_pii.py:46-48; Como verificar P2-04.md:173-195)'
+    problema: '[médio] o log do gateway imprime o conteúdo inteiro da mensagem. Reproduzido: com o guardrail ligado, "CPF 529 982 247 25", nome, telefone e endereço seguiram ao modelo e foram para o log em claro; só a máscara canônica foi trocada. Quem copia o guardrail leva dado pessoal para a observabilidade, o que contradiz a minimização que a prática ensina. O texto não cobre isso.'
+    tratamento: 'No Exemplo, logar só o veredito e a contagem de trocas (por exemplo "mascarados: 2 CPF, 1 e-mail") e ajustar o verificador para ler esse registro; se mantiver o log de conteúdo, dizer que é só do gateway de teste e que produção não registra prompt. Se o Exemplo mudar, reexecutar e registrar.'
+  - afirmacao: '"Ele pega o CPF com ou sem pontuação e o e-mail" (P2-04.md, Antes e depois)'
+    problema: '[médio] só os formatos canônicos: CPF com espaços ("529 982 247 25") ou separadores mistos ("529-982-247.25") passa sem máscara, e o verificador sai 0 nos dois casos (falso negativo; ele nem procura CPF sem pontuação). O texto cita "CPF de outro formato" entre o que não cobre, mas apresenta o verificador como prova.'
+    tratamento: Dizer no Como verificar que o verificador e o guardrail cobrem só CPF formatado ou com 11 dígitos colados e e-mail simples, e que um passe é ausência de achado, não prova; acrescentar um caso de teste com formato fora do padrão.
+  - afirmacao: Prompt, passos 3 e 6 (trazido do plano)
+    problema: '[baixo] assume shell persistente (AI_GATEWAY_KEY se perde); após --force-recreate gateway o banco persiste e o alias app-teste-hml já existe (400 "Key with alias ... already exists", reproduzido).'
+    tratamento: Dizer para reexportar a chave ou reemitir com outro alias (app-teste-hml2) e apagar a chave antiga.
+  - afirmacao: Fonte litellm-pii-masking (https://docs.litellm.ai/docs/proxy/guardrails/pii_masking_v2)
+    problema: '[baixo] confirmada: ações MASK e BLOCK, Presidio analisador e anonimizador em dois contêineres; a página fala em "All Presidio Entity Types" e não lista CPF, como o texto afirma.'
+    tratamento: Nenhum.
+  - afirmacao: Execução (1 de 3 Docker, por amostragem)
+    problema: '[baixo] reproduzida em t9-p2-04 (LiteLLM v1.104.0, porta 4011, docker system df antes, compose down -v ao fim): com default_on true o verificador sai 0 e o log traz [CPF] e [EMAIL]; com default_on false sai 1 com a linha do "antes", ambos iguais ao texto.'
+    tratamento: Nenhum.
