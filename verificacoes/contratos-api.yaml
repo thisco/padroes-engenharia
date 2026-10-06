@@ -1,0 +1,12 @@
+conteudo: contratos-api
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: uma descrição OpenAPI formaliza a superfície de uma API e a semântica dela
+  ref: openapi-spec
+  localizacao: seção 2 (Introduction), 'An OpenAPI Description (OAD) formally describes the surface of an API and its semantics' (versão 3.2.1)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote da T8
+  data: '2026-10-06'
+  achados: []

@@ -1,0 +1,16 @@
+conteudo: observabilidade
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o SLI é uma medida quantitativa, bem definida, de um aspecto do nível de serviço entregue
+  ref: sre-book-slo
+  localizacao: seção 'Indicators' (definição de SLI)
+  resultado: confirmada
+- texto: o SLO é um valor-alvo, ou uma faixa de valores, para um nível de serviço medido por um SLI
+  ref: sre-book-slo
+  localizacao: seção 'Objectives' (definição de SLO)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: sessao-independente
+  data: '2026-10-06'
+  achados: []
