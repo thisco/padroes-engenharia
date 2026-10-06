@@ -10,8 +10,6 @@ candidatas:
     momento: antes-de-escrever
   - titulo: Rollback declarado no plano
     momento: enquanto-escreve
-  - titulo: Expandir e contrair
-    momento: enquanto-escreve
   - titulo: flyway validate no pipeline
     momento: antes-do-merge
 revisado_em: 2026-10-04

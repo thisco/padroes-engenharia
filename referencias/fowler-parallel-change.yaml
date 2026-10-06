@@ -1,0 +1,10 @@
+id: fowler-parallel-change
+titulo: Parallel Change
+organizacao: Martin Fowler (martinfowler.com)
+url: https://martinfowler.com/bliki/ParallelChange.html
+tipo: analista
+verificado_em: 2026-10-06
+verificacao: V
+localizacao: "as três fases (expand, migrate, contract) e o parágrafo sobre evolutionary database design"
+dominios: [dados-migrations]
+notas: null

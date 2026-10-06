@@ -3,7 +3,7 @@ titulo: Undo migrations (Flyway)
 organizacao: Redgate
 url: https://documentation.red-gate.com/flyway/flyway-concepts/migrations/undo-migrations
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-06
 verificacao: V
 localizacao: "abertura da página: edição Teams"
 dominios: [dados-migrations]

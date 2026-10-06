@@ -3,7 +3,7 @@ titulo: "Running Batch Migrations for SQLite and other databases"
 organizacao: Alembic
 url: https://alembic.sqlalchemy.org/en/latest/batch.html
 tipo: padrao-aberto
-verificado_em: 2026-10-04
+verificado_em: 2026-10-06
 verificacao: V
 localizacao: "seções sobre o limite do ALTER no SQLite e o fluxo 'move and copy'"
 dominios: [dados-migrations]

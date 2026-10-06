@@ -3,8 +3,8 @@ titulo: Evolutionary Database Design
 organizacao: Martin Fowler e Pramod Sadalage (martinfowler.com)
 url: https://martinfowler.com/articles/evodb.html
 tipo: analista
-verificado_em: 2026-10-04
+verificado_em: 2026-10-06
 verificacao: V
-localizacao: "seções 'Jen implements a new story' e 'All database changes are migrations'"
+localizacao: "seções 'Jen implements a new story', 'All database changes are migrations' e 'Transition Phase'"
 dominios: [dados-migrations]
 notas: null

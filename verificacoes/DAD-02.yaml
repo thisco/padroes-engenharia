@@ -1,0 +1,123 @@
+conteudo: DAD-02
+verificado_em: '2026-10-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a estrutura passa a aceitar a versão antiga e a nova ao mesmo tempo (expand); os clientes migram
+    para a nova (migrate); a antiga é removida (contract); a maioria das refatorações de banco segue esse
+    padrão
+  ref: fowler-parallel-change
+  localizacao: as três fases e o parágrafo sobre evolutionary database design
+  resultado: confirmada
+- texto: o período de transição deixa o acesso antigo e o novo coexistirem, e os sistemas dependentes
+    migram de forma independente antes de a estrutura antiga sair
+  ref: fowler-evodb
+  localizacao: seção 'Transition Phase' (o exemplo do renomear tabela com view de compatibilidade)
+  resultado: confirmada
+- texto: 'o padrão seguro é expandir e contrair: adicionar o novo, migrar os dados, ler do novo e só então
+    remover o antigo, em entrega posterior; remover coluna, renomear tabela e alterar tipo incompatível
+    são destrutivos e exigem ADR'
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, seção 'Mudança destrutiva'
+  resultado: confirmada
+  nota: A skill cita renomear tabela; a DAD-02 aplica o mesmo raciocínio à coluna, e isso é do texto da
+    prática, não da skill.
+- texto: o rollback é declarado no plano antes da execução e o par upgrade/downgrade é testado em banco
+    efêmero; mudança de schema é a mais cara de desfazer porque o estado já mudou quando o problema aparece
+  ref: migrations-reversiveis
+  localizacao: SKILL.md, seções 'Regras' (4), 'Estratégia de rollback no plano' e a abertura
+  resultado: confirmada
+- texto: o validate falha quando o checksum local difere do aplicado, quando migration aplicada sumiu
+    do disco ou quando há migration resolvida e ainda não aplicada
+  ref: flyway-validate
+  localizacao: seção 'Description'
+  resultado: confirmada
+  nota: 'Execução real em 2026-10-06: com a V3 no disco e ainda não aplicada, validate saiu com 1 e ''Detected
+    resolved migration not applied to database: 3.'' (no exemplo da receita).'
+- texto: migration versionada tem o nome V<versão>__<descrição>.sql e se aplica uma vez, na ordem
+  ref: flyway-versionadas
+  localizacao: seções de nomenclatura e aplicação em ordem
+  resultado: confirmada
+- texto: a migration de desfazer do Flyway só existe nas edições pagas; sem ela, a volta é uma migration
+    nova
+  ref: flyway-undo
+  localizacao: 'abertura da página: ''EDITION: TEAMS'''
+  resultado: confirmada
+  nota: 'A volta por migration nova foi executada: a V4 de reversao/ recriou nome_completo, copiou o dado
+    de nome, e validate passou com 4 migrations.'
+- texto: o Alembic cria a revisão com upgrade() e downgrade() preenchidos; o downgrade é opcional no tutorial,
+    e a skill o pede
+  ref: alembic-tutorial
+  localizacao: seções de criação do script e de downgrade
+  resultado: confirmada
+  nota: Mesma afirmação já registrada em DAD-01; reaberta a fonte em 2026-10-06.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/V1__cria_cliente.sql
+  comando: sh exemplos/DAD-02/executar.sh (seção B, V1)
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: passou
+  evidencia: 'V1 aplicada: ''Successfully applied 1 migration to schema "public", now at version v1'';
+    duas linhas inseridas (Ana Souza, Bruno Lima).'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/errado/V2__renomeia_nome_completo.sql
+  comando: sh exemplos/DAD-02/executar.sh (seção A)
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: falhou-como-esperado
+  evidencia: 'V2 que renomeia aplicada (now at version v2); o consumidor antigo recebe ''ERROR:  column
+    "nome_completo" does not exist'' e ''LINE 1: SELECT nome_completo FROM cliente;''.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/V2__expande_nome.sql
+  comando: sh exemplos/DAD-02/executar.sh (seção B, expandir)
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: passou
+  evidencia: '''now at version v2''; INSERT pela coluna antiga (Carla Dias) e pela nova (Diego Melo) e
+    UPDATE pela nova (Ana Souza Lima) deixam nome_completo e nome iguais nas 4 linhas; ''Successfully
+    validated 2 migrations''.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/V3__contrai_nome_completo.sql
+  comando: sh exemplos/DAD-02/executar.sh (seção B, contrair)
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: passou
+  evidencia: '''now at version v3''; SELECT id, nome mostra as 4 linhas; ''Successfully validated 3 migrations'';
+    flyway_schema_history com versões 1, 2 e 3, success t e checksums 2036036335, -1578914844 e 1272903912.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/reversao/V4__restaura_nome_completo.sql
+  comando: sh exemplos/DAD-02/executar.sh (seção C)
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: passou
+  evidencia: '''now at version v4''; nome_completo recriada com os 4 valores copiados de nome; ''Successfully
+    validated 4 migrations''.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/executar.sh
+  comando: sh exemplos/DAD-02/executar.sh
+  ambiente: Flyway OSS Edition 11.20.3 (imagem flyway/flyway:11) contra PostgreSQL 16.13 (postgres:16-alpine)
+    efêmero em rede Docker própria; Docker 29.5.2; macOS. docker system df antes e depois com os mesmos
+    totais (imagens 92 com 30,9 GB, contêineres 35, volumes 26, cache de build 253); container e rede
+    derrubados ao fim.
+  resultado: passou
+  evidencia: saída 0 nas seções A, B e C; saída bruta em curadoria-a5/saidas/b3-dad02-executar.txt.
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: provisória, até a conferência em lote da T8 (ADR 0005)
+  data: '2026-10-06'
+  achados: []
