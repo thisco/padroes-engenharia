@@ -1,17 +1,17 @@
 # Donos do código e do conteúdo (spec §12.3), na sintaxe do GitLab:
 # https://docs.gitlab.com/user/project/codeowners/reference/
 #
-# PENDÊNCIA: @nuarq é o handle provisório do grupo dono. Confirme o handle real ao criar o
-# projeto no GitLab Serpro e troque em todas as linhas.
+# PENDÊNCIA: @engenharia é o handle provisório do grupo dono. Confirme o handle real do grupo
+# dono ao criar o projeto no GitLab e troque em todas as linhas.
 #
 # Cada seção é avaliada à parte. [Nome][2] exige duas aprovações: é o nível alto de
 # niveis-de-risco.yml. Se o plano da instância não aplicar aprovação por seção, a regra
 # fica documentada e é conferida na revisão.
 
-[Repositório] @nuarq
+[Repositório] @engenharia
 *
 
-[Motor e governança][2] @nuarq
+[Motor e governança][2] @engenharia
 /esquemas/
 /scripts/
 /portal/
@@ -24,43 +24,43 @@
 /niveis-de-risco.yml
 /componentes.yml
 
-[Construir com IA] @nuarq
+[Construir com IA] @engenharia
 /praticas/construir-com-ia/
 
-[Arquitetura e padrões de projeto] @nuarq
+[Arquitetura e padrões de projeto] @engenharia
 /praticas/arquitetura/
 
-[Contratos de API] @nuarq
+[Contratos de API] @engenharia
 /praticas/contratos-api/
 
-[Frontend e UX] @nuarq
+[Frontend e UX] @engenharia
 /praticas/frontend-ux/
 
-[Dados e migrations] @nuarq
+[Dados e migrations] @engenharia
 /praticas/dados-migrations/
 
-[Privacidade e LGPD] @nuarq
+[Privacidade e LGPD] @engenharia
 /praticas/privacidade-lgpd/
 
-[Qualidade e BDD] @nuarq
+[Qualidade e BDD] @engenharia
 /praticas/qualidade-bdd/
 
-[Infra e IaC] @nuarq
+[Infra e IaC] @engenharia
 /praticas/infra-iac/
 
-[CI/CD] @nuarq
+[CI/CD] @engenharia
 /praticas/ci-cd/
 
-[Observabilidade e operação] @nuarq
+[Observabilidade e operação] @engenharia
 /praticas/observabilidade/
 
-[Segurança] @nuarq
+[Segurança] @engenharia
 /praticas/seguranca/
 
-[Aplicações que consomem modelos e agentes próprios] @nuarq
+[Aplicações que consomem modelos e agentes próprios] @engenharia
 /praticas/ia-no-produto/
 
-[Conteúdo transversal] @nuarq
+[Conteúdo transversal] @engenharia
 /paginas/
 /conceitos/
 /guias/
