@@ -2,74 +2,126 @@ conteudo: P3-06
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: "o servidor MCP oferece recursos (contexto e dados), prompts (mensagens com modelo para a pessoa) e ferramentas (funções que o modelo executa)"
+- texto: o servidor MCP oferece recursos (contexto e dados), prompts (mensagens com modelo para a pessoa) e ferramentas
+    (funções que o modelo executa)
   ref: mcp-spec
-  localizacao: "seção 'Key Details', 'Features' (versão 2026-07-28)"
+  localizacao: seção 'Key Details', 'Features' (versão 2026-07-28)
   resultado: confirmada
-- texto: "as ferramentas representam execução arbitrária de código, e as descrições do comportamento delas, como as anotações, devem ser tidas como não confiáveis, a menos que venham de um servidor confiável"
+- texto: as ferramentas representam execução arbitrária de código, e as descrições do comportamento delas, como
+    as anotações, devem ser tidas como não confiáveis, a menos que venham de um servidor confiável
   ref: mcp-spec
-  localizacao: "seção 'Security and Trust & Safety', 'Tool Safety'"
+  localizacao: seção 'Security and Trust & Safety', 'Tool Safety'
   resultado: confirmada
-- texto: "o host precisa obter o consentimento explícito da pessoa antes de invocar qualquer ferramenta"
+- texto: o host precisa obter o consentimento explícito da pessoa antes de invocar qualquer ferramenta
   ref: mcp-spec
-  localizacao: "seção 'Security and Trust & Safety', 'Tool Safety'"
+  localizacao: seção 'Security and Trust & Safety', 'Tool Safety'
   resultado: confirmada
-- texto: "o protocolo não impõe os princípios de segurança por si só; quem implementa deve montar fluxos de consentimento e autorização"
+- texto: o protocolo não impõe os princípios de segurança por si só; quem implementa deve montar fluxos de consentimento
+    e autorização
   ref: mcp-spec
-  localizacao: "seção 'Security and Trust & Safety', 'Implementation Guidelines' ('MCP itself cannot enforce these security principles at the protocol level')"
+  localizacao: seção 'Security and Trust & Safety', 'Implementation Guidelines' ('MCP itself cannot enforce these
+    security principles at the protocol level')
   resultado: confirmada
-- texto: "a lista de conectores (MCPs) permitidos traça a fronteira dos dados, ao definir a quais sistemas o agente chega"
+- texto: a lista de conectores (MCPs) permitidos traça a fronteira dos dados, ao definir a quais sistemas o agente
+    chega
   ref: anthropic-ciso-agentic-ai
-  localizacao: "seção 'Case study: Claude Cowork' ('Connector allowlists draw your data boundary')"
+  localizacao: 'seção ''Case study: Claude Cowork'' (''Connector allowlists draw your data boundary'')'
   resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P3-06/verificar-allowlist.py
-  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (mcp.json com docs-internos de outro command e o busca-web fora da lista)"
-  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  comando: python3 scripts/verificar-allowlist.py --config antes.json --allowlist central/mcp-allowlist.yml (docs-internos
+    com pacote npx sem versão e o busca-web fora da lista), reexecutado em T10
+  ambiente: cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8;
+    macOS
   resultado: falhou-como-esperado
-  evidencia: "\"docs-internos: command difere do aprovado ('npx' em vez de 'python3')\", \"args difere\", \"busca-web: servidor fora da allowlist\" e \"P3-06: servidor MCP fora da allowlist ou diferente do aprovado (acima).\", saída 1."
+  evidencia: '''docs-internos: pacote sem versão fixada (use pacote@x.y.z)'', ''args difere do aprovado'', ''busca-web:
+    servidor fora da allowlist'' e ''P3-06: servidor MCP fora da allowlist ou diferente do aprovado (acima).'',
+    saída 1. Também saída 1 com config vazia, sem mcpServers, com env ou headers declarados, JSON inválido e arquivo
+    ausente.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P3-06/mcp.json
-  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (mcp.json do exemplo, só com os dois servidores aprovados)"
-  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  comando: python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (mcp.json
+    do exemplo, só com os dois servidores aprovados)
+  ambiente: cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8;
+    macOS
   resultado: passou
-  evidencia: "P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado., saída 0."
+  evidencia: 'reexecutado em T10: P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado., saída 0.'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P3-06/mcp-allowlist.yml
-  comando: "python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (allowlist com os dois servidores fictícios, com origem, revisão e critério)"
-  ambiente: "cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8; macOS"
+  comando: python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml (allowlist
+    com os dois servidores fictícios, com origem, revisão e critério)
+  ambiente: cópia de projeto-teste-17 em ~/curadoria-a5/b2-p3-06-prompt, em diretório temporário; Python 3.14.8;
+    macOS
   resultado: passou
-  evidencia: "as duas entradas passam na checagem de origem, revisado_em, revisado_contra e command ou url; saída 0."
+  evidencia: 'reexecutado em T10: as duas entradas passam (a do npx com @1.4.2); sem a versão fixada a entrada reprova;
+    saída 0 com a versão.'
+  data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-06/gitlab-ci.yml
+  comando: git clone --depth 1 --branch v1.0.0 file://<repositório local> central; test do commit; python3 scripts/verificar-allowlist.py
+    --config mcp.json --allowlist central/mcp-allowlist.yml (as mesmas três linhas do job, com um repositório local
+    no lugar do endereço fictício)
+  ambiente: repositório local com a tag v1.0.0 em /tmp, git, Python 3.14.8; macOS (o job não foi executado num GitLab)
+  resultado: passou
+  evidencia: 'clone na tag, commit conferido, ''P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.'',
+    saída 0; com o commit trocado o test falha (saída 1) antes do verificador.'
   data: '2026-10-06'
 - tipo: prompt
   prompt: P3-06-prompt-1
   harness: claude-code
   ambiente: sessão nova, em ~/curadoria-a5/b2-p3-06-prompt
   resultado: passou
-  evidencia: "1ª rodada: saída 1 (docs-internos com command diferente, busca-web fora da allowlist); busca-web removido e docs-internos restaurado; 2ª rodada: saída 0 (P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.); commit ae59e5f só com mcp.json, sem trailer"
+  evidencia: '1ª rodada: saída 1 (docs-internos com command diferente, busca-web fora da allowlist); busca-web removido
+    e docs-internos restaurado; 2ª rodada: saída 0 (P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.);
+    commit ae59e5f só com mcp.json, sem trailer'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
   achados:
-  - afirmacao: 'Como aplicar 3 e Prompt: --allowlist central/mcp-allowlist.yml; "uma cópia da allowlist central" (P3-06.md:117-125)'
-    problema: '[médio] a allowlist usada no CI é uma cópia dentro do mesmo repositório do projeto; quem edita o mcp.json edita a cópia e se autoaprova. O texto diz que a lista mora num repositório da engenharia e cita "política gerida pela organização", mas não diz que a cópia local é autoaprovável nem pede CODEOWNERS ou obtenção por versão fixada fora do alcance do projeto (a P3-04 diz).'
-    tratamento: 'Dizer que a cópia local não é fonte de confiança: o CI baixa a lista do repositório central numa versão fixada com hash, ou o arquivo fica sob CODEOWNERS da engenharia e fora do alcance de quem edita o projeto.'
+  - afirmacao: 'Como aplicar 3 e Prompt: --allowlist central/mcp-allowlist.yml; "uma cópia da allowlist central"
+      (P3-06.md:117-125)'
+    problema: '[médio] a allowlist usada no CI é uma cópia dentro do mesmo repositório do projeto; quem edita o
+      mcp.json edita a cópia e se autoaprova. O texto diz que a lista mora num repositório da engenharia e cita
+      "política gerida pela organização", mas não diz que a cópia local é autoaprovável nem pede CODEOWNERS ou obtenção
+      por versão fixada fora do alcance do projeto (a P3-04 diz).'
+    tratamento: 'Tratado em T10: o Exemplo mostra o job do projeto (exemplos/P3-06/gitlab-ci.yml) clonando a allowlist
+      do repositório central (a pasta central/ representa outro repositório, dito no texto) numa tag fixada com
+      o commit conferido; o texto diz que a cópia local é autoaprovável e põe o arquivo do job sob CODEOWNERS. Executado
+      localmente com um repositório file:// com a tag v1.0.0: clone e conferência passam e o verificador sai 0;
+      commit trocado reprova no test. Job não executado num GitLab.'
   - afirmacao: Verificador "todos na allowlist e iguais ao aprovado" (exemplos/P3-06/verificar-allowlist.py)
-    problema: '[médio] escapes semânticos reproduzidos em t9-p3-06: env, cwd e headers extras no servidor passam (só command, args e url são comparados); config com chave "servers" ou vazia sai 0 com "0 servidores ... todos na allowlist" (falha aberta); python3 -m servidor_docs resolve o módulo a partir do diretório do projeto, que controla o código; YAML malformado cai em traceback. O texto afirma que ele não prova segurança, mas não cita esses casos.'
-    tratamento: Comparar também env, cwd, headers e type, reprovar config sem mcpServers ou vazia quando se espera servidor, tratar erro de leitura com saída 1, e listar o resto como limite.
+    problema: '[médio] escapes semânticos reproduzidos em t9-p3-06: env, cwd e headers extras no servidor passam
+      (só command, args e url são comparados); config com chave "servers" ou vazia sai 0 com "0 servidores ... todos
+      na allowlist" (falha aberta); python3 -m servidor_docs resolve o módulo a partir do diretório do projeto,
+      que controla o código; YAML malformado cai em traceback. O texto afirma que ele não prova segurança, mas não
+      cita esses casos.'
+    tratamento: 'Tratado em T10: o verificador compara também type, env, cwd e headers, reprova campo não previsto,
+      config sem mcpServers ou vazia e arquivo ausente ou inválido (saída 1, sem traceback); o python3 -m do projeto
+      saiu do Exemplo e virou limite no texto. Reexecutado: antes, depois, config vazia, env/headers declarados,
+      JSON quebrado e arquivo inexistente.'
   - afirmacao: 'Exemplo "antes": "npx", ["-y", "servidor-docs-comunitario"] (P3-06.md, Antes e depois)'
-    problema: '[médio] npx -y executa pacote de terceiro sem confirmação; o texto o mostra como o servidor reprovado, mas não avisa que entrada de allowlist com npx -y e sem versão fixada aprova o que o registro servir no dia (o limite "versão nova do mesmo pacote passa" cobre só em parte).'
-    tratamento: Dizer que entrada com npx -y exige versão e hash fixados, e preferir servidor próprio.
+    problema: '[médio] npx -y executa pacote de terceiro sem confirmação; o texto o mostra como o servidor reprovado,
+      mas não avisa que entrada de allowlist com npx -y e sem versão fixada aprova o que o registro servir no dia
+      (o limite "versão nova do mesmo pacote passa" cobre só em parte).'
+    tratamento: 'Tratado em T10: a allowlist usa npx -y @exemplo/servidor-docs@1.4.2; o verificador reprova pacote
+      de npx, uvx ou pipx sem versão fixada (config e lista); o texto nomeia o risco do pacote de terceiro e deixa
+      o hash como limite.'
   - afirmacao: 'Prompt: "ao projeto {nome do projeto}" (P3-06.md:119) (trazido do plano)'
-    problema: '[baixo] o preparo não tem pasta com o nome do projeto (o agente trabalhou na raiz); o prompt cita "projeto-teste-17" no teste.'
-    tratamento: Trocar por "neste repositório" e corrigir na T10; "único shell" também não é literal.
+    problema: '[baixo] o preparo não tem pasta com o nome do projeto (o agente trabalhou na raiz); o prompt cita
+      "projeto-teste-17" no teste.'
+    tratamento: 'Tratado em T10: o prompt diz ''neste repositório'' com um único shell ou refazendo as variáveis,
+      e o preparo descreve a pasta central/. Prompt alterado: aguarda novo teste em sessão nova.'
   - afirmacao: Fonte mcp-spec (https://modelcontextprotocol.io/specification/latest)
-    problema: '[baixo] confirmada: ferramentas representam execução arbitrária de código, anotações não confiáveis salvo servidor confiável, consentimento explícito antes de invocar ferramenta, o protocolo não impõe os princípios. A URL é "latest" e a página cita a revisão 2026-07-28, então o conteúdo muda.'
-    tratamento: Fixar a URL da revisão (/specification/2026-07-28) na referência.
+    problema: '[baixo] confirmada: ferramentas representam execução arbitrária de código, anotações não confiáveis
+      salvo servidor confiável, consentimento explícito antes de invocar ferramenta, o protocolo não impõe os princípios.
+      A URL é "latest" e a página cita a revisão 2026-07-28, então o conteúdo muda.'
+    tratamento: 'Tratado em T10: a referência mcp-spec aponta para /specification/2026-07-28, reaberta com os mesmos
+      trechos.'
   - afirmacao: Execução registrada (ae59e5f)
-    problema: '[baixo] conferida: commit só com mcp.json (2 inserções, 5 remoções); antes (3 linhas) e depois reproduzidos em t9-p3-06.'
+    problema: '[baixo] conferida: commit só com mcp.json (2 inserções, 5 remoções); antes (3 linhas) e depois reproduzidos
+      em t9-p3-06.'
     tratamento: Nenhum.

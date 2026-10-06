@@ -7,14 +7,16 @@ Uso: python3 verificar-permissoes.py [--politica docs/steering/permissoes-agente
 A política é um JSON no formato do arquivo de permissões do template do scaffold: o objeto
 "permissions" com as listas "allow", "ask" e "deny", cada regra no formato Ferramenta(padrão).
 Confere que:
-  1. "allow" não concede escrita (o padrão é somente-leitura);
+  1. "allow" não concede escrita nem shell amplo: Bash com curinga só para comandos de leitura;
   2. cada caminho de governança tem Edit e Write em "ask" ou "deny";
-  3. se há hook de pré-escrita, o comando falha fechado (termina com exit 2 se o script falha);
+  3. se há hook de pré-escrita, o comando chama o script de governança e falha fechado
+     (`|| { ...; exit 2; }` no fim, depois da chamada do script);
   4. o agente declara identidade própria, diferente da pessoa que o classificou.
 Sai com 0 se tudo confere e com 1 se algo falta.
 
 O verificador lê arquivos. Ele não prova que o harness aplica a política, nem que escrita por
-comando de shell fora dos padrões listados é barrada.
+comando de shell fora dos padrões listados é barrada, e a regra de um padrão só vale se o harness
+o interpreta como o `fnmatch` daqui.
 """
 
 import argparse
@@ -29,7 +31,22 @@ CAMINHOS_DE_GOVERNANCA = [
     "docs/adr/0001-exemplo.md",
     "Arquitetura/mapa.yml",
     "scripts/proteger_governanca.py",
+    "scripts/verificar-permissoes.py",
+    ".gitlab-ci.yml",
 ]
+SCRIPT_DE_GOVERNANCA = "scripts/proteger_governanca.py"
+COMANDOS_DE_LEITURA = {
+    "ls",
+    "cat",
+    "head",
+    "tail",
+    "grep",
+    "wc",
+    "git status",
+    "git diff",
+    "git log",
+}
+FECHA_COM_EXIT_2 = re.compile(r"\|\|\s*\{[^}]*\bexit 2\b[^}]*\}\s*$")
 FERRAMENTAS_DE_ESCRITA = ("Edit", "Write", "NotebookEdit", "MultiEdit")
 REGRA = re.compile(r"^(\w+)\((.*)\)$")
 SEM_VALOR = {"", "nenhuma", "nenhum", "nao", "a-confirmar"}
@@ -65,8 +82,12 @@ def conferir_politica(politica, caminho_da_politica, caminhos):
     allow, ask, deny = (perm.get(k, []) for k in ("allow", "ask", "deny"))
     for regra in allow:
         ferramenta, padrao = partes(regra)
-        if ferramenta in FERRAMENTAS_DE_ESCRITA or (ferramenta == "Bash" and padrao in {"", "*"}):
-            erros.append(f"allow concede escrita ou shell irrestrito: {regra}")
+        if ferramenta in FERRAMENTAS_DE_ESCRITA:
+            erros.append(f"allow concede escrita: {regra}")
+        elif ferramenta == "Bash" and "*" in padrao:
+            comando = padrao.split(":")[0].strip()
+            if comando not in COMANDOS_DE_LEITURA:
+                erros.append(f"allow concede shell amplo, que pode escrever: {regra}")
     for caminho in [*caminhos, caminho_da_politica]:
         for ferramenta in ("Edit", "Write"):
             if not cobre([*ask, *deny], ferramenta, caminho):
@@ -76,8 +97,10 @@ def conferir_politica(politica, caminho_da_politica, caminhos):
     if not comandos:
         avisos.append("a política não declara hook de pré-escrita")
     for comando in comandos:
-        if "exit 2" not in comando:
-            erros.append("o hook não falha fechado (o comando não termina com exit 2)")
+        if SCRIPT_DE_GOVERNANCA not in comando.split("||")[0]:
+            erros.append(f"o hook não chama o script de governança ({SCRIPT_DE_GOVERNANCA})")
+        if not FECHA_COM_EXIT_2.search(comando):
+            erros.append("o hook não falha fechado (o comando não termina com || { ...; exit 2; })")
     return erros, avisos
 
 

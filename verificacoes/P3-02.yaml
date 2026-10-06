@@ -2,73 +2,112 @@ conteudo: P3-02
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
 afirmacoes:
-- texto: 'as quatro perguntas do guia do CISO: que conteúdo não confiável o agente ingere (o que um atacante poderia escrever ou alterar), que ações pode executar e em nome de quem (só lê ou também escreve), qual o raio de dano (alcance vezes gravidade) e que observabilidade existe (ações distinguíveis das de uma pessoa e presentes nos sistemas de segurança)'
+- texto: 'as quatro perguntas do guia do CISO: que conteúdo não confiável o agente ingere (o que um atacante poderia
+    escrever ou alterar), que ações pode executar e em nome de quem (só lê ou também escreve), qual o raio de dano
+    (alcance vezes gravidade) e que observabilidade existe (ações distinguíveis das de uma pessoa e presentes nos
+    sistemas de segurança)'
   ref: anthropic-ciso-agentic-ai
   localizacao: seção 'Four questions to assess agentic AI risk', perguntas 1 a 4
   resultado: confirmada
-- texto: 'a injeção de prompt é o primeiro risco da lista de 2025 da OWASP, e a injeção indireta é a de fontes externas (sites, documentos) que trazem instruções que alteram o comportamento do modelo'
+- texto: a injeção de prompt é o primeiro risco da lista de 2025 da OWASP, e a injeção indireta é a de fontes externas
+    (sites, documentos) que trazem instruções que alteram o comportamento do modelo
   ref: owasp-llm-top10
   localizacao: título 'LLM01:2025 Prompt Injection' e seção 'Indirect Prompt Injections'
   resultado: confirmada
-- texto: 'entre as mitigações da OWASP estão privilégio mínimo, aprovação humana para ações de alto risco e segregação e identificação do conteúdo externo'
+- texto: entre as mitigações da OWASP estão privilégio mínimo, aprovação humana para ações de alto risco e segregação
+    e identificação do conteúdo externo
   ref: owasp-llm-top10
   localizacao: seção de prevenção e mitigação (itens 4, 5 e 6 da lista)
   resultado: confirmada
-- texto: 'as cinco perguntas do threat-model, a regra de um parágrafo de mitigação por sim, a distinção entre mecanismo e intenção, o não sei e o aviso que não bloqueia'
+- texto: as cinco perguntas do threat-model, a regra de um parágrafo de mitigação por sim, a distinção entre mecanismo
+    e intenção, o não sei e o aviso que não bloqueia
   ref: sdd-scaffold-threat-model
   localizacao: seções 'As perguntas', 'Como responder bem' e 'Verificação'
   resultado: confirmada
-- texto: 'o modelo de spec do scaffold traz a seção Threat-model com as cinco perguntas'
+- texto: o modelo de spec do scaffold traz a seção Threat-model com as cinco perguntas
   ref: sdd-scaffold-modelo-spec
   localizacao: seção 'Threat-model'
   resultado: confirmada
-- texto: 'o verificar_pr.py avisa, sem bloquear, quando o diff toca superfície sensível (palavra no caminho do arquivo) e nenhuma spec do PR traz seção de threat-model com conteúdo'
+- texto: o verificar_pr.py avisa, sem bloquear, quando o diff toca superfície sensível (palavra no caminho do arquivo)
+    e nenhuma spec do PR traz seção de threat-model com conteúdo
   ref: sdd-scaffold-verificar-pr
   localizacao: regex SENSIVEL, função secao_preenchida() e o bloco toca_sensivel em analisar()
   resultado: confirmada
-- texto: 'a seção conta como vazia quando o primeiro conteúdo depois do título é um subtítulo; o verificador não conhece as quatro perguntas do CISO'
+- texto: a seção conta como vazia quando o primeiro conteúdo depois do título é um subtítulo; o verificador não
+    conhece as quatro perguntas do CISO
   ref: sdd-scaffold-verificar-pr
   localizacao: secao_preenchida() (o corpo termina no próximo título de qualquer nível)
   resultado: confirmada
-  nota: 'Comportamento também reproduzido na execução (spec sem parágrafo de abertura gerou o aviso).'
+  nota: Comportamento também reproduzido na execução (spec sem parágrafo de abertura gerou o aviso).
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P3-02/spec-triagem-de-chamados.md
-  comando: python3 scripts/verificar_pr.py --base main (verificar_pr.py baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py, sha256 616cc4c2...b30e igual ao do index.json), com a spec cujo Threat-model repete as cinco perguntas sem resposta
-  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.1) em ~/curadoria-a5/b2-p3-02-prompt, branch feat/2026-10-06-triagem-de-chamados, base main; Python 3.14.8; macOS
+  comando: python3 scripts/verificar_pr.py --base main (verificar_pr.py baixado de http://127.0.0.1:8000/.well-known/mecanismos/sdd-scaffold/verificar_pr.py,
+    sha256 616cc4c2...b30e igual ao do index.json), com a spec cujo Threat-model repete as cinco perguntas sem resposta
+  ambiente: cópia de projeto-teste-17 (sdd-scaffold 1.7.1) em ~/curadoria-a5/b2-p3-02-prompt, branch feat/2026-10-06-triagem-de-chamados,
+    base main; Python 3.14.8; macOS
   resultado: falhou-como-esperado
-  evidencia: 'AVISO: a mudança toca superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py) e nenhuma spec do PR responde ao checklist de threat-model.; único achado; saída 0 (aviso não bloqueia).'
+  evidencia: 'AVISO: a mudança toca superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py)
+    e nenhuma spec do PR responde ao checklist de threat-model.; único achado; saída 0 (aviso não bloqueia).'
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/P3-02/spec-triagem-de-chamados.md
-  comando: o mesmo comando, com o arquivo do exemplo copiado para docs/specs/2026-10-06-triagem-de-chamados.md
+  comando: o mesmo comando, com o arquivo do exemplo em docs/specs/2026-10-06-triagem-de-chamados.md e o plano do
+    exemplo em docs/plans/ (reexecutado em T10)
   ambiente: o mesmo da execução anterior (cópia em diretório temporário)
   resultado: passou
   evidencia: 'Verificação de PR: 5 arquivo(s), nenhum achado.; saída 0.'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/P3-02/plano-triagem-de-chamados.md
+  comando: python3 scripts/verificar_pr.py --base main (PR com plano, spec respondida, __init__, webhook e teste;
+    verificar_pr.py hospedado 1.7.1, sha256 616cc4c2...b30e)
+  ambiente: cópia de projeto-teste-17 em diretório temporário (/tmp), branch feat/2026-10-06-triagem-de-chamados,
+    base main; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'Verificação de PR: 5 arquivo(s), nenhum achado.; saída 0. Sem o plano, o verificador acrescenta o
+    AVISO de plano ausente.'
+  data: '2026-10-06'
 - tipo: prompt
   prompt: P3-02-prompt-1
   harness: claude-code
-  ambiente: 'sessão nova, cópia de projeto-teste-17 (verificar_pr.py 1.7.1) em ~/curadoria-a5/b2-p3-02-prompt, branch feat/2026-10-06-triagem-de-chamados'
+  ambiente: sessão nova, cópia de projeto-teste-17 (verificar_pr.py 1.7.1) em ~/curadoria-a5/b2-p3-02-prompt, branch
+    feat/2026-10-06-triagem-de-chamados
   resultado: passou
-  evidencia: 'antes: AVISO de superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py) sem threat-model; o agente reescreveu a seção com abertura, as 5 perguntas do scaffold e as 4 do CISO; depois "Verificação de PR: 5 arquivo(s), nenhum achado.", saída 0; commit f3e7b48 só com a spec, sem trailer; nenhum não sei. O agente redigiu o enunciado das 4 perguntas do CISO a partir das respostas, e removeu o comentário HTML da seção para pôr o parágrafo logo abaixo do título. Transcrição em curadoria-a5/transcricoes/P3-02-prompt-1.bruta.jsonl.'
+  evidencia: 'antes: AVISO de superfície sensível (src/triagem/webhook.py, tests/unidade/test_webhook.py) sem threat-model;
+    o agente reescreveu a seção com abertura, as 5 perguntas do scaffold e as 4 do CISO; depois "Verificação de
+    PR: 5 arquivo(s), nenhum achado.", saída 0; commit f3e7b48 só com a spec, sem trailer; nenhum não sei. O agente
+    redigiu o enunciado das 4 perguntas do CISO a partir das respostas, e removeu o comentário HTML da seção para
+    pôr o parágrafo logo abaixo do título. Transcrição em curadoria-a5/transcricoes/P3-02-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
   achados:
   - afirmacao: 'Exemplo "depois": "Verificação de PR: 5 arquivo(s), nenhum achado." (P3-02.md, Antes e depois)'
-    problema: '[médio] os 5 arquivos incluem um plano em docs/plans/, que nem o Exemplo nem o Como aplicar trazem. Reproduzido em t9-p3-02 com o verificar_pr.py hospedado: spec + webhook + teste dão ainda o AVISO "altera código e não traz plano em docs/plans/". O leitor não chega ao "nenhum achado" sem inventar o plano.'
-    tratamento: No Exemplo, listar os cinco arquivos do PR (plano, spec, __init__, webhook e teste) ou dizer que o aviso de plano é separado e esperado.
+    problema: '[médio] os 5 arquivos incluem um plano em docs/plans/, que nem o Exemplo nem o Como aplicar trazem.
+      Reproduzido em t9-p3-02 com o verificar_pr.py hospedado: spec + webhook + teste dão ainda o AVISO "altera
+      código e não traz plano em docs/plans/". O leitor não chega ao "nenhum achado" sem inventar o plano.'
+    tratamento: 'Tratado em T10: o Exemplo traz o plano (exemplos/P3-02/plano-triagem-de-chamados.md) e lista os
+      cinco arquivos do PR; o Como verificar explica a dependência. verificar_pr.py hospedado 1.7.1 (sha256 616cc4c2...b30e)
+      reexecutado: AVISO de threat-model antes, ''Verificação de PR: 5 arquivo(s), nenhum achado.'' depois.'
   - afirmacao: 'Prompt: não traz o enunciado das 4 perguntas do CISO (trazido do plano)'
-    problema: '[baixo] o agente as redigiu a partir das respostas fornecidas; o enunciado está no corpo da prática, não no prompt.'
-    tratamento: Pôr o enunciado das quatro perguntas (da fonte, até 30 palavras por citação) no prompt ou no preparo.
+    problema: '[baixo] o agente as redigiu a partir das respostas fornecidas; o enunciado está no corpo da prática,
+      não no prompt.'
+    tratamento: 'Tratado em T10: o prompt traz o enunciado das quatro perguntas do CISO, em paráfrase. Prompt alterado:
+      aguarda novo teste em sessão nova.'
   - afirmacao: 'Prompt: o agente removeu o comentário HTML de instrução (trazido do plano)'
-    problema: '[baixo] o comentário não conta como parágrafo e o verificador exige texto antes do primeiro subtítulo; já documentado no Como aplicar item 6.'
+    problema: '[baixo] o comentário não conta como parágrafo e o verificador exige texto antes do primeiro subtítulo;
+      já documentado no Como aplicar item 6.'
     tratamento: Nenhum.
   - afirmacao: '"Único shell" (P3-02.md:119) e verificar_pr.py do preparo'
-    problema: '[baixo] o verificar_pr.py de projeto-teste-17 difere do hospedado 1.7.1 (falta --no-renames na linha 401; sha256 distinto). Quem usa a cópia do scaffold antigo recebe um script diferente do citado.'
-    tratamento: Trocar por "use um único shell; se o shell não persistir, refaça as variáveis exportadas a cada comando" (como já está na P2-05). Dizer para baixar o script hospedado, e não usar a cópia do projeto.
+    problema: '[baixo] o verificar_pr.py de projeto-teste-17 difere do hospedado 1.7.1 (falta --no-renames na linha
+      401; sha256 distinto). Quem usa a cópia do scaffold antigo recebe um script diferente do citado.'
+    tratamento: 'Tratado em T10: o prompt manda usar um único shell ou refazer as variáveis; o texto manda baixar
+      o verificar_pr.py hospedado e não usar a cópia de um scaffold antigo. Prompt alterado: aguarda novo teste
+      em sessão nova.'
   - afirmacao: Fonte anthropic-ciso-agentic-ai (https://claude.com/blog/ciso-guide-to-agentic-ai)
-    problema: '[baixo] confirmada: as quatro perguntas (conteúdo não confiável, ações e em nome de quem, raio de dano = alcance x gravidade, observabilidade). Status adotar, força avisa e mecanismo hospedado (mecanismos/sdd-scaffold/verificar_pr.py, 1.7.1) coerentes; execução do antes (AVISO) reproduzida.'
+    problema: '[baixo] confirmada: as quatro perguntas (conteúdo não confiável, ações e em nome de quem, raio de
+      dano = alcance x gravidade, observabilidade). Status adotar, força avisa e mecanismo hospedado (mecanismos/sdd-scaffold/verificar_pr.py,
+      1.7.1) coerentes; execução do antes (AVISO) reproduzida.'
     tratamento: Nenhum.

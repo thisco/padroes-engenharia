@@ -1,0 +1,10 @@
+# Job do projeto (P3-06). A allowlist não mora aqui: o job a obtém do repositório central da
+# engenharia, na tag fixada, e confere o commit, para que quem edita o projeto não a edite junto.
+# O endereço e o commit abaixo são fictícios. Este arquivo também fica sob CODEOWNERS da engenharia.
+mcp-allowlist:
+  stage: test
+  image: python:3.11
+  script:
+    - git clone --depth 1 --branch v1.0.0 https://gitlab.example/engenharia/mcp-allowlist.git central
+    - test "$(git -C central rev-parse HEAD)" = "0123456789abcdef0123456789abcdef01234567"
+    - python3 scripts/verificar-allowlist.py --config mcp.json --allowlist central/mcp-allowlist.yml

@@ -24,8 +24,10 @@
       "Write(scripts/proteger_governanca.py)",
       "Edit(scripts/verificar_*.py)",
       "Write(scripts/verificar_*.py)",
-      "Edit(.github/**)",
-      "Write(.github/**)"
+      "Edit(scripts/verificar-*.py)",
+      "Write(scripts/verificar-*.py)",
+      "Edit(.gitlab-ci.yml)",
+      "Write(.gitlab-ci.yml)"
     ]
   },
   "hooks": {
