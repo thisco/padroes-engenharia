@@ -108,3 +108,29 @@ def test_avaliar_para_no_teto_e_candidato_invalido_nao_roda_harness(tmp_path, mo
         and "perdeu o placeholder {mudança}" in avs[0].feedback
         and avs[0].tokens == 0
     )
+
+
+def test_restricoes_pegam_placeholder_introduzido():
+    candidato = ATUAL.replace("Faça X", "Faça {extra}")
+    problemas = metrica.restricoes_do_candidato(ATUAL, candidato, "DAD-01")
+    assert "introduziu placeholder {extra}" in "; ".join(problemas)
+
+
+def test_variavel_ausente_no_cenario_vira_nota_zero(tmp_path, monkeypatch):
+    base = tmp_path / "base"
+    base.mkdir()
+    monkeypatch.setitem(projeto.BASES, "fake", base)
+    monkeypatch.setenv("PATH", f"{FALSOS}{os.pathsep}{os.environ['PATH']}")
+    teto = metrica.Teto(10_000)
+    avs = metrica.avaliar(
+        _cenario(),
+        "claude-code",
+        "Faça {mudança} e {sem_valor} X-01",
+        raiz_monorepo=tmp_path,
+        transcricoes=tmp_path / "t",
+        teto=teto,
+        pasta_tmp=tmp_path / "tmp",
+    )
+    assert len(avs) == 1 and avs[0].nota == 0.0 and avs[0].tokens == 0
+    assert "variável ausente" in avs[0].feedback and "sem_valor" in avs[0].feedback
+    assert teto.consumidos == 0

@@ -11,7 +11,7 @@ from pathlib import Path
 from otimizacao.cenarios import Cenario
 from otimizacao.harness import HARNESSES
 from otimizacao.projeto import ProjetoInvalido, preparar
-from otimizacao.prompts import placeholders, substituir_variaveis
+from otimizacao.prompts import VariavelAusente, placeholders, substituir_variaveis
 from otimizacao.verificar import verificar
 
 LIMITE_CRESCIMENTO = 0.20
@@ -55,6 +55,8 @@ def restricoes_do_candidato(atual: str, candidato: str, pratica: str) -> list[st
     problemas = []
     for p in sorted(placeholders(atual) - placeholders(candidato)):
         problemas.append(f"perdeu o placeholder {{{p}}}")
+    for p in sorted(placeholders(candidato) - placeholders(atual)):
+        problemas.append(f"introduziu placeholder {{{p}}}")
     if pratica not in candidato:
         problemas.append(f"perdeu a menção ao ID {pratica}")
     crescimento = len(candidato) - len(atual)
@@ -90,7 +92,11 @@ def avaliar(
         if problemas:
             return [Avaliacao(cenario.id, harness_nome, 0, 0.0, "; ".join(problemas), 0, None, "")]
     harness = HARNESSES[harness_nome]
-    prompt = substituir_variaveis(candidato, cenario.variaveis)
+    try:
+        prompt = substituir_variaveis(candidato, cenario.variaveis)
+    except VariavelAusente as exc:
+        feedback = f"cenário inválido: variável ausente {exc}"
+        return [Avaliacao(cenario.id, harness_nome, 0, 0.0, feedback, 0, None, "")]
     resultados: list[Avaliacao] = []
     for repeticao in range(1, repeticoes + 1):
         teto.exigir()
