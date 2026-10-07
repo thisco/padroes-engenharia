@@ -1,0 +1,10 @@
+id: opentofu-plan
+titulo: "OpenTofu: comando tofu plan"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/cli/commands/plan/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções 'Saved Plans' (-out), '-detailed-exitcode' e 'Planning Modes'"
+dominios: [infra-iac]
+notas: Fonte aberta, lida em 2026-10-07. A versão local usada nos Exemplos é o OpenTofu v1.13.1.

@@ -1,0 +1,10 @@
+id: opentofu-dependency-lock
+titulo: "OpenTofu: dependency lock file"
+organizacao: OpenTofu
+url: https://opentofu.org/docs/language/files/dependency-lock/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções sobre o nome do arquivo (.terraform.lock.hcl) e a recomendação de versioná-lo"
+dominios: [infra-iac]
+notas: "Fonte aberta, lida em 2026-10-07."

@@ -1,0 +1,10 @@
+id: opentofu-show
+titulo: "OpenTofu: comando tofu show"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/cli/commands/show/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção sobre -json com arquivo de plano salvo"
+dominios: [infra-iac]
+notas: Fonte aberta, lida em 2026-10-07.

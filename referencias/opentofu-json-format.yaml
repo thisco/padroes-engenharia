@@ -1,0 +1,10 @@
+id: opentofu-json-format
+titulo: "OpenTofu: formato JSON de plano e estado"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/internals/json-format/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção 'Plan Representation': resource_changes e change.actions"
+dominios: [infra-iac]
+notas: Fonte aberta, lida em 2026-10-07.

@@ -1,0 +1,81 @@
+conteudo: IAC-02
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o modelo de steering pede registrar a proibição de operações manuais fora do CI/CD por perda de rastreabilidade
+  ref: sdd-scaffold-infra-devops
+  localizacao: seção 'Normas de deploy', comentário 'preencher'
+  resultado: confirmada
+  nota: É um comentário de preenchimento do modelo, citado como orientação.
+- texto: o modelo de steering lembra que auto-upgrades da nuvem geram falso-diff no IaC
+  ref: sdd-scaffold-infra-devops
+  localizacao: seção 'Normas de deploy', comentário 'preencher'
+  resultado: confirmada
+- texto: tofu plan cria um plano de execução que mostra o que a ferramenta pretende mudar
+  ref: opentofu-plan
+  localizacao: abertura da página
+  resultado: confirmada
+- texto: com -out o plano é gravado num arquivo que depois pode ser passado ao tofu apply, para automação
+  ref: opentofu-plan
+  localizacao: opção -out e seção 'Saved Plans'
+  resultado: confirmada
+- texto: tofu show -json sobre um plano salvo devolve o plano em JSON
+  ref: opentofu-show
+  localizacao: seção sobre -json com arquivo de plano
+  resultado: confirmada
+- texto: resource_changes traz as ações previstas em change.actions; ["delete","create"] é substituição
+  ref: opentofu-json-format
+  localizacao: 'seção ''Plan Representation'': resource_changes e change.actions'
+  resultado: confirmada
+- texto: a documentação recomenda versionar o .terraform.lock.hcl para discutir mudanças de dependência em revisão de código
+  ref: opentofu-dependency-lock
+  localizacao: nome do arquivo e recomendação de versionamento
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/executar.sh
+  comando: sh executar.sh
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: passou
+  evidencia: 'init instalou hashicorp/local v2.9.1; validate "Success! The configuration is valid."; fmt ok; apply "1 added"; A: saída 1; B: saída 0; C: saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/modulo-base/main.tf
+  comando: tofu init, validate, fmt -check e apply (executar.sh)
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: passou
+  evidencia: '"Apply complete! Resources: 1 added, 0 changed, 0 destroyed."'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/modulo-base/.terraform.lock.hcl
+  comando: tofu init com o lock presente (executar.sh)
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: passou
+  evidencia: provider hashicorp/local v2.9.1 instalado conforme o lock
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/modulo-antes/main.tf
+  comando: tofu plan -out + show + verificar-plano.py plano.json (executar.sh, parte A)
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: falhou-como-esperado
+  evidencia: '"local_file.config must be replaced", "Plan: 1 to add, 0 to change, 1 to destroy."; "IAC-02: 1 destruição(ões) sem aprovação (1 delete+create).", saída 1; com aprovação de local_file.config,
+    saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/modulo-depois/main.tf
+  comando: tofu plan -out + show + verificar-plano.py plano.json (executar.sh, parte C)
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: passou
+  evidencia: '"local_file.versao will be created", "Plan: 1 to add, 0 to change, 0 to destroy."; "IAC-02: plano sem destruição não aprovada (1 create, 1 no-op).", saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-02/verificar-plano.py
+  comando: verificar-plano.py nos três estados e com entradas inválidas
+  ambiente: OpenTofu v1.13.1; provider hashicorp/local v2.9.1; Python 3.14.8; macOS; pasta temporária
+  resultado: passou
+  evidencia: 'destruição sem aprovação: saída 1; com aprovação e só criação: saída 0; arquivo vazio, inexistente, não JSON, JSON que não é plano e arquivo de aprovações ausente: saída 1'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
