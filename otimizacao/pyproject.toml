@@ -1,0 +1,16 @@
+# Laboratório de eval e otimização dos prompts (delta F0). Ambiente separado do gerador.
+[project]
+name = "padroes-otimizacao"
+version = "0.1.0"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+  "dspy==3.4.0",
+  "gepa==0.1.4",
+  "PyYAML==6.0.3",
+  "markdown-it-py==4.2.0",
+  "Jinja2==3.1.6",
+  "jsonschema==4.26.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.16.10"]
