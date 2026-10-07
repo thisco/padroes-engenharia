@@ -224,5 +224,72 @@ def test_gerar_com_erro_nao_mexe_na_saida(repo_minimo, mutar, tmp_path):
     mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
     saida = tmp_path / "site"
     _criar(saida, "praticas 2")
+    (saida / "llms.txt").write_text("site anterior", encoding="utf-8")
     assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 1
     assert (saida / "praticas 2").is_dir()
+
+
+# Revisão forte da T1: destino perigoso, apresentações e symlink ---------------------------------
+
+
+@pytest.mark.parametrize("previa", [[], ["--previa"]])
+@pytest.mark.parametrize("destino", [".", "..", "guias", "esquemas/sub"])
+def test_recusa_saida_que_e_a_raiz_ancestral_ou_pasta_da_fonte(
+    repo_minimo, capsys, previa, destino
+):
+    (repo_minimo / "guias").mkdir(exist_ok=True)
+    (repo_minimo / "guias" / "g.md").write_text("x", encoding="utf-8")
+    alvo = (repo_minimo / destino).resolve()
+    args = ["--raiz", str(repo_minimo), "--saida", str(alvo), *previa, *BUILD]
+    with pytest.raises(SystemExit) as saiu:
+        cli.main(args)
+    assert saiu.value.code == 2
+    assert "--saida" in capsys.readouterr().err
+    assert (repo_minimo / "AGENTS.md").is_file() and (repo_minimo / "guias" / "g.md").is_file()
+
+
+def test_recusa_pasta_existente_com_conteudo_que_nao_e_um_site_gerado(repo_minimo, tmp_path):
+    outra = tmp_path / "documentos"
+    outra.mkdir()
+    (outra / "nota.txt").write_text("x", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        cli.main(["--raiz", str(repo_minimo), "--saida", str(outra), *BUILD])
+    assert (outra / "nota.txt").is_file()
+
+
+def test_aceita_pasta_existente_que_ja_e_um_site_gerado(repo_minimo, tmp_path):
+    saida = tmp_path / "site"
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 0
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 0
+
+
+def test_previa_recusa_public_com_outra_caixa_de_letra(repo_minimo):
+    (repo_minimo / "public").mkdir()
+    outra = repo_minimo / "PUBLIC"
+    if not outra.exists():
+        pytest.skip("sistema de arquivos sensível a maiúsculas")
+    with pytest.raises(SystemExit):
+        cli.main(["--raiz", str(repo_minimo), "--saida", str(outra), "--previa", *BUILD])
+
+
+def test_previa_carimba_o_deck_das_apresentacoes(repo_minimo, tmp_path):
+    fabrica.escrever_apresentacao(repo_minimo)
+    saida = tmp_path / "previa"
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), "--previa", *BUILD]) == 0
+    deck = (saida / "apresentacoes" / "harness-sdd" / "index.html").read_text("utf-8")
+    assert "PRÉVIA, não publicada" in deck
+    normal = tmp_path / "normal"
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(normal), *BUILD]) == 0
+    assert "PRÉVIA" not in (normal / "apresentacoes" / "harness-sdd" / "index.html").read_text(
+        "utf-8"
+    )
+
+
+def test_limpeza_nao_segue_symlink_para_fora_da_saida(tmp_path):
+    fora = tmp_path / "fora"
+    (fora / "vitima 2").mkdir(parents=True)
+    saida = tmp_path / "public"
+    saida.mkdir()
+    (saida / "link").symlink_to(fora, target_is_directory=True)
+    assert cli.remover_pastas_vazias_numeradas(saida) == 0
+    assert (fora / "vitima 2").is_dir()

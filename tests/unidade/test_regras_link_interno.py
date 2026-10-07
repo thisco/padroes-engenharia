@@ -1,6 +1,8 @@
 """R-LINK-INTERNO: todo link relativo do corpo Markdown aponta para arquivo que existe na fonte
 ou para a página que o build gera (B.5, T1b)."""
 
+import shutil
+
 import pytest
 
 from portal.gerador.carregar import Conteudo, Repositorio
@@ -36,7 +38,8 @@ BASE = (fabrica.pratica(), fabrica.receita("outra"), fabrica.starter())
         "[x](https://exemplo.org/a.md)",  # externo não é conferido
         "[x](mailto:a@exemplo.org)",
         "<https://exemplo.org/b>",
-        "[x](../exemplos/ligar-ci/job.yml)",  # arquivo que existe na fonte
+        "[x](../exemplos/ligar-ci/job.yml)",  # arquivo de exemplos/, que o site publica
+        "[x](../llms.txt) [y](../catalogo.json) [z](../roteamento.json)",  # saídas do build
         "[x](/praticas/P1-01.html)",  # absoluto na raiz do site não é relativo
         "```md\n[x](nao-existe.md)\n```",  # em bloco de código não é link
         "`[x](nao-existe.md)`",
@@ -104,3 +107,28 @@ def test_pratica_resolve_a_partir_da_pagina_gerada_e_nao_da_faixa_da_fonte(tmp_p
     assert [(e.arquivo, e.campo) for e in erros] == [
         ("praticas/construir-com-ia/P1-02.md", "linha 1")
     ]
+
+
+@pytest.mark.parametrize(
+    "link",
+    [
+        "[x](../paginas/pessoas.md)",  # existe na fonte, mas o site não tem paginas/
+        "[x](../AGENTS.md)",
+        "[x](../esquemas/pratica.schema.json)",
+        "![x](nao-existe.png)",  # imagem também é conferida
+    ],
+)
+def test_reprova_alvo_que_so_existe_na_fonte_e_imagem_quebrada(tmp_path, link):
+    for relativo in ("paginas/pessoas.md", "AGENTS.md", "esquemas/pratica.schema.json"):
+        (tmp_path / relativo).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / relativo).write_text("x", encoding="utf-8")
+    erros = rodar(*BASE, receita(f"Veja {link}.\n"), raiz=tmp_path)
+    assert [e.regra for e in erros] == ["R-LINK-INTERNO"]
+
+
+def test_aceita_a_pagina_do_roteiro_de_uma_apresentacao(tmp_path):
+    shutil.copytree(fabrica.RAIZ / "esquemas", tmp_path / "esquemas")
+    fabrica.escrever_apresentacao(tmp_path)
+    corpo = "[r](../apresentacoes/harness-sdd/roteiro.html) [d](../apresentacoes/harness-sdd/)\n"
+    erros = rodar(*BASE, receita(corpo), raiz=tmp_path)
+    assert [e.valor for e in erros] == ["../apresentacoes/harness-sdd/: alvo não existe"]

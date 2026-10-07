@@ -916,6 +916,22 @@ def copiar(origem: Path, destino: Path) -> None:
     destino.write_bytes(origem.read_bytes())
 
 
+CARIMBO_DECK = (
+    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#fde68a;'
+    'color:#000;font:600 14px sans-serif;text-align:center;padding:4px">'
+    "PRÉVIA, não publicada</div>"
+)
+
+
+def _carimbar_deck(conteudo: bytes) -> bytes:
+    """Na prévia, o deck leva uma faixa fixa logo depois de `<body>` (ou no fim, sem ele)."""
+    texto = conteudo.decode("utf-8")
+    achado = re.search(r"<body[^>]*>", texto)
+    if achado is None:
+        return (texto + CARIMBO_DECK).encode("utf-8")
+    return (texto[: achado.end()] + CARIMBO_DECK + texto[achado.end() :]).encode("utf-8")
+
+
 def copiar_apresentacoes(site: Site, saida: Path) -> None:
     """Copia `apresentacoes/<slug>/` sem transformar os arquivos. Ficam de fora o README, o
     `apresentacao.yml`, o roteiro-fonte (a página Markdown gerada ocupa o lugar dele), os ocultos
@@ -925,7 +941,12 @@ def copiar_apresentacoes(site: Site, saida: Path) -> None:
         for arquivo in sorted(pasta.rglob("*")):
             relativo = arquivo.relative_to(pasta)
             if arquivo.is_file() and not arquivo.is_symlink() and a.publicado(relativo):
-                copiar(arquivo, saida / PASTA_APRESENTACOES / a.slug / relativo)
+                destino = saida / PASTA_APRESENTACOES / a.slug / relativo
+                if site.previa and arquivo.suffix == ".html":
+                    destino.parent.mkdir(parents=True, exist_ok=True)
+                    destino.write_bytes(_carimbar_deck(arquivo.read_bytes()))
+                else:
+                    copiar(arquivo, destino)
 
 
 def emitir(site: Site, saida: Path) -> list[Pagina]:

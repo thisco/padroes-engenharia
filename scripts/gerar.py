@@ -66,6 +66,34 @@ def copiar_para_raiz(saida: Path, raiz: Path) -> None:
         (raiz / nome).write_bytes((saida / nome).read_bytes())
 
 
+def _mesma_pasta(a: Path, b: Path) -> bool:
+    try:
+        return a.exists() and b.exists() and os.path.samefile(a, b)
+    except OSError:
+        return False
+
+
+def problema_da_saida(raiz: Path, saida: Path, *, previa: bool) -> str | None:
+    """Por que `--saida` não serve, ou None. O build troca a pasta de saída inteira, então ela
+    não pode ser a raiz, um ancestral dela nem uma pasta da fonte; pasta existente com outro
+    conteúdo que não um site gerado também é recusada. A prévia ainda não pode ficar em `public/`
+    (a comparação é por arquivo, então `Public` num sistema que ignora maiúsculas também vale)."""
+    raiz, destino = raiz.resolve(), saida.resolve()
+    publico = raiz / "public"
+    if destino == raiz or destino in raiz.parents:
+        return f"--saida não pode ser a raiz do repositório nem um ancestral dela ({destino})"
+    em_public = destino == publico or publico in destino.parents
+    if previa and (em_public or any(_mesma_pasta(p, publico) for p in (destino, *destino.parents))):
+        return f"a prévia não pode ficar em public/ ({destino}); escolha outra pasta"
+    dentro = raiz in destino.parents and publico not in destino.parents
+    if dentro and not _mesma_pasta(destino, publico):
+        return f"--saida não pode ficar dentro do repositório fora de public/ ({destino})"
+    if destino.is_dir() and any(destino.iterdir()):
+        if not ((destino / "llms.txt").is_file() or (destino / "index.html").is_file()):
+            return f"--saida existe, tem conteúdo e não é um site gerado ({destino})"
+    return None
+
+
 NUMERADA = re.compile(r".+ [0-9]+$")
 
 
@@ -76,8 +104,12 @@ def remover_pastas_vazias_numeradas(saida: Path) -> int:
     if not saida.is_dir():
         return 0
     removidas = 0
-    nivel1 = [p for p in sorted(saida.iterdir()) if p.is_dir()]
-    nivel2 = [p for pai in nivel1 for p in sorted(pai.iterdir()) if p.is_dir()]
+
+    def pastas(pai: Path) -> list[Path]:
+        return [p for p in sorted(pai.iterdir()) if p.is_dir() and not p.is_symlink()]
+
+    nivel1 = pastas(saida)
+    nivel2 = [p for pai in nivel1 for p in pastas(pai)]
     for pasta in (*nivel2, *nivel1):
         if NUMERADA.match(pasta.name) and not pasta.is_symlink() and not any(pasta.iterdir()):
             pasta.rmdir()
@@ -98,13 +130,12 @@ def main(argv: list[str] | None = None) -> int:
         help="prévia de conteúdo novo: ignora R-PROMPT e carimba; exige --saida fora de public/",
     )
     args = parser.parse_args(argv)
-    if args.previa:
-        if args.saida is None:
-            parser.error("--previa exige --saida (uma pasta fora de public/)")
-        publico = (args.raiz / "public").resolve()
-        destino = args.saida.resolve()
-        if destino == publico or publico in destino.parents:
-            parser.error(f"a prévia não pode ficar em public/ ({destino}); escolha outra pasta")
+    if args.previa and args.saida is None:
+        parser.error("--previa exige --saida (uma pasta fora de public/)")
+    if args.saida is not None:
+        problema = problema_da_saida(args.raiz, args.saida, previa=args.previa)
+        if problema:
+            parser.error(problema)
     try:
         raiz = args.raiz.resolve()
         saida = (args.saida or raiz / "public").resolve()

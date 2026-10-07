@@ -204,11 +204,11 @@ def test_execucao_de_prompt_falhou_exige_motivo_nao_vazio(motivo):
 def test_motivo_so_e_obrigatorio_quando_falhou_e_so_vale_em_prompt():
     assert _erros_de_registro({**PROMPT_FALHOU, "resultado": "passou"}) == []
     arquivo = {
+        "tipo": "arquivo",
         "arquivo": "exemplos/P1-01/plano.md",
         "comando": "make",
         "ambiente": "py 3.12",
         "resultado": "falhou",
-        "motivo": "x",
         "evidencia": "ok",
         "data": "2026-10-07",
     }

@@ -412,3 +412,13 @@ def test_pagina_de_ferramentas_sem_mecanismos_nao_cita_o_indice(repo_minimo):
     )
     assert "mecanismos/index.json" not in html_radar(s)
     assert "mecanismos/index.json" not in md_radar(s)
+
+
+def test_hospedados_base_com_comentario_nao_vira_hospedada(tmp_path):
+    montar(tmp_path)
+    trecho = com_base(
+        "BASE=https://raw.githubusercontent.com/o/r/v1/scripts  # espelho de "
+        ".well-known/mecanismos/sdd-scaffold",
+        'curl -fsSL "$BASE/sumiu.py" -o x',
+    )
+    assert rodar(tmp_path, trecho) == []

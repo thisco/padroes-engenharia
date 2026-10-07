@@ -956,8 +956,39 @@ def regra_apresentacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto)
 _ESQUEMA_URL = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 
 
-def _paginas_geradas(repo: Repositorio, espinha: Espinha) -> frozenset[str]:
-    """Os caminhos HTML que o build gera: conteúdo, domínios, listagens e páginas fixas."""
+SAIDAS_FIXAS = (
+    "llms.txt",
+    "llms-full.txt",
+    "busca.json",
+    "catalogo.json",
+    "roteamento.json",
+    "prompts.json",
+    "README.md",
+    "ROTEAMENTO.md",
+)
+
+
+def _arquivos_de_apresentacoes(raiz: Path) -> set[str]:
+    """O roteiro gerado e os arquivos que o build copia de cada `apresentacoes/<slug>/`."""
+    from portal.gerador.apresentacoes import carregar_apresentacoes  # tardia: ver acima
+
+    publicados: set[str] = set()
+    if not (raiz / "apresentacoes").is_dir():
+        return publicados
+    for a in carregar_apresentacoes(raiz):
+        if a.roteiro:
+            publicados.add(a.caminho_roteiro)
+        pasta = raiz / "apresentacoes" / a.slug
+        for arquivo in pasta.rglob("*"):
+            relativo = arquivo.relative_to(pasta)
+            if arquivo.is_file() and not arquivo.is_symlink() and a.publicado(relativo):
+                publicados.add(f"apresentacoes/{a.slug}/{relativo.as_posix()}")
+    return publicados
+
+
+def _paginas_geradas(repo: Repositorio, espinha: Espinha, raiz: Path) -> frozenset[str]:
+    """Os caminhos que o build publica: páginas de conteúdo, domínios, listagens, roteiros, os
+    arquivos das apresentações e as saídas para agentes (`llms.txt`, `catalogo.json`...)."""
     # importação tardia: renderizar importa avisos, que importa este módulo (ciclo)
     from portal.gerador.renderizar import PAGINAS_GERADAS, caminho_de
 
@@ -966,7 +997,9 @@ def _paginas_geradas(repo: Repositorio, espinha: Espinha) -> frozenset[str]:
     }
     dominios = {f"dominios/{f.slug}.html" for f in espinha.faixas}
     fixas = {caminho for caminho, _ in PAGINAS_GERADAS}
-    return frozenset(conteudos | dominios | fixas)
+    return frozenset(
+        conteudos | dominios | fixas | set(SAIDAS_FIXAS) | _arquivos_de_apresentacoes(raiz)
+    )
 
 
 def _links_relativos(corpo: str) -> list[tuple[int, str]]:
@@ -981,7 +1014,9 @@ def _links_relativos(corpo: str) -> list[tuple[int, str]]:
             continue
         inicio, fim = token.map
         for filho in token.children or []:
-            href = str(filho.attrGet("href") or "") if filho.type == "link_open" else ""
+            href = str(
+                filho.attrGet({"link_open": "href", "image": "src"}.get(filho.type, "")) or ""
+            )
             destino = unquote(href.split("#")[0].split("?")[0])
             if not destino or destino.startswith("/") or _ESQUEMA_URL.match(href):
                 continue
@@ -992,14 +1027,16 @@ def _links_relativos(corpo: str) -> list[tuple[int, str]]:
 
 @regra
 def regra_link_interno(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """Todo link relativo do corpo Markdown aponta para um arquivo que existe na fonte ou para a
-    página (ou o `.md` gêmeo dela) que o build gera. O destino é resolvido a partir da pasta da
-    página gerada, que é onde o leitor está (`praticas/` para uma prática da faixa `ci-cd`). Âncora
-    não é conferida; pasta não conta, porque o site não tem índice dela. O erro traz o arquivo, a
-    linha e o destino."""
+    """Todo link relativo do corpo Markdown aponta para a página (ou o `.md` gêmeo dela) ou outra
+    saída que o build publica: `exemplos/`, roteiros e arquivos das apresentações, `llms.txt`,
+    `catalogo.json`... Arquivo que só existe na fonte, como `AGENTS.md` ou `paginas/x.md`, não
+    vale, porque o site não o tem. O destino é resolvido a partir da pasta da página gerada, que é
+    onde o leitor está (`praticas/` para uma prática da faixa `ci-cd`). Âncora não é conferida;
+    pasta não conta, porque o site não tem índice dela. O erro traz o arquivo, a linha e o
+    destino."""
     from portal.gerador.renderizar import caminho_de  # tardia: ver `_paginas_geradas`
 
-    geradas = _paginas_geradas(repo, espinha)
+    geradas = _paginas_geradas(repo, espinha, contexto.raiz)
     erros: list[Erro] = []
     for c in repo.markdown():
         pasta_da_pagina = posixpath.dirname(caminho_de(c).split("#")[0])
@@ -1007,7 +1044,10 @@ def regra_link_interno(repo: Repositorio, espinha: Espinha, contexto: Contexto) 
         for linha, destino in _links_relativos(c.corpo):
             alvo = posixpath.normpath(posixpath.join(pasta_da_pagina, destino))
             gerado = alvo.removesuffix(".md") + ".html" if alvo.endswith(".md") else alvo
-            if alvo.startswith("..") or not ((contexto.raiz / alvo).is_file() or gerado in geradas):
+            publicado = (alvo.startswith("exemplos/") and (contexto.raiz / alvo).is_file()) or (
+                gerado in geradas
+            )
+            if alvo.startswith("..") or not publicado:
                 campo = f"linha {deslocamento + linha}"
                 erros.append(
                     Erro(
@@ -1127,7 +1167,8 @@ CITACAO_HOSPEDADA = re.compile(
 
 BASE_DEFINIDA = re.compile(r"\bBASE=")
 BASE_HOSPEDADA = re.compile(
-    r"\bBASE=[\"']?[^\"']*?\.well-known/mecanismos/(?P<componente>[a-z0-9][a-z0-9-]*)/?(?![\w/.-])"
+    r"""\bBASE=(?:"[^"]*?|'[^']*?|[^\s"'#]*?)"""
+    r"\.well-known/mecanismos/(?P<componente>[a-z0-9][a-z0-9-]*)/?(?![\w/.-])"
 )
 CITACAO_POR_BASE = re.compile(r"\$\{?BASE\}?/(?P<arquivo>[A-Za-z0-9_][\w.-]*)")
 _JANELA_BASE = 3
