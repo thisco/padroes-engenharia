@@ -1,0 +1,180 @@
+conteudo: escolher-e-configurar-o-harness
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o AGENTS.md é um formato aberto de instruções para agentes de código
+  ref: agents-md
+  localizacao: 'página inicial: descrição do formato'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o SKILL.md exige name e description e segue a especificação Agent Skills; a especificação recomenda cerca de 100
+    tokens de metadados e menos de 5.000 tokens de instruções
+  ref: agent-skills-spec
+  localizacao: seções 'SKILL.md format' e 'Progressive disclosure'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: 'o scaffold monta a governança por harness: skills/ com quatro links, hook do Claude Code, requirements.toml do Codex,
+    permissions.yaml do Kiro'
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1, seções 'Um corpo de skill, quatro pontos de montagem' e 'O que impede e o que orienta'
+  resultado: confirmada
+  nota: Conferido também no template gerado com o script do guia.
+- texto: a camada de premissa precisa ficar pequena porque o Codex trunca documentos de projeto em 32.768 bytes sem avisar
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1, seção 'As quatro camadas de governança'
+  resultado: confirmada
+  nota: Observação do scaffold; a documentação do Codex fixa o limite padrão de 32 KiB, não o aviso.
+- texto: .agents/skills entrou na 1.7.0 e serve ao Codex e ao Antigravity
+  ref: sdd-scaffold-changelog
+  localizacao: CHANGELOG.md, [1.7.0]
+  resultado: confirmada
+- texto: com CLAUDE.md e AGENTS.md na pasta, o Claude Code lê só o CLAUDE.md; o @AGENTS.md traz o outro; CLAUDE.md é contexto,
+    não configuração imposta
+  ref: claude-code-memory
+  localizacao: seções 'CLAUDE.md vs auto memory' e 'AGENTS.md'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as skills de projeto do Claude Code ficam em .claude/skills/<nome>/SKILL.md; as descrições são carregadas e o corpo
+    só quando a skill é invocada
+  ref: claude-code-skills
+  localizacao: seções 'Choose where skills load' e 'How skills load'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o PreToolUse do Claude Code pode bloquear; a saída 2 bloqueia e a 1 não; os hooks vêm de .claude/settings.json e
+    outros níveis, e o do projeto pode ser versionado
+  ref: claude-code-hooks
+  localizacao: seções 'Exit code 2' e 'Hook locations'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: subagentes de projeto do Claude Code ficam em .claude/agents/, com janela de contexto própria e campos tools e model
+  ref: claude-code-subagents
+  localizacao: seções de localização e de contexto
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Codex lê AGENTS.md da raiz até a pasta de trabalho e para ao chegar a 32 KiB (project_doc_max_bytes)
+  ref: codex-agents-md
+  localizacao: seção de descoberta e limite
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Codex varre .agents/skills da pasta de trabalho até a raiz, começa com nome e descrição e limita a lista inicial
+    a cerca de 2% da janela ou 8.000 caracteres; a página não cita .codex/skills
+  ref: codex-skills
+  localizacao: seção de localização e progressive disclosure
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: hooks do Codex ficam em .codex/hooks.json ou .codex/config.toml, e o PreToolUse nega com permissionDecision deny
+  ref: codex-hooks
+  localizacao: seções de arquivos de configuração e de bloqueio
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: subagentes do Codex ficam em .codex/agents/*.toml, com name, description e developer_instructions, e herdam da sessão
+    pai o que não sobrescrevem
+  ref: codex-subagents
+  localizacao: seção de definição de subagentes
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Codex tem políticas de aprovação e três modos de sandbox (read-only, workspace-write, danger-full-access), e a
+    rede vem desligada por padrão
+  ref: codex-sandbox-aprovacoes
+  localizacao: seções de políticas de aprovação, modos de sandbox e rede
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Copilot lê .github/copilot-instructions.md, .github/instructions/*.instructions.md, AGENTS.md (o mais próximo),
+    CLAUDE.md ou GEMINI.md na raiz, e os tipos aplicáveis valem juntos
+  ref: copilot-instructions
+  localizacao: seções de instruções por repositório, por caminho e de agente
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as skills de projeto do Copilot ficam em .github/skills, .claude/skills ou .agents/skills, com name e description
+    obrigatórios; a página não diz se segue link simbólico
+  ref: copilot-skills
+  localizacao: seção de skills de projeto e formato do SKILL.md
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os hooks do Copilot ficam em .github/hooks/*.json, valem no agente de nuvem e na CLI, e o preToolUse aprova ou nega
+  ref: copilot-hooks
+  localizacao: seções de configuração e de preToolUse
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: agentes personalizados do Copilot ficam em .github/agents/<nome>.md, com name, description, prompt, tools e mcp-servers;
+    a página não afirma janela isolada
+  ref: copilot-custom-agents
+  localizacao: seções de local e de campos do perfil
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Kiro inclui sempre o AGENTS.md, sem modos de inclusão, e o steering em .kiro/steering/ tem quatro modos
+  ref: kiro-steering
+  localizacao: seções 'Agents.md' e de modos de inclusão
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as skills do Kiro ficam em .kiro/skills/, com name igual à pasta, minúsculas, números e hífens, até 64 caracteres;
+    começa com nomes e descrições
+  ref: kiro-skills
+  localizacao: seções de local e de formato
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os hooks do Kiro ficam em .kiro/hooks/*.json e o PreToolUse pode bloquear a execução
+  ref: kiro-hooks
+  localizacao: seções de local e de tipos de hook
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as permissões do Kiro têm precedência deny sobre ask sobre allow, e o arquivo de workspace fica por usuário, fora
+    do repositório
+  ref: kiro-permissions
+  localizacao: seções de localização e precedência
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os agentes personalizados do Kiro ficam em .kiro/agents/ em JSON ou Markdown
+  ref: kiro-custom-agents
+  localizacao: seção de caminhos
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os agentes de .kiro/agents/ podem ser invocados como subagentes, com contexto de conversa isolado
+  ref: kiro-subagents
+  localizacao: seções de subagentes e contexto
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Antigravity lê AGENTS.md, GEMINI.md e .agents/rules/ em qualquer subpasta, e o trigger da regra é model_decision,
+    always_on, glob ou manual; sem frontmatter a regra é descartada
+  ref: antigravity-rules
+  localizacao: seções de descoberta e de triggers
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07. O descarte silencioso sem frontmatter consta da conferência anterior desta página, de
+    2026-10-05, e não foi reaberto nesta consulta.
+- texto: as skills do Antigravity ficam em .agents/skills/<pasta>/
+  ref: antigravity-skills
+  localizacao: seção de local do workspace
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os hooks do Antigravity ficam em .agents/hooks.json e o PreToolUse devolve allow, deny, ask e outras decisões
+  ref: antigravity-hooks
+  localizacao: seções de local e eventos
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as permissões do Antigravity têm listas deny, ask e allow nessa precedência, no formato ação(alvo), configuradas
+    no IDE ou em ~/.gemini/antigravity-cli/settings.json
+  ref: antigravity-permissions
+  localizacao: seções de configuração e precedência
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: os subagentes do Antigravity ficam em .agents/agents/<nome>.md e começam sem o histórico da conversa pai
+  ref: antigravity-subagents
+  localizacao: seções de local e isolamento de contexto
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+execucoes:
+- tipo: arquivo
+  arquivo: guias/escolher-e-configurar-o-harness.md
+  comando: bash conferir-pontos-de-montagem.sh (o script do passo 4) na raiz de um projeto gerado por criar_projeto.py da
+    tag v1.7.1, e na raiz de um projeto no estado anterior à 1.7.0 (sem .agents/skills e sem @AGENTS.md no CLAUDE.md)
+  ambiente: macOS, bash, sdd-scaffold v1.7.1 (clone da tag); projetos de teste em pasta temporária e em ~/curadoria-a5/b5-guia-harness-prompt;
+    sem harness
+  resultado: passou
+  evidencia: 'projeto 1.7.1: quatro pontos de montagem com ../skills e 5 skills cada, AGENTS.md, CLAUDE.md com @AGENTS.md,
+    GEMINI.md, hook PreToolUse, git_attribution fixado e permissions.yaml; ''0 ponto(s) faltando'', código 0. Projeto anterior:
+    FALTA em .agents/skills e em CLAUDE.md sem @AGENTS.md; ''2 ponto(s) faltando'', código 1.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.5 pendente'
+  data: '2026-10-07'
+  achados: []
