@@ -85,7 +85,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
   Inclui os 3 médios herdados da conferência do starter, da receita e do caso da B.2
   (`c5ae0e0`): laço `until` do health check sem limite no starter e na receita; passo 7 do
   prompt da receita sem "sem trailer"; `cd` e `<pasta-da-aplicação>` ausentes no passo 3.
-- [ ] **T10.** Checkpoint do dono.
+- [x] **T10.** Checkpoint do dono.
 
 ## Evidências
 
@@ -185,3 +185,23 @@ Conferido: 10 práticas, 4 domínios, 1 receita; verificadores rodados: verifica
 - Herdados da B.2: resolvidos. Receita e starter do gateway com limite de 60 tentativas no health check, passo 7 com "sem linha de coautoria nem trailer" e `cd <pasta-da-aplicação>` no passo 3.
 - OBS, revisor (médio): resolvido. Os 15 registros da B.3 trazem `revisor: conferência em lote (ADR 0005), sessão independente`, no formato dos demais, com os achados do seu ID (os de OBS-01, OBS-02 e observabilidade inclusive).
 - `validar.py`: zero erro ("validação ok: nenhum erro").
+
+## Checkpoint: 2026-10-07
+
+**Aprovou:** o dono do portal ("Tudo ok"), ao fechar a fatia e mandar seguir para a B.4. **Decisões:**
+
+1. **Status das 9 práticas:** todas em `experimentar`, inclusive a UX-01 (prevista como
+   `adotar`): o validador exige referência forte ou caso interno, e a base dela é a skill
+   interna `estados-de-interface`. Promoção quando houver um caso.
+2. **Prompts alterados na T9** (DAD-02, receita corretiva, starter e receita do gateway: limite
+   no laço de espera, "sem coautoria nem trailer", `cd`): não retestados; a execução anterior
+   vale, com nota nos registros.
+3. **Pendências para a B.5** aceitas como listadas na T9: laços `until` sem limite em P2-01,
+   P2-04, P2-05 e P2-06; `comparar-contratos.py` sem aviso de schema sem `type`; ordem dos
+   passos 6 e 7 da receita do gateway; health check no repositório externo `gateway-poc`;
+   diretórios vazios `<nome> 2` que o iCloud Drive cria em `public/` durante o `gerar.py`
+   (lixo local; apagar com `find public -maxdepth 2 -name '* [0-9]' -type d -empty -delete`).
+
+Custo da fatia: estimativa de 3 milhões de tokens, com 5 autores, 11 testadores, o conferente
+(ADR 0005, com reconferência) e o autor da T9. Sem revisão com modelo forte: o único achado alto
+era no verificador de um Exemplo, tratado e reconferido pelo mesmo conferente.
