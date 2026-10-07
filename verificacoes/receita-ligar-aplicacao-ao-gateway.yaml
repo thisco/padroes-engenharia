@@ -1,5 +1,5 @@
 # prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
-# 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. O prompt da seção Com o agente ainda não foi testado em sessão nova; revisão adversarial provisória até a conferência em lote.
+# 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. Prompt testado em sessão nova na B.2 (commit 0a06b44 do preparo); conferido em lote na B.2 e revisto na B.5 (laço com limite, passos 6 e 7, sem reteste por decisão do dono).
 conteudo: receita-ligar-aplicacao-ao-gateway
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
@@ -150,61 +150,70 @@ execucoes:
   data: '2026-10-06'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
-  data: '2026-10-06'
+  data: '2026-10-07'
   achados:
   - afirmacao: Passos 1 a 6 contra a execução registrada e a transcrição (receita-ligar-aplicacao-ao-gateway-prompt-1)
-    problema: '[baixo] confirmado: chave virtual com alias, models ["simulado"], 5 de orçamento por 30 dias; cliente
-      com a resposta simulada; veredito "CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum" (a transcrição
-      mostra também uma linha anterior de 0 mascarados, de outra chamada); 7 chamadas ok e a 8ª com 429 budget_exceeded
-      (custo 5.4, teto 5.0); /key/info com spend e max_budget. A conta do texto (9 chamadas aceitas a 0,6) bate.'
+    problema: '[baixo] confirmado: chave virtual com alias, models ["simulado"], 5 de orçamento por 30 dias; cliente com
+      a resposta simulada; veredito "CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum" (a transcrição mostra também
+      uma linha anterior de 0 mascarados, de outra chamada); 7 chamadas ok e a 8ª com 429 budget_exceeded (custo 5.4, teto
+      5.0); /key/info com spend e max_budget. A conta do texto (9 chamadas aceitas a 0,6) bate.'
     tratamento: Nenhum.
   - afirmacao: prompt publicado (## Com o agente) contra b2-receita-gateway-prompt.prompt.txt
-    problema: '[baixo] igual ao testado, salvo os placeholders {url do gateway} e {pasta do gateway} e um ponto:
-      no testado o passo 5 usava `COMPOSE_PROJECT_NAME=gateway-poc-teste docker compose logs`; no publicado, `docker
-      compose logs`, que funciona na pasta do gateway.'
+    problema: '[baixo] igual ao testado, salvo os placeholders {url do gateway} e {pasta do gateway} e um ponto: no testado
+      o passo 5 usava `COMPOSE_PROJECT_NAME=gateway-poc-teste docker compose logs`; no publicado, `docker compose logs`,
+      que funciona na pasta do gateway.'
     tratamento: Nenhum.
   - afirmacao: 'prompt, passo 7: commit com a mensagem "feat: aplicação ligada ao gateway de IA"'
-    problema: '[médio] o prompt não diz "sem trailer", e a regra do plano é pedir a mensagem sem trailer: o commit
-      testado (0a06b44) saiu com `Co-Authored-By` e `Claude-Session` no corpo, e o harness do usuário pode repetir
-      isso.'
-    tratamento: 'Tratado em 2026-10-06: o passo 7 do prompt pede "sem linha de coautoria nem trailer". Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
+    problema: '[médio] o prompt não diz "sem trailer", e a regra do plano é pedir a mensagem sem trailer: o commit testado
+      (0a06b44) saiu com `Co-Authored-By` e `Claude-Session` no corpo, e o harness do usuário pode repetir isso.'
+    tratamento: 'Tratado em 2026-10-06: o passo 7 do prompt pede "sem linha de coautoria nem trailer". Nota: prompt alterado
+      em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
   - afirmacao: Passo 3 e passo 5 (shell e pasta)
-    problema: '[baixo] o texto manda ficar em um único shell na pasta `gateway-poc/poc`, mas o passo 3 roda `python3
-      -m venv .venv` e `python cliente.py` "no repositório da aplicação" sem dizer `cd`; o passo 5 usa `(cd <pasta-da-aplicação>
+    problema: '[baixo] o texto manda ficar em um único shell na pasta `gateway-poc/poc`, mas o passo 3 roda `python3 -m
+      venv .venv` e `python cliente.py` "no repositório da aplicação" sem dizer `cd`; o passo 5 usa `(cd <pasta-da-aplicação>
       && ...)` e depende do venv e das variáveis do passo 3. Quem segue por leitura tem de deduzir o `cd` e o `<pasta-da-aplicação>`.'
-    tratamento: 'Tratado em 2026-10-06 no prompt: o passo 3 diz "cd <pasta-da-aplicação>". O texto dos passos da receita segue como estava. Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
+    tratamento: 'Tratado em 2026-10-06 no prompt: o passo 3 diz "cd <pasta-da-aplicação>". O texto dos passos da receita
+      segue como estava. Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
   - afirmacao: Passo 7 (403 para modelo fora da lista)
-    problema: '[baixo] o 403 consta no registro como evidência de uma linha, sem a ordem em relação ao estouro do
-      orçamento do passo 6; a chave já estourada pode devolver 429 em vez de 403 conforme a versão. O prompt testado
-      não tem esse passo.'
+    problema: '[baixo] o 403 consta no registro como evidência de uma linha, sem a ordem em relação ao estouro do orçamento
+      do passo 6; a chave já estourada pode devolver 429 em vez de 403 conforme a versão. O prompt testado não tem esse
+      passo.'
     tratamento: 'Pendente: rodar o passo 7 antes do 6 no texto, ou registrar a ordem em que o 403 foi obtido.'
   - afirmacao: Passo 1 e Antes de começar (health check e laço)
-    problema: '[baixo] `until curl ...; do sleep 3; done` sem limite: um gateway que não sobe deixa o shell preso,
-      e o texto não diz o que fazer.'
-    tratamento: 'Tratado em 2026-10-06: os dois laços do texto (passos 1 e 4) têm limite de 60 tentativas de 3 s e uma mensagem ao esgotar. Os blocos de código não são o prompt.'
+    problema: '[baixo] `until curl ...; do sleep 3; done` sem limite: um gateway que não sobe deixa o shell preso, e o texto
+      não diz o que fazer.'
+    tratamento: 'Tratado em 2026-10-06: os dois laços do texto (passos 1 e 4) têm limite de 60 tentativas de 3 s e uma mensagem
+      ao esgotar. Os blocos de código não são o prompt.'
   - afirmacao: Passos 2 a 5 (porta e pré-requisito de nomes)
-    problema: '[baixo] o pré-requisito cita 3 nomes de contêiner, mas o profile guardrails (passo 4) também fixa
-      `poc-presidio-analyzer` e `poc-presidio-anonymizer`, que só conflitam se houver outra cópia dos profiles no
-      ar.'
+    problema: '[baixo] o pré-requisito cita 3 nomes de contêiner, mas o profile guardrails (passo 4) também fixa `poc-presidio-analyzer`
+      e `poc-presidio-anonymizer`, que só conflitam se houver outra cópia dos profiles no ar.'
     tratamento: Nenhum.
   - afirmacao: 'Se der errado: porta ocupada e guardrail não registrado'
     problema: '[baixo] coberto: o primeiro item trata nome em uso e porta 4000 (sem derrubar o que está lá); o terceiro
-      trata "nenhum veredito no log" (guardrail não carregou por PYTHONPATH e montagem, ou Presidio fora do ar).
-      Também cobre alias repetido, atraso do gasto, 429 x 422 e OOM.'
+      trata "nenhum veredito no log" (guardrail não carregou por PYTHONPATH e montagem, ou Presidio fora do ar). Também
+      cobre alias repetido, atraso do gasto, 429 x 422 e OOM.'
     tratamento: Nenhum.
   - afirmacao: Executabilidade por leitura (§11.4)
-    problema: '[médio] o que exigiria inventar algo: (a) `<pasta-da-aplicação>` e o `cd` do passo 3; (b) o limite
-      do health check; (c) a posição exata do item no `guardrails:` do config.yaml (o texto diz "logo abaixo da
-      linha", e o item entra com dois espaços, como os da lista, o que confere com a tag); (d) quem não tem o Presidio
-      no profile sem o passo 4 vê erro de DNS no log do gateway sem diagnóstico no passo 5. Nenhum bloqueia: o texto,
-      com os Se der errado, deixa um leitor atento chegar ao veredito.'
+    problema: '[médio] o que exigiria inventar algo: (a) `<pasta-da-aplicação>` e o `cd` do passo 3; (b) o limite do health
+      check; (c) a posição exata do item no `guardrails:` do config.yaml (o texto diz "logo abaixo da linha", e o item entra
+      com dois espaços, como os da lista, o que confere com a tag); (d) quem não tem o Presidio no profile sem o passo 4
+      vê erro de DNS no log do gateway sem diagnóstico no passo 5. Nenhum bloqueia: o texto, com os Se der errado, deixa
+      um leitor atento chegar ao veredito.'
     tratamento: Tratados (a) e (b) em 2026-10-06, como nos achados acima; (c) e (d) já estavam tratados no texto.
   - afirmacao: fontes litellm-* e gateway-poc-*
-    problema: '[baixo] gateway-poc-readme e gateway-poc-compose abertas na web no commit 571a091c: a porta 4000,
-      os três nomes e o profile guardrails (presidio-analyzer e presidio-anonymizer) conferem. As páginas litellm-*
-      não foram reabertas nesta conferência (amostra: uma fonte por conteúdo).'
+    problema: '[baixo] gateway-poc-readme e gateway-poc-compose abertas na web no commit 571a091c: a porta 4000, os três
+      nomes e o profile guardrails (presidio-analyzer e presidio-anonymizer) conferem. As páginas litellm-* não foram reabertas
+      nesta conferência (amostra: uma fonte por conteúdo).'
     tratamento: Nenhum.
   - afirmacao: comentário de cabeçalho deste registro
-    problema: '[baixo] o cabeçalho ainda diz que o prompt não foi testado em sessão nova; a execução do prompt está
-      registrada abaixo.'
+    problema: '[baixo] o cabeçalho ainda diz que o prompt não foi testado em sessão nova; a execução do prompt está registrada
+      abaixo.'
     tratamento: 'Nenhum: comentário histórico.'
+  - afirmacao: 'passo 3: marcador <!-- incluir: exemplos/P2-01/cliente.py --> visível'
+    problema: '[médio] a diretiva estava recuada dentro do item de lista e o expansor só a reconhece na coluna 0; o código
+      do cliente não aparecia.'
+    tratamento: 'Tratado em 2026-10-07: a diretiva passou para a coluna 0 (a lista recomeça no passo 4); conferido no HTML
+      e no .md gerados. O prompt não mudou.'
+  - afirmacao: 'passo 4: segundo laço de espera'
+    problema: '[baixo] o laço após --force-recreate só imprimia ''pare aqui''.'
+    tratamento: 'Tratado em 2026-10-07: sai com exit 1, como o do passo 1.'

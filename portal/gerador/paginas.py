@@ -39,7 +39,9 @@ from portal.gerador.texto_md import celula, juntar, md_lista_referencias
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
 # Campos que são identificadores ou rótulos de máquina: não passam pelo Markdown.
-LITERAIS = frozenset({"figura", "degrau", "dominio", "pratica", "momento", "destino", "id"})
+LITERAIS = frozenset(
+    {"figura", "degrau", "dominio", "pratica", "momento", "destino", "id", "praticas"}
+)
 
 
 def ids_da_pagina(site: Site, pagina: Conteudo) -> list[str]:
@@ -364,6 +366,24 @@ def _normas(site: Site, pagina: Conteudo, ids: list[str]) -> list[dict[str, Any]
     return resultado
 
 
+def _trabalho(site: Site, pagina: Conteudo, ids: list[str]) -> dict[str, Any] | None:
+    """Os modos de trabalho (Cherny + Verificador) com as práticas de cada modo resolvidas."""
+    bruto = pagina.meta.get("trabalho")
+    if not isinstance(bruto, dict) or not bruto.get("ciclo"):
+        return None
+    trabalho = citar(bruto, ids)
+    nomes = [str(m["titulo"]) for m in bruto["ciclo"]]
+    for i, modo in enumerate(trabalho["ciclo"]):
+        modo["praticas"] = [
+            {"chave": p.chave, "titulo": p.meta["titulo"], "href": caminho_de(p)}
+            for id_ in bruto["ciclo"][i].get("praticas") or []
+            if (p := site.catalogo.pratica(str(id_))) is not None
+        ]
+        modo["predomina"] = nomes[i]
+        modo["tambem"] = [n for n in nomes if n != nomes[i]]
+    return trabalho
+
+
 def html_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
     ids = ids_da_pagina(site, pagina)
     meta = pagina.meta
@@ -376,9 +396,38 @@ def html_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
         lead=citar(meta.get("lead", ""), ids, "lead"),
         modos=citar(_lista(pagina, "modos"), ids),
         normas=_normas(site, pagina, ids),
+        trabalho=_trabalho(site, pagina, ids),
         corpo=corpo_da_pagina(pagina, ids),
         referencias=site.catalogo.referencias_de(pagina),
     )
+
+
+def _md_trabalho(pagina: Conteudo) -> str:
+    """A versão em texto do diagrama: uma tabela com os seis modos e a lista de limites."""
+    bruto = pagina.meta.get("trabalho")
+    if not isinstance(bruto, dict) or not bruto.get("ciclo"):
+        return ""
+    linhas = ["| Modo | Fase | O que faz | Onde aparece |", "| --- | --- | --- | --- |"]
+    for modo in bruto["ciclo"]:
+        links = ", ".join(f"[{i}](praticas/{i}.md)" for i in modo.get("praticas") or [])
+        onde = f"{modo['onde']} {links}".strip()
+        linhas.append(
+            f"| {celula(modo['titulo'])} | {celula(modo['fase'])} | {celula(modo['faz'])} "
+            f"| {celula(onde)} |"
+        )
+    v = bruto["verificador"]
+    linhas.append(
+        f"| {celula(v['titulo'])} (acrescentado aqui) | Envolve todas | {celula(v['faz'])} "
+        f"| {celula(v['onde'])} |"
+    )
+    limites = [f"- {item}" for item in bruto.get("limites") or []]
+    return juntar(
+        "## Modos de trabalho na era agentiva",
+        str(bruto["intro"]),
+        "\n".join(linhas),
+        str(bruto["legenda"]),
+        "A lista tem estes limites:\n\n" + "\n".join(limites),
+    ).rstrip("\n")
 
 
 def md_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
@@ -395,6 +444,7 @@ def md_pessoas_e_normas(site: Site, pagina: Conteudo) -> str:
         str(meta.get("lead") or ""),
         ("## Modos de atuação\n\n" + "\n".join(modos)) if modos else "",
         ("## Normas\n\n" + "\n".join(normas)) if normas else "",
+        _md_trabalho(pagina),
         pagina.corpo,
         md_lista_referencias(site, pagina),
     )

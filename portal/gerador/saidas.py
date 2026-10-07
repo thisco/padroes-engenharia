@@ -498,11 +498,16 @@ def _de(site: Site) -> str:
     return f" de {site.organizacao}" if site.organizacao else ""
 
 
+def _titulo(site: Site) -> str:
+    """O H1 do `llms.txt`; a prévia leva o carimbo na primeira linha."""
+    return f"# {site.nome} (PRÉVIA, não publicada)" if site.previa else f"# {site.nome}"
+
+
 def llms_txt(site: Site, paginas: list[Pagina]) -> str:
     """Índice no formato llms.txt (https://llmstxt.org/): H1, resumo em blockquote, detalhes e
     seções H2 com `- [título](url): descrição`, apontando o `.md` gêmeo de cada página."""
     linhas = [
-        f"# {site.nome}",
+        _titulo(site),
         "",
         f"> Portal de padrões de engenharia{_de(site)}, com IA como guia. "
         f"Versão {site.versao}, commit {site.commit}, gerado em {site.data}.",
@@ -553,8 +558,9 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
 
 def llms_full(site: Site, paginas: list[Pagina]) -> str:
     """Todas as páginas em Markdown, na ordem do llms.txt, cada uma com a URL de origem."""
+    carimbo = " (PRÉVIA, não publicada)" if site.previa else ""
     cabecalho = (
-        f"# {site.nome}: texto completo\n\n"
+        f"# {site.nome}: texto completo{carimbo}\n\n"
         f"> Versão {site.versao}, commit {site.commit}, gerado em {site.data}. "
         "Cada seção abaixo é o `.md` gêmeo de uma página, precedido da URL dele.\n"
     )
@@ -910,6 +916,22 @@ def copiar(origem: Path, destino: Path) -> None:
     destino.write_bytes(origem.read_bytes())
 
 
+CARIMBO_DECK = (
+    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#fde68a;'
+    'color:#000;font:600 14px sans-serif;text-align:center;padding:4px">'
+    "PRÉVIA, não publicada</div>"
+)
+
+
+def _carimbar_deck(conteudo: bytes) -> bytes:
+    """Na prévia, o deck leva uma faixa fixa logo depois de `<body>` (ou no fim, sem ele)."""
+    texto = conteudo.decode("utf-8")
+    achado = re.search(r"<body[^>]*>", texto)
+    if achado is None:
+        return (texto + CARIMBO_DECK).encode("utf-8")
+    return (texto[: achado.end()] + CARIMBO_DECK + texto[achado.end() :]).encode("utf-8")
+
+
 def copiar_apresentacoes(site: Site, saida: Path) -> None:
     """Copia `apresentacoes/<slug>/` sem transformar os arquivos. Ficam de fora o README, o
     `apresentacao.yml`, o roteiro-fonte (a página Markdown gerada ocupa o lugar dele), os ocultos
@@ -919,7 +941,12 @@ def copiar_apresentacoes(site: Site, saida: Path) -> None:
         for arquivo in sorted(pasta.rglob("*")):
             relativo = arquivo.relative_to(pasta)
             if arquivo.is_file() and not arquivo.is_symlink() and a.publicado(relativo):
-                copiar(arquivo, saida / PASTA_APRESENTACOES / a.slug / relativo)
+                destino = saida / PASTA_APRESENTACOES / a.slug / relativo
+                if site.previa and arquivo.suffix == ".html":
+                    destino.parent.mkdir(parents=True, exist_ok=True)
+                    destino.write_bytes(_carimbar_deck(arquivo.read_bytes()))
+                else:
+                    copiar(arquivo, destino)
 
 
 def emitir(site: Site, saida: Path) -> list[Pagina]:

@@ -11,7 +11,7 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from portal.gerador.erros import R_EXTERNO, Erro
+from portal.gerador.erros import R_EXTERNO, R_PROMPT, Erro
 from portal.gerador.externos import EXTERNOS
 from portal.gerador.regras import validar_tudo
 from portal.gerador.renderizar import montar_site
@@ -47,13 +47,19 @@ def construir(
     commit: str,
     data: str,
     url_base: str,
+    previa: bool = False,
 ) -> list[Erro]:
-    """Valida `raiz` e gera o site em `saida`. Devolve os erros; com erro, nada é publicado."""
+    """Valida `raiz` e gera o site em `saida`. Devolve os erros; com erro, nada é publicado.
+
+    Com `previa`, só `R-PROMPT` deixa de reprovar (receita nova ainda sem execução registrada) e
+    o site sai carimbado "PRÉVIA, não publicada"; as demais regras continuam valendo."""
     raiz, saida = Path(raiz), Path(saida)
-    erros = validar_tudo(raiz)
+    erros = validar_tudo(raiz, frozenset({R_PROMPT}) if previa else frozenset())
     if erros:
         return erros
-    site = montar_site(raiz, versao=versao, commit=commit, data=data, url_base=url_base)
+    site = montar_site(
+        raiz, versao=versao, commit=commit, data=data, url_base=url_base, previa=previa
+    )
     temporaria = saida.with_name(saida.name + ".tmp")
     antiga = saida.with_name(saida.name + ".old")
     for pasta in (temporaria, antiga):

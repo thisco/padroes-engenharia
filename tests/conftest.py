@@ -170,7 +170,7 @@ def repo_exemplo(repo_minimo: Path) -> Path:
     _com_registro(
         raiz, "guias/do-zero.md", tutorial, "## Passos\n\n1. Faça. [ref:ref-forte]\n", "do-zero"
     )
-    _com_registro(raiz, "casos/sgd.md", fabrica.meta_caso(), citacao, "sgd")
+    _com_registro(raiz, "casos/caso-teste.md", fabrica.meta_caso(), citacao, "caso-teste")
     problema = fabrica.meta_pagina_estruturada()
     _com_registro(raiz, "paginas/o-problema.md", problema, citacao, "o-problema")
     inicio = fabrica.meta_pagina(

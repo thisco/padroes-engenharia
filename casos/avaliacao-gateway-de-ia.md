@@ -33,8 +33,9 @@ numeros:
     valor: 11
     data: "2026-09-23"
     fonte: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/avaliacao/resultados/matriz-consolidada.md
-referencias: [gateway-poc-matriz, gateway-poc-plano-avaliacao, gateway-poc-benchmark-gateways]
+referencias: [gateway-poc-matriz, gateway-poc-plano-avaliacao, gateway-poc-benchmark-gateways, gateway-poc-cenario-08-decisao-tipada, gateway-poc-readme]
 revisado_em: 2026-10-06
+dono: engenharia
 ---
 
 ## O que foi avaliado
@@ -57,7 +58,7 @@ Os critérios de aceite são os mesmos para todo caso: reprodutível por script,
 
 A comparação com o OmniRoute, prevista como fase 2 do plano, não faz parte do material publicado: o plano é citado nos textos, mas a execução e o plano comparativo não foram incluídos [ref:gateway-poc-plano-avaliacao]. Este caso, portanto, não compara o LiteLLM com outro gateway. O mesmo vale para a versão testada: a imagem é uma tag móvel, e a própria matriz avisa que a decisão de produção não deve se apoiar num resultado dependente dela sem reexecutar o teste contra uma versão fixa [ref:gateway-poc-matriz].
 
-O período vai de 2026-09-10, primeira execução, a 2026-09-23, execução do cenário de decisão tipada, registrada no README desse cenário no mesmo commit.
+O período vai de 2026-09-10, primeira execução, a 2026-09-23, execução do cenário de decisão tipada, que o README desse cenário registra como "Execução real em 2026-09-23" [ref:gateway-poc-cenario-08-decisao-tipada]. O README da raiz do repositório, no mesmo commit, diz "execuções entre 2026-09-10 e 2026-09-11" [ref:gateway-poc-readme]; essa frase não cobre o cenário 08, e vale a data do README do cenário.
 
 ## O que o portal tira disso
 

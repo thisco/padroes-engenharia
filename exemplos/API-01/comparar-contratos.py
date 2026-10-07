@@ -19,6 +19,9 @@ os $ref internos de `#/components/`:
   - campo removido, com tipo mudado, que passou a obrigatório ou novo e obrigatório, na requisição.
 É compatível: endpoint, operação ou código de resposta novo, campo ou parâmetro novo e opcional.
 
+Um schema sem `type` nos dois lados (por exemplo, o que só tem `allOf`) não é comparado; a saída
+traz uma linha de AVISO com a contagem e os lugares, e o código de saída não muda.
+
 Limites: o verificador lê só os dois arquivos. Não confere enum, formato, limites de tamanho,
 oneOf, allOf, a semântica dos campos, nem se a implementação segue o contrato (isso é o teste
 de contrato, API-02). A regra de versão é a do SemVer: mudança incompatível pede a major.
@@ -72,6 +75,7 @@ class Comparador:
     def __init__(self, base, revisao):
         self.base, self.revisao = base, revisao
         self.achados = []
+        self.sem_type = []
 
     def registrar(self, tipo, texto):
         self.achados.append((tipo, texto))
@@ -79,6 +83,10 @@ class Comparador:
     def schema(self, b, r, onde, modo, nivel=0):
         b, r = resolver(self.base, b), resolver(self.revisao, r)
         if nivel > PROFUNDIDADE_MAXIMA:
+            return
+        if b.get("type") is None and r.get("type") is None:
+            if b or r:
+                self.sem_type.append(onde)
             return
         if b.get("type") != r.get("type"):
             self.registrar(
@@ -200,13 +208,19 @@ def main(argv=None):
         base, revisao = carregar(args.base), carregar(args.revisao)
         v_base, major_base = versao_major(base, args.base)
         v_rev, major_rev = versao_major(revisao, args.revisao)
-        achados = Comparador(base, revisao).comparar()
+        comparador = Comparador(base, revisao)
+        achados = comparador.comparar()
     except (OSError, ValueError, KeyError, TypeError, AttributeError) as erro:
         print(f"API-01: não foi possível comparar: {erro}")
         return 1
     incompativeis = [t for k, t in achados if k == INCOMPATIVEL]
     for tipo, texto in achados:
         print(("INCOMPATÍVEL: " if tipo == INCOMPATIVEL else "compatível: ") + texto)
+    if comparador.sem_type:
+        print(
+            f"AVISO: {len(comparador.sem_type)} schema(s) sem type não comparado(s), "
+            "confira na revisão: " + "; ".join(comparador.sem_type)
+        )
     if not incompativeis:
         print(f"API-01: {len(achados)} mudança(s), todas compatíveis (versão {v_base} -> {v_rev}).")
         return 0

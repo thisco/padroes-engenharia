@@ -9,7 +9,7 @@ CSS = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
 
 
 def fora_de_media_min_width(css):
-    return re.sub(r"@media\s*\(min-width:[^{]*\{(?:[^{}]*\{[^}]*\})*\s*\}", "", css)
+    return re.sub(r"@(?:media|container)\s*\(min-width:[^{]*\{(?:[^{}]*\{[^}]*\})*\s*\}", "", css)
 
 
 def test_nenhuma_largura_fixa_acima_de_360px_fora_de_min_width():

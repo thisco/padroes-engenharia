@@ -15,7 +15,7 @@ dono: engenharia
 revisado_em: 2026-10-07
 revisar_ate: 2027-04-07
 resumo: "Um único script roda suíte, linter, formatador e cobertura mínima; o job do CI chama esse script, e quem desenvolve o roda antes de pedir revisão."
-ferramentas_aprovadas: [gitlab-ci-local]
+ferramentas_aprovadas: [gitlab-ci-local, pytest]
 exemplos:
   - exemplos/QLD-03/validar.sh
   - exemplos/QLD-03/gitlab-ci.yml
@@ -75,7 +75,8 @@ inconformidade que uma máquina acharia.
    regra de contar as falhas e sair com 1 no fim. Troque a pasta de cobertura (`--cov=calculo`) e o
    mínimo (90) pelos do projeto.
 2. Crie o `requirements-dev.txt` com as versões fixadas de pytest, pytest-cov e ruff, e a
-   configuração do linter no `pyproject.toml`. O ruff local e o do CI leem o mesmo arquivo.
+   configuração do linter no `pyproject.toml`. O ruff local e o do CI leem o mesmo arquivo. A linha
+   `extend` do Exemplo só existe no repositório do portal; no seu projeto, apague-a.
 3. Crie o `.gitlab-ci.yml` com o job `validar` do Exemplo, ou acrescente o job ao que já existe. O
    job não pode repetir nenhum comando do script: ele instala e chama.
 4. Antes do push, rode o script no ambiente do projeto (`sh validar.sh`, com o ambiente virtual

@@ -21,7 +21,7 @@ pasta onde o projeto vai nascer, cola um prompt, e o agente clona o scaffold, ro
 confere a instalação, lê a constituição e conduz a configuração pós-geração [ref:sdd-scaffold-readme].
 Este guia cobre o preparo, o que conferir no fim e o que continua sendo seu. O prompt em si não
 mora aqui: ele é o `prompt_para_agente` do starter
-[SDD scaffold](../starters/sdd-scaffold.html), na versão 1.7.1, e é lá que você o copia.
+[sdd-scaffold](../starters/sdd-scaffold.html), na versão 1.7.1, e é lá que você o copia.
 
 ## Passos
 
@@ -41,7 +41,7 @@ mora aqui: ele é o `prompt_para_agente` do starter
 3. **Tenha à mão três respostas.** O prompt começa perguntando o nome do projeto, a stack e uma
    descrição de uma linha. Se você não souber a stack ou a descrição, ele segue com os defaults e
    deixa marcadores `<!-- preencher -->` para depois [ref:sdd-scaffold-readme].
-4. **Cole o prompt do starter.** Abra o [starter SDD scaffold](../starters/sdd-scaffold.html),
+4. **Cole o prompt do starter.** Abra o [starter sdd-scaffold](../starters/sdd-scaffold.html),
    copie o `prompt_para_agente` e cole na sessão. Ele pede que o agente pare e espere sua
    confirmação antes de qualquer passo destrutivo [ref:sdd-scaffold-readme]; responda às
    perguntas e confirme.

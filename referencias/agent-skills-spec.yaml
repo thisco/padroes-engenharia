@@ -3,7 +3,7 @@ titulo: Agent Skills specification
 organizacao: Agent Skills
 url: https://agentskills.io/specification
 tipo: padrao-aberto
-verificado_em: '2026-10-04'
+verificado_em: 2026-10-07
 verificacao: V
 localizacao: seções 'SKILL.md format' e 'Progressive disclosure'
 dominios:

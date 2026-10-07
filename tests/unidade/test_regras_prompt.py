@@ -66,3 +66,17 @@ def test_prompt_sai_escapado_com_id_e_copiar():
     assert '<figure class="prompt" id="DAD-01-prompt-1">' in html
     assert "&lt;script&gt;" in html and "<script>" not in html
     assert 'class="copiar" data-copiar hidden>Copiar</button>' in html
+
+
+def test_execucao_que_falhou_nao_conta_como_execucao_registrada(tmp_path):
+    p = fabrica.pratica(fabrica.meta_pratica(status="adotar"), COM_PROMPT)
+    falhou = dict(
+        EXECUTADO, prompt="P1-01-prompt-1", resultado="falhou", motivo="defeito do prompt"
+    )
+    sozinha = fabrica.verificacao(fabrica.meta_verificacao(conteudo="P1-01", execucoes=[falhou]))
+    assert rodar(p, sozinha, raiz=tmp_path) == ["P1-01-prompt-1: sem execução registrada"]
+    execucoes = [falhou, dict(EXECUTADO, prompt="P1-01-prompt-1")]
+    com_a_que_passou = fabrica.verificacao(
+        fabrica.meta_verificacao(conteudo="P1-01", execucoes=execucoes)
+    )
+    assert rodar(p, com_a_que_passou, raiz=tmp_path) == []

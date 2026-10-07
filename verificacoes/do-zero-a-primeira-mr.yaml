@@ -61,23 +61,44 @@ afirmacoes:
   nota: 'Conferido em 2026-10-06 no clone local (git diff v1.7.0 v1.7.1 --stat: só settings, workflows, Kiro, hook, verificar_pr.py, README e CHANGELOG mudam no template). O guia não foi reexecutado inteiro na 1.7.1; o verificar_pr.py foi rodado num projeto gerado pela tag, com a mesma linha BLOQUEIA do guia.'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico, ADR 0005
-  data: '2026-10-06'
+  data: '2026-10-07'
   achados:
-  - afirmacao: links ../praticas/construir-com-ia/P1-01, P1-04, P1-05, P1-06, P1-09 e P1-11.html (guias/do-zero-a-primeira-mr.md:71, 114 e demais)
-    problema: '[médio] seis links dão 404 no site gerado (as páginas de prática ficam em /praticas/P1-XX.html, sem a pasta do domínio).'
-    tratamento: 'Tratado em 2026-10-06: os seis links passaram a ../praticas/P1-XX.html e foram conferidos com curl no portal servido depois de regerar.'
-  - afirmacao: 'Passo 1: python3 scripts-do-scaffold/criar_projeto.py; base com app/precos.py, V1__cria_pedidos.sql e remoto git init --bare (guias/do-zero-a-primeira-mr.md:49-65)'
-    problema: '[médio] o tutorial não é executável por quem lê sem inventar: scripts-do-scaffold/ não existe (no scaffold é criar_projeto.py na raiz do clone); o conteúdo de app/precos.py, da migration V1, dos testes, do PRD, da spec e do plano completos e o comando do remoto só são descritos. A execução em si foi reproduzida: no commit 7f2b10f do projeto de teste o verificar_pr.py devolve ''BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado'', e em d9d13f1 só avisos.'
-    tratamento: 'Tratado em 2026-10-06: o passo 1 traz o clone da tag v1.7.0 e o criar_projeto.py na raiz do clone, o ambiente virtual com requirements.txt e pytest, o conteúdo de app/precos.py, da V1, do teste de preço, dos testes do CPF, de app/pedidos.py (provisório e final), da V2 e o git init --bare do remoto; o PRD foi resumido. Passos 1, 2 e 5 reexecutados num projeto novo (nova entrada em execucoes). Spec, plano completos e jobs do CI continuam vindos da execução original e o guia diz isso.'
+  - afirmacao: links ../praticas/construir-com-ia/P1-01, P1-04, P1-05, P1-06, P1-09 e P1-11.html (guias/do-zero-a-primeira-mr.md:71,
+      114 e demais)
+    problema: '[médio] seis links dão 404 no site gerado (as páginas de prática ficam em /praticas/P1-XX.html, sem a pasta
+      do domínio).'
+    tratamento: 'Tratado em 2026-10-06: os seis links passaram a ../praticas/P1-XX.html e foram conferidos com curl no portal
+      servido depois de regerar.'
+  - afirmacao: 'Passo 1: python3 scripts-do-scaffold/criar_projeto.py; base com app/precos.py, V1__cria_pedidos.sql e remoto
+      git init --bare (guias/do-zero-a-primeira-mr.md:49-65)'
+    problema: '[médio] o tutorial não é executável por quem lê sem inventar: scripts-do-scaffold/ não existe (no scaffold
+      é criar_projeto.py na raiz do clone); o conteúdo de app/precos.py, da migration V1, dos testes, do PRD, da spec e
+      do plano completos e o comando do remoto só são descritos. A execução em si foi reproduzida: no commit 7f2b10f do
+      projeto de teste o verificar_pr.py devolve ''BLOQUEIA: migrations/V1__cria_pedidos.sql já existe na base e foi alterado'',
+      e em d9d13f1 só avisos.'
+    tratamento: 'Tratado em 2026-10-06: o passo 1 traz o clone da tag v1.7.0 e o criar_projeto.py na raiz do clone, o ambiente
+      virtual com requirements.txt e pytest, o conteúdo de app/precos.py, da V1, do teste de preço, dos testes do CPF, de
+      app/pedidos.py (provisório e final), da V2 e o git init --bare do remoto; o PRD foi resumido. Passos 1, 2 e 5 reexecutados
+      num projeto novo (nova entrada em execucoes). Spec, plano completos e jobs do CI continuam vindos da execução original
+      e o guia diz isso.'
   - afirmacao: saída 'Projeto criado em /Users/thiago/curadoria-a5/...' (guias/do-zero-a-primeira-mr.md:54)
     problema: '[baixo] caminho pessoal na saída publicada.'
     tratamento: 'Tratado em 2026-10-06: a saída passou a mostrar /caminho/app-guia1.'
-  - afirmacao: 'T12 achados: .gitlab-ci-local/ sem ignore na receita ligar-ci; ruff acusa import sys nos scripts do scaffold; PyYAML ausente no Python do sistema'
-    problema: '[baixo] trazidos do plano. O guia já manda ignorar .gitlab-ci-local/ e declara o ruff; a receita ligar-ci (fatia anterior) não manda ignorar, e a validação do YAML depende de PyYAML.'
-    tratamento: 'Parcial: o guia já manda ignorar .gitlab-ci-local/. Não alterei a receita ligar-ci-gitlab-travas (fatia anterior, exige nova conferência dela); o ruff no scaffold é da 1.8.0 e o PyYAML entra pelo requirements.txt instalado no ambiente virtual do passo 1.'
+  - afirmacao: 'T12 achados: .gitlab-ci-local/ sem ignore na receita ligar-ci; ruff acusa import sys nos scripts do scaffold;
+      PyYAML ausente no Python do sistema'
+    problema: '[baixo] trazidos do plano. O guia já manda ignorar .gitlab-ci-local/ e declara o ruff; a receita ligar-ci
+      (fatia anterior) não manda ignorar, e a validação do YAML depende de PyYAML.'
+    tratamento: 'Parcial: o guia já manda ignorar .gitlab-ci-local/. Não alterei a receita ligar-ci-gitlab-travas (fatia
+      anterior, exige nova conferência dela); o ruff no scaffold é da 1.8.0 e o PyYAML entra pelo requirements.txt instalado
+      no ambiente virtual do passo 1.'
   - afirmacao: '6.1: revisão contra a spec pelo mesmo executor; aprovação por ''Ana Lima'' fictícia'
     problema: '[baixo] declarado no guia (valor da revisão está na independência); sem ação além de manter a declaração.'
     tratamento: 'Mantido: a declaração de revisão pelo mesmo executor e de aprovação fictícia fica no guia.'
+  - afirmacao: 'passos 2 a 4: branch do Tier 2, merge e arquivos provisórios'
+    problema: '[médio] a branch do CPF nunca é criada, ''faça o merge'' sem comando, app/pedidos.py provisório, PRD, spec
+      e plano só em prosa.'
+    tratamento: 'Tratado em 2026-10-07: comando de criação da branch, comandos de commit e merge, app/pedidos.py provisório
+      (rodado: 3 testes falham) e onde ficam PRD, spec e plano.'
 execucoes:
 - tipo: arquivo
   arquivo: guias/do-zero-a-primeira-mr.md

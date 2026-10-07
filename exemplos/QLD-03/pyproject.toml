@@ -1,5 +1,8 @@
 # Configuração do projeto de exemplo. O ruff local e o do CI leem este mesmo arquivo.
 [tool.ruff]
+# Só no repositório do portal: herda o alvo e as exclusões do pyproject da raiz. No seu projeto,
+# apague esta linha, porque o arquivo da raiz do portal não existe lá.
+extend = "../../pyproject.toml"
 line-length = 100
 
 [tool.ruff.lint]

@@ -27,7 +27,7 @@ def test_config_do_portal():
     assert config == {
         "nome": "Padrões de Engenharia",
         "organizacao": "",
-        "versao": "0.3.0",
+        "versao": "1.1.0",
         "url_base": "http://localhost:8000",
     }
 

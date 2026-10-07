@@ -1,13 +1,13 @@
 # Padrões de Engenharia
 
-> Portal de padrões de engenharia, com IA como guia. Versão 0.3.0.
+> Portal de padrões de engenharia, com IA como guia. Versão 1.1.0.
 
 Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se este arquivo divergir do gerado.
 
 ## O que há aqui
 
 - 48 práticas na espinha de 12 domínios × 4 momentos; 15 das 48 células a definir (`ROTEAMENTO.md`).
-- 160 referências, cada uma conferida na fonte, e 6 skills publicadas.
+- 185 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |

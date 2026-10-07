@@ -1,5 +1,5 @@
 # Configuração do portal. A URL base é sobrescrita no CI com --url-base "$CI_PAGES_URL".
 nome: "Padrões de Engenharia"
 organizacao: ""
-versao: "0.3.0"
+versao: "1.1.0"
 url_base: "http://localhost:8000"

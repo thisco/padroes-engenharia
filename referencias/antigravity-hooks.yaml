@@ -1,0 +1,10 @@
+id: antigravity-hooks
+titulo: "Lifecycle Hooks (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/hooks
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de local (.agents/hooks.json), eventos e decisão do PreToolUse"
+dominios: [construir-com-ia]
+notas: null

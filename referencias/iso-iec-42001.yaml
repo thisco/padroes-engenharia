@@ -1,0 +1,11 @@
+id: iso-iec-42001
+titulo: "ISO/IEC 42001:2023, Artificial intelligence management system"
+organizacao: IEC (loja oficial)
+url: https://webstore.iec.ch/publication/90574
+tipo: normativo
+publicado_em: '2023-12-18'
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "página do catálogo: escopo (requisitos de um sistema de gestão de IA), edição 1.0 e data de publicação"
+dominios: [ia-no-produto]
+notas: "Lida só a página do catálogo da IEC, que traz o escopo; o texto da norma é pago e não foi lido. A página iso.org devolveu HTTP 403."

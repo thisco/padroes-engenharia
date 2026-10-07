@@ -15,9 +15,11 @@ revisado_em: 2026-10-06
 revisar_ate: 2027-04-06
 resumo: "Todo campo de schema entra num registro do projeto com classe e, se for dado pessoal, com a finalidade, antes de a migration existir."
 ferramentas_aprovadas: []
+mapeia: [lgpd:art-6]
 exemplos:
   - exemplos/LGPD-01/V1__cria_cliente.sql
   - exemplos/LGPD-01/dados.md
+  - exemplos/LGPD-01/dados-antes.md
   - exemplos/LGPD-01/verificar-classificacao.py
 ---
 
@@ -92,13 +94,21 @@ O caso é a V1 da tabela `cliente`, com cinco campos:
 
 <!-- incluir: exemplos/LGPD-01/V1__cria_cliente.sql -->
 
-Antes, o registro tem só `cliente.id` e `cliente.nome`. O verificador, rodado numa cópia de um
-projeto-modelo com `db/migration/` e `docs/steering/dados.md`, sai com 1:
+Antes, o registro tem só `cliente.id` e `cliente.nome`; esse estado é o arquivo `exemplos/LGPD-01/dados-antes.md`:
+
+<!-- incluir: exemplos/LGPD-01/dados-antes.md -->
+
+Rode o verificador nos dois estados com a mesma V1: primeiro com `dados-antes.md` e, depois, com `dados.md`
+(abaixo). No projeto, o arquivo é o `docs/steering/dados.md`. O estado "antes" sai com 1:
+
+```bash
+python3 verificar-classificacao.py --schema V1__cria_cliente.sql --dados dados-antes.md
+```
 
 ```text
-V1__cria_cliente.sql: cliente.cpf: sem classificação em dados.md
-V1__cria_cliente.sql: cliente.email: sem classificação em dados.md
-V1__cria_cliente.sql: cliente.condicao_saude: sem classificação em dados.md
+V1__cria_cliente.sql: cliente.cpf: sem classificação em dados-antes.md
+V1__cria_cliente.sql: cliente.email: sem classificação em dados-antes.md
+V1__cria_cliente.sql: cliente.condicao_saude: sem classificação em dados-antes.md
 LGPD-01: campo sem classe, com classe inválida ou sem finalidade (acima).
 ```
 
@@ -107,7 +117,7 @@ finalidade que alguém precisa defender:
 
 <!-- incluir: exemplos/LGPD-01/dados.md -->
 
-E o verificador sai com 0:
+E o verificador, rodado com `--dados dados.md`, sai com 0:
 
 ```text
 LGPD-01: 5 campos de schema, todos classificados.

@@ -51,7 +51,7 @@ execucoes:
     CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE segredos (commit
     com o segredo sintético em app/config.py, plantado por plantar-segredo.sh)
   ambiente: cópia do repositório de preparo ~/curadoria-a5/b4-seg-02-prompt (main publicada num remoto
-    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1;
+    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f;
     gitleaks 8.30.1 local; macOS. O job não foi executado num GitLab.
   resultado: falhou-como-esperado
   evidencia: 'RuleID aws-access-token, File app/config.py, Line 1, Secret REDACTED; ''1 commits scanned'',
@@ -64,7 +64,7 @@ execucoes:
     CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE segredos (depois
     de trocar o arquivo por config-depois.py e reescrever o commit com --amend)
   ambiente: cópia do repositório de preparo ~/curadoria-a5/b4-seg-02-prompt (main publicada num remoto
-    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1;
+    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f;
     gitleaks 8.30.1 local; macOS. O job não foi executado num GitLab.
   resultado: passou
   evidencia: '''1 commits scanned'', ''no leaks found'', '' PASS  segredos'' (saída 0).'
@@ -119,3 +119,6 @@ revisao_adversarial:
     problema: '[baixo] sobrescrevia o arquivo sem aviso se o diretório fosse um projeto real.'
     tratamento: 'Tratado: aviso no cabeçalho e o script se recusa (saída 1) se app/config.py já existir;
       rodado duas vezes, a segunda recusa.'
+  - afirmacao: imagem zricethezav/gitleaks referenciada por tag (pendência herdada da B.4)
+    problema: '[baixo] a imagem do job era citada só pela tag v8.30.1, que pode ser movida no registro.'
+    tratamento: 'Tratado em 2026-10-07: o job do Exemplo cita v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f (índice multiplataforma, de docker buildx imagetools inspect; igual ao RepoDigest da imagem baixada). Job rodado de novo com o gitlab-ci-local 4.76.0 nos dois estados, em cópia do preparo: FAIL com aws-access-token em app/config.py e PASS com config-depois.py. O .gitlab-ci.yml da raiz do portal e seu teste (tests/unidade/test_ci.py) seguem por tag: são da T1.'

@@ -6,6 +6,11 @@ Reprova (saída 1): arquivo ausente ou vazio, Docker indisponível, serviço sem
 healthcheck vazio, `disable: true` ou `test: ["NONE"]`), dependência sem condition
 service_healthy, serviço do compose fora da seção "Serviços" do documento (ou o inverso) e ordem
 de rebuild sem os quatro passos na sequência migrations, build, up, saúde.
+
+Exceção: o serviço sem a chave `healthcheck` no compose, construído de um Dockerfile local que
+declara `HEALTHCHECK` (e não `HEALTHCHECK NONE`), é aceito se o item dele na seção "Serviços" do
+documento disser "healthcheck herdado da imagem". Imagem de registro sem build não entra: o
+verificador não puxa imagem, e o serviço precisa declarar o healthcheck no compose.
 """
 
 import json
@@ -58,6 +63,37 @@ def healthcheck_ativo(spec):
     return True
 
 
+def dockerfile_declara_healthcheck(spec):
+    """True se o Dockerfile local do build tem HEALTHCHECK ativo no último estágio."""
+    build = spec.get("build")
+    if not isinstance(build, dict) or not build.get("context"):
+        return False
+    caminho = Path(build["context"]) / (build.get("dockerfile") or "Dockerfile")
+    try:
+        linhas = caminho.read_text(encoding="utf-8").splitlines()
+    except (OSError, UnicodeDecodeError):
+        return False
+    ativo = False
+    for linha in linhas:
+        instrucao = linha.strip()
+        if re.match(r"FROM\s", instrucao, re.I):
+            ativo = False
+        elif re.match(r"HEALTHCHECK\s", instrucao, re.I):
+            ativo = not re.match(r"HEALTHCHECK\s+NONE\b", instrucao, re.I)
+    return ativo
+
+
+def declarados_herdados(texto):
+    """Nomes dos itens da seção Serviços que dizem 'healthcheck herdado da imagem'."""
+    listados = secao(texto, "Serviços") or ""
+    itens = re.findall(r"^- `([\w.-]+)`(.*?)(?=^- `|\Z)", listados, re.M | re.S)
+    return {
+        nome
+        for nome, corpo in itens
+        if re.search(r"healthcheck\s+herdado\s+da\s+imagem", corpo, re.I)
+    }
+
+
 def secao(texto, titulo):
     achado = re.search(rf"^## {titulo}\s*$(.*?)(?=^## |\Z)", texto, re.M | re.S)
     return achado.group(1) if achado else None
@@ -74,9 +110,17 @@ def main():
     erros = []
     if not servicos:
         erros.append(f"{compose}: nenhum serviço declarado")
+    herdados = declarados_herdados(texto)
     for nome, spec in servicos.items():
         if not healthcheck_ativo(spec):
-            erros.append(f"{compose}: serviço sem healthcheck (ausente ou desligado): {nome}")
+            if "healthcheck" not in spec and dockerfile_declara_healthcheck(spec):
+                if nome not in herdados:
+                    erros.append(
+                        f"{doc}: {nome} herda o HEALTHCHECK da imagem e o item dele em Serviços "
+                        "não diz 'healthcheck herdado da imagem'"
+                    )
+            else:
+                erros.append(f"{compose}: serviço sem healthcheck (ausente ou desligado): {nome}")
         for dep, cond in (spec.get("depends_on") or {}).items():
             if cond.get("condition") != "service_healthy":
                 erros.append(f"{compose}: {nome} depende de {dep} sem condition service_healthy")

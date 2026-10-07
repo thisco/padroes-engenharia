@@ -171,3 +171,64 @@ def test_resumo_e_obrigatorio_na_pratica():
     meta.pop("resumo", None)
     (erro,) = validar_instancia(meta, carregar_validador(PASTA, "pratica"), "p.md")
     assert erro == Erro("p.md", "frontmatter", "R-ESQUEMA", "'resumo' is a required property")
+
+
+# Execução de prompt que falhou (B.5, T1d) -----------------------------------------------------
+
+PROMPT_FALHOU = {
+    "tipo": "prompt",
+    "prompt": "CICD-01-prompt-1",
+    "harness": "claude-code",
+    "resultado": "falhou",
+    "evidencia": "curl no host deu Could not resolve host",
+    "data": "2026-10-07",
+}
+
+
+def _erros_de_registro(execucao):
+    registro = fabrica.meta_verificacao(execucoes=[execucao])
+    return validar_instancia(registro, carregar_validador(PASTA, "verificacao"), "v.yaml")
+
+
+def test_execucao_de_prompt_aceita_falhou_com_motivo():
+    assert _erros_de_registro({**PROMPT_FALHOU, "motivo": "defeito do prompt, corrigido"}) == []
+
+
+@pytest.mark.parametrize("motivo", [{}, {"motivo": ""}])
+def test_execucao_de_prompt_falhou_exige_motivo_nao_vazio(motivo):
+    erros = _erros_de_registro({**PROMPT_FALHOU, **motivo})
+    assert erros and {e.regra for e in erros} == {"R-ESQUEMA"}
+    assert {e.campo for e in erros} & {"execucoes.0", "execucoes.0.motivo"}
+
+
+def test_motivo_so_e_obrigatorio_quando_falhou_e_so_vale_em_prompt():
+    assert _erros_de_registro({**PROMPT_FALHOU, "resultado": "passou"}) == []
+    arquivo = {
+        "tipo": "arquivo",
+        "arquivo": "exemplos/P1-01/plano.md",
+        "comando": "make",
+        "ambiente": "py 3.12",
+        "resultado": "falhou",
+        "evidencia": "ok",
+        "data": "2026-10-07",
+    }
+    assert _erros_de_registro(arquivo), "falhou não vale para execução de arquivo"
+
+
+# Caso com dono (B.5, T1e) ---------------------------------------------------------------------
+
+
+def test_caso_exige_dono():
+    meta = fabrica.meta_caso(dono="engenharia")
+    assert validar_instancia(meta, carregar_validador(PASTA, "caso"), "c.md") == []
+    del meta["dono"]
+    (erro,) = validar_instancia(meta, carregar_validador(PASTA, "caso"), "c.md")
+    assert erro == Erro("c.md", "frontmatter", "R-ESQUEMA", "'dono' is a required property")
+
+
+@pytest.mark.parametrize("dono", ["", "Engenharia", "uma equipe", 3])
+def test_caso_rejeita_dono_que_nao_e_slug(dono):
+    erros = validar_instancia(
+        fabrica.meta_caso(dono=dono), carregar_validador(PASTA, "caso"), "c.md"
+    )
+    assert [e.campo for e in erros] == ["dono"]

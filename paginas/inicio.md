@@ -14,7 +14,7 @@ caminhos:
   destino: receitas/ligar-ci-gitlab-travas
 fatos:
 - Cada afirmação tem uma fonte, aberta e conferida na web por quem escreveu.
-- Um agente independente revisa cada conteúdo contra as fontes, sem ver o rascunho.
+- Cada lote de conteúdo passa por uma conferência de executabilidade feita por um agente independente, que segue os passos e abre uma fonte por conteúdo; a revisão com modelo forte vale quando há mudança de motor ou de schema, ou achado crítico.
 - Todo exemplo publicado foi executado, e a execução está registrada na página.
 revisado_em: '2026-10-04'
 referencias:

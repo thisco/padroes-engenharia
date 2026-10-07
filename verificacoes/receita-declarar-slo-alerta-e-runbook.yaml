@@ -1,0 +1,90 @@
+conteudo: receita-declarar-slo-alerta-e-runbook
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o SLI é uma medida quantitativa, bem definida, de um aspecto do nível de serviço entregue, e
+    o SLO é um valor-alvo, ou uma faixa de valores, para esse nível, medido por um SLI
+  ref: sre-book-slo
+  localizacao: seções 'Indicators' e 'Objectives'
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: é melhor admitir um orçamento de erro, a taxa à qual os SLOs podem ser descumpridos, e acompanhá-lo
+    diária ou semanalmente
+  ref: sre-book-slo
+  localizacao: seção 'Objectives' (erro orçado)
+  resultado: confirmada
+  nota: O erro orçado de 0,5% para um objetivo de 99,5% é a conta do portal (100 menos o objetivo), e
+    não uma afirmação da fonte. Afirmação já registrada em OBS-02 (fonte aberta em 2026-10-06); reaproveitada
+    nesta receita, sem reabrir a fonte.
+- texto: escolher e publicar SLOs para os usuários define a expectativa de desempenho do serviço
+  ref: sre-book-slo
+  localizacao: seção 'SLOs Set Expectations'
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o livro orienta a monitorar o sintoma (o que está quebrado) e não a causa
+  ref: sre-book-monitoring
+  localizacao: seção 'Symptoms Versus Causes'
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: toda página precisa ser acionável, e cada vez que o pager toca a pessoa precisa poder reagir
+    com urgência; o alerta deve detectar condição urgente e acionável que afeta usuários, e a pessoa deve
+    poder agir em resposta
+  ref: sre-book-monitoring
+  localizacao: seção 'Tying These Principles Together'
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o modelo de dados de log do OpenTelemetry tem Timestamp (hora do evento na origem), SeverityText
+    (nível como a origem o escreveu), TraceId e SpanId, Body, Attributes, Resource (origem do log) e EventName
+    (tipo do evento)
+  ref: opentelemetry-logs-data-model
+  localizacao: campos do registro de log (Timestamp, TraceId, SpanId, SeverityText, Body, Attributes,
+    Resource, EventName)
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o TraceId do registro de log existe para a correlação entre o log e o trace
+  ref: opentelemetry-logs-data-model
+  localizacao: seção de correlação com traces (TraceId, SpanId, TraceFlags)
+  resultado: confirmada
+  nota: Afirmação já registrada em OBS-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/declarar-slo-alerta-e-runbook/executar.sh
+  comando: sh exemplos/declarar-slo-alerta-e-runbook/executar.sh
+  ambiente: Python 3.14.8 (só biblioteca padrão); git 2.50.1; macOS. Repositório de teste em /tmp/b5-slo-XXXXXX,
+    apagado ao sair; sem Docker e sem rede.
+  resultado: falhou-como-esperado
+  evidencia: 'saída 0 do roteiro; log do emitir-logs.py: ''OBS-01: 3 linhas, todas com os campos obrigatórios
+    e sem dado pessoal'' (saída 0); slo.yml com runbook inexistente e alerta solto: ''runbook inexistente''
+    e ''cpu-acima-de-80: alerta fora de um SLO'' (saída 1); runbook sem Ação: "runbook sem a seção ''Ação''
+    preenchida" (saída 1); runbook completo: ''objetivo 99.5% em 28 dias, erro orçado 0.50%'' e ''OBS-02:
+    1 SLO(s), com alerta, quem aciona e runbook completos'' (saída 0). Saída bruta em curadoria-a5/saidas/b5-receita-declarar-slo-alerta-e-runbook.txt.'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: receita-declarar-slo-alerta-e-runbook-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b5-receita-declarar-slo-alerta-e-runbook-prompt, contra a prévia do portal servida em http://127.0.0.1:8001, gerada com gerar.py --previa no commit c621a5c. Transcrição em curadoria-a5/transcricoes/receita-declarar-slo-alerta-e-runbook-prompt-1.bruta.jsonl.'
+  resultado: passou
+  evidencia: '77941ab; verificar-log saiu 0 (request_id req-b5771c); verificar-slo saiu 1 e depois 0 (''erro orçado 0.50%''). Observação: o testador commitou com core.hooksPath=/dev/null por conta própria. Sem coautoria.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-07'
+  achados:
+  - afirmacao: 'Antes de começar e passos: download sem hash'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. O prompt não mudou.'
+  - afirmacao: 'verificar-slo.py: seções dentro de bloco de código'
+    problema: '[baixo] as três seções dentro de uma cerca passam (saída 0).'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).
+  - afirmacao: 'registro: commit com core.hooksPath=/dev/null'
+    problema: '[baixo] o testador pulou os hooks; a ressalva está dita no registro.'
+    tratamento: 'Nenhum: a ressalva está dita.'

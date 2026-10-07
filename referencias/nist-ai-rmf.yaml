@@ -1,0 +1,11 @@
+id: nist-ai-rmf
+titulo: "NIST AI Risk Management Framework"
+organizacao: NIST
+url: https://www.nist.gov/itl/ai-risk-management-framework
+tipo: padrao-aberto
+publicado_em: '2023-01-26'
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "página do framework: lançamento da versão 1.0 (NIST.AI.100-1), funções centrais e a frase sobre uso voluntário"
+dominios: [ia-no-produto]
+notas: "Página oficial do NIST lida em 2026-10-07. A página diz que o framework é de uso voluntário."

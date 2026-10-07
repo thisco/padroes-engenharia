@@ -1,0 +1,10 @@
+id: copilot-hooks
+titulo: "Hooks do GitHub Copilot"
+organizacao: GitHub
+url: https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-hooks
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de locais (.github/hooks/*.json), eventos e preToolUse"
+dominios: [construir-com-ia]
+notas: null

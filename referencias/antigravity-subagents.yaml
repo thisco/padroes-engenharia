@@ -1,0 +1,10 @@
+id: antigravity-subagents
+titulo: "Subagents (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/subagents
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de local (.agents/agents/) e isolamento de contexto"
+dominios: [construir-com-ia]
+notas: null

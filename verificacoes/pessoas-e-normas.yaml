@@ -1,0 +1,71 @@
+conteudo: pessoas-e-normas
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Em sessões típicas, a pessoa toma cerca de 70% das decisões de planejamento e cerca de 20% das de execução.
+  ref: anthropic-claude-code-expertise
+  localizacao: números de decisões de planejamento e de execução nas sessões (já verificados em o-problema)
+  resultado: confirmada
+- texto: Cada sessão começa sem memória da anterior.
+  ref: anthropic-effective-harnesses
+  localizacao: seção sobre sessões sem memória
+  resultado: confirmada
+- texto: Agentes tendem a elogiar o próprio trabalho, e separar quem faz de quem avalia é uma alavanca forte, embora não elimine de imediato a complacência.
+  ref: anthropic-harness-design
+  localizacao: seção sobre separar gerador e avaliador
+  resultado: confirmada
+- texto: A LGPD define dado pessoal e tratamento e exige finalidade e necessidade.
+  ref: lgpd
+  localizacao: art. 5º, I e X; art. 6º, I e III
+  resultado: confirmada
+- texto: A Portaria MGI 3.485 institui a Política de Governança de IA do Ministério e vale para os órgãos do Ministério e usuários do ColaboraGov.
+  ref: portaria-mgi-3485
+  localizacao: texto da notícia (fonte secundária; o texto oficial devolveu 403)
+  resultado: parcial
+  nota: A referência é [S]; o texto da página ressalva que o escopo vem de fonte secundária e não afirma que a portaria obriga quem usa o portal.
+- texto: O PL 2338/2023 foi aprovado no Senado em 2024-12-10, remetido à Câmara em 2025-03-17 e estava em tramitação na Câmara em 2026-10-06.
+  ref: pl-2338-congresso
+  localizacao: campos de situação e notas da referência
+  resultado: confirmada
+- texto: O NIST AI RMF 1.0 foi publicado em 2023-01-26 e é de uso voluntário.
+  ref: nist-ai-rmf
+  localizacao: página do framework, lançamento e frase sobre uso voluntário
+  resultado: confirmada
+- texto: A ISO/IEC 42001:2023, publicada em 2023-12-18, especifica requisitos de um sistema de gestão de IA para organizações que fornecem ou usam produtos e serviços com IA.
+  ref: iso-iec-42001
+  localizacao: página do catálogo da IEC, escopo e data
+  resultado: confirmada
+- texto: Boris Cherny propôs cinco modos de trabalho (Prototyper, Builder, Sweeper, Grower, Maintainer), em post pessoal, e não em publicação institucional.
+  ref: cherny-cinco-arquetipos
+  localizacao: lista dos cinco arquétipos e a frase do autor na página secundária; o post no X não abriu (HTTP 402)
+  resultado: confirmada
+  nota: Fonte [S]; as definições de cada modo vêm da página secundária, não do post lido.
+- texto: Os tipos são apresentados por fase do ciclo do produto, e quem constrói sozinho com agentes passa pelos cinco em sequência.
+  ref: cherny-cinco-arquetipos
+  localizacao: página secundária, trecho sobre os tipos por fase; a declaração do próprio autor de que os papéis mudam não foi lida no post
+  resultado: parcial
+  nota: A fonte secundária sustenta a fase como eixo e a sequência para quem constrói sozinho; a versão anterior do texto dizia 'um mesmo time', que a fonte não diz, e foi corrigida na conferência de 2026-10-07. A frase do autor de que os papéis mudam com o projeto só está no post original, que não abriu (HTTP 402).
+- texto: Toda fase do produto precisa dos cinco papéis ao mesmo tempo; o que muda é a distribuição.
+  ref: jvaneyck-cinco-arquetipos
+  localizacao: frase central do post de 2026-07-10
+  resultado: confirmada
+- texto: Os rótulos de fase do diagrama ("Produção", "Simplificação" e "Mercado") nomeiam a fase de cada modo.
+  ref: cherny-cinco-arquetipos
+  localizacao: descrição de cada modo na página secundária (Builder, Sweeper, Grower)
+  resultado: parcial
+  nota: São paráfrases do portal derivadas do "faz" de cada modo, e não termos da fonte; "Ideia" e "Sistema maduro" vêm das palavras da descrição de Prototyper e Maintainer.
+- texto: A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como construir.
+  ref: anthropic-claude-code-expertise
+  localizacao: página do estudo, trecho sobre planejamento e execução (a página dá 70% de planejamento e 20% de execução pelas pessoas; os 80% do modelo não aparecem com esse número e não foram citados)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-07'
+  achados:
+  - afirmacao: saída .md com [ref:id] cru
+    problema: '[baixo] 16 ocorrências em public/pessoas-e-normas.md; o mesmo ocorre em o-problema, index e guias: comportamento
+      do motor para o .md.'
+    tratamento: 'Pendência pós-v1, anotada no plano da B.5 (T10); decisão a tomar: o .md mantém [ref:id] ou o motor resolve.'
+  - afirmacao: Portaria MGI 3.485
+    problema: '[baixo] fonte primária (DOU) deu socket hang up; uma segunda fonte confirma data e escopo.'
+    tratamento: 'Nenhum: segue [S], nota ''primária bloqueada''; reabrir no DOU.'

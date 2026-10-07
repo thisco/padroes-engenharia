@@ -232,7 +232,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
 .tabela thead th { border-bottom: 2px solid var(--tinta); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--tinta-2); }
 .filtros { display: flex; flex-wrap: wrap; gap: 12px 20px; font-size: 13px; margin: 8px 0 14px; }
-.filtros select { font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
+.filtros select { max-width: 100%; font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
 
 /* barra de força de um domínio */
 .barra-forca { display: flex; flex-wrap: wrap; gap: 3px; max-width: 100%; }
@@ -282,7 +282,7 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .ninho .setas .seta.volta::before { content: "←"; display: block; font-size: 18px; font-style: normal; }
 .ninho .setas .seta.volta::after { content: none; }
 .ninho .onde { margin: 10px 0 0; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
-.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; align-items: start; }
 .ninho .exec.remoto { grid-template-columns: minmax(0, 1fr); }
 .ninho .exec .cx { margin-top: 0; }
 .ninho .cx.impede { background: var(--gov); color: var(--branco); border: 2px solid var(--gov); }
@@ -374,22 +374,22 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .bloco pre { width: 100%; box-sizing: border-box; margin: 0; padding: 12px 56px 12px 12px; }
 .bloco .copiar { position: absolute; top: 6px; right: 6px; }
 
-/* A.5-2 C8: O problema, ninho e cadeia lado a lado; "Como combinar" em bloco azul-claro */
+/* A.5-2 C8: O problema, ninho e cadeia lado a lado; "Como combinar" em bloco neutro (azul só impede) */
 .lado-a-lado { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
 .lado-a-lado > section { min-width: 0; }
 @media (min-width: 901px) {
   .lado-a-lado { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
-.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--gov-claro); border: 1px solid var(--gov); padding: 12px; }
-.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--gov); padding: 8px 10px; }
+.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--papel-2); border: 1px solid var(--traco); padding: 12px; }
+.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--traco); padding: 8px 10px; }
 .combinar .momento-caixa p { margin: 4px 0 0; font-size: 13px; }
 
 /* A.5-2 C10: legenda de status em grade e chips de status distintos (o texto sempre aparece) */
 .legenda-status { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px 14px; margin: 8px 0; }
 .legenda-status > div { display: flex; flex-direction: column; gap: 4px; }
 .legenda-status dd { margin: 0; font-size: 13px; }
-.st.adotar { background: var(--gov); color: var(--branco); border-color: var(--gov); }
-.st.experimentar { background: var(--gov-claro); border-color: var(--gov); border-style: dashed; }
+.st.adotar { background: var(--branco); border: 2px solid var(--tinta); }
+.st.experimentar { background: var(--papel-2); border-style: dashed; }
 .st.avaliar { background: var(--ambar-claro); border-color: var(--ambar); color: var(--tinta); }
 .st.evitar { background: var(--branco); border-color: var(--erro); color: var(--erro); text-decoration: line-through; }
 
@@ -428,3 +428,54 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 /* peça apagada (só a própria caixa, não as de dentro): descrição e arquivos legíveis no fundo claro */
 .ninho .cx.apaga > .peca .linha { color: var(--tinta-2); }
 .ninho .cx.memoria.apaga .arqs code { background: var(--branco); color: var(--tinta-2); }
+
+/* modos de trabalho (Pessoas e normas): o ciclo do produto numa fila de cinco modos, dentro do
+   quadro do Verificador. A barra de cada modo diz a proporção sem número: o segmento largo é o
+   modo que predomina na fase; os quatro estreitos, hachurados, são os outros, presentes. Nenhum
+   azul (azul só significa "impede"); a hachura usa --traco, 3:1 contra o fundo. Abaixo de 900px
+   de largura da própria figura, os modos empilham em lista; com 560px ou mais, barra e texto
+   ficam lado a lado. */
+.modos { margin: 12px 0 0; container-type: inline-size; }
+.modos .verificador { border: 2px solid var(--tinta); background: var(--branco); padding: 14px; }
+.modos .quadro-cab h3 { margin: 0 0 2px; font-size: 18px; }
+.modos .quadro-cab p { margin: 0; font-size: 14px; max-width: 64ch; }
+.modos .sentido { margin: 14px 0 8px; font-size: 12px; font-weight: 600; color: var(--tinta-2); display: flex; align-items: center; gap: 8px; }
+.modos .sentido::after { content: ""; flex: 1; border-top: 2px solid var(--tinta-2); }
+.modos ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+.modos li.modo { position: relative; background: var(--papel); border: 1px solid var(--traco); padding: 10px 12px; font-size: 13px; }
+.modos li.modo:not(:last-child)::after { content: "↓"; position: absolute; left: 50%; bottom: -17px; line-height: 16px; font-size: 15px; color: var(--tinta-2); }
+.modos li.modo h4 { margin: 0; font-size: 16px; }
+.modos .fase { margin: 0 0 8px; font-size: 12px; color: var(--tinta-2); }
+.modos .barra-modos { display: flex; gap: 3px; height: 14px; margin-bottom: 8px; }
+.modos .barra-modos i {
+  flex: 1; border: 1px solid var(--traco); background: repeating-linear-gradient(135deg, var(--traco) 0 1px, var(--branco) 1px 4px);
+}
+.modos .barra-modos i.enfase { flex: 5; background: var(--tinta); border-color: var(--tinta); }
+.modos li.modo p { margin: 0 0 6px; }
+.modos li.modo .onde { color: var(--tinta-2); }
+.modos .praticas { list-style: none; margin: 4px 0 0; padding: 0; font-size: 13px; }
+.modos .praticas li { margin: 0 0 4px; }
+.modos .quadro-pe { margin: 14px 0 0; padding-top: 10px; border-top: 1px dashed var(--traco); font-size: 13px; max-width: 80ch; }
+.modos figcaption { margin-top: 8px; font-size: 12px; color: var(--tinta-2); max-width: 80ch; }
+.limites { max-width: 72ch; font-size: 14px; padding-left: 20px; }
+@container (min-width: 560px) {
+  .modos li.modo { display: grid; grid-template-columns: 200px minmax(0, 1fr); column-gap: 18px; }
+  .modos li.modo > h4, .modos li.modo > .fase, .modos li.modo > .barra-modos { grid-column: 1; }
+  .modos li.modo > .faz, .modos li.modo > .onde, .modos li.modo > .praticas { grid-column: 2; }
+  .modos li.modo > h4 { grid-row: 1; }
+  .modos li.modo > .fase { grid-row: 2; }
+  .modos li.modo > .barra-modos { grid-row: 3; align-self: start; }
+  .modos li.modo > .faz { grid-row: 1; }
+  .modos li.modo > .onde { grid-row: 2; }
+  .modos li.modo > .praticas { grid-row: 3; margin-top: 0; }
+}
+@container (min-width: 900px) {
+  .modos ol { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .modos li.modo { display: block; }
+  .modos li.modo:not(:last-child)::after { content: none; }
+  .modos .sentido::after {
+    content: "→"; text-align: right; border: 0; font-size: 18px; line-height: 14px;
+    background: linear-gradient(var(--tinta-2), var(--tinta-2)) left center / calc(100% - 12px) 2px no-repeat;
+  }
+}
+/* fim dos modos de trabalho */

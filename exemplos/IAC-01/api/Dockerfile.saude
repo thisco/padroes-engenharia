@@ -1,0 +1,4 @@
+FROM python:3.11
+COPY app.py /app/app.py
+HEALTHCHECK --interval=2s --timeout=3s --retries=20 CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/saude')"
+CMD ["python", "/app/app.py"]

@@ -31,8 +31,8 @@ niveis:
       - niveis-de-risco.yml
       - componentes.yml
 
-# SemVer do portal (spec §12.3); a versão mora em portal/config.yml.
+# SemVer do portal (spec §12.3, ADR 0007); a versão mora em portal/config.yml.
 semver:
-  major: mudança de schema em esquemas/ ou ID retirado
-  minor: conteúdo novo
+  major: mudança incompatível de schema em esquemas/ (campo obrigatório novo, campo retirado ou tipo alterado) ou ID retirado
+  minor: acréscimo compatível de schema (campo ou bloco opcional) ou conteúdo novo
   patch: texto e links

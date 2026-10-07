@@ -12,13 +12,14 @@ As regras não confiam no tipo dos campos (o schema já reporta isso): leem com 
 from __future__ import annotations
 
 import hashlib
+import posixpath
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import unquote, urlsplit
 
 from markdown_it import MarkdownIt
 
@@ -83,8 +84,11 @@ def carregar_contexto(raiz: Path) -> Contexto:
     )
 
 
-def validar_tudo(raiz: Path) -> list[Erro]:
-    """Todos os erros de validação do repositório em `raiz`, ordenados e sem repetição."""
+def validar_tudo(raiz: Path, ignorar: frozenset[str] = frozenset()) -> list[Erro]:
+    """Todos os erros de validação do repositório em `raiz`, ordenados e sem repetição.
+
+    `ignorar` são códigos de regra descartados do resultado (o modo de prévia ignora só
+    `R-PROMPT`)."""
     raiz = Path(raiz)
     espinha = carregar_espinha(raiz / "esquemas" / "espinha.yml")
     repo = carregar(raiz)
@@ -94,7 +98,7 @@ def validar_tudo(raiz: Path) -> list[Erro]:
     erros += validar_componentes(raiz)
     for funcao in REGRAS:
         erros += funcao(repo, espinha, contexto)
-    return sorted(set(erros))
+    return sorted({e for e in erros if e.regra not in ignorar})
 
 
 def _texto(meta: dict[str, Any], campo: str) -> str | None:
@@ -284,7 +288,7 @@ BLOCOS_POR_PAGINA = {
         "principios",
         "escada",
     },
-    "pessoas-e-normas": {"lead", "modos", "normas"},
+    "pessoas-e-normas": {"lead", "modos", "normas", "trabalho"},
 }
 PAGINAS_RESERVADAS = frozenset(
     {
@@ -437,6 +441,17 @@ def _problemas_da_pagina(
         erros += _na_espinha(pagina, espinha, falha.get("dominio"), None, f"falhas.{i}.")
     for i, disciplina in enumerate(_itens(pagina, "disciplinas")):
         erros += _na_espinha(pagina, espinha, disciplina.get("dominio"), None, f"disciplinas.{i}.")
+    trabalho = pagina.meta.get("trabalho")
+    ciclo = (
+        [m for m in trabalho.get("ciclo", []) if isinstance(m, dict)]
+        if isinstance(trabalho, dict)
+        else []
+    )
+    for i, modo in enumerate(ciclo):
+        for id_ in modo.get("praticas") or []:
+            if isinstance(id_, str) and id_ not in praticas:
+                campo = f"trabalho.ciclo.{i}.praticas"
+                erros.append(Erro(caminho, campo, codigos.R_REF_INEXISTENTE, id_))
     for i, item in enumerate(_itens(pagina, "momentos")):
         erros += _na_espinha(pagina, espinha, None, item.get("momento"), f"momentos.{i}.")
     for i, caminho_item in enumerate(_itens(pagina, "caminhos")):
@@ -790,7 +805,7 @@ def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         executados = {
             e.get("prompt")
             for e in (registro.meta.get("execucoes") or [] if registro else [])
-            if isinstance(e, dict) and e.get("tipo") == "prompt"
+            if isinstance(e, dict) and e.get("tipo") == "prompt" and e.get("resultado") != "falhou"
         }
         for achado in achados:
             if achado.id not in executados:
@@ -947,6 +962,125 @@ def regra_apresentacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto)
     return validar_apresentacoes(contexto.raiz, frozenset(r.chave for r in repo.referencias))
 
 
+# Links internos (B.5, T1b) -------------------------------------------------------------------
+
+_ESQUEMA_URL = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+
+
+SAIDAS_FIXAS = (
+    "llms.txt",
+    "llms-full.txt",
+    "busca.json",
+    "catalogo.json",
+    "roteamento.json",
+    "prompts.json",
+    "README.md",
+    "ROTEAMENTO.md",
+)
+
+
+def _arquivos_de_apresentacoes(raiz: Path) -> set[str]:
+    """O roteiro gerado e os arquivos que o build copia de cada `apresentacoes/<slug>/`."""
+    from portal.gerador.apresentacoes import carregar_apresentacoes  # tardia: ver acima
+
+    publicados: set[str] = set()
+    if not (raiz / "apresentacoes").is_dir():
+        return publicados
+    for a in carregar_apresentacoes(raiz):
+        if a.roteiro:
+            publicados.add(a.caminho_roteiro)
+        pasta = raiz / "apresentacoes" / a.slug
+        for arquivo in pasta.rglob("*"):
+            relativo = arquivo.relative_to(pasta)
+            if arquivo.is_file() and not arquivo.is_symlink() and a.publicado(relativo):
+                publicados.add(f"apresentacoes/{a.slug}/{relativo.as_posix()}")
+    return publicados
+
+
+def _paginas_geradas(repo: Repositorio, espinha: Espinha, raiz: Path) -> frozenset[str]:
+    """Os caminhos que o build publica: páginas de conteúdo, domínios, listagens, roteiros, os
+    arquivos das apresentações e as saídas para agentes (`llms.txt`, `catalogo.json`...)."""
+    # importação tardia: renderizar importa avisos, que importa este módulo (ciclo)
+    from portal.gerador.renderizar import PAGINAS_GERADAS, caminho_de
+
+    conteudos = {
+        caminho_de(c).split("#")[0] for c in repo.publicados() if c.tipo not in ("dominio",)
+    }
+    dominios = {f"dominios/{f.slug}.html" for f in espinha.faixas}
+    fixas = {caminho for caminho, _ in PAGINAS_GERADAS}
+    return frozenset(
+        conteudos | dominios | fixas | set(SAIDAS_FIXAS) | _arquivos_de_apresentacoes(raiz)
+    )
+
+
+def _links_relativos(corpo: str) -> list[tuple[int, str]]:
+    """Os links do corpo que são relativos: (linha do corpo, base 1; destino sem âncora).
+
+    Ficam de fora o link com esquema (`https:`, `mailto:`), o absoluto na raiz do site, o que é só
+    âncora e o que está em bloco ou trecho de código (o parser nem o reconhece como link)."""
+    linhas = corpo.splitlines()
+    achados: list[tuple[int, str]] = []
+    for token in MarkdownIt("commonmark").parse(corpo):
+        if token.type != "inline" or not token.map:
+            continue
+        inicio, fim = token.map
+        for filho in token.children or []:
+            href = str(
+                filho.attrGet({"link_open": "href", "image": "src"}.get(filho.type, "")) or ""
+            )
+            destino = unquote(href.split("#")[0].split("?")[0])
+            if not destino or destino.startswith("/") or _ESQUEMA_URL.match(href):
+                continue
+            linha = next((i for i in range(inicio, fim) if destino in linhas[i]), inicio)
+            achados.append((linha + 1, destino))
+    return achados
+
+
+@regra
+def regra_link_interno(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Todo link relativo do corpo Markdown aponta para a página (ou o `.md` gêmeo dela) ou outra
+    saída que o build publica: `exemplos/`, roteiros e arquivos das apresentações, `llms.txt`,
+    `catalogo.json`... Arquivo que só existe na fonte, como `AGENTS.md` ou `paginas/x.md`, não
+    vale, porque o site não o tem. O destino é resolvido a partir da pasta da página gerada, que é
+    onde o leitor está (`praticas/` para uma prática da faixa `ci-cd`). Âncora não é conferida;
+    pasta não conta, porque o site não tem índice dela. O erro traz o arquivo, a linha e o
+    destino."""
+    from portal.gerador.renderizar import caminho_de  # tardia: ver `_paginas_geradas`
+
+    geradas = _paginas_geradas(repo, espinha, contexto.raiz)
+    erros: list[Erro] = []
+    for c in repo.markdown():
+        pasta_da_pagina = posixpath.dirname(caminho_de(c).split("#")[0])
+        deslocamento = _linhas_antes_do_corpo(contexto.raiz / c.caminho_relativo, c.corpo)
+        for linha, destino in _links_relativos(c.corpo):
+            alvo = posixpath.normpath(posixpath.join(pasta_da_pagina, destino))
+            gerado = alvo.removesuffix(".md") + ".html" if alvo.endswith(".md") else alvo
+            publicado = (alvo.startswith("exemplos/") and (contexto.raiz / alvo).is_file()) or (
+                gerado in geradas
+            )
+            if alvo.startswith("..") or not publicado:
+                campo = f"linha {deslocamento + linha}"
+                erros.append(
+                    Erro(
+                        c.caminho_relativo,
+                        campo,
+                        codigos.R_LINK_INTERNO,
+                        f"{destino}: alvo não existe",
+                    )
+                )
+    return erros
+
+
+def _linhas_antes_do_corpo(arquivo: Path, corpo: str) -> int:
+    """Quantas linhas do arquivo vêm antes do corpo (o frontmatter e o que o carregador descarta);
+    zero se o arquivo não está em disco."""
+    try:
+        texto = arquivo.read_text(encoding="utf-8")
+    except OSError:
+        return 0
+    return texto.count("\n") - corpo.count("\n") if texto.endswith(corpo) else 0
+
+
 # Mecanismos hospedados (spec delta 1.7, R3) -----------------------------------------------------
 
 
@@ -1042,9 +1176,43 @@ CITACAO_HOSPEDADA = re.compile(
 )
 
 
+BASE_DEFINIDA = re.compile(r"\bBASE=")
+BASE_HOSPEDADA = re.compile(
+    r"""\bBASE=(?:"[^"]*?|'[^']*?|[^\s"'#]*?)"""
+    r"\.well-known/mecanismos/(?P<componente>[a-z0-9][a-z0-9-]*)/?(?![\w/.-])"
+)
+CITACAO_POR_BASE = re.compile(r"\$\{?BASE\}?/(?P<arquivo>[A-Za-z0-9_][\w.-]*)")
+_JANELA_BASE = 3
+
+
+def _citacoes_por_base(texto: str) -> list[tuple[str, str]]:
+    """Os pares (componente, arquivo) citados como `$BASE/<arquivo>` ou `${BASE}/<arquivo>`.
+
+    O `BASE=` vale quando está na própria linha ou numa das três anteriores (a mais próxima
+    vence) e termina em `/.well-known/mecanismos/<componente>/`; `BASE` sem definição por perto ou
+    definido em outro lugar (o GitHub na tag, por exemplo) não é conferido."""
+    linhas = texto.splitlines()
+    achados: list[tuple[str, str]] = []
+    for i, linha in enumerate(linhas):
+        for uso in CITACAO_POR_BASE.finditer(linha):
+            for j in range(i, max(i - _JANELA_BASE, 0) - 1, -1):
+                alvo = linhas[j][: uso.start()] if j == i else linhas[j]
+                definicoes = list(BASE_DEFINIDA.finditer(alvo))
+                if definicoes:
+                    hospedada = BASE_HOSPEDADA.match(alvo, definicoes[-1].start())
+                    if hospedada:
+                        achados.append((hospedada["componente"], uso["arquivo"].rstrip(".")))
+                    break
+    return achados
+
+
 def _citacoes_hospedadas(texto: str) -> list[tuple[str, str]]:
-    """Os pares (componente, arquivo) citados como `/.well-known/mecanismos/<c>/<arquivo>`."""
-    return [(m["componente"], m["arquivo"].rstrip(".")) for m in CITACAO_HOSPEDADA.finditer(texto)]
+    """Os pares (componente, arquivo) citados como `/.well-known/mecanismos/<c>/<arquivo>` ou,
+    com `BASE` definido na janela, como `$BASE/<arquivo>`."""
+    diretas = [
+        (m["componente"], m["arquivo"].rstrip(".")) for m in CITACAO_HOSPEDADA.finditer(texto)
+    ]
+    return diretas + _citacoes_por_base(texto)
 
 
 def _textos_com_citacoes(repo: Repositorio, raiz: Path) -> list[tuple[str, str]]:

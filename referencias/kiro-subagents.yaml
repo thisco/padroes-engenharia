@@ -1,0 +1,10 @@
+id: kiro-subagents
+titulo: "Sub-agents (Kiro)"
+organizacao: Kiro
+url: https://kiro.dev/docs/custom-agents/subagents/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de agentes customizados como subagentes e contexto isolado"
+dominios: [construir-com-ia]
+notas: null

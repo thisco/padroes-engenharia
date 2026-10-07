@@ -1,0 +1,190 @@
+conteudo: brownfield-em-5-passos
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o gerador do scaffold cria uma pasta nova, roda git init e faz o primeiro commit; o --help da 1.7.1 não traz opção
+    para repositório existente
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Quick start', lista 'O que acontece'
+  resultado: confirmada
+  nota: Conferido também com python3 criar_projeto.py --help na tag v1.7.1.
+- texto: o gerador substitui nome, stack e descrição no AGENTS.md
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Quick start', lista 'O que acontece'
+  resultado: confirmada
+- texto: o projeto gerado traz a constituição no AGENTS.md, os ponteiros CLAUDE.md e GEMINI.md, sete peças de steering, a
+    skill sdd-lifecycle e os quatro pontos de montagem de skills como links para skills/
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seções 'O que você recebe' e 'Um corpo de skill,
+    quatro pontos de montagem'
+  resultado: confirmada
+  nota: Conferido na árvore gerada na execução (59 arquivos).
+- texto: o verificar_constituicao.py compara o bloco inline entre os marcadores com a cópia canônica em docs/constituicao/
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'A camada 0, e por que ela é inline'
+  resultado: confirmada
+- texto: os marcadores <!-- preencher --> ficam em docs/steering/, tests/README.md e arquivos de configuração
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Pós-geração', item 'Preencher os <!-- preencher
+    -->'
+  resultado: confirmada
+- texto: o agente não edita a constituição, as ADRs nem o mapa de arquitetura por conta própria
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: os controles de escrita são proteção contra descuido, e o hook só vê Edit, Write, NotebookEdit e MultiEdit; escrita
+    por shell passa só por regras ask de Bash
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Limite dos controles por ferramenta'
+  resultado: confirmada
+- texto: o verificador de drift é informativo e, com o mapa sem componentes e sem infra, fica em sincronia
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Pós-geração', item 'Rodar o drift check'
+  resultado: confirmada
+  nota: A saída sem divergências foi observada na execução.
+- texto: o scaffold fixa git_attribution desligado em .codex/requirements.toml
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), tabela da seção 'O que impede e o que orienta'
+  resultado: confirmada
+- texto: o job do CI roda o verificar_pr.py da própria MR, e a trava vale contra descuido, não contra má-fé; mitigações são
+    CODEOWNERS e proteção de branch
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'O que impede e o que orienta', 'Limite da
+    trava de PR'
+  resultado: confirmada
+- texto: o checklist pós-geração manda conferir os caminhos protegidos e acrescentar o que é sensível no projeto
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'Pós-geração', item 'Conferir os caminhos
+    protegidos'
+  resultado: confirmada
+- texto: o scaffold traz o CI dele em .github/workflows/qualidade.yml
+  ref: sdd-scaffold-readme
+  localizacao: README na tag v1.7.1 (clone local da tag, commit cd121cd), seção 'O que você recebe'
+  resultado: confirmada
+- texto: o hook PreToolUse de .claude/settings.json chama scripts/proteger_governanca.py; a lista PROTEGIDOS tem .github e
+    não tem .gitlab-ci.yml; o hook devolve ask para AGENTS.md
+  ref: sdd-scaffold-hook-proteger-governanca
+  localizacao: lista PROTEGIDOS, caminho_protegido() e main() na tag v1.7.1
+  resultado: confirmada
+  nota: 'Conferido por simulação: AGENTS.md devolve permissionDecision ask; app/frete.py e .gitlab-ci.yml passam sem decisão
+    antes da mudança.'
+- texto: o .kiro/permissions.yaml tem precedência deny sobre ask sobre allow e cobre fs.write
+  ref: sdd-scaffold-permissoes-declarativas
+  localizacao: comentário de abertura e regras da tag v1.7.1
+  resultado: confirmada
+- texto: o verificar_pr.py avisa, sem bloquear, de superfície sensível sem threat-model e de código sem plano; bloqueia só
+    migration editada
+  ref: sdd-scaffold-verificar-pr
+  localizacao: docstring do script e saídas na tag v1.7.1
+  resultado: confirmada
+  nota: Os dois avisos e a saída 'nenhum achado' foram observados na execução.
+- texto: o plano parte do modelo com Tier no cabeçalho, Impacto Arquitetural, Estratégia de rollback, Evidências e a seção
+    de revisão
+  ref: sdd-scaffold-modelo-plano
+  localizacao: template/docs/plans/MODELO-plano.md na tag v1.7.1
+  resultado: confirmada
+- texto: o Tier 1 tem plano leve e não tem spec
+  ref: sdd-scaffold-sdd-processo
+  localizacao: docs/steering/sdd-processo.md na tag v1.7.1, seção 'Tiers de rigor'
+  resultado: confirmada
+- texto: o PreToolUse do Claude Code roda antes da chamada da ferramenta e pode bloqueá-la
+  ref: claude-code-hooks
+  localizacao: tabela de eventos, linha PreToolUse
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: com CLAUDE.md próprio, o AGENTS.md entra pelo import @AGENTS.md
+  ref: claude-code-memory
+  localizacao: seção 'AGENTS.md'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o Codex para de acrescentar arquivos de instruções ao chegar a 32 KiB (project_doc_max_bytes, padrão)
+  ref: codex-agents-md
+  localizacao: seção sobre project_doc_max_bytes
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: as permissões de workspace do Kiro ficam por usuário, fora do repositório, para um repositório clonado não injetar
+    regras; a página não cita permissions.yaml dentro do repositório
+  ref: kiro-permissions
+  localizacao: seção 'File Locations'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o pipeline de merge request só inclui jobs com rules ou workflow:rules que casem com merge_request_event; jobs sem
+    rules não rodam nele
+  ref: gitlab-mr-pipelines
+  localizacao: seção de requisitos
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07.
+- texto: o pipeline de merge request roda sobre o conteúdo da branch de origem e ignora o da branch de destino
+  ref: gitlab-mr-pipelines
+  localizacao: seção sobre o que o pipeline de MR executa
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07; a página diz que roda 'on the contents of the source branch only'.
+- texto: Pipelines must succeed fica em Settings, Merge requests, Merge checks
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07 pela conferência em lote.
+- texto: o gitlab-ci-local executa os jobs do .gitlab-ci.yml localmente com Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, seção de uso
+  resultado: confirmada
+  nota: 'Executado na execução: cinco jobs PASS.'
+- texto: o gitleaks varre o histórico git com o comando gitleaks git
+  ref: gitleaks-readme
+  localizacao: README, seção de uso
+  resultado: confirmada
+  nota: 'Executado na execução: ''no leaks found'' em 5 commits.'
+execucoes:
+- tipo: arquivo
+  arquivo: guias/brownfield-em-5-passos.md
+  comando: clone da tag v1.7.1 e criar_projeto.py fora do repositório; comm -12 das listas de arquivos; rsync -a --ignore-existing;
+    união de .gitignore e requirements.txt; preenchimento dos marcadores; simulação do hook com JSON na entrada; verificar_constituicao.py;
+    verificar_drift_arquitetura.py; shasum -a 256 -c; ruff check .; npx gitlab-ci-local@4.76.0 com CI_PIPELINE_SOURCE=merge_request_event;
+    verificar_pr.py --base origin/main antes e depois do plano
+  ambiente: macOS, Python 3.14.8, Docker local, gitlab-ci-local 4.76.0, sdd-scaffold v1.7.1 (clone da tag); repositório de
+    teste fretes em ~/curadoria-a5/b5-guia-brownfield-exec, sem agente de IA
+  resultado: passou
+  evidencia: 'colisões: .gitignore, pyproject.toml e requirements.txt (59 arquivos no scaffold); rsync deixou 17 entradas
+    novas e nenhum arquivo meu modificado; hook devolve ask para AGENTS.md e, depois da mudança, para .gitlab-ci.yml; pipeline
+    de MR com testes, lint, normas-do-pr, governanca e segredos em PASS; verificar_pr.py: 2 AVISOs na primeira rodada (infra
+    de exemplo e plano ausente) e ''Verificação de PR: 56 arquivo(s), nenhum achado.'' no fim.'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: brownfield-em-5-passos-prompt-1
+  harness: claude-code
+  ambiente: sessão nova com só o texto do prompt preenchido; guia servido da prévia do portal em http://127.0.0.1:8001 (gerar.py
+    --previa, commit c621a5c); preparo em ~/curadoria-a5/b5-guia-brownfield-prompt; transcrição em ~/curadoria-a5/transcricoes/guia-brownfield-em-5-passos-prompt-1.bruta.jsonl
+  resultado: passou
+  evidencia: 'branch chore/2026-10-07-adota-scaffold com 5 commits (84d59a4, 1d97392, 246a361, 50bb637, 94b7220), sem coautoria;
+    diagnóstico com 3 colisões (.gitignore, pyproject.toml, requirements.txt); rsync sem modificar arquivo existente; constituição
+    e drift ok; o hook passou a pedir ask para .gitlab-ci.yml; hashes OK; pipeline com 5 jobs PASS no gitlab-ci-local 4.76.0;
+    verificar_pr.py ''Verificação de PR: 56 arquivo(s), nenhum achado.''. Observações tratadas no guia: git rm -rq infra falha
+    porque infra/ ainda não está rastreada após o rsync (o texto e o prompt passaram a mandar rm -rf infra; prompt alterado
+    sem reteste); o verificar_pr.py lê ''## Evidências'' como vazia quando só há subtítulos ### (aviso no passo 5); testes
+    e lint deixam de rodar em push sem MR (já constava no passo 4.2).'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-07'
+  achados:
+  - afirmacao: 'passo 2: rm -rf infra e prompt do passo 2'
+    problema: '[médio] o diagnóstico não inclui infra e o texto não manda conferir git ls-files infra; com infra/ própria
+      o rsync mistura e o rm -rf apaga os arquivos não rastreados dela.'
+    tratamento: 'Tratado em 2026-10-07: o texto confere git ls-files infra antes do rm -rf e, se a pasta já era do repositório,
+      lista só o que o scaffold trouxe (comm -13). Nota: prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão
+      do dono).'
+  - afirmacao: 'passo 4: o guia não diz que a MR pode editar o .gitlab-ci.yml e desligar os gates'
+    problema: '[médio] CODEOWNERS e proteção de branch só em scripts/; a MR altera o CI que a avalia.'
+    tratamento: 'Tratado em 2026-10-07: parágrafo no passo 4 e item em ''O que fica com você'': Pipelines must succeed,
+      main protegida e CODEOWNERS em .gitlab-ci.yml e scripts/ (refs gitlab-pipeline-obrigatorio, gitlab-mr-pipelines e
+      sdd-scaffold-readme).'
+  - afirmacao: 'prompt do guia: download de scaffold e exemplos sem hash'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. Seção ''Limites'' do guia.'
+  - afirmacao: 'passo 3 e prompt: o deny do hook contornado por shell'
+    problema: '[baixo] o texto diz que a edição é sua, o prompt manda aplicá-la depois do sim e a execução a aplicou por
+      shell.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).

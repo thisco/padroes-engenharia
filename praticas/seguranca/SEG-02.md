@@ -63,8 +63,10 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    execução, nunca por arquivo versionado. Guarde um `.env.example` só com os nomes, e confira que
    o `.env` está no `.gitignore`.
 2. Acrescente o job `segredos` do Exemplo ao `.gitlab-ci.yml`. A imagem do gitleaks tem o próprio
-   `gitleaks` como entrypoint, e o job o zera para rodar o script num shell; a versão da imagem fica
-   fixada (`v8.30.1` no Exemplo, a release que o portal usou) [ref:gitleaks-readme].
+   `gitleaks` como entrypoint, e o job o zera para rodar o script num shell; a imagem fica
+   fixada pela tag e pelo digest (`v8.30.1@sha256:c00b6bd0…` no Exemplo, a release que o portal usou,
+   com o digest do índice multiplataforma lido por `docker buildx imagetools inspect`)
+   [ref:gitleaks-readme]. Ao subir a versão, troque os dois.
 3. Instale o hook local: `cp pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit`.
    Ele reprova também quando o `gitleaks` não está instalado, para o commit não passar sem
    conferência.
@@ -201,6 +203,6 @@ a própria chave de exemplo da documentação da AWS passou na execução do por
 o intervalo da MR: segredo já presente na `main` não é lido por ele, e pede uma varredura do
 histórico inteiro e a rotação da credencial. `--redact` tira o valor do log, mas o commit, o
 arquivo e a linha continuam nele. O job foi executado com o `gitlab-ci-local` e o Docker, e não num
-GitLab, e a imagem é referenciada por tag, e não por digest. O hook é local e pode ser pulado,
+GitLab, e a imagem é fixada por digest, que só garante o mesmo conteúdo enquanto o registro o mantiver. O hook é local e pode ser pulado,
 então a trava que vale é o job. O que a prática não faz é descobrir a credencial já usada por
 alguém: se o segredo foi publicado, a resposta é rotacionar, e o scanner só avisa.

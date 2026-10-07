@@ -1,0 +1,10 @@
+id: kiro-custom-agents
+titulo: "Custom agents (Kiro)"
+organizacao: Kiro
+url: https://kiro.dev/docs/custom-agents/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção de caminhos (.kiro/agents/) e campos de configuração"
+dominios: [construir-com-ia]
+notas: null

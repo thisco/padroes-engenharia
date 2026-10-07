@@ -195,6 +195,62 @@ def test_hospedados_pega_receita_que_baixa_script_nao_hospedado(tmp_path):
     ]
 
 
+def com_base(*linhas):
+    return receita_com("```bash\n" + "\n".join(linhas) + "\n```")
+
+
+BASE_SCAFFOLD = f'BASE="{{URL do portal}}/{URL}"'
+
+
+def test_hospedados_aceita_citacao_por_base_definida_nas_linhas_anteriores(tmp_path):
+    montar(tmp_path)
+    trecho = com_base(
+        "mkdir -p scripts",
+        BASE_SCAFFOLD,
+        'curl -fsSL "$BASE/verificar_pr.py" -o scripts/verificar_pr.py',
+        "curl -fsSL ${BASE}/verificar_pr.py -o scripts/verificar_pr.py",
+    )
+    assert rodar(tmp_path, trecho) == []
+
+
+def test_hospedados_pega_citacao_por_base_de_arquivo_nao_hospedado(tmp_path):
+    montar(tmp_path)
+    trecho = com_base(BASE_SCAFFOLD, 'curl -fsSL "$BASE/sumiu.py" -o scripts/sumiu.py')
+    assert rodar(tmp_path, trecho) == [
+        Erro(
+            "receitas/ligar-ci.md",
+            "mecanismo",
+            "R-MECANISMO-HOSPEDADO",
+            f"{URL}/sumiu.py: arquivo não hospedado em mecanismos/",
+        )
+    ]
+
+
+def test_hospedados_base_usa_a_definicao_mais_proxima_e_a_janela_de_tres_linhas(tmp_path):
+    montar(tmp_path)
+    redefinida = com_base(
+        BASE_SCAFFOLD,
+        'BASE="https://raw.githubusercontent.com/thisco/sdd-scaffold/abc/template/scripts"',
+        'curl -fsSL "$BASE/sumiu.py" -o x',  # a definição mais próxima não é hospedada
+    )
+    assert rodar(tmp_path, redefinida) == []
+    longe = com_base(BASE_SCAFFOLD, "a", "b", "c", 'curl -fsSL "$BASE/sumiu.py" -o x')
+    assert rodar(tmp_path, longe) == []  # a definição está a 4 linhas: não vale
+    sem_definicao = com_base('curl -fsSL "$BASE/sumiu.py" -o x')
+    assert rodar(tmp_path, sem_definicao) == []
+
+
+def test_hospedados_pega_base_de_outro_componente_nao_hospedado(tmp_path):
+    montar(tmp_path)
+    trecho = com_base(
+        'BASE="{URL do portal}/.well-known/mecanismos/outro"', 'curl "$BASE/verificar_pr.py"'
+    )
+    erros = rodar(tmp_path, trecho)
+    assert [e.valor for e in erros] == [
+        ".well-known/mecanismos/outro/verificar_pr.py: arquivo não hospedado em mecanismos/"
+    ]
+
+
 def test_hospedados_pega_componente_nao_hospedado_citado_em_pratica(tmp_path):
     montar(tmp_path)
     corpo = fabrica.CORPO_PRATICA + "\nBaixe de /.well-known/mecanismos/outro/x.py.\n"
@@ -356,3 +412,13 @@ def test_pagina_de_ferramentas_sem_mecanismos_nao_cita_o_indice(repo_minimo):
     )
     assert "mecanismos/index.json" not in html_radar(s)
     assert "mecanismos/index.json" not in md_radar(s)
+
+
+def test_hospedados_base_com_comentario_nao_vira_hospedada(tmp_path):
+    montar(tmp_path)
+    trecho = com_base(
+        "BASE=https://raw.githubusercontent.com/o/r/v1/scripts  # espelho de "
+        ".well-known/mecanismos/sdd-scaffold",
+        'curl -fsSL "$BASE/sumiu.py" -o x',
+    )
+    assert rodar(tmp_path, trecho) == []

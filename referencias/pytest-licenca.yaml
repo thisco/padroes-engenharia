@@ -1,0 +1,10 @@
+id: pytest-licenca
+titulo: "pytest: arquivo LICENSE do repositório"
+organizacao: pytest-dev
+url: https://github.com/pytest-dev/pytest/blob/main/LICENSE
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "cabeçalho do arquivo: The MIT License (MIT)"
+dominios: [qualidade-bdd]
+notas: "Código-fonte aberto no GitHub, lido em 2026-10-07."

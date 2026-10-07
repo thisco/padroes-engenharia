@@ -194,8 +194,8 @@ def meta_guia(**alteracoes: Any) -> dict[str, Any]:
 def meta_caso(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
-            "titulo": "SGD Catálogo de Nuvem",
-            "origem": {"repo": "sgd-catalogo", "commit": COMMIT},
+            "titulo": "Catálogo de Nuvem de Exemplo",
+            "origem": {"repo": "repo-catalogo", "commit": COMMIT},
             "periodo": "2026-03 a 2026-09",
             "numeros": [
                 {
@@ -206,6 +206,7 @@ def meta_caso(**alteracoes: Any) -> dict[str, Any]:
                 }
             ],
             "referencias": ["ref-forte"],
+            "dono": "engenharia",
         },
         alteracoes,
     )
@@ -248,7 +249,7 @@ def meta_starter(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
             "id": "sdd-scaffold",
-            "titulo": "SDD scaffold",
+            "titulo": "sdd-scaffold",
             "descricao": "Repositório-modelo com constituição, steering e skills.",
             "repo": dados["repo"],
             "versao": dados["versao"],
@@ -441,7 +442,7 @@ def verificacao(meta: dict[str, Any] | None = None) -> Conteudo:
 
 
 def caso(
-    slug: str = "sgd",
+    slug: str = "caso-teste",
     meta: dict[str, Any] | None = None,
     corpo: str = "Números recontados no commit de origem [ref:ref-forte].\n",
 ) -> Conteudo:

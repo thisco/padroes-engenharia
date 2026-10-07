@@ -15,6 +15,7 @@ revisado_em: 2026-10-06
 revisar_ate: 2027-04-06
 resumo: "CPF e e-mail em claro não vão para fixture de teste, log nem prompt: o dado é mascarado antes do modelo e do log, e o teste usa dado sintético."
 ferramentas_aprovadas: []
+mapeia: [lgpd:art-6]
 exemplos:
   - exemplos/LGPD-02/verificar-dado-em-claro.py
   - exemplos/LGPD-02/antes/tests/fixtures/cliente.json
@@ -155,8 +156,9 @@ ou refaça as variáveis a cada comando.
 
 1. Rode este comando e mostre a saída:
    python3 scripts/verificar-dado-em-claro.py --raiz {raiz do projeto}
-2. Para cada arquivo acusado, troque o CPF em claro por [CPF] e o e-mail em claro por [EMAIL].
-   Só em tests/ o e-mail pode ser cliente@example.com no lugar de [EMAIL]. Mantenha o resto de
+2. Para cada arquivo acusado, troque o CPF em claro por [CPF] e o e-mail em claro por [EMAIL],
+   trocando só as linhas acusadas pelo verificador: outras sequências de dígitos do arquivo (um
+   protocolo de 11 dígitos, por exemplo) não são CPF e ficam como estão. Só em tests/ o e-mail pode ser cliente@example.com no lugar de [EMAIL]. Mantenha o resto de
    cada arquivo como está, não apague arquivo e não escreva o dado achado em lugar nenhum
    (relatório, commit, comentário). Não altere o verificador nem outro arquivo.
 3. Rode de novo o comando do passo 1 e mostre a saída, que precisa sair com 0.
