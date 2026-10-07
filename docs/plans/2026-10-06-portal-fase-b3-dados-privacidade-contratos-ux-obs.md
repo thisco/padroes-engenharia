@@ -67,7 +67,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [x] **T2 (LGPD-01, LGPD-02, `_dominio.md` de privacidade-lgpd).** Exemplos: um registro de
   classificação de dados do projeto com verificador; um teste que reprova fixture e log com CPF
   em claro (reaproveita a máscara da P2-04 sem gateway).
-- [ ] **T3 (API-01, API-02, `_dominio.md` de contratos-api).** Exemplos: contrato OpenAPI com
+- [x] **T3 (API-01, API-02, `_dominio.md` de contratos-api).** Exemplos: contrato OpenAPI com
   versão e a regra de mudança incompatível; verificador de diff de contrato que reprova remoção
   de campo ou mudança de tipo, rodado nos dois estados; o job no `gitlab-ci-local`.
 - [x] **T4 (UX-01, UX-02, `_dominio.md` de frontend-ux).** Exemplos: um componente com os quatro
@@ -96,6 +96,12 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 rodados nos dois estados numa cópia de projeto-teste-17. Prompts testados em sessão nova
 (LGPD-01 commit e8a4776, LGPD-02 commit c561f0f), ambos `passou`.
 
+**T3 fechada (2026-10-06).** Domínio `contratos-api` (6988718), API-01 (86329da) e API-02
+(b966374), `experimentar`, força `orienta`. Referências novas: `semver` e `oasdiff` (só citado);
+`openapi-spec` e `sdd-lifecycle` ampliadas. Verificador de diff rodado nos dois estados, e o job
+`contrato` rodado com `gitlab-ci-local` 4.76.0 (PASS compatível, FAIL incompatível). Prompts
+testados em sessão nova, ambos `passou` (API-02, commit 75ce932).
+
 **T4 fechada (2026-10-06).** Domínio frontend-ux, UX-01 e UX-02 com exemplos executados nos dois
 estados (verificador sai 1 antes e 0 depois) e prompts testados em sessão nova (passou). UX-01
 em HTML sem framework, com capturas dos quatro estados em `.playwright-mcp/ux-01-*.png`.
@@ -116,3 +122,4 @@ efeito no conteúdo.
 ## Conferência em lote: <data> — achados
 
 - T2, LGPD-02: a troca em massa tratou `protocolo=20261006001` (11 dígitos) como CPF, e o agente restaurou antes do commit. O Como aplicar deve avisar que número de 11 dígitos não é CPF por si e que a máscara respeite o formato, ou o verificador deve reportar com contexto.
+- T3, API-02: o comentário da linha 1 de `api/openapi.yaml` do preparo ("Proposta incompatível sem versão nova…") fica desatualizado após a correção, e o prompt proíbe editá-lo. Ajustar o preparo ou o passo 2 do prompt (sem retestar, decisão do dono).

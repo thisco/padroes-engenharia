@@ -81,6 +81,13 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: 'as quatro mudanças a mais saem 1 com "INCOMPATÍVEL: ..." e "sem versão major nova"; info.version "x": "info.version precisa ser X.Y.Z", saída 1; arquivo inexistente: "não foi possível comparar", saída 1.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: API-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-api-01-prompt
+  resultado: passou
+  evidencia: 'venv /tmp/venv-api com pyyaml==6.0.3 (PyYAML ausente); comparação antes: 2 linhas INCOMPATÍVEL e saída 1; info.version 2.0.0; ADR docs/adr/0001-remove-telefone.md; com --adr: saída 0; commit só com proposta.yaml e a ADR, sem trailer; avisou que a ADR precisa de aprovação humana'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote da T8
   data: '2026-10-06'

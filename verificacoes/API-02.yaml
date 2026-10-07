@@ -52,6 +52,13 @@ execucoes:
   resultado: passou
   evidencia: 'obter_cliente(1) devolve (200, corpo) e o corpo valida contra o schema Cliente do contrato v1 e das propostas compatíveis; "Ran 2 tests ... OK".'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: API-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-api-02-prompt, branch feat/remove-telefone
+  resultado: passou
+  evidencia: 'job contrato FAIL com as 2 linhas INCOMPATÍVEL; telefone restaurado e email opcional, versão 1.1.0; depois PASS com 2 testes OK; commit 75ce932 só com api/openapi.yaml, sem trailer, sem push'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote da T8
   data: '2026-10-06'
