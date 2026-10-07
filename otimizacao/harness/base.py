@@ -58,6 +58,9 @@ def executar_cli(
     Timeout devolve código -1 e stderr "timeout de N s"."""
     try:
         transcricao.parent.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        return -1, "", f"transcrição não gravada: {exc}"
+    try:
         proc = subprocess.Popen(
             argv,
             cwd=cwd,
@@ -76,7 +79,7 @@ def executar_cli(
     except subprocess.TimeoutExpired:
         # Mata o grupo inteiro (netos do CLI incluídos) e colhe a saída parcial.
         with contextlib.suppress(ProcessLookupError):
-            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+            os.killpg(proc.pid, signal.SIGKILL)
         saida, erro = proc.communicate()
         pendente = f"timeout de {timeout_s} s"
     texto = (saida or b"").decode("utf-8", errors="replace")

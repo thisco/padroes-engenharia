@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from otimizacao.harness import HARNESSES
-from otimizacao.harness.base import nome_da_transcricao
+from otimizacao.harness.base import executar_cli, nome_da_transcricao
 
 FALSOS = Path(__file__).parent / "binarios_falsos"
 
@@ -158,3 +158,15 @@ def test_saida_que_nao_e_json(ambiente, monkeypatch, nome):
     monkeypatch.setenv("FALSO_FALHA", "lixo")
     e = HARNESSES[nome].executar("x", ambiente / "projeto", ambiente / "t")
     assert e.erro is not None and e.erro.startswith("harness falhou: saída não é JSON")
+
+
+def test_timeout_mata_neto_quando_o_cli_ja_saiu(tmp_path):
+    inicio = time.monotonic()
+    codigo, stdout, stderr = executar_cli(
+        ["bash", "-c", "echo parcial; (sleep 20 &); exit 0"],
+        cwd=tmp_path,
+        transcricao=tmp_path / "t.jsonl",
+        timeout_s=2,
+    )
+    assert codigo == -1 and "parcial" in stdout and stderr == "timeout de 2 s"
+    assert time.monotonic() - inicio < 10
