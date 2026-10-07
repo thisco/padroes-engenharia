@@ -166,5 +166,7 @@ próprio scaffold, em que o aviso não bloqueia porque suficiência é julgament
 [ref:sdd-scaffold-threat-model]. Ele também não decide quando a seção é obrigatória: o gatilho
 (a mudança toca superfície sensível?) é julgamento de quem escreve a spec, e o verificador só
 roda sobre as specs que o CI mandar. A resposta "não" não pede justificativa, e portanto um "não"
-errado passa. A prática cobre a spec antes do código; ela não substitui teste de segurança nem
+errado passa. O texto antes do `: sim|não|não sei` também não é conferido: o verificador casa o
+número do item e a resposta, não a pergunta, e cinco linhas `N. qualquer coisa: não` passam. Quem
+revisa compara os rótulos com as cinco perguntas da skill. A prática cobre a spec antes do código; ela não substitui teste de segurança nem
 revisão do código escrito.

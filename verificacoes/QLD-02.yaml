@@ -85,6 +85,6 @@ execucoes:
   evidencia: 'teste parametrizado com 5 casos (5 failed, depois 5 passed); correção com divmod; entrada na PROJECT_MEMORY com os 5 campos; verificar-bug.py saiu 0; commit abde2bf, sem coautoria nem trailer'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
   achados: []

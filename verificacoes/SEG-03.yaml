@@ -115,6 +115,9 @@ execucoes:
     nem trailer.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: verificar-dependencias.py --indice aceita qualquer URL, inclusive file://
+    problema: '[baixo] só importa se o CI deixar quem abre a MR escolher o argumento.'
+    tratamento: 'Tratado: o Limites diz que o índice vem do job do CI, e não da MR.'

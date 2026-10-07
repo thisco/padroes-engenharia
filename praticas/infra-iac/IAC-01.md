@@ -90,9 +90,9 @@ declara healthcheck, a dependência é por lista e ninguém escreveu a ordem:
 O verificador reprova (saída 1; a ordem das linhas pode variar):
 
 ```text
-compose-antes.yml: serviço sem healthcheck: api
+compose-antes.yml: serviço sem healthcheck (ausente ou desligado): api
 compose-antes.yml: api depende de db sem condition service_healthy
-compose-antes.yml: serviço sem healthcheck: db
+compose-antes.yml: serviço sem healthcheck (ausente ou desligado): db
 ambiente-local-antes.md: falta a seção '## Serviços'
 ambiente-local-antes.md: falta a seção '## Ordem de rebuild'
 IAC-01: 5 problema(s) no ambiente local (acima).
@@ -128,7 +128,8 @@ iac-db Up 11 seconds (healthy)
 ```
 
 O verificador e o roteiro completo. O script usa os contêineres `iac-db` e `iac-api`, o projeto
-`iac-ambiente` e a porta 18080 do host, e derruba tudo ao sair; a espera pelo ambiente tem limite
+`iac-ambiente` e a porta 18080 do host, e derruba tudo ao sair (contêineres, rede, volumes e a
+imagem `iac-ambiente-api`); não o rode onde já exista contêiner com esses nomes. A espera pelo ambiente tem limite
 de 90 segundos e o script sai com 1 se esgotar:
 
 <!-- incluir: exemplos/IAC-01/verificar-ambiente.py -->
@@ -178,7 +179,8 @@ Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O ve
 `verificar-ambiente.py` do Exemplo, que roda no CI ou antes do push. Ele lê o compose já
 normalizado por `docker compose config` e reprova (saída 1) o arquivo ausente ou vazio, o Docker
 indisponível, o compose inválido, o serviço sem `healthcheck`, a dependência sem
-`condition: service_healthy`, o serviço do compose ausente da seção `## Serviços` (ou o inverso) e
+`condition: service_healthy`, o `healthcheck` desligado (`disable: true` ou `test: ["NONE"]`) ou
+vazio, o serviço do compose ausente da seção `## Serviços` (ou o inverso) e
 a ordem de rebuild que não traz os quatro passos na sequência.
 
 Os limites: o verificador confere a forma, e não que o healthcheck testa a coisa certa nem que o

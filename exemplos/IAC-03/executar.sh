@@ -2,10 +2,21 @@
 # Roda o exemplo da IAC-03: o verificador do plano e um deploy que falha e volta de verdade.
 # Uso: sh executar.sh   (na pasta exemplos/IAC-03; precisa de Docker e Python 3)
 # O script usa o contêiner iac-app, o projeto iac-rollback, as imagens iac-app:1 e iac-app:2 e a
-# porta 18090 do host, e remove tudo ao sair.
+# porta 18090 do host, e remove tudo ao sair. Como o "rmi" do fim apagaria imagens de quem já tem
+# essas tags, o script se recusa a rodar se iac-app:1, iac-app:2 ou o contêiner iac-app existirem.
 set -u
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 cd "$AQUI" || exit 1
+for existente in iac-app:1 iac-app:2; do
+    if docker image inspect "$existente" >/dev/null 2>&1; then
+        echo "a imagem $existente já existe; não a removo. Apague-a você ou use outra máquina."
+        exit 1
+    fi
+done
+if docker inspect iac-app >/dev/null 2>&1; then
+    echo "o contêiner iac-app já existe; não o toco."
+    exit 1
+fi
 trap 'IMAGEM=x docker compose -f "$AQUI/compose.yml" down -v >/dev/null 2>&1; docker rmi iac-app:1 iac-app:2 >/dev/null 2>&1' EXIT
 
 echo "### A. Antes: o plano não declara rollback"

@@ -50,6 +50,6 @@ execucoes:
   evidencia: 'Primeira tentativa (mesma data, transcrição ~/curadoria-a5/transcricoes/CICD-01-prompt-1.bruta.jsonl) falhou no passo 0: curl no host com host.docker.internal deu "Could not resolve host"; defeito do prompt, corrigido em 2d320a2; o esquema só aceita passou e falhou-como-esperado, por isso não tem entrada própria. Esta execução: sha256 do verificar_pr.py conferido (OK); primeiro run com os três jobs reprovando (F401 no lint, "22.0 != 18" na suíte, BLOQUEIA na V1 do verificador); corrigiu o import, o sinal (1 - desconto), restaurou a V1 de origin/main e criou a V2; segundo run PASS nos três, com dois AVISO do verificador (rollback não declarado e sem plano); commits a58f3bb "ci: gates da merge request (CICD-01)" e 6592706 "fix: desconto, lint e migration corretiva (CICD-01)", sem coautoria nem trailer, sem push. Observação do testador: o verificador compara commits e não a árvore, então o segundo run só passou depois do commit da correção.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
   achados: []

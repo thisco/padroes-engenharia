@@ -76,6 +76,11 @@ execucoes:
     fica com a revisão humana.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'exemplos/SEG-01/verificar-threat-model.py:18 aceita qualquer texto antes de : sim|não'
+    problema: '[baixo] cinco linhas ''N. a: não'' saíam 0; o Limites não dizia que o texto da pergunta
+      não é conferido.'
+    tratamento: 'Tratado: o Limites diz que o rótulo não é conferido e que a revisão o compara com as
+      cinco perguntas da skill.'

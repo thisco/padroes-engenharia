@@ -180,7 +180,10 @@ arquivo ausente, vazio ou que não é um plano em JSON e o recurso com ação `d
 inclusa) que não esteja na lista de aprovações; o arquivo de aprovações informado e ausente também
 reprova.
 
-Os limites: o verificador não lê o significado da mudança. Ele não sabe se um `update` no lugar
+Os limites: o verificador aceita como plano o JSON que traz `format_version`, `planned_values` e
+`configuration` (um módulo sem recurso não traz `resource_changes`, observado no OpenTofu 1.13, e
+vale como "nenhuma mudança"); um JSON sem essas três chaves reprova. Ele não lê o significado da
+mudança. Ele não sabe se um `update` no lugar
 causa interrupção, se um recurso novo custa caro ou se uma regra de rede ficou aberta demais. A
 lista de aprovações é um arquivo de texto, e o portal não verifica quem a escreveu; a trava vale se
 a revisão do PR a trata como decisão de pessoa. O plano é o retrato do momento em que foi gerado, e

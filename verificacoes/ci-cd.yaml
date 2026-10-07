@@ -11,6 +11,11 @@ afirmacoes:
   localizacao: página da capacidade, definição e benefícios (aberta na web em 2026-10-07)
   resultado: confirmada
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: commit 692e309 engolido por --amend (obrigatório 1, T1..T5)
+    problema: '[baixo] refutado como descrito: o commit está no HEAD com praticas/infra-iac/_dominio.md,
+      verificacoes/infra-iac.yaml e, por engano, verificacoes/ci-cd.yaml; os registros e o domínio estão
+      íntegros.'
+    tratamento: Nada a corrigir; a nota da T4 do plano já registra a troca.

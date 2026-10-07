@@ -96,6 +96,11 @@ execucoes:
   evidencia: 'validar.sh de 1 para 0 e job validar de FAIL para PASS no gitlab-ci-local 4.76.0; commit fix(calculo) só com calculo.py, sem coautoria nem trailer. Observação: o testador viu só as últimas 25 linhas da saída do job no estado antes.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/QLD-03/pyproject.toml e o ruff do portal
+    problema: '[baixo] o ruff usa a configuração mais próxima, sem herdar a da raiz; a pasta perde UP
+      e B do portal (só E, F, I).'
+    tratamento: 'Aceito sem mudança: o corpo já avisa que o ruff do portal lê esse pyproject; herdar a
+      configuração da raiz (extend) fica como opção.'

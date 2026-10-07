@@ -151,6 +151,9 @@ nenhuma ADR também reprova.
 
 <!-- incluir: exemplos/ARQ-01/verificar-adr.py -->
 
+O `adr.md` do Exemplo é a ADR já aceita por uma pessoa (status `aceita`); o prompt manda o agente
+deixar a sua `proposta`, e é com `proposta` que o gate `--aceita` reprova.
+
 Os limites: o verificador confere a forma, não o mérito. Uma ADR com as cinco partes pode ter
 contexto raso ou alternativa nenhuma, e só a pessoa que aceita avalia isso. O "Vamos" e o tamanho
 mínimo das seções são escolhas do portal, não da fonte. Ele não sabe quais mudanças pedem ADR

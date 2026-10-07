@@ -94,6 +94,15 @@ execucoes:
     só reconhece Container e ContainerDb, então usou Container (para a T8); commit a89c0d5'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/ARQ-04/verificar-c4.py:30-33 só reconhece Person, Person_Ext, System, System_Ext,
+      SystemDb, Container, ContainerDb e Container_Ext
+    problema: '[médio] um ContainerQueue (sintaxe válida do Mermaid C4) não virava elemento, e o verificador
+      saía 1 culpando o desenho certo (Rel usa ''fila'', que não foi declarado); o agente do teste de
+      prompt esbarrou nisso e usou Container.'
+    tratamento: 'Tratado: o verificador reconhece Person[_Ext], System[Db|Queue][_Ext] e Container[Db|Queue][_Ext]
+      (fronteiras como System_Boundary seguem fora), exige tecnologia só nos contêineres, e o Como verificar
+      lista os tipos aceitos. Rodado: antes 1 (3 problemas), depois 0, fila como ContainerQueue 0 e ContainerQueue
+      sem tecnologia 1. O prompt não mudou.'

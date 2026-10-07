@@ -188,7 +188,8 @@ histórico do projeto, a idade, a popularidade nem vulnerabilidades conhecidas (
 ferramenta de auditoria). Ele confere as dependências diretas no índice e exige hash no lockfile
 inteiro, mas não prova que o lockfile saiu do `requirements.txt` do commit: gere o lockfile na MR e
 reveja o diff dele. O índice usado é o `pypi.org`; um índice privado pode ter outra rota, e o
-`--indice` serve para apontar outro. O Exemplo cobre só Python e `requirements.txt`; `pyproject.toml`,
+`--indice` serve para apontar outro (aceita qualquer URL, inclusive `file://`); por isso o índice
+vem do job do CI, e quem abre a MR não escolhe o argumento. O Exemplo cobre só Python e `requirements.txt`; `pyproject.toml`,
 `package.json` e afins pedem o mesmo desenho com a ferramenta do ecossistema. A injeção de prompt
 tem outras formas além do nome de pacote, e a página do OWASP citada trata a categoria geral
 [ref:owasp-llm-top10].

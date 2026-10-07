@@ -6,7 +6,9 @@ Lê docs/arquitetura/c4-contexto.mmd (nível 1), docs/arquitetura/c4-containers.
 Arquitetura/mapa.yml. Reprova: arquivo ausente ou vazio, tipo de diagrama errado, elemento sem
 descrição (ou sem tecnologia, no contêiner), Rel para elemento não declarado ou sem rótulo,
 pessoa ou sistema externo do nível 2 que não está no nível 1, componente do manifesto sem
-contêiner e contêiner sem componente. O campo drawio_label do manifesto casa com o rótulo do
+contêiner e contêiner sem componente. Reconhece Person, Person_Ext, System, System_Ext, SystemDb,
+SystemQueue (e as versões _Ext) e Container, ContainerDb, ContainerQueue (e as versões _Ext);
+tecnologia só é exigida nos contêineres. O campo drawio_label do manifesto casa com o rótulo do
 contêiner. Sai 1 com qualquer problema. Precisa de PyYAML (pip install pyyaml).
 """
 
@@ -26,8 +28,10 @@ except ImportError:
     print("ARQ-04: PyYAML não instalado (pip install pyyaml)")
     sys.exit(1)
 
+# Tipos do Mermaid C4: Person[_Ext], System[Db|Queue][_Ext] e Container[Db|Queue][_Ext].
+# System_Boundary e as demais fronteiras não são elementos.
 ELEMENTO = re.compile(
-    r"^\s*(Person|Person_Ext|System|System_Ext|SystemDb|Container|ContainerDb|Container_Ext)"
+    r"^\s*(Person(?:_Ext)?|System(?:Db|Queue)?(?:_Ext)?|Container(?:Db|Queue)?(?:_Ext)?)"
     r"\((.*)\)\s*$"
 )
 RELACAO = re.compile(r"^\s*Rel\((.*)\)\s*$")

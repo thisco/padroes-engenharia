@@ -154,6 +154,10 @@ sem contêiner e contêiner sem componente.
 
 Os limites: o verificador confere a coerência dos arquivos, não se o desenho é verdadeiro. Ele não
 compara os `Rel` com as chamadas reais do código nem renderiza o diagrama, e só reconhece a sintaxe
-posicional do Mermaid (`Rel(a, b, "rótulo", "tecnologia")`), não os parâmetros nomeados. Como o
+posicional do Mermaid (`Rel(a, b, "rótulo", "tecnologia")`), não os parâmetros nomeados. Os tipos
+de elemento aceitos são `Person` e `Person_Ext`; `System`, `SystemDb` e `SystemQueue`, cada um com
+a variante `_Ext`; e `Container`, `ContainerDb` e `ContainerQueue`, também com `_Ext`; qualquer
+outro (`Component`, `Node`, fronteiras que não sejam `System_Boundary`) fica de fora. Só os
+contêineres exigem tecnologia. Como o
 suporte a C4 do Mermaid é experimental [ref:mermaid-c4], a sintaxe pode mudar e o verificador
 precisa acompanhá-la. O casamento do `drawio_label` com o rótulo é por fragmento do texto.

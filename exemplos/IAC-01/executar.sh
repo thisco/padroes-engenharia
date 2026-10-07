@@ -2,13 +2,15 @@
 # Roda o exemplo da IAC-01: o verificador nos dois estados e a ordem de rebuild de verdade.
 # Uso: sh executar.sh   (na pasta exemplos/IAC-01; precisa de Docker e Python 3)
 # O script usa containers iac-db e iac-api, o projeto iac-ambiente e a porta 18080 do host, e
-# derruba tudo ao sair. Trabalha numa cópia temporária, para não alterar o exemplo.
+# derruba tudo ao sair (contêineres, rede, volumes e a imagem iac-ambiente-api). Trabalha numa
+# cópia temporária, para não alterar o exemplo. Não rode onde já exista contêiner iac-db ou iac-api
+# de outro projeto: o nome fixo faz o "up" falhar, e o script não toca no que não é dele.
 set -u
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 TMP="$(mktemp -d)"
 cp -R "$AQUI/." "$TMP/"
 cd "$TMP" || exit 1
-trap 'docker compose -f "$TMP/compose.yml" down -v --remove-orphans >/dev/null 2>&1; rm -rf "$TMP"' EXIT
+trap 'docker compose -f "$TMP/compose.yml" down -v --rmi local --remove-orphans >/dev/null 2>&1; rm -rf "$TMP"' EXIT
 
 echo "### A. Antes: sem healthcheck, sem condição e sem ordem escrita"
 python3 verificar-ambiente.py compose-antes.yml ambiente-local-antes.md

@@ -53,6 +53,6 @@ execucoes:
   evidencia: 'escolheu v1.2.0 (feat + fix + chore); primeiro run: verificar-release FAIL por falta de entrada no CHANGELOG.md; commit "docs: changelog da 1.2.0", tag recriada em e12046da284fb2125a3b75e16671bc657dabbf50; segundo run PASS nos dois jobs, com build-info.json trazendo a versão e o commit; sem push, sem coautoria nem trailer'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
   achados: []

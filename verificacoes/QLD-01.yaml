@@ -81,6 +81,6 @@ execucoes:
   evidencia: 'vermelho por NotImplementedError e verde colados no plano; verificar-plano.py saiu 0; commit 32ad506 com test_frete.py, frete.py e docs/plans/frete.md, sem coautoria nem trailer'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
   achados: []

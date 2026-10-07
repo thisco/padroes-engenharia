@@ -58,7 +58,8 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   perguntas, varredura de segredo, dependência conferida). A CICD-01 tem força `avisa`, pelo
   `verificar_pr.py` hospedado; as demais ficam em `orienta`.
 - Cinco páginas de domínio novas: `arquitetura`, `qualidade-bdd`, `infra-iac`, `ci-cd` e
-  `seguranca`. Com elas, as 12 faixas da espinha ficam povoadas.
+  `seguranca`. Com elas, todas as 12 faixas da espinha têm ao menos uma prática; 15 células da espinha seguem
+  "a definir", o backlog público do §10.
 - Referências novas da B.4: `c4model-diagramas`, `import-linter-docs`, `mermaid-c4`,
   `sdd-scaffold-arquitetura-viva`, `sdd-scaffold-drift-arquitetura`,
   `sdd-scaffold-steering-arquitetura`, `sdd-scaffold-modelo-adr`,

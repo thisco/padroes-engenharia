@@ -2,10 +2,10 @@
 
 Uso: python3 verificar-ambiente.py <compose.yml> <ambiente-local.md>
 
-Reprova (saída 1): arquivo ausente ou vazio, Docker indisponível, serviço sem healthcheck,
-dependência sem condition service_healthy, serviço do compose fora da seção "Serviços" do
-documento (ou o inverso) e ordem de rebuild sem os quatro passos na sequência
-migrations, build, up, saúde.
+Reprova (saída 1): arquivo ausente ou vazio, Docker indisponível, serviço sem healthcheck (ou com
+healthcheck vazio, `disable: true` ou `test: ["NONE"]`), dependência sem condition
+service_healthy, serviço do compose fora da seção "Serviços" do documento (ou o inverso) e ordem
+de rebuild sem os quatro passos na sequência migrations, build, up, saúde.
 """
 
 import json
@@ -47,6 +47,17 @@ def configuracao(compose):
     return json.loads(saida.stdout).get("services", {})
 
 
+def healthcheck_ativo(spec):
+    """True se o serviço tem um healthcheck que não está desligado nem vazio."""
+    hc = spec.get("healthcheck")
+    if not isinstance(hc, dict) or not hc or hc.get("disable"):
+        return False
+    teste = hc.get("test")
+    if teste is not None and (not teste or str(teste[0]).upper() == "NONE" or teste == "NONE"):
+        return False
+    return True
+
+
 def secao(texto, titulo):
     achado = re.search(rf"^## {titulo}\s*$(.*?)(?=^## |\Z)", texto, re.M | re.S)
     return achado.group(1) if achado else None
@@ -64,8 +75,8 @@ def main():
     if not servicos:
         erros.append(f"{compose}: nenhum serviço declarado")
     for nome, spec in servicos.items():
-        if "healthcheck" not in spec:
-            erros.append(f"{compose}: serviço sem healthcheck: {nome}")
+        if not healthcheck_ativo(spec):
+            erros.append(f"{compose}: serviço sem healthcheck (ausente ou desligado): {nome}")
         for dep, cond in (spec.get("depends_on") or {}).items():
             if cond.get("condition") != "service_healthy":
                 erros.append(f"{compose}: {nome} depende de {dep} sem condition service_healthy")

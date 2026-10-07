@@ -175,7 +175,9 @@ succeed** precisa estar marcado [ref:gitlab-pipeline-obrigatorio].
 Os limites: o job foi executado com o `gitlab-ci-local` e o Docker, e não num GitLab. Linhas e
 arquivos medem o tamanho do texto, e não o risco: uma linha numa migration pesa mais que cem de
 teste, e o verificador não sabe a diferença. Arquivo binário conta como arquivo e como zero linha.
-Renomear conta como remover e criar. Quem quer burlar o teto divide uma mudança acoplada em MRs
+Renomear conta como remover e criar. A MR em que todos os arquivos casam com `--ignorar` (por
+exemplo, só lockfile) reprova com "nenhuma mudança medida"; ela pede outro job ou uma exceção
+declarada. Quem quer burlar o teto divide uma mudança acoplada em MRs
 que só funcionam juntas, e isso o job não vê; a dica é cada MR ser entregável sozinha. O job roda
 o script da própria MR, então o CODEOWNERS (ou rodar o script da base) é parte da trava. O DORA
 trata o lote pequeno em horas e dias de trabalho, e o teto de MR é uma aproximação dele

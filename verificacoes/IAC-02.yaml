@@ -83,6 +83,15 @@ execucoes:
   evidencia: plan "1 to add, 0 to change, 0 to destroy", verificar-plano.py saiu 0, apply ok, PR.md com as linhas do plano, lockfile não mudou; commit b36c44f, sem trailer
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: o .gitignore da raiz não ignorava *.tfstate, .terraform/ nem *.tfplan
+    problema: '[baixo] o próximo exemplo de IaC poderia versionar estado ou plano.'
+    tratamento: 'Tratado: o .gitignore da raiz ganhou *.tfstate, *.tfstate.backup, .terraform/, *.tfplan
+      e plano.bin.'
+  - afirmacao: exemplos/IAC-02/verificar-plano.py:39 aceita como plano qualquer JSON com format_version
+    problema: '[baixo] um JSON truncado, sem resource_changes, saía 0 com ''nenhuma mudança''.'
+    tratamento: 'Tratado em parte: exigir resource_changes reprovaria módulo sem recurso (o tofu 1.13
+      o omite, observado), então o verificador exige format_version, planned_values e configuration; o
+      Limites diz isso. Os três planos do executar.sh seguem 1, 0 e 0.'

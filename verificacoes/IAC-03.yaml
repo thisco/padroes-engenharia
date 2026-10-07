@@ -91,6 +91,11 @@ execucoes:
   evidencia: verificador 1 antes e 0 depois; iac03-app:2 ficou unhealthy e a volta para :1 usou o mesmo comando; trap derrubou contêiner, rede e imagens; commit adefad7 só com o plano, sem trailer
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/IAC-03/executar.sh:9, docker rmi iac-app:1 iac-app:2 no trap
+    problema: '[baixo] removeria imagens de quem já tem essas tags.'
+    tratamento: 'Tratado: o script recusa rodar (saída 1) se iac-app:1, iac-app:2 ou o contêiner iac-app
+      já existirem, antes de registrar o trap; cabeçalho e corpo dizem isso. Rodado limpo: saída igual
+      à do corpo e sem sobras.'

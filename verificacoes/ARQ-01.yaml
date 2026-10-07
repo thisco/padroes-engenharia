@@ -75,6 +75,11 @@ execucoes:
     "ARQ-01: 2 ADRs completas." (saída 0); commit só com a ADR, sem trailer; commit 74d4c01'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/ARQ-01/adr.md (estado depois) já está aceita, enquanto o prompt manda o agente
+      deixá-la proposta
+    problema: '[baixo] o corpo não dizia que o adr.md do Exemplo é a ADR já aceita por uma pessoa; o gate
+      --aceita só reprova com proposta.'
+    tratamento: 'Tratado: o corpo diz que o adr.md é a ADR já aceita e que o gate reprova com proposta.'

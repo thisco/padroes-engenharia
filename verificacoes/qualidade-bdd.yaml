@@ -11,6 +11,6 @@ afirmacoes:
   localizacao: seção 'Protocolo de debugging sistemático', última frase
   resultado: confirmada
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
   achados: []

@@ -62,6 +62,10 @@ execucoes:
   evidencia: 'job tamanho-da-mr FAIL com "15 arquivo(s), 372 linha(s)"; criou as branches mr/clientes (6891c8d), mr/pedidos (25494d5) e mr/faturas (963063f) por git cherry-pick, cada uma com 5 arquivos e 124 linhas e PASS; feat/tres-modulos intocada, sem push, sem coautoria nem trailer'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/CICD-02/verificar-tamanho-mr.py:73-75 reprova a MR em que todos os arquivos casam
+      com --ignorar
+    problema: '[baixo] a MR só de lockfile reprova com ''nenhuma mudança medida''.'
+    tratamento: 'Tratado: o Limites diz que MR só de lockfile pede outro job ou exceção declarada.'

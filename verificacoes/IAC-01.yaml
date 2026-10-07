@@ -98,6 +98,21 @@ execucoes:
     o repositório não tem ferramenta de migration, então o passo 1 da ordem de rebuild ficou sem comando (o verificador aceitou).'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/IAC-01/verificar-ambiente.py:93 aceita qualquer chave healthcheck
+    problema: '[médio] healthcheck: {disable: true} no db saía 0 com ''2 serviços com healthcheck''.'
+    tratamento: 'Tratado: o verificador reprova healthcheck vazio, disable: true e test: ["NONE"] (''serviço
+      sem healthcheck (ausente ou desligado)''). Rodado com as duas variantes: saída 1; antes 1 (5 problemas)
+      e depois 0. O Como verificar e a saída do corpo foram atualizados.'
+  - afirmacao: exemplos/IAC-01/executar.sh:11, o trap com down -v --remove-orphans
+    problema: '[baixo] a imagem iac-ambiente-api:latest (1,12 GB) ficava depois do script, contra ''derruba
+      tudo ao sair'' e ''sem sobras de imagem''.'
+    tratamento: 'Tratado: o trap usa down -v --rmi local --remove-orphans; o script rodado deixou zero
+      imagem e zero contêiner iac-; cabeçalho e corpo dizem que a imagem é removida.'
+  - afirmacao: nomes fixos iac-db, iac-api, projeto iac-ambiente e porta 18080
+    problema: '[baixo] com contêiner alheio de mesmo nome o up falha e o trap não toca no alheio, mas
+      o aviso não estava escrito.'
+    tratamento: 'Tratado: cabeçalho do script e corpo avisam para não rodar onde já exista contêiner com
+      esses nomes.'

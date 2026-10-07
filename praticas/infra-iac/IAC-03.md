@@ -119,7 +119,8 @@ no ar: 1
 
 O verificador do plano e o roteiro completo. O script usa o contêiner `iac-app`, o projeto
 `iac-rollback`, as imagens `iac-app:1` e `iac-app:2` e a porta 18090 do host, e remove tudo ao
-sair; toda espera pela saúde tem limite de 30 segundos e o script sai com 1 se esgotar:
+sair. Como isso apagaria imagens de quem já tem essas tags, o script recusa rodar (saída 1) se
+`iac-app:1`, `iac-app:2` ou o contêiner `iac-app` já existirem. Toda espera pela saúde tem limite de 30 segundos e o script sai com 1 se esgotar:
 
 <!-- incluir: exemplos/IAC-03/verificar-rollback.py -->
 

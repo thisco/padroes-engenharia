@@ -23,8 +23,9 @@ def ler_json(caminho):
     except ValueError:
         print(f"{caminho}: não é JSON")
         sys.exit(1)
-    if not isinstance(dado, dict) or "format_version" not in dado:
-        print(f"{caminho}: não é um plano de `tofu show -json`")
+    chaves = ("format_version", "planned_values", "configuration")
+    if not isinstance(dado, dict) or any(chave not in dado for chave in chaves):
+        print(f"{caminho}: não é um plano de `tofu show -json` (precisa de {', '.join(chaves)})")
         sys.exit(1)
     return dado
 

@@ -112,6 +112,10 @@ execucoes:
     ("no leaks found"). O diretório .gitlab-ci-local/ ficou untracked no preparo.
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.4 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: exemplos/SEG-02/plantar-segredo.sh escreve app/config.py
+    problema: '[baixo] sobrescrevia o arquivo sem aviso se o diretório fosse um projeto real.'
+    tratamento: 'Tratado: aviso no cabeçalho e o script se recusa (saída 1) se app/config.py já existir;
+      rodado duas vezes, a segunda recusa.'

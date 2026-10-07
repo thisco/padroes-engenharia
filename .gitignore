@@ -11,3 +11,10 @@ __pycache__/
 # Sistema e ferramentas
 .DS_Store
 .superpowers/
+
+# IaC (OpenTofu/Terraform): estado, cache de providers e planos nunca entram
+*.tfstate
+*.tfstate.backup
+.terraform/
+*.tfplan
+plano.bin
