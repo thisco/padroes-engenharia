@@ -141,10 +141,24 @@ não tem spec, e sim um plano leve com o teste que prova a correção [ref:sdd-s
    Verificação de PR: 4 arquivo(s), nenhum achado.
    ```
 
-Faça o merge. A execução fez um merge local com `--no-ff` e empurrou a `main`, no lugar do
-botão de merge da MR.
+Faça o commit na branch e o merge. A execução fez um merge local com `--no-ff` e empurrou a `main`, no
+lugar do botão de merge da MR:
+
+```bash
+git add -A && git commit -m "fix(precos): usa vírgula no preço em reais"
+git switch main
+git merge --no-ff fix/2026-10-05-virgula-no-preco -m "merge: fix/2026-10-05-virgula-no-preco"
+git push origin main
+```
 
 ### 3. Uma mudança de Tier 2: o CPF no pedido
+
+Parta da `main` com a correção do passo 2 já mesclada e crie a branch da mudança, que os passos 3 e 4
+vão citar como "a branch do CPF":
+
+```bash
+git switch -c feat/2026-10-05-cpf-no-pedido
+```
 
 Guardar o CPF do cliente no pedido muda o schema e grava dado pessoal: é Tier 2, que passa por
 spec, aprovação humana, plano e revisão contra a spec [ref:sdd-lifecycle]. O scaffold pede o
@@ -222,8 +236,22 @@ AVISO: docs/specs/2026-10-05-cpf-no-pedido.md: R1 não é citado em teste altera
 ```
 
 (a mesma linha saiu para R2 e R3). Escreva em `tests/unidade/test_pedidos.py` os testes, cada um com `# cobre: R<n>`, e veja falharem
-(com um `app/pedidos.py` provisório, que insere só `cliente` e `total_centavos`, a falha é de
-asserção e não de importação):
+(com um `app/pedidos.py` provisório, que insere só `cliente` e `total_centavos`, os testes falham por
+causa do comportamento e não por erro de importação; o provisório é o arquivo abaixo, e a versão final
+está no passo 5):
+
+```python
+# app/pedidos.py (provisório)
+def criar_pedido(conexao, cliente: str, total_centavos: int, cpf: str) -> int:
+    cursor = conexao.execute(
+        "INSERT INTO pedidos (cliente, total_centavos) VALUES (?, ?)",
+        (cliente, total_centavos),
+    )
+    return cursor.lastrowid
+```
+
+Os documentos ficam cada um na sua pasta: o PRD em `docs/prd/`, a spec em `docs/specs/` e o plano em
+`docs/plans/`, a partir dos modelos `MODELO-*.md` que o gerador já trouxe. Os testes:
 
 ```python
 import sqlite3
@@ -310,7 +338,16 @@ O `segredos` usa o gitleaks, que varre o histórico [ref:gitleaks-readme]. O git
 a pasta `.gitlab-ci-local/` no projeto: acrescente-a ao `.gitignore`, como a execução fez.
 No GitLab de verdade, falta marcar **Pipelines must succeed** em Settings → Merge requests →
 Merge checks, passo 5 da receita. Faça o merge da branch do CI na `main` e traga a `main` para a
-branch do CPF.
+branch do CPF:
+
+```bash
+git add .gitlab-ci.yml .gitignore && git commit -m "ci: ativa as travas do scaffold"
+git switch main
+git merge --no-ff ci/2026-10-05-travas -m "merge: ci/2026-10-05-travas"
+git push origin main
+git switch feat/2026-10-05-cpf-no-pedido
+git merge main
+```
 
 ### 5. Veja a trava: a migration editada bloqueia
 

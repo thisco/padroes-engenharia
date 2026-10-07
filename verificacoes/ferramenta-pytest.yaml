@@ -39,6 +39,9 @@ execucoes:
   evidencia: 'pytest 9.1.1'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.5 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'ficha: schema, seções, versão 9.1.1 e pytest-bdd como candidato sem prática'
+    problema: '[baixo] sem achado; as fontes pytest-* não foram reabertas na conferência.'
+    tratamento: Nenhum.

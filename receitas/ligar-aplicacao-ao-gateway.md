@@ -107,9 +107,10 @@ variáveis do passo 2.
    mensagem), então use outro alias.
 3. Aponte a aplicação para o gateway. O gateway é compatível com o formato da API da OpenAI, e
    um SDK da OpenAI funciona apontando para ele [ref:litellm-proxy-docker]. No cliente da
-   aplicação, leia a URL e a chave do ambiente e use em `model` o nome do catálogo do gateway:
+   aplicação, leia a URL e a chave do ambiente e use em `model` o nome do catálogo do gateway
+   (o cliente abaixo é o `exemplos/P2-01/cliente.py`):
 
-   <!-- incluir: exemplos/P2-01/cliente.py -->
+<!-- incluir: exemplos/P2-01/cliente.py -->
 
    No repositório da aplicação, guarde `AI_GATEWAY_URL` e `AI_GATEWAY_KEY` no `.env`, que fica
    fora do git, e tire do `.env.example` as variáveis de chave de provedor, acrescentando as
@@ -160,7 +161,7 @@ variáveis do passo 2.
    ```bash
    docker compose --profile guardrails up -d --force-recreate gateway
    for i in $(seq 1 60); do curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null && break; sleep 3; done
-   curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null || echo "o gateway não respondeu em 3 minutos (60 tentativas): veja docker compose logs gateway e pare aqui"
+   curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null || { echo "o gateway não respondeu em 3 minutos (60 tentativas): veja docker compose logs gateway e pare aqui"; exit 1; }
    ```
 
    Os contêineres do Presidio pedem mais memória [ref:gateway-poc-readme]. O guardrail mascara

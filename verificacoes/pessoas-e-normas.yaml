@@ -36,6 +36,13 @@ afirmacoes:
   localizacao: página do catálogo da IEC, escopo e data
   resultado: confirmada
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.5 pendente"
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: saída .md com [ref:id] cru
+    problema: '[baixo] 16 ocorrências em public/pessoas-e-normas.md; o mesmo ocorre em o-problema, index e guias: comportamento
+      do motor para o .md.'
+    tratamento: 'Pendência pós-v1, anotada no plano da B.5 (T10); decisão a tomar: o .md mantém [ref:id] ou o motor resolve.'
+  - afirmacao: Portaria MGI 3.485
+    problema: '[baixo] fonte primária (DOU) deu socket hang up; uma segunda fonte confirma data e escopo.'
+    tratamento: 'Nenhum: segue [S], nota ''primária bloqueada''; reabrir no DOU.'

@@ -24,6 +24,7 @@ referencias:
   - kiro-permissions
   - gitlab-mr-pipelines
   - gitlab-ci-local-readme
+  - gitlab-pipeline-obrigatorio
   - gitleaks-readme
 revisado_em: 2026-10-07
 ---
@@ -227,11 +228,18 @@ Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
 
 Se o seu projeto não tem infraestrutura como código, apague a pasta `infra/` de exemplo. Ela traz um
 módulo OpenTofu de modelo, e o `verificar_pr.py` trata `infra/cloud/` como superfície sensível (passo 5).
-Logo depois da cópia a pasta ainda não está rastreada pelo git, então `git rm` falha; use `rm -rf`
-(se ela já estiver rastreada, `git rm -rq infra`):
+Antes de apagar, confira que a pasta não é sua: `git ls-files infra` precisa sair vazio. Se o repositório já
+tinha uma `infra/` rastreada, o `rsync` misturou os arquivos dela com os do scaffold e o `rm -rf` levaria os
+dois; nesse caso remova só o que o scaffold trouxe, que é a lista do `comm` abaixo. Logo depois da cópia a
+pasta do scaffold ainda não está rastreada pelo git, então `git rm` falha; use `rm -rf`:
 
 ```bash
-rm -rf infra
+if [ -z "$(git ls-files infra)" ]; then
+  rm -rf infra
+else
+  echo "infra/ já é sua. Arquivos que o scaffold trouxe, para remover um a um:"
+  comm -13 "$T/repo.txt" "$T/scaffold.txt" | grep '^infra/'
+fi
 ```
 
 O verificador de drift da arquitetura continua em sincronia sem a pasta
@@ -438,6 +446,14 @@ histórico inteiro com o gitleaks [ref:gitleaks-readme]: um segredo antigo no se
 até ser tratado, e num brownfield isso acontece. No GitLab de verdade, falta marcar **Pipelines must
 succeed** em Settings, Merge requests, Merge checks, passo 5 da receita.
 
+Há um furo que o pipeline sozinho não fecha: a MR pode editar o próprio `.gitlab-ci.yml` e desligar os três
+gates (apagar o job, ou pôr `rules` que nunca casam), e o pipeline de MR roda sobre o conteúdo da branch de origem, e não sobre o da `main` [ref:gitlab-mr-pipelines].
+O que fecha isso são três coisas juntas: **Pipelines must succeed** [ref:gitlab-pipeline-obrigatorio], a
+branch `main` protegida, e o CODEOWNERS cobrindo o `scripts/`, que é a mitigação que o README do scaffold
+aponta [ref:sdd-scaffold-readme], e o `.gitlab-ci.yml`, onde os gates moram, de modo que a alteração nesses
+arquivos exija a aprovação de quem é dono deles. O `ask` do hook do passo 3
+protege contra o agente, e não contra quem abre a MR.
+
 ### 5. A primeira MR, passando pelo `verificar_pr.py`
 
 A primeira MR é a da própria adoção. O `verificar_pr.py` compara o diff com a base e avisa, sem
@@ -485,8 +501,16 @@ do guia [Do zero à primeira MR com IA](do-zero-a-primeira-mr.html).
   32 KiB por padrão [ref:codex-agents-md] e que o job `governanca` da receita reprova o `AGENTS.md` a
   partir de 30000 bytes. Com um `CLAUDE.md` próprio, ele precisa importar o `AGENTS.md` com a linha
   `@AGENTS.md` [ref:claude-code-memory].
-- Marcar o merge check no GitLab, o CODEOWNERS e a proteção de branch em `scripts/`, porque o job roda o
-  `verificar_pr.py` da própria MR e a trava vale contra descuido, não contra má-fé [ref:sdd-scaffold-readme].
+- Marcar o merge check no GitLab, proteger a `main` e pôr o `.gitlab-ci.yml` e o `scripts/` no CODEOWNERS,
+  porque o job roda o `verificar_pr.py` da própria MR e a trava vale contra descuido, não contra má-fé
+  [ref:sdd-scaffold-readme]. Sem o CODEOWNERS nesses dois caminhos, quem abre a MR desliga os gates.
+
+## Limites
+
+Os scripts do scaffold vêm da tag `v1.7.1` e são conferidos pelos hashes do passo 4; o que o guia e o
+prompt baixam de `{URL do portal}/exemplos/*` (os arquivos de exemplo) não tem hash publicado. Só os
+mecanismos de `/.well-known/mecanismos/` têm. Fora de um portal em que você confia, leia o conteúdo
+baixado antes de executá-lo ou de copiá-lo para o repositório.
 
 ## O que a execução não cobriu
 
@@ -532,7 +556,9 @@ Pare e me avise antes de qualquer passo destrutivo.
    frontend); deixe os outros e liste-os para mim, sem inventar autenticação, classificação de dados
    nem decisões de arquitetura. Troque no AGENTS.md só o mapa do repositório, para refletir as pastas
    reais, e não toque no bloco entre <!-- constituicao:inicio e <!-- constituicao:fim -->. Se o
-   repositório não tem infraestrutura como código, rode rm -rf infra. Rode
+   repositório não tem infraestrutura como código e git ls-files infra não lista nada, rode rm -rf
+   infra; se lista, remova só os arquivos de infra/ que o scaffold trouxe (comm -13 de repo.txt e
+   scaffold.txt, só as linhas infra/) e me avise. Rode
    python3 -I scripts/verificar_constituicao.py --raiz . e o scripts/verificar_drift_arquitetura.py
    (instale o pyyaml num venv do projeto se faltar) e mostre as saídas.
 

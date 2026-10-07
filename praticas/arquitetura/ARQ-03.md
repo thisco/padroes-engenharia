@@ -62,6 +62,21 @@ imports.
 1. Crie o pacote com as três camadas: `dominio` (regra pura), `aplicacao` (casos de uso e portas) e
    `adaptadores` (HTTP, banco, filas). Defina a porta como `Protocol` na `aplicacao`, em termos do
    domínio.
+
+   Os arquivos do Exemplo têm hífen no nome (`repositorio-sql.py`), que o Python não aceita como nome
+   de módulo, e o `importlinter.ini` espera módulos como `boletos.dominio.boleto`. Ao copiá-los, monte
+   as pastas assim, com um `__init__.py` vazio em cada pasta:
+
+   ```text
+   boletos/
+     dominio/boleto.py                    # exemplos/ARQ-03/dominio.py (o antes: dominio-antes.py)
+     aplicacao/portas.py                  # exemplos/ARQ-03/portas.py
+     aplicacao/servico.py                 # exemplos/ARQ-03/servico.py
+     adaptadores/repositorio_sql.py       # exemplos/ARQ-03/repositorio-sql.py
+     adaptadores/adaptador_http.py        # exemplos/ARQ-03/adaptador-http.py
+   importlinter.ini                       # exemplos/ARQ-03/importlinter.ini
+   scripts/verificar-camadas.py           # exemplos/ARQ-03/verificar-camadas.py
+   ```
 2. Mova a leitura da requisição para um adaptador de entrada e o acesso ao banco para um adaptador
    de saída que implementa a porta. O caso de uso recebe a porta pronta e chama o domínio.
 3. Escreva o `importlinter.ini` com os dois contratos do Exemplo, ajustando `root_package` e a

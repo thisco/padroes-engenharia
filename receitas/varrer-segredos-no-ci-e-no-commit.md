@@ -52,8 +52,10 @@ git ls-remote --heads origin main
 ```
 
 Sem o gitleaks instalado, o hook do passo 3 reprova todo commit, de propósito: o commit não deve passar
-sem conferência. O roteiro do Exemplo usa a imagem `zricethezav/gitleaks:v8.30.1`, fixada também por digest no arquivo, no job e o gitleaks
-local (8.30.1 na execução do portal) no hook.
+sem conferência. O roteiro do Exemplo usa a imagem `zricethezav/gitleaks:v8.30.1`, fixada também por digest no job do arquivo; o hook usa o gitleaks
+instalado na máquina (8.30.1 na execução do portal).
+
+**Limite do download.** Os arquivos que esta receita baixa de `{URL do portal}/exemplos/*` não têm hash publicado: só os mecanismos de `/.well-known/mecanismos/` têm. Fora de um portal em que você confia, leia o conteúdo de cada arquivo antes de rodá-lo ou de copiá-lo para o repositório. O `pre-commit.sh` vira um hook em `.git/hooks` e executa a cada commit, por isso merece leitura antes de ser instalado.
 
 ## Passos
 
@@ -65,11 +67,13 @@ local (8.30.1 na execução do portal) no hook.
    printf '.env\n' >> .gitignore
    printf 'AWS_ACCESS_KEY_ID=\n' > .env.example
    ```
-2. **Crie o job `segredos`** no `.gitlab-ci.yml` (ou acrescente-o ao que já existe), com o arquivo
-   do portal:
+2. **Crie o job `segredos`** no `.gitlab-ci.yml`, com o arquivo do portal. O `curl -o` **substitui** um
+   `.gitlab-ci.yml` que o projeto já tenha: se ele existir, baixe para `/tmp/segredos-ci.yml` e
+   acrescente o job ao arquivo existente:
 
    ```bash
-   curl -fsSL "{URL do portal}/exemplos/SEG-02/gitlab-ci.yml" -o .gitlab-ci.yml
+   test -e .gitlab-ci.yml && echo "já existe: baixe para /tmp/segredos-ci.yml e mescle" \
+     || curl -fsSL "{URL do portal}/exemplos/SEG-02/gitlab-ci.yml" -o .gitlab-ci.yml
    ```
 
    O job só roda em pipeline de merge request, pela regra `$CI_PIPELINE_SOURCE ==

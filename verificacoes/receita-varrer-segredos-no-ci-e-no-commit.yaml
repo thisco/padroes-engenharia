@@ -85,6 +85,26 @@ execucoes:
   evidencia: 'a5bd135 (ci); o hook recusou o commit com a chave (saída 1); e0fdb72 com --no-verify, job FAIL; amend 987723c, job PASS; sem push. Observação: o amend foi com --no-verify porque o passo 6 não dizia que o hook roda no amend; o passo 6 da receita ganhou essa frase depois do teste, sem reteste (o bloco prompt não mudou). Sem coautoria.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.5 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'Antes de começar e passos: download sem hash, incluindo pre-commit.sh e plantar-segredo.sh'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite. O pre-commit.sh vira hook e executa a cada commit.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. O prompt não mudou. Para o pre-commit.sh, o texto diz que vira hook e merece leitura antes de
+      instalado.'
+  - afirmacao: 'passo 2: curl -o .gitlab-ci.yml'
+    problema: '[médio] o download substitui um .gitlab-ci.yml existente.'
+    tratamento: 'Tratado em 2026-10-07: mesmo guarda do passo da receita de contrato (baixa para /tmp e mescla se o arquivo
+      existir).'
+  - afirmacao: Antes de começar, frase 'fixada também por digest no arquivo, no job e o gitleaks local ... no hook'
+    problema: '[baixo] frase truncada.'
+    tratamento: 'Tratado em 2026-10-07: reescrita (digest no job do arquivo; hook com o gitleaks instalado).'
+  - afirmacao: 'prompt: repositório de teste e chave sintética'
+    problema: '[baixo] os blocos de prompt rodam --no-verify e --amend sem dizer que o repositório é descartável.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).
+  - afirmacao: 'registro: amend com --no-verify'
+    problema: '[baixo] o passo 6 ainda não dizia que o hook roda no amend; a ressalva está dita.'
+    tratamento: 'Nenhum: a ressalva está dita.'

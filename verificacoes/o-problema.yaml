@@ -219,12 +219,11 @@ afirmacoes:
   nota: "O arquivo é idêntico ao da v1.7.0 no clone local (git diff v1.7.0 v1.7.1 vazio neste caminho)."
 revisao_adversarial:
   revisor: sessao-independente
-  data: '2026-10-04'
+  data: '2026-10-07'
   achados:
   - afirmacao: O harness roda a sessão e a sessão contém o modelo [ref:openai-harness-engineering]
     problema: síntese do autor apresentada como da fonte
-    tratamento: o lead agora cita só o que cada fonte diz (sessão sem memória; o que não está no contexto
-      não existe)
+    tratamento: o lead agora cita só o que cada fonte diz (sessão sem memória; o que não está no contexto não existe)
   - afirmacao: a cada 25% a mais de adoção de IA, −7,2% e −1,5% [ref:dora-2024]
     problema: o blog do Google Cloud usa o 25% só para os ganhos; as quedas vêm com 'as AI adoption increased'
     tratamento: o texto perdeu o 'a cada 25%'; os valores e a data (22/10/2024) batem
@@ -236,8 +235,8 @@ revisao_adversarial:
     tratamento: data 2025-11 e as duas fontes datadas no texto
   - afirmacao: agentes escrevem mais rápido do que qualquer time revisa
     problema: absoluto e sem fonte
-    tratamento: reescrito como 'podem escrever mais rápido do que um time consegue revisar', com o DORA
-      ao lado; definição do elo suavizada
+    tratamento: reescrito como 'podem escrever mais rápido do que um time consegue revisar', com o DORA ao lado; definição
+      do elo suavizada
   - afirmacao: princípio 'impede ou orienta' [ref:claude-code-memory]
     problema: a frase sobre onde a revisão humana olha não está na fonte
     tratamento: frase trocada pelo que a fonte diz (CLAUDE.md é contexto; bloquear exige hook)
@@ -245,17 +244,19 @@ revisao_adversarial:
     problema: a fonte chama de alavanca forte e diz que não elimina de imediato a complacência
     tratamento: texto com a ressalva
   - afirmacao: fontes do próprio autor (estados-de-interface, sdd-scaffold-readme, sdd-lifecycle)
-    problema: documentam a ferramenta do autor, não são evidência externa; o README só nomeia as cinco
-      perguntas do threat-model
+    problema: documentam a ferramenta do autor, não são evidência externa; o README só nomeia as cinco perguntas do threat-model
     tratamento: 'aceito: as afirmações são sobre o que o scaffold traz, não sobre eficácia'
-  - afirmacao: 'número do 15% × 28–33%: a fonte classifica a sessão, não a pessoa; sucesso verificado
-      é jargão'
+  - afirmacao: 'número do 15% × 28–33%: a fonte classifica a sessão, não a pessoa; sucesso verificado é jargão'
     problema: texto lia como medição objetiva
-    tratamento: descrição com 'sessões classificadas como', sucesso = classificador mais sinal concreto,
-      nível avaliado por modelo
+    tratamento: descrição com 'sessões classificadas como', sucesso = classificador mais sinal concreto, nível avaliado
+      por modelo
   - afirmacao: marcador [S] da LGPD sem explicação
     problema: o marcador não era explicado e o art. 5º I não era usado
     tratamento: o portal planalto.gov.br foi lido manualmente no navegador (V) e o marcador saiu
   - afirmacao: 20% da semana e cerca de 100 linhas sem data própria
     problema: herdam a data da falha
     tratamento: 'aceito: o número tem a data da própria entrada em numeros e da falha'
+  - afirmacao: 'tabela de padrões de falha: 6 respostas ''(candidata)'' sem prática e sem chip de força'
+    problema: '[médio] as práticas agora existem.'
+    tratamento: 'Tratado em 2026-10-07: padrões 2 a 7 ligados a P1-09, P1-03, QLD-01, P1-09, ARQ-02 e P1-03; o que ainda
+      não tem prática segue dito como candidato no texto.'

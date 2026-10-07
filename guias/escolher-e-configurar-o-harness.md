@@ -18,6 +18,7 @@ referencias:
   - claude-code-memory
   - claude-code-skills
   - claude-code-hooks
+  - claude-code-permissions
   - claude-code-subagents
   - codex-agents-md
   - codex-skills
@@ -116,7 +117,7 @@ especificação recomenda cerca de 100 tokens de metadados por skill e menos de 
 
 | Harness | Mecanismo |
 |---|---|
-| Claude Code | regras `ask` e `deny` em `.claude/settings.json`, como as do template [ref:sdd-scaffold-readme]; o `CLAUDE.md` é contexto, e não configuração imposta [ref:claude-code-memory] |
+| Claude Code | regras `allow`, `ask` e `deny` em `.claude/settings.json`, avaliadas nessa ordem de precedência: `deny`, depois `ask`, depois `allow` [ref:claude-code-permissions]; o template traz `ask` e `deny` [ref:sdd-scaffold-readme]; o `CLAUDE.md` é contexto, e não configuração imposta [ref:claude-code-memory] |
 | Codex | políticas de aprovação e três modos de sandbox (`read-only`, `workspace-write`, `danger-full-access`); a rede vem desligada por padrão [ref:codex-sandbox-aprovacoes] |
 | GitHub Copilot | não verificado: a curadoria não abriu uma página de permissões do Copilot |
 | Kiro | `permissions.yaml`, com precedência `deny` sobre `ask` sobre `allow`; o arquivo do workspace fica por usuário, fora do repositório [ref:kiro-permissions] |
@@ -242,8 +243,10 @@ Claude Code, o hook que bloqueia usa a saída 2, e a saída 1 não bloqueia [ref
 ### 6. Confira dentro do harness
 
 O que o harness lista só se vê dentro dele. Abra cada harness que você usa na raiz do repositório e peça a
-lista de skills do projeto: ela deve trazer as mesmas cinco do scaffold. No Claude Code e no Codex, o teste do
-portal listou as cinco; Kiro, Antigravity e Copilot não têm essa execução registrada.
+lista de skills do projeto: ela deve trazer as mesmas cinco do scaffold. A execução registrada provou o
+script do passo 4, que contou as cinco skills por `find` sem abrir harness nenhum, e o prompt, que rodou
+no Claude Code e corrigiu os pontos de montagem. A listagem de skills feita pelo próprio harness, em
+qualquer um dos cinco, não foi conferida.
 
 ## O que a execução não cobriu
 

@@ -101,16 +101,27 @@ execucoes:
   evidencia: 'estado antes: saída 1 com as mesmas três linhas e a de fecho do corpo; estado depois: ''LGPD-01: 5
     campos de schema, todos classificados.'', saída 0.'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/dados-antes.md
+  comando: python3 verificar-classificacao.py --schema V1__cria_cliente.sql --dados dados-antes.md (dentro de exemplos/LGPD-01)
+  ambiente: Python 3.14.8; macOS (T10)
+  resultado: falhou-como-esperado
+  evidencia: 'estado antes como arquivo: ''cliente.cpf'', ''cliente.email'' e ''cliente.condicao_saude'' sem classificação em dados-antes.md e ''LGPD-01: campo sem classe, com classe inválida ou sem finalidade (acima).'', saída 1; com dados.md, ''LGPD-01: 5 campos de schema, todos classificados.'', saída 0.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-06'
+  data: '2026-10-07'
   achados:
-  - afirmacao: 'exemplos/LGPD-01/verificar-classificacao.py: extração de colunas e Como verificar (''reprova o ADD
-      COLUMN sem linha no registro'')'
-    problema: '[alto] coluna de nome key, index, check, unique, primary, foreign ou constraint era descartada como
-      constraint, e só a primeira cláusula de ALTER TABLE ... ADD COLUMN a, ADD COLUMN b era vista; com key, "index"
-      e cpf_pai fora do dados.md o verificador saía 0 com ''3 campos, todos classificados''.'
-    tratamento: 'Tratado: constraint e índice passam a ser reconhecidos pela sintaxe (PRIMARY KEY (, CONSTRAINT
-      nome, UNIQUE (, CHECK (, FOREIGN KEY (, INDEX/KEY nome (), nunca pelo nome da coluna, com ou sem aspas; cada
-      cláusula ADD [COLUMN] é percorrida. O caso do conferente sai 1 e lista key, index e cpf_pai; os dois estados
-      do Exemplo seguem iguais (1 antes, 0 depois); o Como verificar passou a dizer isso.'
+  - afirmacao: 'exemplos/LGPD-01/verificar-classificacao.py: extração de colunas e Como verificar (''reprova o ADD COLUMN
+      sem linha no registro'')'
+    problema: '[alto] coluna de nome key, index, check, unique, primary, foreign ou constraint era descartada como constraint,
+      e só a primeira cláusula de ALTER TABLE ... ADD COLUMN a, ADD COLUMN b era vista; com key, "index" e cpf_pai fora
+      do dados.md o verificador saía 0 com ''3 campos, todos classificados''.'
+    tratamento: 'Tratado: constraint e índice passam a ser reconhecidos pela sintaxe (PRIMARY KEY (, CONSTRAINT nome, UNIQUE
+      (, CHECK (, FOREIGN KEY (, INDEX/KEY nome (), nunca pelo nome da coluna, com ou sem aspas; cada cláusula ADD [COLUMN]
+      é percorrida. O caso do conferente sai 1 e lista key, index e cpf_pai; os dois estados do Exemplo seguem iguais (1
+      antes, 0 depois); o Como verificar passou a dizer isso.'
+  - afirmacao: 'Exemplo: estado antes'
+    problema: '[médio] o ''antes'' dependia de um projeto-modelo que não existe em exemplos/LGPD-01/.'
+    tratamento: 'Tratado em 2026-10-07: exemplos/LGPD-01/dados-antes.md; verificador rodado nos dois estados (saída 1 e
+      0).'

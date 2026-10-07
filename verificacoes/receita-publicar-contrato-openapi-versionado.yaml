@@ -127,6 +127,22 @@ execucoes:
   evidencia: 'Main com 10d7764 (os 4 arquivos, push para origin); branch feat/2026-10-07-remove-telefone com 0b2aff7 (job contrato FAIL: 2 INCOMPATÍVEL, ''1.0.0 -> 1.1.0'') e 14d6e95 (job PASS: 2 mudanças compatíveis, 2 testes OK). Sem coautoria, sem push da branch.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.5 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'passos 1 a 6 e Antes de começar: download sem hash'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. O prompt não mudou.'
+  - afirmacao: 'passo 4: curl -o .gitlab-ci.yml'
+    problema: '[médio] o download substitui um .gitlab-ci.yml existente, embora o texto diga ''ou acrescente''.'
+    tratamento: 'Tratado em 2026-10-07: o passo diz que o download substitui e só baixa se o arquivo não existir; senão
+      manda baixar para /tmp e mesclar. O prompt não mudou.'
+  - afirmacao: 'Confira: 3 mudanças compatíveis'
+    problema: '[baixo] o prompt produz 2 mudanças porque não acrescenta o endpoint novo, que é só do roteiro.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).
+  - afirmacao: exemplos/API-01/comparar-contratos.py com allOf
+    problema: '[baixo] o AVISO de schema sem type sai 0 e o job passa.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).

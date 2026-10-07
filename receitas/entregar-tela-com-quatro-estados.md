@@ -49,6 +49,8 @@ ls docs/steering/frontend-ux.md
 Os dois verificadores estão no portal, em `{URL do portal}/exemplos/UX-02/verificar-prototipos.py` e
 `{URL do portal}/exemplos/UX-01/verificar-estados.py`.
 
+**Limite do download.** Os arquivos que esta receita baixa de `{URL do portal}/exemplos/*` não têm hash publicado: só os mecanismos de `/.well-known/mecanismos/` têm. Fora de um portal em que você confia, leia o conteúdo de cada arquivo antes de rodá-lo ou de copiá-lo para o repositório.
+
 ## Passos
 
 1. **Liste as telas na spec.** Cada tela é uma linha de `## Telas`, com um `slug` em minúsculas

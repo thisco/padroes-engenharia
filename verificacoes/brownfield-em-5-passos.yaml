@@ -114,6 +114,16 @@ afirmacoes:
   localizacao: seção de requisitos
   resultado: confirmada
   nota: Aberto na web em 2026-10-07.
+- texto: o pipeline de merge request roda sobre o conteúdo da branch de origem e ignora o da branch de destino
+  ref: gitlab-mr-pipelines
+  localizacao: seção sobre o que o pipeline de MR executa
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07; a página diz que roda 'on the contents of the source branch only'.
+- texto: Pipelines must succeed fica em Settings, Merge requests, Merge checks
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07 pela conferência em lote.
 - texto: o gitlab-ci-local executa os jobs do .gitlab-ci.yml localmente com Docker
   ref: gitlab-ci-local-readme
   localizacao: README, seção de uso
@@ -154,6 +164,27 @@ execucoes:
     e lint deixam de rodar em push sem MR (já constava no passo 4.2).'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.5 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'passo 2: rm -rf infra e prompt do passo 2'
+    problema: '[médio] o diagnóstico não inclui infra e o texto não manda conferir git ls-files infra; com infra/ própria
+      o rsync mistura e o rm -rf apaga os arquivos não rastreados dela.'
+    tratamento: 'Tratado em 2026-10-07: o texto confere git ls-files infra antes do rm -rf e, se a pasta já era do repositório,
+      lista só o que o scaffold trouxe (comm -13). Nota: prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão
+      do dono).'
+  - afirmacao: 'passo 4: o guia não diz que a MR pode editar o .gitlab-ci.yml e desligar os gates'
+    problema: '[médio] CODEOWNERS e proteção de branch só em scripts/; a MR altera o CI que a avalia.'
+    tratamento: 'Tratado em 2026-10-07: parágrafo no passo 4 e item em ''O que fica com você'': Pipelines must succeed,
+      main protegida e CODEOWNERS em .gitlab-ci.yml e scripts/ (refs gitlab-pipeline-obrigatorio, gitlab-mr-pipelines e
+      sdd-scaffold-readme).'
+  - afirmacao: 'prompt do guia: download de scaffold e exemplos sem hash'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. Seção ''Limites'' do guia.'
+  - afirmacao: 'passo 3 e prompt: o deny do hook contornado por shell'
+    problema: '[baixo] o texto diz que a edição é sua, o prompt manda aplicá-la depois do sim e a execução a aplicou por
+      shell.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).

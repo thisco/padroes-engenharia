@@ -55,6 +55,8 @@ O roteiro do Exemplo (`executar.sh`) monta um repositório de teste com remoto `
 percorre todos os passos; ele usa os arquivos que o portal hospeda em
 `{URL do portal}/exemplos/API-01/` e `{URL do portal}/exemplos/API-02/`.
 
+**Limite do download.** Os arquivos que esta receita baixa de `{URL do portal}/exemplos/*` não têm hash publicado: só os mecanismos de `/.well-known/mecanismos/` têm. Fora de um portal em que você confia, leia o conteúdo de cada arquivo antes de rodá-lo ou de copiá-lo para o repositório.
+
 ## Passos
 
 1. **Escreva o contrato v1.** Crie `api/openapi.yaml` com `info.version: 1.0.0`. A especificação
@@ -86,10 +88,13 @@ percorre todos os passos; ele usa os arquivos que o portal hospeda em
    curl -fsSL "{URL do portal}/exemplos/API-02/teste_contrato.py" -o tests/test_contrato.py
    curl -fsSL "{URL do portal}/exemplos/API-02/servico.py" -o api/servico.py   # só se não tiver a sua
    ```
-4. **Crie o job `contrato`** no `.gitlab-ci.yml` (ou acrescente-o ao que já existe):
+4. **Crie o job `contrato`** no `.gitlab-ci.yml`. O `curl -o` abaixo **substitui** um `.gitlab-ci.yml` que o
+   projeto já tenha. Se ele existir, baixe para `/tmp/contrato-ci.yml`, mescle o job `contrato` (e as
+   `variables` e `stages` de que ele depende) ao arquivo existente e só então siga:
 
    ```bash
-   curl -fsSL "{URL do portal}/exemplos/API-02/gitlab-ci.yml" -o .gitlab-ci.yml
+   test -e .gitlab-ci.yml && echo "já existe: baixe para /tmp/contrato-ci.yml e mescle" \
+     || curl -fsSL "{URL do portal}/exemplos/API-02/gitlab-ci.yml" -o .gitlab-ci.yml
    ```
 
    Cada escolha do arquivo tem uma razão. O job só roda em pipeline de merge request, pela regra

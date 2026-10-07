@@ -40,6 +40,11 @@ afirmacoes:
   localizacao: seções 'Choose where skills load' e 'How skills load'
   resultado: confirmada
   nota: Aberto na web em 2026-10-07.
+- texto: no Claude Code as regras allow, ask e deny valem em .claude/settings.json e são avaliadas na ordem deny, ask, allow
+  ref: claude-code-permissions
+  localizacao: seções 'Manage permissions' e 'Settings precedence'
+  resultado: confirmada
+  nota: Aberto na web em 2026-10-07 (a página diz que as regras são avaliadas em ordem deny, ask, allow e que as configurações de projeto podem ir ao controle de versão).
 - texto: o PreToolUse do Claude Code pode bloquear; a saída 2 bloqueia e a 1 não; os hooks vêm de .claude/settings.json e
     outros níveis, e o do projeto pode ser versionado
   ref: claude-code-hooks
@@ -186,6 +191,18 @@ execucoes:
     com o guia).'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.5 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'passo 6: ''No Claude Code e no Codex, o teste do portal listou as cinco'' skills'
+    problema: '[alto] o registro só prova o script do passo 4 (find, sem harness) e o prompt rodado no Claude Code; nenhuma
+      listagem pelo próprio harness.'
+    tratamento: 'Tratado em 2026-10-07: a frase passou a dizer o que o registro prova e que a listagem de skills pelo harness
+      não foi conferida.'
+  - afirmacao: tabela de permissões, linha do Claude Code
+    problema: '[baixo] cita só o README do scaffold e o claude-code-memory, não a documentação de permissões.'
+    tratamento: 'Tratado em 2026-10-07: referência claude-code-permissions criada (página aberta em 2026-10-07: regras avaliadas
+      em deny, ask, allow) e citada na linha.'
+  - afirmacao: 'prompt, passo 3: <pasta> ambíguo'
+    problema: '[baixo] mkdir -p <pasta> && ln -s ../skills <pasta>/skills, em que <pasta> é .agents e não o ponto de montagem.'
+    tratamento: Pendência pós-v1, anotada no plano da B.5 (T10); sem reteste de prompt (decisão do dono).

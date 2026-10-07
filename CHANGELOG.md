@@ -34,7 +34,7 @@ pediram. A versão a publicar é decidida no checkpoint da B.5.
   P3-01 (agência do agente), P3-02 (as quatro perguntas do CISO no threat-model), P3-03 (critério de
   término, escopo e autonomia), P3-04 (agente somente-leitura com identidade própria), P3-05
   (isolamento do conteúdo externo) e P3-06 (MCP fechado por padrão, com allowlist central). Os
-  prompts alterados na conferência em lote aguardam novo teste em sessão nova.
+  prompts alterados na conferência em lote seguem sem reteste (decisão do dono).
 - Nove práticas das faixas de dados, privacidade, contratos, frontend e observabilidade (fatia
   B.3), com Exemplo executado e registro em `verificacoes/`: DAD-02 (expandir e contrair),
   LGPD-01 (classificação do dado pessoal), LGPD-02 (dado pessoal fora de prompt, log e teste),

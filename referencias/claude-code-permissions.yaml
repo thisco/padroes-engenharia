@@ -1,0 +1,11 @@
+id: claude-code-permissions
+titulo: Configure permissions
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/permissions
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: seções Permission system, Manage permissions e Settings precedence
+dominios:
+- construir-com-ia
+notas: null

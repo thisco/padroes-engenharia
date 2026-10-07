@@ -114,4 +114,7 @@ execucoes:
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'Como aplicar, passo 1: layout das pastas'
+    problema: '[médio] arquivos do Exemplo com hífen e importlinter.ini esperando boletos.dominio.boleto.'
+    tratamento: 'Tratado em 2026-10-07: árvore de pastas com o destino de cada arquivo.'

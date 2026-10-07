@@ -142,6 +142,12 @@ execucoes:
   evidencia: 'ac45f3e (protótipo; verificador de protótipos saiu 1 e depois 0) e 2bf3e2e (HTML e JSON; ''UX-01: 4 estados presentes; o vazio orienta e é distinto do erro''). Observação: o testador disse que a validação humana do protótipo não aconteceu de fato, como o prompt previa. Sem coautoria.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: 'provisória: conferência em lote da B.5 pendente'
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: 'Antes de começar: download dos verificadores sem hash'
+    problema: '[médio] os prompts baixam com curl -fsSL arquivos de {URL do portal}/exemplos/* sem conferir hash e sem declarar
+      o limite.'
+    tratamento: 'Tratado em 2026-10-07: o texto declara que os arquivos baixados de `{URL do portal}/exemplos/*` não têm
+      hash publicado (só os mecanismos de `/.well-known/mecanismos/` têm) e manda ler o conteúdo antes de rodá-lo fora de
+      um portal confiável. O prompt não mudou.'

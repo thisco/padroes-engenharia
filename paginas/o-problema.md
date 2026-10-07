@@ -43,45 +43,50 @@ falhas:
   observado: Uma instância posterior olhava o projeto, via que já havia progresso e declarava o trabalho concluído
     [ref:anthropic-effective-harnesses].
   data: 2025-11
-  dominio: construir-com-ia
-  resposta: Lista de requisitos que nasce falhando e nada que fecha sem evidência colada no plano (candidata).
+  pratica: P1-09
+  resposta: O revisor parte de cada requisito e registra veredito e evidência por R<n> no plano; a lista de
+    requisitos que nasce falhando segue candidata.
 - titulo: Amnésia entre sessões
   apelido: shift change
   observado: Cada sessão começa sem memória da anterior [ref:anthropic-effective-harnesses] (Anthropic, 11/2025);
     para o agente, o que ele não alcança no contexto efetivamente não existe [ref:openai-harness-engineering] (OpenAI,
     02/2026).
   data: 2025-11
-  dominio: construir-com-ia
-  resposta: AGENTS.md, memória do projeto, ADR e plano em disco, e a retomada lendo o git log (candidata).
+  pratica: P1-03
+  resposta: O AGENTS.md carrega só a constituição e o roteamento, e o detalhe fica em disco, lido sob demanda; a
+    retomada lendo o git log segue candidata.
 - titulo: Pronto sem teste de ponta a ponta
   apelido: tests not run
   observado: O agente tendia a marcar a funcionalidade como completa sem teste adequado, e falhas de ponta a ponta
     escapavam de testes unitários e de chamadas de curl [ref:anthropic-effective-harnesses].
   data: 2025-11
-  dominio: qualidade-bdd
-  resposta: Teste de unidade, de integração e de ponta a ponta, rodando contra o artefato real (candidata).
+  pratica: QLD-01
+  resposta: O teste vem antes da lógica, falha, e a saída das duas execuções vai para o plano; o teste de ponta a
+    ponta contra o artefato real segue candidato.
 - titulo: Quem faz, julga
   apelido: agente único
   observado: Agentes tendem a elogiar com confiança o próprio trabalho, mesmo quando a qualidade é medíocre; separar
     quem faz de quem avalia é uma alavanca forte, embora não elimine de imediato essa complacência [ref:anthropic-harness-design].
   data: 2026-03
-  dominio: construir-com-ia
-  resposta: Revisão adversarial por agente independente, contra a spec e não contra o diff (candidata).
+  pratica: P1-09
+  resposta: Revisor independente, que parte de cada requisito da spec e não do diff, com veredito e evidência por
+    R<n>.
 - titulo: Drift acumulado
   apelido: AI slop
   observado: O agente replica os padrões do repositório, inclusive os irregulares, e isso leva ao desvio; a equipe
     da OpenAI gastava as sextas-feiras, 20% da semana, limpando o que chamou de resíduos de IA, e isso não escalou
     [ref:openai-harness-engineering].
   data: 2026-02
-  dominio: arquitetura
-  resposta: Princípios mecânicos e linters, drift check, limpeza recorrente, e bug que vira regra (candidata).
+  pratica: ARQ-02
+  resposta: Um verificador que reprova confere compose, IaC, diagrama e mapa no mesmo PR (drift check); bug que
+    vira regra é a QLD-02, e a limpeza recorrente segue candidata.
 - titulo: Manual gigante
   apelido: one big AGENTS.md
   observado: Um manual monolítico apodrece, vira um cemitério de regras obsoletas e é difícil de verificar; funcionou
     tratar o AGENTS.md como um mapa de cerca de 100 linhas, com indicações para fontes mais profundas [ref:openai-harness-engineering].
   data: 2026-02
-  dominio: construir-com-ia
-  resposta: Constituição pequena, steering sob demanda e o CI reprovando AGENTS.md grande (candidata).
+  pratica: P1-03
+  resposta: Constituição pequena, steering sob demanda e o AGENTS.md abaixo de 30000 bytes.
 numeros:
 - valor: 15% × 28–33%
   descricao: 'Sessões classificadas como de iniciantes chegam a sucesso verificado em 15% das vezes; as de intermediários
