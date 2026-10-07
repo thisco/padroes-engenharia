@@ -500,7 +500,7 @@ do guia [Do zero à primeira MR com IA](do-zero-a-primeira-mr.html).
 Troque `{URL do portal}` pelo endereço em que o portal está publicado e `AAAA-MM-DD` pela data de
 hoje, no nome da branch.
 
-```prompt
+```text
 Adote o sdd-scaffold 1.7.1 neste repositório existente seguindo o guia "Brownfield em 5 passos" do
 portal de padrões de engenharia, em {URL do portal}/guias/brownfield-em-5-passos.md. Use um único
 shell, ou refaça as variáveis a cada comando. Trabalhe numa branch nova chamada

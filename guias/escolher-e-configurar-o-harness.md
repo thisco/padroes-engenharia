@@ -259,7 +259,7 @@ portal listou as cinco; Kiro, Antigravity e Copilot não têm essa execução re
 Troque `{URL do portal}` pelo endereço em que o portal está publicado e `AAAA-MM-DD` pela data de hoje, no nome da
 branch.
 
-```prompt
+```text
 Confira e corrija os pontos de montagem dos harnesses neste repositório seguindo o guia "Como
 escolher e configurar o harness" do portal de padrões de engenharia, em
 {URL do portal}/guias/escolher-e-configurar-o-harness.md. Use um único shell, ou refaça as variáveis
