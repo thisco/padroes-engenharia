@@ -35,6 +35,7 @@ class Verificacao:
     nao_deve_alterar: tuple[str, ...] = ()
     deve_criar: tuple[str, ...] = ()
     nao_deve_criar: tuple[str, ...] = ()
+    resposta_deve_conter: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -110,5 +111,6 @@ def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
             nao_deve_alterar=tuple(lista(verificacao, "nao_deve_alterar")),
             deve_criar=tuple(lista(verificacao, "deve_criar")),
             nao_deve_criar=tuple(lista(verificacao, "nao_deve_criar")),
+            resposta_deve_conter=tuple(lista(verificacao, "resposta_deve_conter")),
         ),
     )

@@ -81,6 +81,11 @@ def test_variavel_nao_declarada_no_prompt_e_erro_so_na_substituicao(tmp_path):
     [
         ('deve_conter: ["nenhum achado"]', 'deve_conter: "nenhum achado"', "deve_conter"),
         ("nao_deve_criar: []", 'nao_deve_criar: "x.txt"', "nao_deve_criar"),
+        (
+            "nao_deve_criar: []",
+            'nao_deve_criar: []\n  resposta_deve_conter: "tier 0"',
+            "resposta_deve_conter",
+        ),
         ("preparacao:\n  - git init -q\n", "preparacao: git init -q\n", "preparacao"),
     ],
 )
@@ -89,3 +94,11 @@ def test_string_onde_se_espera_lista_reprova(tmp_path, antigo, novo, campo):
     escrever(tmp_path, "ruim.yaml", VALIDO.replace(antigo, novo, 1))
     with pytest.raises(CenarioInvalido, match=f"{campo} deve ser lista"):
         carregar_cenarios(tmp_path)
+
+
+def test_resposta_deve_conter_carrega_como_tupla(tmp_path):
+    texto = VALIDO.replace(
+        "nao_deve_criar: []", 'nao_deve_criar: []\n  resposta_deve_conter: ["tier 0"]', 1
+    )
+    escrever(tmp_path, "ok.yaml", texto)
+    assert carregar_cenarios(tmp_path)[0].verificacao.resposta_deve_conter == ("tier 0",)

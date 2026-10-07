@@ -143,6 +143,32 @@ def avaliar(
                     )
                 )
                 continue
+            ausente = next(
+                (
+                    t
+                    for t in cenario.verificacao.resposta_deve_conter
+                    if t.casefold() not in execucao.resposta.casefold()
+                ),
+                None,
+            )
+            if ausente is not None:
+                feedback = (
+                    f"resposta do agente sem o trecho '{ausente}'; "
+                    f"resposta: {execucao.resposta[:200]!r}"
+                )
+                resultados.append(
+                    Avaliacao(
+                        cenario.id,
+                        harness_nome,
+                        repeticao,
+                        0.0,
+                        feedback,
+                        execucao.tokens,
+                        execucao.custo_usd,
+                        str(execucao.transcricao),
+                    )
+                )
+                continue
             r = verificar(cenario.verificacao, copia)
             feedback = (
                 r.feedback

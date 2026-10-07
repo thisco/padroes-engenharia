@@ -15,3 +15,4 @@ verificacao:
   nao_deve_alterar: ["AGENTS.md", "README.md"]
   deve_criar: []
   nao_deve_criar: ["docs/plans/2*.md"]
+  resposta_deve_conter: ["tier 0"]

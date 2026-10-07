@@ -1,6 +1,7 @@
 """Restrições do prompt candidato (caso 3), composição projeto → harness → verificador e teto."""
 
 import os
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -134,3 +135,35 @@ def test_variavel_ausente_no_cenario_vira_nota_zero(tmp_path, monkeypatch):
     assert len(avs) == 1 and avs[0].nota == 0.0 and avs[0].tokens == 0
     assert "variável ausente" in avs[0].feedback and "sem_valor" in avs[0].feedback
     assert teto.consumidos == 0
+
+
+def _avaliar_com_resposta(tmp_path, monkeypatch, trechos):
+    base = tmp_path / "base"
+    base.mkdir()
+    (base / "AGENTS.md").write_text("", encoding="utf-8")
+    monkeypatch.setitem(projeto.BASES, "fake", base)
+    monkeypatch.setenv("PATH", f"{FALSOS}{os.pathsep}{os.environ['PATH']}")
+    c = _cenario()
+    c = replace(c, verificacao=replace(c.verificacao, resposta_deve_conter=trechos))
+    return metrica.avaliar(
+        c,
+        "claude-code",
+        "Faça {mudança} X-01",
+        raiz_monorepo=tmp_path,
+        transcricoes=tmp_path / "t",
+        teto=metrica.Teto(10_000),
+        repeticoes=1,
+        pasta_tmp=tmp_path / "tmp",
+    )
+
+
+def test_resposta_com_o_trecho_passa(tmp_path, monkeypatch):
+    avs = _avaliar_com_resposta(tmp_path, monkeypatch, ("ok",))
+    assert [a.nota for a in avs] == [1.0]
+
+
+def test_resposta_sem_o_trecho_zera_sem_verificar(tmp_path, monkeypatch):
+    avs = _avaliar_com_resposta(tmp_path, monkeypatch, ("tier 0",))
+    assert avs[0].nota == 0.0 and avs[0].tokens == 230
+    assert "resposta do agente sem o trecho 'tier 0'" in avs[0].feedback
+    assert "resposta: 'OK'" in avs[0].feedback
