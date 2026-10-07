@@ -7,6 +7,15 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+Nada ainda.
+
+## [1.1.0] - 2026-10-07
+
+### Alterado
+
+- Regra de SemVer refinada (ADR 0007): major só para mudança incompatível de schema; acréscimo
+  compatível é minor. `niveis-de-risco.yml` e `AGENTS.md` atualizados.
+
 ### Adicionado
 
 - Bloco `trabalho` no schema de página e o diagrama "Modos de trabalho na era agentiva" em

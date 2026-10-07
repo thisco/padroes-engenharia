@@ -67,7 +67,7 @@ carregados em todo turno, com a cópia canônica versionada em `docs/constituica
 |---|---|---|
 | Código do gerador, esquemas, templates, tema, scripts ou CI | skill `sdd-lifecycle` (`skills/sdd-lifecycle/SKILL.md`) | spec em `docs/specs/`, plano em `docs/plans/` |
 | Criar ou alterar prática, conceito, guia, caso, página ou referência | skill `curadoria-de-pratica` (`skills/curadoria-de-pratica/SKILL.md`) | spec §6 (modelo) e §11 (curadoria) |
-| Mudança de schema ou retirada de ID | skill `sdd-lifecycle`, Tier 2 | `esquemas/`, `niveis-de-risco.yml` (risco alto, SemVer major) |
+| Mudança de schema ou retirada de ID | skill `sdd-lifecycle`, Tier 2 | `esquemas/`, `niveis-de-risco.yml` (risco alto; SemVer major se incompatível, minor se aditivo, ADR 0007) |
 
 ## Mapa do repositório
 
