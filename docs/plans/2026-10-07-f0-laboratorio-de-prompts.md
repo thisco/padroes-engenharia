@@ -89,6 +89,10 @@ skills, núcleo e MCP; otimização em Kiro e Antigravity (só linha de base); l
    precisa conferir o commit além do verificador.
 4. **Duas repetições** por cenário e harness, na linha de base e no GEPA; a nota do candidato num
    cenário é a mínima das repetições, não a média: um prompt que passa "às vezes" não passa.
+5. **Modelo mais barato só nos rollouts de treino.** Linha de base e portão final rodam no modelo
+   padrão de cada harness, porque medem o que o usuário real tem. Os rollouts do GEPA (a maior
+   parte do custo) podem rodar com `--modelo-treino sonnet` no Claude Code; a reflexão fica no
+   modelo padrão. Todo harness aceita `modelo: str | None` e só passa `--model` quando informado.
 
 ---
 
@@ -797,7 +801,7 @@ git commit -m "feat(otimizacao): leitura, preenchimento e regravação do bloco 
 - Create: `otimizacao/harness/__init__.py`, `otimizacao/harness/base.py`, `otimizacao/harness/claude_code.py`, `otimizacao/harness/codex.py`, `otimizacao/harness/kiro.py`, `otimizacao/harness/antigravity.py`, `otimizacao/tests/test_harness.py`, `otimizacao/tests/binarios_falsos/{claude,codex,kiro-cli,agy}` (scripts shell)
 
 **Interfaces:**
-- Produces: `Execucao(harness: str, codigo: int, resposta: str, tokens_entrada: int, tokens_saida: int, custo_usd: float | None, transcricao: Path, erro: str | None)`, `class Harness(Protocol): nome: str; def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao`, `HARNESSES: dict[str, Harness]` com chaves `claude-code`, `codex`, `kiro`, `antigravity`, `executar_cli(argv, cwd, stdin, timeout_s, transcricao) -> tuple[int, str, str]`.
+- Produces: `Execucao(harness: str, codigo: int, resposta: str, tokens_entrada: int, tokens_saida: int, custo_usd: float | None, transcricao: Path, erro: str | None)`, `class Harness(Protocol): nome: str; def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao` (só passa `--model` ao CLI quando `modelo` vem preenchido), `HARNESSES: dict[str, Harness]` com chaves `claude-code`, `codex`, `kiro`, `antigravity`, `executar_cli(argv, cwd, stdin, timeout_s, transcricao) -> tuple[int, str, str]`.
 
 - [ ] **Step 1: Testes que falham (binários falsos no PATH)**
 
@@ -878,6 +882,13 @@ def test_executa_e_le_tokens(ambiente, nome, entrada, saida, trecho_argv):
     assert e.transcricao.is_file() and e.transcricao.parent == ambiente / "t"
 
 
+def test_modelo_so_entra_quando_informado(ambiente):
+    HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert "--model" not in (ambiente / "argv.txt").read_text(encoding="utf-8")
+    HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t", modelo="sonnet")
+    assert "--model sonnet" in (ambiente / "argv.txt").read_text(encoding="utf-8")
+
+
 def test_claude_sem_bare_e_com_configuracao_isolada(ambiente):
     HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t")
     argv = (ambiente / "argv.txt").read_text(encoding="utf-8")
@@ -946,7 +957,7 @@ class Execucao:
 class Harness(Protocol):
     nome: str
 
-    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao: ...
+    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao: ...
 
 
 def executar_cli(
@@ -1005,10 +1016,11 @@ NOME = "claude-code"
 class ClaudeCode:
     nome = NOME
 
-    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao:
+    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao:
         transcricao = nome_da_transcricao(transcricoes, NOME)
         argv = [
             "claude", "-p", prompt,
+            *(["--model", modelo] if modelo else []),
             "--output-format", "json",
             "--permission-mode", "acceptEdits",
             "--allowedTools", "Bash,Read,Edit,Write",
@@ -1050,11 +1062,12 @@ NOME = "codex"
 class Codex:
     nome = NOME
 
-    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao:
+    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao:
         transcricao = nome_da_transcricao(transcricoes, NOME)
         ultima = transcricao.with_suffix(".ultima.md")
         argv = [
             "codex", "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
+            *(["--model", modelo] if modelo else []),
             "--sandbox", "workspace-write", "--skip-git-repo-check",
             "-C", str(cwd), "--json", "-o", str(ultima), prompt,
         ]
@@ -1089,9 +1102,9 @@ NOME = "kiro"
 class Kiro:
     nome = NOME
 
-    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao:
+    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao:
         transcricao = nome_da_transcricao(transcricoes, NOME)
-        argv = ["kiro-cli", "chat", "--no-interactive", "--trust-all-tools", "--output-format", "stream-json", prompt]
+        argv = ["kiro-cli", "chat", "--no-interactive", "--trust-all-tools", "--output-format", "stream-json", *(["--model", modelo] if modelo else []), prompt]
         codigo, stdout, stderr = executar_cli(argv, cwd, transcricao, timeout_s)
         if codigo == -1:
             return Execucao(NOME, codigo, "", 0, 0, None, transcricao, f"harness falhou: {stderr}")
@@ -1121,9 +1134,9 @@ NOME = "antigravity"
 class Antigravity:
     nome = NOME
 
-    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900) -> Execucao:
+    def executar(self, prompt: str, cwd: Path, transcricoes: Path, timeout_s: int = 900, modelo: str | None = None) -> Execucao:
         transcricao = nome_da_transcricao(transcricoes, NOME)
-        argv = ["agy", "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions", "--print-timeout", f"{timeout_s}s"]
+        argv = ["agy", "-p", prompt, "--output-format", "json", "--dangerously-skip-permissions", "--print-timeout", f"{timeout_s}s", *(["--model", modelo] if modelo else [])]
         codigo, stdout, stderr = executar_cli(argv, cwd, transcricao, timeout_s + 30)
         if codigo == -1:
             return Execucao(NOME, codigo, "", 0, 0, None, transcricao, f"harness falhou: {stderr}")
@@ -1347,7 +1360,7 @@ git commit -m "feat(otimizacao): verificação do cenário por comandos e diff c
 
 **Interfaces:**
 - Consumes: `Cenario`, `preparar`, `HARNESSES`, `verificar`, `substituir_variaveis`, `placeholders`.
-- Produces: `restricoes_do_candidato(atual: str, candidato: str, pratica: str) -> list[str]`, `Teto(limite: int)` com `.consumidos`, `.registrar(tokens)`, `.estourou`, `TetoAtingido(RuntimeError)`, `Avaliacao(cenario: str, harness: str, repeticao: int, nota: float, feedback: str, tokens: int, custo_usd: float | None, transcricao: str)`, `avaliar(cenario, harness_nome, candidato, *, raiz_monorepo, transcricoes, teto, repeticoes=2, pasta_tmp=None) -> list[Avaliacao]`, `nota_minima(avaliacoes) -> float`.
+- Produces: `restricoes_do_candidato(atual: str, candidato: str, pratica: str) -> list[str]`, `Teto(limite: int)` com `.consumidos`, `.registrar(tokens)`, `.estourou`, `TetoAtingido(RuntimeError)`, `Avaliacao(cenario: str, harness: str, repeticao: int, nota: float, feedback: str, tokens: int, custo_usd: float | None, transcricao: str)`, `avaliar(cenario, harness_nome, candidato, *, raiz_monorepo, transcricoes, teto, repeticoes=2, pasta_tmp=None, atual=None, modelo=None) -> list[Avaliacao]`, `nota_minima(avaliacoes) -> float`.
 
 - [ ] **Step 1: Teste que falha**
 
@@ -1513,6 +1526,7 @@ def avaliar(
     repeticoes: int = 2,
     pasta_tmp: Path | None = None,
     atual: str | None = None,
+    modelo: str | None = None,
 ) -> list[Avaliacao]:
     if atual is not None:
         problemas = restricoes_do_candidato(atual, candidato, cenario.pratica)
@@ -1531,7 +1545,7 @@ def avaliar(
             except ProjetoInvalido as exc:
                 resultados.append(Avaliacao(cenario.id, harness_nome, repeticao, 0.0, f"cenário inválido: {exc}", 0, None, ""))
                 continue
-            execucao = harness.executar(prompt, copia, transcricoes)
+            execucao = harness.executar(prompt, copia, transcricoes, modelo=modelo)
             teto.registrar(execucao.tokens)
             if execucao.erro:
                 resultados.append(Avaliacao(cenario.id, harness_nome, repeticao, 0.0, execucao.erro, execucao.tokens, execucao.custo_usd, str(execucao.transcricao)))
@@ -1803,7 +1817,7 @@ git commit -m "feat(otimizacao): linha de base por prática, relatório e regist
 
 **Interfaces:**
 - Consumes: `gepa.core.adapter.GEPAAdapter`, `EvaluationBatch`; `avaliar`, `Teto`.
-- Produces: `AdapterHarness(raiz, harnesses, teto, transcricoes, atual, repeticoes=2)` com `evaluate(batch: list[Cenario], candidate: dict[str, str], capture_traces=False) -> EvaluationBatch` e `make_reflective_dataset(candidate, eval_batch, components_to_update) -> dict[str, list[dict]]`; `refletir_com_claude(prompt: str) -> str`; constante `COMPONENTE = "prompt"`.
+- Produces: `AdapterHarness(raiz, harnesses, teto, transcricoes, atual, repeticoes=2, pasta_tmp=None, modelo=None)` (`modelo` vale só para os rollouts do GEPA) com `evaluate(batch: list[Cenario], candidate: dict[str, str], capture_traces=False) -> EvaluationBatch` e `make_reflective_dataset(candidate, eval_batch, components_to_update) -> dict[str, list[dict]]`; `refletir_com_claude(prompt: str) -> str`; constante `COMPONENTE = "prompt"`.
 
 - [ ] **Step 1: Teste que falha**
 
@@ -1888,9 +1902,9 @@ COMPONENTE = "prompt"
 
 
 class AdapterHarness(GEPAAdapter[Cenario, dict[str, Any], dict[str, Any]]):
-    def __init__(self, raiz: Path, harnesses: list[str], teto: Teto, transcricoes: Path, *, atual: str, repeticoes: int = 2, pasta_tmp: Path | None = None) -> None:
+    def __init__(self, raiz: Path, harnesses: list[str], teto: Teto, transcricoes: Path, *, atual: str, repeticoes: int = 2, pasta_tmp: Path | None = None, modelo: str | None = None) -> None:
         self.raiz, self.harnesses, self.teto, self.transcricoes = raiz, harnesses, teto, transcricoes
-        self.atual, self.repeticoes, self.pasta_tmp = atual, repeticoes, pasta_tmp
+        self.atual, self.repeticoes, self.pasta_tmp, self.modelo = atual, repeticoes, pasta_tmp, modelo
 
     def evaluate(self, batch: list[Cenario], candidate: dict[str, str], capture_traces: bool = False) -> EvaluationBatch:
         candidato = candidate[COMPONENTE]
@@ -1899,7 +1913,7 @@ class AdapterHarness(GEPAAdapter[Cenario, dict[str, Any], dict[str, Any]]):
         for cenario in batch:
             por_harness: list[Avaliacao] = []
             for harness in self.harnesses:
-                por_harness += avaliar(cenario, harness, candidato, raiz_monorepo=self.raiz, transcricoes=self.transcricoes, teto=self.teto, repeticoes=self.repeticoes, pasta_tmp=self.pasta_tmp, atual=self.atual)
+                por_harness += avaliar(cenario, harness, candidato, raiz_monorepo=self.raiz, transcricoes=self.transcricoes, teto=self.teto, repeticoes=self.repeticoes, pasta_tmp=self.pasta_tmp, atual=self.atual, modelo=self.modelo)
             chamadas += 1
             nota = nota_minima(por_harness)
             piores = [a for a in por_harness if a.nota == nota]
@@ -1974,7 +1988,7 @@ git commit -m "feat(otimizacao): adapter do GEPA sobre o harness e reflexão pel
 - Create: `otimizacao/otimizar.py`, `otimizacao/tests/test_otimizar.py`
 
 **Interfaces:**
-- Produces: `aprovar(atual: str, candidato: str, notas_atual: dict[str, float], notas_candidato: dict[str, float], pratica: str) -> tuple[bool, list[str]]` (chaves = `"<cenario>/<harness>"`), `otimizar(raiz, pratica, harnesses, max_metric_calls, teto, transcricoes, modelo_reflexao=None, seed=0) -> dict`, `gravar_relatorio_otimizacao(resultado, pasta) -> tuple[Path, Path]`, CLI `python -m otimizacao.otimizar --pratica ID --harness claude-code,codex [--max-metric-calls 30] [--teto-tokens 3000000] [--aplicar]`.
+- Produces: `aprovar(atual: str, candidato: str, notas_atual: dict[str, float], notas_candidato: dict[str, float], pratica: str) -> tuple[bool, list[str]]` (chaves = `"<cenario>/<harness>"`), `otimizar(raiz, pratica, harnesses, max_metric_calls, teto, transcricoes, modelo_reflexao=None, seed=0, modelo_treino=None) -> dict` (o portão final roda sempre no modelo padrão), `gravar_relatorio_otimizacao(resultado, pasta) -> tuple[Path, Path]`, CLI `python -m otimizacao.otimizar --pratica ID --harness claude-code,codex [--max-metric-calls 30] [--teto-tokens 3000000] [--modelo-treino sonnet] [--aplicar]`.
 
 - [ ] **Step 1: Teste que falha**
 
@@ -2019,7 +2033,8 @@ Expected: FAIL.
 """Otimização de um prompt pelo GEPA com portão de não regressão e teto (delta F0 §3.4, passos 3 e 4).
 
 Uso: python -m otimizacao.otimizar --pratica DAD-01 --harness claude-code,codex [--max-metric-calls 30]
-     [--teto-tokens 3000000] [--modelo-reflexao opus] [--seed 0] [--aplicar]
+     [--teto-tokens 3000000] [--modelo-treino sonnet] [--modelo-reflexao opus] [--seed 0] [--aplicar]
+`--modelo-treino` vale só para os rollouts do GEPA; a linha de base e o portão rodam no modelo padrão.
 `--aplicar` regrava o bloco prompt da prática só se o candidato passar no portão. Sem a flag, só
 relatório. Saída: 0 ok · 3 teto atingido · 2 erro interno.
 """
@@ -2066,7 +2081,7 @@ def _notas(cenarios, harnesses, prompt, atual, raiz, teto, transcricoes) -> dict
     return notas
 
 
-def otimizar(raiz: Path, pratica: str, harnesses: list[str], max_metric_calls: int, teto: Teto, transcricoes: Path, modelo_reflexao: str | None = None, seed: int = 0) -> dict:
+def otimizar(raiz: Path, pratica: str, harnesses: list[str], max_metric_calls: int, teto: Teto, transcricoes: Path, modelo_reflexao: str | None = None, seed: int = 0, modelo_treino: str | None = None) -> dict:
     cenarios = carregar_cenarios(PASTA_CENARIOS, pratica)
     treino = [c for c in cenarios if c.conjunto == "treino"]
     validacao = [c for c in cenarios if c.conjunto == "validacao"]
@@ -2074,9 +2089,9 @@ def otimizar(raiz: Path, pratica: str, harnesses: list[str], max_metric_calls: i
         raise SystemExit(f"{pratica}: precisa de cenários de treino e de validação")
     id_prompt = cenarios[0].prompt
     atual = texto_do_prompt(raiz, id_prompt)
-    adapter = AdapterHarness(raiz, harnesses, teto, transcricoes, atual=atual)
+    adapter = AdapterHarness(raiz, harnesses, teto, transcricoes, atual=atual, modelo=modelo_treino)
     run_dir = PASTA_RESULTADOS / f"gepa-{pratica}-{datetime.date.today().isoformat()}"
-    resultado: dict = {"pratica": pratica, "prompt": id_prompt, "data": datetime.date.today().isoformat(), "harnesses": harnesses, "atual": atual, "parcial": False}
+    resultado: dict = {"pratica": pratica, "prompt": id_prompt, "data": datetime.date.today().isoformat(), "harnesses": harnesses, "atual": atual, "parcial": False, "modelo_treino": modelo_treino}
     try:
         notas_atual = _notas(validacao, harnesses, atual, atual, raiz, teto, transcricoes)
         saida = gepa.optimize(
@@ -2127,11 +2142,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-metric-calls", type=int, default=30)
     parser.add_argument("--teto-tokens", type=int, default=3_000_000)
     parser.add_argument("--modelo-reflexao", default=None)
+    parser.add_argument("--modelo-treino", default=None, help="modelo mais barato só para os rollouts do GEPA (ex.: sonnet)")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--aplicar", action="store_true")
     args = parser.parse_args(argv)
     try:
-        resultado = otimizar(RAIZ, args.pratica, args.harness.split(","), args.max_metric_calls, Teto(args.teto_tokens), TRANSCRICOES, args.modelo_reflexao, args.seed)
+        resultado = otimizar(RAIZ, args.pratica, args.harness.split(","), args.max_metric_calls, Teto(args.teto_tokens), TRANSCRICOES, args.modelo_reflexao, args.seed, args.modelo_treino)
         js, md = gravar_relatorio_otimizacao(resultado, PASTA_RESULTADOS)
         if args.aplicar and resultado.get("aprovado"):
             caminho = escrever_prompt(RAIZ, resultado["prompt"], resultado["candidato"])
@@ -2409,9 +2425,10 @@ git commit -m "feat(otimizacao): linha de base de DAD-01, P1-01 e P2-02 nos quat
 - [ ] **Step 1: Rodar o GEPA nas práticas selecionadas**
 
 ```bash
-.venv-otimizacao/bin/python -m otimizacao.otimizar --pratica <ID> --harness claude-code,codex --max-metric-calls 30 --teto-tokens 3000000
+.venv-otimizacao/bin/python -m otimizacao.otimizar --pratica <ID> --harness claude-code,codex --max-metric-calls 30 --teto-tokens 3000000 --modelo-treino sonnet
 ```
-O teto por prática é 3 milhões; o do piloto (10 milhões) é a soma das linhas de base com as
+Os rollouts de treino usam `sonnet` no Claude Code (decisão 5); o portão final roda no modelo
+padrão. O teto por prática é 3 milhões; o do piloto (10 milhões) é a soma das linhas de base com as
 otimizações, conferida à mão em **Evidências**. Uma prática por vez; só começa a seguinte se o
 total somado deixar margem para 3 milhões.
 
