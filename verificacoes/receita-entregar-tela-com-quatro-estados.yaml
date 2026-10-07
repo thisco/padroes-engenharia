@@ -134,6 +134,13 @@ execucoes:
     vazio aparece 0 vez(es) (esperado 1)'' (saída 1); tela completa: ''UX-01: 4 estados presentes; o vazio
     orienta e é distinto do erro'' (saída 0). Saída bruta em curadoria-a5/saidas/b5-receita-entregar-tela-com-quatro-estados.txt.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: receita-entregar-tela-com-quatro-estados-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b5-receita-entregar-tela-com-quatro-estados-prompt, contra a prévia do portal servida em http://127.0.0.1:8001, gerada com gerar.py --previa no commit c621a5c. Transcrição em curadoria-a5/transcricoes/receita-entregar-tela-com-quatro-estados-prompt-1.bruta.jsonl.'
+  resultado: passou
+  evidencia: 'ac45f3e (protótipo; verificador de protótipos saiu 1 e depois 0) e 2bf3e2e (HTML e JSON; ''UX-01: 4 estados presentes; o vazio orienta e é distinto do erro''). Observação: o testador disse que a validação humana do protótipo não aconteceu de fato, como o prompt previa. Sem coautoria.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'

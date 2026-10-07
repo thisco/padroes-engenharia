@@ -119,6 +119,13 @@ execucoes:
     PASS; contrato exigindo email sem a implementação devolvê-lo: "AssertionError: Lists differ: [''$:
     falta o campo obrigatório email''] != []", FAIL. Saída bruta em curadoria-a5/saidas/b5-receita-publicar-contrato-openapi-versionado.txt.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: receita-publicar-contrato-openapi-versionado-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b5-receita-publicar-contrato-openapi-versionado-prompt, contra a prévia do portal servida em http://127.0.0.1:8001, gerada com gerar.py --previa no commit c621a5c. Transcrição em curadoria-a5/transcricoes/receita-publicar-contrato-openapi-versionado-prompt-1.bruta.jsonl.'
+  resultado: passou
+  evidencia: 'Main com 10d7764 (os 4 arquivos, push para origin); branch feat/2026-10-07-remove-telefone com 0b2aff7 (job contrato FAIL: 2 INCOMPATÍVEL, ''1.0.0 -> 1.1.0'') e 14d6e95 (job PASS: 2 mudanças compatíveis, 2 testes OK). Sem coautoria, sem push da branch.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'

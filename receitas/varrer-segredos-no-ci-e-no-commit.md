@@ -103,7 +103,8 @@ local (8.30.1 na execução do portal) no hook.
    ```
 6. **Trate o achado.** Se a branch **não foi publicada**, tire o segredo do arquivo, leia-o do
    ambiente (`config-depois.py` do Exemplo da SEG-02) e reescreva o commit com `git commit --amend`,
-   para o intervalo da MR não o conter mais. Se foi publicada, considere a credencial comprometida:
+   para o intervalo da MR não o conter mais. O hook também roda no `--amend` e, com o segredo já fora
+   do arquivo, deixa o commit passar; não use `--no-verify` aqui. Se foi publicada, considere a credencial comprometida:
    rotacione primeiro e só depois limpe o histórico, porque remover o commit não invalida a
    credencial [ref:sdd-scaffold-threat-model]. O falso positivo se trata no `.gitleaksignore`
    [ref:gitleaks-readme], numa MR que a revisão veja.

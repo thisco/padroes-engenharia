@@ -77,6 +77,13 @@ execucoes:
     reescrito com --amend (o hook passa, 0 commits varridos): ''no leaks found'', PASS. Saída bruta em
     curadoria-a5/saidas/b5-receita-varrer-segredos-no-ci-e-no-commit.txt.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: receita-varrer-segredos-no-ci-e-no-commit-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b5-receita-varrer-segredos-no-ci-e-no-commit-prompt, contra a prévia do portal servida em http://127.0.0.1:8001, gerada com gerar.py --previa no commit c621a5c. Transcrição em curadoria-a5/transcricoes/receita-varrer-segredos-no-ci-e-no-commit-prompt-1.bruta.jsonl.'
+  resultado: passou
+  evidencia: 'a5bd135 (ci); o hook recusou o commit com a chave (saída 1); e0fdb72 com --no-verify, job FAIL; amend 987723c, job PASS; sem push. Observação: o amend foi com --no-verify porque o passo 6 não dizia que o hook roda no amend; o passo 6 da receita ganhou essa frase depois do teste, sem reteste (o bloco prompt não mudou). Sem coautoria.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'

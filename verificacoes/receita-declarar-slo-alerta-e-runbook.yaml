@@ -65,6 +65,13 @@ execucoes:
     preenchida" (saída 1); runbook completo: ''objetivo 99.5% em 28 dias, erro orçado 0.50%'' e ''OBS-02:
     1 SLO(s), com alerta, quem aciona e runbook completos'' (saída 0). Saída bruta em curadoria-a5/saidas/b5-receita-declarar-slo-alerta-e-runbook.txt.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: receita-declarar-slo-alerta-e-runbook-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b5-receita-declarar-slo-alerta-e-runbook-prompt, contra a prévia do portal servida em http://127.0.0.1:8001, gerada com gerar.py --previa no commit c621a5c. Transcrição em curadoria-a5/transcricoes/receita-declarar-slo-alerta-e-runbook-prompt-1.bruta.jsonl.'
+  resultado: passou
+  evidencia: '77941ab; verificar-log saiu 0 (request_id req-b5771c); verificar-slo saiu 1 e depois 0 (''erro orçado 0.50%''). Observação: o testador commitou com core.hooksPath=/dev/null por conta própria. Sem coautoria.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'
