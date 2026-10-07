@@ -1,0 +1,10 @@
+id: docker-dockerfile-healthcheck
+titulo: "Dockerfile reference: HEALTHCHECK"
+organizacao: "Docker"
+url: https://docs.docker.com/reference/dockerfile/#healthcheck
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção HEALTHCHECK: formas CMD e NONE, estado starting/healthy/unhealthy e só a última instrução vale"
+dominios: [infra-iac]
+notas: null

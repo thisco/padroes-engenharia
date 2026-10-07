@@ -8,7 +8,7 @@ forca: orienta
 mecanismo: null
 status: experimentar
 aplica: []
-referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, docker-compose-up, gateway-poc-compose]
+referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, docker-compose-up, docker-dockerfile-healthcheck, gateway-poc-compose]
 relacionadas: [IAC-03, DAD-02]
 dono: engenharia
 revisado_em: 2026-10-07
@@ -19,8 +19,11 @@ exemplos:
   - exemplos/IAC-01/api/Dockerfile
   - exemplos/IAC-01/api/app.py
   - exemplos/IAC-01/ambiente-local-antes.md
+  - exemplos/IAC-01/ambiente-local-heranca.md
   - exemplos/IAC-01/ambiente-local.md
+  - exemplos/IAC-01/api/Dockerfile.saude
   - exemplos/IAC-01/compose-antes.yml
+  - exemplos/IAC-01/compose-heranca.yml
   - exemplos/IAC-01/compose.yml
   - exemplos/IAC-01/executar.sh
   - exemplos/IAC-01/verificar-ambiente.py
@@ -113,6 +116,24 @@ O verificador sai com 0:
 IAC-01: 2 serviços com healthcheck e a ordem de rebuild escrita.
 ```
 
+Há um caso aceito: o serviço construído de um Dockerfile do próprio repositório que declara
+`HEALTHCHECK` herda o teste da imagem, e o compose pode não repetir o bloco [ref:docker-dockerfile-healthcheck].
+O verificador aceita esse serviço sem `healthcheck` no compose só se o item dele em `## Serviços`
+disser "healthcheck herdado da imagem"; a `HEALTHCHECK NONE` não conta. No Exemplo, o
+`compose-heranca.yml` constrói a `api` do `api/Dockerfile.saude`, que traz a instrução. Com o
+`ambiente-local.md`, que não declara a herança, o verificador reprova (saída 1):
+
+```text
+ambiente-local.md: api herda o HEALTHCHECK da imagem e o item dele em Serviços não diz 'healthcheck herdado da imagem'
+IAC-01: 1 problema(s) no ambiente local (acima).
+```
+
+Com o `ambiente-local-heranca.md`, que traz a frase no item da `api`, sai 0:
+
+```text
+IAC-01: 2 serviços com healthcheck e a ordem de rebuild escrita.
+```
+
 A ordem escrita também é executada de verdade. Saída da execução da curadoria (Docker 29.5.2,
 Compose v5.1.3): a primeira subida, a mudança da versão no código, a recriação sem rebuild (a
 versão no ar continua `v1`) e a recriação depois do rebuild (`v2`):
@@ -182,6 +203,10 @@ indisponível, o compose inválido, o serviço sem `healthcheck`, a dependência
 `condition: service_healthy`, o `healthcheck` desligado (`disable: true` ou `test: ["NONE"]`) ou
 vazio, o serviço do compose ausente da seção `## Serviços` (ou o inverso) e
 a ordem de rebuild que não traz os quatro passos na sequência.
+
+A herança vale só para serviço com `build` e Dockerfile local: o verificador não puxa imagem de
+registro, e esse serviço declara o healthcheck no compose. Se houver mais de uma `HEALTHCHECK` no
+Dockerfile, vale a última, como no Docker [ref:docker-dockerfile-healthcheck].
 
 Os limites: o verificador confere a forma, e não que o healthcheck testa a coisa certa nem que o
 comando escrito no passo funciona; para isso serve o `executar.sh`, que roda a ordem de verdade.

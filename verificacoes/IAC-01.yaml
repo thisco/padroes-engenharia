@@ -32,6 +32,10 @@ afirmacoes:
   ref: gateway-poc-compose
   localizacao: comentário do serviço vector-connector, bloco ports
   resultado: confirmada
+- texto: o Dockerfile pode declarar HEALTHCHECK, que a imagem carrega; HEALTHCHECK NONE desliga o herdado da imagem base; com mais de uma instrução só a última vale
+  ref: docker-dockerfile-healthcheck
+  localizacao: seção HEALTHCHECK da referência do Dockerfile
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/IAC-01/verificar-ambiente.py
@@ -97,6 +101,34 @@ execucoes:
   evidencia: 'verificador 1 antes e 0 depois; ambiente subiu com --wait, /versao respondeu v1, down -v ao fim; commit 82849dd só com compose.yml e docs/ambiente-local.md, sem trailer. Observação do testador:
     o repositório não tem ferramenta de migration, então o passo 1 da ordem de rebuild ficou sem comando (o verificador aceitou).'
   data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/verificar-ambiente.py
+  comando: sh executar.sh (parte B2), e o verificador com compose-heranca.yml e api/Dockerfile.saude
+  ambiente: Docker 29.5.2, Compose v5, Python 3.14; macOS
+  resultado: passou
+  evidencia: 'healthcheck herdado da imagem: com ambiente-local.md (sem a declaração) saída 1 e "api herda o HEALTHCHECK da imagem e o item dele em Serviços não diz ..."; com ambiente-local-heranca.md saída 0 e "2 serviços com healthcheck"; antes (compose-antes.yml) continua 1 com 5 problemas e depois (compose.yml) 0; o executar.sh inteiro rodou e não deixou imagem nem contêiner iac-.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/compose-heranca.yml
+  comando: python3 verificar-ambiente.py compose-heranca.yml ambiente-local-heranca.md (e com ambiente-local.md), pela parte B2 do executar.sh
+  ambiente: Docker 29.5.2, Compose v5, Python 3.14; macOS
+  resultado: passou
+  evidencia: 'com a declaração no texto, saída 0 e "2 serviços com healthcheck"; sem ela, saída 1; o compose-heranca.yml é lido pelo verificador (docker compose config), sem build no script; o Dockerfile.saude foi construído à parte (docker build -f Dockerfile.saude) e a imagem traz o Healthcheck na configuração (docker image inspect), removida em seguida.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/ambiente-local-heranca.md
+  comando: python3 verificar-ambiente.py compose-heranca.yml ambiente-local-heranca.md (e com ambiente-local.md), pela parte B2 do executar.sh
+  ambiente: Docker 29.5.2, Compose v5, Python 3.14; macOS
+  resultado: passou
+  evidencia: 'com a declaração no texto, saída 0 e "2 serviços com healthcheck"; sem ela, saída 1; o compose-heranca.yml é lido pelo verificador (docker compose config), sem build no script; o Dockerfile.saude foi construído à parte (docker build -f Dockerfile.saude) e a imagem traz o Healthcheck na configuração (docker image inspect), removida em seguida.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/api/Dockerfile.saude
+  comando: python3 verificar-ambiente.py compose-heranca.yml ambiente-local-heranca.md (e com ambiente-local.md), pela parte B2 do executar.sh
+  ambiente: Docker 29.5.2, Compose v5, Python 3.14; macOS
+  resultado: passou
+  evidencia: 'com a declaração no texto, saída 0 e "2 serviços com healthcheck"; sem ela, saída 1; o compose-heranca.yml é lido pelo verificador (docker compose config), sem build no script; o Dockerfile.saude foi construído à parte (docker build -f Dockerfile.saude) e a imagem traz o Healthcheck na configuração (docker image inspect), removida em seguida.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'
@@ -116,3 +148,6 @@ revisao_adversarial:
       o aviso não estava escrito.'
     tratamento: 'Tratado: cabeçalho do script e corpo avisam para não rodar onde já exista contêiner com
       esses nomes.'
+  - afirmacao: healthcheck herdado da imagem (pendência herdada da B.4)
+    problema: '[baixo] o verificador exigia o bloco healthcheck no compose, mesmo com HEALTHCHECK no Dockerfile do serviço.'
+    tratamento: 'Tratado em 2026-10-07: aceita o serviço sem a chave healthcheck, com build de Dockerfile local que declara HEALTHCHECK ativo, só se o item dele em Serviços disser "healthcheck herdado da imagem"; disable/NONE no compose e HEALTHCHECK NONE no Dockerfile continuam reprovando; imagem de registro sem build fica fora (limite dito no Como verificar). Dois estados rodados (com e sem a declaração).'

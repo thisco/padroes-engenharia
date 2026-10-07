@@ -1,5 +1,6 @@
 #!/bin/sh
-# Roda o exemplo da IAC-01: o verificador nos dois estados e a ordem de rebuild de verdade.
+# Roda o exemplo da IAC-01: o verificador nos estados (inclusive o healthcheck herdado) e a ordem
+# de rebuild de verdade.
 # Uso: sh executar.sh   (na pasta exemplos/IAC-01; precisa de Docker e Python 3)
 # O script usa containers iac-db e iac-api, o projeto iac-ambiente e a porta 18080 do host, e
 # derruba tudo ao sair (contêineres, rede, volumes e a imagem iac-ambiente-api). Trabalha numa
@@ -18,6 +19,14 @@ echo "saída: $?"
 
 echo; echo "### B. Depois"
 python3 verificar-ambiente.py compose.yml ambiente-local.md
+echo "saída: $?"
+
+echo; echo "### B2. Healthcheck herdado da imagem (Dockerfile.saude com HEALTHCHECK, sem bloco no compose)"
+echo "--- sem declarar no texto"
+python3 verificar-ambiente.py compose-heranca.yml ambiente-local.md
+echo "saída: $?"
+echo "--- declarado no texto"
+python3 verificar-ambiente.py compose-heranca.yml ambiente-local-heranca.md
 echo "saída: $?"
 
 echo; echo "### C. A ordem escrita, executada"
