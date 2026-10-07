@@ -54,6 +54,13 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: 'base inexistente: "ERRO: base origin/nao-existe não encontrada", saída 1; diff vazio: "ERRO: nenhuma mudança medida contra origin/main", saída 1; limite 0: "ERRO: os limites precisam ser inteiros positivos", saída 1; yarn.lock de 5000 linhas com --ignorar ''*.lock'': "1 arquivo(s), 1 linha(s) ... 1 ignorado(s): dentro do limite", saída 0; sem --ignorar: "2 arquivo(s), 5001 linha(s) ... MR grande demais", saída 1.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: CICD-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-cicd-02-prompt, branch feat/tres-modulos; transcrição em ~/curadoria-a5/transcricoes/CICD-02-prompt-1.bruta.jsonl
+  resultado: passou
+  evidencia: 'job tamanho-da-mr FAIL com "15 arquivo(s), 372 linha(s)"; criou as branches mr/clientes (6891c8d), mr/pedidos (25494d5) e mr/faturas (963063f) por git cherry-pick, cada uma com 5 arquivos e 124 linhas e PASS; feat/tres-modulos intocada, sem push, sem coautoria nem trailer'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: "provisória: conferência em lote da B.4 pendente"
   data: '2026-10-07'
