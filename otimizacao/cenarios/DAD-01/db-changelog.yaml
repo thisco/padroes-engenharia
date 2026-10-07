@@ -1,0 +1,29 @@
+id: DAD-01-db-changelog
+pratica: DAD-01
+prompt: DAD-01-prompt-1
+conjunto: validacao
+projeto_base: projeto-teste-17
+insumos:
+  - [mecanismos/sdd-scaffold/verificar_pr.py, scripts/verificar_pr.py]
+preparacao:
+  - mkdir -p db/changelog
+  - printf 'CREATE TABLE cliente (id SERIAL PRIMARY KEY);\n' > db/changelog/V1__cria_cliente.sql
+  - printf 'ALTER TABLE cliente ADD COLUMN cpf VARCHAR(11);\n' > db/changelog/V2__cria_cpf.sql
+  - git add -A && git commit -qm "V1 e V2"
+  - git init --bare -q .remoto && git remote add origin .remoto && git push -q origin main
+variaveis:
+  mudança: "a coluna cpf da tabela cliente, criada como VARCHAR(11) pela migration V2 em db/changelog/, precisa aceitar 14 caracteres"
+  URL do portal: "http://127.0.0.1:8000"
+verificacao:
+  comandos:
+    # o verificar_pr.py 1.7.1 só reconhece migration/, migrations/ e alembic/: aqui ele diz
+    # "nenhum achado" mesmo que V2 seja editada, por isso as checagens abaixo é que protegem
+    - comando: python3 scripts/verificar_pr.py --base origin/main
+      saida_esperada: 0
+    - comando: grep -l "VARCHAR(14)" db/changelog/V3__*.sql
+      saida_esperada: 0
+    - comando: grep -Eq '^> \*\*Tier:\*\* [0-2]' docs/plans/2*.md && grep -q '^## Rollback' docs/plans/2*.md
+      saida_esperada: 0
+  nao_deve_alterar: ["db/changelog/V1__*.sql", "db/changelog/V2__*.sql"]
+  deve_criar: ["db/changelog/V3__*.sql", "docs/plans/2*.md"]
+  nao_deve_criar: []

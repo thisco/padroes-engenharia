@@ -8,11 +8,12 @@ RAIZ = Path(__file__).resolve().parent.parent.parent
 PASTA = RAIZ / "otimizacao" / "cenarios"
 
 
-def test_cada_pratica_do_piloto_tem_treino_e_duas_validacoes():
-    for pratica in ("DAD-01", "P1-01", "P2-02"):
+def test_cada_pratica_do_piloto_tem_treino_e_validacoes():
+    minimo_validacoes = {"DAD-01": 3, "P1-01": 2, "P2-02": 2}
+    for pratica, minimo in minimo_validacoes.items():
         cenarios = carregar_cenarios(PASTA, pratica)
         assert [c.conjunto for c in cenarios].count("treino") >= 1, pratica
-        assert [c.conjunto for c in cenarios].count("validacao") >= 2, pratica
+        assert [c.conjunto for c in cenarios].count("validacao") >= minimo, pratica
         assert all(c.prompt == f"{pratica}-prompt-1" for c in cenarios)
 
 
@@ -24,3 +25,10 @@ def test_insumos_existem_no_monorepo():
 
 def test_dad01_cobre_o_caso_sem_remoto():
     assert any(c.id == "DAD-01-sem-remoto" for c in carregar_cenarios(PASTA, "DAD-01"))
+
+
+def test_dad01_tem_o_cenario_db_changelog():
+    por_id = {c.id: c for c in carregar_cenarios(PASTA, "DAD-01")}
+    cenario = por_id["DAD-01-db-changelog"]
+    assert cenario.conjunto == "validacao"
+    assert "db/changelog/V2__*.sql" in cenario.verificacao.nao_deve_alterar
