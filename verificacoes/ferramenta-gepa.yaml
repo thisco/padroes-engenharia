@@ -10,7 +10,7 @@ afirmacoes:
   ref: gepa-repositorio
   localizacao: README, 'Quick Start' (seed_candidate, trainset, valset, reflection_lm, max_metric_calls)
   resultado: confirmada
-- texto: a métrica devolve nota e feedback em texto, que o modelo de reflexão usa para reescrever a instrução
+- texto: além da nota, a métrica pode devolver feedback em texto, que o modelo de reflexão usa para reescrever a instrução
   ref: dspy-gepa
   localizacao: seções 'GEPA uses reflection to improve instructions' e 'Expanding our haiku metric'
   resultado: confirmada
@@ -32,11 +32,14 @@ afirmacoes:
   ref: decagon-gepa-producao
   localizacao: seção '3. Length constraints are essential regularization'
   resultado: confirmada
-- texto: a saída JSON do Claude Code em modo não interativo traz total_cost_usd
+- texto: a saída JSON do Claude Code em modo não interativo traz o custo estimado por sessão em total_cost_usd
   ref: claude-code-headless
-  localizacao: seção 'Pipe data through Claude', parágrafo sobre --output-format json
+  localizacao: seção 'Pipe data through Claude', parágrafo sobre --output-format json ('client-side estimates')
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-revisao-tarefa-14
+  revisor: revisor da tarefa 14 (sessão independente, fontes abertas na web)
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: O custo por sessão sai da saída JSON do harness, como `total_cost_usd` no Claude Code [ref:claude-code-headless]
+    problema: a fonte diz que total_cost_usd e o detalhamento por modelo são estimativas do cliente e podem diferir da cobrança real
+    tratamento: o texto passa a dizer 'o custo estimado por sessão'

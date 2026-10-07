@@ -5,6 +5,6 @@ url: https://dspy.ai/current/getting-started/gepa-optimization/
 tipo: comunidade
 verificado_em: 2026-10-07
 verificacao: V
-localizacao: "seções 'GEPA uses reflection to improve instructions', 'Expanding our haiku metric' e 'Compiling our optimization' (reflection_lm, auto, max_metric_calls, trainset e valset)"
+localizacao: "seções 'GEPA uses reflection to improve instructions', 'Expanding our haiku metric' e 'Compiling our optimization' (feedback da métrica, reflection_lm, auto, trainset e valset)"
 dominios: [construir-com-ia]
 notas: null

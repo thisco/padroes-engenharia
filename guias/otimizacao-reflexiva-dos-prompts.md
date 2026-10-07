@@ -41,11 +41,13 @@ do portal. Ele trabalha com quatro peças:
   migrations com outro nome, uma spec ambígua. Os cenários se dividem em treino e validação.
 - **Runner sem interação.** O runner roda o prompt no harness, dentro da cópia do projeto, sem
   ninguém para responder. Os quatro harnesses têm esse modo. O Claude Code roda com `claude -p`, e
-  com `--bare` ignora hooks, skills, servidores MCP e o `CLAUDE.md` da máquina, o que exige
-  `ANTHROPIC_API_KEY` [ref:claude-code-headless]. O Codex roda com `codex exec`, que aceita
+  com `--bare` ignora hooks, skills, servidores MCP e qualquer `CLAUDE.md`, do projeto ou do
+  usuário, e não usa o login da assinatura: com a API da Anthropic, pede `ANTHROPIC_API_KEY` ou um
+  `apiKeyHelper`, e os provedores de nuvem usam as próprias credenciais [ref:claude-code-headless]. O Codex roda com `codex exec`, que aceita
   `--json`, `--sandbox workspace-write`, `--ephemeral` e `--ignore-user-config`
   [ref:codex-nao-interativo]. O Kiro roda com `kiro-cli chat --no-interactive`, com a chave em
-  `KIRO_API_KEY` e as ferramentas liberadas por `--trust-all-tools` [ref:kiro-headless]. O
+  `KIRO_API_KEY` e as ferramentas liberadas por `--trust-all-tools`; a chave de API só existe nos
+  planos Pro, Pro+, Pro Max e Power [ref:kiro-headless], o que condiciona a linha de base no Kiro. O
   Antigravity roda com `agy -p`, e sem credencial em cache sai com erro em vez de esperar
   [ref:antigravity-headless].
 - **Verificador como métrica.** Depois do agente, o runner roda o verificador da própria prática
@@ -61,10 +63,12 @@ do portal. Ele trabalha com quatro peças:
 O GEPA otimiza parâmetros de texto, como prompts, usando a reflexão de um LLM e uma busca evolutiva
 que guarda a fronteira de Pareto dos candidatos [ref:gepa-repositorio]. Ele roda o sistema, lê as
 trajetórias em linguagem natural para diagnosticar o que deu errado, propõe e testa novas versões do
-prompt e combina lições de candidatos diferentes [ref:gepa-paper]. Para isso a métrica precisa
-devolver nota e feedback em texto, e a documentação do DSPy recomenda um modelo maior como modelo de
-reflexão [ref:dspy-gepa]. O orçamento é dado por `auto` (`light`, `medium`, `heavy`) ou por
-`max_metric_calls` [ref:dspy-gepa].
+prompt e combina lições de candidatos diferentes [ref:gepa-paper]. Além da nota, o GEPA
+aceita da métrica um feedback em texto, que o modelo de reflexão lê para entender por que o
+resultado falhou ou passou; quando o modelo otimizado é menor, a documentação do DSPy recomenda um
+modelo maior para a reflexão [ref:dspy-gepa]. O laboratório sempre devolve esse feedback. No DSPy,
+o orçamento é dado por `auto` (`light`, `medium`, `heavy`) [ref:dspy-gepa]; no `gepa.optimize`,
+por `max_metric_calls` [ref:gepa-repositorio].
 
 O artigo do GEPA foi aceito no ICLR 2026, como apresentação oral [ref:gepa-paper]. Em seis tarefas,
 os autores relatam que o GEPA supera o GRPO, um método de aprendizado por reforço, em 6% na média e

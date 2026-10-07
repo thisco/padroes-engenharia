@@ -2,9 +2,9 @@ conteudo: otimizacao-reflexiva-dos-prompts
 verificado_em: '2026-10-07'
 verificador: agente-curadoria
 afirmacoes:
-- texto: o Claude Code roda sem interação com claude -p; com --bare ignora hooks, skills, servidores MCP e o CLAUDE.md, e exige ANTHROPIC_API_KEY
+- texto: o Claude Code roda sem interação com claude -p; com --bare ignora hooks, skills, servidores MCP e qualquer CLAUDE.md, não usa o login da assinatura, pede ANTHROPIC_API_KEY ou apiKeyHelper com a API da Anthropic, e os provedores de nuvem usam as próprias credenciais
   ref: claude-code-headless
-  localizacao: seções 'Basic usage' e 'Start faster with bare mode'
+  localizacao: seções 'Basic usage' e 'Start faster with bare mode' (parágrafos sobre auto-discovery e credenciais)
   resultado: confirmada
 - texto: a saída JSON do Claude Code traz o custo estimado em total_cost_usd
   ref: claude-code-headless
@@ -18,6 +18,10 @@ afirmacoes:
   ref: kiro-headless
   localizacao: seções de autenticação, execução e autorização de ferramentas
   resultado: confirmada
+- texto: a chave de API do Kiro só existe nos planos Pro, Pro+, Pro Max e Power
+  ref: kiro-headless
+  localizacao: seção 'Authentication' ('API key authentication is only available for Kiro Pro, Pro+, Pro Max, and Power subscribers')
+  resultado: confirmada
 - texto: o Antigravity roda com agy -p e, sem credencial em cache, sai com erro em vez de esperar
   ref: antigravity-headless
   localizacao: uso básico e limitações ('a run that isn't already authenticated exits with an authentication required error instead of hanging')
@@ -30,13 +34,17 @@ afirmacoes:
   ref: gepa-paper
   localizacao: resumo (abstract)
   resultado: confirmada
-- texto: a métrica precisa devolver nota e feedback em texto, e a documentação recomenda um modelo maior como modelo de reflexão
+- texto: além da nota, o GEPA aceita da métrica feedback em texto, que o modelo de reflexão lê; quando o modelo otimizado é menor, a documentação recomenda um modelo maior para a reflexão
   ref: dspy-gepa
   localizacao: seções 'GEPA uses reflection to improve instructions' e 'Expanding our haiku metric'
   resultado: confirmada
-- texto: o orçamento é dado por auto (light, medium, heavy) ou por max_metric_calls
+- texto: no DSPy, o orçamento é dado por auto (light, medium, heavy)
   ref: dspy-gepa
   localizacao: seção 'Compiling our optimization'
+  resultado: confirmada
+- texto: no gepa.optimize, o orçamento é dado por max_metric_calls
+  ref: gepa-repositorio
+  localizacao: README, 'Quick Start' (max_metric_calls=150)
   resultado: confirmada
 - texto: o artigo foi aceito no ICLR 2026 como apresentação oral
   ref: gepa-paper
@@ -68,6 +76,21 @@ afirmacoes:
   localizacao: seção '3. Length constraints are essential regularization'
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-revisao-tarefa-14
+  revisor: revisor da tarefa 14 (sessão independente, fontes abertas na web)
   data: '2026-10-07'
-  achados: []
+  achados:
+  - afirmacao: O orçamento é dado por `auto` (`light`, `medium`, `heavy`) ou por `max_metric_calls` [ref:dspy-gepa]
+    problema: a página do DSPy traz só auto light/medium/heavy e fala de um orçamento de chamadas da métrica, mas não nomeia max_metric_calls; o parâmetro está no Quick Start do repositório
+    tratamento: max_metric_calls passa a citar [ref:gepa-repositorio]; a afirmação do registro foi dividida em duas e a localizacao de dspy-gepa deixou de citar max_metric_calls
+  - afirmacao: Para isso a métrica precisa devolver nota e feedback em texto [ref:dspy-gepa]
+    problema: a fonte diz que o GEPA permite à métrica devolver feedback em texto, que é opcional; 'precisa' é exagero
+    tratamento: o texto diz que o GEPA aceita, além da nota, feedback em texto que o modelo de reflexão lê, e que o laboratório sempre o devolve
+  - afirmacao: a documentação do DSPy recomenda um modelo maior como modelo de reflexão [ref:dspy-gepa]
+    problema: a recomendação da fonte é condicional ('when optimizing smaller models')
+    tratamento: o texto passa a dizer 'quando o modelo otimizado é menor'
+  - afirmacao: com `--bare` ignora hooks, skills, servidores MCP e o `CLAUDE.md` da máquina, o que exige `ANTHROPIC_API_KEY` [ref:claude-code-headless]
+    problema: a fonte diz que o bare pula a descoberta de qualquer CLAUDE.md, não só o da máquina, e que não usa o login da assinatura; com a API da Anthropic pede ANTHROPIC_API_KEY ou apiKeyHelper, e provedores de nuvem usam as próprias credenciais
+    tratamento: "o texto passa a dizer 'ignora hooks, skills, servidores MCP e CLAUDE.md, e não usa o login da assinatura: com a API da Anthropic, pede ANTHROPIC_API_KEY'"
+  - afirmacao: O Kiro roda com `kiro-cli chat --no-interactive`, com a chave em `KIRO_API_KEY` [ref:kiro-headless]
+    problema: correto, mas omite que a fonte restringe a chave de API aos planos Pro, Pro+, Pro Max e Power, o que condiciona a linha de base no Kiro
+    tratamento: o texto acrescenta a restrição de plano
