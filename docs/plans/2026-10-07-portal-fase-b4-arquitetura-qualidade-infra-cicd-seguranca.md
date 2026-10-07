@@ -83,7 +83,7 @@ tarefa dela.
   verificador de serviços declarados; `tofu plan` (ou `terraform plan`, se o OpenTofu não
   instalar) de um módulo mínimo com provider `local`/`null`, saída real; rollback declarado e
   executado (reaproveita a DAD-02).
-- [ ] **T4 (CICD-01..03, `_dominio.md` de ci-cd).** Exemplos: `.gitlab-ci.yml` com os três gates
+- [x] **T4 (CICD-01..03, `_dominio.md` de ci-cd).** Exemplos: `.gitlab-ci.yml` com os três gates
   rodado no `gitlab-ci-local` nos dois estados; verificador de tamanho de MR; tag + changelog
   com verificador que reprova tag sem entrada.
 - [ ] **T5 (SEG-01..03, `_dominio.md` de seguranca).** Exemplos: threat-model em cinco perguntas
@@ -102,6 +102,8 @@ harness") e o caso "SGD Catálogo de Nuvem" (§10) ficam para a B.5, junto com a
 listadas lá.
 
 ## Evidências
+
+**T4 fechada (2026-10-07).** Commits: CICD-01 `3b9bba8`, CICD-02 `30a5ffe`, CICD-03 `b5e4bc7`, domínio `037bb6e` (o `verificacoes/ci-cd.yaml` entrou por engano num `--amend` do commit `domínio infra-iac`, `692e309`, de outra tarefa; o conteúdo está íntegro). Referência nova: `conventional-commits` (1.0.0, aberta em 2026-10-07); `semver` e `gitlab-variaveis-predefinidas` ganharam localização (itens 2, 3 e 6 do SemVer; CI_COMMIT_TAG) e as demais referências de CI/DORA tiveram o `verificado_em` renovado. Decisões: CICD-01 `avisa` com o `verificar_pr.py` hospedado, baixado no job com SHA-256 conferido (hash errado reprova antes de rodar); o job de lint, suíte e verificador roda no mesmo estágio para os três aparecerem de uma vez. CICD-02: teto de exemplo de 10 arquivos e 200 linhas, declarado como exemplo (nenhuma fonte fixa número), com a DORA citada só pelo que diz (lotes pequenos, integração diária, efeito com IA; 1,5% e 7,2% do relatório de 2024 como associação). CICD-03: a regra "a versão não aumenta" reprova correção em linha antiga (limite declarado). Preparos dos testes de prompt em `~/curadoria-a5/b4-cicd-0{1,2,3}-prompt`; o de CICD-01 exige o servidor local do portal (`python3 -m http.server 8765 --bind 0.0.0.0` em `~/curadoria-a5/b4-cicd-01-portal`). Execuções reais com `gitlab-ci-local` 4.76.0 nos dois estados; prompts não testados e sem execução registrada (R-PROMPT esperado).
 
 **T3 fechada (2026-10-07).** IAC-01 (4063d03), IAC-02 (46e7eae), IAC-03 (69ceca7) e o domínio
 `infra-iac` (a79506e). Referências novas: `sdd-scaffold-infra-devops` (steering lido na tag
