@@ -1,0 +1,94 @@
+conteudo: QLD-03
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: antes de pedir revisão ou submeter o PR, a suíte completa passa, o linter e o formatador não apontam inconformidade e a cobertura mínima foi atingida, e os comandos exatos do projeto ficam registrados no steering
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seção 'Validação local rígida', itens 1 a 4 e comentário de preenchimento dos comandos
+  resultado: confirmada
+  nota: O pedido de registrar os comandos exatos está no comentário HTML de preenchimento do template, visível no arquivo cru e conferido no clone local da tag v1.7.1.
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (já registrada em API-02, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: sem o merge check Pipelines must succeed, o pipeline vermelho não impede o merge
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido (já registrada em API-02, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: ruff check sai com 1 se há violações
+  ref: ruff-linter
+  localizacao: seção de exit codes ('1 if violations were found')
+  resultado: confirmada
+- texto: ruff format --check sai com 1 se algum arquivo seria reformatado
+  ref: ruff-formatter
+  localizacao: seção sobre --check e exit codes
+  resultado: confirmada
+- texto: o pytest sai com 1 se um teste falha e com 5 se nenhum teste foi coletado
+  ref: pytest-exit-codes
+  localizacao: lista de exit codes, códigos 1 e 5
+  resultado: confirmada
+- texto: a opção --cov-fail-under falha a execução se a cobertura total ficar abaixo do mínimo
+  ref: pytest-cov-config
+  localizacao: opção --cov-fail-under ('Fail if the total coverage is less than MIN')
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 validar (estado antes, calculo-ruim.txt salvo como calculo.py)
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'job FAIL (saída 1) com os três passos reprovados na mesma execução: linter (F401 import sem uso e E701), formatador ("File would be reformatted"), testes ("2 failed, 1 passed", assert 3.75 == 5 e 3.5 == 7), "validar: 3 passo(s) falharam."'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 validar (estado depois, calculo.py corrigido)
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'PASS validar: "All checks passed!", "2 files already formatted", "Required test coverage of 90% reached. Total coverage: 100.00%", "3 passed", "validar: tudo certo."'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/validar.sh
+  comando: sh validar.sh com PATH apontando para um ambiente virtual com as versões de requirements-dev.txt; sem teste; com o python3 do sistema sem ferramentas
+  ambiente: projeto mínimo em /tmp/qld03; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'estado depois: ok nos três passos, "validar: tudo certo.", saída 0; estado antes: "validar: 3 passo(s) falharam."; sem arquivo de teste: "no tests ran", "FALHOU: testes e cobertura", "validar: 1 passo(s) falharam."; python3 do sistema sem ruff nem pytest: "No module named ruff", "No module named pytest", "validar: 3 passo(s) falharam." (fail-closed).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/calculo-ruim.txt
+  comando: npx --yes gitlab-ci-local@4.76.0 validar com o arquivo salvo como calculo.py
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'job FAIL com os três passos reprovados ("validar: 3 passo(s) falharam.").'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/calculo.py
+  comando: npx --yes gitlab-ci-local@4.76.0 validar
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'PASS validar, cobertura de 100%.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/teste_calculo.py
+  comando: npx --yes gitlab-ci-local@4.76.0 validar (salvo como test_calculo.py)
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: '3 passed; com o calculo-ruim.txt, 2 failed, 1 passed.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/requirements-dev.txt
+  comando: pip install -r requirements-dev.txt dentro do job validar
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'instalação sem erro na imagem python:3.11; o job seguiu para sh validar.sh.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-03/pyproject.toml
+  comando: ruff check . e ruff format --check . dentro do job validar
+  ambiente: projeto mínimo em /tmp/qld03 (git, branch main); gitlab-ci-local 4.76.0, Docker, imagem python:3.11 (pytest 9.1.1, pytest-cov 7.1.0, ruff 0.16.10 por pip); macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: '"All checks passed!" e "2 files already formatted" no estado depois; F401 e E701 no estado antes.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []

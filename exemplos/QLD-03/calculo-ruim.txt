@@ -1,0 +1,7 @@
+"""Média de uma lista de valores. Versão com três defeitos (salve como calculo.py)."""
+import os
+
+
+def media(valores: list[float]) -> float:
+    if not valores: raise ValueError('a lista não pode ser vazia')
+    return sum(valores) / (len(valores) + 1)

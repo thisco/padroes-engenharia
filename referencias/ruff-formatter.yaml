@@ -1,0 +1,10 @@
+id: ruff-formatter
+titulo: "Ruff: The Ruff Formatter (opção --check e códigos de saída)"
+organizacao: Astral
+url: https://docs.astral.sh/ruff/formatter/
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção sobre ruff format --check e exit codes"
+dominios: [qualidade-bdd]
+notas: "Documentação do projeto Ruff, versão estável lida em 2026-10-07."

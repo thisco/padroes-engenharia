@@ -1,0 +1,10 @@
+id: pytest-cov-config
+titulo: "pytest-cov: Configuration (--cov-fail-under)"
+organizacao: pytest-dev
+url: https://pytest-cov.readthedocs.io/en/latest/config.html
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "opção --cov-fail-under ('Fail if the total coverage is less than MIN')"
+dominios: [qualidade-bdd]
+notas: "Documentação do plugin pytest-cov, versão latest lida em 2026-10-07."

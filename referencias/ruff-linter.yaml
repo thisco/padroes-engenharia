@@ -1,0 +1,10 @@
+id: ruff-linter
+titulo: "Ruff: The Ruff Linter (ruff check e códigos de saída)"
+organizacao: Astral
+url: https://docs.astral.sh/ruff/linter/
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "abertura (ruff check) e seção de exit codes (1 se há violações)"
+dominios: [qualidade-bdd]
+notas: "Documentação do projeto Ruff, versão estável lida em 2026-10-07."

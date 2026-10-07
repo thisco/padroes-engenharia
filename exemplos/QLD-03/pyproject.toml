@@ -1,0 +1,9 @@
+# Configuração do projeto de exemplo. O ruff local e o do CI leem este mesmo arquivo.
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["calculo"]

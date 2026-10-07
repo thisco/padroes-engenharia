@@ -1,0 +1,12 @@
+# Job `validar` (QLD-03): roda o mesmo scripts/validar.sh que a pessoa roda antes do push.
+# Requer no repositório: validar.sh, requirements-dev.txt (com as versões fixadas), calculo.py
+# e test_calculo.py. O job não repete nenhum comando do script: ele só instala e chama.
+stages:
+  - validacao
+
+validar:
+  stage: validacao
+  image: python:3.11
+  script:
+    - pip install --quiet --disable-pip-version-check -r requirements-dev.txt
+    - sh validar.sh
