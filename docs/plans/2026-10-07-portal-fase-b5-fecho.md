@@ -277,6 +277,14 @@ Pendências pós-v1 (não tratadas):
 - Conteúdo M6: backlog público das 15 células "a definir", por célula.
 - Meta de 55 práticas (hoje 48, o mínimo do §10).
 - `pytest-bdd` sem ficha própria no radar.
+- Padronização de nomes no template do `sdd-scaffold` (anotado pelo dono em 2026-10-07): tudo que é
+  nosso é minúsculo kebab-case, e quatro nomes fogem disso (`Arquitetura/`, `docs/PROJECT_MEMORY.md`,
+  `docs/{adr,plans,prd,specs}/MODELO-*.md`); os de convenção externa ficam (`AGENTS.md`, `CLAUDE.md`,
+  `GEMINI.md`, `README.md`, `CHANGELOG.md`, `LICENSE`, `SKILL.md`, `CODEOWNERS`). Renomear quebra projeto
+  gerado (hook, `verificar_drift_arquitetura.py`, `settings.json`, `permissions.yaml`) e exige repino no
+  portal: 18 arquivos do scaffold, 2 da skill e 18 do portal citam `Arquitetura/`; `PROJECT_MEMORY`
+  4/5/9; `MODELO-` 6/0/11 (práticas ARQ-01/02/04, P1-01/04/05/11, API-01, QLD-02 e os guias 1 a 3).
+  Fatia própria: sdd-scaffold 2.0.0 (major) + sdd-lifecycle 3.0.x + delta do portal, depois de F0/F1.
 - Frontend médios de template: B5-M1 (radar em cartões abaixo de 600px), B5-M2 (duas linguagens de status), B5-M4 (abertura de O problema), B5-M5 (mini-espinha da Início), B5-M6 (busca a 400px) e os baixos B5-L1 a L4.
 - T1 (10) `BASE:` de YAML e `BASE :=` de Makefile não reconhecidos; (11) link dentro de HTML bruto não conferido; (17) SemVer do `dono` obrigatório no caso, a decidir no checkpoint.
 - Baixos da T8 não tratados: prompt do guia 3 contorna o `deny` por shell; `<pasta>` do prompt do guia 4; "Confira" sem dizer que o endpoint novo é só do roteiro; `--estrito` ou aviso no `comparar-contratos.py` (AVISO sai 0); `verificar-slo.py` aceita seções dentro de cerca de código; prompt de segredos sem "repositório descartável"; `[ref:id]` cru nas saídas `.md` (decisão: manter ou resolver no motor); gitleaks "feature-complete" na ficha; gitleaks sem Segurança nos domínios; `{URL do portal}` copiado à mão (variável de shell).
