@@ -28,10 +28,15 @@ afirmacoes:
   localizacao: seção 'Síntese', gaps (2) e (3)
   resultado: confirmada
 - texto: execuções entre 2026-09-10 e 2026-09-23
-  ref: gateway-poc-matriz
+  ref: gateway-poc-cenario-08-decisao-tipada
   localizacao: READMEs dos cenários, linhas 'Execução real em' (01-07 em 09-10 e 09-11, 08 em 09-23); o README da raiz diz 09-10 a 09-11, divergente do cenário 08
   resultado: parcial
   nota: O período publicado segue o README do cenário 08; a divergência está anotada. A referência da matriz cobre o veredito, e a data vem do README do cenário no mesmo commit.
+- texto: o README da raiz do gateway-poc diz 'execuções entre 2026-09-10 e 2026-09-11' (snapshot de 2026-10-06)
+  ref: gateway-poc-readme
+  localizacao: README.md, seção 'Avaliação', linha que antecede a tabela de cenários
+  resultado: confirmada
+  nota: A frase é a divergência que o texto do caso diz; ela não cobre o cenário 08, que registra 2026-09-23.
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
@@ -45,7 +50,7 @@ revisao_adversarial:
     problema: '[baixo] confere com os READMEs dos cenários (01 a 06 em 09-10, 05 e 07 em 09-11, 08 em 09-23). O
       README raiz da tag diz "execuções entre 2026-09-10 e 2026-09-11", e a divergência já está anotada no registro
       como "parcial".'
-    tratamento: Nenhum.
+    tratamento: 'Tratado em 2026-10-07: conferido de novo contra o clone gateway-poc (HEAD 571a091): README do cenário 08 diz "Execução real em 2026-09-23", cenários 05 e 07 em 09-11, e o README raiz diz 09-10 a 09-11. O caso mantém 2026-09-10 a 2026-09-23, e o texto passou a dizer a divergência, com a referência nova gateway-poc-cenario-08-decisao-tipada (aberta na web, HTTP 200) e gateway-poc-readme.'
   - afirmacao: 'texto: "Dos 45 casos, 42 passam, 2 são gap confirmado e 1 é falha ou gap"'
     problema: '[baixo] a conta fecha (42 + 3 = 45), mas "Passa" inclui casos "como teste" cujo achado é um problema
       (VS-05, TI-02, SO-02, SO-03, SO-05); o texto avisa. O número 3 de `numeros[]` agrupa falha e gap, e o texto
