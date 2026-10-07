@@ -85,8 +85,8 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   D13 (ler o D13 na spec); ADR 0006 "o caso SGD sai da semente"; prova da instalação completa do
   starter `gateway-poc` com a porta 4000 livre (prompt do README do starter em sessão nova,
   registro em `verificacoes/starter-gateway-poc.yaml`).
-- [ ] **T6.** Testes de prompt em sessão nova: 2 guias, 4 receitas, 1 starter.
-- [ ] **T7.** `CHANGELOG.md` com a versão da fase B fechada (proposta: `0.4.0`; o dono decide no
+- [x] **T6.** Testes de prompt em sessão nova: 2 guias, 4 receitas, 1 starter.
+- [x] **T7.** `CHANGELOG.md` com a versão da fase B fechada (proposta: `0.4.0`; o dono decide no
   checkpoint); lint; suíte; validar; dois builds idênticos; `public/` regenerado.
 - [ ] **T8 (conferência em lote, ADR 0005)** do conteúdo de T2 a T5, com reconferência; a T1 já
   terá a revisão forte.
@@ -225,5 +225,21 @@ no passo 7 com `max_budget` 1; (3) o catálogo (o `/ui/` devolve 200, `simulado`
 do perfil-restrito e `fronteira-sonnet` volta 403); (4) nenhuma chave impressa e `.env` e
 `.demo-keys` ignorados pelo git; (5) ao fim, `docker compose down -v` dentro de `gateway-poc/poc`, e
 `docker ps` sem contêiner novo. Nenhuma execução foi registrada em `verificacoes/`.
+
+**T6 e T7 fechadas (2026-10-07).** `CHANGELOG.md` em `[Não publicado]`: resumo da fase B inteira (B.1 a
+B.5) na abertura; B.5 em Adicionado (guias 3 e 4, receitas 5 a 8, fichas `opentofu` e `pytest`, página
+Pessoas e normas, ADR 0006, `--previa`, `R-LINK-INTERNO`, `$BASE/<arquivo>`, `falhou` com `motivo`,
+`dono` no caso, limpeza de pastas vazias), pendências da T2 em Corrigido (uma linha por grupo) e `dono`
+obrigatório em Alterado, com a versão a decidir no checkpoint. `ruff check` e `ruff format --check`
+limpos (298 arquivos). Suíte antes do build: 709 passed, 1 failed (`test_sai_0_no_repositorio_real`,
+por `R-GERADO-DIVERGENTE` do README); depois do build: 710 passed. `validar.py`: antes, só
+`R-GERADO-DIVERGENTE` do README; depois, "validação ok: nenhum erro". Build em `public/` e em
+`/Users/thiago/.claude/jobs/0c679baa/tmp/build5`: `diff -rq` sem diferença; pastas `<nome> <n>` vazias
+removidas em seguida. Gerado: `public/guias/` com 4 guias, `public/receitas/` com 8,
+`public/pessoas-e-normas.html`, `public/ferramentas/` com 14 fichas (inclui `opentofu` e `pytest`);
+`grep` por NUJOR, NUARQ, Serpro e SGD em `public/**/*.html`: vazio; `grep -c "a definir"
+public/espinha.md`: 11 linhas; nenhum "PRÉVIA" em `public/`. A T6 (testes de prompt em sessão nova) não
+foi executada: os preparos estão prontos e nenhuma execução de prompt foi registrada; a prova completa
+do starter `gateway-poc` aguarda o `docker compose up` do dono (o classificador barrou o testador).
 
 ## Conferência em lote: <data> — achados

@@ -7,7 +7,10 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
-Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em andamento, com o repino do scaffold 1.7.1.
+Fase B fechada, fatias B.1 a B.5: 48 práticas em 12 domínios, 4 guias, 8 receitas, 2 starters, 1 caso, as
+apresentações e o radar com 14 fichas, sobre os componentes `sdd-scaffold` 1.7.1 e `sdd-lifecycle` 3.0.0.
+A B.5 fecha os mínimos do §10, trata as pendências das quatro fatias anteriores e traz o motor que elas
+pediram. A versão a publicar é decidida no checkpoint da B.5.
 
 ### Adicionado
 
@@ -71,6 +74,24 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   e `pypi-json-api`; `nygard-adr`, `cockburn-hexagonal`, `semver`, `gitlab-variaveis-predefinidas`,
   `gitleaks-readme` e `sdd-scaffold-threat-model` relidas e ampliadas.
 
+- Fatia B.5, fecho da fase B: os guias "Brownfield em 5 passos" e "Como escolher e configurar o
+  harness" (guias 3 e 4) e as receitas 5 a 8, "Publicar um contrato OpenAPI versionado com teste no
+  CI", "Entregar uma tela com os quatro estados", "Declarar SLO, alerta e runbook de um serviço" e
+  "Varrer segredos no CI e antes do commit" (8 receitas no total), cada uma com Exemplo executado e
+  registro em `verificacoes/`. Os prompts novos aguardam teste em sessão nova.
+- Fichas `opentofu` e `pytest` no radar (14 fichas), com `ferramentas_aprovadas` preenchido nas
+  práticas ligadas; a página "Pessoas e normas", com as cinco normas do D13 (só a LGPD tem prática
+  mapeada, as outras quatro aparecem como lacuna nomeada); a ADR 0006, que tira o caso do catálogo
+  de nuvem da semente.
+- Motor: modo de prévia do `gerar.py` (`--previa`, pasta explícita, ignora só `R-PROMPT`, carimba
+  "PRÉVIA, não publicada" no rodapé e no `llms.txt`); regra `R-LINK-INTERNO` (link relativo do
+  Markdown precisa apontar para arquivo da fonte ou do gerado); citação `$BASE/<arquivo>` aceita na
+  regra de mecanismo hospedado; schema de verificação com `resultado: falhou` e `motivo`
+  obrigatório; schema de caso com `dono` obrigatório; limpeza das pastas vazias `<nome> <n>` em
+  `--saida`, e `--saida` recusada quando é a raiz, ancestral ou pasta da fonte.
+- Referências novas: doze de hooks, subagentes, permissões e sandbox dos harnesses,
+  `docker-dockerfile-healthcheck` e `gateway-poc-cenario-08-decisao-tipada`.
+
 ### Alterado
 
 - O portal, o motor, os testes e o deck deixam de citar a organização: `organizacao` em
@@ -105,6 +126,8 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   descuido e não contra má-fé; a DAD-01 passa a dizer que renomear ou mover a migration também
   bloqueia (na 1.7.0, passava). Reexecução no `gitlab-ci-local` 4.76.0, em registro novo:
   `normas-do-pr` com BLOQUEIA para a V2 editada e para a V2 renomeada, caminho verde e `governanca`.
+- Schema de caso passa a exigir `dono` (mudança de schema: major pelo `niveis-de-risco.yml`; a
+  versão é decidida no checkpoint da B.5).
 
 ### Removido
 
@@ -126,6 +149,17 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   `apresentacao.yml`, o roteiro-fonte nem arquivos ocultos, e `roteiro.html` na pasta reprova.
 - Deck: capa com o autor, redação do hook no slide 14, notas de versão no comparativo e folga do
   slide 14 em 1280x720.
+
+- B.5, pendências das fatias anteriores: laços de espera com limite (60 tentativas de 3 s) em P2-01,
+  P2-04, P2-05 e P2-06; links dos Exemplos de P2-01, P2-04, P2-05 e P2-06 apontam para o
+  `docker-compose.yml`, não para a pasta.
+- `comparar-contratos.py` avisa de schema sem `type` não comparado; a receita do gateway separa o
+  403 do estouro de orçamento; o prompt da LGPD-02 troca só as linhas acusadas.
+- QLD-03 herda o ruff da raiz com `extend`; a IAC-01 aceita healthcheck herdado da imagem, se
+  declarado, e reprova só o desligado; a SEG-02 fixa a imagem do gitleaks por digest.
+- Datas do período do caso da avaliação do gateway conferidas com os cenários (a divergência do
+  README raiz do gateway agora consta no texto); prompts de P1-07, P1-08, P1-10 e P1-11 já estavam
+  corrigidos desde a B.1. Prompts alterados sem reteste, por decisão do dono.
 
 ## [0.3.0] - 2026-10-05
 
