@@ -1,0 +1,140 @@
+conteudo: receita-entregar-tela-com-quatro-estados
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a spec define os quatro estados de cada tela e de cada consulta, e uma página com três consultas
+    tem doze estados
+  ref: estados-de-interface
+  localizacao: seção 'A regra'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: carregando, vazio, erro e sucesso respondem às perguntas da tabela da regra
+  ref: estados-de-interface
+  localizacao: seção 'A regra', tabela
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o vazio é a situação normal de quem começou, costuma ser a primeira tela, diz o que aparecerá
+    e como criar o primeiro item
+  ref: estados-de-interface
+  localizacao: seção 'Estado vazio não é estado de erro'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: a mensagem de erro diz o que aconteceu e o que fazer, não se desculpa, não culpa a pessoa, não
+    mostra rastro de pilha e diz de quem depende a recuperação
+  ref: estados-de-interface
+  localizacao: seção 'Erro descreve e orienta'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: carregando sem limite de tempo é indistinguível de travamento; vazio tratado como erro faz a
+    pessoa nova achar que quebrou; erro com exceção crua vaza detalhe interno; estados só da página deixam
+    a tela inconsistente
+  ref: estados-de-interface
+  localizacao: seção 'Erros comuns'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: PR de interface que não trata os quatro estados explicitamente não passa em revisão
+  ref: estados-de-interface
+  localizacao: seção 'A regra', último parágrafo
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: se o steering não existir, não se inventa um design system e se pergunta qual usar
+  ref: estados-de-interface
+  localizacao: seção 'Parâmetros deste projeto'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: estado vazio é o contêiner, tela ou painel cujo conteúdo ainda não existe ou não pode ser exibido
+  ref: nngroup-empty-states
+  localizacao: abertura, 'What Is an Empty State?' (definição citada por paráfrase)
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o estado vazio serve para comunicar o estado do sistema, dar pistas de aprendizado e abrir caminhos
+    diretos para as tarefas principais
+  ref: nngroup-empty-states
+  localizacao: os três títulos de diretriz do artigo
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o estado vazio esclarece se o conteúdo está carregando ou indisponível
+  ref: nngroup-empty-states
+  localizacao: diretriz 'Use Empty States to Communicate System Status'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o WCAG 2.2, critério 3.3.3 (AA), exige as sugestões de correção conhecidas para erro de entrada
+    detectado automaticamente, salvo se comprometer a segurança ou a finalidade do conteúdo
+  ref: wcag-error-suggestion
+  localizacao: texto do critério 3.3.3
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: página nova exige protótipo validado por uma pessoa antes da implementação, e revisar protótipo
+    custa minutos enquanto revisar a página implementada custa uma rodada inteira
+  ref: estados-de-interface
+  localizacao: seção 'Protótipo antes do código'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o protótipo é o artefato de aprovação de design
+  ref: estados-de-interface
+  localizacao: seção 'Protótipo antes do código'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o diretório dos protótipos e o design system são parâmetros do steering do projeto, e sem ele
+    se pergunta em vez de inventar
+  ref: estados-de-interface
+  localizacao: seção 'Parâmetros deste projeto'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: a regra dos quatro estados vale para cada tela
+  ref: estados-de-interface
+  localizacao: seção 'A regra'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o estado vazio é a primeira tela que muita gente vê, convida a agir, e a tela que só diz 'nenhum
+    resultado' desperdiça o momento de ensinar o sistema
+  ref: estados-de-interface
+  localizacao: seção 'Estado vazio não é estado de erro'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: os estados vazio, erro e carregando costumam ser escritos depois, sob pressão, e por isso ficam
+    ruins; vazio tratado como erro faz a pessoa nova achar que quebrou
+  ref: estados-de-interface
+  localizacao: abertura e tabela 'Erros comuns'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o estado vazio serve para dar pistas de aprendizado e caminhos diretos para as tarefas principais
+  ref: nngroup-empty-states
+  localizacao: diretrizes 'Provide Learning Cues' e 'Provide Direct Pathways for Key Tasks'
+  resultado: confirmada
+  nota: Afirmação já registrada em UX-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/entregar-tela-com-quatro-estados/executar.sh
+  comando: sh exemplos/entregar-tela-com-quatro-estados/executar.sh
+  ambiente: Python 3.14.8 (só biblioteca padrão); git 2.50.1; macOS. Repositório de teste em /tmp/b5-tela-XXXXXX,
+    apagado ao sair; sem Docker e sem rede.
+  resultado: falhou-como-esperado
+  evidencia: 'saída 0 do roteiro; spec com duas telas e protótipo sem o vazio: ''estado vazio ausente
+    ou sem texto'' e ''a tela detalhe-chamado não tem protótipo'' (saída 1); protótipos completos: ''UX-02:
+    2 telas da spec, cada uma com protótipo dos quatro estados'' (saída 0); tela sem o vazio: ''estado
+    vazio aparece 0 vez(es) (esperado 1)'' (saída 1); tela completa: ''UX-01: 4 estados presentes; o vazio
+    orienta e é distinto do erro'' (saída 0). Saída bruta em curadoria-a5/saidas/b5-receita-entregar-tela-com-quatro-estados.txt.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.5 pendente'
+  data: '2026-10-07'
+  achados: []
