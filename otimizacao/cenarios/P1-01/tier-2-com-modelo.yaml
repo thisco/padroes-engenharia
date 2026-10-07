@@ -1,0 +1,20 @@
+id: P1-01-tier-2-com-modelo
+pratica: P1-01
+prompt: P1-01-prompt-1
+conjunto: validacao
+projeto_base: projeto-teste-17
+insumos:
+  - [exemplos/P1-01/verificar-tier.sh, scripts/verificar-tier.sh]
+preparacao: []
+variaveis:
+  mudança: "trocar o banco de pedidos de PostgreSQL para um serviço gerenciado com novo schema e migrar os dados"
+verificacao:
+  comandos:
+    - comando: bash scripts/verificar-tier.sh .
+      saida_esperada: 0
+      deve_conter: ["todos os planos declaram o tier"]
+    - comando: grep -Eq '^> \*\*Tier:\*\* 2' docs/plans/2*.md
+      saida_esperada: 0
+  nao_deve_alterar: ["AGENTS.md", "docs/plans/MODELO-plano.md", "docs/steering/*.md"]
+  deve_criar: ["docs/plans/2*.md"]
+  nao_deve_criar: ["src/*", "*.py"]

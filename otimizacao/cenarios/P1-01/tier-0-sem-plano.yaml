@@ -1,0 +1,17 @@
+id: P1-01-tier-0-sem-plano
+pratica: P1-01
+prompt: P1-01-prompt-1
+conjunto: validacao
+projeto_base: projeto-teste-17
+insumos:
+  - [exemplos/P1-01/verificar-tier.sh, scripts/verificar-tier.sh]
+preparacao: []
+variaveis:
+  mudança: "corrigir um erro de digitação no README.md"
+verificacao:
+  comandos:
+    - comando: bash scripts/verificar-tier.sh .
+      saida_esperada: 0
+  nao_deve_alterar: ["AGENTS.md", "README.md"]
+  deve_criar: []
+  nao_deve_criar: ["docs/plans/2*.md"]

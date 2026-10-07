@@ -1,0 +1,20 @@
+id: P1-01-tier-1-sem-modelo
+pratica: P1-01
+prompt: P1-01-prompt-1
+conjunto: treino
+projeto_base: projeto-teste-17
+insumos:
+  - [exemplos/P1-01/verificar-tier.sh, scripts/verificar-tier.sh]
+preparacao:
+  - rm docs/plans/MODELO-plano.md && git add -A && git commit -qm "sem modelo"
+variaveis:
+  mudança: "ajustar a mensagem de erro de validação do CPF no formulário de cadastro"
+verificacao:
+  comandos:
+    - comando: bash scripts/verificar-tier.sh .
+      saida_esperada: 0
+    - comando: grep -Eq '^> \*\*Tier:\*\* 1' docs/plans/2*.md
+      saida_esperada: 0
+  nao_deve_alterar: ["AGENTS.md"]
+  deve_criar: ["docs/plans/2*.md"]
+  nao_deve_criar: []

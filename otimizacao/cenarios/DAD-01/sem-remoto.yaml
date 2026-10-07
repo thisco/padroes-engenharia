@@ -1,0 +1,27 @@
+id: DAD-01-sem-remoto
+pratica: DAD-01
+prompt: DAD-01-prompt-1
+conjunto: validacao
+projeto_base: projeto-teste-17
+insumos:
+  - [mecanismos/sdd-scaffold/verificar_pr.py, scripts/verificar_pr.py]
+preparacao:
+  - mkdir -p db/migration
+  - printf 'CREATE TABLE cliente (id SERIAL PRIMARY KEY);\n' > db/migration/V1__cria_cliente.sql
+  - printf 'ALTER TABLE cliente ADD COLUMN cpf VARCHAR(11);\n' > db/migration/V2__cria_cpf.sql
+  - git add -A && git commit -qm "V1 e V2"
+variaveis:
+  mudança: "a coluna cpf da tabela cliente, criada como VARCHAR(11) pela migration V2, precisa aceitar 14 caracteres"
+  URL do portal: "http://127.0.0.1:8000"
+verificacao:
+  comandos:
+    - comando: python3 scripts/verificar_pr.py --base main
+      saida_esperada: 0
+      deve_conter: ["nenhum achado"]
+    - comando: grep -l "VARCHAR(14)" db/migration/V3__*.sql
+      saida_esperada: 0
+    - comando: grep -Eq '^> \*\*Tier:\*\* [0-2]' docs/plans/2*.md && grep -q '^## Rollback' docs/plans/2*.md
+      saida_esperada: 0
+  nao_deve_alterar: ["db/migration/V1__*.sql", "db/migration/V2__*.sql"]
+  deve_criar: ["db/migration/V3__*.sql", "docs/plans/2*.md"]
+  nao_deve_criar: []

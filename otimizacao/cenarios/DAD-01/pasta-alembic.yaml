@@ -1,0 +1,31 @@
+id: DAD-01-pasta-alembic
+pratica: DAD-01
+prompt: DAD-01-prompt-1
+conjunto: treino
+projeto_base: projeto-teste-17
+insumos:
+  - [mecanismos/sdd-scaffold/verificar_pr.py, scripts/verificar_pr.py]
+preparacao:
+  - mkdir -p alembic/versions
+  - |-
+      printf 'def upgrade(): op.create_table("cliente", sa.Column("id", sa.Integer, primary_key=True))\ndef downgrade(): op.drop_table("cliente")\n' > alembic/versions/0001_cria_cliente.py
+  - |-
+      printf 'def upgrade(): op.add_column("cliente", sa.Column("cpf", sa.String(11)))\ndef downgrade(): op.drop_column("cliente", "cpf")\n' > alembic/versions/0002_cria_cpf.py
+  - git add -A && git commit -qm "0001 e 0002"
+  - git init --bare -q .remoto && git remote add origin .remoto && git push -q origin main
+variaveis:
+  mudança: "a coluna cpf da tabela cliente, criada como String(11) pela migration 0002, precisa aceitar 14 caracteres"
+  URL do portal: "http://127.0.0.1:8000"
+verificacao:
+  comandos:
+    - comando: python3 scripts/verificar_pr.py --base origin/main
+      saida_esperada: 0
+    - comando: grep -l "String(14)" alembic/versions/0003_*.py
+      saida_esperada: 0
+    - comando: grep -q "def downgrade" alembic/versions/0003_*.py
+      saida_esperada: 0
+    - comando: grep -Eq '^> \*\*Tier:\*\* [0-2]' docs/plans/2*.md && grep -q '^## Rollback' docs/plans/2*.md
+      saida_esperada: 0
+  nao_deve_alterar: ["alembic/versions/0001_*.py", "alembic/versions/0002_*.py"]
+  deve_criar: ["alembic/versions/0003_*.py", "docs/plans/2*.md"]
+  nao_deve_criar: []

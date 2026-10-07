@@ -1,0 +1,34 @@
+id: P2-02-spec-ambigua
+pratica: P2-02
+prompt: P2-02-prompt-1
+conjunto: treino
+projeto_base: projeto-teste-17
+insumos:
+  - [exemplos/P2-02/verificar-classificacao.py, scripts/verificar-classificacao.py]
+preparacao:
+  - mkdir -p docs/specs
+  - |-
+    printf '# Spec: chat de atendimento com sugestão de seguro\n\nUm chat que responde dúvidas de clientes sobre produtos e, quando o cliente pede, sugere um plano de seguro adequado ao perfil dele.\n' > docs/specs/2026-10-07-spec-ambigua.md
+  - git add -A && git commit -qm "spec"
+variaveis:
+  caminho da spec: docs/specs/2026-10-07-spec-ambigua.md
+  nome de quem classifica: Ana Souza
+  AAAA-MM-DD: "2026-10-07"
+  quem revisa: analista habilitado
+  texto do aviso ao usuário: "Este conteúdo foi produzido com apoio de IA e revisado por uma pessoa."
+verificacao:
+  comandos:
+    - comando: python3 scripts/verificar-classificacao.py docs/steering/ia.md
+      saida_esperada: 0
+      deve_conter: ["classificação completa"]
+    - comando: |-
+        grep -q '^escopo: alto-risco' docs/steering/ia.md && grep -q '^revisao_profissional: sim' docs/steering/ia.md
+      saida_esperada: 0
+    - comando: |-
+          test "$(git log -1 --format=%s)" = "docs(steering): classificar o risco de IA da aplicação (P2-02)"
+      saida_esperada: 0
+    - comando: test "$(git show --stat --format= HEAD | grep -c '|')" = "1"
+      saida_esperada: 0
+  nao_deve_alterar: ["AGENTS.md", "docs/specs/*.md", "docs/steering/sdd-processo.md"]
+  deve_criar: ["docs/steering/ia.md"]
+  nao_deve_criar: []
