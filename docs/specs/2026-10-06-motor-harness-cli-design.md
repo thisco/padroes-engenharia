@@ -536,6 +536,7 @@ Cada fase termina com checkpoint humano, evidência em `docs/plans/` e `pytest`,
 
 | Fase | Entrega | Critério de saída |
 |---|---|---|
+| **F0 · Laboratório de prompts** ([delta de 2026-10-07](2026-10-07-f0-laboratorio-de-prompts-delta.md)) | `otimizacao/` com runner sem interação nos quatro harnesses, métrica com feedback do verificador, cenários, linha de base de DAD-01, P1-01 e P2-02, otimização em Claude Code e Codex com portão de não regressão, ADR e `ferramentas/gepa.yml` | critérios do §5 do delta; independe da F1 e pode correr em paralelo |
 | **F1 · Modelo e compilador** | bloco `mecanismo` no schema, regras 13 a 17 e 20 do validador, `regras.json`, `nucleo/AGENTS.bloco.md`, gerador do pacote com manifesto; 3 práticas reais convertidas (DAD-01, P1-01, P2-01) | pacote gerado deterministicamente; validador reprova fixtures inválidas |
 | **F2 · Runtime e adaptadores Claude Code e Codex, hooks Git** | `padroes_hook.py`, adaptadores dos dois harnesses, `pre-commit.py`, `commit-msg.py`, fixtures de payload reais, verificador de DAD-01 | sessão real nos dois harnesses nega a edição; fixtures passam; tempo < 1 s |
 | **F3 · Adaptadores Kiro e Antigravity, Gemini parcial** | tabela de ferramentas confirmada no payload, degradação do Kiro, `plugin.json` Agent Plugins, manifestos próprios de Claude e Antigravity | sessão real nos dois harnesses; `claude plugin validate --strict` aprova |
