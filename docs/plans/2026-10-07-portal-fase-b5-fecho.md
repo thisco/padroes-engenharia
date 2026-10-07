@@ -69,7 +69,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   IAC-01 aceita healthcheck herdado da imagem (declarado) e reprova só o desligado; SEG-02 cita
   a imagem do gitleaks por digest; links internos que a `R-LINK-INTERNO` apontar; datas do
   período da avaliação no caso. Prompts alterados: nota "sem reteste (decisão do dono)".
-- [ ] **T3 (guias 3 e 4).** "Brownfield em 5 passos" (repositório existente recebe o scaffold
+- [x] **T3 (guias 3 e 4).** "Brownfield em 5 passos" (repositório existente recebe o scaffold
   1.7.1 sem perder o que tem: constituição, steering, hook, CI, primeira MR com `verificar_pr.py`)
   e "Como escolher e configurar o harness" (os 5 harnesses do radar, a matriz de pontos de
   montagem `.claude`/`.codex`/`.kiro`/`.agents`, a receita de skills, critérios sem ranking).
@@ -99,6 +99,29 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
+
+**T3 fechada (2026-10-07).** Dois guias `tutorial`, com registro em `verificacoes/<slug>.yaml` (a chave
+do guia é o nome do arquivo, como nos dois guias anteriores; o `guia-<slug>` do brief não casa com o
+motor). Referências em ce0ba0f: 12 novas (`codex-hooks`, `codex-subagents`, `codex-sandbox-aprovacoes`,
+`copilot-hooks`, `copilot-custom-agents`, `kiro-hooks`, `kiro-permissions`, `kiro-custom-agents`,
+`kiro-subagents`, `antigravity-hooks`, `antigravity-subagents`, `antigravity-permissions`) e as 14
+existentes dos harnesses, de `agents-md` e de `agent-skills-spec` reabertas com `verificado_em`
+2026-10-07. "Brownfield em 5 passos" em c87fe31: repositório de teste `fretes` (Python, 4 testes,
+README, `pyproject.toml`, `.gitlab-ci.yml` com `testes` e `lint`), scaffold 1.7.1 copiado com
+`rsync --ignore-existing` (colisões: `.gitignore`, `pyproject.toml`, `requirements.txt`), hook e
+permissões com `.gitlab-ci.yml` protegido, CI com os jobs antigos mais as travas (cinco jobs em PASS no
+gitlab-ci-local 4.76.0), `verificar_pr.py` com 2 avisos e depois "nenhum achado"; achados reais no
+texto: `infra/` de exemplo dispara o aviso de threat-model, jobs sem `rules` não rodam na MR, e o
+`ruff check .` existente acusa os scripts do scaffold (`extend-exclude`). "Como escolher e configurar o
+harness" em 8c69454: tabelas por critério com `[ref:]` (o que lê, skills, hooks, permissões, subagentes),
+sem ranking, e script de conferência dos pontos de montagem rodado num projeto 1.7.1 (0 faltando) e num
+anterior à 1.7.0 (2 faltando, saída 1). `ruff` e `ruff format` limpos; `pytest` e `validar.py` acusam
+só `R-PROMPT` (o do motor, que hoje recusa prompt em guia, e o das receitas da T4). Os dois prompts
+estão em `## Com o agente` e **não foram executados**. Preparos em repositórios git com `main`:
+`/Users/thiago/curadoria-a5/b5-guia-brownfield-prompt` (com remoto `-origin.git`; gerado por
+`b5-brownfield-prep.sh`; a execução do guia ficou em `b5-guia-brownfield-exec`) e
+`/Users/thiago/curadoria-a5/b5-guia-harness-prompt` (projeto 1.7.1 sem `.agents/skills` e sem
+`@AGENTS.md`; gerado por `b5-harness-prep.sh`). Teste do prompt contra a prévia do portal.
 
 **T4 fechada (2026-10-07).** Quatro receitas, uma por prática-mãe, cada uma com `executar.sh` em
 `exemplos/<slug>/` (repositório de teste em `/tmp/b5-*`, apagado ao sair) e registro em
