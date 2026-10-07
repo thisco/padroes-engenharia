@@ -1,0 +1,11 @@
+id: conventional-commits
+titulo: "Conventional Commits 1.0.0"
+organizacao: Conventional Commits
+url: https://www.conventionalcommits.org/en/v1.0.0/
+tipo: padrao-aberto
+versao: 1.0.0
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "Summary e Specification: estrutura da mensagem, tipos feat e fix, BREAKING CHANGE e a correlação com o SemVer"
+dominios: [ci-cd]
+notas: "Especificação sob CC BY 3.0; o portal parafraseia. Lida a versão 1.0.0 em inglês."

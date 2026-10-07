@@ -1,0 +1,51 @@
+conteudo: CICD-03
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a versão do SemVer é X.Y.Z de inteiros não negativos, sem zero à esquerda; a major sobe para mudança incompatível, a minor para funcionalidade nova compatível, a correção para conserto compatível
+  ref: semver
+  localizacao: resumo (Maior, Menor e Correção) e itens 2, 6, 7 e 8 da especificação (tradução pt-BR, aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: uma versão lançada não se modifica, e qualquer modificação sai como versão nova
+  ref: semver
+  localizacao: item 3 da especificação (tradução pt-BR)
+  resultado: confirmada
+- texto: no Conventional Commits, fix corresponde a PATCH, feat a MINOR, e o rodapé BREAKING CHANGE ou o ! depois do tipo a MAJOR
+  ref: conventional-commits
+  localizacao: Summary e Specification (versão 1.0.0, aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: o job roda só em pipeline de tag pela regra if $CI_COMMIT_TAG
+  ref: gitlab-job-rules
+  localizacao: 'seção Common if clauses with predefined variables (item "if: $CI_COMMIT_TAG": se mudanças são enviadas para uma tag), aberta na web em 2026-10-07'
+  resultado: confirmada
+- texto: CI_COMMIT_TAG só existe em pipelines de tag
+  ref: gitlab-variaveis-predefinidas
+  localizacao: tabela de variáveis predefinidas, CI_COMMIT_TAG ("Available only in pipelines for tags"), aberta na web em 2026-10-07
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso, e o verificador precisa das tags anteriores
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker e aceita a opção --variable
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação, executores e opção --variable (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/CICD-03/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --variable CI_COMMIT_TAG=v1.2.0
+  ambiente: clone de ~/curadoria-a5/b4-cicd-03-prompt com remoto --bare local (origin), main e tag v1.1.0 publicadas; gitlab-ci-local 4.76.0, Docker, imagem python:3.11; macOS. O pipeline não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'antes: tag v1.2.0 no HEAD sem entrada no CHANGELOG.md, empacotar PASS ("versao": "1.2.0" e o commit), verificar-release "tag v1.2.0 sem entrada ''## [1.2.0] - AAAA-MM-DD'' em CHANGELOG.md", FAIL (saída 1). Depois: tag apagada, entrada com dois itens e commit do changelog, tag recriada: "v1.2.0 com entrada no changelog e artefato do commit da tag", PASS nos dois jobs.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/CICD-03/verificar-release.py
+  comando: python3 scripts/verificar-release.py --tag <tag> (casos de borda, em cópia do projeto de teste)
+  ambiente: clone de ~/curadoria-a5/b4-cicd-03-prompt; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'tag 1.2 e v01.2.0: "não tem a forma vX.Y.Z", saída 1; v9.9.9: "não existe no repositório", saída 1; tag vazia: "ERRO: tag vazia", saída 1; v1.1.5 depois de v1.2.0: "a versão não aumenta: já existe v1.2.0", saída 1; tag v1.2.1 no commit anterior ao do artefato: versão e commit do build-info divergentes e pacote ausente, saída 1; entrada sem item: "não tem nenhum item", saída 1; CHANGELOG.md vazio: "ausente ou vazio", saída 1; dist/ removido: "build-info.json ausente ou vazio", saída 1.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []

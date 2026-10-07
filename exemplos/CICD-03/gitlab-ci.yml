@@ -1,0 +1,40 @@
+# Release rastreável (CICD-03): só roda em pipeline de tag. O job `empacotar` gera o artefato do
+# commit da tag (pacote e build-info.json com versão e commit) e o job `verificar-release` reprova a
+# tag sem forma SemVer, sem entrada no CHANGELOG.md ou com artefato que não é do commit da tag.
+# Requer no repositório: scripts/verificar-release.py (deste Exemplo, sem alterações), CHANGELOG.md
+# e as tags anteriores. O `python3 -I` roda o script em modo isolado.
+stages:
+  - build
+  - release
+
+.so-em-tag:
+  rules:
+    - if: $CI_COMMIT_TAG
+
+empacotar:
+  extends: .so-em-tag
+  stage: build
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - VERSAO="${CI_COMMIT_TAG#v}"
+    - COMMIT=$(git rev-parse "refs/tags/$CI_COMMIT_TAG^{commit}")
+    - mkdir -p dist
+    - git archive --format=tar.gz --prefix="app-$VERSAO/" -o "dist/app-$VERSAO.tar.gz" "$COMMIT"
+    - |
+      printf '{"versao": "%s", "commit": "%s"}\n' "$VERSAO" "$COMMIT" > dist/build-info.json
+    - cat dist/build-info.json
+  artifacts:
+    paths:
+      - dist/
+
+verificar-release:
+  extends: .so-em-tag
+  stage: release
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+  needs: [empacotar]
+  script:
+    - python3 -I scripts/verificar-release.py --tag "$CI_COMMIT_TAG"
