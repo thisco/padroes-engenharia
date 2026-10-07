@@ -23,7 +23,8 @@ afirmacoes:
   ref: docker-compose-up
   localizacao: opções --wait e --wait-timeout
   resultado: confirmada
-- texto: no compose do gateway-poc, gateway depende de db com service_healthy, db tem healthcheck pg_isready, há profiles guardrails, vectors e agents e o vector-connector tem build a partir de um repositório Git
+- texto: no compose do gateway-poc, gateway depende de db com service_healthy, db tem healthcheck pg_isready, há profiles guardrails, vectors e agents e o vector-connector tem build a partir de um repositório
+    Git
   ref: gateway-poc-compose
   localizacao: poc/docker-compose.yml, serviços gateway, db, presidio-*, db-vectors, vector-connector e agente-eco (leitura do arquivo na tag v0.1.0)
   resultado: confirmada
@@ -51,28 +52,28 @@ execucoes:
   comando: python3 verificar-ambiente.py compose-antes.yml ambiente-local-antes.md
   ambiente: cópia temporária do exemplo; Python 3.14.8; Docker 29.5.2; macOS
   resultado: falhou-como-esperado
-  evidencia: "faltam as seções '## Serviços' e '## Ordem de rebuild', saída 1"
+  evidencia: faltam as seções '## Serviços' e '## Ordem de rebuild', saída 1
   data: '2026-10-07'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/compose.yml
-  comando: "sh executar.sh (parte C, com docker compose up -d --build --wait --wait-timeout 90)"
+  comando: sh executar.sh (parte C, com docker compose up -d --build --wait --wait-timeout 90)
   ambiente: cópia temporária do exemplo; Docker 29.5.2; Compose v5.1.3; macOS
   resultado: passou
-  evidencia: 'iac-db e iac-api "Healthy"; versão no ar v1; ao fim "iac-api Up (healthy)" e "iac-db Up (healthy)"; tudo derrubado pelo trap'
+  evidencia: iac-db e iac-api "Healthy"; versão no ar v1; ao fim "iac-api Up (healthy)" e "iac-db Up (healthy)"; tudo derrubado pelo trap
   data: '2026-10-07'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/ambiente-local.md
   comando: python3 verificar-ambiente.py compose.yml ambiente-local.md e a ordem do documento executada na parte C do executar.sh
   ambiente: cópia temporária do exemplo; Docker 29.5.2; macOS
   resultado: passou
-  evidencia: 'verificador saída 0; sem rebuild a versão no ar continua v1, depois de "docker compose build api" e up passa a v2'
+  evidencia: verificador saída 0; sem rebuild a versão no ar continua v1, depois de "docker compose build api" e up passa a v2
   data: '2026-10-07'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/api/app.py
   comando: sh executar.sh (parte C)
   ambiente: cópia temporária do exemplo; imagem python:3.11; Docker 29.5.2; macOS
   resultado: passou
-  evidencia: '/versao devolveu v1 e depois v2 (VERSAO alterada na cópia); /saude 200 com o banco saudável'
+  evidencia: /versao devolveu v1 e depois v2 (VERSAO alterada na cópia); /saude 200 com o banco saudável
   data: '2026-10-07'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/api/Dockerfile
@@ -86,9 +87,17 @@ execucoes:
   comando: sh executar.sh
   ambiente: Docker 29.5.2; Compose v5.1.3; macOS
   resultado: passou
-  evidencia: 'partes A, B e C completas; depois da execução nenhum contêiner nem rede iac- restou (docker ps -a e docker network ls vazios)'
+  evidencia: partes A, B e C completas; depois da execução nenhum contêiner nem rede iac- restou (docker ps -a e docker network ls vazios)
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: IAC-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-iac-01-prompt
+  resultado: passou
+  evidencia: 'verificador 1 antes e 0 depois; ambiente subiu com --wait, /versao respondeu v1, down -v ao fim; commit 82849dd só com compose.yml e docs/ambiente-local.md, sem trailer. Observação do testador:
+    o repositório não tem ferramenta de migration, então o passo 1 da ordem de rebuild ficou sem comando (o verificador aceitou).'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: "provisória: conferência em lote da B.4 pendente"
+  revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'
   achados: []

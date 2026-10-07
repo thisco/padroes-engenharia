@@ -75,6 +75,13 @@ execucoes:
   resultado: passou
   evidencia: 'destruição sem aprovação: saída 1; com aprovação e só criação: saída 0; arquivo vazio, inexistente, não JSON, JSON que não é plano e arquivo de aprovações ausente: saída 1'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: IAC-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-iac-02-prompt, branch feat/2026-10-07-versao-dev
+  resultado: passou
+  evidencia: plan "1 to add, 0 to change, 0 to destroy", verificar-plano.py saiu 0, apply ok, PR.md com as linhas do plano, lockfile não mudou; commit b36c44f, sem trailer
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

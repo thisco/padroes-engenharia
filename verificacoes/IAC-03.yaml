@@ -83,6 +83,13 @@ execucoes:
   resultado: passou
   evidencia: imagens iac-app:1 e iac-app:2 construídas
   data: '2026-10-07'
+- tipo: prompt
+  prompt: IAC-03-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-iac-03-prompt
+  resultado: passou
+  evidencia: verificador 1 antes e 0 depois; iac03-app:2 ficou unhealthy e a volta para :1 usou o mesmo comando; trap derrubou contêiner, rede e imagens; commit adefad7 só com o plano, sem trailer
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'
