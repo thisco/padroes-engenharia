@@ -77,6 +77,13 @@ execucoes:
   resultado: passou
   evidencia: 'QLD-02: o teste falha com o defeito, passa na correção e o gotcha está registrado., saída 0.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: QLD-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-qld-02-prompt
+  resultado: passou
+  evidencia: 'teste parametrizado com 5 casos (5 failed, depois 5 passed); correção com divmod; entrada na PROJECT_MEMORY com os 5 campos; verificar-bug.py saiu 0; commit abde2bf, sem coautoria nem trailer'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: "provisória: conferência em lote da B.4 pendente"
   data: '2026-10-07'

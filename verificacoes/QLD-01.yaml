@@ -73,6 +73,13 @@ execucoes:
   resultado: passou
   evidencia: 'QLD-01: o plano traz o vermelho por ausência da implementação e o verde., saída 0.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: QLD-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-qld-01-prompt
+  resultado: passou
+  evidencia: 'vermelho por NotImplementedError e verde colados no plano; verificar-plano.py saiu 0; commit 32ad506 com test_frete.py, frete.py e docs/plans/frete.md, sem coautoria nem trailer'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: "provisória: conferência em lote da B.4 pendente"
   data: '2026-10-07'

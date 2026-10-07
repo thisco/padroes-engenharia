@@ -88,6 +88,13 @@ execucoes:
   resultado: passou
   evidencia: '"All checks passed!" e "2 files already formatted" no estado depois; F401 e E701 no estado antes.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: QLD-03-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-qld-03-prompt
+  resultado: passou
+  evidencia: 'validar.sh de 1 para 0 e job validar de FAIL para PASS no gitlab-ci-local 4.76.0; commit fix(calculo) só com calculo.py, sem coautoria nem trailer. Observação: o testador viu só as últimas 25 linhas da saída do job no estado antes.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: "provisória: conferência em lote da B.4 pendente"
   data: '2026-10-07'
