@@ -43,14 +43,19 @@ class Harness(Protocol):
 
 
 def executar_cli(
-    argv: list[str], cwd: Path, transcricao: Path, timeout_s: int, stdin: str | None = None
+    argv: list[str],
+    cwd: Path,
+    transcricao: Path,
+    timeout_s: int,
+    stdin: str | None = None,
+    env: dict[str, str] | None = None,
 ) -> tuple[int, str, str]:
     """Roda o CLI, grava stdout bruto em `transcricao` e devolve (código, stdout, stderr).
     Timeout devolve código -1 e stderr "timeout de N s"."""
     transcricao.parent.mkdir(parents=True, exist_ok=True)
     try:
         r = subprocess.run(
-            argv, cwd=cwd, input=stdin, capture_output=True, text=True, timeout=timeout_s
+            argv, cwd=cwd, input=stdin, env=env, capture_output=True, text=True, timeout=timeout_s
         )
     except subprocess.TimeoutExpired as exc:
         parcial = exc.stdout.decode() if isinstance(exc.stdout, bytes) else (exc.stdout or "")

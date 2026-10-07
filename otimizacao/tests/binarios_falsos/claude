@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Finge o `claude -p --output-format json`: grava o prompt recebido e devolve o JSON de resultado.
-printf '%s\n' "$*" > "${FALSO_LOG:-/dev/null}"
+{ printf '%s\n' "$*"; printf '%s\n' "${CLAUDE_CONFIG_DIR:-}"; } > "${FALSO_LOG:-/dev/null}"
 if [ "${FALSO_FALHA:-}" = "timeout" ]; then sleep 30; fi
 if [ "${FALSO_FALHA:-}" = "vazio" ]; then exit 0; fi
 if [ "${FALSO_FALHA:-}" = "erro" ]; then

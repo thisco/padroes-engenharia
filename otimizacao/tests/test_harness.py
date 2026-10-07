@@ -15,6 +15,7 @@ def ambiente(tmp_path, monkeypatch):
     monkeypatch.setenv("PATH", f"{FALSOS}{os.pathsep}{os.environ['PATH']}")
     monkeypatch.setenv("FALSO_LOG", str(tmp_path / "argv.txt"))
     monkeypatch.delenv("FALSO_FALHA", raising=False)
+    monkeypatch.setenv("PADROES_LAB_CLAUDE_CONFIG_DIR", str(tmp_path / "config-claude"))
     (tmp_path / "projeto").mkdir()
     return tmp_path
 
@@ -22,7 +23,7 @@ def ambiente(tmp_path, monkeypatch):
 @pytest.mark.parametrize(
     ("nome", "entrada", "saida", "trecho_argv"),
     [
-        ("claude-code", 120, 30, "--output-format json"),
+        ("claude-code", 200, 30, "--output-format json"),
         ("codex", 200, 40, "--sandbox workspace-write"),
         ("kiro", 90, 10, "--no-interactive"),
         ("antigravity", 70, 9, "--dangerously-skip-permissions"),
@@ -71,3 +72,11 @@ def test_timeout_vira_erro(ambiente, monkeypatch):
     monkeypatch.setenv("FALSO_FALHA", "timeout")
     e = HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t", timeout_s=1)
     assert e.erro == "harness falhou: timeout de 1 s"
+
+
+def test_claude_usa_diretorio_de_configuracao_isolado(ambiente, monkeypatch):
+    destino = ambiente / "config-isolada"
+    monkeypatch.setenv("PADROES_LAB_CLAUDE_CONFIG_DIR", str(destino))
+    HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert (ambiente / "argv.txt").read_text(encoding="utf-8").splitlines()[1] == str(destino)
+    assert destino.is_dir()

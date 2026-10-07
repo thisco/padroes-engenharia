@@ -4,11 +4,21 @@ de API), hooks e MCP do usuário anulados por --settings e --mcp-config com --st
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from otimizacao.harness.base import Execucao, executar_cli, nome_da_transcricao, ultima_linha_json
 
 NOME = "claude-code"
+
+
+def diretorio_de_configuracao() -> Path:
+    """Diretório de configuração isolado do laboratório (sem plugins, skills e hooks do usuário)."""
+    destino = Path(
+        os.environ.get("PADROES_LAB_CLAUDE_CONFIG_DIR") or Path.home() / ".claude-laboratorio"
+    )
+    destino.mkdir(parents=True, exist_ok=True)
+    return destino
 
 
 class ClaudeCode:
@@ -35,7 +45,13 @@ class ClaudeCode:
             "--mcp-config", json.dumps({"mcpServers": {}}, separators=(",", ":")),
             "--strict-mcp-config",
         ]  # fmt: skip
-        codigo, stdout, stderr = executar_cli(argv, cwd, transcricao, timeout_s)
+        codigo, stdout, stderr = executar_cli(
+            argv,
+            cwd,
+            transcricao,
+            timeout_s,
+            env={**os.environ, "CLAUDE_CONFIG_DIR": str(diretorio_de_configuracao())},
+        )
         if codigo == -1:
             return Execucao(NOME, codigo, "", 0, 0, None, transcricao, f"harness falhou: {stderr}")
         dados = ultima_linha_json(stdout, "result") or ultima_linha_json(stdout)
@@ -45,7 +61,11 @@ class ClaudeCode:
                 NOME, codigo, stdout, 0, 0, None, transcricao, f"harness falhou: {motivo}"
             )
         uso = dados.get("usage") or {}
-        entrada = int(uso.get("input_tokens", 0))
+        entrada = (
+            int(uso.get("input_tokens", 0))
+            + int(uso.get("cache_read_input_tokens", 0))
+            + int(uso.get("cache_creation_input_tokens", 0))
+        )
         saida = int(uso.get("output_tokens", 0))
         erro = None
         if dados.get("is_error"):
