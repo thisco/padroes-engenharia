@@ -1,0 +1,83 @@
+conteudo: receita-varrer-segredos-no-ci-e-no-commit
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: segredo nunca é commitado, vive em variável de ambiente em runtime e o scanner roda bloqueante
+    no CI; remover o commit não invalida a credencial, e a regra é rotacionar antes de limpar o histórico
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Segredo'
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o gitleaks git aceita --log-opts (opções do git log, por exemplo um intervalo de commits) e --redact;
+    o código de saída é 1 com vazamento ou erro e se troca com --exit-code
+  ref: gitleaks-readme
+  localizacao: 'README: seções de uso do subcomando git, --log-opts, --redact e exit code'
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o gitleaks tem hook para o pre-commit (pre-commit install; SKIP=gitleaks git commit pula)
+  ref: gitleaks-readme
+  localizacao: 'README: seção de pre-commit'
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: há imagens Docker oficiais (zricethezav/gitleaks e ghcr.io/gitleaks/gitleaks) e o .gitleaksignore
+    trata falso positivo; a detecção usa regras com regex e entropia
+  ref: gitleaks-readme
+  localizacao: 'README: seções Docker, .gitleaksignore e configuração de regras'
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o job roda só em pipeline de merge request, pela regra $CI_PIPELINE_SOURCE == merge_request_event
+  ref: gitlab-mr-pipelines
+  localizacao: seções 'When they run' e de configuração (afirmação já registrada em API-02, referência
+    relida em 2026-10-07)
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: CI_MERGE_REQUEST_TARGET_BRANCH_NAME traz a branch de destino da MR e só existe em pipelines de
+    merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: seção de variáveis de pipelines de merge request (já registrada em API-02)
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: GIT_DEPTH 0 desliga o clone raso e a variável do .gitlab-ci.yml sobrescreve a configuração do
+    projeto
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (já registrada em API-02)
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o merge check chama-se Pipelines must succeed
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido (já registrada em API-02)
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (já registrada em API-02)
+  resultado: confirmada
+  nota: Afirmação já registrada em SEG-02 (fonte aberta em 2026-10-07); reaproveitada nesta receita, sem
+    reabrir a fonte.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/varrer-segredos-no-ci-e-no-commit/executar.sh
+  comando: sh exemplos/varrer-segredos-no-ci-e-no-commit/executar.sh
+  ambiente: Docker 29.5.2; gitlab-ci-local 4.76.0 (npx); imagem zricethezav/gitleaks:v8.30.1 no job; gitleaks
+    8.30.1 local no hook; git 2.50.1; macOS. Repositório de teste em /tmp/b5-seg-XXXXXX com remoto bare
+    local, apagado ao sair; o job não foi executado num GitLab. Chave AWS sintética montada em duas partes
+    por plantar-segredo.sh. Nenhum container ou rede restou depois do roteiro.
+  resultado: falhou-como-esperado
+  evidencia: 'saída 0 do roteiro; hook com a chave em stage: ''RuleID: aws-access-token'', ''leaks found:
+    1'', ''SEG-02: segredo no que está em stage'', nenhum commit novo na branch; commit com --no-verify
+    e job: ''leaks found: 1'' com Secret REDACTED, FAIL; chave trocada pela leitura do ambiente e commit
+    reescrito com --amend (o hook passa, 0 commits varridos): ''no leaks found'', PASS. Saída bruta em
+    curadoria-a5/saidas/b5-receita-varrer-segredos-no-ci-e-no-commit.txt.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.5 pendente'
+  data: '2026-10-07'
+  achados: []
