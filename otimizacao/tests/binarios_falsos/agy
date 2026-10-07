@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 printf '%s\n' "$*" > "${FALSO_LOG:-/dev/null}"
 if [ "${FALSO_FALHA:-}" = "vazio" ]; then exit 0; fi
+if [ "${FALSO_FALHA:-}" = "lixo" ]; then echo lixo; exit 0; fi
+if [ "${FALSO_FALHA:-}" = "falhou" ]; then echo '{"status":"FAILED","error":"quota"}'; exit 1; fi
 echo '{"conversation_id":"c1","status":"SUCCESS","response":"OK\n","num_turns":1,"usage":{"input_tokens":70,"output_tokens":9,"thinking_tokens":4,"cache_read_tokens":0,"total_tokens":79}}'
+if [ "${FALSO_FALHA:-}" = "exit" ]; then exit 1; fi

@@ -69,7 +69,12 @@ class ClaudeCode:
         saida = int(uso.get("output_tokens", 0))
         erro = None
         if dados.get("is_error"):
-            erro = f"harness falhou: is_error ({dados.get('subtype', 'sem subtype')})"
+            erro = (
+                f"harness falhou: is_error ({dados.get('subtype', 'sem subtype')}): "
+                f"{str(dados.get('result', ''))[:200]}"
+            )
+        if codigo != 0 and erro is None:
+            erro = f"harness falhou: exit {codigo}"
         return Execucao(
             NOME,
             codigo,

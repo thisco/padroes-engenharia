@@ -5,9 +5,13 @@ prefixo "harness falhou: "; o chamador transforma em nota 0 com feedback. Nunca 
 
 from __future__ import annotations
 
+import contextlib
 import json
+import os
+import signal
 import subprocess
 import time
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Protocol
@@ -52,17 +56,38 @@ def executar_cli(
 ) -> tuple[int, str, str]:
     """Roda o CLI, grava stdout bruto em `transcricao` e devolve (código, stdout, stderr).
     Timeout devolve código -1 e stderr "timeout de N s"."""
-    transcricao.parent.mkdir(parents=True, exist_ok=True)
     try:
-        r = subprocess.run(
-            argv, cwd=cwd, input=stdin, env=env, capture_output=True, text=True, timeout=timeout_s
+        transcricao.parent.mkdir(parents=True, exist_ok=True)
+        proc = subprocess.Popen(
+            argv,
+            cwd=cwd,
+            env=env,
+            stdin=subprocess.PIPE if stdin is not None else subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            start_new_session=True,
         )
-    except subprocess.TimeoutExpired as exc:
-        parcial = exc.stdout.decode() if isinstance(exc.stdout, bytes) else (exc.stdout or "")
-        transcricao.write_text(parcial, encoding="utf-8")
-        return -1, parcial, f"timeout de {timeout_s} s"
-    transcricao.write_text(r.stdout, encoding="utf-8")
-    return r.returncode, r.stdout, r.stderr
+    except OSError as exc:
+        return -1, "", f"binário indisponível: {exc}"
+    entrada = stdin.encode("utf-8") if stdin is not None else None
+    try:
+        saida, erro = proc.communicate(input=entrada, timeout=timeout_s)
+        pendente = None
+    except subprocess.TimeoutExpired:
+        # Mata o grupo inteiro (netos do CLI incluídos) e colhe a saída parcial.
+        with contextlib.suppress(ProcessLookupError):
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+        saida, erro = proc.communicate()
+        pendente = f"timeout de {timeout_s} s"
+    texto = (saida or b"").decode("utf-8", errors="replace")
+    texto_erro = (erro or b"").decode("utf-8", errors="replace")
+    try:
+        transcricao.write_text(texto, encoding="utf-8")
+    except OSError as exc:
+        return -1, texto, f"transcrição não gravada: {exc}"
+    if pendente:
+        return -1, texto, pendente
+    return proc.returncode, texto, texto_erro
 
 
 def ultima_linha_json(stdout: str, tipo: str | None = None) -> dict | None:
@@ -82,7 +107,4 @@ def ultima_linha_json(stdout: str, tipo: str | None = None) -> dict | None:
 
 
 def nome_da_transcricao(transcricoes: Path, harness: str) -> Path:
-    return (
-        transcricoes
-        / f"{harness}-{time.strftime('%Y%m%d-%H%M%S')}-{time.time_ns() % 1000000:06d}.jsonl"
-    )
+    return transcricoes / f"{harness}-{time.strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:8]}.jsonl"

@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 printf '%s\n' "$*" > "${FALSO_LOG:-/dev/null}"
+if [ "${FALSO_FALHA:-}" = "vazio" ]; then exit 0; fi
+if [ "${FALSO_FALHA:-}" = "formato" ]; then echo '{"type":"outra"}'; exit 0; fi
 echo '{"type":"assistant","text":"OK"}'
 echo '{"type":"usage","input_tokens":90,"output_tokens":10}'
+if [ "${FALSO_FALHA:-}" = "exit" ]; then exit 1; fi

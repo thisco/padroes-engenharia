@@ -1,11 +1,13 @@
 """Cada harness sem interação: argv certo, tokens lidos, falhas viram Execucao.erro."""
 
 import os
+import time
 from pathlib import Path
 
 import pytest
 
 from otimizacao.harness import HARNESSES
+from otimizacao.harness.base import nome_da_transcricao
 
 FALSOS = Path(__file__).parent / "binarios_falsos"
 
@@ -65,7 +67,10 @@ def test_stdout_vazio_vira_erro(ambiente, monkeypatch, nome):
 def test_is_error_do_claude_vira_erro(ambiente, monkeypatch):
     monkeypatch.setenv("FALSO_FALHA", "erro")
     e = HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t")
-    assert e.erro == "harness falhou: is_error (error_during_execution)" and e.tokens_entrada == 10
+    assert (
+        e.erro.startswith("harness falhou: is_error (error_during_execution)")
+        and e.tokens_entrada == 10
+    )
 
 
 def test_timeout_vira_erro(ambiente, monkeypatch):
@@ -80,3 +85,76 @@ def test_claude_usa_diretorio_de_configuracao_isolado(ambiente, monkeypatch):
     HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t")
     assert (ambiente / "argv.txt").read_text(encoding="utf-8").splitlines()[1] == str(destino)
     assert destino.is_dir()
+
+
+def test_timeout_nao_deixa_processo_orfao(ambiente, monkeypatch):
+    arquivo_pid = ambiente / "neto.pid"
+    monkeypatch.setenv("FALSO_FALHA", "timeout")
+    monkeypatch.setenv("FALSO_PID", str(arquivo_pid))
+    HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t", timeout_s=1)
+    pid = int(arquivo_pid.read_text(encoding="utf-8"))
+    for _ in range(20):
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return
+        time.sleep(0.1)
+    pytest.fail("o processo neto (sleep 30) sobreviveu ao timeout")
+
+
+def test_timeout_com_utf8_cortado_nao_levanta(ambiente, monkeypatch):
+    monkeypatch.setenv("FALSO_FALHA", "timeout-utf8")
+    e = HARNESSES["claude-code"].executar("x", ambiente / "projeto", ambiente / "t", timeout_s=1)
+    assert e.erro == "harness falhou: timeout de 1 s"
+
+
+def test_binario_ausente_vira_erro(ambiente, monkeypatch, tmp_path):
+    vazio = tmp_path / "vazio"
+    vazio.mkdir()
+    monkeypatch.setenv("PATH", str(vazio))
+    e = HARNESSES["kiro"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro is not None and e.erro.startswith("harness falhou: binário indisponível")
+
+
+def test_nomes_de_transcricao_sao_unicos(tmp_path):
+    nomes = {nome_da_transcricao(tmp_path, "codex") for _ in range(50)}
+    assert len(nomes) == 50
+
+
+def test_kiro_formato_inesperado_vira_erro(ambiente, monkeypatch):
+    monkeypatch.setenv("FALSO_FALHA", "formato")
+    e = HARNESSES["kiro"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro == "harness falhou: formato de saída do kiro não reconhecido"
+
+
+@pytest.mark.parametrize("nome", ["codex", "kiro"])
+def test_stdout_vazio_codex_e_kiro(ambiente, monkeypatch, nome):
+    monkeypatch.setenv("FALSO_FALHA", "vazio")
+    e = HARNESSES[nome].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro == "harness falhou: saída vazia"
+
+
+@pytest.mark.parametrize("nome", ["claude-code", "codex", "kiro", "antigravity"])
+def test_exit_diferente_de_zero_vira_erro(ambiente, monkeypatch, nome):
+    monkeypatch.setenv("FALSO_FALHA", "exit")
+    e = HARNESSES[nome].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro == "harness falhou: exit 1"
+
+
+def test_codex_sem_turn_completed(ambiente, monkeypatch):
+    monkeypatch.setenv("FALSO_FALHA", "sem-turno")
+    e = HARNESSES["codex"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro is not None and e.erro.startswith("harness falhou: sem turn.completed")
+
+
+def test_antigravity_status_de_falha_traz_o_erro(ambiente, monkeypatch):
+    monkeypatch.setenv("FALSO_FALHA", "falhou")
+    e = HARNESSES["antigravity"].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro is not None and "quota" in e.erro
+
+
+@pytest.mark.parametrize("nome", ["claude-code", "antigravity"])
+def test_saida_que_nao_e_json(ambiente, monkeypatch, nome):
+    monkeypatch.setenv("FALSO_FALHA", "lixo")
+    e = HARNESSES[nome].executar("x", ambiente / "projeto", ambiente / "t")
+    assert e.erro is not None and e.erro.startswith("harness falhou: saída não é JSON")

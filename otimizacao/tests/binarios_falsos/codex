@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 printf '%s\n' "$*" > "${FALSO_LOG:-/dev/null}"
+if [ "${FALSO_FALHA:-}" = "vazio" ]; then exit 0; fi
+if [ "${FALSO_FALHA:-}" = "sem-turno" ]; then echo '{"type":"thread.started","thread_id":"t1"}'; exit 0; fi
 echo '{"type":"thread.started","thread_id":"t1"}'
 echo '{"type":"item.completed","item":{"type":"agent_message","text":"OK"}}'
 echo '{"type":"turn.completed","usage":{"input_tokens":200,"cached_input_tokens":150,"output_tokens":40}}'
 for a in "$@"; do if [ "$ultimo" = "-o" ]; then echo "OK" > "$a"; fi; ultimo="$a"; done
+if [ "${FALSO_FALHA:-}" = "exit" ]; then exit 1; fi

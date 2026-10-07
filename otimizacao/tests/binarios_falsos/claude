@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Finge o `claude -p --output-format json`: grava o prompt recebido e devolve o JSON de resultado.
 { printf '%s\n' "$*"; printf '%s\n' "${CLAUDE_CONFIG_DIR:-}"; } > "${FALSO_LOG:-/dev/null}"
-if [ "${FALSO_FALHA:-}" = "timeout" ]; then sleep 30; fi
+if [ "${FALSO_FALHA:-}" = "timeout" ]; then sleep 30 & echo $! > "${FALSO_PID:-/dev/null}"; wait; fi
+if [ "${FALSO_FALHA:-}" = "timeout-utf8" ]; then printf 'a\xc3'; sleep 30; fi
 if [ "${FALSO_FALHA:-}" = "vazio" ]; then exit 0; fi
+if [ "${FALSO_FALHA:-}" = "lixo" ]; then echo lixo; exit 0; fi
 if [ "${FALSO_FALHA:-}" = "erro" ]; then
   echo '{"type":"result","subtype":"error_during_execution","is_error":true,"result":"falhou","usage":{"input_tokens":10,"output_tokens":2}}'; exit 1
 fi
 echo '{"type":"result","subtype":"success","is_error":false,"result":"OK","session_id":"s1","total_cost_usd":0.01,"num_turns":1,"usage":{"input_tokens":120,"cache_read_input_tokens":80,"output_tokens":30}}'
+if [ "${FALSO_FALHA:-}" = "exit" ]; then exit 1; fi

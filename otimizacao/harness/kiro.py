@@ -1,6 +1,7 @@
 """Kiro CLI sem interação: `kiro-cli chat --no-interactive --trust-all-tools --output-format
-stream-json`. O formato exato dos eventos de uso é confirmado na sonda (passo 5); até lá o
-parser aceita `usage` ou `input_tokens` em qualquer linha JSON."""
+stream-json`. O formato NÃO foi validado por sonda (o CLI não estava autenticado); o parser só
+aceita linhas JSON com `type == "usage"` (tokens) e `type == "assistant"` (texto). Sem linha
+`assistant` em saída com exit 0, falha com formato não reconhecido."""
 
 from __future__ import annotations
 
@@ -38,8 +39,11 @@ class Kiro:
             )
         uso = ultima_linha_json(stdout, "usage") or {}
         uso = uso.get("usage", uso)
-        texto = ultima_linha_json(stdout, "assistant") or {}
+        assistente = ultima_linha_json(stdout, "assistant")
+        texto = assistente or {}
         erro = None if codigo == 0 else f"harness falhou: exit {codigo}"
+        if erro is None and assistente is None:
+            erro = "harness falhou: formato de saída do kiro não reconhecido"
         return Execucao(
             NOME,
             codigo,
