@@ -4,8 +4,8 @@ organizacao: Cognitect (Michael Nygard)
 url: https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions
 tipo: analista
 publicado_em: 2011-11-15
-verificado_em: 2026-10-04
+verificado_em: 2026-10-07
 verificacao: V
 localizacao: "texto principal: definição de ADR e seções Title, Context, Decision, Status e Consequences"
-dominios: [construir-com-ia]
+dominios: [construir-com-ia, arquitetura]
 notas: null

@@ -1,0 +1,71 @@
+conteudo: ARQ-01
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a ADR tem título, contexto (forças sem juízo de valor), decisão em voz ativa, status (proposto,
+    aceito, descontinuado, substituído) e consequências (boas, ruins e neutras)
+  ref: nygard-adr
+  localizacao: Nygard, texto principal (seções Title, Context, Decision, Status, Consequences; numeração
+    e tamanho)
+  resultado: confirmada
+- texto: as ADRs são numeradas em sequência sem reaproveitar número, têm uma ou duas páginas e a decisão
+    antiga é mantida marcada como substituída
+  ref: nygard-adr
+  localizacao: seção de numeração e tamanho e de decisões substituídas
+  resultado: confirmada
+- texto: com os registros, a motivação das decisões anteriores fica visível para todos, presentes e futuros
+  ref: nygard-adr
+  localizacao: citação 'The motivation behind previous decisions is visible for everyone, present and
+    future'
+  resultado: confirmada
+- texto: o modelo do scaffold tem Status (proposta, aceita, substituída por ADR-NNNN, descontinuada),
+    Data e as seções Contexto, Decisão e Consequências
+  ref: sdd-scaffold-modelo-adr
+  localizacao: MODELO-adr.md, cabeçalho e seções
+  resultado: confirmada
+- texto: o steering de arquitetura manda que cada decisão de difícil reversão tenha uma ADR em docs/adr/
+  ref: sdd-scaffold-steering-arquitetura
+  localizacao: seção Decisões-chave, comentário de preenchimento
+  resultado: confirmada
+- texto: a mudança destrutiva em assinatura de API ou modelo de banco só acontece com ADR aprovada
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção Regressão estrutural
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/ARQ-01/verificar-adr.py
+  comando: python3 scripts/verificar-adr.py (com a ADR incompleta, com a completa, com --aceita 0002 e
+    proposta, com --aceita 0003 inexistente, sem ADR e com diretório inexistente)
+  ambiente: cópia de projeto-teste-17 em /tmp/b4a1; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'incompleta: 5 problemas, saída 1; completa: ''ARQ-01: 2 ADRs completas.'', saída 0; --aceita
+    0002 com status proposta: saída 1; --aceita 0002 com aceita: saída 0; --aceita 0003: saída 1; só o
+    MODELO-adr.md: ''nenhuma ADR NNNN-<slug>.md em docs/adr'', saída 1; diretório inexistente: saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-01/adr-antes.md
+  comando: python3 scripts/verificar-adr.py docs/adr (copiada como docs/adr/0002-fila-de-tarefas.md)
+  ambiente: cópia de projeto-teste-17 em /tmp/b4a1; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'Status ausente; Contexto e Decisão curtos demais; Consequências ausente; Decisão fora da
+    voz ativa. ''ARQ-01: 5 problema(s) em 2 ADR(s) (acima).'', saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-01/adr.md
+  comando: python3 scripts/verificar-adr.py docs/adr (copiada como docs/adr/0002-fila-de-tarefas.md)
+  ambiente: cópia de projeto-teste-17 em /tmp/b4a1; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: '''ARQ-01: 2 ADRs completas.'', saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-01/adr-0001.md
+  comando: python3 scripts/verificar-adr.py docs/adr (copiada como docs/adr/0001-postgresql-como-banco-principal.md)
+  ambiente: cópia de projeto-teste-17 em /tmp/b4a1; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: ADR 0001 sem problema nas duas execuções; sem ela, a numeração da 0002 reprova ('numeração
+    com lacuna (falta 0001)').
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
