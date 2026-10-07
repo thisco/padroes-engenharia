@@ -91,3 +91,22 @@ def test_insumo_inexistente_e_base_desconhecida(tmp_path, monkeypatch):
     )
     with pytest.raises(projeto.ProjetoInvalido, match="projeto_base desconhecido"):
         projeto.preparar(desconhecido, _monorepo(tmp_path), tmp_path / "copia2")
+
+
+def test_remoto_bare_na_copia_fica_fora_do_base(tmp_path, monkeypatch):
+    monkeypatch.setitem(projeto.BASES, "fake", _base(tmp_path))
+    preparacao = (
+        "git init --bare -q .remoto && git remote add origin .remoto && git add -A && "
+        "git -c user.name=l -c user.email=l@l commit -qm preparado && git push -q origin main"
+    )
+    copia = projeto.preparar(_cenario(preparacao=[preparacao]), _monorepo(tmp_path), tmp_path / "c")
+
+    def git(*args):
+        return subprocess.run(
+            ["git", "-C", str(copia), *args], capture_output=True, text=True, check=True
+        ).stdout
+
+    assert ".remoto/" not in git("ls-files")
+    assert git("status", "--porcelain") == ""
+    assert (copia / ".remoto" / "HEAD").is_file()
+    assert git("rev-parse", "laboratorio-base") == git("rev-parse", "HEAD")

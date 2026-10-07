@@ -17,6 +17,7 @@ from otimizacao.cenarios import Cenario
 
 BASES: dict[str, Path] = {"projeto-teste-17": Path.home() / "curadoria-a5" / "projeto-teste-17"}
 TAG_BASE = "laboratorio-base"
+PASTA_REMOTO = ".remoto"
 AMBIENTE_GIT = {
     "GIT_AUTHOR_NAME": "laboratorio",
     "GIT_AUTHOR_EMAIL": "laboratorio@local",
@@ -43,6 +44,11 @@ def preparar(cenario: Cenario, raiz_monorepo: Path, destino: Path) -> Path:
         (destino / alvo).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(arquivo, destino / alvo)
     _git(destino, "init", "-q", "-b", "main")
+    # o remoto bare da preparação vive na cópia, mas não pode entrar no `base` nem no diff
+    exclude = destino / ".git" / "info" / "exclude"
+    exclude.parent.mkdir(parents=True, exist_ok=True)
+    with open(exclude, "a", encoding="utf-8") as arquivo:
+        arquivo.write(f"{PASTA_REMOTO}/\n")
     for comando in cenario.preparacao:
         resultado = subprocess.run(
             comando, shell=True, cwd=destino, capture_output=True, text=True, env=_env()
