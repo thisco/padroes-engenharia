@@ -97,3 +97,6 @@ revisao_adversarial:
       de allOf, imprime ''0 mudança(s), todas compatíveis'' e sai 0; a saída não avisa.'
     tratamento: 'Tratado no texto: os limites do Como verificar dizem que schema sem type não é comparado e que
       a saída não avisa, e pedem a conferência na revisão. O verificador não foi alterado.'
+  - afirmacao: 'exemplos/API-01/comparar-contratos.py: aviso de schema sem type'
+    problema: '[baixo] pendência herdada da B.3: a saída não avisava do schema sem type não comparado.'
+    tratamento: 'Tratado em 2026-10-07: o verificador imprime "AVISO: N schema(s) sem type não comparado(s)" com os lugares, sem mudar a saída; rodado nos dois estados (contrato sem allOf: sem aviso, saídas do corpo iguais; contrato com allOf e telefone removido: aviso e saída 0), com base-allof.yaml e proposta-allof.yaml do Exemplo.'

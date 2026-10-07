@@ -1,0 +1,62 @@
+# Variante do contrato v1 com o schema Cliente dentro de allOf (sem type no topo).
+# info.version é a versão do contrato: ela sobe a major quando a mudança é incompatível.
+openapi: 3.2.1
+info:
+  title: API de clientes
+  version: 1.0.0
+paths:
+  /clientes/{id}:
+    get:
+      summary: Consulta um cliente
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: O cliente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+        "404":
+          description: Cliente inexistente
+  /clientes:
+    post:
+      summary: Cadastra um cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClienteNovo"
+      responses:
+        "201":
+          description: O cliente criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+components:
+  schemas:
+    Cliente:
+      allOf:
+        - type: object
+          required: [id, nome]
+          properties:
+            id:
+              type: integer
+            nome:
+              type: string
+            telefone:
+              type: string
+    ClienteNovo:
+      type: object
+      required: [nome]
+      properties:
+        nome:
+          type: string
+        telefone:
+          type: string

@@ -144,6 +144,17 @@ compatível: endpoint novo: /clientes/{id}/historico
 API-01: 3 mudança(s), todas compatíveis (versão 1.0.0 -> 1.1.0).
 ```
 
+Um schema sem `type` não é comparado, e o verificador avisa. Com o contrato em `allOf`
+(`base-allof.yaml`) e a proposta `2.0.0` que remove `telefone` de dentro dele
+(`proposta-allof.yaml`), a saída é:
+
+```text
+AVISO: 2 schema(s) sem type não comparado(s), confira na revisão: GET /clientes/{id} 200; POST /clientes 201
+API-01: 0 mudança(s), todas compatíveis (versão 1.0.0 -> 2.0.0).
+```
+
+O código de saída é 0: o aviso não reprova, só chama a pessoa que revisa.
+
 ### Para o agente
 
 Regra curta para o `AGENTS.md` do projeto:
@@ -196,9 +207,9 @@ aponte um arquivo existente, e o arquivo ausente ou inválido. A API-02 o liga a
 Os limites: o verificador cobre as regras da tabela para os caminhos, os parâmetros e os schemas
 de `application/json`, seguindo `$ref` internos; não olha `enum`, formato, `oneOf`, `allOf`, nem
 a semântica dos campos, e não confere se o código segue o contrato (o teste de contrato da API-02
-faz isso). Um schema sem `type` (por exemplo, o que só tem `allOf`) não é comparado, e a saída não avisa: se
-remover um campo dentro dele, o verificador sai com 0 e diz que todas as mudanças são compatíveis,
-então confira esses schemas na revisão. Ele não lê o conteúdo da ADR, só que o arquivo existe. A classificação é a da tabela
+faz isso). Um schema sem `type` (por exemplo, o que só tem `allOf`) não é comparado: se remover um campo
+dentro dele, o verificador sai com 0 e diz que todas as mudanças são compatíveis, mas imprime uma
+linha de `AVISO` com a contagem e os lugares, e esses schemas pedem conferência na revisão. Ele não lê o conteúdo da ADR, só que o arquivo existe. A classificação é a da tabela
 da prática: uma mudança "compatível" ainda quebra o consumidor que rejeita campo desconhecido.
 Existem ferramentas de código aberto que fazem o diff de contratos com um conjunto de regras
 bem maior; o oasdiff, por exemplo, tem o subcomando `breaking`, que mostra só as mudanças que
