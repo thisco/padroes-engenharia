@@ -72,10 +72,10 @@ def test_template_de_mr_traz_os_seis_passos_da_curadoria():
     assert "CHANGELOG.md" in TEMPLATE
 
 
-def test_versao_0_3_0_no_config_e_no_changelog():
+def test_versao_1_0_0_no_config_e_no_changelog():
     config = yaml.safe_load((fabrica.RAIZ / "portal/config.yml").read_text(encoding="utf-8"))
     changelog = (fabrica.RAIZ / "CHANGELOG.md").read_text(encoding="utf-8")
-    assert config["versao"] == "0.3.0"
+    assert config["versao"] == "1.0.0"
     assert "## [0.3.0] - 2026-10-05" in changelog
     nao_publicado = changelog.split("## [Não publicado]")[1].split("## [0.1.0]")[0]
     for trecho in ("### Alterado", "### Adicionado", "### Removido", "0.2.0", "ferramentas"):
