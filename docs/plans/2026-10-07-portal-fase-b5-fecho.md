@@ -88,12 +88,12 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [x] **T6.** Testes de prompt em sessão nova: 2 guias, 4 receitas, 1 starter.
 - [x] **T7.** `CHANGELOG.md` com a versão da fase B fechada (proposta: `0.4.0`; o dono decide no
   checkpoint); lint; suíte; validar; dois builds idênticos; `public/` regenerado.
-- [ ] **T8 (conferência em lote, ADR 0005)** do conteúdo de T2 a T5, com reconferência; a T1 já
+- [x] **T8 (conferência em lote, ADR 0005)** do conteúdo de T2 a T5, com reconferência; a T1 já
   terá a revisão forte.
-- [ ] **T9 (três revisões de produto, §23).** Frontend, mockups e conteúdo, em paralelo, cada
+- [x] **T9 (três revisões de produto, §23).** Frontend, mockups e conteúdo, em paralelo, cada
   uma em sessão nova, com o build servido, as duas specs e sem este plano, como na A.5 (M15).
   Relatórios em `docs/research/2026-10-AA-revisao-b5-{frontend,mockups,conteudo}.md`.
-- [ ] **T10.** Tratar os achados de T8 e T9 (sem reteste de prompt).
+- [x] **T10.** Tratar os achados de T8 e T9 (sem reteste de prompt).
 - [ ] **T11 (merge e tag).** `main` está no merge-base (`6b910a9`): merge por fast-forward,
   tag `v<versão>` anotada. Se o classificador barrar, o comando exato vai ao dono.
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
@@ -241,6 +241,45 @@ removidas em seguida. Gerado: `public/guias/` com 4 guias, `public/receitas/` co
 public/espinha.md`: 11 linhas; nenhum "PRÉVIA" em `public/`. A T6 (testes de prompt em sessão nova) não
 foi executada: os preparos estão prontos e nenhuma execução de prompt foi registrada; a prova completa
 do starter `gateway-poc` aguarda o `docker compose up` do dono (o classificador barrou o testador).
+
+**T8, T9 e T10 fechadas (2026-10-07).** T8: conferência em lote (seção abaixo, 1 alto, 3 médios e 17 baixos). T9:
+três revisões de produto, em `docs/research/2026-10-07-revisao-b5-{frontend,mockups,conteudo}.md`, com notas 7,0/10 no
+frontend (antes 4,5), nenhum alto em mockups e nenhum alto em conteúdo (utilidade 8, evidência 9, executabilidade 8,
+cobertura 7, clareza 7, consistência 8). T10, commits: af28436 (azul), 9f926ee (iCloud), e358df1 (dado de teste), 9266a18
+(SKILL.md), 1f26a6f (conteúdo e registros), 598fc50 (CSS dos médios de frontend). Suíte: 719 passed e 1 failed no
+meio (`test_sai_0_no_repositorio_real`, só por `R-GERADO-DIVERGENTE` do README, que o build final resolve).
+Prompt alterado sem reteste (decisão do dono): o do guia 3 (`rm -rf infra`), com a nota no registro.
+
+Achado -> tratamento, uma linha cada:
+- B5-A1 (radar com azul em `adotar`/`experimentar`) -> `.st.adotar` com contorno de tinta e `.st.experimentar` tracejado, neutros; teste `tests/unidade/test_tema_azul.py` (5 falhas antes).
+- B5-A2 (quadro "Como combinar tudo" azul) -> fundo `--papel-2` e borda `--traco`; mesmo teste.
+- T8 alto, guia 4 (listagem pelas cinco skills) -> frase reescrita: o registro prova o script do passo 4 e o prompt no Claude Code; a listagem pelo harness não foi conferida.
+- Guia 3, MR edita o CI -> parágrafo no passo 4 e item em "O que fica com você" (Pipelines must succeed, main protegida, CODEOWNERS em `.gitlab-ci.yml` e `scripts/`).
+- Guia 3, `rm -rf infra` -> confere `git ls-files infra`; se a pasta era do repositório, remove só o que o scaffold trouxe; prompt alterado (sem reteste).
+- Download sem hash (4 receitas e guia 3) -> declarado em "Antes de começar"/"Limites"; na de segredos, o `pre-commit.sh` vira hook e merece leitura; prompts intactos.
+- Mockups M1 (6 respostas "(candidata)") -> padrões 2 a 7 ligados a P1-09, P1-03, QLD-01, P1-09, ARQ-02 e P1-03; chip de força aparece; o que falta de prática segue dito como candidato.
+- Mockups L6 ("Por que confiar") -> texto alinhado à ADR 0005.
+- Conteúdo M1 (marcador cru no gateway) -> diretiva na coluna 0; conferido no HTML e no `.md` gerados.
+- Conteúdo M2 (guia 1) -> branch do Tier 2, comandos de merge, `app/pedidos.py` provisório (rodado: 3 testes falham) e pastas do PRD, spec e plano.
+- Conteúdo M3 (ARQ-03) -> árvore de pastas com o destino de cada arquivo do Exemplo.
+- Conteúdo M4 (receita de contrato) -> o `curl -o` substitui um `.gitlab-ci.yml` existente: guarda e instrução de mesclar (também na de segredos).
+- Conteúdo M7 (LGPD-01) -> `exemplos/LGPD-01/dados-antes.md`, rodado nos dois estados (saída 1 e 0), com execução registrada.
+- T1 (6) iCloud -> `gerar.py` varre `<nome> <n>` também no início do build (teste vermelho antes).
+- T1 (16) `SKILL.md:136` -> lista `passou | falhou | falhou-como-esperado`, `motivo` no `falhou` (só essa linha; alinhamento ao schema).
+- Baixos: `CHANGELOG.md:40` (sem reteste, decisão do dono); "SGD" fora dos testes; segundo laço do gateway sai com 1; frase truncada da receita de segredos; permissões do Claude Code com `[ref:claude-code-permissions]` (página aberta em 2026-10-07); registros da B.5 com `revisor` "conferência em lote (ADR 0005), sessão independente" e os achados do slug.
+- Frontend médios só CSS: B5-M1 (`max-width: 100%` no select do filtro) e B5-M3 (`align-items: start` na fileira do ninho), com teste.
+
+Pendências pós-v1 (não tratadas):
+- Mockups M2: ficha de conceito sem "Práticas".
+- Mockups M3: ninho da IA no produto vertical (decisão do dono em 2026-10-06, plano `2026-10-06-ninho-produto-na-coluna.md`).
+- Mockups M4 e M5: subtítulo da faixa e nome curto na célula da espinha.
+- Conteúdo M5: roteamento por tarefa para agente (`llms.txt` sem `resumo`, consulta só nas fases 0 e 7).
+- Conteúdo M6: backlog público das 15 células "a definir", por célula.
+- Meta de 55 práticas (hoje 48, o mínimo do §10).
+- `pytest-bdd` sem ficha própria no radar.
+- Frontend médios de template: B5-M1 (radar em cartões abaixo de 600px), B5-M2 (duas linguagens de status), B5-M4 (abertura de O problema), B5-M5 (mini-espinha da Início), B5-M6 (busca a 400px) e os baixos B5-L1 a L4.
+- T1 (10) `BASE:` de YAML e `BASE :=` de Makefile não reconhecidos; (11) link dentro de HTML bruto não conferido; (17) SemVer do `dono` obrigatório no caso, a decidir no checkpoint.
+- Baixos da T8 não tratados: prompt do guia 3 contorna o `deny` por shell; `<pasta>` do prompt do guia 4; "Confira" sem dizer que o endpoint novo é só do roteiro; `--estrito` ou aviso no `comparar-contratos.py` (AVISO sai 0); `verificar-slo.py` aceita seções dentro de cerca de código; prompt de segredos sem "repositório descartável"; `[ref:id]` cru nas saídas `.md` (decisão: manter ou resolver no motor); gitleaks "feature-complete" na ficha; gitleaks sem Segurança nos domínios; `{URL do portal}` copiado à mão (variável de shell).
 
 ## Conferência em lote: 2026-10-07 — achados
 
