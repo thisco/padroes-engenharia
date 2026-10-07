@@ -76,6 +76,15 @@ def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
     verificacao = d.get("verificacao")
     if not isinstance(verificacao, dict) or not verificacao.get("comandos"):
         raise CenarioInvalido(f"{arquivo}: verificacao sem comandos")
+
+    def lista(origem: dict[str, Any], campo: str) -> list[Any]:
+        valor = origem.get(campo)
+        if valor is None:
+            return []
+        if not isinstance(valor, list):
+            raise CenarioInvalido(f"{arquivo}: {campo} deve ser lista")
+        return valor
+
     comandos = []
     for c in verificacao["comandos"]:
         if not isinstance(c.get("saida_esperada"), int) or isinstance(
@@ -83,9 +92,9 @@ def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
         ):
             raise CenarioInvalido(f"{arquivo}: saida_esperada deve ser inteiro")
         comandos.append(
-            Comando(str(c["comando"]), c["saida_esperada"], tuple(c.get("deve_conter") or ()))
+            Comando(str(c["comando"]), c["saida_esperada"], tuple(lista(c, "deve_conter")))
         )
-    insumos = tuple((str(a), str(b)) for a, b in (d.get("insumos") or []))
+    insumos = tuple((str(a), str(b)) for a, b in lista(d, "insumos"))
     variaveis = {str(k): str(v) for k, v in (d.get("variaveis") or {}).items()}
     return Cenario(
         id=texto("id"),
@@ -94,12 +103,12 @@ def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
         conjunto=conjunto,
         projeto_base=texto("projeto_base"),
         insumos=insumos,
-        preparacao=tuple(str(p) for p in (d.get("preparacao") or [])),
+        preparacao=tuple(str(p) for p in lista(d, "preparacao")),
         variaveis=variaveis,
         verificacao=Verificacao(
             comandos=tuple(comandos),
-            nao_deve_alterar=tuple(verificacao.get("nao_deve_alterar") or ()),
-            deve_criar=tuple(verificacao.get("deve_criar") or ()),
-            nao_deve_criar=tuple(verificacao.get("nao_deve_criar") or ()),
+            nao_deve_alterar=tuple(lista(verificacao, "nao_deve_alterar")),
+            deve_criar=tuple(lista(verificacao, "deve_criar")),
+            nao_deve_criar=tuple(lista(verificacao, "nao_deve_criar")),
         ),
     )

@@ -74,3 +74,18 @@ def test_variavel_nao_declarada_no_prompt_e_erro_so_na_substituicao(tmp_path):
     escrever(tmp_path, "c.yaml", VALIDO)
     (c,) = carregar_cenarios(tmp_path)
     assert c.variaveis == {"mudança": "a coluna cpf precisa aceitar 14 caracteres"}
+
+
+@pytest.mark.parametrize(
+    ("antigo", "novo", "campo"),
+    [
+        ('deve_conter: ["nenhum achado"]', 'deve_conter: "nenhum achado"', "deve_conter"),
+        ("nao_deve_criar: []", 'nao_deve_criar: "x.txt"', "nao_deve_criar"),
+        ("preparacao:\n  - git init -q\n", "preparacao: git init -q\n", "preparacao"),
+    ],
+)
+def test_string_onde_se_espera_lista_reprova(tmp_path, antigo, novo, campo):
+    assert antigo in VALIDO
+    escrever(tmp_path, "ruim.yaml", VALIDO.replace(antigo, novo, 1))
+    with pytest.raises(CenarioInvalido, match=f"{campo} deve ser lista"):
+        carregar_cenarios(tmp_path)
