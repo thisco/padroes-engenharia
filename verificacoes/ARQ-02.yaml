@@ -1,0 +1,98 @@
+conteudo: ARQ-02
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a skill amarra diagrama, IaC e ambiente local com um manifesto e um script; quando divergem,
+    cada um parece correto até alguém confiar no errado
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: abertura da skill (parágrafo depois do título)
+  resultado: confirmada
+- texto: o ciclo é compose local, módulo de nuvem, diagrama, manifesto e ADR se a decisão for de difícil
+    reversão, na mesma branch; separar em PRs diferentes é a forma mais comum de o drift começar
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção O ciclo, sempre na mesma branch
+  resultado: confirmada
+- texto: o manifesto declara por componente drawio_label, tofu_modulo e compose_servicos
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção O manifesto, tabela
+  resultado: confirmada
+- texto: o PR que toca infraestrutura anexa a saída resumida do plan da ferramenta de IaC
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção PR que toca infraestrutura
+  resultado: confirmada
+- texto: o exit code do script de drift é sempre 0, e o relatório informa e não bloqueia
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção A verificação
+  resultado: confirmada
+- texto: tratar o relatório de drift como ruído faz o script virar decoração e o manifesto apodrecer
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: tabela Erros comuns
+  resultado: confirmada
+- texto: o script compara o manifesto com rótulos do diagrama, módulos de IaC e serviços do compose e
+    retorna 0 sempre
+  ref: sdd-scaffold-drift-arquitetura
+  localizacao: docstring, verificar() e main() (return 0)
+  resultado: confirmada
+- texto: o steering do projeto guarda a tabela de equivalências local para nuvem
+  ref: sdd-scaffold-steering-arquitetura
+  localizacao: seção Tabela de equivalências local para nuvem
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/verificar-drift.py
+  comando: 'python3 scripts/verificar-drift.py (estado antes, depois, com componentes: [], sem mapa.yml
+    e sem PyYAML)'
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: passou
+  evidencia: 'antes: ''módulo fila existe e não está no mapa.yml'', ''serviço fila existe no compose e
+    não está no mapa.yml'', ''2 divergência(s)'', saída 1; depois: ''ARQ-02: mapa.yml, diagrama, compose
+    e módulos em sincronia.'', saída 0; componentes vazio: ''mapa.yml sem componentes'', saída 1; mapa
+    ausente: saída 1; sem PyYAML: saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/docker-compose.yml
+  comando: python3 scripts/verificar_drift_arquitetura.py e scripts/verificar-drift.py com o mapa-antes.yml
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: falhou-como-esperado
+  evidencia: relatório do scaffold lista 2 divergências e sai 0; verificador do portal lista as mesmas
+    e sai 1.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/mapa-antes.yml
+  comando: python3 scripts/verificar-drift.py
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: falhou-como-esperado
+  evidencia: '''ARQ-02: 2 divergência(s) (acima).'', saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/arquitetura-antes.drawio
+  comando: python3 scripts/verificar-drift.py (com o mapa-antes.yml)
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: falhou-como-esperado
+  evidencia: saída 1 (o diagrama tem Aplicação e Dados; a fila não está no mapa nem no diagrama).
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/mapa.yml
+  comando: python3 scripts/verificar_drift_arquitetura.py e scripts/verificar-drift.py
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: passou
+  evidencia: '''✔ Arquitetura em sincronia: mapa.yml × drawio × OpenTofu × compose sem divergências.'',
+    saída 0; ''ARQ-02: mapa.yml, diagrama, compose e módulos em sincronia.'', saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-02/arquitetura.drawio
+  comando: python3 scripts/verificar-drift.py (com o mapa.yml)
+  ambiente: árvore montada em /tmp/b4a2 (compose, três módulos, mapa e diagrama); Python 3.14.8 com PyYAML
+    6.0.3; macOS
+  resultado: passou
+  evidencia: saída 0; o rótulo 'Fila' casa com o nó 'Fila (Redis)'.
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []

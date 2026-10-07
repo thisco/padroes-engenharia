@@ -1,0 +1,20 @@
+versao: 1
+diagrama: Arquitetura/arquitetura.drawio
+compose: infra/local/docker-compose.yml
+modulos_tofu: infra/cloud/modules
+
+componentes:
+  - nome: aplicacao
+    drawio_label: "Aplicação"
+    tofu_modulo: api
+    compose_servicos: [api]
+
+  - nome: dados
+    drawio_label: "Dados"
+    tofu_modulo: database
+    compose_servicos: [db]
+
+  - nome: fila
+    drawio_label: "Fila"
+    tofu_modulo: fila
+    compose_servicos: [fila]

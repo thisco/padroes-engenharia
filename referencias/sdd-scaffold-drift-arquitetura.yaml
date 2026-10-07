@@ -1,0 +1,11 @@
+id: sdd-scaffold-drift-arquitetura
+titulo: "scripts/verificar_drift_arquitetura.py do sdd-scaffold"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/template/scripts/verificar_drift_arquitetura.py
+tipo: interno
+versao: "1.7.1"
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "docstring (exit code sempre 0), função verificar() e main()"
+dominios: [arquitetura]
+notas: "Lido em 2026-10-07 no arquivo da tag v1.7.1 (clone local, commit fixado em componentes.yml); a URL do commit não foi aberta na web nesta sessão."

@@ -1,0 +1,17 @@
+# Ambiente local do serviço de boletos. A fila nasceu neste PR.
+services:
+  api:
+    build: ../..
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - fila
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app_local
+      POSTGRES_DB: app
+  fila:
+    image: redis:7
