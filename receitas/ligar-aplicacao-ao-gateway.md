@@ -180,7 +180,20 @@ variáveis do passo 2.
    P2-04 VEREDITO: CPF: 3 mascarados; e-mail: 1 mascarado; vazamento: nenhum
    P2-04: nenhum CPF ou e-mail detectado nas mensagens enviadas ao modelo.
    ```
-6. Confira o orçamento, com os exemplos da P2-06. A chave tem `max_budget` e
+6. Prove que a chave só vê o que o gateway liberou: chame um modelo fora da lista da chave. Faça
+   isto antes do próximo passo, que estoura o orçamento: o 403 é a prova da lista de modelos, e com
+   a chave já sem orçamento a recusa que vem pode ser a de orçamento. O gateway recusa com 403:
+
+   ```bash
+   curl -s -o /dev/null -w '%{http_code}\n' "$AI_GATEWAY_URL/v1/chat/completions" \
+     -H "Authorization: Bearer $AI_GATEWAY_KEY" -H "Content-Type: application/json" \
+     -d '{"model":"fronteira-sonnet","messages":[{"role":"user","content":"oi"}]}'
+   ```
+
+   ```text
+   403
+   ```
+7. Confira o orçamento, com os exemplos da P2-06. A chave tem `max_budget` e
    `budget_duration`, e o proxy só aplica o teto com banco, que o starter tem
    [ref:litellm-budgets] [ref:litellm-proxy-docker]. Copie
    [`exemplos/P2-06/gastar.py`](../exemplos/P2-06/gastar.py) para a pasta da aplicação e
@@ -206,18 +219,6 @@ variáveis do passo 2.
    O código HTTP da recusa muda com a versão: aqui foi 429, e no LiteLLM v1.104.0, do Exemplo da
    P2-06, foi 422 com o mesmo `type` `budget_exceeded`. A aplicação trata a recusa com uma
    mensagem de limite e sem tentar de novo em laço.
-7. Prove que a chave só vê o que o gateway liberou: chame um modelo fora da lista da chave. O
-   gateway recusa com 403:
-
-   ```bash
-   curl -s -o /dev/null -w '%{http_code}\n' "$AI_GATEWAY_URL/v1/chat/completions" \
-     -H "Authorization: Bearer $AI_GATEWAY_KEY" -H "Content-Type: application/json" \
-     -d '{"model":"fronteira-sonnet","messages":[{"role":"user","content":"oi"}]}'
-   ```
-
-   ```text
-   403
-   ```
 8. Ao terminar o teste, derrube só este ambiente, na pasta `gateway-poc/poc`:
    `docker compose --profile guardrails down -v` apaga os volumes [ref:gateway-poc-readme].
 
@@ -273,6 +274,8 @@ chave virtual.
 - `python cliente.py` imprime a resposta simulada do gateway, sem nenhuma chave de provedor no
   ambiente da aplicação.
 - O verificador da P2-04 sai com 0 e a linha do veredito diz `vazamento: nenhum`.
+- A chamada a um modelo fora da lista da chave volta `403`, e isso é conferido antes de estourar
+  o orçamento.
 - O `gastar.py` termina numa recusa `budget_exceeded`, e o relatório mostra o gasto da chave
   acima do teto, depois de alguns segundos.
 - `git status` não lista `.env`, e `grep -rn "AI_GATEWAY_KEY=sk-" .` não acha a chave em arquivo
