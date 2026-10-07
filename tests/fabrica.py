@@ -249,7 +249,7 @@ def meta_starter(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
             "id": "sdd-scaffold",
-            "titulo": "SDD scaffold",
+            "titulo": "sdd-scaffold",
             "descricao": "Repositório-modelo com constituição, steering e skills.",
             "repo": dados["repo"],
             "versao": dados["versao"],

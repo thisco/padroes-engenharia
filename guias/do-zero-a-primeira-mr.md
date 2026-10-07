@@ -41,7 +41,7 @@ comandos da execução somaram cerca de 3,5 minutos, sem contar o tempo de escre
 
 ### 1. Gere o projeto
 
-O starter [SDD scaffold](../starters/sdd-scaffold.html) gera o projeto com o `criar_projeto.py`,
+O starter [sdd-scaffold](../starters/sdd-scaffold.html) gera o projeto com o `criar_projeto.py`,
 que exige Python 3.11 ou mais novo, rede e git com `user.name` e `user.email`, e faz o primeiro
 commit [ref:sdd-scaffold-readme]. Para ter o agente conduzindo a instalação, siga o guia
 [Instanciar o scaffold pelo próprio agente](instanciar-scaffold-pelo-agente.html). Para fazer

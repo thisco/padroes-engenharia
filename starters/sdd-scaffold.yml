@@ -1,5 +1,5 @@
 id: sdd-scaffold
-titulo: "SDD scaffold: projeto novo com constituição, steering e skills"
+titulo: "sdd-scaffold: projeto novo com constituição, steering e skills"
 descricao: >-
   Gera um projeto com a constituição no AGENTS.md, modelos de PRD, spec, plano e ADR, o
   steering em docs/steering/, quatro skills de domínio, a skill sdd-lifecycle instalada na
