@@ -1,0 +1,16 @@
+conteudo: ci-cd
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o merge check Pipelines must succeed impede o merge de uma MR sem pipeline completo e bem-sucedido
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção do merge check Pipelines must succeed (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: a capacidade de trabalhar em lotes pequenos é quebrar o trabalho em unidades curtas e independentes, o que reduz o tempo para ter retorno sobre as mudanças
+  ref: dora-small-batches
+  localizacao: página da capacidade, definição e benefícios (aberta na web em 2026-10-07)
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []

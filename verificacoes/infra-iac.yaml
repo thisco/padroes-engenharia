@@ -1,0 +1,20 @@
+conteudo: infra-iac
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o ambiente de dev roda no Docker Compose e, com o código dentro das imagens e sem live-reload, toda alteração exige rebuild antes de recriar os serviços
+  ref: sdd-scaffold-infra-devops
+  localizacao: seção 'Ambiente de dev local (ordem de rebuild)'
+  resultado: confirmada
+- texto: o Compose espera por padrão só o contêiner estar em execução, e não pronto; o healthcheck define o pronto
+  ref: docker-compose-startup-order
+  localizacao: seções de comportamento padrão e 'healthcheck'
+  resultado: confirmada
+- texto: tofu plan cria um plano de execução que mostra o que a ferramenta pretende mudar
+  ref: opentofu-plan
+  localizacao: abertura da página
+  resultado: confirmada
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
