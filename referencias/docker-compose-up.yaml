@@ -1,0 +1,10 @@
+id: docker-compose-up
+titulo: "docker compose up (referência da CLI)"
+organizacao: "Docker"
+url: https://docs.docker.com/reference/cli/docker/compose/up/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "opções --build, --detach, --wait e --wait-timeout"
+dominios: [infra-iac]
+notas: null

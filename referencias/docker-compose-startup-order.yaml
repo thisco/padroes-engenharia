@@ -1,0 +1,10 @@
+id: docker-compose-startup-order
+titulo: "Control startup and shutdown order in Compose"
+organizacao: "Docker"
+url: https://docs.docker.com/compose/how-tos/startup-order/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções 'depends_on', 'healthcheck' e comportamento padrão de inicialização"
+dominios: [infra-iac]
+notas: null

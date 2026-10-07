@@ -1,0 +1,94 @@
+conteudo: IAC-01
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o modelo de steering diz que o ambiente de dev roda no Docker Compose e que, com o código dentro das imagens e sem live-reload, toda alteração exige rebuild antes de recriar os serviços
+  ref: sdd-scaffold-infra-devops
+  localizacao: seção 'Ambiente de dev local (ordem de rebuild)', primeiro parágrafo
+  resultado: confirmada
+- texto: o modelo pede registrar a ordem exata de rebuild em quatro passos (migrations, rebuild das imagens, recriar com up -d, verificar a saúde)
+  ref: sdd-scaffold-infra-devops
+  localizacao: comentário 'preencher' da mesma seção
+  resultado: confirmada
+  nota: Os quatro passos estão num comentário de preenchimento do modelo; o texto do portal diz que nenhum código do scaffold os impõe.
+- texto: o Compose, por padrão, espera só o contêiner estar em execução; healthcheck mais depends_on com condition service_healthy esperam o pronto
+  ref: docker-compose-startup-order
+  localizacao: seções 'Control startup order' (comportamento padrão), 'depends_on condition service_healthy' e exemplo com pg_isready
+  resultado: confirmada
+- texto: sem a espera, o dependente pode subir antes de a dependência estar operacional e falhar
+  ref: docker-compose-startup-order
+  localizacao: seção de comportamento padrão
+  resultado: confirmada
+- texto: --wait espera os serviços em execução ou saudáveis, --wait-timeout limita a espera em segundos
+  ref: docker-compose-up
+  localizacao: opções --wait e --wait-timeout
+  resultado: confirmada
+- texto: no compose do gateway-poc, gateway depende de db com service_healthy, db tem healthcheck pg_isready, há profiles guardrails, vectors e agents e o vector-connector tem build a partir de um repositório Git
+  ref: gateway-poc-compose
+  localizacao: poc/docker-compose.yml, serviços gateway, db, presidio-*, db-vectors, vector-connector e agente-eco (leitura do arquivo na tag v0.1.0)
+  resultado: confirmada
+- texto: um comentário do arquivo registra que a porta 8001 do host conflitava com outro projeto local e o serviço usa a 8002
+  ref: gateway-poc-compose
+  localizacao: comentário do serviço vector-connector, bloco ports
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/verificar-ambiente.py
+  comando: sh executar.sh (partes A e B), verificar-ambiente.py nos dois estados
+  ambiente: cópia temporária do exemplo; Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS
+  resultado: passou
+  evidencia: 'antes: 5 problemas, saída 1; depois: "IAC-01: 2 serviços com healthcheck e a ordem de rebuild escrita.", saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/compose-antes.yml
+  comando: python3 verificar-ambiente.py compose-antes.yml ambiente-local-antes.md
+  ambiente: cópia temporária do exemplo; Python 3.14.8; Docker 29.5.2; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'serviço sem healthcheck (api e db), dependência sem service_healthy; "IAC-01: 5 problema(s) no ambiente local (acima).", saída 1'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/ambiente-local-antes.md
+  comando: python3 verificar-ambiente.py compose-antes.yml ambiente-local-antes.md
+  ambiente: cópia temporária do exemplo; Python 3.14.8; Docker 29.5.2; macOS
+  resultado: falhou-como-esperado
+  evidencia: "faltam as seções '## Serviços' e '## Ordem de rebuild', saída 1"
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/compose.yml
+  comando: "sh executar.sh (parte C, com docker compose up -d --build --wait --wait-timeout 90)"
+  ambiente: cópia temporária do exemplo; Docker 29.5.2; Compose v5.1.3; macOS
+  resultado: passou
+  evidencia: 'iac-db e iac-api "Healthy"; versão no ar v1; ao fim "iac-api Up (healthy)" e "iac-db Up (healthy)"; tudo derrubado pelo trap'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/ambiente-local.md
+  comando: python3 verificar-ambiente.py compose.yml ambiente-local.md e a ordem do documento executada na parte C do executar.sh
+  ambiente: cópia temporária do exemplo; Docker 29.5.2; macOS
+  resultado: passou
+  evidencia: 'verificador saída 0; sem rebuild a versão no ar continua v1, depois de "docker compose build api" e up passa a v2'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/api/app.py
+  comando: sh executar.sh (parte C)
+  ambiente: cópia temporária do exemplo; imagem python:3.11; Docker 29.5.2; macOS
+  resultado: passou
+  evidencia: '/versao devolveu v1 e depois v2 (VERSAO alterada na cópia); /saude 200 com o banco saudável'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/api/Dockerfile
+  comando: docker compose build api (dentro do executar.sh)
+  ambiente: cópia temporária do exemplo; Docker 29.5.2; macOS
+  resultado: passou
+  evidencia: '"Image iac-ambiente-api Built"'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-01/executar.sh
+  comando: sh executar.sh
+  ambiente: Docker 29.5.2; Compose v5.1.3; macOS
+  resultado: passou
+  evidencia: 'partes A, B e C completas; depois da execução nenhum contêiner nem rede iac- restou (docker ps -a e docker network ls vazios)'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []
