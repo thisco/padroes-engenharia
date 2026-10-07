@@ -213,3 +213,22 @@ def test_motivo_so_e_obrigatorio_quando_falhou_e_so_vale_em_prompt():
         "data": "2026-10-07",
     }
     assert _erros_de_registro(arquivo), "falhou não vale para execução de arquivo"
+
+
+# Caso com dono (B.5, T1e) ---------------------------------------------------------------------
+
+
+def test_caso_exige_dono():
+    meta = fabrica.meta_caso(dono="engenharia")
+    assert validar_instancia(meta, carregar_validador(PASTA, "caso"), "c.md") == []
+    del meta["dono"]
+    (erro,) = validar_instancia(meta, carregar_validador(PASTA, "caso"), "c.md")
+    assert erro == Erro("c.md", "frontmatter", "R-ESQUEMA", "'dono' is a required property")
+
+
+@pytest.mark.parametrize("dono", ["", "Engenharia", "uma equipe", 3])
+def test_caso_rejeita_dono_que_nao_e_slug(dono):
+    erros = validar_instancia(
+        fabrica.meta_caso(dono=dono), carregar_validador(PASTA, "caso"), "c.md"
+    )
+    assert [e.campo for e in erros] == ["dono"]

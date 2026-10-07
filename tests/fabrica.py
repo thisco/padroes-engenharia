@@ -206,6 +206,7 @@ def meta_caso(**alteracoes: Any) -> dict[str, Any]:
                 }
             ],
             "referencias": ["ref-forte"],
+            "dono": "engenharia",
         },
         alteracoes,
     )

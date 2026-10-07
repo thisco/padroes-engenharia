@@ -4,7 +4,7 @@
   "description": "casos/<slug>.md (spec §6.4). Todo número tem valor, data e fonte; a origem fixa repositório e commit.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["titulo", "origem", "periodo", "numeros", "referencias"],
+  "required": ["titulo", "origem", "periodo", "numeros", "referencias", "dono"],
   "properties": {
     "titulo": {"type": "string", "minLength": 1},
     "origem": {
@@ -37,9 +37,11 @@
       "uniqueItems": true,
       "items": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}
     },
+    "dono": {"$ref": "#/$defs/slug"},
     "revisado_em": {"$ref": "#/$defs/data"}
   },
   "$defs": {
+    "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
   }
 }

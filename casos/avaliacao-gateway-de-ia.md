@@ -35,6 +35,7 @@ numeros:
     fonte: https://github.com/thisco/gateway-poc/blob/571a091c8a8f9ff99aba89c064d69a36ff195bef/avaliacao/resultados/matriz-consolidada.md
 referencias: [gateway-poc-matriz, gateway-poc-plano-avaliacao, gateway-poc-benchmark-gateways, gateway-poc-cenario-08-decisao-tipada, gateway-poc-readme]
 revisado_em: 2026-10-06
+dono: engenharia
 ---
 
 ## O que foi avaliado
