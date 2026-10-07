@@ -84,6 +84,15 @@ execucoes:
   evidencia: três componentes (aplicacao, dados, fila) casam com os três contêineres; sem o mapa, saída
     1.
   data: '2026-10-07'
+- tipo: prompt
+  prompt: ARQ-04-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-arq-04-prompt
+  resultado: passou
+  evidencia: 'verificar-c4.py saiu 1 com 3 problemas; editou só os dois .mmd; depois saída 0; commit só
+    com os dois arquivos, sem trailer. Observação do testador: tentou ContainerQueue para a Fila e o verificador
+    só reconhece Container e ContainerDb, então usou Container (para a T8); commit a89c0d5'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

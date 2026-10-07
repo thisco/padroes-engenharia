@@ -65,6 +65,15 @@ execucoes:
   evidencia: ADR 0001 sem problema nas duas execuções; sem ela, a numeração da 0002 reprova ('numeração
     com lacuna (falta 0001)').
   data: '2026-10-07'
+- tipo: prompt
+  prompt: ARQ-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-arq-01-prompt
+  resultado: passou
+  evidencia: 'verificar-adr.py saiu 1 com 5 problemas; editou só a ADR 0002 (Status proposta, data via
+    date +%F, Decisão começando por "Vamos"; incluiu também a linha Formato: Nygard do modelo); depois
+    "ARQ-01: 2 ADRs completas." (saída 0); commit só com a ADR, sem trailer; commit 74d4c01'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

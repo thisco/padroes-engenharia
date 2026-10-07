@@ -92,6 +92,15 @@ execucoes:
   resultado: passou
   evidencia: saída 0; o rótulo 'Fila' casa com o nó 'Fila (Redis)'.
   data: '2026-10-07'
+- tipo: prompt
+  prompt: ARQ-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-arq-02-prompt
+  resultado: passou
+  evidencia: relatório do scaffold listou 2 divergências (módulo e serviço fila) e saiu 0; verificar-drift.py
+    saiu 1; editou só mapa.yml e o drawio (nó e aresta); depois os dois saíram 0; commit só com os dois
+    arquivos, sem trailer; commit ed41532
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

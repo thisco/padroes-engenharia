@@ -102,6 +102,15 @@ execucoes:
   resultado: passou
   evidencia: adaptador de saída importa sqlalchemy e dominio sem violar nenhum contrato.
   data: '2026-10-07'
+- tipo: prompt
+  prompt: ARQ-03-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-arq-03-prompt
+  resultado: passou
+  evidencia: lint-imports BROKEN (flask l.6, sqlalchemy l.7), saída 1; removeu os imports e a função gerar()
+    do domínio; depois contratos KEPT, saída 0; commit só com boletos/dominio/boleto.py, sem trailer;
+    commit d228e94
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'
