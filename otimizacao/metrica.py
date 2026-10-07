@@ -22,10 +22,16 @@ class TetoAtingido(RuntimeError):
     pass
 
 
+class FalhaFatal(RuntimeError):
+    pass
+
+
 class Teto:
     def __init__(self, limite: int) -> None:
         self.limite = limite
         self.consumidos = 0
+        # O GEPA engole exceções da reflexão; aqui ela fica registrada e a próxima avaliação para.
+        self.falha_fatal: Exception | None = None
 
     def registrar(self, tokens: int) -> None:
         self.consumidos += tokens
@@ -35,6 +41,8 @@ class Teto:
         return self.consumidos >= self.limite
 
     def exigir(self) -> None:
+        if self.falha_fatal is not None:
+            raise FalhaFatal(f"falha fatal registrada: {self.falha_fatal}") from self.falha_fatal
         if self.estourou:
             raise TetoAtingido(f"teto de {self.limite} tokens atingido ({self.consumidos})")
 

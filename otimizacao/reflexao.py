@@ -6,7 +6,9 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
+import tempfile
 
 from otimizacao.harness.claude_code import diretorio_de_configuracao
 from otimizacao.metrica import Teto
@@ -14,24 +16,37 @@ from otimizacao.metrica import Teto
 
 def refletir_com_claude(teto: Teto, modelo: str | None = None):
     def _refletir(prompt: str) -> str:
+        # O GEPA engole exceções daqui; guardar no teto faz a próxima avaliação parar.
+        try:
+            return _chamar(prompt)
+        except Exception as exc:
+            teto.falha_fatal = exc
+            raise
+
+    def _chamar(prompt: str) -> str:
         argv = [
             "claude", "-p", prompt,
             "--output-format", "json",
             "--max-turns", "1",
-            "--allowedTools", "",
+            "--tools", "",
             "--settings", '{"hooks":{}}',
             "--mcp-config", '{"mcpServers":{}}',
             "--strict-mcp-config",
         ]  # fmt: skip
         if modelo:
             argv += ["--model", modelo]
-        r = subprocess.run(
-            argv,
-            capture_output=True,
-            text=True,
-            timeout=600,
-            env={**os.environ, "CLAUDE_CONFIG_DIR": str(diretorio_de_configuracao())},
-        )
+        vazio = tempfile.mkdtemp(prefix="padroes-reflexao-")
+        try:
+            r = subprocess.run(
+                argv,
+                capture_output=True,
+                text=True,
+                timeout=600,
+                cwd=vazio,
+                env={**os.environ, "CLAUDE_CONFIG_DIR": str(diretorio_de_configuracao())},
+            )
+        finally:
+            shutil.rmtree(vazio, ignore_errors=True)
         dados = json.loads(r.stdout.strip().splitlines()[-1]) if r.stdout.strip() else {}
         uso = dados.get("usage") or {}
         teto.registrar(

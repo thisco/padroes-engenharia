@@ -9,7 +9,7 @@ from gepa.core.adapter import EvaluationBatch
 from otimizacao import projeto
 from otimizacao.adapter_gepa import COMPONENTE, AdapterHarness
 from otimizacao.cenarios import Cenario, Comando, Verificacao
-from otimizacao.metrica import Teto
+from otimizacao.metrica import FalhaFatal, Teto, avaliar
 from otimizacao.reflexao import refletir_com_claude
 
 FALSOS = Path(__file__).parent / "binarios_falsos"
@@ -83,6 +83,9 @@ def test_reflexao_devolve_resultado_e_registra_tokens(monkeypatch, tmp_path):
     assert teto.consumidos == 230
     chamada, config = log.read_text().splitlines()[-2:]
     assert "--strict-mcp-config" in chamada
+    assert "--tools" in chamada.split() and "--allowedTools" not in chamada
+    assert teto.falha_fatal is None
+    teto.exigir()
     assert config == str(tmp_path / "cfg")
 
 
@@ -92,3 +95,33 @@ def test_reflexao_com_falha_levanta_runtime_error(monkeypatch, tmp_path):
     monkeypatch.setenv("FALSO_FALHA", "erro")
     with pytest.raises(RuntimeError, match="reflexão falhou"):
         refletir_com_claude(Teto(1000))("pergunta")
+
+
+def test_falha_da_reflexao_fica_no_teto_e_para_a_proxima_avaliacao(monkeypatch, tmp_path):
+    base = tmp_path / "base"
+    base.mkdir()
+    (base / "AGENTS.md").write_text("", encoding="utf-8")
+    monkeypatch.setitem(projeto.BASES, "fake", base)
+    monkeypatch.setenv("PATH", f"{FALSOS}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("PADROES_LAB_CLAUDE_CONFIG_DIR", str(tmp_path / "cfg"))
+    monkeypatch.setenv("FALSO_FALHA", "erro")
+    teto = Teto(100_000)
+    with pytest.raises(RuntimeError, match="reflexão falhou"):
+        refletir_com_claude(teto)("pergunta")
+    assert isinstance(teto.falha_fatal, RuntimeError)
+    monkeypatch.delenv("FALSO_FALHA")
+    c = Cenario(
+        "X-01-a", "X-01", "X-01-prompt-1", "treino", "fake", (), (), {"m": "1"},
+        Verificacao((Comando("true", 0),)),
+    )  # fmt: skip
+    with pytest.raises(FalhaFatal):
+        avaliar(
+            c, "claude-code", "Faça {m} X-01", raiz_monorepo=tmp_path,
+            transcricoes=tmp_path / "t", teto=teto, repeticoes=1, pasta_tmp=tmp_path / "tmp",
+            atual="Faça {m} X-01",
+        )  # fmt: skip
+
+
+def test_harnesses_vazio_e_rejeitado(tmp_path):
+    with pytest.raises(ValueError, match="harnesses não pode ser vazio"):
+        AdapterHarness(tmp_path, [], Teto(1), tmp_path / "t", atual="x")

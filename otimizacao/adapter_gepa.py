@@ -18,6 +18,10 @@ COMPONENTE = "prompt"
 
 
 class AdapterHarness(GEPAAdapter[Cenario, dict[str, Any], dict[str, Any]]):
+    """Orçamento: `num_metric_calls` conta cenários; cada chamada de métrica custa
+    `len(harnesses) x repeticoes` sessões de agente (`max_metric_calls=30` com 2 harnesses e
+    2 repetições são até 120 sessões). O freio real é o teto de tokens."""
+
     def __init__(
         self,
         raiz: Path,
@@ -30,6 +34,8 @@ class AdapterHarness(GEPAAdapter[Cenario, dict[str, Any], dict[str, Any]]):
         pasta_tmp: Path | None = None,
         modelo: str | None = None,
     ) -> None:
+        if not harnesses:
+            raise ValueError("harnesses não pode ser vazio")
         self.raiz = raiz
         self.harnesses = harnesses
         self.teto = teto
