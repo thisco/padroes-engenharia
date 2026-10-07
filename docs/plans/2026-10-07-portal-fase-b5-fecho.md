@@ -75,7 +75,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   montagem `.claude`/`.codex`/`.kiro`/`.agents`, a receita de skills, critérios sem ranking).
   Cada guia com `[ref:]`, Exemplo executado num repositório de teste e prompt testado em sessão
   nova. Schema `guia`.
-- [ ] **T4 (receitas 5 a 8).** Uma por prática-mãe, sem repetir o corpo dela: "Publicar um
+- [x] **T4 (receitas 5 a 8).** Uma por prática-mãe, sem repetir o corpo dela: "Publicar um
   contrato OpenAPI versionado com teste no CI" (Desenho; API-01/02), "Entregar uma tela com os
   quatro estados" (Desenho; UX-01/02), "Declarar SLO, alerta e runbook de um serviço" (Entrega e
   operação; OBS-02) e "Varrer segredos no CI e antes do commit" (Entrega e operação; SEG-02).
@@ -99,6 +99,22 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
+
+**T4 fechada (2026-10-07).** Quatro receitas, uma por prática-mãe, cada uma com `executar.sh` em
+`exemplos/<slug>/` (repositório de teste em `/tmp/b5-*`, apagado ao sair) e registro em
+`verificacoes/receita-<slug>.yaml`: `publicar-contrato-openapi-versionado` (API-01 e API-02) em
+6abc766, `entregar-tela-com-quatro-estados` (UX-01 e UX-02) em 55b3a1a,
+`declarar-slo-alerta-e-runbook` (OBS-02 e OBS-01) em 236b0a0 e `varrer-segredos-no-ci-e-no-commit`
+(SEG-02) em fd7dbe0, com o ajuste da imagem por digest em 832317e. Os roteiros rodaram com saída 0 e
+mostram o errado e o certo de cada prática (jobs `contrato` e `segredos` no gitlab-ci-local 4.76.0 e
+Docker, hook com o gitleaks 8.30.1 local, verificadores de UX e OBS em Python 3.14.8); as saídas
+brutas estão em `~/curadoria-a5/saidas/b5-receita-<slug>.txt`. As afirmações com `[ref:]` vêm dos
+registros das práticas-mãe e a fonte não foi reaberta. O `validar.py` acusa só `R-PROMPT` nas
+quatro, como previsto; o prompt de cada receita está em `## Com o agente` e **não foi executado**
+(nenhuma execução de prompt registrada). Preparos prontos, repositórios git com `main`, em
+`/Users/thiago/curadoria-a5/b5-receita-<slug>-prompt` (os de contrato e de segredos com remoto
+`--bare` local ao lado, `-origin.git`); o teste roda contra a prévia do portal (T1). A SEG-03 ficou
+fora da receita de segredos (só um apontamento).
 
 **T2 fechada (2026-10-07).** Item → commit: (1) laços com limite de 60 tentativas de 3 s, mensagem e
 saída 1 em P2-01, P2-04, P2-05 e P2-06 (blocos do texto e passos dos prompts) em 0df76a8; o job do
