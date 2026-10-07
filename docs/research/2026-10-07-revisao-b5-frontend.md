@@ -108,3 +108,18 @@ Por que não passa de 7: sobrou uma violação direta da regra mais característ
 
 1. B5-A1: tirar o azul dos chips de status do radar (`adotar`, `experimentar`) e alinhar com a legenda da Início; azul só em `bloqueia`.
 2. B5-A2: trocar borda e fundo azuis do quadro "Como combinar tudo" por neutros.
+
+## Reconferência (2026-10-07)
+
+Build servido com os commits af28436 e 598fc50 (rodapé mostra commit 38b8cbc). Capturas em `/Users/thiago/Documents/Workspace/repos/padroes-engenharia/.playwright-mcp/`, prefixo `b5-rev2-`, a 1280 e 400px.
+
+| Item | Veredito | O que se vê |
+|---|---|---|
+| B5-A1 radar | resolvido | Cores computadas dos chips: `adotar` fundo branco, texto e borda #0A1A2F sólida; `experimentar` fundo #DDE4EC, borda #0A1A2F tracejada; `avaliar` fundo âmbar-claro, borda #B06F12. Nenhum chip de status usa #1351B4. Igual a 1280 e 400 e coerente com a legenda da Início. Capturas: `b5-rev2-radar-1280.png`, `b5-rev2-radar-400.png`. |
+| B5-A2 "Como combinar tudo" | resolvido | Quadro com fundo neutro e as quatro caixas com borda cinza-azulada fina; sem azul. Captura: `b5-rev2-problema-1280-combinar.png` (a 400 a página não tem estouro: scrollWidth 400). |
+| B5-M1 select do radar a 400px | parcial | O select "Domínio" ainda termina em x=390 numa viewport de 400, passando da margem de 18px que os demais elementos respeitam (borda útil em 382). Não estoura a tela, mas sai do alinhamento. A tabela segue cortada sem pista de rolagem (parte do achado original). Captura: `b5-rev2-radar-400.png`. |
+| B5-M3 fileira do ninho | resolvido para o alinhamento | "Ferramentas nativas" caiu de ~110px para 61px de altura e não estica mais até o Hook. O vazio sob "As nove peças" na coluna direita continua (~250px), então a parte de composição do achado fica aberta. Captura: `b5-rev2-conceitos-1280.png`. |
+
+Azul restante, conferido por DOM e captura: Hook e Guardrail (blocos `impede`, preenchimento #1351B4), chip `bloqueia` e a célula DAD-01 na espinha, o contorno azul de `pede aprovação` (força), e links de texto. Nenhuma outra caixa, status ou borda genérica usa azul. Está onde deve.
+
+Nota revisada: 7,5 / 10 (era 7,0). Os dois altos estão fechados; restam os médios B5-M1 (parcial), M2 a M6 e os baixos.

@@ -1,5 +1,5 @@
 # prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
-# 2026-10-06: starter novo. Revisão adversarial provisória até a conferência em lote; o prompt_para_agente ainda não foi testado em sessão nova.
+# 2026-10-06: starter novo. Conferido em lote na B.2 (ADR 0005). O prompt_para_agente foi testado em sessão nova na B.2 (parou no passo 1 por porta ocupada, como previsto); a prova completa, com a porta 4000 livre, está em andamento na B.5 (2026-10-07).
 conteudo: starter-gateway-poc
 verificado_em: '2026-10-06'
 verificador: agente-curadoria

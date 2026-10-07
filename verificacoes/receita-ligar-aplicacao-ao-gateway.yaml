@@ -1,5 +1,5 @@
 # prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
-# 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. O prompt da seção Com o agente ainda não foi testado em sessão nova; revisão adversarial provisória até a conferência em lote.
+# 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. Prompt testado em sessão nova na B.2 (commit 0a06b44 do preparo); conferido em lote na B.2 e revisto na B.5 (laço com limite, passos 6 e 7, sem reteste por decisão do dono).
 conteudo: receita-ligar-aplicacao-ao-gateway
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
