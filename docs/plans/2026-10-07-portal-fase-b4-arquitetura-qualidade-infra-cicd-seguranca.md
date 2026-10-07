@@ -96,7 +96,7 @@ tarefa dela.
   obrigatórios; fail-open dos verificadores e laço sem limite entram na lista de partida.
 - [x] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono), com
   nota no registro; reconferência pelo mesmo conferente.
-- [ ] **T10.** Checkpoint do dono.
+- [x] **T10.** Checkpoint do dono.
 
 Fora desta fatia: guias 3 ("Brownfield em 5 passos") e 4 ("Como escolher e configurar o
 harness") e o caso "SGD Catálogo de Nuvem" (§10) ficam para a B.5, junto com as pendências já
@@ -166,3 +166,20 @@ Conferido: 16 práticas, 5 domínios; verificadores rodados: verificar-adr.py (A
 - Plano e CHANGELOG (baixo): resolvido. A linha 17 do plano diz 48 (32 anteriores mais 16) e o CHANGELOG traz "15 células da espinha seguem 'a definir'".
 - Registros: resolvido. Os 21 registros (16 práticas e 5 domínios) trazem o revisor "conferência em lote (ADR 0005), sessão independente", sem "provisória" restante, e os achados do ID (ARQ-01 1, ARQ-04 1, QLD-03 1, IAC-01 3, IAC-02 2, IAC-03 1, CICD-02 1, SEG-01 1, SEG-02 1, SEG-03 1, ci-cd 1; os demais 0).
 - `validar.py`: resolvido. "validação ok: nenhum erro."; árvore limpa em `a0c2295`.
+
+## Checkpoint: 2026-10-07
+
+**Aprovou:** o dono do portal ("Tudo ok"), ao fechar a fatia e mandar seguir para a B.5. **Decisões:**
+
+1. **Status das 16 práticas:** todas em `experimentar`; CICD-01 com força `avisa` pelo
+   `verificar_pr.py` hospedado (hash conferido no job). Mantidos.
+2. **Células "a definir":** 15 das 48 células da espinha seguem vazias; são o backlog público
+   previsto no §10, e o mínimo de 48 práticas foi atingido. Sem fatia nova para elas.
+3. **Pendências para a B.5** aceitas como listadas na T9: guias 3 e 4, caso "SGD Catálogo de
+   Nuvem", schema de verificação sem `falhou` para execução de prompt (a 1ª execução da CICD-01
+   ficou descrita na evidência da que passou), QLD-03 herdar o ruff da raiz com `extend`, IAC-01
+   aceitar healthcheck herdado da imagem, imagem do gitleaks por tag.
+
+Custo da fatia: estimativa de 3 milhões de tokens, com 5 autores, 17 testadores (CICD-01 duas
+vezes), o conferente (ADR 0005, com reconferência) e os autores da T7 e da T9. Sem revisão com
+modelo forte: nenhum achado alto.
