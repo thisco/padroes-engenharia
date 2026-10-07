@@ -11,6 +11,8 @@ toda página e na primeira linha de `llms.txt`, e não regrava README.md nem ROT
 
 Commit e data do build, nesta ordem: --commit e --data; CI_COMMIT_SHA; SOURCE_DATE_EPOCH ou
 CI_COMMIT_TIMESTAMP; `git log -1`. Dois builds do mesmo commit dão os mesmos bytes.
+Ao terminar, apaga em `--saida` as pastas vazias `<nome> <n>` do iCloud (níveis 1 e 2) e loga
+quantas apagou.
 Saída: 0 gerado · 1 erro de validação ou recurso externo (nada é gerado) · 2 erro interno.
 """
 
@@ -19,6 +21,7 @@ from __future__ import annotations
 import argparse
 import datetime
 import os
+import re
 import subprocess
 import sys
 from collections.abc import Mapping
@@ -63,6 +66,25 @@ def copiar_para_raiz(saida: Path, raiz: Path) -> None:
         (raiz / nome).write_bytes((saida / nome).read_bytes())
 
 
+NUMERADA = re.compile(r".+ [0-9]+$")
+
+
+def remover_pastas_vazias_numeradas(saida: Path) -> int:
+    """Apaga em `saida` as pastas vazias cujo nome termina em espaço e dígito (`praticas 2`), que
+    o iCloud cria ao sincronizar a pasta do repositório. Olha só os níveis 1 e 2, o segundo antes
+    do primeiro (a filha que sai pode esvaziar o pai). Devolve quantas apagou."""
+    if not saida.is_dir():
+        return 0
+    removidas = 0
+    nivel1 = [p for p in sorted(saida.iterdir()) if p.is_dir()]
+    nivel2 = [p for pai in nivel1 for p in sorted(pai.iterdir()) if p.is_dir()]
+    for pasta in (*nivel2, *nivel1):
+        if NUMERADA.match(pasta.name) and not pasta.is_symlink() and not any(pasta.iterdir()):
+            pasta.rmdir()
+            removidas += 1
+    return removidas
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Gera o portal de padrões de engenharia.")
     parser.add_argument("--raiz", type=Path, default=RAIZ, help="raiz do repositório")
@@ -100,6 +122,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         if not erros and not args.previa:
             copiar_para_raiz(saida, raiz)
+        removidas = 0 if erros else remover_pastas_vazias_numeradas(saida)
         for aviso in aviso_url_base(args.url_base or config["url_base"], os.environ):
             print(f"aviso: {aviso.arquivo}: {aviso.mensagem}", file=sys.stderr)
     except Exception as exc:
@@ -110,6 +133,8 @@ def main(argv: list[str] | None = None) -> int:
     if erros:
         print(f"{len(erros)} erro(s); nada foi gerado.", file=sys.stderr)
         return 1
+    if removidas:
+        print(f"{removidas} pasta(s) vazia(s) do tipo '<nome> <n>' removida(s) de {saida}.")
     prefixo = "PRÉVIA, não publicada: " if args.previa else ""
     print(
         f"{prefixo}portal gerado em {saida} "

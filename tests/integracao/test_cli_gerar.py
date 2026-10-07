@@ -164,3 +164,65 @@ def test_previa_recusa_public(repo_minimo, capsys, destino):
     assert saiu.value.code == 2
     assert "não pode ficar em public/" in capsys.readouterr().err
     assert not (repo_minimo / "public").exists()
+
+
+# Pastas vazias "<nome> <n>" do iCloud (B.5, T1f) -----------------------------------------------
+
+
+def _criar(saida, *relativos):
+    for relativo in relativos:
+        (saida / relativo).mkdir(parents=True, exist_ok=True)
+
+
+def test_remove_so_pasta_vazia_com_nome_terminado_em_espaco_e_digito_nos_niveis_1_e_2(tmp_path):
+    saida = tmp_path / "public"
+    _criar(
+        saida,
+        "praticas 2",  # nível 1, vazia: sai
+        "praticas/faixa 3",  # nível 2, vazia: sai
+        "exemplos 10",  # mais de um dígito: sai
+        "dominios",  # vazia, mas sem sufixo: fica
+        "assets 2x",  # não termina em dígito: fica
+        "a/b/c 2",  # nível 3: fica
+        "cheia 2",  # tem arquivo: fica
+        "pai 2/filha 3",  # a filha sai e deixa o pai vazio: o pai sai também
+    )
+    (saida / "cheia 2" / "x.txt").write_text("x", encoding="utf-8")
+    (saida / "praticas" / "P1-01.html").write_text("x", encoding="utf-8")
+    assert cli.remover_pastas_vazias_numeradas(saida) == 5
+    restantes = sorted(p.relative_to(saida).as_posix() for p in saida.rglob("*") if p.is_dir())
+    assert restantes == ["a", "a/b", "a/b/c 2", "assets 2x", "cheia 2", "dominios", "praticas"]
+
+
+def test_sem_pasta_numerada_remove_zero(tmp_path):
+    assert cli.remover_pastas_vazias_numeradas(tmp_path / "nao-existe") == 0
+    assert cli.remover_pastas_vazias_numeradas(tmp_path) == 0
+
+
+def test_gerar_remove_as_pastas_do_icloud_e_loga_quantas(
+    repo_minimo, tmp_path, monkeypatch, capsys
+):
+    real = cli.construir
+
+    def construir_e_sujar(raiz, saida, **kwargs):
+        erros = real(raiz, saida, **kwargs)
+        _criar(saida, "praticas 2", "dominios/x 2")  # o iCloud cria depois do rename
+        return erros
+
+    monkeypatch.setattr(cli, "construir", construir_e_sujar)
+    saida = tmp_path / "site"
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 0
+    assert not (saida / "praticas 2").exists()
+    assert not (saida / "dominios" / "x 2").exists()
+    assert (saida / "dominios").is_dir()
+    saida_padrao = capsys.readouterr().out
+    assert "2 pasta(s) vazia(s) do tipo '<nome> <n>' removida(s) de " in saida_padrao
+    assert saida_padrao.endswith("(versão 0.1.0, commit 0123456, 2026-10-01).\n")
+
+
+def test_gerar_com_erro_nao_mexe_na_saida(repo_minimo, mutar, tmp_path):
+    mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
+    saida = tmp_path / "site"
+    _criar(saida, "praticas 2")
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 1
+    assert (saida / "praticas 2").is_dir()
