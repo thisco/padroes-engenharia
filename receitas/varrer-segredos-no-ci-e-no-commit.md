@@ -52,7 +52,7 @@ git ls-remote --heads origin main
 ```
 
 Sem o gitleaks instalado, o hook do passo 3 reprova todo commit, de propósito: o commit não deve passar
-sem conferência. O roteiro do Exemplo usa a imagem `zricethezav/gitleaks:v8.30.1` no job e o gitleaks
+sem conferência. O roteiro do Exemplo usa a imagem `zricethezav/gitleaks:v8.30.1`, fixada também por digest no arquivo, no job e o gitleaks
 local (8.30.1 na execução do portal) no hook.
 
 ## Passos
