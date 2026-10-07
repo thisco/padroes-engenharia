@@ -87,6 +87,13 @@ execucoes:
   evidencia: 'aplicada depois da V3 no banco efêmero: ''now at version v4'' e information_schema mostrando
     cpf character varying com character_maximum_length 11.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: receita-adicionar-migration-corretiva-prompt-1
+  harness: claude-code
+  ambiente: 'sessão nova, em ~/curadoria-a5/b3-receita-migration-prompt (cópia de projeto-teste-17 com V1 e V2 na main, sem remoto e sem scripts/verificar_pr.py), branch fix/2026-10-06-amplia-cpf. O testador seguiu a receita servida da fonte em http://127.0.0.1:8001/receitas/adicionar-migration-corretiva.md, porque o portal gerado na 8000 ainda não tem a B.3.'
+  resultado: passou
+  evidencia: 'commit 01345c7 "fix(dados): amplia cliente.cpf para VARCHAR(14)" só com db/migration/V3__amplia_cpf.sql e docs/plans/2026-10-06-amplia-cpf.md, sem coautoria. flyway validate com a V3 pendente falhou ("Detected resolved migration not applied to database: 3"); migrate aplicou; validate final "Successfully validated 3 migrations"; checksum da V2 (-1946493639) igual ao da receita; volta testada com V4 só no diretório temporário; shasum -c do verificar_pr.py OK (616cc4c2...); verificar_pr.py --base main: "2 arquivo(s), nenhum achado". Transcrição em curadoria-a5/transcricoes/receita-adicionar-migration-corretiva-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote da T8 (ADR 0005)
   data: '2026-10-06'

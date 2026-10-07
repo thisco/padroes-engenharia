@@ -117,6 +117,13 @@ execucoes:
   resultado: passou
   evidencia: saída 0 nas seções A, B e C; saída bruta em curadoria-a5/saidas/b3-dad02-executar.txt.
   data: '2026-10-06'
+- tipo: prompt
+  prompt: DAD-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-dad-02-prompt (cópia de projeto-teste-17 com db/migration/V1 na main, sem remoto), branch feat/2026-10-06-renomeia-cliente-nome
+  resultado: passou
+  evidencia: 'commit 11c4406 "feat(dados): expande nome sem remover a antiga (DAD-02)" com 2 arquivos (migration de expansão e plano), sem coautoria; container pg-efemero derrubado ao fim. Transcrição em curadoria-a5/transcricoes/DAD-02-prompt-1.bruta.jsonl.'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: provisória, até a conferência em lote da T8 (ADR 0005)
   data: '2026-10-06'

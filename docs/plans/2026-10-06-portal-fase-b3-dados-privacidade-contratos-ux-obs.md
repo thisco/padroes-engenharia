@@ -58,7 +58,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 `praticas/<faixa>/_dominio.md` (schema `dominio`: `titulo`, `grupo`, `descricao`, `steering`,
 `skills`, `referencias`, `candidatas`) na tarefa da primeira prática dela.
 
-- [ ] **T1 (DAD-02, receita "Adicionar uma migration corretiva", DAD-01 lacuna 2).** O Exemplo
+- [x] **T1 (DAD-02, receita "Adicionar uma migration corretiva", DAD-01 lacuna 2).** O Exemplo
   da DAD-02 roda expandir e contrair em PostgreSQL efêmero com Flyway, com saída real. A receita
   encadeia DAD-01 e DAD-02 (V corretiva, `flyway validate`, teste da sequência inteira,
   rollback declarado no plano). Na DAD-01, o Exemplo ganha o `flyway validate` executado e a
@@ -88,6 +88,17 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [ ] **T10.** Checkpoint do dono.
 
 ## Evidências
+
+**T1 fechada (2026-10-06).** DAD-02 (ca86614), receita "Adicionar uma migration corretiva"
+(a652ffc) e a lacuna 2 do aceite da DAD-01 (58ab23b), `experimentar`, força `orienta`. Referência
+nova: `fowler-parallel-change`; `fowler-evodb` ampliada. Exemplos executados em PostgreSQL 16
+efêmero com Flyway 11.20.3 (`docker system df` igual antes e depois): V2 que renomeia quebra o
+consumidor antigo; expandir, contrair e a volta por V4 passam no `flyway validate` (2, 3 e 4
+migrations); na receita, o `verificar_pr.py` hospedado bloqueia a edição da V2 e aceita a V3. DAD-01:
+`flyway validate` com checksum mismatch antes e `Successfully validated 3 migrations` depois da V3,
+mais a consulta em `flyway_schema_history`, prompt intocado. Prompts testados em sessão nova (DAD-02
+commit 11c4406, receita commit 01345c7), ambos `passou`; a receita foi testada contra a fonte
+servida na porta 8001, porque o portal da 8000 ainda não tem a B.3.
 
 **T2 fechada (2026-10-06).** Domínio `privacidade-lgpd` (c648746), LGPD-01 (84380e0) e LGPD-02
 (26df641), status `experimentar`, força `orienta`. Referências novas: `anpd-ripd`,
