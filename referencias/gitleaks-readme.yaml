@@ -3,8 +3,8 @@ titulo: "Gitleaks"
 organizacao: Gitleaks
 url: https://github.com/gitleaks/gitleaks
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-07
 verificacao: V
-localizacao: "README: subcomandos git/dir/stdin, --redact, --verbose, .gitleaksignore, regras com regex e entropia, imagens Docker"
+localizacao: "README: subcomandos git/dir/stdin, --log-opts para intervalo de commits, --redact, --verbose, código de saída (1 com vazamento ou erro), hook do pre-commit, .gitleaksignore, regras com regex e entropia, imagens Docker"
 dominios: [ci-cd]
-notas: "README da branch principal, lido em 2026-10-04; última release v8.30.1 (2026-03-21, API do GitHub)."
+notas: "README da branch principal, lido em 2026-10-04 e relido em 2026-10-07; última release v8.30.1 (2026-03-21, API do GitHub). A versão 8.30.1 foi a usada nas execuções do portal."

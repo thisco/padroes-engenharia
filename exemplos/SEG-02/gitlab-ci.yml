@@ -1,0 +1,25 @@
+# Job `segredos` (SEG-02): reprova a merge request que traz segredo nos commits dela.
+# Varre só o intervalo origin/<alvo>..HEAD; o histórico anterior não é lido por este job.
+# `--redact` mantém o valor do segredo fora do log do job. A imagem tem o gitleaks como
+# entrypoint, por isso o entrypoint é zerado para o script rodar num shell.
+stages:
+  - travas
+
+.so-em-merge-request:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+segredos:
+  extends: .so-em-merge-request
+  stage: travas
+  image:
+    name: zricethezav/gitleaks:v8.30.1
+    entrypoint: [""]
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - git config --global --add safe.directory "$PWD"
+    - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
+    - git rev-parse --verify "refs/remotes/origin/$ALVO"
+    - gitleaks git --no-banner --redact --verbose --log-opts="origin/$ALVO..HEAD" .

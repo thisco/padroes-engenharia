@@ -1,0 +1,108 @@
+conteudo: SEG-02
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: segredo nunca é commitado, vive em variável de ambiente em runtime e o scanner roda bloqueante
+    no CI; remover o commit não invalida a credencial, e a regra é rotacionar antes de limpar o histórico
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Segredo'
+  resultado: confirmada
+- texto: o gitleaks git aceita --log-opts (opções do git log, por exemplo um intervalo de commits) e --redact;
+    o código de saída é 1 com vazamento ou erro e se troca com --exit-code
+  ref: gitleaks-readme
+  localizacao: 'README: seções de uso do subcomando git, --log-opts, --redact e exit code'
+  resultado: confirmada
+- texto: o gitleaks tem hook para o pre-commit (pre-commit install; SKIP=gitleaks git commit pula)
+  ref: gitleaks-readme
+  localizacao: 'README: seção de pre-commit'
+  resultado: confirmada
+- texto: há imagens Docker oficiais (zricethezav/gitleaks e ghcr.io/gitleaks/gitleaks) e o .gitleaksignore
+    trata falso positivo; a detecção usa regras com regex e entropia
+  ref: gitleaks-readme
+  localizacao: 'README: seções Docker, .gitleaksignore e configuração de regras'
+  resultado: confirmada
+- texto: o job roda só em pipeline de merge request, pela regra $CI_PIPELINE_SOURCE == merge_request_event
+  ref: gitlab-mr-pipelines
+  localizacao: seções 'When they run' e de configuração (afirmação já registrada em API-02, referência
+    relida em 2026-10-07)
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_TARGET_BRANCH_NAME traz a branch de destino da MR e só existe em pipelines de
+    merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: seção de variáveis de pipelines de merge request (já registrada em API-02)
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso e a variável do .gitlab-ci.yml sobrescreve a configuração do
+    projeto
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (já registrada em API-02)
+  resultado: confirmada
+- texto: o merge check chama-se Pipelines must succeed
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido (já registrada em API-02)
+  resultado: confirmada
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (já registrada em API-02)
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --variable CI_PIPELINE_SOURCE=merge_request_event --variable
+    CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE segredos (commit
+    com o segredo sintético em app/config.py, plantado por plantar-segredo.sh)
+  ambiente: cópia do repositório de preparo ~/curadoria-a5/b4-seg-02-prompt (main publicada num remoto
+    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1;
+    gitleaks 8.30.1 local; macOS. O job não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'RuleID aws-access-token, File app/config.py, Line 1, Secret REDACTED; ''1 commits scanned'',
+    ''leaks found: 1'', '' FAIL  segredos'' (saída 1). Com a branch de destino inexistente: ''fatal: Could
+    not read from remote repository'', FAIL (saída 1).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --variable CI_PIPELINE_SOURCE=merge_request_event --variable
+    CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE segredos (depois
+    de trocar o arquivo por config-depois.py e reescrever o commit com --amend)
+  ambiente: cópia do repositório de preparo ~/curadoria-a5/b4-seg-02-prompt (main publicada num remoto
+    --bare local, branch com o commit do segredo); gitlab-ci-local 4.76.0, Docker, imagem zricethezav/gitleaks:v8.30.1;
+    gitleaks 8.30.1 local; macOS. O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: '''1 commits scanned'', ''no leaks found'', '' PASS  segredos'' (saída 0).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/plantar-segredo.sh
+  comando: bash plantar-segredo.sh <diretório> e gitleaks dir sobre o resultado; também com AKIAIOSFODNN7EXAMPLE,
+    que o gitleaks 8.30.1 não detectou
+  ambiente: diretório temporário; gitleaks 8.30.1; macOS
+  resultado: passou
+  evidencia: '''SEG-02: app/config.py escrito em <dir> com chave sintética.''; o gitleaks detecta a sequência
+    de letras com ''leaks found: 1'' e não detecta a chave de exemplo da documentação da AWS (''no leaks
+    found'').'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/pre-commit.sh
+  comando: cp pre-commit.sh .git/hooks/pre-commit; git commit com app/config.py (segredo) em stage
+  ambiente: repositório temporário; gitleaks 8.30.1; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'RuleID aws-access-token, ''leaks found: 1'' e ''SEG-02: segredo no que está em stage; tire-o
+    do arquivo e mova para variável de ambiente.''; o commit foi recusado (nenhum commit criado).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/pre-commit.sh
+  comando: git commit com config-depois.py em stage; e com PATH sem gitleaks
+  ambiente: repositório temporário; gitleaks 8.30.1; macOS
+  resultado: passou
+  evidencia: '''no leaks found'' e commit criado; sem gitleaks no PATH: ''SEG-02: gitleaks não está instalado;
+    sem ele o commit não é conferido.'' e commit recusado (saída 1).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/config-depois.py
+  comando: importado pelo job (config no commit reescrito) e lido pelo gitleaks
+  ambiente: cópia do repositório de preparo; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'gitleaks: no leaks found; compile do arquivo sem erro.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
