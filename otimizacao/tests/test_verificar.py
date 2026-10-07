@@ -74,3 +74,24 @@ def test_repo_sem_a_tag_base_nao_levanta_e_reprova(tmp_path):
     subprocess.run(["git", "init", "-q", "-b", "main", str(r)], check=True)
     res = verificar(Verificacao((Comando("true", 0),)), r)
     assert res.nota == 0.0 and res.feedback == "cenário inválido: tag laboratorio-base ausente"
+
+
+def test_caminhos_com_acento_e_espaco_sao_classificados(tmp_path):
+    r = tmp_path / "r"
+    (r / "db").mkdir(parents=True)
+    (r / "db" / "decisões.md").write_text("a\n", encoding="utf-8")
+    (r / "db" / "com espaço.sql").write_text("b\n", encoding="utf-8")
+    subprocess.run(["git", "init", "-q", "-b", "main", str(r)], check=True)
+    commit_base(r)
+    (r / "db" / "decisões.md").write_text("editada\n", encoding="utf-8")
+    (r / "db" / "nova migração.sql").write_text("c\n", encoding="utf-8")
+    res = verificar(Verificacao((Comando("true", 0),), ("db/decis*.md",), ("db/*.sql",)), r)
+    assert res.nota == 0.0 and "alterou arquivo proibido: db/decisões.md" in res.feedback
+    assert res.criados == ("db/nova migração.sql",)
+
+
+def test_comando_que_excede_o_timeout_vira_nota_zero(tmp_path, monkeypatch):
+    r = _repo(tmp_path)
+    monkeypatch.setattr("otimizacao.verificar.TIMEOUT_COMANDO_S", 1)
+    res = verificar(Verificacao((Comando("sleep 5", 0),)), r)
+    assert res.nota == 0.0 and "excedeu 1 s" in res.feedback
