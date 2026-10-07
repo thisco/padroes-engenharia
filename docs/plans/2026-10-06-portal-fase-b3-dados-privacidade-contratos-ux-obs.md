@@ -38,7 +38,7 @@ comando"; preparo completo; `dono: engenharia`; nenhum texto cita a organizaçã
 | LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | enquanto-escreve | orienta · experimentar | `lgpd`, P2-04, achados de PII da avaliação |
 | API-01 | Contrato de API versionado: mudança incompatível vira versão nova e ADR | antes-de-escrever | orienta · experimentar | `openapi-spec`, Fase 2 da `sdd-lifecycle` |
 | API-02 | Teste de contrato no CI: quebra de contrato reprova o merge | antes-do-merge | orienta · experimentar | `openapi-spec`; verificador de diff de contrato |
-| UX-01 | Toda tela tem os quatro estados: carregando, vazio, erro e sucesso | enquanto-escreve | orienta · adotar | skill `estados-de-interface` |
+| UX-01 | Toda tela tem os quatro estados: carregando, vazio, erro e sucesso | enquanto-escreve | orienta · experimentar | skill `estados-de-interface` |
 | UX-02 | Protótipo antes do código, e o estado vazio não é erro | antes-de-escrever | orienta · experimentar | skill `estados-de-interface`, `steering:frontend-ux` |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | enquanto-escreve | orienta · experimentar | logs de auditoria da avaliação, LGPD-02 |
 | OBS-02 | SLO, alerta e runbook antes do deploy | depois-da-entrega | orienta · experimentar | `sre-book-slo` |
@@ -80,7 +80,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [x] **T7.** `CHANGELOG.md`; lint; suíte; validar; dois builds idênticos.
 - [ ] **T8 (conferência em lote, ADR 0005).** Como na B.2, com os achados de segurança
   automáticos como itens obrigatórios.
-- [ ] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono na B.2),
+- [x] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono na B.2),
   com nota no registro.
   Inclui os 3 médios herdados da conferência do starter, da receita e do caso da B.2
   (`c5ae0e0`): laço `until` do health check sem limite no starter e na receita; passo 7 do
@@ -107,7 +107,7 @@ servida na porta 8001, porque o portal da 8000 ainda não tem a B.3.
 rodados nos dois estados numa cópia de projeto-teste-17. Prompts testados em sessão nova
 (LGPD-01 commit e8a4776, LGPD-02 commit c561f0f), ambos `passou`.
 
-**T3 fechada (2026-10-06).** Domínio `contratos-api` (6988718), API-01 (86329da) e API-02
+**T3 fechada (2026-10-06).** Domínio `contratos-api` (0be7dba), API-01 (86329da) e API-02
 (b966374), `experimentar`, força `orienta`. Referências novas: `semver` e `oasdiff` (só citado);
 `openapi-spec` e `sdd-lifecycle` ampliadas. Verificador de diff rodado nos dois estados, e o job
 `contrato` rodado com `gitlab-ci-local` 4.76.0 (PASS compatível, FAIL incompatível). Prompts
@@ -139,6 +139,19 @@ desatualizados, resolvida pelo build. `validar.py`: 2 erros R-GERADO-DIVERGENTE 
 (`diff -rq` vazio). Portal com as 4 páginas de domínio novas, as 9 práticas novas em
 `public/praticas/` e `receitas/adicionar-migration-corretiva.html`; zero ocorrências de
 nome de organização em `public/`. `public/` está no `.gitignore` e por isso não entra no commit.
+
+**T9 fechada (2026-10-06).** Achado, tratamento:
+- LGPD-01 (alto), colunas `key`/`"index"` e só o primeiro `ADD COLUMN`: extração reescrita (constraint e índice pela sintaxe, cada cláusula `ADD [COLUMN]`); o caso do conferente sai 1 e lista as três colunas; antes 1 e depois 0 no Exemplo, saída do corpo igual.
+- LGPD-02, `tests/` vazia e arquivo não decodificável: sai 1 com mensagem; UTF-8, depois UTF-16, senão "não varrido" e sai 1; antes 1 e depois 0, e a saída do corpo passou a "4 arquivos varridos".
+- LGPD-02, limites (escape, base64, CPF partido, dígito inválido): só texto, no Como verificar, com a P2-04 e a revisão humana como complemento; Como aplicar ganhou a frase sobre 11 dígitos e a troca por ocorrência.
+- Receita da migration corretiva, `shasum -a 256 -c`: o `executar.sh` sai 1 se o hash falhar, o bloco e o texto da receita só rodam o script se passar, o arquivo de hash é temporário.
+- Laço `pg_isready` sem limite (DAD-01, DAD-02, receita): 30 tentativas de 1 s e saída 1; mesmo limite no bloco do texto da DAD-01 e no passo do prompt da DAD-02 e da receita (prompts sem reteste, com nota nos registros).
+- Laço do health check do gateway (receita e prompt do starter, no portal): 60 tentativas de 3 s com mensagem; prompt da receita ganhou "sem linha de coautoria nem trailer" no passo 7 e o `cd <pasta-da-aplicação>` no passo 3 (sem reteste, com nota nos registros).
+- Nome fixo `pg-efemero`/`efemera`: aviso de uma linha nos três Exemplos e na receita; nome mantido.
+- OBS-01, OBS-02 e `observabilidade.yaml`: `revisao_adversarial` no formato dos demais; todos os registros da B.3 passaram a `revisor: "conferência em lote (ADR 0005), sessão independente"`, com os achados de cada ID.
+- Baixos: tabela do plano (UX-01 `experimentar`), hash `0be7dba` na T3, `spec-chamados.md` no UX-02, CPF literal do OBS-01 trocado por CPF gerado na hora (nos emissores) e por número sintético no arquivo estático, aviso de schema sem `type` no API-01 (só texto), ADR qualquer no API-02 (só texto, job não endurecido).
+
+Pendências para a B.5: (1) o comentário da linha 1 do `api/openapi.yaml` do preparo da API-02 (`~/curadoria-a5/b3-api-02-prompt`) é do preparo e não está versionado no portal; (2) o laço de health check do `seed-demo.sh` e do compose, se existir, está no repositório externo `gateway-poc` e não foi tocado; (3) as práticas P2-01, P2-04, P2-05 e P2-06 (`praticas/ia-no-produto/`) ainda têm `until curl ... health/liveliness` sem limite; (4) o `comparar-contratos.py` continua sem imprimir aviso de schema sem `type` (o aviso está só no texto); (5) a receita do gateway ainda não separa o passo 7 (403) do estouro de orçamento do passo 6; (6) o prompt da LGPD-02 não ganhou a orientação "só as linhas acusadas"; (7) nenhum dos prompts alterados na T9 foi retestado, por decisão do dono.
 
 ## Conferência em lote: 2026-10-06 — achados
 
