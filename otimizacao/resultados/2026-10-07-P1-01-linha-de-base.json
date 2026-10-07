@@ -1,0 +1,204 @@
+{
+  "avaliacoes": [
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": 0.40197125000000006,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 55539,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194015-da6d040c.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": 0.40293075000000006,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 55555,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194022-391b54cb.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": null,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 65054,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194036-99d1fc5b.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": null,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 41487,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194049-9c0c4593.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": null,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 52520,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194058-7e9386dd.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-0-sem-plano",
+      "custo_usd": null,
+      "feedback": "passou; criou nada; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 24491,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194111-e873358e.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": 0.483512,
+      "feedback": "passou; criou docs/plans/2026-10-07-mensagem-erro-cpf.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 116147,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194122-fe60ea09.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": 0.49684800000000007,
+      "feedback": "passou; criou docs/plans/2026-10-07-mensagem-erro-cpf.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 116906,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194142-59234e09.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-mensagem-cpf.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 85189,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194232-aeecc88f.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-mensagem-validacao-cpf.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 90055,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194252-4668b398.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-ajuste-mensagem-cpf.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 52697,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194312-58244784.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-1-sem-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-ajuste-mensagem-erro-cpf.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 42636,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194345-ce8dea50.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": 0.5686232499999999,
+      "feedback": "passou; criou docs/plans/2026-10-07-migracao-banco-pedidos.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 184942,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194415-40e5a555.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": 0.5877917500000001,
+      "feedback": "passou; criou docs/plans/2026-10-07-migrar-banco-pedidos.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 155829,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194504-bb48b5d6.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-migracao-banco-pedidos.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 101923,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194554-f55d4215.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-migracao-banco-pedidos.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 96904,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-194618-988b1116.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-migracao-banco-pedidos.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 42168,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194642-91428e6c.jsonl"
+    },
+    {
+      "cenario": "P1-01-tier-2-com-modelo",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/plans/2026-10-07-migracao-banco-pedidos.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 43868,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194704-0a59cd1a.jsonl"
+    }
+  ],
+  "custo_usd": 2.9417,
+  "data": "2026-10-07",
+  "parcial": false,
+  "pratica": "P1-01",
+  "prompt": "P1-01-prompt-1",
+  "resumo": {
+    "antigravity": {
+      "acertos": 6,
+      "total": 6
+    },
+    "claude-code": {
+      "acertos": 6,
+      "total": 6
+    },
+    "codex": {
+      "acertos": 6,
+      "total": 6
+    }
+  },
+  "tokens": 1423910
+}

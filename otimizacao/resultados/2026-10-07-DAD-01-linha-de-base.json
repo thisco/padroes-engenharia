@@ -1,0 +1,204 @@
+{
+  "avaliacoes": [
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": 1.1780489999999997,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf_para_14.sql, docs/plans/2026-10-07-cpf-14-caracteres.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 318423,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194057-8c135ce2.jsonl"
+    },
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": 1.8872187500000002,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf_para_14_caracteres.sql, docs/plans/2026-10-07-cpf-14-caracteres.md; alterou CHANGELOG.md",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 699557,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194225-3bc69935.jsonl"
+    },
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__altera_cpf_cliente.sql, docs/plans/2026-10-07-alterar-cpf-cliente.md; alterou CHANGELOG.md",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 135451,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194842-6ec8a455.jsonl"
+    },
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__altera_cpf_cliente_para_14.sql, docs/plans/2026-10-07-aumentar-cpf-cliente.md; alterou CHANGELOG.md",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 128898,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194952-4491de34.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": 2.112129,
+      "feedback": "passou; criou alembic/versions/0003_amplia_cpf_para_14.py, docs/plans/2026-10-07-cpf-14-caracteres.md, tests/unidade/test_migration_0003_cpf_14.py; alterou CHANGELOG.md",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 829339,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-195756-1705789a.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": 2.5595955,
+      "feedback": "passou; criou alembic/versions/0003_aumenta_cpf_para_14.py, docs/plans/2026-10-07-cpf-14-caracteres.md, tests/unidade/test_migration_0003_cpf_14.py; alterou CHANGELOG.md, docs/PROJECT_MEMORY.md",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 1061608,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-200113-28f50fd1.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": null,
+      "feedback": "passou; criou alembic/versions/0003_aumentar_cpf_cliente.py, docs/plans/2026-10-07-aumentar-cpf-cliente.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 145492,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-200938-c4c42630.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": null,
+      "feedback": "passou; criou alembic/versions/0003_aumenta_cpf_cliente.py, docs/plans/2026-10-07-aumentar-cpf-cliente.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 144599,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201101-52508161.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": 1.46560025,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf_para_14.sql, docs/plans/2026-10-07-cpf-14-caracteres.md; alterou CHANGELOG.md",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 435115,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-201219-7a518793.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": 1.3678915,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf_para_14.sql, docs/plans/2026-10-07-cpf-14-caracteres.md; alterou CHANGELOG.md",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 404043,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-201424-e7432a5d.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__altera_cpf_14_caracteres.sql, docs/plans/2026-10-07-alterar-cpf-cliente.md; alterou CHANGELOG.md",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 132652,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201615-c5ccf44c.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__altera_cpf_cliente_para_14_caracteres.sql, docs/plans/2026-10-07-alterar-cpf-cliente.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 153145,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201726-5ccb2028.jsonl"
+    },
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf.sql, docs/plans/2026-10-07-amplia-cpf.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 327661,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-201917-e42034ce.jsonl"
+    },
+    {
+      "cenario": "DAD-01-com-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf.sql, docs/plans/2026-10-07-amplia-cpf.md, docs/specs/2026-10-07-amplia-cpf.md, tests/integracao/test_migration_cpf.py; alterou CHANGELOG.md",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 682959,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-202040-2860a98f.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": null,
+      "feedback": "passou; criou alembic/versions/0003_ampliar_cpf_para_14.py, docs/plans/2026-10-07-cpf-14.md, tests/integracao/test_migration_cpf.py; alterou CHANGELOG.md",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 405727,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-202256-8348047b.jsonl"
+    },
+    {
+      "cenario": "DAD-01-pasta-alembic",
+      "custo_usd": null,
+      "feedback": "passou; criou alembic/versions/0003_amplia_cpf.py, docs/plans/2026-10-07-ampliar-cpf.md, tests/test_migration_cpf.py; alterou CHANGELOG.md",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 342106,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-202451-a8237959.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf.sql, docs/plans/2026-10-07-amplia-cpf.md, tests/integracao/test_migration_cpf.py; alterou CHANGELOG.md",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 500463,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-202617-d8d048ac.jsonl"
+    },
+    {
+      "cenario": "DAD-01-sem-remoto",
+      "custo_usd": null,
+      "feedback": "passou; criou db/migration/V3__amplia_cpf.sql, docs/plans/2026-10-07-ampliar-cpf.md; alterou CHANGELOG.md",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 369699,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-202816-fc41d81d.jsonl"
+    }
+  ],
+  "custo_usd": 10.5705,
+  "data": "2026-10-07",
+  "parcial": false,
+  "pratica": "DAD-01",
+  "prompt": "DAD-01-prompt-1",
+  "resumo": {
+    "antigravity": {
+      "acertos": 6,
+      "total": 6
+    },
+    "claude-code": {
+      "acertos": 6,
+      "total": 6
+    },
+    "codex": {
+      "acertos": 6,
+      "total": 6
+    }
+  },
+  "tokens": 7216937
+}

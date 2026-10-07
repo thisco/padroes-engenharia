@@ -212,6 +212,42 @@ execucoes:
     saiu com 0. Transcrição: relatório final do agente em curadoria-a5/transcricoes/P1-01-prompt-2.txt;
     uma rodada anterior, com a versão do prompt sem o caso do modelo ausente, teve o mesmo resultado.'
   data: '2026-10-04'
+- tipo: prompt
+  prompt: P1-01-prompt-1
+  harness: antigravity
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P1-01-tier-0-sem-plano, P1-01-tier-1-sem-modelo,
+    P1-01-tier-2-com-modelo; transcrições: /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194058-7e9386dd.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194111-e873358e.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194312-58244784.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194345-ce8dea50.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194642-91428e6c.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194704-0a59cd1a.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: P1-01-prompt-1
+  harness: claude-code
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P1-01-tier-0-sem-plano, P1-01-tier-1-sem-modelo,
+    P1-01-tier-2-com-modelo; transcrições: /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194015-da6d040c.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194022-391b54cb.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194122-fe60ea09.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194142-59234e09.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194415-40e5a555.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194504-bb48b5d6.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: P1-01-prompt-1
+  harness: codex
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P1-01-tier-0-sem-plano, P1-01-tier-1-sem-modelo,
+    P1-01-tier-2-com-modelo; transcrições: /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194036-99d1fc5b.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194049-9c0c4593.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194232-aeecc88f.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194252-4668b398.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194554-f55d4215.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-194618-988b1116.jsonl'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

@@ -1,0 +1,204 @@
+{
+  "avaliacoes": [
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": 0.5709069999999999,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 146445,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194057-df032e45.jsonl"
+    },
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": 0.56416475,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 146229,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194134-bc10d2e8.jsonl"
+    },
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 74854,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194313-9d9e8741.jsonl"
+    },
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 54528,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194359-408621bd.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": 0.566883,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 174441,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194431-563eb697.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": 0.663003,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 154773,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194506-fac19f9c.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 89890,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194655-920809bb.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 74809,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194748-8bb62c33.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": 0.53524725,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 116590,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194826-eff36f57.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": 0.57792475,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "claude-code",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 173268,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194857-f78a969f.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 80449,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-195111-fc638280.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "antigravity",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 104843,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-195153-aa8fd4e1.jsonl"
+    },
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 135304,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200717-86d4e914.jsonl"
+    },
+    {
+      "cenario": "P2-02-alto-risco",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 110309,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200749-89a63fc8.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 134373,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200818-ad1b0503.jsonl"
+    },
+    {
+      "cenario": "P2-02-spec-ambigua",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 112735,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200849-c9d538f4.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 1,
+      "tokens": 133590,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200916-3a1d2d70.jsonl"
+    },
+    {
+      "cenario": "P2-02-uso-universal",
+      "custo_usd": null,
+      "feedback": "passou; criou docs/steering/ia.md; alterou nada",
+      "harness": "codex",
+      "nota": 1.0,
+      "repeticao": 2,
+      "tokens": 127258,
+      "transcricao": "/Users/thiago/curadoria-a5/otimizacao/codex-20261007-200945-a081d702.jsonl"
+    }
+  ],
+  "custo_usd": 3.4781,
+  "data": "2026-10-07",
+  "parcial": false,
+  "pratica": "P2-02",
+  "prompt": "P2-02-prompt-1",
+  "resumo": {
+    "antigravity": {
+      "acertos": 6,
+      "total": 6
+    },
+    "claude-code": {
+      "acertos": 6,
+      "total": 6
+    },
+    "codex": {
+      "acertos": 6,
+      "total": 6
+    }
+  },
+  "tokens": 2144688
+}

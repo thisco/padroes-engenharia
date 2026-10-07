@@ -263,6 +263,56 @@ execucoes:
   evidencia: 'com a espera limitada a 30 tentativas, a saída é a do corpo: checksum mismatch -1946493639 x -1926160430,
     ''Successfully validated 3 migrations'' e o histórico com os três checksums; nenhum container ou rede sobrou.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: antigravity
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '2 de 2 execuções passaram no verificador do cenário; cenários: DAD-01-com-remoto; transcrições:
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194842-6ec8a455.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194952-4491de34.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: claude-code
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '2 de 2 execuções passaram no verificador do cenário; cenários: DAD-01-com-remoto; transcrições:
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194057-8c135ce2.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194225-3bc69935.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: antigravity
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '4 de 4 execuções passaram no verificador do cenário; cenários: DAD-01-pasta-alembic, DAD-01-sem-remoto;
+    transcrições: /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-200938-c4c42630.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201101-52508161.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201615-c5ccf44c.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-201726-5ccb2028.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: claude-code
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '4 de 4 execuções passaram no verificador do cenário; cenários: DAD-01-pasta-alembic, DAD-01-sem-remoto;
+    transcrições: /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-195756-1705789a.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-200113-28f50fd1.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-201219-7a518793.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-201424-e7432a5d.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: codex
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: DAD-01-com-remoto, DAD-01-pasta-alembic,
+    DAD-01-sem-remoto; transcrições: /Users/thiago/curadoria-a5/otimizacao/codex-20261007-201917-e42034ce.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202040-2860a98f.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202256-8348047b.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202451-a8237959.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202617-d8d048ac.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202816-fc41d81d.jsonl'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'

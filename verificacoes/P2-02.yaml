@@ -77,6 +77,42 @@ execucoes:
     2026-10-06 e o parágrafo final; depois "P2-02: classificação completa.", saída 0; commit e4ef178 só com docs/steering/ia.md.
     Transcrição em curadoria-a5/transcricoes/P2-02-prompt-1.bruta.jsonl. Nota (2026-10-06): o texto do prompt foi ajustado depois deste teste (lista de domínios alinhada à política e dominio_de_impacto como valor livre); por decisão do dono, o teste não foi repetido.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: P2-02-prompt-1
+  harness: antigravity
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P2-02-alto-risco, P2-02-spec-ambigua,
+    P2-02-uso-universal; transcrições: /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194313-9d9e8741.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194359-408621bd.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194655-920809bb.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-194748-8bb62c33.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-195111-fc638280.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-195153-aa8fd4e1.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: P2-02-prompt-1
+  harness: claude-code
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P2-02-alto-risco, P2-02-spec-ambigua,
+    P2-02-uso-universal; transcrições: /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194057-df032e45.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194134-bc10d2e8.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194431-563eb697.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194506-fac19f9c.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194826-eff36f57.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-194857-f78a969f.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: P2-02-prompt-1
+  harness: codex
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '6 de 6 execuções passaram no verificador do cenário; cenários: P2-02-alto-risco, P2-02-spec-ambigua,
+    P2-02-uso-universal; transcrições: /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200717-86d4e914.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200749-89a63fc8.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200818-ad1b0503.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200849-c9d538f4.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200916-3a1d2d70.jsonl,
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-200945-a081d702.jsonl'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'
