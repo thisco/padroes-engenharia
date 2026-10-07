@@ -1,0 +1,10 @@
+id: import-linter-docs
+titulo: "Import Linter: contratos forbidden e layers"
+organizacao: Import Linter (David Seddon)
+url: https://import-linter.readthedocs.io/en/stable/contract_types/forbidden/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "páginas Overview, contract_types/forbidden, contract_types/layers e get_started/run"
+dominios: [arquitetura]
+notas: "Abertas na web em 2026-10-07. Licença BSD-2-Clause (link no Overview). A documentação não informa o código de saída do lint-imports; o 1 com contrato quebrado é observação local (import-linter 2.15) registrada no Exemplo da ARQ-03."

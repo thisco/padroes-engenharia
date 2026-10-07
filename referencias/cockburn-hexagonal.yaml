@@ -3,7 +3,7 @@ titulo: Hexagonal architecture
 organizacao: Alistair Cockburn
 url: https://alistair.cockburn.us/hexagonal-architecture/
 tipo: analista
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-07'
 verificacao: V
 localizacao: intenção e descrição de portas e adaptadores
 dominios:

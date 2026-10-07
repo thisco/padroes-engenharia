@@ -1,0 +1,108 @@
+conteudo: ARQ-03
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a intenção da arquitetura hexagonal é permitir que a aplicação seja operada por usuários, programas,
+    testes ou scripts de lote e desenvolvida e testada isolada de dispositivos e bancos de dados
+  ref: cockburn-hexagonal
+  localizacao: seção Intent
+  resultado: confirmada
+- texto: portas são pontos de conversa entre o núcleo e o exterior; adaptadores traduzem entre a API interna
+    e a tecnologia de fora
+  ref: cockburn-hexagonal
+  localizacao: seção Ports and Adapters
+  resultado: confirmada
+- texto: um adaptador específico da tecnologia converte o evento em chamada ou mensagem, e a aplicação
+    não conhece a natureza do dispositivo de entrada
+  ref: cockburn-hexagonal
+  localizacao: texto principal, parágrafo sobre eventos de fontes externas
+  resultado: confirmada
+- texto: o Import Linter permite impor restrições às importações entre módulos Python, com contratos num
+    arquivo de configuração, e o lint-imports confere os contratos
+  ref: import-linter-docs
+  localizacao: página inicial (Overview e Configuration)
+  resultado: confirmada
+- texto: o contrato forbidden impede um conjunto de módulos de ser importado por outro, e cobre pacotes
+    externos se include_external_packages = True e o pacote entra pela raiz
+  ref: import-linter-docs
+  localizacao: contract_types/forbidden
+  resultado: confirmada
+- texto: o contrato layers lista as camadas da mais alta para a mais baixa; a mais baixa não importa a
+    mais alta
+  ref: import-linter-docs
+  localizacao: contract_types/layers
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/verificar-camadas.py
+  comando: python3 scripts/verificar-camadas.py (domínio antes, domínio depois, raiz sem configuração,
+    --config inexistente, sem import-linter)
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: 'antes: contrato ''dominio-sem-framework'' BROKEN com ''boletos.dominio.boleto -> flask (l.6)''
+    e ''-> sqlalchemy (l.7)'', saída 1; depois: ''ARQ-03: 2 contratos cumpridos.'', saída 0; configuração
+    ausente e raiz sem config: saída 1; python sem import-linter: ''import-linter não instalado'', saída
+    1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/dominio-antes.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: falhou-como-esperado
+  evidencia: O dominio nao importa framework nem banco BROKEN; flask (l.6) e sqlalchemy (l.7); saída 1.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/dominio.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: '2 contratos KEPT; ''ARQ-03: 2 contratos cumpridos.''; saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/importlinter.ini
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: lê os dois contratos (forbidden e layers) e analisa 14 arquivos; o linter funciona com flask
+    e sqlalchemy não instalados.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/portas.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: aplicacao importa só o dominio; contrato layers KEPT.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/servico.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: aplicacao importa só aplicacao e dominio; contrato layers KEPT.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/adaptador-http.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: adaptadores importam flask, aplicacao e adaptadores sem violar nenhum contrato.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-03/repositorio-sql.py
+  comando: python3 scripts/verificar-camadas.py
+  ambiente: pacote boletos montado em /tmp/b4a3; Python 3.14.8; import-linter 2.15 e grimp 3.17 numa venv
+    de preparo; flask e sqlalchemy não instalados; macOS
+  resultado: passou
+  evidencia: adaptador de saída importa sqlalchemy e dominio sem violar nenhum contrato.
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
