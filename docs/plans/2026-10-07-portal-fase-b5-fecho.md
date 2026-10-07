@@ -50,7 +50,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 
 ## Tarefas
 
-- [ ] **T1 (motor e schemas, TDD).** (a) `gerar.py --previa`: gera numa pasta explícita (recusa
+- [x] **T1 (motor e schemas, TDD).** (a) `gerar.py --previa`: gera numa pasta explícita (recusa
   `public/`), ignora só `R-PROMPT`, e carimba "PRÉVIA, não publicada" no rodapé e em `llms.txt`.
   (b) Regra `R-LINK-INTERNO`: todo link relativo em Markdown do conteúdo aponta para arquivo que
   existe na fonte ou no gerado; reprova com arquivo e linha. (c) Regra de mecanismo hospedado
@@ -99,6 +99,47 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
+
+**T1 fechada (2026-10-07).** Commits: c6eb7f1 (a, `--previa`), 20a756a (b, `R-LINK-INTERNO`),
+e4a9ba5 (c, `$BASE/<arquivo>`), 041ce08 (d, `falhou` com `motivo`; CICD-01), a22b075 (e, caso com
+`dono`), 561aa25 (f, pastas `<nome> <n>`) e cb045c9 (achados da revisão forte). Vermelho → verde por
+item: (a) 5 falhas ("unrecognized arguments: --previa") → 22 passed nos dois arquivos; (b)
+ImportError de `regra_link_interno` → 27 testes; (c) 2 falhas (citação por `$BASE` de arquivo ou
+componente não hospedado passava em silêncio) → 35 passed; (d) 2 falhas (aceitação de `falhou` e
+`R-PROMPT` contando a falha) → 59 passed; (e) 5 falhas (caso sem `dono` e `dono` fora do formato
+passavam) → 684 passed; (f) 3 falhas (função inexistente) → 19 passed. Depois da revisão forte, 19
+testes vermelhos → suíte 708 passed; `ruff check` e `ruff format --check` limpos; as 2 falhas
+restantes são os testes do repositório real (`test_sai_0_no_repositorio_real`,
+`test_validar_tudo_no_repositorio_real_nao_tem_erro`), por conteúdo em andamento de outras tarefas
+(`R-PROMPT` e `R-VERIFICACAO` de receitas e guias novos, `R-GERADO-DIVERGENTE` do README).
+`R-LINK-INTERNO` no conteúdo de então achou 4 links quebrados, todos para a pasta de `exemplos/`
+(`P2-01.md:100`, `P2-04.md:114`, `P2-05.md:130`, `P2-06.md:97`, destino `../exemplos/P2-0n/`: o site
+não tem índice da pasta); a T2 os tratou e hoje a regra não acha nenhum. Prévia conferida numa cópia
+do HEAD com `--commit` e `--data` (`gerar.py --previa --saida .../previa`): `llms.txt` abre com
+"(PRÉVIA, não publicada)" e o rodapé também. Decisão: a prévia ignora o código `R-PROMPT` inteiro
+(literal do plano), o que inclui "prompt só em prática e receita": um guia com bloco ```prompt só
+passa na prévia, e publicar guia com prompt exige decidir a regra (ver T3).
+
+*Revisão com modelo forte (opus), contra este plano e a constituição.* Altos, tratados em cb045c9:
+(1) `--previa --saida <raiz>` ou pasta da fonte apagava o repositório → `--saida` recusada se for a
+raiz, ancestral, pasta da fonte ou pasta com conteúdo que não é site gerado, nos dois modos; (2)
+trava de `public/` furável por outra caixa de letra (APFS) → comparação por `samefile`. Médios:
+(3) e (4) `R-LINK-INTERNO` aceitava arquivo só da fonte e reprovava saídas geradas (roteiro,
+`llms.txt`, `catalogo.json`) → agora confere contra o que o build publica, e imagens também; (5)
+prévia sem carimbo nas apresentações → faixa injetada no deck; (8) CICD-01 contraditória → frase
+removida; tratados. Médios não tratados: (6) a limpeza `<nome> <n>` quase nunca acha algo, porque o
+iCloud cria as pastas minutos depois de o processo sair (teste só as simula) → decisão do dono:
+tirar a saída da sincronização (`public.nosync`), varrer no início do próximo build ou ignorar no
+`.gitignore`; (7) ignorar `R-PROMPT` inteiro na prévia → mantido (ver decisão acima). Baixos:
+tratados (9) regex de `$BASE` com comentário, (13) symlink na limpeza, (14) teste do schema que
+passaria com o código quebrado. Anotados: (10) `BASE:` de YAML e `BASE :=` de Makefile não são
+reconhecidos; (11) link dentro de bloco HTML bruto não é conferido (o parser da regra liga o HTML);
+(12) dois links iguais em linhas seguidas colapsam num erro só; (15) `motivo` é aceito também com
+`passou` e a mensagem do schema não aponta o campo; (16) `skills/curadoria-de-pratica/SKILL.md:136`
+e `docs/specs/2026-10-02-portal-v1-1-delta.md:377` ainda listam só `passou | falhou-como-esperado`
+(`skills/` é risco alto, fica para pedido do dono); (17) SemVer: `dono` obrigatório no caso é mudança
+de schema, major pelo `niveis-de-risco.yml`, a decidir na T7; (18) `harness: claude-code` nos
+registros segue a convenção existente.
 
 **T3 fechada (2026-10-07).** Dois guias `tutorial`, com registro em `verificacoes/<slug>.yaml` (a chave
 do guia é o nome do arquivo, como nos dois guias anteriores; o `guia-<slug>` do brief não casa com o
