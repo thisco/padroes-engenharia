@@ -29,10 +29,27 @@ referencias:
 - anthropic-claude-code-expertise
 - anthropic-effective-harnesses
 - anthropic-harness-design
+- cherny-cinco-arquetipos
 - iso-iec-42001
+- jvaneyck-cinco-arquetipos
 - lgpd
 - nist-ai-rmf
 - pl-2338-congresso
 - portaria-mgi-3485
 revisado_em: '2026-10-07'
 ---
+
+## Modos de trabalho na era agentiva
+
+Boris Cherny, criador do Claude Code, propôs cinco modos de trabalho em vez de cinco cargos [ref:cherny-cinco-arquetipos]. A tabela mostra onde cada um aparece neste portal e acrescenta um sexto, que a lista não nomeia.
+
+| Modo | O que faz | Onde aparece neste portal |
+| --- | --- | --- |
+| Prototyper | Propõe ideias novas e faz muitas, das quais a maioria não segue adiante [ref:cherny-cinco-arquetipos]. | Spec e protótipo antes do código: [UX-02](praticas/UX-02.html). |
+| Builder | Transforma o protótipo em produto e infraestrutura de produção [ref:cherny-cinco-arquetipos]. | Plano e teste primeiro: [QLD-01](praticas/QLD-01.html). |
+| Sweeper | Limpa a interface, simplifica o sistema, desliga o que não serve e otimiza [ref:cherny-cinco-arquetipos]. | [QLD-02](praticas/QLD-02.html): o bug vira teste e depois regra. |
+| Grower | Leva um produto já construído em direção ao encaixe com o mercado, iterando [ref:cherny-cinco-arquetipos]. | SLO, alerta e métricas: [OBS-02](praticas/OBS-02.html). |
+| Maintainer | Cuida de um sistema maduro para que siga seguro, confiável e rápido ao crescer [ref:cherny-cinco-arquetipos]. | Arquitetura Viva: [ARQ-02](praticas/ARQ-02.html); mudança de schema reversível: [DAD-02](praticas/DAD-02.html). |
+| Verificador (acrescentado aqui) | Avalia se o que foi feito está certo: quem faz não julga. A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como [ref:anthropic-claude-code-expertise]; quando quem executa é o agente, o que sobra de escasso é conferir o resultado. | Revisão independente (ADR 0005), `verificar_pr.py` do scaffold SDD e a conferência em lote da curadoria; a seção Como verificar de cada prática. |
+
+A lista tem quatro limites. É um post pessoal, e não uma publicação institucional [ref:cherny-cinco-arquetipos]. Os cinco modos existem em toda fase do produto; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos]. Modo não é identidade: o autor descreve os tipos por fase do ciclo, e um mesmo time os percorre ao longo do projeto [ref:cherny-cinco-arquetipos]. E, numa organização com cargo, carreira e regime jurídico, adotam-se os modos de trabalho, sem abolir os cargos.

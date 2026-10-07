@@ -35,6 +35,24 @@ afirmacoes:
   ref: iso-iec-42001
   localizacao: página do catálogo da IEC, escopo e data
   resultado: confirmada
+- texto: Boris Cherny propôs cinco modos de trabalho (Prototyper, Builder, Sweeper, Grower, Maintainer), em post pessoal no X, e não em publicação institucional.
+  ref: cherny-cinco-arquetipos
+  localizacao: lista dos cinco arquétipos e a frase do autor na página secundária; o post no X não abriu (HTTP 402)
+  resultado: confirmada
+  nota: Fonte [S]; as definições de cada modo vêm da página secundária, não do post lido.
+- texto: Os tipos são apresentados por fase do ciclo do produto, e um mesmo time os percorre ao longo do projeto.
+  ref: cherny-cinco-arquetipos
+  localizacao: página secundária, trecho sobre os tipos por fase; a declaração do próprio autor de que os papéis mudam não foi lida no post
+  resultado: parcial
+  nota: O texto da página foi escrito sem atribuir ao autor a frase de que os papéis mudam; reabrir o post no X.
+- texto: Toda fase do produto precisa dos cinco papéis ao mesmo tempo; o que muda é a distribuição.
+  ref: jvaneyck-cinco-arquetipos
+  localizacao: frase central do post de 2026-07-10
+  resultado: confirmada
+- texto: A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como construir.
+  ref: anthropic-claude-code-expertise
+  localizacao: página do estudo, trecho sobre planejamento e execução (a página dá 70% de planejamento e 20% de execução pelas pessoas; os 80% do modelo não aparecem com esse número e não foram citados)
+  resultado: confirmada
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-07'

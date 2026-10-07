@@ -1,0 +1,12 @@
+id: cherny-cinco-arquetipos
+titulo: 'The Archetype Under the Title (sobre os cinco arquétipos propostos por Boris Cherny)'
+organizacao: paddo.dev
+url: https://paddo.dev/blog/the-archetype-under-the-title/
+tipo: comunidade
+publicado_em: '2026-06-29'
+verificado_em: '2026-10-07'
+verificacao: S
+localizacao: Lista dos cinco arquétipos (Prototyper, Builder, Sweeper, Grower, Maintainer) e a frase de Cherny sobre papéis de produto do futuro
+dominios:
+- construir-com-ia
+notas: Fonte secundária [S]. O post original é de Boris Cherny, criador do Claude Code, no X (https://x.com/bcherny/status/2071379474277613732, achado por busca) e não abriu em 2026-10-07 (HTTP 402); é um post pessoal, não uma publicação institucional. As definições vêm desta página, que abriu e reproduz a lista e uma frase do autor; o post em si não foi lido.
