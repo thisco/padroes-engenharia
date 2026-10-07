@@ -79,7 +79,7 @@ tarefa dela.
 - [ ] **T2 (QLD-01..03, `_dominio.md` de qualidade-bdd).** Exemplos: teste vermelho→verde com as
   duas saídas; bug com teste de reprodução e a regra destilada; script de validação local
   idêntico ao job do CI, rodado nos dois estados.
-- [ ] **T3 (IAC-01..03, `_dominio.md` de infra-iac).** Exemplos: compose com ordem de rebuild e
+- [x] **T3 (IAC-01..03, `_dominio.md` de infra-iac).** Exemplos: compose com ordem de rebuild e
   verificador de serviços declarados; `tofu plan` (ou `terraform plan`, se o OpenTofu não
   instalar) de um módulo mínimo com provider `local`/`null`, saída real; rollback declarado e
   executado (reaproveita a DAD-02).
@@ -102,5 +102,19 @@ harness") e o caso "SGD Catálogo de Nuvem" (§10) ficam para a B.5, junto com a
 listadas lá.
 
 ## Evidências
+
+**T3 fechada (2026-10-07).** IAC-01 (4063d03), IAC-02 (46e7eae), IAC-03 (69ceca7) e o domínio
+`infra-iac` (a79506e). Referências novas: `sdd-scaffold-infra-devops` (steering lido na tag
+v1.7.1; é um modelo com comentários "preencher", citado como orientação e não como regra com
+código), `docker-compose-startup-order`, `docker-compose-up`, `opentofu-plan`, `opentofu-show`,
+`opentofu-json-format` e `opentofu-dependency-lock` (as de OpenTofu e Docker abertas na web em
+2026-10-07). Decisões: OpenTofu v1.13.1 com o provider `local` v2.9.1; o `tofu init` baixou o
+provider sem falha de rede, e o `.terraform.lock.hcl` do módulo base está no Exemplo da IAC-02. Os
+verificadores falham fechado (insumo ausente ou vazio sai 1) e toda espera tem limite; os
+roteiros usam o prefixo `iac-`, derrubam tudo com `trap` e foram conferidos sem sobras de
+contêiner, rede ou imagem. A IAC-03 não repete a volta de schema: aponta a DAD-02 e executa o
+rollback de deploy (imagem anterior). Preparos de prompt em `~/curadoria-a5/b4-iac-01-prompt`,
+`b4-iac-02-prompt` e `b4-iac-03-prompt`; os prompts ainda não foram testados nem registrados
+(R-PROMPT pendente, como esperado).
 
 ## Conferência em lote: <data> — achados
