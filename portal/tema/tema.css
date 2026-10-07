@@ -374,22 +374,22 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .bloco pre { width: 100%; box-sizing: border-box; margin: 0; padding: 12px 56px 12px 12px; }
 .bloco .copiar { position: absolute; top: 6px; right: 6px; }
 
-/* A.5-2 C8: O problema, ninho e cadeia lado a lado; "Como combinar" em bloco azul-claro */
+/* A.5-2 C8: O problema, ninho e cadeia lado a lado; "Como combinar" em bloco neutro (azul só impede) */
 .lado-a-lado { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; }
 .lado-a-lado > section { min-width: 0; }
 @media (min-width: 901px) {
   .lado-a-lado { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
-.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--gov-claro); border: 1px solid var(--gov); padding: 12px; }
-.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--gov); padding: 8px 10px; }
+.combinar { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; background: var(--papel-2); border: 1px solid var(--traco); padding: 12px; }
+.combinar .momento-caixa { background: var(--branco); border: 1px solid var(--traco); padding: 8px 10px; }
 .combinar .momento-caixa p { margin: 4px 0 0; font-size: 13px; }
 
 /* A.5-2 C10: legenda de status em grade e chips de status distintos (o texto sempre aparece) */
 .legenda-status { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px 14px; margin: 8px 0; }
 .legenda-status > div { display: flex; flex-direction: column; gap: 4px; }
 .legenda-status dd { margin: 0; font-size: 13px; }
-.st.adotar { background: var(--gov); color: var(--branco); border-color: var(--gov); }
-.st.experimentar { background: var(--gov-claro); border-color: var(--gov); border-style: dashed; }
+.st.adotar { background: var(--branco); border: 2px solid var(--tinta); }
+.st.experimentar { background: var(--papel-2); border-style: dashed; }
 .st.avaliar { background: var(--ambar-claro); border-color: var(--ambar); color: var(--tinta); }
 .st.evitar { background: var(--branco); border-color: var(--erro); color: var(--erro); text-decoration: line-through; }
 
