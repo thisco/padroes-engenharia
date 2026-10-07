@@ -80,7 +80,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   quatro estados" (Desenho; UX-01/02), "Declarar SLO, alerta e runbook de um serviço" (Entrega e
   operação; OBS-02) e "Varrer segredos no CI e antes do commit" (Entrega e operação; SEG-02).
   Schema `receita`; Exemplo executado; prompt testado com o portal em **modo de prévia** (T1).
-- [ ] **T5 (radar, páginas, ADR, starter).** Fichas `ferramentas/opentofu.yml` e
+- [x] **T5 (radar, páginas, ADR, starter).** Fichas `ferramentas/opentofu.yml` e
   `ferramentas/pytest.yml`; `paginas/pessoas-e-normas.md` com `lead`, `modos` e as 5 normas do
   D13 (ler o D13 na spec); ADR 0006 "o caso SGD sai da semente"; prova da instalação completa do
   starter `gateway-poc` com a porta 4000 livre (prompt do README do starter em sessão nova,
@@ -99,5 +99,27 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
+
+**T5 fechada (2026-10-07).** Fichas `opentofu` (1.13.1, MPL-2.0; IAC-02) e `pytest` (9.1.1, MIT;
+QLD-01 a QLD-03, com o plugin pytest-bdd declarado e sem prática ainda) em d835c02, com
+`ferramentas_aprovadas` preenchido nas quatro práticas. Página `pessoas-e-normas` em 8973793, com as
+5 normas do D13 (LGPD, Portaria MGI 3.485, PL 2338, NIST AI RMF, ISO 42001); só a LGPD tem prática
+mapeada (LGPD-01 e LGPD-02 ganharam `mapeia: [lgpd:art-6]`), as outras quatro aparecem como lacuna
+nomeada; a Portaria é fonte [S] (texto oficial deu 403). A prévia gera `pessoas-e-normas.html`.
+ADR 0006 em 704e78a, com nota na lista de casos do §10 da spec.
+
+*Starter `gateway-poc`: preparo pronto, prova da instalação completa pendente.* Preparo em
+`/Users/thiago/curadoria-a5/b5-starter-gateway-prompt` (repositório git vazio, `main`). A porta 4000
+está livre, mas em 2026-10-07 ainda havia contêineres `poc-*` de outra cópia (poc-db e poc-ollama no
+ar; poc-db-vectors, poc-vector-connector, poc-agente-eco no ar; os dois presidio parados), e o
+passo 1 do prompt para se houver contêiner com nome `poc-gateway`, `poc-db` ou `poc-ollama`. Só os
+dois últimos colidem. O dono precisa derrubá-los (`docker rm -f poc-db poc-ollama`) antes do teste; a
+T5 não mexeu neles. O Docker tem 5,1 GiB de memória (o README pede cerca de 8 GiB); o `ollama pull`
+é opcional no prompt e deve ser recusado. O testador confere: (1) o gateway no ar na porta 4000
+(`curl -sf http://localhost:4000/health/liveliness`); (2) a chave virtual `teste-instalacao` criada
+no passo 7 com `max_budget` 1; (3) o catálogo (o `/ui/` devolve 200, `simulado` responde com a chave
+do perfil-restrito e `fronteira-sonnet` volta 403); (4) nenhuma chave impressa e `.env` e
+`.demo-keys` ignorados pelo git; (5) ao fim, `docker compose down -v` dentro de `gateway-poc/poc`, e
+`docker ps` sem contêiner novo. Nenhuma execução foi registrada em `verificacoes/`.
 
 ## Conferência em lote: <data> — achados
