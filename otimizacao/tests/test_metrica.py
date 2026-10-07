@@ -163,7 +163,17 @@ def test_resposta_com_o_trecho_passa(tmp_path, monkeypatch):
 
 
 def test_resposta_sem_o_trecho_zera_sem_verificar(tmp_path, monkeypatch):
-    avs = _avaliar_com_resposta(tmp_path, monkeypatch, ("tier 0",))
+    avs = _avaliar_com_resposta(tmp_path, monkeypatch, (r"tier\W*0\b",))
     assert avs[0].nota == 0.0 and avs[0].tokens == 230
-    assert "resposta do agente sem o trecho 'tier 0'" in avs[0].feedback
+    assert "resposta do agente sem o trecho 'tier\\W*0\\b'" in avs[0].feedback
     assert "resposta: 'OK'" in avs[0].feedback
+
+
+@pytest.mark.parametrize("resposta", ["Tier 0", "**Tier:** 0 — x", "tier: 0"])
+def test_resposta_cumpre_casa_variacoes_de_tier_0(resposta):
+    assert metrica.resposta_cumpre(resposta, (r"tier\W*0\b",)) is None
+
+
+@pytest.mark.parametrize("resposta", ["Tier 1", "OK", "Tier 01"])
+def test_resposta_cumpre_devolve_o_padrao_que_falhou(resposta):
+    assert metrica.resposta_cumpre(resposta, (r"tier\W*0\b",)) == r"tier\W*0\b"

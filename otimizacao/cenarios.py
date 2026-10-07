@@ -61,6 +61,17 @@ def carregar_cenarios(pasta: Path, pratica: str | None = None) -> list[Cenario]:
     return sorted(cenarios, key=lambda c: c.id)
 
 
+def _regexes(padroes: list[Any], arquivo: Path) -> tuple[str, ...]:
+    for trecho in padroes:
+        try:
+            re.compile(str(trecho))
+        except re.error as exc:
+            raise CenarioInvalido(
+                f"{arquivo}: resposta_deve_conter com regex inválida: {trecho}"
+            ) from exc
+    return tuple(str(t) for t in padroes)
+
+
 def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
     def texto(campo: str) -> str:
         valor = d.get(campo)
@@ -111,6 +122,6 @@ def _cenario(d: dict[str, Any], arquivo: Path) -> Cenario:
             nao_deve_alterar=tuple(lista(verificacao, "nao_deve_alterar")),
             deve_criar=tuple(lista(verificacao, "deve_criar")),
             nao_deve_criar=tuple(lista(verificacao, "nao_deve_criar")),
-            resposta_deve_conter=tuple(lista(verificacao, "resposta_deve_conter")),
+            resposta_deve_conter=_regexes(lista(verificacao, "resposta_deve_conter"), arquivo),
         ),
     )

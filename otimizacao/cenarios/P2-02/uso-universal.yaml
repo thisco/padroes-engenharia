@@ -8,10 +8,10 @@ insumos:
 preparacao:
   - mkdir -p docs/specs
   - |-
-    printf '# Spec: resumo de atas\n\nUm assistente interno que resume atas de reunião para a própria equipe. Não toma decisão sobre pessoas.\n' > docs/specs/2026-10-07-uso-universal.md
+    printf '# Spec: resumo de atas\n\nUm assistente interno que resume atas de reunião para a própria equipe. Não toma decisão sobre pessoas.\n' > docs/specs/2026-10-07-resumo-atas.md
   - git add -A && git commit -qm "spec"
 variaveis:
-  caminho da spec: docs/specs/2026-10-07-uso-universal.md
+  caminho da spec: docs/specs/2026-10-07-resumo-atas.md
   nome de quem classifica: Ana Souza
   AAAA-MM-DD: "2026-10-07"
   quem revisa: analista habilitado

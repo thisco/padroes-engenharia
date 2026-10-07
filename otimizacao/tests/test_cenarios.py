@@ -102,3 +102,12 @@ def test_resposta_deve_conter_carrega_como_tupla(tmp_path):
     )
     escrever(tmp_path, "ok.yaml", texto)
     assert carregar_cenarios(tmp_path)[0].verificacao.resposta_deve_conter == ("tier 0",)
+
+
+def test_resposta_deve_conter_com_regex_invalida_reprova(tmp_path):
+    texto = VALIDO.replace(
+        "nao_deve_criar: []", 'nao_deve_criar: []\n  resposta_deve_conter: ["["]', 1
+    )
+    escrever(tmp_path, "ruim.yaml", texto)
+    with pytest.raises(CenarioInvalido, match="resposta_deve_conter com regex inválida: \\["):
+        carregar_cenarios(tmp_path)

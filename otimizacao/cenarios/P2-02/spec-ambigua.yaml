@@ -8,10 +8,10 @@ insumos:
 preparacao:
   - mkdir -p docs/specs
   - |-
-    printf '# Spec: chat de atendimento com sugestão de seguro\n\nUm chat que responde dúvidas de clientes sobre produtos e, quando o cliente pede, sugere um plano de seguro adequado ao perfil dele.\n' > docs/specs/2026-10-07-spec-ambigua.md
+    printf '# Spec: chat de atendimento com sugestão de seguro\n\nUm chat que responde dúvidas de clientes sobre produtos e, quando o cliente pede, sugere um plano de seguro adequado ao perfil dele.\n' > docs/specs/2026-10-07-chat-produtos.md
   - git add -A && git commit -qm "spec"
 variaveis:
-  caminho da spec: docs/specs/2026-10-07-spec-ambigua.md
+  caminho da spec: docs/specs/2026-10-07-chat-produtos.md
   nome de quem classifica: Ana Souza
   AAAA-MM-DD: "2026-10-07"
   quem revisa: analista habilitado

@@ -3,6 +3,7 @@ harness), composição projeto → harness → verificador (casos 1, 2 e 4) e o 
 
 from __future__ import annotations
 
+import re
 import shutil
 import tempfile
 from dataclasses import dataclass
@@ -82,6 +83,11 @@ def nota_minima(avaliacoes: list[Avaliacao]) -> float:
     return min((a.nota for a in avaliacoes), default=0.0)
 
 
+def resposta_cumpre(resposta: str, padroes: tuple[str, ...]) -> str | None:
+    """Devolve o primeiro padrão (regex, sem diferenciar maiúsculas) que a resposta não casa."""
+    return next((p for p in padroes if not re.search(p, resposta, re.IGNORECASE)), None)
+
+
 def avaliar(
     cenario: Cenario,
     harness_nome: str,
@@ -143,14 +149,7 @@ def avaliar(
                     )
                 )
                 continue
-            ausente = next(
-                (
-                    t
-                    for t in cenario.verificacao.resposta_deve_conter
-                    if t.casefold() not in execucao.resposta.casefold()
-                ),
-                None,
-            )
+            ausente = resposta_cumpre(execucao.resposta, cenario.verificacao.resposta_deve_conter)
             if ausente is not None:
                 feedback = (
                     f"resposta do agente sem o trecho '{ausente}'; "

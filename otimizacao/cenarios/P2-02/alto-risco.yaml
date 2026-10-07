@@ -8,14 +8,14 @@ insumos:
 preparacao:
   - mkdir -p docs/specs
   - |-
-    printf '# Spec: triagem de empréstimo\n\nA aplicação recomenda ao analista aprovar ou negar pedidos de empréstimo pessoal, com base no histórico do cliente. O analista decide depois de ler a recomendação.\n' > docs/specs/2026-10-07-alto-risco.md
+    printf '# Spec: triagem de empréstimo\n\nA aplicação recomenda ao analista aprovar ou negar pedidos de empréstimo pessoal, com base no histórico do cliente. O analista decide depois de ler a recomendação.\n' > docs/specs/2026-10-07-triagem-emprestimo.md
   - git add -A && git commit -qm "spec"
 variaveis:
-  caminho da spec: docs/specs/2026-10-07-alto-risco.md
+  caminho da spec: docs/specs/2026-10-07-triagem-emprestimo.md
   nome de quem classifica: Ana Souza
   AAAA-MM-DD: "2026-10-07"
-  quem revisa: analista habilitado
-  texto do aviso ao usuário: "Este conteúdo foi produzido com apoio de IA e revisado por uma pessoa."
+  quem revisa: analista de crédito habilitado
+  texto do aviso ao usuário: "Esta recomendação foi produzida com apoio de IA e revisada por um analista."
 verificacao:
   comandos:
     - comando: python3 scripts/verificar-classificacao.py docs/steering/ia.md
