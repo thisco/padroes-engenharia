@@ -41,3 +41,13 @@ def test_adotar_e_experimentar_se_distinguem_sem_cor():
     adotar, experimentar = declaracoes(".st.adotar"), declaracoes(".st.experimentar")
     assert "dashed" in experimentar and "dashed" not in adotar
     assert "var(--tinta)" in adotar
+
+
+def test_selects_do_filtro_nao_passam_da_largura_do_corpo():
+    """B5-M1: a 400px o select de domínio do radar passava da margem do filtro."""
+    assert "max-width: 100%" in declaracoes(".filtros select")
+
+
+def test_fileira_do_harness_alinha_ao_topo():
+    """B5-M3: o bloco 'Ferramentas nativas' esticava até a altura do vizinho (Hook)."""
+    assert "align-items: start" in declaracoes(".ninho .exec")

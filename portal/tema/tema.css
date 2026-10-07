@@ -232,7 +232,7 @@ ol.refs small, .ref-meta { display: block; color: var(--tinta-2); font-size: 12p
 .tabela th, .tabela td { border-bottom: 1px solid var(--regra); padding: 6px 8px; text-align: left; vertical-align: top; }
 .tabela thead th { border-bottom: 2px solid var(--tinta); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--tinta-2); }
 .filtros { display: flex; flex-wrap: wrap; gap: 12px 20px; font-size: 13px; margin: 8px 0 14px; }
-.filtros select { font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
+.filtros select { max-width: 100%; font: inherit; padding: 3px 6px; border: 1px solid var(--tinta-2); background: var(--branco); color: var(--tinta); }
 
 /* barra de força de um domínio */
 .barra-forca { display: flex; flex-wrap: wrap; gap: 3px; max-width: 100%; }
@@ -282,7 +282,7 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 .ninho .setas .seta.volta::before { content: "←"; display: block; font-size: 18px; font-style: normal; }
 .ninho .setas .seta.volta::after { content: none; }
 .ninho .onde { margin: 10px 0 0; font-size: 12px; font-weight: 600; color: var(--tinta-2); }
-.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; }
+.ninho .exec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 4px; align-items: start; }
 .ninho .exec.remoto { grid-template-columns: minmax(0, 1fr); }
 .ninho .exec .cx { margin-top: 0; }
 .ninho .cx.impede { background: var(--gov); color: var(--branco); border: 2px solid var(--gov); }
