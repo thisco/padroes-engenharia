@@ -11,8 +11,8 @@ toda página e na primeira linha de `llms.txt`, e não regrava README.md nem ROT
 
 Commit e data do build, nesta ordem: --commit e --data; CI_COMMIT_SHA; SOURCE_DATE_EPOCH ou
 CI_COMMIT_TIMESTAMP; `git log -1`. Dois builds do mesmo commit dão os mesmos bytes.
-Ao terminar, apaga em `--saida` as pastas vazias `<nome> <n>` do iCloud (níveis 1 e 2) e loga
-quantas apagou.
+No início e ao terminar, apaga em `--saida` as pastas vazias `<nome> <n>` do iCloud (níveis 1 e 2)
+e loga quantas apagou.
 Saída: 0 gerado · 1 erro de validação ou recurso externo (nada é gerado) · 2 erro interno.
 """
 
@@ -142,6 +142,8 @@ def main(argv: list[str] | None = None) -> int:
         config = carregar_config(raiz)
         commit = args.commit or descobrir_commit(raiz, os.environ)
         data = args.data or descobrir_data(raiz, os.environ)
+        # `problema_da_saida` já garantiu que a pasta é vazia ou um site gerado.
+        antes = remover_pastas_vazias_numeradas(saida)
         erros = construir(
             raiz,
             saida,
@@ -153,7 +155,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         if not erros and not args.previa:
             copiar_para_raiz(saida, raiz)
-        removidas = 0 if erros else remover_pastas_vazias_numeradas(saida)
+        removidas = antes if erros else antes + remover_pastas_vazias_numeradas(saida)
         for aviso in aviso_url_base(args.url_base or config["url_base"], os.environ):
             print(f"aviso: {aviso.arquivo}: {aviso.mensagem}", file=sys.stderr)
     except Exception as exc:

@@ -220,13 +220,34 @@ def test_gerar_remove_as_pastas_do_icloud_e_loga_quantas(
     assert saida_padrao.endswith("(versão 0.1.0, commit 0123456, 2026-10-01).\n")
 
 
+def test_gerar_remove_as_pastas_vazias_numeradas_tambem_no_inicio(
+    repo_minimo, tmp_path, monkeypatch
+):
+    """T10: o iCloud cria `<nome> <n>` minutos depois do build; o próximo build limpa antes."""
+    real = cli.construir
+    vistas = []
+
+    def construir_e_espiar(raiz, saida, **kwargs):
+        vistas.append(sorted(p.name for p in saida.iterdir() if p.is_dir()))
+        return real(raiz, saida, **kwargs)
+
+    monkeypatch.setattr(cli, "construir", construir_e_espiar)
+    saida = tmp_path / "site"
+    _criar(saida, "praticas 2", "dominios/x 2")
+    (saida / "llms.txt").write_text("site anterior", encoding="utf-8")
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 0
+    assert "praticas 2" not in vistas[0], "a pasta vazia ainda existia no início do build"
+
+
 def test_gerar_com_erro_nao_mexe_na_saida(repo_minimo, mutar, tmp_path):
     mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
     saida = tmp_path / "site"
     _criar(saida, "praticas 2")
+    (saida / "praticas 2" / "x.txt").write_text("x", encoding="utf-8")
     (saida / "llms.txt").write_text("site anterior", encoding="utf-8")
     assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 1
-    assert (saida / "praticas 2").is_dir()
+    assert (saida / "praticas 2" / "x.txt").is_file()
+    assert (saida / "llms.txt").read_text("utf-8") == "site anterior"
 
 
 # Revisão forte da T1: destino perigoso, apresentações e symlink ---------------------------------
