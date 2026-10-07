@@ -1,0 +1,125 @@
+conteudo: receita-publicar-contrato-openapi-versionado
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: uma descrição OpenAPI formaliza a superfície de uma API e a semântica dela
+  ref: openapi-spec
+  localizacao: seção 2 (Introduction), 'An OpenAPI Description (OAD) formally describes the surface of
+    an API and its semantics' (versão 3.2.1)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: a especificação define o info.version como a versão do documento OpenAPI, distinta da versão
+    da especificação e da versão da API descrita
+  ref: openapi-spec
+  localizacao: seção 4.2.1 (Info Object, Fixed Fields), campo version
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o documento OpenAPI é um objeto JSON que pode ser representado em JSON ou em YAML
+  ref: openapi-spec
+  localizacao: seção 3 (Format)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o campo deprecated da operação diz que os consumidores devem evitar usá-la
+  ref: openapi-spec
+  localizacao: seção 4.10.1 (Operation Object, Fixed Fields), campo deprecated ('Consumers SHOULD refrain
+    from usage of the declared operation')
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o software que usa o Versionamento Semântico deve declarar uma API pública, no código ou na documentação,
+    desde que precisa e compreensiva
+  ref: semver
+  localizacao: item 1 da especificação (tradução pt-BR)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: a versão maior sobe com mudanças incompatíveis na API, e a menor com funcionalidade nova compatível
+  ref: semver
+  localizacao: resumo e itens 7 e 8 da especificação (tradução pt-BR)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: a versão menor deve subir quando uma funcionalidade da API pública é definida como descontinuada
+  ref: semver
+  localizacao: item 7 da especificação (tradução pt-BR)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o oasdiff tem o subcomando breaking, que mostra só as mudanças que quebram clientes existentes
+  ref: oasdiff
+  localizacao: README, descrição da ferramenta e subcomando breaking
+  resultado: confirmada
+  nota: Afirmação já registrada em API-01 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o Schema Object da especificação usa palavras-chave de JSON Schema, como required
+  ref: openapi-spec
+  localizacao: seção 4.24 (Schema Object), 4.24.1 (JSON Schema Keywords) (versão 3.2.1)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o oasdiff tem uma GitHub Action e uma imagem Docker para pipelines, e a opção --fail-on configura
+    o comportamento de saída conforme os achados
+  ref: oasdiff
+  localizacao: README, opção --fail-on e integração com CI (GitHub Action, Docker)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o job roda só em pipeline de merge request, pela regra $CI_PIPELINE_SOURCE == merge_request_event
+  ref: gitlab-mr-pipelines
+  localizacao: seções 'When they run' e de configuração (afirmação já registrada em receita-ligar-ci-gitlab-travas,
+    referência aberta em 2026-10-04)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: CI_MERGE_REQUEST_TARGET_BRANCH_NAME traz a branch de destino da MR e só existe em pipelines de
+    merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: seção de variáveis de pipelines de merge request (já registrada em receita-ligar-ci-gitlab-travas,
+    referência aberta em 2026-10-04)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: GIT_DEPTH 0 desliga o clone raso e a variável do .gitlab-ci.yml sobrescreve a configuração do
+    projeto
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (já registrada em receita-ligar-ci-gitlab-travas,
+    referência aberta em 2026-10-04)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o merge check chama-se Pipelines must succeed
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção sobre exigir pipeline bem-sucedido (já registrada em receita-ligar-ci-gitlab-travas,
+    referência aberta em 2026-10-04)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (já registrada em receita-ligar-ci-gitlab-travas, referência
+    aberta em 2026-10-04)
+  resultado: confirmada
+  nota: Afirmação já registrada em API-02 (fonte aberta em 2026-10-06); reaproveitada nesta receita, sem
+    reabrir a fonte.
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/publicar-contrato-openapi-versionado/executar.sh
+  comando: sh exemplos/publicar-contrato-openapi-versionado/executar.sh
+  ambiente: Docker 29.5.2; gitlab-ci-local 4.76.0 (npx); imagem python:3.11 com PyYAML 6.0.3 por pip;
+    git 2.50.1; macOS. Repositório de teste em /tmp/b5-api-XXXXXX com remoto bare local, apagado ao sair;
+    o job não foi executado num GitLab. Nenhum container ou rede restou depois do roteiro.
+  resultado: falhou-como-esperado
+  evidencia: 'saída 0 do roteiro; contrato v1.0.0 e job na main; remoção do telefone com versão 1.1.0:
+    ''API-01: 2 mudança(s) incompatível(is) sem versão major nova (1.0.0 -> 1.1.0)'', FAIL; email opcional
+    e endpoint novo: ''API-01: 3 mudança(s), todas compatíveis'', ''Ran 2 tests ... OK'', PASS; versão
+    2.0.0 com ADR nova: ''mudança incompatível com major nova (1.0.0 -> 2.0.0) e ADR docs/adr/0001-remove-telefone.md'',
+    PASS; contrato exigindo email sem a implementação devolvê-lo: "AssertionError: Lists differ: [''$:
+    falta o campo obrigatório email''] != []", FAIL. Saída bruta em curadoria-a5/saidas/b5-receita-publicar-contrato-openapi-versionado.txt.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.5 pendente'
+  data: '2026-10-07'
+  achados: []
