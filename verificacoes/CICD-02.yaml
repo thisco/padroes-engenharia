@@ -1,0 +1,60 @@
+conteudo: CICD-02
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a capacidade trabalhar em lotes pequenos é quebrar o trabalho em unidades curtas e independentes, o que reduz o tempo para ter retorno sobre as mudanças e facilita achar e corrigir problemas
+  ref: dora-small-batches
+  localizacao: página da capacidade, definição e benefícios (aberta na web em 2026-10-07; frase "It reduces the time it takes to get feedback on changes, making it easier to triage and remediate problems")
+  resultado: confirmada
+- texto: a página recomenda integrar mudanças pequenas e liberáveis ao trunk pelo menos uma vez por dia
+  ref: dora-small-batches
+  localizacao: seção de implementação ("checking multiple small releasable changes into trunk at least once per day")
+  resultado: confirmada
+- texto: a IA gera blocos grandes de código com rapidez, mas mudança grande é difícil de revisar, testar e integrar com segurança; lotes pequenos amplificam o impacto positivo da adoção de IA sobre o desempenho do produto
+  ref: dora-small-batches
+  localizacao: seção sobre IA ("While AI excels at generating large blocks of code quickly, large changes are difficult to review, test, and integrate safely"; "working in small batches amplifies the positive impact of AI adoption on product performance")
+  resultado: confirmada
+- texto: o DORA trata o lote pequeno em horas e dias de trabalho
+  ref: dora-small-batches
+  localizacao: definição (funcionalidades concluídas em horas a poucos dias; no máximo uma semana)
+  resultado: parcial
+  nota: a página fala em horas a alguns dias e no máximo uma semana para uma funcionalidade; o texto diz só "horas e dias de trabalho" e que o teto de MR é uma aproximação do portal.
+- texto: com o aumento da adoção de IA houve queda estimada de 1,5% na vazão de entrega e de 7,2% na estabilidade da entrega, e o relatório diz que melhorar o processo de desenvolvimento não melhora a entrega automaticamente sem o básico, como lotes pequenos e testes robustos
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega (aberto na web em 2026-10-07)
+  resultado: confirmada
+- texto: a regra CI_PIPELINE_SOURCE == merge_request_event roda o job só em pipeline de MR, que roda a cada push de commit novo na branch da MR
+  ref: gitlab-mr-pipelines
+  localizacao: seção sobre quando rodam (cenários de criação da MR e push na branch de origem) e a regra de condição (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: o merge check Pipelines must succeed é o que faz o pipeline vermelho impedir o merge
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção do merge check (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso, e o diff precisa do histórico e da branch de destino
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/CICD-02/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE tamanho-da-mr
+  ambiente: clone de ~/curadoria-a5/b4-cicd-02-prompt com remoto --bare local (origin) e a main publicada; gitlab-ci-local 4.76.0, Docker, imagem python:3.11; macOS. O job não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'antes: branch com três commits independentes (15 arquivos, 372 linhas), "CICD-02: 15 arquivo(s), 372 linha(s) mudadas (limite 10 arquivos e 200 linhas; 0 ignorado(s)): MR grande demais", job FAIL (saída 1). Depois: três branches, cada uma com um commit trazido por git cherry-pick, "5 arquivo(s), 124 linha(s) mudadas ... dentro do limite", job PASS nas três.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/CICD-02/verificar-tamanho-mr.py
+  comando: python3 scripts/verificar-tamanho-mr.py --base origin/main --max-arquivos 10 --max-linhas 200 (casos de borda, em cópia do projeto de teste)
+  ambiente: clone de ~/curadoria-a5/b4-cicd-02-prompt; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'base inexistente: "ERRO: base origin/nao-existe não encontrada", saída 1; diff vazio: "ERRO: nenhuma mudança medida contra origin/main", saída 1; limite 0: "ERRO: os limites precisam ser inteiros positivos", saída 1; yarn.lock de 5000 linhas com --ignorar ''*.lock'': "1 arquivo(s), 1 linha(s) ... 1 ignorado(s): dentro do limite", saída 0; sem --ignorar: "2 arquivo(s), 5001 linha(s) ... MR grande demais", saída 1.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []

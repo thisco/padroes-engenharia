@@ -1,0 +1,27 @@
+# Job `tamanho-da-mr` (CICD-02): reprova a merge request acima dos limites declarados.
+# Requer no repositório: scripts/verificar-tamanho-mr.py (deste Exemplo, sem alterações) e o
+# histórico completo com a branch de destino. Os limites moram aqui, nas variáveis MR_MAX_*,
+# sob revisão como qualquer mudança do pipeline; os valores abaixo são de exemplo, não uma
+# recomendação de fonte. O `python3 -I` roda o script em modo isolado.
+stages:
+  - gates
+
+variables:
+  MR_MAX_ARQUIVOS: "10"
+  MR_MAX_LINHAS: "200"
+
+.so-em-merge-request:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+tamanho-da-mr:
+  extends: .so-em-merge-request
+  stage: gates
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+  script:
+    - ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    - git rev-parse --verify --quiet "refs/remotes/origin/$ALVO" >/dev/null || git fetch --quiet origin "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"
+    - git rev-parse --verify "refs/remotes/origin/$ALVO"
+    - python3 -I scripts/verificar-tamanho-mr.py --base "origin/$ALVO" --max-arquivos "$MR_MAX_ARQUIVOS" --max-linhas "$MR_MAX_LINHAS" --ignorar '*.lock' --ignorar 'package-lock.json'
