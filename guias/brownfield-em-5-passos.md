@@ -227,9 +227,11 @@ Constituição padrao-v1.0: bloco inline confere com o arquivo canônico.
 
 Se o seu projeto não tem infraestrutura como código, apague a pasta `infra/` de exemplo. Ela traz um
 módulo OpenTofu de modelo, e o `verificar_pr.py` trata `infra/cloud/` como superfície sensível (passo 5).
+Logo depois da cópia a pasta ainda não está rastreada pelo git, então `git rm` falha; use `rm -rf`
+(se ela já estiver rastreada, `git rm -rq infra`):
 
 ```bash
-git rm -rq infra
+rm -rf infra
 ```
 
 O verificador de drift da arquitetura continua em sincronia sem a pasta
@@ -460,7 +462,9 @@ uma mudança Tier 1, que tem plano leve e não tem spec [ref:sdd-scaffold-sdd-pr
 o impacto arquitetural respondido, a estratégia de rollback (reverter o commit de adoção) e a seção
 Evidências com a saída real do `pytest`, do `ruff`, do `verificar_constituicao.py` e do drift check
 [ref:sdd-scaffold-modelo-plano]. Troque a entrada `[0.1.0]` do `CHANGELOG.md` do scaffold por uma
-`[Não lançado]`, porque o projeto já tem histórico. Faça o commit e rode de novo:
+`[Não lançado]`, porque o projeto já tem histórico. Preencha a seção `## Evidências` com o texto direto, em bloco de código: o `verificar_pr.py` trata a seção
+como vazia quando ela só tem subtítulos `###` e acusa evidência ausente [ref:sdd-scaffold-verificar-pr].
+Faça o commit e rode de novo:
 
 ```text
 Verificação de PR: 56 arquivo(s), nenhum achado.
@@ -528,7 +532,7 @@ Pare e me avise antes de qualquer passo destrutivo.
    frontend); deixe os outros e liste-os para mim, sem inventar autenticação, classificação de dados
    nem decisões de arquitetura. Troque no AGENTS.md só o mapa do repositório, para refletir as pastas
    reais, e não toque no bloco entre <!-- constituicao:inicio e <!-- constituicao:fim -->. Se o
-   repositório não tem infraestrutura como código, rode git rm -rq infra. Rode
+   repositório não tem infraestrutura como código, rode rm -rf infra. Rode
    python3 -I scripts/verificar_constituicao.py --raiz . e o scripts/verificar_drift_arquitetura.py
    (instale o pyyaml num venv do projeto se faltar) e mostre as saídas.
 

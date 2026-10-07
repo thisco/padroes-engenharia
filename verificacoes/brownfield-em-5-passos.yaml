@@ -139,6 +139,20 @@ execucoes:
     de MR com testes, lint, normas-do-pr, governanca e segredos em PASS; verificar_pr.py: 2 AVISOs na primeira rodada (infra
     de exemplo e plano ausente) e ''Verificação de PR: 56 arquivo(s), nenhum achado.'' no fim.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: brownfield-em-5-passos-prompt-1
+  harness: claude-code
+  ambiente: sessão nova com só o texto do prompt preenchido; guia servido da prévia do portal em http://127.0.0.1:8001 (gerar.py
+    --previa, commit c621a5c); preparo em ~/curadoria-a5/b5-guia-brownfield-prompt; transcrição em ~/curadoria-a5/transcricoes/guia-brownfield-em-5-passos-prompt-1.bruta.jsonl
+  resultado: passou
+  evidencia: 'branch chore/2026-10-07-adota-scaffold com 5 commits (84d59a4, 1d97392, 246a361, 50bb637, 94b7220), sem coautoria;
+    diagnóstico com 3 colisões (.gitignore, pyproject.toml, requirements.txt); rsync sem modificar arquivo existente; constituição
+    e drift ok; o hook passou a pedir ask para .gitlab-ci.yml; hashes OK; pipeline com 5 jobs PASS no gitlab-ci-local 4.76.0;
+    verificar_pr.py ''Verificação de PR: 56 arquivo(s), nenhum achado.''. Observações tratadas no guia: git rm -rq infra falha
+    porque infra/ ainda não está rastreada após o rsync (o texto e o prompt passaram a mandar rm -rf infra; prompt alterado
+    sem reteste); o verificar_pr.py lê ''## Evidências'' como vazia quando só há subtítulos ### (aviso no passo 5); testes
+    e lint deixam de rodar em push sem MR (já constava no passo 4.2).'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'

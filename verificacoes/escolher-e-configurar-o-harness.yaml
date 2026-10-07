@@ -174,6 +174,17 @@ execucoes:
     GEMINI.md, hook PreToolUse, git_attribution fixado e permissions.yaml; ''0 ponto(s) faltando'', código 0. Projeto anterior:
     FALTA em .agents/skills e em CLAUDE.md sem @AGENTS.md; ''2 ponto(s) faltando'', código 1.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: escolher-e-configurar-o-harness-prompt-1
+  harness: claude-code
+  ambiente: sessão nova com só o texto do prompt preenchido; guia servido da prévia do portal em http://127.0.0.1:8001 (gerar.py
+    --previa, commit c621a5c); preparo em ~/curadoria-a5/b5-guia-harness-prompt; transcrição em ~/curadoria-a5/transcricoes/guia-escolher-e-configurar-o-harness-prompt-1.bruta.jsonl
+  resultado: passou
+  evidencia: 'assumiu Claude Code e Codex e disse que assumiu; o script do passo 4 saiu 1 com 2 FALTA (.agents/skills e @AGENTS.md)
+    e 0 depois da correção; commit 2e0a576 ''chore: monta os pontos de montagem dos harnesses'' com 2 arquivos (.agents/skills
+    e CLAUDE.md), sem coautoria. O testador deixou um diretório temporário e /tmp/b5_t porque o rm -rf foi barrado (sem relação
+    com o guia).'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.5 pendente'
   data: '2026-10-07'
