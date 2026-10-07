@@ -49,6 +49,11 @@ afirmacoes:
   ref: jvaneyck-cinco-arquetipos
   localizacao: frase central do post de 2026-07-10
   resultado: confirmada
+- texto: Os rótulos de fase do diagrama ("Produção", "Simplificação" e "Mercado") nomeiam a fase de cada modo.
+  ref: cherny-cinco-arquetipos
+  localizacao: descrição de cada modo na página secundária (Builder, Sweeper, Grower)
+  resultado: parcial
+  nota: São paráfrases do portal derivadas do "faz" de cada modo, e não termos da fonte; "Ideia" e "Sistema maduro" vêm das palavras da descrição de Prototyper e Maintainer.
 - texto: A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como construir.
   ref: anthropic-claude-code-expertise
   localizacao: página do estudo, trecho sobre planejamento e execução (a página dá 70% de planejamento e 20% de execução pelas pessoas; os 80% do modelo não aparecem com esse número e não foram citados)

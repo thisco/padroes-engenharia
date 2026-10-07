@@ -6,6 +6,7 @@ from pathlib import Path
 
 from portal.gerador.carregar import Conteudo, Repositorio
 from portal.gerador.erros import Erro
+from portal.gerador.esquemas import carregar_validador, validar_instancia
 from portal.gerador.paginas import html_pessoas_e_normas, md_pessoas_e_normas
 from portal.gerador.regras import Contexto, regra_vinculos
 from tests import fabrica
@@ -85,6 +86,9 @@ def test_md_traz_a_tabela_com_os_seis_modos_e_os_limites_sem_html():
         "Verificador (acrescentado aqui)",
     ]
     assert "[P1-01](praticas/P1-01.md)" in md
+    assert (
+        md.index("Onde Maintainer aparece") < md.index("Segmento largo") < md.index("A lista tem")
+    )
     assert "- Post pessoal [ref:ref-forte]." in md
     assert not re.search(r"</?(figure|ol|li|i|svg)\b", md)
 
@@ -115,3 +119,13 @@ def test_css_empilha_por_container_query_e_nao_usa_azul():
     assert re.search(r"@container\s*\(min-width:\s*\d+px\)", css)
     assert "--gov" not in css  # azul só significa "impede"
     assert "--traco" in css  # a hachura tem 3:1 contra o fundo
+
+
+def test_schema_exige_a_legenda_do_diagrama():
+    validador = carregar_validador(fabrica.RAIZ / "esquemas", "pagina")
+    meta = fabrica.meta_pagina(trabalho=trabalho())
+    assert validar_instancia(meta, validador, "p.md") == []
+    sem = trabalho()
+    del sem["legenda"]
+    erros = validar_instancia(fabrica.meta_pagina(trabalho=sem), validador, "p.md")
+    assert erros and {e.regra for e in erros} == {"R-ESQUEMA"}

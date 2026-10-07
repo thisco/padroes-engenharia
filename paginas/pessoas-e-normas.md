@@ -39,7 +39,7 @@ referencias:
 revisado_em: '2026-10-07'
 trabalho:
   intro: 'Boris Cherny, criador do Claude Code, propôs cinco modos de trabalho em vez de cinco cargos [ref:cherny-cinco-arquetipos]. O autor os descreve por fase do ciclo do produto, mas os cinco existem em toda fase; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos]. O portal acrescenta um sexto, que a lista não nomeia e que envolve os outros cinco: o Verificador.'
-  legenda: 'Cada barra mostra uma fase do ciclo. O segmento largo e cheio é o modo que predomina nela; os quatro estreitos e hachurados são os outros, presentes. A largura indica ênfase, não uma medida.'
+  legenda: 'Cada barra mostra uma fase do ciclo. O segmento largo e cheio é o modo que predomina nela; os quatro estreitos e hachurados são os outros, presentes. A largura indica ênfase, não uma medida. Escolher um modo predominante por fase é leitura deste portal: a fonte diz que os cinco existem em toda fase e que o que muda é a proporção [ref:jvaneyck-cinco-arquetipos].'
   ciclo:
     - titulo: 'Prototyper'
       fase: 'Ideia'
@@ -69,7 +69,7 @@ trabalho:
   verificador:
     titulo: 'Verificador'
     faz: 'Avalia se o que foi feito está certo: quem faz não julga. A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como [ref:anthropic-claude-code-expertise]; quando quem executa é o agente, o que sobra de escasso é conferir o resultado (leitura deste portal).'
-    onde: 'revisão independente (ADR 0005), `verificar_pr.py` do scaffold SDD e a conferência em lote da curadoria; a seção Como verificar de cada prática.'
+    onde: 'Revisão independente (ADR 0005), `verificar_pr.py` do scaffold SDD e a conferência em lote da curadoria; a seção Como verificar de cada prática.'
   limites:
     - 'É um post pessoal, e não uma publicação institucional [ref:cherny-cinco-arquetipos].'
     - 'Os cinco modos existem em toda fase do produto; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos].'

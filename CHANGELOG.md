@@ -7,7 +7,12 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
-Nada ainda.
+### Adicionado
+
+- Bloco `trabalho` no schema de página e o diagrama "Modos de trabalho na era agentiva" em
+  Pessoas e normas: os cinco modos de Cherny dentro do quadro do Verificador, com a prática de
+  cada modo como link (HTML e CSS pelo template da página; o `.md` traz a mesma informação em
+  tabela).
 
 ## [1.0.0] - 2026-10-07
 

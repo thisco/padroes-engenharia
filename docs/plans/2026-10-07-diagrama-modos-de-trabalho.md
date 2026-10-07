@@ -65,3 +65,22 @@ limites sem HTML; prática inexistente é `R-REF-INEXISTENTE`; o CSS usa contain
 ## Impacto Arquitetural
 
 - [x] Compose, IaC e diagrama: N/A.
+
+## Evidências
+
+**Fechada (2026-10-07), com os ajustes da revisão.**
+
+- `$V/pytest -q`: 726 passed (inclui `tests/unidade/test_diagrama_modos.py`, 6 testes, vermelhos
+  antes da implementação e dos ajustes).
+- `$V/ruff check .`: All checks passed. `$V/ruff format --check .`: 301 files already formatted.
+- `$V/python scripts/validar.py`: validação ok: nenhum erro.
+- Geração em `/Users/thiago/.claude/jobs/0c679baa/tmp/modos2`: o `pessoas-e-normas.md` traz a
+  tabela, a legenda depois dela e os limites; o HTML traz a ressalva "leitura deste portal".
+- Verificação visual (Playwright, servidor local, sem `public/`), em
+  `/Users/thiago/Documents/Workspace/repos/padroes-engenharia/.playwright-mcp/`:
+  `modos-1280.png` (cinco colunas), `modos-760.png` (lista com barra à esquerda) e
+  `modos-400.png` (lista empilhada). A 400px, `scrollWidth` 400 para `innerWidth` 400: sem
+  rolagem horizontal.
+- Ajustes da revisão: legenda obrigatória no schema (teste de rejeição), legenda no `.md`,
+  ressalva de que o modo predominante por fase é leitura do portal, `verificador.onde` já com
+  maiúscula, rótulos de fase registrados como paráfrase em `verificacoes/pessoas-e-normas.yaml`.

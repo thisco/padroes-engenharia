@@ -57,7 +57,7 @@
           <h4>{{ modo.titulo }}</h4>
           <p class="fase">{{ modo.fase }}</p>
           <span class="barra-modos" aria-hidden="true">{% for _ in trabalho.ciclo %}<i{% if loop.index0 == pos %} class="enfase"{% endif %}></i>{% endfor %}</span>
-          <span class="vh">Predomina {{ modo.predomina }}. Presentes também: {{ modo.tambem | join(", ") }}.</span>
+          <span class="vh">Predomina {{ modo.predomina }} (leitura de ênfase deste portal; ver a legenda). Presentes também: {{ modo.tambem | join(", ") }}.</span>
           <p class="faz">{{ modo.faz }}</p>
           <p class="onde">{{ modo.onde }}</p>
 {% if modo.praticas %}
@@ -70,7 +70,7 @@
         </li>
 {% endfor %}
       </ol>
-      <p class="quadro-pe"><b>{{ trabalho.verificador.titulo }} no portal:</b> {{ trabalho.verificador.onde }}</p>
+      <p class="quadro-pe"><b>{{ trabalho.verificador.titulo }} no portal.</b> {{ trabalho.verificador.onde }}</p>
     </div>
 {% if trabalho.legenda %}
     <figcaption>{{ trabalho.legenda }}</figcaption>

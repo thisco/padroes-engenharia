@@ -146,7 +146,7 @@
     "trabalho": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["intro", "ciclo", "verificador", "limites"],
+      "required": ["intro", "legenda", "ciclo", "verificador", "limites"],
       "properties": {
         "intro": {"$ref": "#/$defs/texto"},
         "legenda": {"$ref": "#/$defs/texto"},

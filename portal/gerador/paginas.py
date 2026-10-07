@@ -418,13 +418,14 @@ def _md_trabalho(pagina: Conteudo) -> str:
     v = bruto["verificador"]
     linhas.append(
         f"| {celula(v['titulo'])} (acrescentado aqui) | Envolve todas | {celula(v['faz'])} "
-        f"| {celula(str(v['onde'])[:1].upper() + str(v['onde'])[1:])} |"
+        f"| {celula(v['onde'])} |"
     )
     limites = [f"- {item}" for item in bruto.get("limites") or []]
     return juntar(
         "## Modos de trabalho na era agentiva",
         str(bruto["intro"]),
         "\n".join(linhas),
+        str(bruto["legenda"]),
         "A lista tem estes limites:\n\n" + "\n".join(limites),
     ).rstrip("\n")
 
