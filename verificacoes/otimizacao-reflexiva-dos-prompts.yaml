@@ -1,0 +1,73 @@
+conteudo: otimizacao-reflexiva-dos-prompts
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Claude Code roda sem interação com claude -p; com --bare ignora hooks, skills, servidores MCP e o CLAUDE.md, e exige ANTHROPIC_API_KEY
+  ref: claude-code-headless
+  localizacao: seções 'Basic usage' e 'Start faster with bare mode'
+  resultado: confirmada
+- texto: a saída JSON do Claude Code traz o custo estimado em total_cost_usd
+  ref: claude-code-headless
+  localizacao: seção 'Pipe data through Claude', parágrafo sobre --output-format json ('client-side estimates')
+  resultado: confirmada
+- texto: o Codex roda sem interação com codex exec, que aceita --json, --sandbox workspace-write, --ephemeral e --ignore-user-config
+  ref: codex-nao-interativo
+  localizacao: abertura da página e descrição das flags
+  resultado: confirmada
+- texto: o Kiro roda com kiro-cli chat --no-interactive, com a chave em KIRO_API_KEY e as ferramentas liberadas por --trust-all-tools
+  ref: kiro-headless
+  localizacao: seções de autenticação, execução e autorização de ferramentas
+  resultado: confirmada
+- texto: o Antigravity roda com agy -p e, sem credencial em cache, sai com erro em vez de esperar
+  ref: antigravity-headless
+  localizacao: uso básico e limitações ('a run that isn't already authenticated exits with an authentication required error instead of hanging')
+  resultado: confirmada
+- texto: o GEPA otimiza parâmetros de texto, como prompts, com reflexão de um LLM e busca evolutiva com fronteira de Pareto
+  ref: gepa-repositorio
+  localizacao: README, descrição de abertura
+  resultado: confirmada
+- texto: o GEPA lê trajetórias em linguagem natural para diagnosticar problemas, propõe e testa novas versões e combina lições complementares da fronteira de Pareto
+  ref: gepa-paper
+  localizacao: resumo (abstract)
+  resultado: confirmada
+- texto: a métrica precisa devolver nota e feedback em texto, e a documentação recomenda um modelo maior como modelo de reflexão
+  ref: dspy-gepa
+  localizacao: seções 'GEPA uses reflection to improve instructions' e 'Expanding our haiku metric'
+  resultado: confirmada
+- texto: o orçamento é dado por auto (light, medium, heavy) ou por max_metric_calls
+  ref: dspy-gepa
+  localizacao: seção 'Compiling our optimization'
+  resultado: confirmada
+- texto: o artigo foi aceito no ICLR 2026 como apresentação oral
+  ref: gepa-paper
+  localizacao: campo Comments da página do arXiv ('Accepted to ICLR 2026 (Oral)')
+  resultado: confirmada
+- texto: em seis tarefas o GEPA supera o GRPO em 6% na média e em até 20%, com até 35 vezes menos rollouts, e supera o MIPROv2 em mais de 10%
+  ref: gepa-paper
+  localizacao: resumo (abstract), versão v2
+  resultado: confirmada
+  nota: A versão v2 do resumo diz 'by over 10%'; a análise de 2026-10-07 citava 'até 11%', que não foi usado.
+- texto: o gepa.optimize recebe conjuntos fixos de treino e validação e um orçamento, e devolve o melhor candidato
+  ref: gepa-repositorio
+  localizacao: README, 'Quick Start' (trainset, valset, max_metric_calls; result.best_candidate)
+  resultado: confirmada
+- texto: rodar continuamente em produção aparece como trabalho futuro num relato da Pydantic
+  ref: pydantic-gepa
+  localizacao: seção 'What's Coming Next'
+  resultado: confirmada
+- texto: num estudo de aprendizado contínuo, o agente otimizado pelo GEPA transferiu abaixo da linha de base com tarefas novas, e os ganhos só se acumularam com controle de regressão no laço
+  ref: agent-optimizers-compound
+  localizacao: resumo (abstract)
+  resultado: confirmada
+- texto: o estudo é um relatório técnico de uma empresa que compara o próprio método com o GEPA
+  ref: agent-optimizers-compound
+  localizacao: campo Comments ('Technical Report by RELAI') e resumo (RELAI-VCL contra GEPA)
+  resultado: confirmada
+- texto: sem limite de tamanho, o GEPA pode produzir prompts acima de 5.000 caracteres, porque a reflexão acumula detalhes a cada iteração
+  ref: decagon-gepa-producao
+  localizacao: seção '3. Length constraints are essential regularization'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-revisao-tarefa-14
+  data: '2026-10-07'
+  achados: []

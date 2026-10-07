@@ -1,0 +1,11 @@
+id: pydantic-gepa
+titulo: "Automated Prompt Optimization with GEPA, Pydantic AI, and Pydantic Evals"
+organizacao: Pydantic
+url: https://pydantic.dev/articles/prompt-optimization-with-gepa
+tipo: comunidade
+publicado_em: 2026-02-02
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção 'What's Coming Next'"
+dominios: [construir-com-ia]
+notas: "Blog de uma empresa que integra o GEPA às próprias ferramentas."

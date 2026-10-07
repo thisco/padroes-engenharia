@@ -1,0 +1,11 @@
+id: gepa-paper
+titulo: "GEPA: Reflective Prompt Evolution Can Outperform Reinforcement Learning"
+organizacao: "Agrawal et al. (arXiv 2507.19457)"
+url: https://arxiv.org/abs/2507.19457
+tipo: comunidade
+versao: "v2 (2026-02-14)"
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "resumo (abstract) e campo Comments da página do arXiv"
+dominios: [construir-com-ia]
+notas: "artigo revisado por pares (ICLR 2026, oral): o campo Comments do arXiv diz 'Accepted to ICLR 2026 (Oral)'. O enum de tipo não tem categoria acadêmica; usado comunidade."

@@ -1,0 +1,10 @@
+id: kiro-headless
+titulo: "Headless mode (Kiro CLI)"
+organizacao: Kiro
+url: https://kiro.dev/docs/cli/headless/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de autenticação (KIRO_API_KEY), execução com --no-interactive, autorização de ferramentas (--trust-all-tools) e saída --output-format stream-json"
+dominios: [construir-com-ia]
+notas: null

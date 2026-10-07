@@ -1,0 +1,42 @@
+conteudo: ferramenta-gepa
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o GEPA otimiza parâmetros de texto, como prompts, por reflexão de um LLM e busca evolutiva com fronteira de Pareto
+  ref: gepa-repositorio
+  localizacao: README, descrição de abertura ('Optimize any text parameter ... using LLM-based reflection and Pareto-efficient evolutionary search')
+  resultado: confirmada
+- texto: o gepa.optimize recebe candidato inicial, treino, validação, modelo de reflexão e orçamento em max_metric_calls
+  ref: gepa-repositorio
+  localizacao: README, 'Quick Start' (seed_candidate, trainset, valset, reflection_lm, max_metric_calls)
+  resultado: confirmada
+- texto: a métrica devolve nota e feedback em texto, que o modelo de reflexão usa para reescrever a instrução
+  ref: dspy-gepa
+  localizacao: seções 'GEPA uses reflection to improve instructions' e 'Expanding our haiku metric'
+  resultado: confirmada
+- texto: roda em ciclos fechados sobre conjuntos fixos e um orçamento de avaliações
+  ref: gepa-repositorio
+  localizacao: README, 'Quick Start' (trainset e valset dados na chamada, orçamento max_metric_calls, resultado best_candidate)
+  resultado: confirmada
+  nota: O README não descreve modo contínuo ou online; a afirmação se limita ao que a chamada recebe e devolve.
+- texto: rodar continuamente em produção aparece como trabalho futuro num relato da Pydantic
+  ref: pydantic-gepa
+  localizacao: seção 'What's Coming Next' ('adapting a GEPA-like algorithm to run continuously in production against Logfire traces')
+  resultado: confirmada
+- texto: no estudo de aprendizado contínuo, o agente otimizado pelo GEPA transferiu abaixo da linha de base, e os ganhos só se acumularam com controle de regressão no laço
+  ref: agent-optimizers-compound
+  localizacao: resumo (abstract)
+  resultado: confirmada
+  nota: Relatório técnico da RELAI, que compara o próprio método com o GEPA; o texto diz 'num estudo', sem generalizar.
+- texto: sem limite de tamanho, o GEPA pode produzir prompts acima de 5.000 caracteres
+  ref: decagon-gepa-producao
+  localizacao: seção '3. Length constraints are essential regularization'
+  resultado: confirmada
+- texto: a saída JSON do Claude Code em modo não interativo traz total_cost_usd
+  ref: claude-code-headless
+  localizacao: seção 'Pipe data through Claude', parágrafo sobre --output-format json
+  resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-revisao-tarefa-14
+  data: '2026-10-07'
+  achados: []

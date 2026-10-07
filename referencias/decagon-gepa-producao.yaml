@@ -1,0 +1,11 @@
+id: decagon-gepa-producao
+titulo: "Optimizing GEPA for production: A test-driven approach to prompt engineering"
+organizacao: Decagon
+url: https://decagon.ai/blog/optimizing-gepa-for-production
+tipo: comunidade
+publicado_em: 2026-03-25
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção '3. Length constraints are essential regularization' e tabela 'Length constraint impact'"
+dominios: [construir-com-ia]
+notas: "Blog de engenharia de uma empresa que usa o GEPA em produção; relato de uso, não estudo independente."

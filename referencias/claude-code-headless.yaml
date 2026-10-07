@@ -1,0 +1,10 @@
+id: claude-code-headless
+titulo: "Run Claude Code programmatically"
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/headless
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções 'Basic usage', 'Start faster with bare mode', 'Get structured output', 'Pipe data through Claude' (total_cost_usd) e 'Auto-approve tools'"
+dominios: [construir-com-ia]
+notas: null

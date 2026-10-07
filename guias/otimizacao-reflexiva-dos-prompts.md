@@ -1,0 +1,120 @@
+---
+titulo: Otimização reflexiva dos prompts
+tipo: explicacao
+publico: Quem cura práticas do portal ou quer entender como os prompts de "Para o agente" são medidos e melhorados
+relacionados: [P1-01, DAD-01, P2-02]
+tempo_leitura: 7
+referencias:
+  - gepa-paper
+  - gepa-repositorio
+  - dspy-gepa
+  - agent-optimizers-compound
+  - decagon-gepa-producao
+  - pydantic-gepa
+  - claude-code-headless
+  - codex-nao-interativo
+  - kiro-headless
+  - antigravity-headless
+revisado_em: 2026-10-07
+---
+
+Cada prática traz, em `### Para o agente`, um prompt que você cola no seu agente de código. A
+curadoria executa esse prompt uma vez, numa sessão nova, e registra a execução. Isso prova que o
+prompt pode funcionar, mas não diz quantas vezes funciona quando o projeto varia, nem se funciona em
+outro harness. Este guia explica como o portal mede esses prompts e como os melhora sem perder o
+controle sobre o que é publicado.
+
+## Medir antes de otimizar
+
+Sem uma medida, não dá para saber se um prompt precisa melhorar, nem provar que uma reescrita
+melhorou. Por isso o laboratório do portal tem duas etapas separadas: a linha de base, que só mede,
+e a otimização, que só roda para o prompt que falhou em algum cenário de validação. Prompt que passa
+em tudo fica como está, ou ganha um cenário mais difícil.
+
+## O que o laboratório faz
+
+O laboratório vive em `otimizacao/`, com ambiente Python próprio, e nunca é importado pelo gerador
+do portal. Ele trabalha com quatro peças:
+
+- **Cenários com variações.** Cada prática do piloto (DAD-01, P1-01 e P2-02) tem cenários que
+  preparam um projeto de teste descartável com uma variação: um repositório sem remoto, uma pasta de
+  migrations com outro nome, uma spec ambígua. Os cenários se dividem em treino e validação.
+- **Runner sem interação.** O runner roda o prompt no harness, dentro da cópia do projeto, sem
+  ninguém para responder. Os quatro harnesses têm esse modo. O Claude Code roda com `claude -p`, e
+  com `--bare` ignora hooks, skills, servidores MCP e o `CLAUDE.md` da máquina, o que exige
+  `ANTHROPIC_API_KEY` [ref:claude-code-headless]. O Codex roda com `codex exec`, que aceita
+  `--json`, `--sandbox workspace-write`, `--ephemeral` e `--ignore-user-config`
+  [ref:codex-nao-interativo]. O Kiro roda com `kiro-cli chat --no-interactive`, com a chave em
+  `KIRO_API_KEY` e as ferramentas liberadas por `--trust-all-tools` [ref:kiro-headless]. O
+  Antigravity roda com `agy -p`, e sem credencial em cache sai com erro em vez de esperar
+  [ref:antigravity-headless].
+- **Verificador como métrica.** Depois do agente, o runner roda o verificador da própria prática
+  (por exemplo, o `verificar_pr.py` da DAD-01) e confere os arquivos que deviam ou não mudar. A nota
+  é 0 ou 1, e o feedback é sempre um texto: a saída do verificador, o arquivo que não devia ter
+  mudado ou a restrição violada.
+- **Duas repetições e nota mínima.** O agente não é determinístico, então cada cenário roda duas
+  vezes em cada harness, e vale a menor nota. Um prompt que passa uma vez e falha na outra não
+  passou.
+
+## O que é o GEPA
+
+O GEPA otimiza parâmetros de texto, como prompts, usando a reflexão de um LLM e uma busca evolutiva
+que guarda a fronteira de Pareto dos candidatos [ref:gepa-repositorio]. Ele roda o sistema, lê as
+trajetórias em linguagem natural para diagnosticar o que deu errado, propõe e testa novas versões do
+prompt e combina lições de candidatos diferentes [ref:gepa-paper]. Para isso a métrica precisa
+devolver nota e feedback em texto, e a documentação do DSPy recomenda um modelo maior como modelo de
+reflexão [ref:dspy-gepa]. O orçamento é dado por `auto` (`light`, `medium`, `heavy`) ou por
+`max_metric_calls` [ref:dspy-gepa].
+
+O artigo do GEPA foi aceito no ICLR 2026, como apresentação oral [ref:gepa-paper]. Em seis tarefas,
+os autores relatam que o GEPA supera o GRPO, um método de aprendizado por reforço, em 6% na média e
+em até 20%, com até 35 vezes menos rollouts, e supera o otimizador de prompts MIPROv2 em mais de 10%
+[ref:gepa-paper]. Esses números são do artigo, em tarefas dele; o portal ainda não mediu o GEPA nos
+próprios prompts.
+
+No laboratório, o modelo da tarefa é o próprio harness: o adapter do GEPA não chama um LLM direto,
+ele roda o runner e devolve a nota e o feedback do verificador. A reflexão usa o Claude Code sem
+interação.
+
+## Três limites e como o laboratório os contém
+
+**Só roda em lote.** O `gepa.optimize` recebe conjuntos fixos de treino e validação e um orçamento,
+e devolve o melhor candidato [ref:gepa-repositorio]. Rodar continuamente em produção aparece como
+trabalho futuro num relato da Pydantic [ref:pydantic-gepa]. No portal, o candidato vira uma MR,
+revisada por uma pessoa, e nunca muda em runtime.
+
+**Não compõe sem controle de regressão.** Num estudo de aprendizado contínuo, o agente otimizado
+pelo GEPA transferiu abaixo da linha de base não otimizada quando vieram tarefas novas, e os ganhos
+só se acumularam quando havia controle de regressão dentro do laço [ref:agent-optimizers-compound].
+O estudo é um relatório técnico de uma empresa que compara o próprio método com o GEPA. No
+laboratório, o portão de não regressão vale por cenário e por harness: o candidato só substitui o
+prompt atual se não piorar em nenhum cenário de validação, em nenhum dos harnesses otimizados.
+
+**Tende a inchar o texto.** Sem limite de tamanho, o GEPA pode produzir prompts acima de 5.000
+caracteres, porque a reflexão acumula detalhes a cada iteração [ref:decagon-gepa-producao]. No
+laboratório, candidato que cresce mais de 20% sobre o prompt atual, ou mais de 400 caracteres de uma
+vez, recebe nota 0 sem nem rodar o harness.
+
+Há ainda o custo. Cada avaliação é uma sessão de agente, e a saída JSON do Claude Code traz o custo
+estimado em `total_cost_usd` [ref:claude-code-headless]. O laboratório soma os tokens de todas as
+sessões e da reflexão e para quando a rodada atinge o teto declarado; o piloto inteiro tem teto de
+10 milhões de tokens.
+
+## Ferramentas
+
+- **GEPA**: a página [GEPA](../ferramentas/gepa.html) traz a instalação no laboratório e os limites.
+- **DSPy**: a documentação do GEPA no DSPy explica a métrica com feedback e o orçamento
+  [ref:dspy-gepa].
+- **Harnesses sem interação**: [Claude Code](../ferramentas/claude-code.html),
+  [Codex](../ferramentas/codex.html), [Kiro](../ferramentas/kiro.html) e
+  [Antigravity](../ferramentas/antigravity.html). A linha de base roda nos quatro; a otimização do
+  piloto roda só no Claude Code e no Codex.
+
+## Onde a metodologia mora
+
+A decisão está na ADR 0007 (`docs/adr/0007-otimizacao-reflexiva-dos-prompts.md`), e o código e os
+cenários, em `otimizacao/`. O relatório de cada rodada, com a nota do prompt atual, a do melhor
+candidato, o diff e o custo, fica em `otimizacao/resultados/`. As execuções que passam entram também
+no registro de verificação da prática. O relatório do piloto nas práticas
+[DAD-01](../praticas/DAD-01.html), [P1-01](../praticas/P1-01.html) e
+[P2-02](../praticas/P2-02.html) ainda não existe; a ferramenta fica em `avaliar` até ele sair.

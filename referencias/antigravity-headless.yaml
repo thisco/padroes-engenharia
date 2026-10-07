@@ -1,0 +1,10 @@
+id: antigravity-headless
+titulo: "Headless mode (Antigravity CLI)"
+organizacao: Google
+url: https://antigravity.google/docs/cli/headless/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de uso básico (agy -p), formatos de saída (json, stream-json), permissões (--dangerously-skip-permissions) e códigos de saída"
+dominios: [construir-com-ia]
+notas: null

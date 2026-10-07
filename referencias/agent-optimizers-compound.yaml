@@ -1,0 +1,11 @@
+id: agent-optimizers-compound
+titulo: "Do Agent Optimizers Compound? A Continual-Learning Evaluation on Terminal-Bench 2.0"
+organizacao: "Wang, Kattakinda e Feizi (RELAI; arXiv 2607.14004)"
+url: https://arxiv.org/abs/2607.14004
+tipo: comunidade
+publicado_em: 2026-07-15
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "resumo (abstract) da página do arXiv"
+dominios: [construir-com-ia]
+notas: "Relatório técnico da RELAI (campo Comments: 'Technical Report by RELAI'), sem revisão por pares confirmada. Os autores comparam o próprio método (RELAI-VCL) com o GEPA."

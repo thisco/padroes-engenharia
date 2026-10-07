@@ -1,0 +1,43 @@
+id: gepa
+titulo: GEPA
+categoria: teste
+status: avaliar
+versao_minima: "0.1.4"
+dono: nuarq
+praticas: [DAD-01, P1-01, P2-02]
+receitas: []
+como_instalar: |
+  O GEPA otimiza parâmetros de texto, como prompts, por reflexão de um LLM e busca evolutiva com
+  fronteira de Pareto [ref:gepa-repositorio]. Neste portal ele é ferramenta de desenvolvimento do
+  catálogo e roda só no laboratório `otimizacao/`, com ambiente Python próprio (Python 3.12), separado
+  do gerador:
+
+      python3.12 -m venv .venv-otimizacao
+      .venv-otimizacao/bin/pip install -e "otimizacao[dev]"
+      .venv-otimizacao/bin/python -m otimizacao.linha_de_base --pratica DAD-01
+      .venv-otimizacao/bin/python -m otimizacao.otimizar --pratica DAD-01 --harness claude-code,codex
+
+  A primeira chamada mede o prompt atual da prática; a segunda o otimiza. O `gepa.optimize` recebe o
+  candidato inicial, os conjuntos de treino e de validação, o modelo de reflexão e o orçamento em
+  chamadas da métrica (`max_metric_calls`) [ref:gepa-repositorio]. A métrica devolve nota e feedback
+  em texto, que o modelo de reflexão lê para reescrever a instrução [ref:dspy-gepa]. Versão fixada
+  pelo laboratório: `gepa==0.1.4`, com `dspy==3.4.0`.
+limites: |
+  Roda em ciclos fechados sobre conjuntos fixos e um orçamento de avaliações [ref:gepa-repositorio];
+  rodar continuamente em produção aparece como trabalho futuro num relato da Pydantic
+  [ref:pydantic-gepa]. Por isso o candidato entra por MR, nunca em runtime. Num estudo de aprendizado
+  contínuo, o agente otimizado pelo GEPA transferiu abaixo da linha de base não otimizada, e os
+  ganhos só se acumularam com controle de regressão dentro do laço [ref:agent-optimizers-compound];
+  o laboratório exige que o candidato não piore em nenhum cenário de validação. Sem limite de
+  tamanho, o GEPA pode produzir prompts acima de 5.000 caracteres [ref:decagon-gepa-producao]; o
+  laboratório reprova candidato que cresça mais de 20%. Cada avaliação é uma sessão de agente; o
+  laboratório soma os tokens e para no teto da rodada (3 milhões por padrão na otimização, 10 milhões
+  no piloto inteiro). O custo por sessão sai da saída JSON do harness, como `total_cost_usd` no
+  Claude Code [ref:claude-code-headless].
+referencias:
+  - gepa-repositorio
+  - dspy-gepa
+  - pydantic-gepa
+  - agent-optimizers-compound
+  - decagon-gepa-producao
+  - claude-code-headless

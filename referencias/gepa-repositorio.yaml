@@ -1,0 +1,10 @@
+id: gepa-repositorio
+titulo: "gepa-ai/gepa"
+organizacao: gepa-ai (GitHub)
+url: https://github.com/gepa-ai/gepa
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "README, descrição de abertura, 'Quick Start' (exemplo de gepa.optimize) e 'Adapters: Plug GEPA into Any System' (tabela, linha MCP Adapter); arquivo LICENSE"
+dominios: [construir-com-ia]
+notas: "Licença MIT. A página do repositório não fixa versão; a 0.1.4 é a fixada em otimizacao/pyproject.toml."

@@ -1,0 +1,10 @@
+id: codex-nao-interativo
+titulo: "Non-interactive mode (Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/non-interactive-mode
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "abertura da página (codex exec) e flags --json, --sandbox, --ephemeral, -o/--output-last-message, --ignore-user-config e --ignore-rules"
+dominios: [construir-com-ia]
+notas: null
