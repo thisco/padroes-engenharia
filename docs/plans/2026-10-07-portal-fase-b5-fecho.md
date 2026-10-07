@@ -62,7 +62,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   Teste vermelho antes de cada item; suíte verde; `validar.py` sem regressão no conteúdo atual
   (os links quebrados que a regra nova achar vão para a T2). **Revisão com modelo forte** contra
   este plano e a spec antes do commit final da tarefa.
-- [ ] **T2 (pendências de conteúdo).** Laços com limite em P2-01, P2-04, P2-05, P2-06 (texto e
+- [x] **T2 (pendências de conteúdo).** Laços com limite em P2-01, P2-04, P2-05, P2-06 (texto e
   exemplos); `comparar-contratos.py` imprime aviso de schema sem `type`; receita do gateway separa
   o 403 do estouro de orçamento; prompt da LGPD-02 com "só as linhas acusadas"; prompts de
   P1-07, P1-08, P1-10, P1-11 com os ajustes anotados na B.1; QLD-03 com `extend` do ruff da raiz;
@@ -99,6 +99,30 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
 - [ ] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
+
+**T2 fechada (2026-10-07).** Item → commit: (1) laços com limite de 60 tentativas de 3 s, mensagem e
+saída 1 em P2-01, P2-04, P2-05 e P2-06 (blocos do texto e passos dos prompts) em 0df76a8; o job do
+Exemplo da P2-05 já tinha o limite e os compose dos Exemplos não têm laço. (2) `comparar-contratos.py`
+é o da API-01: imprime "AVISO: N schema(s) sem type não comparado(s)" com os lugares, sem mudar a
+saída; dois estados rodados, com fixtures `base-allof.yaml` e `proposta-allof.yaml`, em d1b1a04.
+(3) receita do gateway: o 403 passou a passo 6, antes do estouro de orçamento (passo 7), em aeda281.
+(4) prompt da LGPD-02 "trocando só as linhas acusadas" em ab1b48b. (5) prompts de P1-07, P1-08, P1-10
+e P1-11: já corrigidos e reexecutados na B.1 (0c49c9f, `<ID>-prompt-2`, checkpoint de 2026-10-06);
+nada a fazer, conferido o texto vigente. (6) QLD-03 com `extend = "../../pyproject.toml"` em 11a919d
+(o Exemplo reprova F401 e E701 e aprova; a linha só vale no portal e o texto manda apagá-la no projeto).
+(7) IAC-01 em 3e5c960: serviço com `build` de Dockerfile local com `HEALTHCHECK` e sem bloco no compose
+é aceito só se o item em "Serviços" disser "healthcheck herdado da imagem"; `disable` e `NONE`
+continuam reprovando; dois estados rodados e `executar.sh` inteiro (parte B2 nova); referência nova
+`docker-dockerfile-healthcheck`. (8) SEG-02 em c250729: `v8.30.1@sha256:c00b6bd0…` (índice
+multiplataforma) no job do Exemplo, job rodado de novo (FAIL com o segredo, PASS sem); a receita não
+cita a imagem. (9) datas do caso em 7c2aa2c: o período 2026-09-10 a 2026-09-23 confere com os READMEs
+dos cenários (o 08 diz 09-23); a divergência é do README raiz do gateway-poc ("09-10 e 09-11"), e o
+texto do caso passou a dizê-la, com a referência nova `gateway-poc-cenario-08-decisao-tipada`. Links
+(R-LINK-INTERNO): os 4 da pasta `exemplos/P2-0x/` apontam agora para o `docker-compose.yml` em 32a05e7.
+Prompts alterados sem reteste (decisão do dono), com a nota em `verificacoes/` de LGPD-02, P2-04, P2-05
+e P2-06. Não tratado: o job `segredos` do `.gitlab-ci.yml` da raiz e `tests/unidade/test_ci.py` seguem
+por tag (arquivos da T1); a falha de `pytest` e `validar.py` que sobra vem das receitas novas da T4 e
+da T1 em andamento.
 
 **T5 fechada (2026-10-07).** Fichas `opentofu` (1.13.1, MPL-2.0; IAC-02) e `pytest` (9.1.1, MIT;
 QLD-01 a QLD-03, com o plugin pytest-bdd declarado e sem prática ainda) em d835c02, com
