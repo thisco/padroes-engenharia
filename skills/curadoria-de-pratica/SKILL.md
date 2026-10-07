@@ -133,7 +133,7 @@ execucoes:
     arquivo: exemplos/ligar-ci/job.yml
     comando: gitlab-ci-local normas-do-pr
     ambiente: GitLab 17
-    resultado: passou          # passou | falhou-como-esperado
+    resultado: passou          # passou | falhou | falhou-como-esperado (falhou exige `motivo`)
     evidencia: "Job succeeded"
     data: 2026-10-02
   - tipo: prompt
