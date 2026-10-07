@@ -1,0 +1,16 @@
+conteudo: qualidade-bdd
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a implementação de lógica começa por um teste que falha, a correção de bug exige um teste que reproduz o defeito com a evidência das duas execuções no plano, e nenhuma tarefa fecha sem a saída real dos comandos de validação
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seções 'TDD e prove-it' e 'Evidência antes de conclusão' (página aberta no commit fixado da tag v1.7.1)
+  resultado: confirmada
+- texto: o gotcha descoberto na investigação entra na memória quente na mesma sessão, antes de encerrar
+  ref: sdd-scaffold-steering-troubleshooting
+  localizacao: seção 'Protocolo de debugging sistemático', última frase
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []
