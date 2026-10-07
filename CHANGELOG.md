@@ -49,6 +49,26 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   `nngroup-empty-states`, `wcag-error-suggestion`, `sre-book-monitoring` e
   `opentelemetry-logs-data-model`; `fowler-evodb`, `lgpd`, `openapi-spec` e `sdd-lifecycle`
   ampliadas.
+- Dezesseis práticas das faixas de arquitetura, qualidade, infra, CI/CD e segurança (fatia B.4),
+  com Exemplo executado e registro em `verificacoes/`: ARQ-01 a ARQ-04 (ADR antes do código,
+  Arquitetura Viva, portas e adaptadores com linter, C4 em dois níveis), QLD-01 a QLD-03 (teste
+  que falha primeiro, bug vira teste e regra, validação local rígida), IAC-01 a IAC-03 (compose
+  reproduzível, infra em código com plano revisado, rollback testado), CICD-01 a CICD-03
+  (pipeline com gates, lote pequeno, entrega rastreável) e SEG-01 a SEG-03 (threat-model em cinco
+  perguntas, varredura de segredo, dependência conferida). A CICD-01 tem força `avisa`, pelo
+  `verificar_pr.py` hospedado; as demais ficam em `orienta`.
+- Cinco páginas de domínio novas: `arquitetura`, `qualidade-bdd`, `infra-iac`, `ci-cd` e
+  `seguranca`. Com elas, as 12 faixas da espinha ficam povoadas.
+- Referências novas da B.4: `c4model-diagramas`, `import-linter-docs`, `mermaid-c4`,
+  `sdd-scaffold-arquitetura-viva`, `sdd-scaffold-drift-arquitetura`,
+  `sdd-scaffold-steering-arquitetura`, `sdd-scaffold-modelo-adr`,
+  `sdd-scaffold-steering-qualidade`, `sdd-scaffold-steering-troubleshooting`,
+  `sdd-scaffold-project-memory`, `sdd-scaffold-infra-devops`, `pytest-exit-codes`,
+  `pytest-boas-praticas`, `pytest-saida`, `pytest-cov-config`, `ruff-linter`, `ruff-formatter`,
+  `docker-compose-startup-order`, `docker-compose-up`, `opentofu-plan`, `opentofu-show`,
+  `opentofu-json-format`, `opentofu-dependency-lock`, `conventional-commits`, `pip-hash-checking`
+  e `pypi-json-api`; `nygard-adr`, `cockburn-hexagonal`, `semver`, `gitlab-variaveis-predefinidas`,
+  `gitleaks-readme` e `sdd-scaffold-threat-model` relidas e ampliadas.
 
 ### Alterado
 

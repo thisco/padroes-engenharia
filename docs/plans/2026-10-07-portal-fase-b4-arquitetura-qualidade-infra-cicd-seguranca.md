@@ -89,8 +89,8 @@ tarefa dela.
 - [x] **T5 (SEG-01..03, `_dominio.md` de seguranca).** Exemplos: threat-model em cinco perguntas
   com verificador de completude; `gitleaks` rodado nos dois estados (segredo plantado em
   fixture sintética); verificador de dependência (pacote no índice + lockfile) nos dois estados.
-- [ ] **T6.** Testes de prompt em sessão nova, um por prática, logo depois de cada tarefa.
-- [ ] **T7.** `CHANGELOG.md`; lint; suíte; validar; dois builds idênticos; `public/` regenerado.
+- [x] **T6.** Testes de prompt em sessão nova, um por prática, logo depois de cada tarefa.
+- [x] **T7.** `CHANGELOG.md`; lint; suíte; validar; dois builds idênticos; `public/` regenerado.
 - [ ] **T8 (conferência em lote, ADR 0005).** Com os achados de segurança automáticos como itens
   obrigatórios; fail-open dos verificadores e laço sem limite entram na lista de partida.
 - [ ] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono), com
@@ -102,6 +102,8 @@ harness") e o caso "SGD Catálogo de Nuvem" (§10) ficam para a B.5, junto com a
 listadas lá.
 
 ## Evidências
+
+**T6 e T7 fechadas (2026-10-07).** Testes de prompt em sessão nova feitos para as 16 práticas; a CICD-01 precisou de segunda execução após correção do prompt (2d320a2). T7: `CHANGELOG.md` com a B.4; `ruff check` e `ruff format --check` limpos (289 arquivos); suíte 637 passados (antes do build, o único teste que falhava era `test_sai_0_no_repositorio_real`, pelos dois R-GERADO-DIVERGENTE de README e ROTEAMENTO); `validar.py` com zero erro após o build; dois builds (`public` e `build4`, versão 0.3.0) idênticos pelo `diff -rq`; 98 entradas em `public/praticas/` (as 16 da B.4 publicadas, 52 práticas no total em `.md` e `.html`), 12 faixas em `public/dominios/` com as 5 novas; sem NUJOR, NUARQ nem Serpro em `public/`; `verificar_pr.py` aparece 17 vezes em `public/praticas/CICD-01.html`. Para a T8: a espinha ainda mostra "a definir" em 15 das 48 células, inclusive em momentos das 5 faixas novas (ex.: Arquitetura depois da entrega, Qualidade antes de escrever, CI/CD antes de escrever, Segurança depois da entrega), porque o plano distribui as 16 práticas sem cobrir os quatro momentos de cada faixa.
 
 **T1 fechada (2026-10-07).** ARQ-01 (`c376f64`), ARQ-02 (`1bc98af`), ARQ-03 (`b0608e9`), ARQ-04 (`1f78ee9`) e o domínio `arquitetura` (`31a307b`). Referências novas: `c4model-diagramas` (c4model.com e /diagrams, abertas em 2026-10-07), `import-linter-docs` (páginas inicial, forbidden, layers e run, abertas em 2026-10-07), `mermaid-c4` (aberta em 2026-10-07) e quatro do scaffold na tag v1.7.1, lidas no clone local (URL do commit fixado não aberta na web): `sdd-scaffold-arquitetura-viva`, `sdd-scaffold-drift-arquitetura`, `sdd-scaffold-steering-arquitetura` e `sdd-scaffold-modelo-adr`; `nygard-adr` e `cockburn-hexagonal` foram reabertas e tiveram `verificado_em` atualizado. Decisões: a ARQ-01 verifica a forma da ADR (título com o número do arquivo, Status válido, Data, três seções preenchidas, Decisão com "Vamos", numeração sem lacuna) e tem `--aceita NNNN` para o gate do código; a ARQ-02 usa o `verificar_drift_arquitetura.py` do scaffold só como relatório (sai 0) e tem o `verificar-drift.py`, que reprova; a ARQ-03 usa `import-linter` 2.15 (venv de preparo, não a do portal; funciona com flask e sqlalchemy não instalados) por meio de `verificar-camadas.py`, fail-closed, e o código de saída 1 do linter é observação local, não da documentação; a ARQ-04 escreve o C4 em Mermaid (`.mmd`, sem renderizar) e o `verificar-c4.py` casa o rótulo do contêiner com o `drawio_label` do manifesto. Os verificadores da ARQ-02 e da ARQ-04 precisam de PyYAML. Preparos de prompt em `~/curadoria-a5/b4-arq-0{1,2,3,4}-prompt` (script `~/curadoria-a5/b4-arq-prep.sh`; `.venv` em 02, 03 e 04); prompts não testados e sem execução registrada (R-PROMPT esperado). `ruff` e `validar.py` sem erro na faixa além do R-PROMPT.
 
