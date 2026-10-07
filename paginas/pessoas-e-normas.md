@@ -37,19 +37,42 @@ referencias:
 - pl-2338-congresso
 - portaria-mgi-3485
 revisado_em: '2026-10-07'
+trabalho:
+  intro: 'Boris Cherny, criador do Claude Code, propôs cinco modos de trabalho em vez de cinco cargos [ref:cherny-cinco-arquetipos]. O autor os descreve por fase do ciclo do produto, mas os cinco existem em toda fase; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos]. O portal acrescenta um sexto, que a lista não nomeia e que envolve os outros cinco: o Verificador.'
+  legenda: 'Cada barra mostra uma fase do ciclo. O segmento largo e cheio é o modo que predomina nela; os quatro estreitos e hachurados são os outros, presentes. A largura indica ênfase, não uma medida.'
+  ciclo:
+    - titulo: 'Prototyper'
+      fase: 'Ideia'
+      faz: 'Propõe ideias novas e faz muitas, das quais a maioria não segue adiante [ref:cherny-cinco-arquetipos].'
+      onde: 'Spec e protótipo antes do código.'
+      praticas: [UX-02]
+    - titulo: 'Builder'
+      fase: 'Produção'
+      faz: 'Transforma o protótipo em produto e infraestrutura de produção [ref:cherny-cinco-arquetipos].'
+      onde: 'Plano e teste primeiro.'
+      praticas: [QLD-01]
+    - titulo: 'Sweeper'
+      fase: 'Simplificação'
+      faz: 'Limpa a interface, simplifica o sistema, desliga o que não serve e otimiza [ref:cherny-cinco-arquetipos].'
+      onde: 'O bug vira teste e depois regra.'
+      praticas: [QLD-02]
+    - titulo: 'Grower'
+      fase: 'Mercado'
+      faz: 'Leva um produto já construído em direção ao encaixe com o mercado, iterando [ref:cherny-cinco-arquetipos].'
+      onde: 'SLO, alerta e métricas.'
+      praticas: [OBS-02]
+    - titulo: 'Maintainer'
+      fase: 'Sistema maduro'
+      faz: 'Cuida de um sistema maduro para que siga seguro, confiável e rápido ao crescer [ref:cherny-cinco-arquetipos].'
+      onde: 'Arquitetura Viva e mudança de schema reversível.'
+      praticas: [ARQ-02, DAD-02]
+  verificador:
+    titulo: 'Verificador'
+    faz: 'Avalia se o que foi feito está certo: quem faz não julga. A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como [ref:anthropic-claude-code-expertise]; quando quem executa é o agente, o que sobra de escasso é conferir o resultado (leitura deste portal).'
+    onde: 'revisão independente (ADR 0005), `verificar_pr.py` do scaffold SDD e a conferência em lote da curadoria; a seção Como verificar de cada prática.'
+  limites:
+    - 'É um post pessoal, e não uma publicação institucional [ref:cherny-cinco-arquetipos].'
+    - 'Os cinco modos existem em toda fase do produto; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos].'
+    - 'Modo não é identidade: o autor descreve os tipos por fase do ciclo, e quem constrói sozinho com agentes passa pelos cinco em sequência [ref:cherny-cinco-arquetipos].'
+    - 'Numa organização com cargo, carreira e regime jurídico, adotam-se os modos de trabalho, sem abolir os cargos.'
 ---
-
-## Modos de trabalho na era agentiva
-
-Boris Cherny, criador do Claude Code, propôs cinco modos de trabalho em vez de cinco cargos [ref:cherny-cinco-arquetipos]. A tabela mostra onde cada um aparece neste portal e acrescenta um sexto, que a lista não nomeia.
-
-| Modo | O que faz | Onde aparece neste portal |
-| --- | --- | --- |
-| Prototyper | Propõe ideias novas e faz muitas, das quais a maioria não segue adiante [ref:cherny-cinco-arquetipos]. | Spec e protótipo antes do código: [UX-02](praticas/UX-02.html). |
-| Builder | Transforma o protótipo em produto e infraestrutura de produção [ref:cherny-cinco-arquetipos]. | Plano e teste primeiro: [QLD-01](praticas/QLD-01.html). |
-| Sweeper | Limpa a interface, simplifica o sistema, desliga o que não serve e otimiza [ref:cherny-cinco-arquetipos]. | [QLD-02](praticas/QLD-02.html): o bug vira teste e depois regra. |
-| Grower | Leva um produto já construído em direção ao encaixe com o mercado, iterando [ref:cherny-cinco-arquetipos]. | SLO, alerta e métricas: [OBS-02](praticas/OBS-02.html). |
-| Maintainer | Cuida de um sistema maduro para que siga seguro, confiável e rápido ao crescer [ref:cherny-cinco-arquetipos]. | Arquitetura Viva: [ARQ-02](praticas/ARQ-02.html); mudança de schema reversível: [DAD-02](praticas/DAD-02.html). |
-| Verificador (acrescentado aqui) | Avalia se o que foi feito está certo: quem faz não julga. A página da Anthropic diz que as pessoas decidem o que construir e o agente decide como [ref:anthropic-claude-code-expertise]; quando quem executa é o agente, o que sobra de escasso é conferir o resultado (leitura deste portal). | Revisão independente (ADR 0005), `verificar_pr.py` do scaffold SDD e a conferência em lote da curadoria; a seção Como verificar de cada prática. |
-
-A lista tem quatro limites. É um post pessoal, e não uma publicação institucional [ref:cherny-cinco-arquetipos]. Os cinco modos existem em toda fase do produto; o que muda é a proporção [ref:jvaneyck-cinco-arquetipos]. Modo não é identidade: o autor descreve os tipos por fase do ciclo, e quem constrói sozinho com agentes passa pelos cinco em sequência [ref:cherny-cinco-arquetipos]. E, numa organização com cargo, carreira e regime jurídico, adotam-se os modos de trabalho, sem abolir os cargos.

@@ -143,6 +143,46 @@
         }
       }
     },
+    "trabalho": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intro", "ciclo", "verificador", "limites"],
+      "properties": {
+        "intro": {"$ref": "#/$defs/texto"},
+        "legenda": {"$ref": "#/$defs/texto"},
+        "ciclo": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["titulo", "fase", "faz", "onde"],
+            "properties": {
+              "titulo": {"$ref": "#/$defs/texto"},
+              "fase": {"$ref": "#/$defs/texto"},
+              "faz": {"$ref": "#/$defs/texto"},
+              "onde": {"$ref": "#/$defs/texto"},
+              "praticas": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {"type": "string", "pattern": "^[A-Z0-9]+-[0-9]+$"}
+              }
+            }
+          }
+        },
+        "verificador": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["titulo", "faz", "onde"],
+          "properties": {
+            "titulo": {"$ref": "#/$defs/texto"},
+            "faz": {"$ref": "#/$defs/texto"},
+            "onde": {"$ref": "#/$defs/texto"}
+          }
+        },
+        "limites": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/texto"}}
+      }
+    },
     "modos": {
       "type": "array",
       "items": {

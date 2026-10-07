@@ -39,6 +39,51 @@
 {% endfor %}
 </section>
 {% endif %}
+{% if trabalho %}
+<section aria-label="Modos de trabalho na era agentiva">
+  <h2>Modos de trabalho na era agentiva</h2>
+  <p class="lead">{{ trabalho.intro }}</p>
+  <figure class="modos">
+    <div class="verificador">
+      <div class="quadro-cab">
+        <h3>{{ trabalho.verificador.titulo }}</h3>
+        <p>{{ trabalho.verificador.faz }}</p>
+      </div>
+      <p class="sentido">Ciclo do produto, da ideia ao sistema maduro</p>
+      <ol>
+{% for modo in trabalho.ciclo %}
+{% set pos = loop.index0 %}
+        <li class="modo">
+          <h4>{{ modo.titulo }}</h4>
+          <p class="fase">{{ modo.fase }}</p>
+          <span class="barra-modos" aria-hidden="true">{% for _ in trabalho.ciclo %}<i{% if loop.index0 == pos %} class="enfase"{% endif %}></i>{% endfor %}</span>
+          <span class="vh">Predomina {{ modo.predomina }}. Presentes também: {{ modo.tambem | join(", ") }}.</span>
+          <p class="faz">{{ modo.faz }}</p>
+          <p class="onde">{{ modo.onde }}</p>
+{% if modo.praticas %}
+          <ul class="praticas">
+{% for p in modo.praticas %}
+            <li><span class="id">{{ p.chave }}</span><a href="{{ raiz }}{{ p.href }}">{{ p.titulo }}</a></li>
+{% endfor %}
+          </ul>
+{% endif %}
+        </li>
+{% endfor %}
+      </ol>
+      <p class="quadro-pe"><b>{{ trabalho.verificador.titulo }} no portal:</b> {{ trabalho.verificador.onde }}</p>
+    </div>
+{% if trabalho.legenda %}
+    <figcaption>{{ trabalho.legenda }}</figcaption>
+{% endif %}
+  </figure>
+  <h3>Limites desta leitura</h3>
+  <ul class="limites">
+{% for limite in trabalho.limites %}
+    <li>{{ limite }}</li>
+{% endfor %}
+  </ul>
+</section>
+{% endif %}
 {% if corpo %}
 <div class="texto" aria-label="Texto da página">
 {{ corpo }}

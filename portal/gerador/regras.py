@@ -288,7 +288,7 @@ BLOCOS_POR_PAGINA = {
         "principios",
         "escada",
     },
-    "pessoas-e-normas": {"lead", "modos", "normas"},
+    "pessoas-e-normas": {"lead", "modos", "normas", "trabalho"},
 }
 PAGINAS_RESERVADAS = frozenset(
     {
@@ -441,6 +441,17 @@ def _problemas_da_pagina(
         erros += _na_espinha(pagina, espinha, falha.get("dominio"), None, f"falhas.{i}.")
     for i, disciplina in enumerate(_itens(pagina, "disciplinas")):
         erros += _na_espinha(pagina, espinha, disciplina.get("dominio"), None, f"disciplinas.{i}.")
+    trabalho = pagina.meta.get("trabalho")
+    ciclo = (
+        [m for m in trabalho.get("ciclo", []) if isinstance(m, dict)]
+        if isinstance(trabalho, dict)
+        else []
+    )
+    for i, modo in enumerate(ciclo):
+        for id_ in modo.get("praticas") or []:
+            if isinstance(id_, str) and id_ not in praticas:
+                campo = f"trabalho.ciclo.{i}.praticas"
+                erros.append(Erro(caminho, campo, codigos.R_REF_INEXISTENTE, id_))
     for i, item in enumerate(_itens(pagina, "momentos")):
         erros += _na_espinha(pagina, espinha, None, item.get("momento"), f"momentos.{i}.")
     for i, caminho_item in enumerate(_itens(pagina, "caminhos")):

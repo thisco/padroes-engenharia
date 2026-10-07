@@ -33,6 +33,7 @@ BLOCOS = (
     "escada",
     "normas",
     "modos",
+    "trabalho",
 )
 
 # Campos do frontmatter que carregam texto factual citável, por tipo.
