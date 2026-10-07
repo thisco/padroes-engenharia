@@ -1,0 +1,10 @@
+id: pytest-boas-praticas
+titulo: "pytest: Good Integration Practices (descoberta de testes e argumentos de linha de comando)"
+organizacao: pytest-dev
+url: https://docs.pytest.org/en/stable/explanation/goodpractices.html
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção sobre test discovery: arquivos test_*.py ou *_test.py e argumentos de linha de comando"
+dominios: [qualidade-bdd]
+notas: "Documentação do projeto pytest, versão stable lida em 2026-10-07."

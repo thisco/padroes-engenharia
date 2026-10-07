@@ -1,0 +1,10 @@
+id: pytest-saida
+titulo: "pytest: Managing pytest's output (opção -r e short test summary info)"
+organizacao: pytest-dev
+url: https://docs.pytest.org/en/stable/how-to/output.html
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção sobre a opção -r e o 'short test summary info' (padrão fE)"
+dominios: [qualidade-bdd]
+notas: "Documentação do projeto pytest, versão stable lida em 2026-10-07. A página não diz explicitamente que -q mantém o resumo; isso foi observado na execução do Exemplo (pytest 9)."

@@ -1,0 +1,79 @@
+conteudo: QLD-01
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a implementação de lógica começa por um teste que falha, escrito antes do código de produção, e ele falha pela ausência da implementação e não por erro de setup
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seção 'TDD e prove-it', primeiro item (página aberta no commit fixado da tag v1.7.1)
+  resultado: confirmada
+- texto: nenhuma tarefa ou PR fecha sem a saída real dos comandos de validação colada no plano, e não se afirma que algo passa sem o output
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seção 'Evidência antes de conclusão'
+  resultado: confirmada
+- texto: em spec com requisitos R<n>, o teste cita o requisito em comentário (# cobre) ou no nome da função, o verificador de PR avisa quando um R<n> não aparece em teste alterado, e a citação não é cobertura
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seção 'Rastreio do requisito no teste', itens e 'Limite'
+  resultado: confirmada
+- texto: a documentação sobre avaliação de aplicações com LLM começa por definir o critério de sucesso e depois desenhar a avaliação que o mede
+  ref: anthropic-develop-tests
+  localizacao: abertura da página ('starts with clearly defining your success criteria and then designing evaluations')
+  resultado: confirmada
+- texto: o pytest sai com código 1 quando algum teste falha e com 0 quando todos são coletados e passam
+  ref: pytest-exit-codes
+  localizacao: lista de exit codes, códigos 0 e 1
+  resultado: confirmada
+- texto: o resumo short test summary info lista, por padrão (fE), as falhas e os erros
+  ref: pytest-saida
+  localizacao: seção sobre a opção -r e o short test summary info
+  resultado: confirmada
+- texto: o pytest descobre arquivos test_*.py ou *_test.py, e argumentos de linha de comando podem nomear arquivos
+  ref: pytest-boas-praticas
+  localizacao: seção de test discovery e argumentos de linha de comando
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/verificar-plano.py
+  comando: python3 verificar-plano.py plano-antes.md; python3 verificar-plano.py plano.md; plano ausente, vazio, sem seções e com verde com skipped
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'plano-antes.md: saída 1 ("o vermelho é erro de setup ou de coleta, e não falha do teste"; "o vermelho não mostra um teste com FAILED nem o resumo ''N failed''"); plano.md: "QLD-01: o plano traz o vermelho por ausência da implementação e o verde.", saída 0; plano ausente, vazio, sem as duas seções e verde com 1 skipped: saída 1 em todos.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/plano-antes.md
+  comando: python3 verificar-plano.py plano-antes.md
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'QLD-01: 2 problema(s) no plano (acima)., saída 1. O vermelho do plano é a saída real de pytest 9.1.1 sem frete.py: "ModuleNotFoundError: No module named ''frete''", "1 error in 0.05s", saída 2.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/frete-antes.py
+  comando: python3 -m pytest -q --color=no --tb=line teste_frete.py (com frete-antes.py copiado como frete.py)
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: falhou-como-esperado
+  evidencia: '5 failed in 0.00s, saída 1; todos por NotImplementedError (FAILED teste_frete.py::test_ate_a_franquia_paga_so_a_base - NotImplementedError e os outros quatro).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/teste_frete.py
+  comando: python3 -m pytest -q --color=no --tb=line teste_frete.py (com frete-antes.py e depois com frete.py)
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: 'com frete.py: "5 passed in 0.00s", saída 0; com o esqueleto: 5 failed, saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/frete.py
+  comando: python3 -m pytest -q --color=no --tb=line teste_frete.py
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: '5 passed in 0.00s, saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-01/plano.md
+  comando: python3 verificar-plano.py plano.md
+  ambiente: cópia em /tmp/qld01; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'QLD-01: o plano traz o vermelho por ausência da implementação e o verde., saída 0.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []
