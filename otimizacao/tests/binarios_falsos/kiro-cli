@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+printf '%s\n' "$*" > "${FALSO_LOG:-/dev/null}"
+echo '{"type":"assistant","text":"OK"}'
+echo '{"type":"usage","input_tokens":90,"output_tokens":10}'
