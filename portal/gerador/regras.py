@@ -1125,9 +1125,42 @@ CITACAO_HOSPEDADA = re.compile(
 )
 
 
+BASE_DEFINIDA = re.compile(r"\bBASE=")
+BASE_HOSPEDADA = re.compile(
+    r"\bBASE=[\"']?[^\"']*?\.well-known/mecanismos/(?P<componente>[a-z0-9][a-z0-9-]*)/?(?![\w/.-])"
+)
+CITACAO_POR_BASE = re.compile(r"\$\{?BASE\}?/(?P<arquivo>[A-Za-z0-9_][\w.-]*)")
+_JANELA_BASE = 3
+
+
+def _citacoes_por_base(texto: str) -> list[tuple[str, str]]:
+    """Os pares (componente, arquivo) citados como `$BASE/<arquivo>` ou `${BASE}/<arquivo>`.
+
+    O `BASE=` vale quando está na própria linha ou numa das três anteriores (a mais próxima
+    vence) e termina em `/.well-known/mecanismos/<componente>/`; `BASE` sem definição por perto ou
+    definido em outro lugar (o GitHub na tag, por exemplo) não é conferido."""
+    linhas = texto.splitlines()
+    achados: list[tuple[str, str]] = []
+    for i, linha in enumerate(linhas):
+        for uso in CITACAO_POR_BASE.finditer(linha):
+            for j in range(i, max(i - _JANELA_BASE, 0) - 1, -1):
+                alvo = linhas[j][: uso.start()] if j == i else linhas[j]
+                definicoes = list(BASE_DEFINIDA.finditer(alvo))
+                if definicoes:
+                    hospedada = BASE_HOSPEDADA.match(alvo, definicoes[-1].start())
+                    if hospedada:
+                        achados.append((hospedada["componente"], uso["arquivo"].rstrip(".")))
+                    break
+    return achados
+
+
 def _citacoes_hospedadas(texto: str) -> list[tuple[str, str]]:
-    """Os pares (componente, arquivo) citados como `/.well-known/mecanismos/<c>/<arquivo>`."""
-    return [(m["componente"], m["arquivo"].rstrip(".")) for m in CITACAO_HOSPEDADA.finditer(texto)]
+    """Os pares (componente, arquivo) citados como `/.well-known/mecanismos/<c>/<arquivo>` ou,
+    com `BASE` definido na janela, como `$BASE/<arquivo>`."""
+    diretas = [
+        (m["componente"], m["arquivo"].rstrip(".")) for m in CITACAO_HOSPEDADA.finditer(texto)
+    ]
+    return diretas + _citacoes_por_base(texto)
 
 
 def _textos_com_citacoes(repo: Repositorio, raiz: Path) -> list[tuple[str, str]]:
