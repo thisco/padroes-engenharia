@@ -345,7 +345,9 @@ Contagem: 1 alto, 3 médios e 17 baixos.
 2. **Starter `gateway-poc`:** merge sem a prova completa da instalação. O testador executou os
    passos 1 a 3 com a porta 4000 livre; o `docker compose up` foi negado pelo classificador de
    permissões da sessão de teste (não pelo prompt). Registrado em `verificacoes/starter-gateway-poc.yaml`
-   como execução `falhou` com motivo; a prova completa é pendência pós-v1.
+   como execução `falhou` com motivo. **Adendo (2026-10-07, 17h):** a prova completa foi executada pelo
+   coordenador logo após a tag (o `up` passou para a sessão principal), com projeto compose isolado;
+   registrada como execução `passou` no mesmo arquivo. Deixa de ser pendência.
 3. **Pendências pós-v1** aceitas como listadas na T10 (ficha de conceito com "Práticas", nome na
    célula da espinha e subtítulo da faixa, roteamento por tarefa, backlog por célula, select do
    radar a 400px, `BASE:` em YAML e links em HTML bruto na regra de link, `[ref:]` cru nas saídas
