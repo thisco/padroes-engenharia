@@ -160,7 +160,10 @@ incompleta.
 Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O candidato é o
 `verificar-classificacao.py` do Exemplo, no CI do projeto. Ele lê as migrations `.sql` e o
 registro, e reprova o campo de `CREATE TABLE` ou de `ALTER TABLE ... ADD COLUMN` sem linha no
-registro, a classe fora das quatro, o dado pessoal ou sensível sem finalidade, o registro ou a
+registro, a classe fora das quatro (cada cláusula `ADD COLUMN` de um `ALTER TABLE` conta, e uma coluna cujo nome
+coincide com palavra reservada, como `key` ou `"index"`, é coluna: constraint e índice são
+reconhecidos pela sintaxe, como `PRIMARY KEY (`, `CONSTRAINT nome`, `UNIQUE (` ou `INDEX nome (`, e não pelo
+nome), o dado pessoal ou sensível sem finalidade, o registro ou a
 pasta ausentes e a pasta sem nenhum campo. Sai com 0 ou 1.
 
 Os limites: o verificador confere que existe uma classe, e não que ela está certa: um CPF

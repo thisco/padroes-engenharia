@@ -7,6 +7,6 @@ afirmacoes:
   localizacao: seções 'A regra' e 'Protótipo antes do código'
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente (conferência em lote, ADR 0005)
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
   achados: []

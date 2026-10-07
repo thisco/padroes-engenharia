@@ -1,3 +1,4 @@
+# prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
 # 2026-10-06: receita nova. O gateway do starter rodou numa cópia alterada (porta 4010, sem container_name) por causa do conflito com outra cópia da PoC na porta 4000. O prompt da seção Com o agente ainda não foi testado em sessão nova; revisão adversarial provisória até a conferência em lote.
 conteudo: receita-ligar-aplicacao-ao-gateway
 verificado_em: '2026-10-06'
@@ -166,12 +167,12 @@ revisao_adversarial:
     problema: '[médio] o prompt não diz "sem trailer", e a regra do plano é pedir a mensagem sem trailer: o commit
       testado (0a06b44) saiu com `Co-Authored-By` e `Claude-Session` no corpo, e o harness do usuário pode repetir
       isso.'
-    tratamento: 'Pendente: acrescentar "sem trailer" ao passo 7 do prompt e retestar. Não é crítico.'
+    tratamento: 'Tratado em 2026-10-06: o passo 7 do prompt pede "sem linha de coautoria nem trailer". Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
   - afirmacao: Passo 3 e passo 5 (shell e pasta)
     problema: '[baixo] o texto manda ficar em um único shell na pasta `gateway-poc/poc`, mas o passo 3 roda `python3
       -m venv .venv` e `python cliente.py` "no repositório da aplicação" sem dizer `cd`; o passo 5 usa `(cd <pasta-da-aplicação>
       && ...)` e depende do venv e das variáveis do passo 3. Quem segue por leitura tem de deduzir o `cd` e o `<pasta-da-aplicação>`.'
-    tratamento: 'Pendente: dizer no passo 3 o `cd` para a pasta da aplicação e voltar a `poc/`.'
+    tratamento: 'Tratado em 2026-10-06 no prompt: o passo 3 diz "cd <pasta-da-aplicação>". O texto dos passos da receita segue como estava. Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
   - afirmacao: Passo 7 (403 para modelo fora da lista)
     problema: '[baixo] o 403 consta no registro como evidência de uma linha, sem a ordem em relação ao estouro do
       orçamento do passo 6; a chave já estourada pode devolver 429 em vez de 403 conforme a versão. O prompt testado
@@ -180,7 +181,7 @@ revisao_adversarial:
   - afirmacao: Passo 1 e Antes de começar (health check e laço)
     problema: '[baixo] `until curl ...; do sleep 3; done` sem limite: um gateway que não sobe deixa o shell preso,
       e o texto não diz o que fazer.'
-    tratamento: Nenhum.
+    tratamento: 'Tratado em 2026-10-06: os dois laços do texto (passos 1 e 4) têm limite de 60 tentativas de 3 s e uma mensagem ao esgotar. Os blocos de código não são o prompt.'
   - afirmacao: Passos 2 a 5 (porta e pré-requisito de nomes)
     problema: '[baixo] o pré-requisito cita 3 nomes de contêiner, mas o profile guardrails (passo 4) também fixa
       `poc-presidio-analyzer` e `poc-presidio-anonymizer`, que só conflitam se houver outra cópia dos profiles no
@@ -197,7 +198,7 @@ revisao_adversarial:
       linha", e o item entra com dois espaços, como os da lista, o que confere com a tag); (d) quem não tem o Presidio
       no profile sem o passo 4 vê erro de DNS no log do gateway sem diagnóstico no passo 5. Nenhum bloqueia: o texto,
       com os Se der errado, deixa um leitor atento chegar ao veredito.'
-    tratamento: Pendente (a) e (b), como nos achados acima; (c) e (d) já tratados no texto.
+    tratamento: Tratados (a) e (b) em 2026-10-06, como nos achados acima; (c) e (d) já estavam tratados no texto.
   - afirmacao: fontes litellm-* e gateway-poc-*
     problema: '[baixo] gateway-poc-readme e gateway-poc-compose abertas na web no commit 571a091c: a porta 4000,
       os três nomes e o profile guardrails (presidio-analyzer e presidio-anonymizer) conferem. As páginas litellm-*

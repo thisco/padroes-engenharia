@@ -255,21 +255,29 @@ execucoes:
   resultado: passou
   evidencia: saída 0 nas três seções; saída bruta em curadoria-a5/saidas/b3-dad01-validate.txt.
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: exemplos/DAD-01/executar-validate.sh
+  comando: sh executar-validate.sh
+  ambiente: Docker; PostgreSQL 16; Flyway 11 (T9)
+  resultado: passou
+  evidencia: 'com a espera limitada a 30 tentativas, a saída é a do corpo: checksum mismatch -1946493639 x -1926160430,
+    ''Successfully validated 3 migrations'' e o histórico com os três checksums; nenhum container ou rede sobrou.'
+  data: '2026-10-06'
 revisao_adversarial:
-  revisor: sessao-independente
-  data: '2026-10-04'
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-06'
   achados:
   - afirmacao: não edite, não renomeie e não apague [ref:migrations-reversiveis]
     problema: a skill só diz que a migration nunca é editada; renomear e apagar não estavam na fonte
-    tratamento: 'o passo 2 separa: editar vem da skill; renomear e apagar vêm do validate do Flyway (diferença
-      de nome e migration aplicada que sumiu)'
+    tratamento: 'o passo 2 separa: editar vem da skill; renomear e apagar vêm do validate do Flyway (diferença de
+      nome e migration aplicada que sumiu)'
   - afirmacao: fonte autoral usada como primária para a regra
     problema: a skill é do próprio autor; a documentação do Flyway diz o mesmo
     tratamento: O que fazer cita a recomendação do Flyway e diz que a prática é mais estrita que ela
   - afirmacao: V<próximo número>__<descrição>.sql na mesma pasta [ref:flyway-versionadas]
     problema: a página só traz um exemplo de nome; a pasta é configuração
-    tratamento: o texto descreve prefixo V, versão e dois sublinhados e diz 'na pasta de migrations do
-      projeto', sem atribuir a pasta à fonte
+    tratamento: o texto descreve prefixo V, versão e dois sublinhados e diz 'na pasta de migrations do projeto',
+      sem atribuir a pasta à fonte
   - afirmacao: alembic revision com upgrade() e downgrade() preenchidos [ref:alembic-tutorial]
     problema: o tutorial trata o downgrade como opcional; a exigência é da skill
     tratamento: texto diz isso e cita as duas fontes
@@ -278,41 +286,38 @@ revisao_adversarial:
     tratamento: texto cita a skill para a recomendação e o tutorial para os comandos
   - afirmacao: saída do Flyway 11.20.3 sem referência e truncada
     problema: sem evidência anexada e com linhas a menos; a documentação não reproduz a mensagem
-    tratamento: o bloco traz o trecho completo da execução, o texto diz que é trecho e que a mensagem
-      muda entre versões, e a nota do registro guarda a saída
+    tratamento: o bloco traz o trecho completo da execução, o texto diz que é trecho e que a mensagem muda entre
+      versões, e a nota do registro guarda a saída
   - afirmacao: o job falha com uma linha
     problema: o log também traz a linha ::error (sintaxe de GitHub Actions) e um AVISO
     tratamento: texto explica as linhas extras
   - afirmacao: o que a trava não cobre
-    problema: faltavam renomear, mover para fora da pasta e pasta de revisões do Alembic com outro nome;
-      apagar é bloqueado
-    tratamento: três casos rodados pela curadoria (renomear e mover passam; apagar bloqueia) e incluídos
-      no texto
+    problema: faltavam renomear, mover para fora da pasta e pasta de revisões do Alembic com outro nome; apagar
+      é bloqueado
+    tratamento: três casos rodados pela curadoria (renomear e mover passam; apagar bloqueia) e incluídos no texto
   - afirmacao: flyway validate é uma segunda trava
-    problema: a página lista como falha a migration local ainda não aplicada; o portal não dizia onde
-      rodar
-    tratamento: o texto avisa e manda rodar contra um banco com as anteriores aplicadas, cuidando da ordem
-      com o migrate
+    problema: a página lista como falha a migration local ainda não aplicada; o portal não dizia onde rodar
+    tratamento: o texto avisa e manda rodar contra um banco com as anteriores aplicadas, cuidando da ordem com o
+      migrate
   - afirmacao: a prática proíbe mudar qualquer migration da branch de destino
     problema: é mais estrita que o Flyway, que fala em ambiente permanente
     tratamento: dito em O que fazer
   - afirmacao: versão 11.20.3 sem fonte, documentação de outra versão
     problema: não havia evidência anexada; a página de referência é da versão vigente
-    tratamento: o registro da ferramenta traz a execução; o texto diz que é a única versão testada e que
-      a mensagem pode mudar
+    tratamento: o registro da ferramenta traz a execução; o texto diz que é a única versão testada e que a mensagem
+      pode mudar
   - afirmacao: pip install alembic [ref:alembic-tutorial]
     problema: o tutorial remete à página Installation
     tratamento: a referência saiu dessa parte
   - afirmacao: mudar o tipo exige o modo batch
     problema: exige ignora o move-and-copy manual
-    tratamento: 'texto reescrito com o que a documentação diz: o SQLite só faz add_column como ALTER de
-      coluna'
+    tratamento: 'texto reescrito com o que a documentação diz: o SQLite só faz add_column como ALTER de coluna'
   - afirmacao: mecanismo verificar_pr.py@1.6.1
     problema: o repositório do scaffold não tem tags; a versão vem do CHANGELOG no commit fixado
     tratamento: aceito; a versão está em componentes.yml
   - afirmacao: 'Rollback: migration corretiva V4 que volta cpf para VARCHAR(11)'
-    problema: conflita com a skill (rollback é o downgrade testado; estreitar tipo é mudança destrutiva)
-      e V4 não está na MR
+    problema: conflita com a skill (rollback é o downgrade testado; estreitar tipo é mudança destrutiva) e V4 não
+      está na MR
     tratamento: 'linha de plano reescrita: downgrade da V3 testado em banco efêmero, com o aviso de truncamento
       e ADR'
   - afirmacao: 'não executável sem inventar: passo 1 sem origin/main'
@@ -331,8 +336,17 @@ revisao_adversarial:
   - afirmacao: 'não executável sem inventar: verificar_pr.py no repositório vazio'
     problema: nada dizia como trazer o script
     tratamento: o passo 6 diz que a receita baixa o script do scaffold
-  - afirmacao: 'correções K2 (lote de 2026-10-04): formato da linha de tier, origem do verificar_pr.py,
-      rollback sem U__ e origin/main sem remoto'
+  - afirmacao: 'correções K2 (lote de 2026-10-04): formato da linha de tier, origem do verificar_pr.py, rollback
+      sem U__ e origin/main sem remoto'
     problema: o agente do teste de aceite precisou inventar esses quatro pontos
-    tratamento: passos e exemplo reescritos; verificar_pr.py --base main testado num repositório sem remoto
-      (BLOQUEIA e saída 1); conferência independente fica com a revisão do lote
+    tratamento: passos e exemplo reescritos; verificar_pr.py --base main testado num repositório sem remoto (BLOQUEIA
+      e saída 1); conferência independente fica com a revisão do lote
+  - afirmacao: 'exemplos/DAD-01/executar-validate.sh: espera pelo banco (until pg_isready)'
+    problema: '[médio] o laço não tem limite: se a imagem não sobe, o script não termina.'
+    tratamento: 'Tratado: contador com teto de 30 tentativas de 1 s, mensagem e saída 1 ao esgotar; o bloco equivalente
+      no texto da prática ou da receita também tem o limite.'
+  - afirmacao: 'exemplos/DAD-01/executar-validate.sh: nome fixo pg-efemero e rede efemera com trap'
+    problema: '[baixo] se já existirem, o docker run falha, o laço espera no container alheio e o trap derruba recursos
+      que não são do script.'
+    tratamento: 'Tratado no texto: aviso de uma linha de que o script para o container pg-efemero ao sair e de que
+      o nome não deve ser usado por outro container; o nome não mudou, por decisão do dono.'

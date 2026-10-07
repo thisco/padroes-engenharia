@@ -1,3 +1,4 @@
+# prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
 # 2026-10-06: starter novo. Revisão adversarial provisória até a conferência em lote; o prompt_para_agente ainda não foi testado em sessão nova.
 conteudo: starter-gateway-poc
 verificado_em: '2026-10-06'
@@ -125,8 +126,7 @@ revisao_adversarial:
     problema: '[médio] o prompt manda parar se o health check não passar em 3 minutos, mas o laço `until curl ...;
       do sleep 3; done` não tem limite, e `timeout` não existe no macOS. Quem segue o texto precisa inventar o corte
       dos 3 minutos; um gateway que não sobe deixa o agente preso no laço.'
-    tratamento: 'Pendente: trocar o laço por um com contador (por exemplo 60 voltas de 3 s) no prompt e no comando.
-      Não é crítico: o prompt manda mostrar os logs e parar, e o laço só falha em gateway que nunca fica pronto.'
+    tratamento: 'Tratado em 2026-10-06: o passo 4 do prompt usa um laço de 60 tentativas de 3 s e depois confere o health check; o comando do starter não tem o laço. Nota: prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono).'
   - afirmacao: limites declarados na descrição (porta e nomes fixos, seed no localhost:4000, 8 GiB)
     problema: '[baixo] confirmados no compose da tag, aberto na web (container_name poc-gateway, poc-db e poc-ollama,
       porta 4000:4000). A descrição não cita o profile `guardrails`, o `.env.example` com `local-llama` (o catálogo

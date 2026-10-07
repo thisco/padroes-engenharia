@@ -1,3 +1,4 @@
+# prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
 conteudo: DAD-02
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
@@ -124,7 +125,28 @@ execucoes:
   resultado: passou
   evidencia: 'commit 11c4406 "feat(dados): expande nome sem remover a antiga (DAD-02)" com 2 arquivos (migration de expansão e plano), sem coautoria; container pg-efemero derrubado ao fim. Transcrição em curadoria-a5/transcricoes/DAD-02-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
-revisao_adversarial:
-  revisor: provisória, até a conferência em lote da T8 (ADR 0005)
+- tipo: arquivo
+  arquivo: exemplos/DAD-02/executar.sh
+  comando: sh executar.sh
+  ambiente: Docker; PostgreSQL 16; Flyway 11 (T9)
+  resultado: passou
+  evidencia: com a espera limitada a 30 tentativas, os três blocos (errado, expandir e contrair, volta pela V4)
+    saem como no corpo, com 'Successfully validated 4 migrations' no fim; nenhum container ou rede sobrou.
   data: '2026-10-06'
-  achados: []
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'exemplos/DAD-02/executar.sh: espera pelo banco (until pg_isready)'
+    problema: '[médio] o laço não tem limite: se a imagem não sobe, o script não termina.'
+    tratamento: 'Tratado: contador com teto de 30 tentativas de 1 s, mensagem e saída 1 ao esgotar; o bloco equivalente
+      no texto da prática ou da receita também tem o limite.'
+  - afirmacao: 'exemplos/DAD-02/executar.sh: nome fixo pg-efemero e rede efemera com trap'
+    problema: '[baixo] se já existirem, o docker run falha, o laço espera no container alheio e o trap derruba recursos
+      que não são do script.'
+    tratamento: 'Tratado no texto: aviso de uma linha de que o script para o container pg-efemero ao sair e de que
+      o nome não deve ser usado por outro container; o nome não mudou, por decisão do dono.'
+  - afirmacao: 'Prompt do Para o agente, passo 4: espera pelo banco'
+    problema: '[médio] o passo dizia só ''espere o banco aceitar conexão'', sem limite.'
+    tratamento: 'Tratado: o passo pede no máximo 30 tentativas com sleep 1 e parar se esgotar. Nota: prompt alterado
+      em 2026-10-06 após a conferência, sem reteste (decisão do dono).'

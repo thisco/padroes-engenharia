@@ -82,6 +82,9 @@ amplia onde o dado existe e quem o alcança sem que a tarefa precise disso.
    O corpus era fictício; a leitura do portal é que o mesmo acesso exporia dado pessoal, se ele
    estivesse lá.
 7. Rode o verificador do Exemplo no CI. Ele varre `tests/`, `logs/` e `prompts/`.
+8. Um número de 11 dígitos não é CPF por si só: o verificador só acusa o que passa na conferência
+   dos dígitos, e um protocolo ou um ID de pedido pode ter 11 dígitos sem ser CPF. Ao corrigir, troque
+   cada ocorrência acusada (arquivo e linha), e não o arquivo inteiro.
 
 ## Exemplo
 
@@ -123,10 +126,11 @@ traz marcadores, e o teste que precisa de um CPF válido o gera na hora:
 
 <!-- incluir: exemplos/LGPD-02/depois/tests/sintetico.py -->
 
-O verificador sai com 0:
+O verificador, rodado só com os arquivos da pasta `depois/` do Exemplo, sai com 0 (o número de
+arquivos varia com o projeto):
 
 ```text
-LGPD-02: 8 arquivos varridos, nenhum CPF ou e-mail em claro.
+LGPD-02: 4 arquivos varridos, nenhum CPF ou e-mail em claro.
 ```
 
 O verificador. O CPF e o e-mail usam a mesma regex da máscara da P2-04, com a conferência dos
@@ -171,13 +175,18 @@ Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O ca
 `verificar-dado-em-claro.py` do Exemplo, no CI do projeto. Ele varre `tests/`, `logs/` e `prompts/`
 e reprova o arquivo com CPF de dígitos verificadores válidos (com ponto, hífen, espaço ou colado) ou
 com e-mail de domínio que não seja `example.com`, `example.org` ou `example.net` (uma escolha do
-Exemplo). Também reprova a raiz sem nenhuma das três pastas, para um caminho errado não virar um
-"nenhum achado". Sai com 0 ou 1 e nunca imprime o dado achado.
+Exemplo). Também reprova a raiz sem nenhuma das três pastas e a raiz em que nenhum arquivo foi varrido (as
+pastas vazias), para um caminho errado ou vazio não virar um "nenhum achado". O arquivo que não
+decodifica em UTF-8 é lido como UTF-16; se nem assim, o verificador o lista como "não varrido" e
+sai com 1. Sai com 0 ou 1 e nunca imprime o dado achado.
 
 Os limites: o verificador não distingue CPF real de CPF sintético com dígitos válidos, e por isso o
 teste gera o CPF na hora e não o escreve no arquivo; por outro lado, um número de 11 dígitos que por
 acaso passe na conferência dos dígitos é acusado. Ele não vê nome, telefone, endereço, CPF de outro
 formato ou por extenso, o dado dentro de arquivo binário ou compactado, nem o que está fora das três
 pastas, como o código que monta o log ou o prompt em tempo de execução, o tráfego de produção e o
-índice vetorial. A máscara reduz onde o dado existe, mas o que já foi commitado continua no
+índice vetorial. O verificador cobre CPF em texto claro (com ou sem pontuação, em UTF-8 ou UTF-16) e e-mail fora dos
+domínios de teste. Não cobre CPF com escape unicode (`\u0031...`), em base64, partido em mais de uma
+linha nem com dígito verificador inválido: isso é o que a revisão humana do código e a P2-04 (a
+máscara no gateway, no caminho do modelo) complementam. A máscara reduz onde o dado existe, mas o que já foi commitado continua no
 histórico do repositório e pede outra providência.

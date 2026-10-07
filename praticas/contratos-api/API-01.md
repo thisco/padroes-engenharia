@@ -196,7 +196,9 @@ aponte um arquivo existente, e o arquivo ausente ou inválido. A API-02 o liga a
 Os limites: o verificador cobre as regras da tabela para os caminhos, os parâmetros e os schemas
 de `application/json`, seguindo `$ref` internos; não olha `enum`, formato, `oneOf`, `allOf`, nem
 a semântica dos campos, e não confere se o código segue o contrato (o teste de contrato da API-02
-faz isso). Ele não lê o conteúdo da ADR, só que o arquivo existe. A classificação é a da tabela
+faz isso). Um schema sem `type` (por exemplo, o que só tem `allOf`) não é comparado, e a saída não avisa: se
+remover um campo dentro dele, o verificador sai com 0 e diz que todas as mudanças são compatíveis,
+então confira esses schemas na revisão. Ele não lê o conteúdo da ADR, só que o arquivo existe. A classificação é a da tabela
 da prática: uma mudança "compatível" ainda quebra o consumidor que rejeita campo desconhecido.
 Existem ferramentas de código aberto que fazem o diff de contratos com um conjunto de regras
 bem maior; o oasdiff, por exemplo, tem o subcomando `breaking`, que mostra só as mudanças que

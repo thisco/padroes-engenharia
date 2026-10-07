@@ -49,6 +49,19 @@ def arquivos(raiz: Path) -> list[Path]:
     return achados
 
 
+def ler(arquivo: Path) -> str | None:
+    """Texto do arquivo em UTF-8 ou, se falhar, em UTF-16; None se nenhuma das duas serve.
+
+    UTF-16 sem BOM decodifica como UTF-8 com um NUL entre as letras; tirar os NUL o conserta.
+    """
+    for codificacao in ("utf-8", "utf-16"):
+        try:
+            return arquivo.read_text(encoding=codificacao).replace("\x00", "")
+        except UnicodeError:
+            continue
+    return None
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--raiz", default=".", help="raiz do projeto, com tests/, logs/ e prompts/")
@@ -56,11 +69,11 @@ def main() -> int:
     if not any((raiz / p).is_dir() for p in PASTAS):
         print(f"{raiz}: nenhuma das pastas {', '.join(PASTAS)} existe (raiz errada?)")
         return 1
-    varridos, erros = 0, []
+    varridos, erros, nao_varridos = 0, [], []
     for arquivo in arquivos(raiz):
-        try:
-            texto = arquivo.read_text(encoding="utf-8")
-        except UnicodeDecodeError:
+        texto = ler(arquivo)
+        if texto is None:
+            nao_varridos.append(str(arquivo.relative_to(raiz)))
             continue
         varridos += 1
         for n, linha in enumerate(texto.splitlines(), start=1):
@@ -68,6 +81,14 @@ def main() -> int:
             erros += [f"{arquivo.relative_to(raiz)}:{n}: {a}" for a in achados_da_linha(linha)]
     for erro in erros:
         print(erro)
+    for caminho in nao_varridos:
+        print(f"{caminho}: não varrido (não decodifica em UTF-8 nem em UTF-16)")
+    if nao_varridos:
+        print("LGPD-02: arquivo que o verificador não conseguiu ler (acima).")
+        return 1
+    if varridos == 0:
+        print(f"{raiz}: nenhum arquivo varrido em {', '.join(PASTAS)} (pastas vazias?)")
+        return 1
     if erros:
         print("LGPD-02: dado pessoal em claro em teste, log ou prompt (acima).")
         return 1

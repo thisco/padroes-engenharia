@@ -108,7 +108,44 @@ execucoes:
   resultado: passou
   evidencia: "Antes: 6 linhas de CPF em claro e e-mail em claro em tests/fixtures/cliente.json, logs/atendimento.log e prompts/segunda-via.txt, saída 1. Trocou por [CPF] e [EMAIL] (cliente@example.com em tests/); depois 'LGPD-02: 7 arquivos varridos, nenhum CPF ou e-mail em claro.', saída 0. Commit c561f0f com os 3 arquivos, sem trailer; não escreveu o dado em lugar nenhum; lembrou que o dado segue no histórico do git (filter-repo ou BFG, e a pessoa encarregada). A troca em massa pegou protocolo=20261006001 (11 dígitos) como CPF e o agente restaurou antes do commit. Transcrição em curadoria-a5/transcricoes/LGPD-02-prompt-1.bruta.jsonl."
   data: '2026-10-06'
-revisao_adversarial:
-  revisor: provisória, até a conferência em lote (T8)
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/verificar-dado-em-claro.py
+  comando: python3 verificar-dado-em-claro.py --raiz exemplos/LGPD-02/antes e depois
+  ambiente: Python 3.14.8; macOS (T9)
+  resultado: passou
+  evidencia: 'antes: seis achados (CPF e e-mail em tests, logs e prompts) e saída 1; depois: ''LGPD-02: 4 arquivos
+    varridos, nenhum CPF ou e-mail em claro.'', saída 0.'
   data: '2026-10-06'
-  achados: []
+- tipo: arquivo
+  arquivo: exemplos/LGPD-02/verificar-dado-em-claro.py
+  comando: python3 verificar-dado-em-claro.py --raiz <tests/ vazia | tests/ com CPF em UTF-16 | tests/ com arquivo
+    não decodificável>
+  ambiente: Python 3.14.8; macOS (T9)
+  resultado: falhou-como-esperado
+  evidencia: 'tests/ vazia: ''nenhum arquivo varrido'', saída 1; CPF válido em UTF-16 (com e sem BOM): ''CPF em
+    claro'', saída 1; arquivo que não é UTF-8 nem UTF-16: ''não varrido'', saída 1.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'exemplos/LGPD-02/verificar-dado-em-claro.py: pasta vazia e arquivo que não decodifica'
+    problema: '[médio] com tests/ vazia imprimia ''0 arquivos varridos'' e saía 0, e o arquivo que não decodifica
+      em UTF-8 era pulado em silêncio (UTF-16 com CPF válido saía 0).'
+    tratamento: 'Tratado: nenhum arquivo varrido sai 1 com mensagem; o arquivo é lido em UTF-8 e, se falhar, em
+      UTF-16; se nenhuma serve, é listado como ''não varrido'' e o verificador sai 1.'
+  - afirmacao: LGPD-02.md, limites do verificador
+    problema: '[médio] escape unicode, base64, CPF partido em linhas e dígito verificador inválido passam, e o texto
+      não os declarava.'
+    tratamento: 'Tratado só no texto, sem mudar o verificador: o Como verificar diz que ele cobre CPF em texto claro
+      (com ou sem pontuação, UTF-8 ou UTF-16) e não cobre esses casos, que a revisão humana e a P2-04 (gateway)
+      complementam.'
+  - afirmacao: LGPD-02.md, saída do estado depois ('8 arquivos varridos')
+    problema: '[baixo] a pasta depois/ do Exemplo tem 4 arquivos; o 8 vinha do projeto-teste.'
+    tratamento: 'Tratado: a saída registrada passou a ''4 arquivos varridos'', com a frase de que o número varia
+      com o projeto.'
+  - afirmacao: LGPD-02, achado herdado (11 dígitos tratado como CPF)
+    problema: '[baixo] o verificador confere os dígitos e não acusa o protocolo de 11 dígitos; a troca indevida
+      foi do agente do teste de prompt, que trocou por arquivo e não por ocorrência.'
+    tratamento: 'Tratado no Como aplicar (passo 8): número de 11 dígitos não é CPF por si só e a troca é por ocorrência,
+      não por arquivo. O prompt não foi alterado.'

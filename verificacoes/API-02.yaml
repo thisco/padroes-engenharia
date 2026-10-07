@@ -60,6 +60,16 @@ execucoes:
   evidencia: 'job contrato FAIL com as 2 linhas INCOMPATÍVEL; telefone restaurado e email opcional, versão 1.1.0; depois PASS com 2 testes OK; commit 75ce932 só com api/openapi.yaml, sem trailer, sem push'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, até a conferência em lote da T8
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'exemplos/API-02/gitlab-ci.yml: ADR nova'
+    problema: '[baixo] o job aceita qualquer ADR nova em docs/adr/*.md, mesmo de outro assunto.'
+    tratamento: 'Tratado no texto, sem endurecer o job: os limites do Como verificar dizem que o job não confere
+      que a ADR trata dessa mudança e que a revisão humana confere.'
+  - afirmacao: 'preparo do teste de prompt: comentário da linha 1 de api/openapi.yaml'
+    problema: '[baixo] o comentário ''Proposta incompatível sem versão nova…'' fica desatualizado depois da correção,
+      e o prompt proíbe editá-lo. O comentário é do preparo (~/curadoria-a5/b3-api-02-prompt), copiado de exemplos/API-01/proposta-sem-versao.yaml,
+      onde ele é correto.'
+    tratamento: 'Sem mudança no portal: o preparo não está versionado em exemplos/API-02/ nem no texto da prática.
+      Anotado no plano; o prompt não foi alterado.'

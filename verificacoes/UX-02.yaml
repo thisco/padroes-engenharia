@@ -67,6 +67,9 @@ execucoes:
   evidencia: "1ª rodada: saída 1 (vazio ausente em lista-chamados.md; detalhe-chamado sem protótipo); o agente acrescentou o Vazio e criou detalhe-chamado.md com os quatro estados, vazio e erro distintos; 2ª rodada: saída 0 (UX-02: 2 telas da spec, cada uma com protótipo dos quatro estados.); commit 661faa9 só com docs/prototipos/, sem trailer; o relatório lembrou a validação humana do protótipo."
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: pendente (conferência em lote, ADR 0005)
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: UX-02.md, saída do estado antes
+    problema: '[baixo] o bloco citava 2026-10-06-chamados.md, mas o arquivo do Exemplo é spec-chamados.md.'
+    tratamento: 'Tratado: o bloco de saída usa spec-chamados.md.'

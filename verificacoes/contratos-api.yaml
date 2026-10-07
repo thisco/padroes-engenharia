@@ -7,6 +7,6 @@ afirmacoes:
   localizacao: seção 2 (Introduction), 'An OpenAPI Description (OAD) formally describes the surface of an API and its semantics' (versão 3.2.1)
   resultado: confirmada
 revisao_adversarial:
-  revisor: provisória, até a conferência em lote da T8
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
   achados: []

@@ -74,9 +74,16 @@ variáveis do passo 2.
    cd gateway-poc/poc
    printf 'LITELLM_MASTER_KEY=sk-poc-%s\nLITELLM_SALT_KEY=sk-poc-%s\n' "$(openssl rand -hex 16)" "$(openssl rand -hex 16)" > .env
    docker compose up -d
-   until curl -sf http://localhost:4000/health/liveliness >/dev/null; do sleep 3; done
-   bash seed-demo.sh
+   for i in $(seq 1 60); do curl -sf http://localhost:4000/health/liveliness >/dev/null && break; sleep 3; done
+   if curl -sf http://localhost:4000/health/liveliness >/dev/null; then
+     bash seed-demo.sh
+   else
+     echo "o gateway não respondeu em 3 minutos (60 tentativas): veja docker compose logs gateway e pare aqui"
+   fi
    ```
+
+   A espera tem limite de 60 tentativas de 3 segundos; se esgotar, o `seed-demo.sh` não roda, e o
+   passo seguinte só vale com o gateway no ar.
 
    O `seed-demo.sh` cria dois times e duas chaves virtuais [ref:gateway-poc-readme]. O modelo
    `simulado` do catálogo responde sem provedor, e é com ele que os próximos passos rodam
@@ -152,7 +159,8 @@ variáveis do passo 2.
 
    ```bash
    docker compose --profile guardrails up -d --force-recreate gateway
-   until curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null; do sleep 3; done
+   for i in $(seq 1 60); do curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null && break; sleep 3; done
+   curl -sf "$AI_GATEWAY_URL/health/liveliness" >/dev/null || echo "o gateway não respondeu em 3 minutos (60 tentativas): veja docker compose logs gateway e pare aqui"
    ```
 
    Os contêineres do Presidio pedem mais memória [ref:gateway-poc-readme]. O guardrail mascara
@@ -232,7 +240,7 @@ chave virtual.
    master key e o corpo {"key_alias":"<alias>","models":["simulado"],"max_budget":5,
    "budget_duration":"30d"}. Se o gateway recusar o alias por já existir, use outro. Guarde a
    chave só na variável AI_GATEWAY_KEY do seu shell e no .env desta aplicação.
-3. Neste repositório, crie o .env com AI_GATEWAY_URL={url do gateway} e AI_GATEWAY_KEY, e
+3. Entre na pasta desta aplicação (cd <pasta-da-aplicação>) e, nela, crie o .env com AI_GATEWAY_URL={url do gateway} e AI_GATEWAY_KEY, e
    confirme com git check-ignore .env que ele não é versionado (se não for ignorado, acrescente
    .env ao .gitignore). No .env.example, tire as variáveis de chave de provedor, se houver, e
    acrescente AI_GATEWAY_URL= e AI_GATEWAY_KEY=, vazias. Confira que o cliente de modelo da
@@ -254,7 +262,7 @@ chave virtual.
    GET {url do gateway}/key/info?key=<chave>, com a master key, e mostre só key_alias, spend e
    max_budget; o gasto pode aparecer com alguns segundos de atraso.
 7. Faça um único commit só com os arquivos da aplicação que você alterou ou criou (nunca o .env),
-   com a mensagem "feat: aplicação ligada ao gateway de IA".
+   com a mensagem "feat: aplicação ligada ao gateway de IA", sem linha de coautoria nem trailer.
 8. Termine listando o que depende de mim: pedir ao time do gateway da organização a chave de
    produção (uma por ambiente), registrar o guardrail e o orçamento no gateway real e, se o
    starter foi só de teste, derrubar o ambiente de teste.

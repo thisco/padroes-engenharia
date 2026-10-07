@@ -13,6 +13,6 @@ afirmacoes:
   resultado: parcial
   nota: Aplicação feita pelo portal e dita no texto como leitura do portal; a lei lista as operações, sem citar log nem modelo.
 revisao_adversarial:
-  revisor: provisória, até a conferência em lote (T8)
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
   achados: []

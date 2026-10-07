@@ -75,6 +75,17 @@ execucoes:
   evidencia: '3 linhas fora do padrão antes (saída 1); editou só scripts/emitir_logs.py; depois "OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal." (saída 0); commit 6313953 só com o script, sem trailer, logs/ fora do commit'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: sessao-independente
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'revisao_adversarial.revisor: sessao-independente com achados vazios, antes da conferência'
+    problema: '[médio] o registro dizia sessão independente sem achado, enquanto os demais registros da B.3 diziam
+      provisória ou pendente.'
+    tratamento: 'Tratado: revisor e achados no mesmo formato dos demais registros, com os achados da conferência
+      em lote.'
+  - afirmacao: 'exemplos/OBS-01/emitir-logs.py e emitir-logs-antes.py: CPF literal'
+    problema: '[baixo] o CPF 529.982.247-25 (dígitos válidos, número de exemplo conhecido) estava literal no repositório,
+      contra o item 1 da LGPD-02.'
+    tratamento: 'Tratado: os dois emissores geram o CPF na hora com uma função sintética; o log-exemplo-ruim.jsonl,
+      que é estático, passou a trazer um número sintético gerado só para o exemplo, e o texto diz isso. Os dois
+      estados seguem iguais (1 antes, 0 depois).'

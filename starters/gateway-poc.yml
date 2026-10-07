@@ -54,9 +54,10 @@ prompt_para_agente: |
      elas, só os modelos locais e o simulado respondem. Não peça nem invente chave de provedor.
 
   4. Suba o gateway com docker compose up -d. Espere o health check passar:
-       until curl -sf http://localhost:4000/health/liveliness >/dev/null; do sleep 3; done
-     Se não passar em 3 minutos, mostre docker compose logs --no-log-prefix gateway (as últimas
-     40 linhas) e pare. O modelo local é opcional: me pergunte se eu quero baixar o qwen2.5:0.5b
+       for i in $(seq 1 60); do curl -sf http://localhost:4000/health/liveliness >/dev/null && break; sleep 3; done
+       curl -sf http://localhost:4000/health/liveliness >/dev/null || echo "gateway não respondeu"
+     A espera tem limite de 60 tentativas de 3 segundos. Se não passar em 3 minutos, mostre docker
+     compose logs --no-log-prefix gateway (as últimas 40 linhas) e pare. O modelo local é opcional: me pergunte se eu quero baixar o qwen2.5:0.5b
      (cerca de 400 MB, com docker exec poc-ollama ollama pull qwen2.5:0.5b) e só baixe se eu
      disser que sim.
 

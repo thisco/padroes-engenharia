@@ -11,6 +11,15 @@ afirmacoes:
   localizacao: seção 'Objectives' (definição de SLO)
   resultado: confirmada
 revisao_adversarial:
-  revisor: sessao-independente
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'revisao_adversarial.revisor: sessao-independente com achados vazios, antes da conferência'
+    problema: '[médio] o registro dizia sessão independente sem achado, enquanto os demais registros da B.3 diziam
+      provisória ou pendente.'
+    tratamento: 'Tratado: revisor e achados no mesmo formato dos demais registros, com os achados da conferência
+      em lote.'
+  - afirmacao: commit 42b7fe4 feito com --amend sobre 0be7dba; hash 6988718 na evidência da T3 do plano
+    problema: '[baixo] observabilidade.yaml ficou dentro de 0be7dba (domínio contratos-api), e 6988718 não é ancestral
+      do HEAD; sem efeito no conteúdo.'
+    tratamento: 'Tratado no plano: 6988718 trocado por 0be7dba na evidência da T3.'

@@ -167,7 +167,8 @@ nova e ADR na MR, e se o teste de contrato passa; sai com 1 nos demais casos. Pa
 trava, o merge check **Pipelines must succeed** precisa estar marcado [ref:gitlab-pipeline-obrigatorio].
 
 Os limites: o job foi executado com o `gitlab-ci-local` e o Docker, e não num GitLab. A ADR só
-conta se estiver commitada na branch e nova em relação à base. O teste de contrato do Exemplo
+conta se estiver commitada na branch e nova em relação à base, e o job aceita qualquer ADR nova em
+`docs/adr/*.md`: ele não confere que a ADR trata dessa mudança, e isso fica para a revisão humana. O teste de contrato do Exemplo
 valida `type`, `properties`, `required`, `items` e `$ref` interno, e só os casos que escreveu: um
 contrato maior pede um validador de JSON Schema completo e um teste por operação usada. A
 comparação herda os limites da API-01. O job roda o verificador da própria MR, então o

@@ -5,12 +5,22 @@ set -u
 AQUI="$(cd "$(dirname "$0")" && pwd)"
 MIG="$(mktemp -d)"
 
+# Atenção: o script para o container pg-efemero e remove a rede efemera ao sair; não use esses
+# nomes para outro container ou rede.
 # PostgreSQL efêmero e as funções flyway e psql_app. $MIG é a pasta com as migrations.
 subir_banco() {
     docker network create efemera >/dev/null
     docker run -d --rm --name pg-efemero --network efemera \
         -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine >/dev/null
-    until docker exec pg-efemero pg_isready -U postgres -d app >/dev/null 2>&1; do sleep 1; done
+    tentativas=0
+    until docker exec pg-efemero pg_isready -U postgres -d app >/dev/null 2>&1; do
+        tentativas=$((tentativas + 1))
+        if [ "$tentativas" -ge 30 ]; then
+            echo "o PostgreSQL não ficou pronto em 30 tentativas"
+            exit 1
+        fi
+        sleep 1
+    done
     sleep 2
 }
 derrubar_banco() {

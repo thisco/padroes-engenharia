@@ -97,7 +97,10 @@ logs grava o payload do pedido e não traz hora, nível nem identificador de cor
 
 <!-- incluir: exemplos/OBS-01/emitir-logs-antes.py -->
 
-O log que ele produz, conferido pelo verificador (saída 1, sem imprimir o dado achado):
+O CPF do pedido é gerado na hora, por uma função de CPF sintético como a da LGPD-02, e nenhum
+número fica escrito no emissor; o `log-exemplo-ruim.jsonl`, abaixo, é um arquivo estático e traz um
+número sintético gerado só para o exemplo. O log que o emissor produz, conferido pelo verificador
+(saída 1, sem imprimir o dado achado):
 
 ```text
 logs/app.jsonl:1: campo obrigatório ausente: timestamp

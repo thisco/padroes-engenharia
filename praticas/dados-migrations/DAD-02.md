@@ -146,7 +146,9 @@ Successfully validated 4 migrations
 ```
 
 O roteiro inteiro (o errado, a expansão, a contração e a volta), com as funções que sobem e
-derrubam o PostgreSQL efêmero e a imagem do Flyway:
+derrubam o PostgreSQL efêmero e a imagem do Flyway. O script para o container `pg-efemero` ao sair;
+não use esse nome para outro container. A espera pelo banco tem limite de 30 tentativas de 1
+segundo e sai com 1 se esgotar:
 
 <!-- incluir: exemplos/DAD-02/executar.sh -->
 
@@ -192,7 +194,7 @@ Flyway ficam em db/migration e não há remoto: use a branch local main.
    comando:
    - docker network create efemera
    - docker run -d --rm --name pg-efemero --network efemera -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine
-   - espere o banco aceitar conexão: docker exec pg-efemero pg_isready -U postgres -d app
+   - espere o banco aceitar conexão: docker exec pg-efemero pg_isready -U postgres -d app, no máximo 30 tentativas com sleep 1; se esgotar, pare e me avise
    - defina flyway() { docker run --rm --network efemera -v "$PWD/db/migration:/flyway/sql" flyway/flyway:11 -url=jdbc:postgresql://pg-efemero:5432/app -user=postgres -password=teste "$@"; }
    - flyway migrate, depois um INSERT pela coluna antiga e outro pela nova com docker exec pg-efemero psql -U postgres -d app, um SELECT que mostre as duas colunas iguais nas linhas novas e flyway validate.
    - teste a volta da expansão: copie db/migration para um diretório temporário, acrescente lá

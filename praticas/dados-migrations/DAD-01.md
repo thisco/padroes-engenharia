@@ -149,7 +149,8 @@ SELECT version, description, checksum, success FROM flyway_schema_history ORDER 
 ```
 
 O roteiro dessa execução, num PostgreSQL efêmero com a imagem do Flyway (as migrations estão em
-`exemplos/DAD-01/`):
+`exemplos/DAD-01/`). O script para o container `pg-efemero` ao sair; não use esse nome para outro
+container. A espera pelo banco tem limite de 30 tentativas de 1 segundo e sai com 1 se esgotar:
 
 <!-- incluir: exemplos/DAD-01/executar-validate.sh -->
 
@@ -175,7 +176,7 @@ sequência inteira num PostgreSQL efêmero, com a imagem do Flyway, antes do mer
 ```bash
 docker network create efemera
 docker run -d --rm --name pg-efemero --network efemera -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine
-until docker exec pg-efemero pg_isready -U postgres >/dev/null 2>&1; do sleep 1; done
+n=0; until docker exec pg-efemero pg_isready -U postgres -d app >/dev/null 2>&1; do n=$((n+1)); [ "$n" -ge 30 ] && { echo "PostgreSQL não subiu em 30 tentativas: pare aqui"; break; }; sleep 1; done
 flyway() { docker run --rm --network efemera -v "$PWD/db/migration:/flyway/sql" flyway/flyway:11 -url=jdbc:postgresql://pg-efemero:5432/app -user=postgres -password=teste "$@"; }
 flyway migrate   # aplica a sequência, incluindo a corretiva
 docker stop pg-efemero && docker network rm efemera

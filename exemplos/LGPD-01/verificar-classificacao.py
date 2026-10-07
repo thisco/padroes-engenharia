@@ -8,10 +8,20 @@ from pathlib import Path
 
 CLASSES = {"publico", "interno", "pessoal", "sensivel"}
 COM_FINALIDADE = {"pessoal", "sensivel"}
-INICIO_CONSTRAINT = ("constraint", "primary", "foreign", "unique", "check", "key", "index")
-CREATE = re.compile(r"create\s+table\s+(?:if\s+not\s+exists\s+)?([\w.\"]+)\s*\(", re.I)
+IDENT = r'(?:"[^"]+"|`[^`]+`|[\w.]+)'
+CREATE = re.compile(rf"create\s+table\s+(?:if\s+not\s+exists\s+)?({IDENT})\s*\(", re.I)
 ALTER = re.compile(
-    r"alter\s+table\s+([\w.\"]+)\s+add\s+(?:column\s+)?(?:if\s+not\s+exists\s+)?([\w\"]+)", re.I
+    rf"alter\s+table\s+(?:only\s+)?(?:if\s+exists\s+)?({IDENT})\s+(.*?)(?:;|\Z)", re.I | re.S
+)
+# Cláusula de constraint ou de índice se reconhece pela sintaxe, e nunca pelo nome: `key text` e
+# `"index" integer` são colunas; `PRIMARY KEY (id)` e `INDEX ix (nome)` não são.
+CONSTRAINT = re.compile(
+    r"(?:constraint\s+\S+"
+    r"|primary\s+key\b"
+    r"|foreign\s+key\b"
+    r"|(?:unique|check|exclude)\s*(?:\(|using\b)"
+    r"|(?:(?:unique|fulltext|spatial)\s+)?(?:index|key)\s+(?:\w+\s*)?\(\s*(?:[^\W\d]|[\"`]))",
+    re.I,
 )
 
 
@@ -21,43 +31,79 @@ def normalizar(texto: str) -> str:
 
 
 def nome(identificador: str) -> str:
-    return identificador.strip('"').split(".")[-1].lower()
+    return identificador.strip('"`').split(".")[-1].strip('"`').lower()
 
 
 def corpo_do_create(sql: str, abre: int) -> str:
-    """O texto entre o parêntese que abre em `abre` e o que o fecha."""
-    nivel = 0
+    """O texto entre o parêntese que abre em `abre` e o que o fecha (aspas e literais à parte)."""
+    nivel, aspa = 0, ""
     for i in range(abre, len(sql)):
-        if sql[i] == "(":
+        c = sql[i]
+        if aspa:
+            aspa = "" if c == aspa else aspa
+        elif c in "'\"`":
+            aspa = c
+        elif c == "(":
             nivel += 1
-        elif sql[i] == ")":
+        elif c == ")":
             nivel -= 1
             if nivel == 0:
                 return sql[abre + 1 : i]
     return sql[abre + 1 :]
 
 
-def colunas(corpo: str) -> list[str]:
-    """Primeiro token de cada item do corpo, no nível de cima, sem as constraints de tabela."""
-    itens, nivel, atual = [], 0, ""
-    for c in corpo:
-        nivel += (c == "(") - (c == ")")
-        if c == "," and nivel == 0:
-            itens.append(atual)
-            atual = ""
+def itens(texto: str) -> list[str]:
+    """Quebra por vírgula no nível de cima, sem olhar vírgula entre parênteses ou aspas."""
+    achados, nivel, aspa, atual = [], 0, "", ""
+    for c in texto:
+        if aspa:
+            aspa = "" if c == aspa else aspa
+        elif c in "'\"`":
+            aspa = c
         else:
-            atual += c
-    itens.append(atual)
+            nivel += (c == "(") - (c == ")")
+            if c == "," and nivel == 0:
+                achados.append(atual)
+                atual = ""
+                continue
+        atual += c
+    achados.append(atual)
+    return [i.strip() for i in achados if i.strip()]
+
+
+def coluna_do_item(item: str) -> str | None:
+    """Nome da coluna que o item declara, ou None se o item é constraint ou índice."""
+    if CONSTRAINT.match(item):
+        return None
+    primeiro = re.match(IDENT, item)
+    return nome(primeiro.group(0)) if primeiro else None
+
+
+def colunas(corpo: str) -> list[str]:
+    achados = [coluna_do_item(item) for item in itens(corpo)]
+    return [c for c in achados if c]
+
+
+def colunas_do_alter(clausulas: str) -> list[str]:
+    """Uma coluna por cláusula `ADD [COLUMN]`; as de constraint e de índice ficam de fora."""
     achados = []
-    for item in itens:
-        partes = item.split()
-        if partes and partes[0].lower().strip('"') not in INICIO_CONSTRAINT:
-            achados.append(nome(partes[0]))
+    for clausula in itens(clausulas):
+        m = re.match(r"add\s+(column\s+)?(?:if\s+not\s+exists\s+)?(.*)", clausula, re.I | re.S)
+        if not m:
+            continue
+        resto = m.group(2)
+        if m.group(1):
+            primeiro = re.match(IDENT, resto)
+            coluna = nome(primeiro.group(0)) if primeiro else None
+        else:
+            coluna = coluna_do_item(resto)
+        if coluna:
+            achados.append(coluna)
     return achados
 
 
 def campos_do_schema(caminho: Path) -> list[tuple[str, str]]:
-    """Pares (arquivo, tabela.coluna) dos CREATE TABLE e dos ADD COLUMN."""
+    """Pares (arquivo, tabela.coluna) dos CREATE TABLE e de cada ADD COLUMN dos ALTER TABLE."""
     arquivos = [caminho] if caminho.is_file() else sorted(caminho.rglob("*.sql"))
     campos = []
     for arquivo in arquivos:
@@ -67,7 +113,8 @@ def campos_do_schema(caminho: Path) -> list[tuple[str, str]]:
             corpo = corpo_do_create(sql, m.end() - 1)
             campos += [(arquivo.name, f"{tabela}.{c}") for c in colunas(corpo)]
         for m in ALTER.finditer(sql):
-            campos.append((arquivo.name, f"{nome(m.group(1))}.{nome(m.group(2))}"))
+            tabela = nome(m.group(1))
+            campos += [(arquivo.name, f"{tabela}.{c}") for c in colunas_do_alter(m.group(2))]
     return campos
 
 

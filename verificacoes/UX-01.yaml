@@ -76,6 +76,9 @@ execucoes:
   evidencia: "1ª rodada: saída 1 (estado vazio ausente no HTML e nos dados); o agente acrescentou o botão e a section data-estado=vazio e a chave vazio no JSON, com os mesmos textos, sem framework nem CDN; 2ª rodada: saída 0 (UX-01: 4 estados presentes; o vazio orienta e é distinto do erro.); commit só com os dois arquivos, sem trailer; árvore limpa."
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: pendente (conferência em lote, ADR 0005)
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: tabela de práticas do plano da B.3 ('orienta · adotar')
+    problema: '[baixo] a prática e o registro estão em experimentar (sem referência forte [V] nem caso interno).'
+    tratamento: 'Tratado no plano: a tabela diz ''orienta · experimentar''.'

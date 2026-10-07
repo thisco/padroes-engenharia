@@ -104,19 +104,27 @@ Num repositório sem remoto, troque `origin/main` pela branch local de destino, 
    ```bash
    mkdir -p scripts
    curl -fsSL "{URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py" -o scripts/verificar_pr.py
-   echo "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py" > /tmp/hash-verificar-pr.txt
-   shasum -a 256 -c /tmp/hash-verificar-pr.txt
-   python3 scripts/verificar_pr.py --base origin/main
+   HASH="$(mktemp)"
+   echo "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py" > "$HASH"
+   if shasum -a 256 -c "$HASH"; then
+     python3 scripts/verificar_pr.py --base origin/main
+   else
+     echo "hash não bate: não rode o script"
+   fi
    ```
 
    O `shasum` imprime `scripts/verificar_pr.py: OK`; qualquer outra saída quer dizer que o arquivo
-   não é o fixado, e ele não deve ser usado. Num repositório sem remoto, use `--base main`. Com a
+   não é o fixado, e então não se roda o script: apague-o e baixe de novo, ou pare e investigue.
+   O hash do bloco é o da versão fixada na curadoria; se o scaffold subir, use o `sha256` do
+   `index.json`. Num repositório sem remoto, use `--base main`. Com a
    migration corretiva, o script imprime `Verificação de PR: 2 arquivo(s), nenhum achado.` e sai
    com 0. Se você tivesse editado a V2, ele bloquearia, como o Exemplo mostra
    [ref:sdd-scaffold-verificar-pr].
 
 O roteiro completo, que percorre tudo isso num repositório de teste temporário (o errado, o
-certo, o `validate`, o teste da sequência, o rollback e a trava):
+certo, o `validate`, o teste da sequência, o rollback e a trava). O script para o container
+`pg-efemero` ao sair; não use esse nome para outro container. A espera pelo banco tem limite de 30
+tentativas de 1 segundo, e o roteiro só chama a trava se o `shasum -a 256 -c` passar:
 
 <!-- incluir: exemplos/adicionar-migration-corretiva/executar.sh -->
 
@@ -141,7 +149,8 @@ ficam em db/migration e não há remoto: use a branch local main no lugar de ori
    - copie db/migration da main para um diretório temporário (sem a migration nova), docker
      network create efemera, docker run -d --rm --name pg-efemero --network efemera
      -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine, e espere o banco aceitar
-     conexão com docker exec pg-efemero pg_isready -U postgres -d app;
+     conexão com docker exec pg-efemero pg_isready -U postgres -d app, no máximo 30 tentativas
+     com sleep 1 (se esgotar, pare e me avise);
    - defina flyway() { docker run --rm --network efemera -v "<diretório temporário>:/flyway/sql" flyway/flyway:11 -url=jdbc:postgresql://pg-efemero:5432/app -user=postgres -password=teste "$@"; }
    - flyway migrate com só as migrations da main; copie a corretiva para o diretório temporário;
      flyway validate (ele falha por migration pendente: mostre isso); flyway migrate; flyway

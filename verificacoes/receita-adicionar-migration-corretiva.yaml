@@ -1,3 +1,4 @@
+# prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
 conteudo: receita-adicionar-migration-corretiva
 verificado_em: '2026-10-06'
 verificador: agente-curadoria
@@ -94,7 +95,35 @@ execucoes:
   resultado: passou
   evidencia: 'commit 01345c7 "fix(dados): amplia cliente.cpf para VARCHAR(14)" só com db/migration/V3__amplia_cpf.sql e docs/plans/2026-10-06-amplia-cpf.md, sem coautoria. flyway validate com a V3 pendente falhou ("Detected resolved migration not applied to database: 3"); migrate aplicou; validate final "Successfully validated 3 migrations"; checksum da V2 (-1946493639) igual ao da receita; volta testada com V4 só no diretório temporário; shasum -c do verificar_pr.py OK (616cc4c2...); verificar_pr.py --base main: "2 arquivo(s), nenhum achado". Transcrição em curadoria-a5/transcricoes/receita-adicionar-migration-corretiva-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
-revisao_adversarial:
-  revisor: provisória, até a conferência em lote da T8 (ADR 0005)
+- tipo: arquivo
+  arquivo: exemplos/adicionar-migration-corretiva/executar.sh
+  comando: URL_PORTAL=http://127.0.0.1:8077 sh executar.sh (public/ servido por http.server)
+  ambiente: Docker; PostgreSQL 16; Flyway 11 (T9)
+  resultado: passou
+  evidencia: '''scripts/verificar_pr.py: OK'' antes da trava; a edição da V2 sai 1 com BLOQUEIA e a V3 com o plano
+    sai 0 com ''Verificação de PR: 2 arquivo(s), nenhum achado.''; o script só segue se o shasum passar.'
   data: '2026-10-06'
-  achados: []
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'exemplos/adicionar-migration-corretiva/executar.sh e passo 6 da receita: shasum -a 256 -c'
+    problema: '[médio] o resultado do shasum era ignorado e o script seguia para o verificar_pr.py; o hash fixo
+      na receita pode ficar velho e o arquivo de hash usava o caminho fixo /tmp/hash-verificar-pr.txt.'
+    tratamento: 'Tratado: o script sai com 1 e ''hash não bate'' se o shasum falhar; o bloco da receita só roda
+      o verificar_pr.py se o shasum passar e o texto diz que o script não se roda com hash divergente; o arquivo
+      de hash passou a ser temporário (mktemp), e o texto diz que o hash é o da versão fixada e que, se o scaffold
+      subir, vale o sha256 do index.json.'
+  - afirmacao: 'exemplos/adicionar-migration-corretiva/executar.sh: espera pelo banco (until pg_isready)'
+    problema: '[médio] o laço não tem limite: se a imagem não sobe, o script não termina.'
+    tratamento: 'Tratado: contador com teto de 30 tentativas de 1 s, mensagem e saída 1 ao esgotar; o bloco equivalente
+      no texto da prática ou da receita também tem o limite.'
+  - afirmacao: 'exemplos/adicionar-migration-corretiva/executar.sh: nome fixo pg-efemero e rede efemera com trap'
+    problema: '[baixo] se já existirem, o docker run falha, o laço espera no container alheio e o trap derruba recursos
+      que não são do script.'
+    tratamento: 'Tratado no texto: aviso de uma linha de que o script para o container pg-efemero ao sair e de que
+      o nome não deve ser usado por outro container; o nome não mudou, por decisão do dono.'
+  - afirmacao: 'Prompt da receita, passo 4: espera pelo banco'
+    problema: '[médio] o passo dizia só ''espere o banco aceitar conexão'', sem limite.'
+    tratamento: 'Tratado: o passo pede no máximo 30 tentativas com sleep 1 e parar se esgotar. Nota: prompt alterado
+      em 2026-10-06 após a conferência, sem reteste (decisão do dono).'

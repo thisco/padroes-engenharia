@@ -81,7 +81,36 @@ execucoes:
   resultado: passou
   evidencia: "Antes: cliente.cpf, cliente.email e cliente.condicao_saude sem classificação, 'LGPD-01: campo sem classe, com classe inválida ou sem finalidade (acima).', saída 1. Acrescentou as 3 linhas (cpf e email pessoal, condicao_saude sensível, com as finalidades do pedido); depois 'LGPD-01: 5 campos de schema, todos classificados.', saída 0. Disse que condicao_saude é sensível por ser dado de saúde e que o RIPD fica com o controlador. Commit e8a4776 só com docs/steering/dados.md, sem trailer. Transcrição em curadoria-a5/transcricoes/LGPD-01-prompt-1.bruta.jsonl."
   data: '2026-10-06'
-revisao_adversarial:
-  revisor: provisória, até a conferência em lote (T8)
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/verificar-classificacao.py
+  comando: python3 verificar-classificacao.py --schema <migrations com key, "index" e ADD COLUMN múltiplo> --dados
+    <dados.md sem essas colunas>
+  ambiente: Python 3.14.8; macOS (T9)
+  resultado: falhou-como-esperado
+  evidencia: 'saída 1 listando cliente.key, cliente.index, cliente.cpf_pai (e cliente.apelido, de um segundo ADD
+    COLUMN IF NOT EXISTS com valor padrão ''a,b''); CONSTRAINT, UNIQUE (, CHECK (, FOREIGN KEY (, INDEX nome (,
+    KEY nome ( e ADD CONSTRAINT não viraram campo. Com as quatro linhas no registro, ''LGPD-01: 9 campos de schema,
+    todos classificados.'', saída 0.'
   data: '2026-10-06'
-  achados: []
+- tipo: arquivo
+  arquivo: exemplos/LGPD-01/verificar-classificacao.py
+  comando: python3 verificar-classificacao.py --schema V1__cria_cliente.sql --dados dados.md (registro só com id
+    e nome, e completo)
+  ambiente: Python 3.14.8; macOS (T9)
+  resultado: passou
+  evidencia: 'estado antes: saída 1 com as mesmas três linhas e a de fecho do corpo; estado depois: ''LGPD-01: 5
+    campos de schema, todos classificados.'', saída 0.'
+  data: '2026-10-06'
+revisao_adversarial:
+  revisor: conferência em lote (ADR 0005), sessão independente
+  data: '2026-10-06'
+  achados:
+  - afirmacao: 'exemplos/LGPD-01/verificar-classificacao.py: extração de colunas e Como verificar (''reprova o ADD
+      COLUMN sem linha no registro'')'
+    problema: '[alto] coluna de nome key, index, check, unique, primary, foreign ou constraint era descartada como
+      constraint, e só a primeira cláusula de ALTER TABLE ... ADD COLUMN a, ADD COLUMN b era vista; com key, "index"
+      e cpf_pai fora do dados.md o verificador saía 0 com ''3 campos, todos classificados''.'
+    tratamento: 'Tratado: constraint e índice passam a ser reconhecidos pela sintaxe (PRIMARY KEY (, CONSTRAINT
+      nome, UNIQUE (, CHECK (, FOREIGN KEY (, INDEX/KEY nome (), nunca pelo nome da coluna, com ou sem aspas; cada
+      cláusula ADD [COLUMN] é percorrida. O caso do conferente sai 1 e lista key, index e cpf_pai; os dois estados
+      do Exemplo seguem iguais (1 antes, 0 depois); o Como verificar passou a dizer isso.'

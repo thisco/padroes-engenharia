@@ -89,6 +89,11 @@ execucoes:
   evidencia: 'venv /tmp/venv-api com pyyaml==6.0.3 (PyYAML ausente); comparação antes: 2 linhas INCOMPATÍVEL e saída 1; info.version 2.0.0; ADR docs/adr/0001-remove-telefone.md; com --adr: saída 0; commit só com proposta.yaml e a ADR, sem trailer; avisou que a ADR precisa de aprovação humana'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: provisória, até a conferência em lote da T8
+  revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'
-  achados: []
+  achados:
+  - afirmacao: 'exemplos/API-01/comparar-contratos.py: schema sem type'
+    problema: '[baixo] retorna sem comparar o schema sem type (por exemplo, com allOf): com telefone removido dentro
+      de allOf, imprime ''0 mudança(s), todas compatíveis'' e sai 0; a saída não avisa.'
+    tratamento: 'Tratado no texto: os limites do Como verificar dizem que schema sem type não é comparado e que
+      a saída não avisa, e pedem a conferência na revisão. O verificador não foi alterado.'

@@ -8,12 +8,22 @@ URL_PORTAL="${URL_PORTAL:?informe a URL do portal}"
 RAIZ="$(mktemp -d)"
 MIG="$(mktemp -d)"
 
+# Atenção: o script para o container pg-efemero e remove a rede efemera ao sair; não use esses
+# nomes para outro container ou rede.
 # PostgreSQL efêmero e as funções flyway e psql_app. $MIG é a pasta com as migrations.
 subir_banco() {
     docker network create efemera >/dev/null
     docker run -d --rm --name pg-efemero --network efemera \
         -e POSTGRES_PASSWORD=teste -e POSTGRES_DB=app postgres:16-alpine >/dev/null
-    until docker exec pg-efemero pg_isready -U postgres -d app >/dev/null 2>&1; do sleep 1; done
+    tentativas=0
+    until docker exec pg-efemero pg_isready -U postgres -d app >/dev/null 2>&1; do
+        tentativas=$((tentativas + 1))
+        if [ "$tentativas" -ge 30 ]; then
+            echo "o PostgreSQL não ficou pronto em 30 tentativas"
+            exit 1
+        fi
+        sleep 1
+    done
     sleep 2
 }
 derrubar_banco() {
@@ -34,8 +44,8 @@ git config user.email t@exemplo.test; git config user.name Teste
 mkdir -p db/migration scripts docs/plans
 cp "$DAD01/V1__cria_cliente.sql" "$DAD01/V2__cria_cpf.sql" db/migration/
 curl -fsSL "$URL_PORTAL/.well-known/mecanismos/sdd-scaffold/verificar_pr.py" -o scripts/verificar_pr.py
-echo "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py" > /tmp/hash-verificar-pr.txt
-shasum -a 256 -c /tmp/hash-verificar-pr.txt
+echo "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e  scripts/verificar_pr.py" > "$RAIZ/hash-verificar-pr.txt"
+shasum -a 256 -c "$RAIZ/hash-verificar-pr.txt" || { echo "hash não bate"; exit 1; }
 git add -A && git commit -q -m "chore: V1 e V2" && git branch -M main && git push -q origin main
 
 echo; echo "### Passo 1. Diagnosticar: a migration já está na branch de destino?"
