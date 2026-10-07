@@ -1,0 +1,10 @@
+id: codex-sandbox-aprovacoes
+titulo: "Agent approvals & security (Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/agent-approvals-security
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de políticas de aprovação, modos de sandbox e acesso à rede"
+dominios: [construir-com-ia]
+notas: null

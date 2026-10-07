@@ -1,0 +1,10 @@
+id: copilot-custom-agents
+titulo: "Agentes personalizados do GitHub Copilot"
+organizacao: GitHub
+url: https://docs.github.com/en/copilot/concepts/agents/coding-agent/about-custom-agents
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de local (.github/agents/*.md) e campos do perfil de agente"
+dominios: [construir-com-ia]
+notas: null

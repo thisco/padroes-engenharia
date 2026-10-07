@@ -3,7 +3,7 @@ titulo: Hooks reference
 organizacao: Anthropic
 url: https://code.claude.com/docs/en/hooks
 tipo: vendor
-verificado_em: '2026-10-04'
+verificado_em: 2026-10-07
 verificacao: V
 localizacao: conceitos, ciclo de vida, códigos de saída e PreToolUse
 dominios:

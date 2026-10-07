@@ -1,0 +1,10 @@
+id: antigravity-permissions
+titulo: "Permissions (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/permissions
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de configuração, listas deny, ask, allow e precedência"
+dominios: [construir-com-ia]
+notas: null

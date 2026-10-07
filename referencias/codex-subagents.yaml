@@ -1,0 +1,10 @@
+id: codex-subagents
+titulo: "Subagents (Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/agent-configuration/subagents
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção de subagentes customizados (.codex/agents/*.toml, campos obrigatórios e sobrescritas)"
+dominios: [construir-com-ia]
+notas: null

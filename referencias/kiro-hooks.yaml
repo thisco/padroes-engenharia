@@ -1,0 +1,10 @@
+id: kiro-hooks
+titulo: "Hooks (Kiro)"
+organizacao: Kiro
+url: https://kiro.dev/docs/hooks/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de local (.kiro/hooks/*.json) e tipos de hook (PreToolUse)"
+dominios: [construir-com-ia]
+notas: null

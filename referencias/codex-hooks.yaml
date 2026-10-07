@@ -1,0 +1,10 @@
+id: codex-hooks
+titulo: "Hooks (Codex)"
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/hooks
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de locais de configuração (.codex/hooks.json, .codex/config.toml), eventos e decisão de bloqueio do PreToolUse"
+dominios: [construir-com-ia]
+notas: null

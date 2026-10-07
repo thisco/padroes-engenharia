@@ -1,0 +1,10 @@
+id: kiro-permissions
+titulo: "Permissions (Kiro)"
+organizacao: Kiro
+url: https://kiro.dev/docs/permissions/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seções de localização dos arquivos, precedência deny, ask, allow e escopos"
+dominios: [construir-com-ia]
+notas: null
