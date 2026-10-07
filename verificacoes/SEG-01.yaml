@@ -1,0 +1,70 @@
+conteudo: SEG-01
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a spec que toca superfície sensível responde a cinco perguntas antes de virar código, e o objetivo
+    é forçar cinco olhadas específicas enquanto a mudança é barata de alterar
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Threat-model em cinco perguntas' (abertura) e frontmatter description (gatilhos),
+    conferidos na página do commit fixado e na cópia local skills/threat-model/SKILL.md
+  resultado: confirmada
+- texto: as cinco perguntas (entrada não confiável, autenticação ou autorização alterada, dado sensível,
+    endpoint novo, mudança de privilégio em IaC) e a regra de um parágrafo de mitigação por sim, na própria
+    spec
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'As perguntas'
+  resultado: confirmada
+- texto: '''Validamos a entrada'' não é mitigação, e ''o payload é validado contra schema na borda, e
+    campo desconhecido é rejeitado em vez de ignorado'' é; a mitigação descreve mecanismo, não intenção'
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Como responder bem'
+  resultado: confirmada
+- texto: '''não sei'' declarado na spec vale mais do que mitigação inventada; mitigação de difícil reversão
+    vira ADR (provedor de identidade, expiração de sessão, modelo de papéis)'
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Como responder bem'
+  resultado: confirmada
+- texto: policy no menor privilégio, com wildcard só com justificativa escrita; segredo nunca commitado,
+    em variável de ambiente, scanner bloqueante no CI
+  ref: sdd-scaffold-threat-model
+  localizacao: seções 'Menor privilégio' e 'Segredo'
+  resultado: confirmada
+- texto: sem steering de segurança, a spec declara o mecanismo de auth e não introduz um segundo em paralelo
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Parâmetros deste projeto'
+  resultado: confirmada
+- texto: o job normas-do-pr avisa quando o diff toca superfície sensível sem spec que responda ao checklist,
+    e o aviso não bloqueia porque suficiência é julgamento
+  ref: sdd-scaffold-threat-model
+  localizacao: seção 'Verificação'
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-01/verificar-threat-model.py
+  comando: python3 verificar-threat-model.py <spec> sobre spec-antes.md, spec.md, spec vazia, inexistente,
+    sem a seção, sem argumento, com 'não sei' sem e com 'Em aberto:'
+  ambiente: cópia dos arquivos de exemplos/ em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'spec-antes.md: 4 problemas (pergunta 5 sem resposta; pergunta 1 com 3 palavras; pergunta
+    3 sem Mitigação; pergunta 4 com 4 palavras), saída 1; spec.md: ''SEG-01: as 5 perguntas respondidas,
+    com mitigação ou pergunta em aberto.'', saída 0; vazia, inexistente, sem seção e sem argumento: saída
+    1; ''não sei'' sem ''Em aberto:'': saída 1; com ''Em aberto:'' de 6+ palavras: saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-01/spec-antes.md
+  comando: python3 verificar-threat-model.py spec-antes.md
+  ambiente: cópia dos arquivos de exemplos/ em diretório temporário; Python 3.14.8; macOS
+  resultado: falhou-como-esperado
+  evidencia: 4 problema(s) no threat-model, saída 1.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-01/spec.md
+  comando: python3 verificar-threat-model.py spec.md
+  ambiente: cópia dos arquivos de exemplos/ em diretório temporário; Python 3.14.8; macOS
+  resultado: passou
+  evidencia: 'SEG-01: as 5 perguntas respondidas, com mitigação ou pergunta em aberto., saída 0.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
