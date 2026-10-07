@@ -1,0 +1,11 @@
+id: sdd-scaffold-project-memory
+titulo: "docs/PROJECT_MEMORY.md do sdd-scaffold (memória quente e seu ciclo de vida)"
+organizacao: sdd-scaffold (github.com/thisco)
+url: https://github.com/thisco/sdd-scaffold/blob/cd121cd973945c486e63029496ed7ec879a18e32/template/docs/PROJECT_MEMORY.md
+tipo: interno
+versao: "1.7.1"
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "cabeçalho, bloco 'Ciclo de vida'"
+dominios: [qualidade-bdd]
+notas: "Aberta na web em 2026-10-07 no commit fixado da tag v1.7.1 e conferida com o clone local da tag."

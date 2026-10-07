@@ -1,0 +1,83 @@
+conteudo: QLD-02
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o protocolo segue reproduzir, hipótese, evidência (log ou teste) e correção, e a correção vem com um teste que falha antes e passa depois; sem ele, o bug não está fechado
+  ref: sdd-scaffold-steering-troubleshooting
+  localizacao: seção 'Protocolo de debugging sistemático' (página aberta no commit fixado da tag v1.7.1)
+  resultado: confirmada
+- texto: todo gotcha novo descoberto na investigação entra na memória quente (docs/PROJECT_MEMORY.md) na mesma sessão, antes de encerrar
+  ref: sdd-scaffold-steering-troubleshooting
+  localizacao: seção 'Protocolo de debugging sistemático', última frase
+  resultado: confirmada
+- texto: o steering pede, para cada gotcha, o sintoma observável, a causa-raiz e a correção ou precaução
+  ref: sdd-scaffold-steering-troubleshooting
+  localizacao: comentário de preenchimento da seção 'Gotchas por subsistema'
+  resultado: confirmada
+  nota: 'A passagem está num comentário HTML do template (preencher), visível no arquivo cru e não na página renderizada; foi conferida no clone local da tag v1.7.1.'
+- texto: o steering de qualidade exige a correção de bug com um teste que reproduz o defeito, falha antes e passa depois, com a evidência das duas execuções no plano
+  ref: sdd-scaffold-steering-qualidade
+  localizacao: seção 'TDD e prove-it', segundo item
+  resultado: confirmada
+- texto: a entrada da memória quente com mais de cerca de 30 dias, ou reutilizada em nova sessão, é promovida ao steering do domínio, e os gotchas estáveis moram em docs/steering/troubleshooting.md
+  ref: sdd-scaffold-project-memory
+  localizacao: cabeçalho, bloco 'Ciclo de vida', itens 2 e última linha
+  resultado: confirmada
+- texto: o pytest sai com 1 quando testes são coletados e rodados e alguns falham, e com 0 quando todos passam
+  ref: pytest-exit-codes
+  localizacao: lista de exit codes, códigos 0 e 1
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/verificar-bug.py
+  comando: python3 verificar-bug.py --modulo parcelas --teste <T> --com-bug <A> --corrigido <B> --memoria <M> nos dois estados e em casos de borda
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: 'antes (teste-fraco.py, memória sem entrada): "o teste passa no código com o defeito: ele não reproduz o bug" e "nenhuma entrada da memória cita o teste test_divide_em_parcelas_iguais", saída 1; depois (teste_parcelas.py, PROJECT_MEMORY.md): "QLD-02: o teste falha com o defeito, passa na correção e o gotcha está registrado.", saída 0; memória sem entrada, entrada sem o campo Regra, corrigido igual ao bugado, código com erro de importação (pytest saiu com 2), arquivo ausente ou vazio e pytest ausente no interpretador: saída 1 em todos.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/parcelas-com-bug.py
+  comando: python3 verificar-bug.py com --com-bug parcelas-com-bug.py (teste_parcelas.py copiado)
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'o teste de reprodução falha no código com o defeito (pytest saída 1); o teste-fraco.py passa nele, o que o verificador reprova.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/parcelas.py
+  comando: python3 verificar-bug.py com --corrigido parcelas.py
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: 'teste_parcelas.py passa no código corrigido (saída 0 do pytest); verificador: "QLD-02: o teste falha com o defeito, passa na correção e o gotcha está registrado.", saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/teste_parcelas.py
+  comando: python3 verificar-bug.py com --teste teste_parcelas.py
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: 'falha no código com o defeito e passa no corrigido; saída 0 do verificador.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/teste-fraco.py
+  comando: python3 verificar-bug.py --teste teste-fraco.py --com-bug parcelas-com-bug.py --corrigido parcelas.py --memoria PROJECT_MEMORY-antes.md
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'QLD-02: 2 problema(s) (acima)., saída 1 (o teste passa no código com o defeito; nenhuma entrada da memória o cita).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/PROJECT_MEMORY-antes.md
+  comando: python3 verificar-bug.py --teste teste_parcelas.py --com-bug parcelas-com-bug.py --corrigido parcelas.py --memoria PROJECT_MEMORY-antes.md
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: falhou-como-esperado
+  evidencia: '"nenhuma entrada da memória cita o teste test_soma_das_parcelas_e_o_total_quando_a_divisao_nao_e_exata", saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/QLD-02/PROJECT_MEMORY.md
+  comando: python3 verificar-bug.py --teste teste_parcelas.py --com-bug parcelas-com-bug.py --corrigido parcelas.py --memoria PROJECT_MEMORY.md
+  ambiente: exemplos copiados em /tmp; Python 3.14.8; pytest 9.1.1; macOS
+  resultado: passou
+  evidencia: 'QLD-02: o teste falha com o defeito, passa na correção e o gotcha está registrado., saída 0.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []
