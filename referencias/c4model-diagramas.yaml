@@ -1,0 +1,10 @@
+id: c4model-diagramas
+titulo: "C4 model: diagramas (System Context e Container)"
+organizacao: Simon Brown (c4model.com)
+url: https://c4model.com/diagrams
+tipo: analista
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "páginas 'The C4 model' (níveis) e 'Diagrams' (System Context, Container e a frase sobre os quatro níveis)"
+dominios: [arquitetura]
+notas: "Aberta na web em 2026-10-07 (https://c4model.com e https://c4model.com/diagrams). A página inicial lista os quatro níveis (sistema, contêiner, componente e código); a frase de que o contexto e os contêineres bastam à maioria das equipes está em /diagrams."

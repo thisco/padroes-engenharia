@@ -1,0 +1,15 @@
+C4Container
+    title Containers: serviço de boletos
+
+    Person(cliente, "Cliente", "Pede a segunda via de um boleto")
+    System_Ext(banco, "Banco emissor", "Registra e baixa os boletos")
+    System_Boundary(sistema, "Serviço de boletos") {
+        Container(api, "Aplicação", "Python", "Atende a segunda via")
+        ContainerDb(db, "Dados", "PostgreSQL 16", "Guarda cadastro e boletos")
+        Container(fila, "Fila", "Redis 7", "Entrega as tarefas de conciliação")
+    }
+
+    Rel(cliente, api, "Pede a segunda via", "HTTPS")
+    Rel(api, db, "Lê e grava", "SQL")
+    Rel(api, fila, "Publica tarefas", "Redis")
+    Rel(api, banco, "Consulta e baixa boletos", "HTTPS")

@@ -1,0 +1,9 @@
+C4Context
+    title Contexto: serviço de boletos
+
+    Person(cliente, "Cliente", "Pede a segunda via de um boleto")
+    System(boletos, "Serviço de boletos", "Gera a segunda via e processa tarefas de conciliação")
+    System_Ext(banco, "Banco emissor", "Registra e baixa os boletos")
+
+    Rel(cliente, boletos, "Pede a segunda via", "HTTPS")
+    Rel(boletos, banco, "Consulta e baixa boletos", "HTTPS")

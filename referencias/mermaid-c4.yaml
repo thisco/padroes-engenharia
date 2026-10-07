@@ -1,0 +1,10 @@
+id: mermaid-c4
+titulo: "Mermaid: diagramas C4 (experimental)"
+organizacao: Mermaid
+url: https://mermaid.js.org/syntax/c4.html
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "abertura (aviso de diagrama experimental), lista de tipos (C4Context, C4Container) e sintaxe de Person, System, Container, ContainerDb, System_Boundary e Rel"
+dominios: [arquitetura]
+notas: "Aberta na web em 2026-10-07. O diagrama é marcado como experimental na própria página."

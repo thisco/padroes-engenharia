@@ -1,0 +1,90 @@
+conteudo: ARQ-04
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: 'o C4 organiza a arquitetura em níveis hierárquicos: sistema, contêiner, componente e código'
+  ref: c4model-diagramas
+  localizacao: página inicial c4model.com (The C4 model)
+  resultado: confirmada
+- texto: não é preciso usar os quatro níveis, só os que agregam valor, e os diagramas de contexto e de
+    contêineres bastam para a maioria das equipes
+  ref: c4model-diagramas
+  localizacao: página /diagrams, seção sobre quais diagramas usar
+  resultado: confirmada
+- texto: o diagrama de contexto mostra o sistema e como ele interage com pessoas e sistemas externos,
+    e o de contêineres abre o sistema em aplicações, bancos e filas
+  ref: c4model-diagramas
+  localizacao: páginas /diagrams (System Context e Container)
+  resultado: confirmada
+- texto: o Mermaid aceita C4Context e C4Container com Person, System, Container, ContainerDb, System_Boundary
+    e Rel, e marca o diagrama como experimental
+  ref: mermaid-c4
+  localizacao: abertura e lista de tipos e de sintaxe
+  resultado: confirmada
+- texto: o manifesto da Arquitetura Viva liga diagrama, IaC e compose, e drawio_label é o fragmento do
+    texto do nó no diagrama
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: seção O manifesto
+  resultado: confirmada
+- texto: quando diagrama e infraestrutura divergem, cada um continua parecendo correto até alguém confiar
+    no artefato errado
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: abertura da skill
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/verificar-c4.py
+  comando: python3 scripts/verificar-c4.py (antes, depois, só contêineres antes, contêineres vazio, nível
+    1 ausente, sem mapa.yml)
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: passou
+  evidencia: 'antes: 3 problemas (sistema sem descrição, Rel para ''banco'' não declarado, componente
+    ''fila'' sem contêiner), saída 1; depois: ''ARQ-04: C4 nível 1 e 2 consistentes entre si e com o mapa.yml.'',
+    saída 0; arquivo vazio, ausente e sem mapa: saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/c4-contexto-antes.mmd
+  comando: python3 scripts/verificar-c4.py
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: falhou-como-esperado
+  evidencia: c4-contexto.mmd:5 sem descrição; :8 Rel usa 'banco' não declarado; saída 1.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/c4-containers-antes.mmd
+  comando: python3 scripts/verificar-c4.py (com o c4-contexto.mmd completo)
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: falhou-como-esperado
+  evidencia: '''mapa.yml: componente fila sem contêiner em c4-containers.mmd'', saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/c4-contexto.mmd
+  comando: python3 scripts/verificar-c4.py
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: passou
+  evidencia: nível 1 com Person, System e System_Ext; saída 0 com o nível 2 completo.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/c4-containers.mmd
+  comando: python3 scripts/verificar-c4.py
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: passou
+  evidencia: três contêineres casados com os três componentes do mapa; saída 0.
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/ARQ-04/mapa.yml
+  comando: python3 scripts/verificar-c4.py
+  ambiente: árvore montada em /tmp/b4a4; Python 3.14.8 com PyYAML 6.0.3; macOS (diagramas só em texto,
+    sem renderizar)
+  resultado: passou
+  evidencia: três componentes (aplicacao, dados, fila) casam com os três contêineres; sem o mapa, saída
+    1.
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
