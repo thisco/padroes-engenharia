@@ -1,0 +1,2 @@
+pyyaml  # lê o manifesto YAML da configuração
+packaging  # compara versões no verificador de release

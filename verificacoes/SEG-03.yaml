@@ -1,0 +1,110 @@
+conteudo: SEG-03
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o estudo analisou 576.000 amostras de código de 16 modelos em duas linguagens e achou ao menos
+    5,2% de pacotes alucinados nos modelos comerciais e 21,7% nos de código aberto, com 205.474 nomes
+    únicos
+  ref: usenix-pacotes-alucinados
+  localizacao: resumo do artigo (abstract)
+  resultado: confirmada
+- texto: os autores descrevem a alucinação de pacote como uma forma nova de ataque de confusão de pacotes,
+    ameaça à integridade da cadeia de suprimentos de software
+  ref: usenix-pacotes-alucinados
+  localizacao: resumo do artigo (abstract)
+  resultado: confirmada
+- texto: a injeção de prompt indireta ocorre quando o modelo aceita entrada de fontes externas, como sites
+    ou arquivos; a mitigação inclui restringir privilégios do modelo ao mínimo e controle humano para
+    operações privilegiadas
+  ref: owasp-llm-top10
+  localizacao: seção 'Indirect Prompt Injections' e lista de prevenção e mitigação
+  resultado: confirmada
+  nota: A página é a LLM01 (injeção de prompt); a leitura de que um pacote sugerido por README ou página
+    é conteúdo externo é do portal e vem marcada assim no texto.
+- texto: a rota GET /pypi/<projeto>/json devolve os metadados do projeto e GET /pypi/<projeto>/<versão>/json
+    os de uma versão
+  ref: pypi-json-api
+  localizacao: seção de endpoints do projeto e do release
+  resultado: confirmada
+  nota: A página não diz o status para projeto inexistente; o 404 foi observado em consulta direta e o
+    verificador trata só o 404 como inexistência.
+- texto: o modo de verificação de hash do pip se ativa com --require-hashes ou com --hash em qualquer
+    requisito, e exige hash em todos os requisitos, fixados com == (ou URL ou caminho); protege contra
+    adulteração remota
+  ref: pip-hash-checking
+  localizacao: seção 'Hash-checking Mode'
+  resultado: confirmada
+  nota: 'O comportamento no desencontro de hash não vem da página: foi observado na execução (pip 26.2.1).'
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/verificar-dependencias.py
+  comando: python3 verificar-dependencias.py <dir> sobre antes/ e depois/, com --indice em porta fechada,
+    servidor local respondendo 500, requirements vazio, lockfile ausente, versão divergente, versão inexistente,
+    opção -r e sem argumento
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: passou
+  evidencia: 'antes/: 5 problemas (sem aprovação, ausente do lock, dois locks sem hash, ''não existe no
+    índice''), saída 1; depois/: ''SEG-03: dependências existentes no índice, aprovadas, fixadas e com
+    hash.'', saída 0; índice inalcançável: ''índice inalcançável ao consultar pyyaml (URLError): falha
+    fechada'', saída 1; resposta 500: ''o índice respondeu 500'', saída 1; requirements vazio, lock ausente,
+    versão divergente, versão inexistente (pyyaml==0.0.1: 404), ''-r outro.txt'' e uso sem argumento:
+    saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/antes/requirements.txt
+  comando: python3 verificar-dependencias.py antes
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'padroes-eng-pacote-inexistente-7f3a: não existe no índice (consulta ao PyPI retornou 404);
+    5 problema(s), saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/antes/requirements.lock
+  comando: python3 verificar-dependencias.py antes
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'pyyaml==6.0.3 e packaging==26.3: entrada do lockfile sem --hash=sha256; saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/antes/dependencias-aprovadas.txt
+  comando: python3 verificar-dependencias.py antes
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: falhou-como-esperado
+  evidencia: 'padroes-eng-pacote-inexistente-7f3a: sem aprovação com motivo; saída 1.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/depois/requirements.txt
+  comando: python3 verificar-dependencias.py depois
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: passou
+  evidencia: 'SEG-03: dependências existentes no índice, aprovadas, fixadas e com hash., saída 0.'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/depois/requirements.lock
+  comando: uv pip compile requirements.txt --generate-hashes --no-header --no-annotate -o requirements.lock
+    (uv 0.12.23); pip install --require-hashes -r requirements.lock e com hashes adulterados (pip 26.2.1,
+    venv temporário)
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: passou
+  evidencia: 'lockfile com 2 entradas e hash sha256; verificador saída 0; pip aceita o lockfile (saída
+    0) e, adulterado, recusa: ''THESE PACKAGES DO NOT MATCH THE HASHES FROM THE REQUIREMENTS FILE'' (saída
+    1).'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/SEG-03/depois/dependencias-aprovadas.txt
+  comando: python3 verificar-dependencias.py depois
+  ambiente: diretório temporário com cópia dos arquivos de exemplos/SEG-03; Python 3.14.8; rede com acesso
+    a pypi.org; macOS
+  resultado: passou
+  evidencia: pyyaml e packaging com motivo; saída 0.
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []

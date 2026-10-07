@@ -1,0 +1,10 @@
+id: pip-hash-checking
+titulo: "Secure installs: hash-checking mode (documentação do pip)"
+organizacao: Python Packaging Authority
+url: https://pip.pypa.io/en/stable/topics/secure-installs/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "seção 'Hash-checking Mode' (como ativa, o que exige: todos os requisitos com hash e fixados com ==)"
+dominios: [seguranca]
+notas: "Aberta na web em 2026-10-07. A página não descreve o comportamento no desencontro de hash; esse comportamento foi observado na execução do Exemplo da SEG-03, não vem da fonte."

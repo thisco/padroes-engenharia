@@ -1,0 +1,3 @@
+pyyaml==6.0.3
+packaging
+padroes-eng-pacote-inexistente-7f3a

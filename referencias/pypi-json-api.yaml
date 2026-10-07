@@ -1,0 +1,10 @@
+id: pypi-json-api
+titulo: "JSON API do PyPI (docs.pypi.org)"
+organizacao: Python Software Foundation
+url: https://docs.pypi.org/api/json/
+tipo: vendor
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "rotas GET /pypi/<project>/json e GET /pypi/<project>/<version>/json; aviso de que a chave releases está obsoleta"
+dominios: [seguranca]
+notas: "Aberta na web em 2026-10-07. A página não diz qual status volta para projeto inexistente; o 404 foi observado em consulta direta em 2026-10-07, e o verificador do Exemplo trata só o 404 como inexistência."
