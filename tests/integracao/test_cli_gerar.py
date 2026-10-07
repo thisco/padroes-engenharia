@@ -6,6 +6,7 @@ import subprocess
 import sys
 
 import pytest
+import yaml
 
 from scripts import gerar as cli
 from tests import fabrica
@@ -87,3 +88,79 @@ def test_roda_como_script(repo_minimo, tmp_path):
         check=False,
     )
     assert resultado.returncode == 0, resultado.stdout + resultado.stderr
+
+
+# Modo de prévia (B.5, T1a) ---------------------------------------------------------------------
+
+
+@pytest.fixture
+def repo_com_receita_sem_execucao(repo_minimo):
+    """O `repo_minimo` mais uma receita nova, cujo prompt ainda não tem execução registrada."""
+    meta = yaml.safe_dump(fabrica.meta_receita(), allow_unicode=True, sort_keys=False)
+    (repo_minimo / "receitas").mkdir()
+    (repo_minimo / "receitas" / "ligar-ci.md").write_text(
+        f"---\n{meta}---\n\n{fabrica.CORPO_RECEITA}", encoding="utf-8"
+    )
+    registro = fabrica.meta_verificacao(conteudo="receita-ligar-ci")
+    (repo_minimo / "verificacoes" / "receita-ligar-ci.yaml").write_text(
+        yaml.safe_dump(registro, allow_unicode=True, sort_keys=False), encoding="utf-8"
+    )
+    return repo_minimo
+
+
+def test_sem_previa_receita_sem_execucao_reprova_com_r_prompt(
+    repo_com_receita_sem_execucao, tmp_path, capsys
+):
+    saida = tmp_path / "site"
+    args = ["--raiz", str(repo_com_receita_sem_execucao), "--saida", str(saida), *BUILD]
+    assert cli.main(args) == 1
+    assert "R-PROMPT" in capsys.readouterr().out
+    assert not saida.exists()
+
+
+def test_previa_ignora_so_r_prompt_e_carimba_rodape_e_llms(repo_com_receita_sem_execucao, tmp_path):
+    saida = tmp_path / "previa"
+    raiz = repo_com_receita_sem_execucao
+    assert cli.main(["--raiz", str(raiz), "--saida", str(saida), "--previa", *BUILD]) == 0
+    assert (saida / "receitas" / "ligar-ci.html").is_file()
+    assert (
+        (saida / "llms.txt").read_text("utf-8").splitlines()[0].endswith("PRÉVIA, não publicada)")
+    )
+    for pagina in saida.rglob("*.html"):
+        rodape = pagina.read_text("utf-8").split('<footer class="rodape">')[1]
+        assert "PRÉVIA, não publicada" in rodape.split("</footer>")[0], pagina
+    # a prévia não toca README.md nem ROTEAMENTO.md da raiz
+    assert not (raiz / "README.md").exists()
+
+
+def test_previa_nao_ignora_as_outras_regras(repo_com_receita_sem_execucao, mutar, tmp_path, capsys):
+    mutar("praticas/construir-com-ia/P1-01.md", "mecanismo: null", "mecanismo: scripts/x.py")
+    saida = tmp_path / "previa"
+    args = ["--raiz", str(repo_com_receita_sem_execucao), "--saida", str(saida), "--previa", *BUILD]
+    assert cli.main(args) == 1
+    assert "R-MECANISMO" in capsys.readouterr().out
+    assert not saida.exists()
+
+
+def test_sem_previa_nao_carimba(repo_minimo, tmp_path):
+    saida = tmp_path / "site"
+    assert cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD]) == 0
+    assert "PRÉVIA" not in (saida / "llms.txt").read_text("utf-8")
+    assert "PRÉVIA" not in (saida / "index.html").read_text("utf-8")
+
+
+def test_previa_exige_saida_explicita(repo_minimo, capsys):
+    with pytest.raises(SystemExit) as saiu:
+        cli.main(["--raiz", str(repo_minimo), "--previa", *BUILD])
+    assert saiu.value.code == 2
+    assert "--previa exige --saida" in capsys.readouterr().err
+    assert not (repo_minimo / "public").exists()
+
+
+@pytest.mark.parametrize("destino", ["public", "public/previa"])
+def test_previa_recusa_public(repo_minimo, capsys, destino):
+    with pytest.raises(SystemExit) as saiu:
+        cli.main(["--raiz", str(repo_minimo), "--saida", str(repo_minimo / destino), "--previa"])
+    assert saiu.value.code == 2
+    assert "não pode ficar em public/" in capsys.readouterr().err
+    assert not (repo_minimo / "public").exists()

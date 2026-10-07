@@ -44,7 +44,7 @@
 {% block conteudo %}{% endblock %}
 </main>
 <footer class="rodape">
-  <span>{{ site.nome }} v{{ site.versao }} · commit <code>{{ site.commit_curto }}</code> · {{ site.data }}</span>
+  <span>{{ site.nome }} v{{ site.versao }} · commit <code>{{ site.commit_curto }}</code> · {{ site.data }}{% if site.previa %} · <strong>PRÉVIA, não publicada</strong>{% endif %}</span>
   <span><a href="{{ raiz }}referencias.html">Referências</a> · <a href="{{ md }}">esta página em Markdown</a></span>
 </footer>
 </body>

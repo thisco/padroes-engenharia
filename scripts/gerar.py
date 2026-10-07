@@ -3,7 +3,11 @@
 na raiz do repositório.
 
 Uso: python scripts/gerar.py [--raiz CAMINHO] [--saida PASTA] [--url-base URL]
-                             [--commit SHA] [--data AAAA-MM-DD]
+                             [--commit SHA] [--data AAAA-MM-DD] [--previa]
+
+`--previa` gera uma prévia para testar conteúdo novo: exige `--saida` fora de `public/`, ignora só
+a regra R-PROMPT (prompt sem execução registrada), carimba "PRÉVIA, não publicada" no rodapé de
+toda página e na primeira linha de `llms.txt`, e não regrava README.md nem ROTEAMENTO.md.
 
 Commit e data do build, nesta ordem: --commit e --data; CI_COMMIT_SHA; SOURCE_DATE_EPOCH ou
 CI_COMMIT_TIMESTAMP; `git log -1`. Dois builds do mesmo commit dão os mesmos bytes.
@@ -66,7 +70,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--url-base", help="URL do portal (padrão: url_base de portal/config.yml)")
     parser.add_argument("--commit", help="commit do build (padrão: CI_COMMIT_SHA ou git)")
     parser.add_argument("--data", help="data do build, AAAA-MM-DD (padrão: data do commit)")
+    parser.add_argument(
+        "--previa",
+        action="store_true",
+        help="prévia de conteúdo novo: ignora R-PROMPT e carimba; exige --saida fora de public/",
+    )
     args = parser.parse_args(argv)
+    if args.previa:
+        if args.saida is None:
+            parser.error("--previa exige --saida (uma pasta fora de public/)")
+        publico = (args.raiz / "public").resolve()
+        destino = args.saida.resolve()
+        if destino == publico or publico in destino.parents:
+            parser.error(f"a prévia não pode ficar em public/ ({destino}); escolha outra pasta")
     try:
         raiz = args.raiz.resolve()
         saida = (args.saida or raiz / "public").resolve()
@@ -80,8 +96,9 @@ def main(argv: list[str] | None = None) -> int:
             commit=commit,
             data=data,
             url_base=args.url_base or config["url_base"],
+            previa=args.previa,
         )
-        if not erros:
+        if not erros and not args.previa:
             copiar_para_raiz(saida, raiz)
         for aviso in aviso_url_base(args.url_base or config["url_base"], os.environ):
             print(f"aviso: {aviso.arquivo}: {aviso.mensagem}", file=sys.stderr)
@@ -93,7 +110,11 @@ def main(argv: list[str] | None = None) -> int:
     if erros:
         print(f"{len(erros)} erro(s); nada foi gerado.", file=sys.stderr)
         return 1
-    print(f"portal gerado em {saida} (versão {config['versao']}, commit {commit[:7]}, {data}).")
+    prefixo = "PRÉVIA, não publicada: " if args.previa else ""
+    print(
+        f"{prefixo}portal gerado em {saida} "
+        f"(versão {config['versao']}, commit {commit[:7]}, {data})."
+    )
     return 0
 
 

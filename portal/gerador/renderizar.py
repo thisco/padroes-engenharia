@@ -127,6 +127,7 @@ class Site:
     catalogo: Catalogo
     ambiente: Environment
     apresentacoes: tuple[Apresentacao, ...] = ()
+    previa: bool = False
 
     @property
     def repo(self) -> Repositorio:
@@ -161,6 +162,7 @@ def montar_site(
     url_base: str,
     repo: Repositorio | None = None,
     apresentacoes: tuple[Apresentacao, ...] | None = None,
+    previa: bool = False,
 ) -> Site:
     """Carrega configuração, espinha e conteúdo de `raiz` (ou usa `repo` e `apresentacoes`, nos
     testes: com `repo` dado, as apresentações da raiz não entram)."""
@@ -193,6 +195,7 @@ def montar_site(
         catalogo=montar_catalogo(repo, espinha),
         ambiente=ambiente,
         apresentacoes=apresentacoes,
+        previa=previa,
     )
 
 

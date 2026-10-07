@@ -83,8 +83,11 @@ def carregar_contexto(raiz: Path) -> Contexto:
     )
 
 
-def validar_tudo(raiz: Path) -> list[Erro]:
-    """Todos os erros de validação do repositório em `raiz`, ordenados e sem repetição."""
+def validar_tudo(raiz: Path, ignorar: frozenset[str] = frozenset()) -> list[Erro]:
+    """Todos os erros de validação do repositório em `raiz`, ordenados e sem repetição.
+
+    `ignorar` são códigos de regra descartados do resultado (o modo de prévia ignora só
+    `R-PROMPT`)."""
     raiz = Path(raiz)
     espinha = carregar_espinha(raiz / "esquemas" / "espinha.yml")
     repo = carregar(raiz)
@@ -94,7 +97,7 @@ def validar_tudo(raiz: Path) -> list[Erro]:
     erros += validar_componentes(raiz)
     for funcao in REGRAS:
         erros += funcao(repo, espinha, contexto)
-    return sorted(set(erros))
+    return sorted({e for e in erros if e.regra not in ignorar})
 
 
 def _texto(meta: dict[str, Any], campo: str) -> str | None:

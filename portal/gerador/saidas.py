@@ -498,11 +498,16 @@ def _de(site: Site) -> str:
     return f" de {site.organizacao}" if site.organizacao else ""
 
 
+def _titulo(site: Site) -> str:
+    """O H1 do `llms.txt`; a prévia leva o carimbo na primeira linha."""
+    return f"# {site.nome} (PRÉVIA, não publicada)" if site.previa else f"# {site.nome}"
+
+
 def llms_txt(site: Site, paginas: list[Pagina]) -> str:
     """Índice no formato llms.txt (https://llmstxt.org/): H1, resumo em blockquote, detalhes e
     seções H2 com `- [título](url): descrição`, apontando o `.md` gêmeo de cada página."""
     linhas = [
-        f"# {site.nome}",
+        _titulo(site),
         "",
         f"> Portal de padrões de engenharia{_de(site)}, com IA como guia. "
         f"Versão {site.versao}, commit {site.commit}, gerado em {site.data}.",
@@ -553,8 +558,9 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
 
 def llms_full(site: Site, paginas: list[Pagina]) -> str:
     """Todas as páginas em Markdown, na ordem do llms.txt, cada uma com a URL de origem."""
+    carimbo = " (PRÉVIA, não publicada)" if site.previa else ""
     cabecalho = (
-        f"# {site.nome}: texto completo\n\n"
+        f"# {site.nome}: texto completo{carimbo}\n\n"
         f"> Versão {site.versao}, commit {site.commit}, gerado em {site.data}. "
         "Cada seção abaixo é o `.md` gêmeo de uma página, precedido da URL dele.\n"
     )

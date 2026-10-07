@@ -85,3 +85,14 @@ def test_resumo_sem_organizacao_nao_deixa_de_virgula_e_com_organizacao_cita():
     com = dataclasses.replace(s, organizacao="Acme")
     assert "> Portal de padrões de engenharia de Acme, com IA como guia." in llms_txt(com, paginas)
     assert "> Portal de padrões de engenharia de Acme, com IA como guia." in readme_md(com)
+
+
+def test_previa_carimba_a_primeira_linha_do_llms_txt_e_do_llms_full():
+    s, paginas = site_e_paginas()
+    previa = dataclasses.replace(s, previa=True)
+    assert llms_txt(previa, paginas).splitlines()[0] == (
+        "# Padrões de Engenharia (PRÉVIA, não publicada)"
+    )
+    assert llms_full(previa, paginas).splitlines()[0].endswith("(PRÉVIA, não publicada)")
+    assert "PRÉVIA" not in llms_txt(s, paginas)
+    assert "PRÉVIA" not in llms_full(s, paginas)
