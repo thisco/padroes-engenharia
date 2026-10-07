@@ -385,8 +385,9 @@ O total mínimo é de 48 práticas, e a meta é 55.
 4. Como escolher e configurar o harness.
 
 **Casos:**
-1. SGD Catálogo de Nuvem: LLM em produção.
-2. Avaliação do gateway de IA: 8 cenários, 45 casos.
+1. ~~SGD Catálogo de Nuvem: LLM em produção.~~ Fora da semente, ver
+   [ADR 0006](../adr/0006-caso-sgd-fora-da-semente.md).
+2. Avaliação do gateway de IA: 8 cenários, 45 casos. É o único caso da v1.
 
 **Referências:** só entram as que são citadas por algum conteúdo, e cada uma passa pelo §11. O
 ponto de partida é o [benchmark](../research/benchmark-portais-praticas-ia.md) e as sínteses em
