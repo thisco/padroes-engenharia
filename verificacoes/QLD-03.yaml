@@ -102,5 +102,4 @@ revisao_adversarial:
   - afirmacao: exemplos/QLD-03/pyproject.toml e o ruff do portal
     problema: '[baixo] o ruff usa a configuração mais próxima, sem herdar a da raiz; a pasta perde UP
       e B do portal (só E, F, I).'
-    tratamento: 'Aceito sem mudança: o corpo já avisa que o ruff do portal lê esse pyproject; herdar a
-      configuração da raiz (extend) fica como opção.'
+    tratamento: 'Tratado em 2026-10-07: o pyproject do Exemplo ganhou extend = "../../pyproject.toml" (com comentário de que a linha é só do portal e o Como aplicar manda apagá-la no projeto). O alvo (py311) e as exclusões da raiz passam a valer; o select continua o do Exemplo (E, F, I), por desenho, então UP e B não entram. Conferido: ruff check e format --check na pasta passam; com o calculo-ruim.txt no lugar do calculo.py, F401 e E701 (2 erros), restaurado em seguida; o ruff da raiz não ganhou erro de arquivo do Exemplo.'
