@@ -91,7 +91,7 @@ def test_adotar_inocente_com_referencia_forte(tmp_path, tipo):
 
 def test_adotar_inocente_com_caso_interno(tmp_path):
     fraca = fabrica.referencia(fabrica.meta_referencia(tipo="analista"))
-    conteudos = [adotar(casos=["sgd"]), fraca, fabrica.caso("sgd")]
+    conteudos = [adotar(casos=["caso-teste"]), fraca, fabrica.caso("caso-teste")]
     assert rodar(regra_adotar, conteudos, tmp_path) == []
 
 

@@ -73,7 +73,7 @@ def test_caso_com_tabela_de_numeros_e_pagina_na_raiz():
     s = fabrica.site(fabrica.caso(), fabrica.referencia())
     html = html_conteudo(s, fabrica.caso())
     assert "<td>testes automatizados</td><td>1705</td><td>2026-09-30</td>" in html
-    assert f"<dt>Origem</dt><dd>sgd-catalogo @ {fabrica.COMMIT}</dd>" in html
+    assert f"<dt>Origem</dt><dd>repo-catalogo @ {fabrica.COMMIT}</dd>" in html
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "Texto.\n")
     html = html_conteudo(fabrica.site(pagina), pagina)
     assert 'href="tema/tema.css"' in html

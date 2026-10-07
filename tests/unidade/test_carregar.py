@@ -60,7 +60,7 @@ def test_carrega_cada_tipo_do_seu_lugar_em_ordem_de_caminho(tmp_path):
     escrever(tmp_path, "praticas/seguranca/_dominio.md", "---\ntitulo: Segurança\n---\n")
     escrever(tmp_path, "conceitos/harness.md", "---\ntitulo: Harness\n---\n")
     escrever(tmp_path, "guias/do-zero.md", "---\ntitulo: Do zero\n---\n")
-    escrever(tmp_path, "casos/sgd.md", "---\ntitulo: SGD\n---\n")
+    escrever(tmp_path, "casos/caso-teste.md", "---\ntitulo: Caso de teste\n---\n")
     escrever(tmp_path, "paginas/o-problema.md", "---\ntitulo: O problema\n---\n")
     escrever(tmp_path, "referencias/dora.yaml", "id: dora\nverificado_em: 2026-10-01\n")
     escrever(tmp_path, "verificacoes/SEG-01.yaml", "conteudo: SEG-01\n")
@@ -79,7 +79,7 @@ def test_carrega_cada_tipo_do_seu_lugar_em_ordem_de_caminho(tmp_path):
     assert [c.chave for c in repo.dominios] == ["seguranca"]
     assert [c.chave for c in repo.conceitos] == ["harness"]
     assert [c.chave for c in repo.guias] == ["do-zero"]
-    assert [c.chave for c in repo.casos] == ["sgd"]
+    assert [c.chave for c in repo.casos] == ["caso-teste"]
     assert [c.chave for c in repo.paginas] == ["o-problema"]
     assert repo.referencias[0].meta == {"id": "dora", "verificado_em": "2026-10-01"}
     assert repo.referencias[0].corpo == ""

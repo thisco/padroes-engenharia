@@ -93,7 +93,7 @@ def test_cobre_todo_corpo_markdown_e_ignora_os_demais_tipos(tmp_path):
     pagina = Conteudo("pagina", "paginas/p.md", fabrica.meta_pagina(), "[x](guias/g.html)\n")
     caso = fabrica.caso(corpo="[x](../praticas/P9-99.html)\n")
     erros = rodar(*BASE, guia, pagina, caso, raiz=tmp_path)
-    assert sorted(e.arquivo for e in erros) == ["casos/sgd.md", "guias/g.md"]
+    assert sorted(e.arquivo for e in erros) == ["casos/caso-teste.md", "guias/g.md"]
 
 
 def test_pratica_resolve_a_partir_da_pagina_gerada_e_nao_da_faixa_da_fonte(tmp_path):

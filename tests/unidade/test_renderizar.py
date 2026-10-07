@@ -38,7 +38,7 @@ def test_caminhos_pelo_id_e_md_gemeo():
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
     inicio = Conteudo("pagina", "paginas/inicio.md", fabrica.meta_pagina(), "")
     assert caminho_de(fabrica.pratica()) == "praticas/P1-01.html"
-    assert caminho_de(fabrica.caso()) == "casos/sgd.html"
+    assert caminho_de(fabrica.caso()) == "casos/caso-teste.html"
     assert caminho_de(fabrica.referencia()) == "referencias.html#ref-forte"
     assert caminho_de(pagina) == "o-problema.html"
     assert caminho_de(inicio) == "index.html"

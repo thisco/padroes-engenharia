@@ -43,7 +43,7 @@ def test_todas_as_paginas_em_ordem_estavel():
     resto = caminhos[len(fixas) :]
     assert resto[0] == "o-problema.html"
     assert resto[1:13] == [f"dominios/{f.slug}.html" for f in fabrica.espinha_real().faixas]
-    assert resto[13:] == ["praticas/P1-01.html", "conceitos/harness.html", "casos/sgd.html"]
+    assert resto[13:] == ["praticas/P1-01.html", "conceitos/harness.html", "casos/caso-teste.html"]
     assert len(caminhos) == len(set(caminhos))
 
 
@@ -53,7 +53,7 @@ def test_secao_titulo_e_descricao_de_cada_pagina():
     assert paginas["espinha.html"].descricao.startswith("As 12 faixas de domínio")
     assert paginas["praticas/P1-01.html"].secao == "Práticas"
     assert paginas["dominios/seguranca.html"].secao == "Domínios"
-    assert paginas["casos/sgd.html"].secao == "Casos"
+    assert paginas["casos/caso-teste.html"].secao == "Casos"
     assert all(p.titulo and p.descricao for p in paginas.values())
 
 
