@@ -2,7 +2,7 @@
 
 Uso: python -m otimizacao.linha_de_base --pratica DAD-01
      [--harness claude-code,codex,kiro,antigravity] [--repeticoes 2]
-     [--teto-tokens 2000000] [--registrar]
+     [--cenario ID1,ID2] [--teto-tokens 2000000] [--registrar]
 Saída: 0 ok · 3 teto atingido (relatório parcial gravado) · 2 erro interno.
 """
 
@@ -27,6 +27,15 @@ TRANSCRICOES = Path.home() / "curadoria-a5" / "otimizacao"
 TODOS = ["claude-code", "codex", "kiro", "antigravity"]
 
 
+def resumir(avaliacoes: list[dict], harnesses: list[str]) -> dict:
+    resumo = {}
+    for h in harnesses:
+        do_harness = [a for a in avaliacoes if a["harness"] == h]
+        acertos = sum(1 for a in do_harness if a["nota"] == 1.0)
+        resumo[h] = {"acertos": acertos, "total": len(do_harness)}
+    return resumo
+
+
 def rodar_linha_de_base(
     raiz: Path,
     pratica: str,
@@ -34,10 +43,18 @@ def rodar_linha_de_base(
     repeticoes: int,
     teto: Teto,
     transcricoes: Path,
+    *,
+    cenarios_ids: list[str] | None = None,
 ) -> dict:
     cenarios = carregar_cenarios(PASTA_CENARIOS, pratica)
     if not cenarios:
         raise SystemExit(f"nenhum cenário para {pratica} em {PASTA_CENARIOS}")
+    if cenarios_ids is not None:
+        existentes = {c.id for c in cenarios}
+        for id_ in cenarios_ids:
+            if id_ not in existentes:
+                raise SystemExit(f"cenário desconhecido para {pratica}: {id_}")
+        cenarios = [c for c in cenarios if c.id in cenarios_ids]
     id_prompt = cenarios[0].prompt
     prompt = texto_do_prompt(raiz, id_prompt)
     avaliacoes: list[dict] = []
@@ -57,11 +74,6 @@ def rodar_linha_de_base(
                     avaliacoes.append(dataclasses.asdict(a))
     except TetoAtingido:
         parcial = True
-    resumo = {}
-    for h in harnesses:
-        do_harness = [a for a in avaliacoes if a["harness"] == h]
-        acertos = sum(1 for a in do_harness if a["nota"] == 1.0)
-        resumo[h] = {"acertos": acertos, "total": len(do_harness)}
     return {
         "pratica": pratica,
         "prompt": id_prompt,
@@ -70,7 +82,20 @@ def rodar_linha_de_base(
         "avaliacoes": avaliacoes,
         "tokens": sum(a["tokens"] for a in avaliacoes),
         "custo_usd": round(sum(a["custo_usd"] or 0.0 for a in avaliacoes), 4),
-        "resumo": resumo,
+        "resumo": resumir(avaliacoes, harnesses),
+    }
+
+
+def _fundir(existente: dict, novo: dict) -> dict:
+    avaliacoes = existente["avaliacoes"] + novo["avaliacoes"]
+    harnesses = list(dict.fromkeys([*existente["resumo"], *novo["resumo"]]))
+    return {
+        **existente,
+        "parcial": bool(existente["parcial"] or novo["parcial"]),
+        "avaliacoes": avaliacoes,
+        "tokens": existente["tokens"] + novo["tokens"],
+        "custo_usd": round(existente["custo_usd"] + novo["custo_usd"], 4),
+        "resumo": resumir(avaliacoes, harnesses),
     }
 
 
@@ -79,6 +104,8 @@ def gravar_relatorio(resultado: dict, pasta: Path) -> tuple[Path, Path]:
     nome = f"{resultado['data']}-{resultado['pratica']}-linha-de-base"
     js = pasta / f"{nome}.json"
     md = pasta / f"{nome}.md"
+    if js.is_file():
+        resultado = _fundir(json.loads(js.read_text(encoding="utf-8")), resultado)
     conteudo = json.dumps(resultado, ensure_ascii=False, indent=2, sort_keys=True)
     js.write_text(conteudo + "\n", encoding="utf-8")
     linhas = [
@@ -108,6 +135,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Linha de base dos prompts de uma prática.")
     parser.add_argument("--pratica", required=True)
     parser.add_argument("--harness", default=",".join(TODOS))
+    parser.add_argument("--cenario", help="ids de cenário separados por vírgula (padrão: todos)")
     parser.add_argument("--repeticoes", type=int, default=2)
     parser.add_argument("--teto-tokens", type=int, default=2_000_000)
     parser.add_argument(
@@ -124,6 +152,7 @@ def main(argv: list[str] | None = None) -> int:
             args.repeticoes,
             Teto(args.teto_tokens),
             TRANSCRICOES,
+            cenarios_ids=args.cenario.split(",") if args.cenario else None,
         )
         js, md = gravar_relatorio(resultado, PASTA_RESULTADOS)
         if args.registrar:

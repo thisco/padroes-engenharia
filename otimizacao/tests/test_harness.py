@@ -26,7 +26,7 @@ def ambiente(tmp_path, monkeypatch):
     ("nome", "entrada", "saida", "trecho_argv"),
     [
         ("claude-code", 200, 30, "--output-format json"),
-        ("codex", 200, 40, "--sandbox workspace-write"),
+        ("codex", 200, 40, "--sandbox danger-full-access"),
         ("kiro", 90, 10, "--no-interactive"),
         ("antigravity", 70, 9, "--dangerously-skip-permissions"),
     ],

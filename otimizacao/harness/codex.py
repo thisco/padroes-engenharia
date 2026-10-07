@@ -1,5 +1,11 @@
-"""Codex CLI sem interação: `codex exec` efêmero, sem config do usuário nem .rules, sandbox de
-escrita no workspace, eventos JSON Lines com `turn.completed.usage`."""
+"""Codex CLI sem interação: `codex exec` efêmero, sem config do usuário nem .rules, eventos JSON
+Lines com `turn.completed.usage`.
+
+Usa `--sandbox danger-full-access`: o sandbox `workspace-write` bloqueia escritas em `.git/`
+("index.lock: Operation not permitted"), e então o agente não consegue criar branch nem commitar,
+o que as práticas exigem. O laboratório roda numa cópia descartável do projeto, então o risco é
+aceito; é o equivalente de `--dangerously-skip-permissions` no Antigravity e de `acceptEdits` mais
+Bash no Claude Code."""
 
 from __future__ import annotations
 
@@ -26,7 +32,7 @@ class Codex:
         argv = [
             "codex", "exec", "--ephemeral", "--ignore-user-config", "--ignore-rules",
             *(["--model", modelo] if modelo else []),
-            "--sandbox", "workspace-write", "--skip-git-repo-check",
+            "--sandbox", "danger-full-access", "--skip-git-repo-check",
             "-C", str(cwd), "--json", "-o", str(ultima), prompt,
         ]  # fmt: skip
         codigo, stdout, stderr = executar_cli(argv, cwd, transcricao, timeout_s)
