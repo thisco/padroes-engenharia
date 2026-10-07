@@ -64,6 +64,17 @@ execucoes:
   resultado: passou
   evidencia: 'SEG-01: as 5 perguntas respondidas, com mitigação ou pergunta em aberto., saída 0.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: SEG-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-seg-01-prompt
+  resultado: passou
+  evidencia: 'verificador saiu 1 com 4 problemas antes e 0 depois; editou só a seção Threat-model da spec;
+    commit 5a4456f "docs(spec): threat-model em cinco perguntas do webhook de pagamento (SEG-01)", sem
+    coautoria nem trailer. Observação: o testador respondeu "não" à pergunta 2 (o endpoint passa a exigir
+    assinatura, mas o Design não altera a autenticação existente) e avisou que é julgamento dele; a suficiência
+    fica com a revisão humana.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

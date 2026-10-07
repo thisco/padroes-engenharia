@@ -104,6 +104,16 @@ execucoes:
   resultado: passou
   evidencia: pyyaml e packaging com motivo; saída 0.
   data: '2026-10-07'
+- tipo: prompt
+  prompt: SEG-03-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-seg-03-prompt
+  resultado: passou
+  evidencia: 'verificador saiu 1 com 5 problemas antes e 0 depois; removida só a linha do pacote inexistente;
+    uv resolveu 2 pacotes com hash; nenhum substituto escolhido e dependencias-aprovadas.txt intacto;
+    commit 8064a33 "fix(deps): remove pacote inexistente e fixa o lockfile com hash (SEG-03)", sem coautoria
+    nem trailer.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'

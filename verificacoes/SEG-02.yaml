@@ -102,6 +102,15 @@ execucoes:
   resultado: passou
   evidencia: 'gitleaks: no leaks found; compile do arquivo sem erro.'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: SEG-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-seg-02-prompt; gitlab-ci-local 4.76.0, Docker
+  resultado: passou
+  evidencia: job segredos FAIL (aws-access-token em app/config.py, valor redigido); app/config.py passou
+    a ler AWS_ACCESS_KEY_ID de os.environ; commit reescrito com --amend (7deed44), sem push; job PASS
+    ("no leaks found"). O diretório .gitlab-ci-local/ ficou untracked no preparo.
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: 'provisória: conferência em lote da B.4 pendente'
   data: '2026-10-07'
