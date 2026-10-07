@@ -1,0 +1,25 @@
+conteudo: arquitetura
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a skill parte de que diagrama, IaC e ambiente local descrevem o mesmo sistema, e o drift passa
+    despercebido até alguém confiar no artefato errado
+  ref: sdd-scaffold-arquitetura-viva
+  localizacao: abertura da skill
+  resultado: confirmada
+- texto: a ADR de Nygard tem título, contexto, decisão, status e consequências
+  ref: nygard-adr
+  localizacao: texto principal
+  resultado: confirmada
+- texto: portas e adaptadores isolam a aplicação das tecnologias de fora
+  ref: cockburn-hexagonal
+  localizacao: seções Intent e Ports and Adapters
+  resultado: confirmada
+- texto: os diagramas de contexto do sistema e de contêineres bastam para a maioria das equipes
+  ref: c4model-diagramas
+  localizacao: página /diagrams
+  resultado: confirmada
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []
