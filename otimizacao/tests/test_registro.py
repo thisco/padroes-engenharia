@@ -56,3 +56,39 @@ def test_registra_so_harness_com_passou_e_preserva_o_resto(tmp_path):
     evidencia = nova["evidencia"]
     assert "2 de 2" in evidencia and "X-01-a" in evidencia and "/t/a.jsonl" in evidencia
     assert "laboratório" in nova["ambiente"]
+
+
+def test_insercao_preserva_o_resto_byte_a_byte(tmp_path):
+    longa = "  evidencia: " + "x" * 160 + "\n"
+    prefixo = (
+        "# decisão do dono em 2026-10-06\n"
+        "conteudo: X-01\n"
+        "execucoes:\n"
+        "  - tipo: prompt\n"
+        "    prompt: X-01-prompt-1\n"
+        "    harness: kiro\n"
+        "    resultado: passou\n"
+        "    evidencia: " + "y" * 160 + "\n"
+        "    data: '2026-10-01'\n"
+    )
+    sufixo = "revisao_adversarial:\n  parecer: 'ok'\n" + longa
+    registro = tmp_path / "verificacoes" / "X-01.yaml"
+    registro.parent.mkdir()
+    registro.write_text(prefixo + sufixo, encoding="utf-8")
+    registrar_execucoes(tmp_path, RESULTADO)
+    texto = registro.read_text(encoding="utf-8")
+    assert texto.startswith(prefixo) and texto.endswith(sufixo)
+    meio = texto[len(prefixo) : -len(sufixo)]
+    assert meio.startswith("  - tipo: prompt\n")
+    dados = yaml.safe_load(texto)
+    assert len(dados["execucoes"]) == 2 and "revisao_adversarial" in dados
+
+
+def test_sem_chave_execucoes_cria_no_fim(tmp_path):
+    registro = tmp_path / "verificacoes" / "X-01.yaml"
+    registro.parent.mkdir()
+    registro.write_text("conteudo: X-01", encoding="utf-8")
+    registrar_execucoes(tmp_path, RESULTADO)
+    dados = yaml.safe_load(registro.read_text(encoding="utf-8"))
+    assert dados["conteudo"] == "X-01"
+    assert [e["harness"] for e in dados["execucoes"]] == ["claude-code"]
