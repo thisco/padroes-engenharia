@@ -3,7 +3,7 @@ titulo: "Auto-merge: Pipelines must succeed"
 organizacao: GitLab
 url: https://docs.gitlab.com/user/project/merge_requests/auto_merge/
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-07
 verificacao: V
 localizacao: "seção sobre exigir pipeline bem-sucedido (Settings > Merge requests > Merge checks)"
 dominios: [ci-cd]

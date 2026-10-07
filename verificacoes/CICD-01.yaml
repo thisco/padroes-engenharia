@@ -1,0 +1,48 @@
+conteudo: CICD-01
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o CI do scaffold tem jobs de testes (suíte completa), de lint e formato (ruff check e ruff format --check) e de normas do PR (verificar_pr.py contra a base), com os scripts rodados em python3 -I
+  ref: sdd-scaffold-qualidade
+  localizacao: jobs testes, lint-e-tipos e normas-do-pr de template/.github/workflows/qualidade.yml na tag v1.7.1 (clone local, commit fixado)
+  resultado: confirmada
+- texto: o job roda só em pipeline de merge request pela regra CI_PIPELINE_SOURCE == merge_request_event
+  ref: gitlab-mr-pipelines
+  localizacao: seção sobre quando rodam e a condição CI_PIPELINE_SOURCE == "merge_request_event" (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: o merge check Pipelines must succeed (Settings, Merge requests, Merge checks) impede o merge de MR sem pipeline completo e bem-sucedido
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção do merge check Pipelines must succeed (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso e o verificador precisa do histórico e da branch de destino
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone' (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: o verificar_pr.py bloqueia a edição de migration que já existe na base, só avisa nos demais casos e sai com 2 quando a base não existe
+  ref: sdd-scaffold-verificar-pr
+  localizacao: docstring (severidades), main() (ERRO de base, saída 2) e analisar() na tag v1.7.1
+  resultado: confirmada
+- texto: a regra de migration reconhece pastas migration, migrations e alembic
+  ref: sdd-scaffold-verificar-pr
+  localizacao: regex MIGRATION
+  resultado: confirmada
+- texto: o gitlab-ci-local executa pipelines como shell ou Docker
+  ref: gitlab-ci-local-readme
+  localizacao: README, instalação e executores (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: o job roda o script da própria MR, então quem o altera na MR altera o que o avalia (mitigação por CODEOWNERS)
+  ref: sdd-scaffold-readme
+  localizacao: seção 'O que impede e o que orienta' (limite da trava de PR)
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/CICD-01/gitlab-ci.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main --ignore-predefined-vars CI_PIPELINE_SOURCE --variable PORTAL_URL=http://host.docker.internal:8765
+  ambiente: clone de ~/curadoria-a5/b4-cicd-01-prompt com remoto --bare local (origin) e a main publicada; gitlab-ci-local 4.76.0, Docker, imagem python:3.11, ruff 0.16.10 por pip; portal servido em http://host.docker.internal:8765 (pasta .well-known/mecanismos copiada de public/); macOS. O pipeline não foi executado num GitLab.
+  resultado: falhou-como-esperado
+  evidencia: 'três estados na mesma branch. (1) antes: lint "F401 `os` imported but unused" FAIL, suite "AssertionError: 22.0 != 18" FAIL, verificador-de-pr "verificar_pr.py: OK" e "BLOQUEIA: db/migration/V1__cria_pedidos.sql já existe na base e foi alterado" mais dois AVISO, FAIL; pipeline com os três jobs FAIL. (2) depois (import removido, sinal corrigido, V1 restaurada, V2 criada): lint "All checks passed!" e "4 files already formatted", suite "Ran 2 tests ... OK", verificador com os dois AVISO e sem BLOQUEIA; PASS nos três. (3) hash errado em VERIFICAR_PR_SHA256: "/tmp/verificar_pr.py: FAILED" e "1 computed checksum did NOT match", verificador-de-pr FAIL (saída 1) sem rodar o script.'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.4 pendente"
+  data: '2026-10-07'
+  achados: []

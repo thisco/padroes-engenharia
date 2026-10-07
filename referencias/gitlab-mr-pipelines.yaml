@@ -3,7 +3,7 @@ titulo: "Merge request pipelines"
 organizacao: GitLab
 url: https://docs.gitlab.com/ci/pipelines/merge_request_pipelines/
 tipo: vendor
-verificado_em: 2026-10-04
+verificado_em: 2026-10-07
 verificacao: V
 localizacao: "seções sobre quando rodam, requisitos e a regra CI_PIPELINE_SOURCE == merge_request_event"
 dominios: [ci-cd]
