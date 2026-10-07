@@ -313,6 +313,33 @@ execucoes:
     /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202451-a8237959.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202617-d8d048ac.jsonl,
     /Users/thiago/curadoria-a5/otimizacao/codex-20261007-202816-fc41d81d.jsonl'
   data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: antigravity
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '2 de 2 execuções passaram no verificador do cenário; cenários: DAD-01-db-changelog; transcrições:
+    /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-204148-e1bd0298.jsonl, /Users/thiago/curadoria-a5/otimizacao/antigravity-20261007-204245-a0d988d6.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: claude-code
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '2 de 2 execuções passaram no verificador do cenário; cenários: DAD-01-db-changelog; transcrições:
+    /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-203313-73b4f6f3.jsonl, /Users/thiago/curadoria-a5/otimizacao/claude-code-20261007-203538-49edbdd7.jsonl'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: DAD-01-prompt-1
+  harness: codex
+  ambiente: laboratório de prompts (otimizacao/), projeto de teste descartável gerado pelo sdd-scaffold,
+    sem interação
+  resultado: passou
+  evidencia: '2 de 2 execuções passaram no verificador do cenário; cenários: DAD-01-db-changelog; transcrições:
+    /Users/thiago/curadoria-a5/otimizacao/codex-20261007-203915-07dea72f.jsonl, /Users/thiago/curadoria-a5/otimizacao/codex-20261007-204036-0672c410.jsonl'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
   data: '2026-10-06'

@@ -2,11 +2,11 @@
 
 | Harness | Acertos | Tokens |
 |---|---|---|
-| antigravity | 6/6 | 840237 |
-| claude-code | 6/6 | 3748085 |
-| codex | 6/6 | 2628615 |
+| antigravity | 8/8 | 1095211 |
+| claude-code | 8/8 | 5127493 |
+| codex | 8/8 | 3211882 |
 
-Tokens: 7216937 · custo informado: US$ 10.5705
+Tokens: 9434586 · custo informado: US$ 14.0602
 
 ## Falhas
 
