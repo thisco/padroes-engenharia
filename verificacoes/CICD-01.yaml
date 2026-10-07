@@ -45,6 +45,14 @@ execucoes:
 - tipo: prompt
   prompt: CICD-01-prompt-1
   harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b4-cicd-01-prompt, branch feat/desconto, com o servidor local do portal em 127.0.0.1:8765 (host); transcrição em ~/curadoria-a5/transcricoes/CICD-01-prompt-1.bruta.jsonl
+  resultado: falhou
+  motivo: 'defeito do prompt no passo 0: o curl no host usava host.docker.internal, que o host não resolve; corrigido em 2d320a2'
+  evidencia: 'falhou no passo 0: curl no host com host.docker.internal deu "Could not resolve host"; defeito do prompt, corrigido em 2d320a2. A execução que passou está na entrada seguinte.'
+  data: '2026-10-07'
+- tipo: prompt
+  prompt: CICD-01-prompt-1
+  harness: claude-code
   ambiente: sessão nova, em ~/curadoria-a5/b4-cicd-01-prompt, branch feat/desconto, com o servidor local do portal em 127.0.0.1:8765 (host) e host.docker.internal:8765 (job); transcrição em ~/curadoria-a5/transcricoes/CICD-01-prompt-2.bruta.jsonl
   resultado: passou
   evidencia: 'Primeira tentativa (mesma data, transcrição ~/curadoria-a5/transcricoes/CICD-01-prompt-1.bruta.jsonl) falhou no passo 0: curl no host com host.docker.internal deu "Could not resolve host"; defeito do prompt, corrigido em 2d320a2; o esquema só aceita passou e falhou-como-esperado, por isso não tem entrada própria. Esta execução: sha256 do verificar_pr.py conferido (OK); primeiro run com os três jobs reprovando (F401 no lint, "22.0 != 18" na suíte, BLOQUEIA na V1 do verificador); corrigiu o import, o sinal (1 - desconto), restaurou a V1 de origin/main e criou a V2; segundo run PASS nos três, com dois AVISO do verificador (rollback não declarado e sem plano); commits a58f3bb "ci: gates da merge request (CICD-01)" e 6592706 "fix: desconto, lint e migration corretiva (CICD-01)", sem coautoria nem trailer, sem push. Observação do testador: o verificador compara commits e não a árvore, então o segundo run só passou depois do commit da correção.'

@@ -794,7 +794,7 @@ def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         executados = {
             e.get("prompt")
             for e in (registro.meta.get("execucoes") or [] if registro else [])
-            if isinstance(e, dict) and e.get("tipo") == "prompt"
+            if isinstance(e, dict) and e.get("tipo") == "prompt" and e.get("resultado") != "falhou"
         }
         for achado in achados:
             if achado.id not in executados:

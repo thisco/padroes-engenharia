@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Registro de verificação",
-  "description": "verificacoes/<ID-ou-slug>.yaml (spec §11.2). A presença de revisao_adversarial, a cobertura das citações e a ausência de nao-confirmada são conferidas pelo validador (R-VERIFICACAO).",
+  "description": "verificacoes/<ID-ou-slug>.yaml (spec §11.2). Execução de prompt aceita resultado falhou (tentativa registrada, com motivo) e ela não conta como execução do prompt. A presença de revisao_adversarial, a cobertura das citações e a ausência de nao-confirmada são conferidas pelo validador (R-VERIFICACAO).",
   "type": "object",
   "additionalProperties": false,
   "required": ["conteudo", "verificado_em", "verificador", "afirmacoes"],
@@ -78,10 +78,13 @@
         "prompt": {"type": "string", "pattern": "^[A-Za-z0-9-]+-prompt-[0-9]+$"},
         "harness": {"type": "string", "minLength": 1},
         "ambiente": {"type": "string", "minLength": 1},
-        "resultado": {"$ref": "#/$defs/resultado_execucao"},
+        "resultado": {"enum": ["passou", "falhou-como-esperado", "falhou"]},
+        "motivo": {"type": "string", "minLength": 1},
         "evidencia": {"type": "string", "minLength": 1},
         "data": {"$ref": "#/$defs/data"}
-      }
+      },
+      "if": {"properties": {"resultado": {"const": "falhou"}}, "required": ["resultado"]},
+      "then": {"required": ["motivo"]}
     }
   }
 }
