@@ -16,6 +16,7 @@ from portal.gerador.regras import (
     regra_execucao,
     regra_exemplo,
     regra_ids,
+    regra_link_interno,
     regra_mecanismo,
     regra_mecanismos_hospedados,
     regra_prompt,
@@ -115,5 +116,6 @@ def test_validar_tudo_roda_todas_as_regras_na_ordem():
         regra_agents,
         regra_skills,
         regra_apresentacoes,
+        regra_link_interno,
         regra_mecanismos_hospedados,
     ]

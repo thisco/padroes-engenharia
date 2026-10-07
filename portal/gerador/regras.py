@@ -12,13 +12,14 @@ As regras não confiam no tipo dos campos (o schema já reporta isso): leem com 
 from __future__ import annotations
 
 import hashlib
+import posixpath
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path, PurePosixPath
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import unquote, urlsplit
 
 from markdown_it import MarkdownIt
 
@@ -948,6 +949,85 @@ def regra_apresentacoes(repo: Repositorio, espinha: Espinha, contexto: Contexto)
     """Cada pasta de `apresentacoes/` tem `apresentacao.yml` válido, `index.html`, as páginas e o
     roteiro que o registro cita e nenhum recurso externo; as referências citadas existem."""
     return validar_apresentacoes(contexto.raiz, frozenset(r.chave for r in repo.referencias))
+
+
+# Links internos (B.5, T1b) -------------------------------------------------------------------
+
+_ESQUEMA_URL = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
+
+
+def _paginas_geradas(repo: Repositorio, espinha: Espinha) -> frozenset[str]:
+    """Os caminhos HTML que o build gera: conteúdo, domínios, listagens e páginas fixas."""
+    # importação tardia: renderizar importa avisos, que importa este módulo (ciclo)
+    from portal.gerador.renderizar import PAGINAS_GERADAS, caminho_de
+
+    conteudos = {
+        caminho_de(c).split("#")[0] for c in repo.publicados() if c.tipo not in ("dominio",)
+    }
+    dominios = {f"dominios/{f.slug}.html" for f in espinha.faixas}
+    fixas = {caminho for caminho, _ in PAGINAS_GERADAS}
+    return frozenset(conteudos | dominios | fixas)
+
+
+def _links_relativos(corpo: str) -> list[tuple[int, str]]:
+    """Os links do corpo que são relativos: (linha do corpo, base 1; destino sem âncora).
+
+    Ficam de fora o link com esquema (`https:`, `mailto:`), o absoluto na raiz do site, o que é só
+    âncora e o que está em bloco ou trecho de código (o parser nem o reconhece como link)."""
+    linhas = corpo.splitlines()
+    achados: list[tuple[int, str]] = []
+    for token in MarkdownIt("commonmark").parse(corpo):
+        if token.type != "inline" or not token.map:
+            continue
+        inicio, fim = token.map
+        for filho in token.children or []:
+            href = str(filho.attrGet("href") or "") if filho.type == "link_open" else ""
+            destino = unquote(href.split("#")[0].split("?")[0])
+            if not destino or destino.startswith("/") or _ESQUEMA_URL.match(href):
+                continue
+            linha = next((i for i in range(inicio, fim) if destino in linhas[i]), inicio)
+            achados.append((linha + 1, destino))
+    return achados
+
+
+@regra
+def regra_link_interno(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """Todo link relativo do corpo Markdown aponta para um arquivo que existe na fonte ou para a
+    página (ou o `.md` gêmeo dela) que o build gera. O destino é resolvido a partir da pasta da
+    página gerada, que é onde o leitor está (`praticas/` para uma prática da faixa `ci-cd`). Âncora
+    não é conferida; pasta não conta, porque o site não tem índice dela. O erro traz o arquivo, a
+    linha e o destino."""
+    from portal.gerador.renderizar import caminho_de  # tardia: ver `_paginas_geradas`
+
+    geradas = _paginas_geradas(repo, espinha)
+    erros: list[Erro] = []
+    for c in repo.markdown():
+        pasta_da_pagina = posixpath.dirname(caminho_de(c).split("#")[0])
+        deslocamento = _linhas_antes_do_corpo(contexto.raiz / c.caminho_relativo, c.corpo)
+        for linha, destino in _links_relativos(c.corpo):
+            alvo = posixpath.normpath(posixpath.join(pasta_da_pagina, destino))
+            gerado = alvo.removesuffix(".md") + ".html" if alvo.endswith(".md") else alvo
+            if alvo.startswith("..") or not ((contexto.raiz / alvo).is_file() or gerado in geradas):
+                campo = f"linha {deslocamento + linha}"
+                erros.append(
+                    Erro(
+                        c.caminho_relativo,
+                        campo,
+                        codigos.R_LINK_INTERNO,
+                        f"{destino}: alvo não existe",
+                    )
+                )
+    return erros
+
+
+def _linhas_antes_do_corpo(arquivo: Path, corpo: str) -> int:
+    """Quantas linhas do arquivo vêm antes do corpo (o frontmatter e o que o carregador descarta);
+    zero se o arquivo não está em disco."""
+    try:
+        texto = arquivo.read_text(encoding="utf-8")
+    except OSError:
+        return 0
+    return texto.count("\n") - corpo.count("\n") if texto.endswith(corpo) else 0
 
 
 # Mecanismos hospedados (spec delta 1.7, R3) -----------------------------------------------------
