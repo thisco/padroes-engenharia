@@ -73,7 +73,7 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [x] **T4 (UX-01, UX-02, `_dominio.md` de frontend-ux).** Exemplos: um componente com os quatro
   estados e um verificador que confere a presença dos quatro no código e no protótipo (texto ou
   HTML estático), rodado nos dois estados; sem framework de frontend imposto.
-- [ ] **T5 (OBS-01, OBS-02, `_dominio.md` de observabilidade).** Exemplos: um log JSON com
+- [x] **T5 (OBS-01, OBS-02, `_dominio.md` de observabilidade).** Exemplos: um log JSON com
   correlação e um verificador que reprova dado pessoal e campos obrigatórios ausentes; um SLO
   declarado em arquivo com alerta e runbook ligados, e o verificador que exige os três.
 - [ ] **T6.** Testes de prompt em sessão nova, um por conteúdo, logo depois de cada tarefa.
@@ -102,6 +102,16 @@ em HTML sem framework, com capturas dos quatro estados em `.playwright-mcp/ux-01
 Referências novas: `nngroup-empty-states` e `wcag-error-suggestion`. Decisão: UX-01 fica
 `experimentar`, porque o validador exige referência forte ou caso interno para `adotar` e a base
 é a skill interna `estados-de-interface`; a promoção fica para o checkpoint do dono.
+
+**T5 fechada (2026-10-06).** Domínio `observabilidade` (42b7fe4), OBS-01 (588643a) e OBS-02
+(44cbed4), `experimentar`, força `orienta`. Referências novas: `sre-book-monitoring`,
+`opentelemetry-logs-data-model`, `gateway-poc-cenario-07-tooling` e
+`gateway-poc-evidencia-tc02-spend-log` (o README do cenário 07 não cita `requester_ip_address` nem
+`user_api_key_alias`; eles estão na evidência TC-02). Verificadores rodados nos dois estados numa
+cópia de projeto-teste-17. Prompts testados em sessão nova (OBS-01 commit 6313953, OBS-02 commit
+eccb798), ambos `passou`. Nota: o commit de domínio `42b7fe4` foi feito com `--amend` sobre
+`0be7dba` (domínio contratos-api), e `verificacoes/observabilidade.yaml` ficou nesse commit, sem
+efeito no conteúdo.
 
 ## Conferência em lote: <data> — achados
 

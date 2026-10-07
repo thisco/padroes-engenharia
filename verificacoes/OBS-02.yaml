@@ -52,6 +52,13 @@ execucoes:
   resultado: passou
   evidencia: 'as três seções e o nome do alerta presentes, saída 0; com o nome do alerta trocado no texto, "o runbook não cita o nome do alerta", saída 1.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: OBS-02-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-obs-02-prompt
+  resultado: passou
+  evidencia: 'antes "runbook inexistente" e "alerta fora de um SLO" (saída 1); removeu o bloco alertas de nível superior e criou docs/runbooks/taxa-de-erro-alta.md com as três seções; depois "OBS-02: 1 SLO(s), com alerta, quem aciona e runbook completos." (saída 0); commit eccb798 com os 2 arquivos, sem trailer'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-06'

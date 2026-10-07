@@ -67,6 +67,13 @@ execucoes:
   resultado: passou
   evidencia: '3 linhas com o mesmo request_id, detalhe "e-mail rejeitado: [EMAIL]"; "OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal.", saída 0.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: OBS-01-prompt-1
+  harness: claude-code
+  ambiente: sessão nova, em ~/curadoria-a5/b3-obs-01-prompt
+  resultado: passou
+  evidencia: '3 linhas fora do padrão antes (saída 1); editou só scripts/emitir_logs.py; depois "OBS-01: 3 linhas, todas com os campos obrigatórios e sem dado pessoal." (saída 0); commit 6313953 só com o script, sem trailer, logs/ fora do commit'
+  data: '2026-10-06'
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-06'
