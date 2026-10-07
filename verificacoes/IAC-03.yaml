@@ -1,0 +1,89 @@
+conteudo: IAC-03
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: todo plano com mudança de schema ou de deploy declara a estratégia de rollback antes da execução; declarar às vezes revela que ela não existe
+  ref: migrations-reversiveis
+  localizacao: seção 'Estratégia de rollback no plano'
+  resultado: confirmada
+- texto: 'as três formas aceitas: downgrade testado em ambiente efêmero (schema), redeploy da imagem anterior pelo mesmo pipeline (deploy) e restore de backup com tempo de restauração conhecido (dado)'
+  ref: migrations-reversiveis
+  localizacao: tabela da seção 'Estratégia de rollback no plano'
+  resultado: confirmada
+- texto: mudança de schema é a mais cara de desfazer porque o estado já mudou quando o problema aparece
+  ref: migrations-reversiveis
+  localizacao: parágrafo de abertura
+  resultado: confirmada
+- texto: o job normas-do-pr bloqueia edição de migration existente e avisa quando o diff mexe em schema sem plano declarando rollback
+  ref: migrations-reversiveis
+  localizacao: seção 'Verificação'
+  resultado: confirmada
+- texto: o modelo de steering pede registrar qual workflow faz o redeploy da imagem anterior, onde ficam os backups e o tempo de restauração conhecido
+  ref: sdd-scaffold-infra-devops
+  localizacao: seção 'Rollback', comentário 'preencher'
+  resultado: confirmada
+  nota: É um comentário de preenchimento do modelo.
+- texto: o healthcheck é o que define quando o serviço está pronto; depends_on com service_healthy espera por ele
+  ref: docker-compose-startup-order
+  localizacao: seções 'healthcheck' e 'depends_on condition service_healthy'
+  resultado: confirmada
+- texto: --wait espera os serviços em execução ou saudáveis e --wait-timeout limita a espera em segundos
+  ref: docker-compose-up
+  localizacao: opções --wait e --wait-timeout
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/executar.sh
+  comando: sh executar.sh
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: 'A: saída 1; B: saída 0; C: iac-app:1 no ar (versão 1), deploy de iac-app:2 "unhealthy", rollback para a imagem guardada "healthy" e versão 1; trap removeu contêiner, rede e imagens (docker
+    ps -a, network ls e images sem iac-)'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/verificar-rollback.py
+  comando: verificar-rollback.py com plano-antes.md, plano.md e entradas inválidas
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: 'plano-antes: "falta a seção ## Rollback", saída 1; plano.md: "IAC-03: rollback declarado, com a volta nomeada e testado.", saída 0; vazio, inexistente, tipo inválido, Testado não, Evidências
+    vazia e Volta de deploy sem tag: saída 1; Volta de schema com V4__ e de dados com backup e tempo: saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/plano-antes.md
+  comando: python3 verificar-rollback.py plano-antes.md
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: falhou-como-esperado
+  evidencia: '"plano-antes.md: falta a seção ''## Rollback''", saída 1'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/plano.md
+  comando: python3 verificar-rollback.py plano.md
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: '"IAC-03: rollback declarado, com a volta nomeada e testado.", saída 0'
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/compose.yml
+  comando: IMAGEM=iac-app:1 docker compose up -d --wait --wait-timeout 30 (executar.sh)
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: serviço saudável com a imagem 1; com a imagem 2 "unhealthy" e a espera sai com erro dentro de 30 segundos
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/app/app.py
+  comando: sh executar.sh (parte C)
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: /versao devolveu 1; /saude 200 na imagem 1 e 500 na imagem 2 (build com SAUDE=quebrado)
+  data: '2026-10-07'
+- tipo: arquivo
+  arquivo: exemplos/IAC-03/app/Dockerfile
+  comando: docker build -q com --build-arg VERSAO e SAUDE (executar.sh)
+  ambiente: Python 3.14.8; Docker 29.5.2; Compose v5.1.3; macOS; imagem python:3.11
+  resultado: passou
+  evidencia: imagens iac-app:1 e iac-app:2 construídas
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: 'provisória: conferência em lote da B.4 pendente'
+  data: '2026-10-07'
+  achados: []

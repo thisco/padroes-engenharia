@@ -1,0 +1,12 @@
+name: iac-rollback
+services:
+  app:
+    image: ${IMAGEM:?defina IMAGEM com a imagem a implantar}
+    container_name: iac-app
+    ports:
+      - "127.0.0.1:18090:8080"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/saude')"]
+      interval: 2s
+      timeout: 3s
+      retries: 3
