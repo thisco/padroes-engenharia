@@ -76,8 +76,8 @@ executado e registrado, prompt testado em sessão nova, `[ref:]` com fonte abert
 - [x] **T5 (OBS-01, OBS-02, `_dominio.md` de observabilidade).** Exemplos: um log JSON com
   correlação e um verificador que reprova dado pessoal e campos obrigatórios ausentes; um SLO
   declarado em arquivo com alerta e runbook ligados, e o verificador que exige os três.
-- [ ] **T6.** Testes de prompt em sessão nova, um por conteúdo, logo depois de cada tarefa.
-- [ ] **T7.** `CHANGELOG.md`; lint; suíte; validar; dois builds idênticos.
+- [x] **T6.** Testes de prompt em sessão nova, um por conteúdo, logo depois de cada tarefa.
+- [x] **T7.** `CHANGELOG.md`; lint; suíte; validar; dois builds idênticos.
 - [ ] **T8 (conferência em lote, ADR 0005).** Como na B.2, com os achados de segurança
   automáticos como itens obrigatórios.
 - [ ] **T9.** Tratar os achados; prompts alterados não são retestados (decisão do dono na B.2),
@@ -129,6 +129,16 @@ cópia de projeto-teste-17. Prompts testados em sessão nova (OBS-01 commit 6313
 eccb798), ambos `passou`. Nota: o commit de domínio `42b7fe4` foi feito com `--amend` sobre
 `0be7dba` (domínio contratos-api), e `verificacoes/observabilidade.yaml` ficou nesse commit, sem
 efeito no conteúdo.
+
+**T6 e T7 fechadas (2026-10-06).** `CHANGELOG.md` com a B.3 em `[Não publicado]`. `ruff check`
+sem achados e `ruff format --check` com 224 arquivos já formatados. `pytest -q`: 637 passam. Uma
+falha antiga foi corrigida (`test_componentes_do_repositorio_real` não esperava o `gateway-poc`
+fixado na B.1) e a outra (`test_sai_0_no_repositorio_real`) decorria de README.md e ROTEAMENTO.md
+desatualizados, resolvida pelo build. `validar.py`: 2 erros R-GERADO-DIVERGENTE antes do build,
+"nenhum erro" depois. Dois builds (`public` e um diretório temporário) sem nenhuma diferença
+(`diff -rq` vazio). Portal com as 4 páginas de domínio novas, as 9 práticas novas em
+`public/praticas/` e `receitas/adicionar-migration-corretiva.html`; zero ocorrências de
+nome de organização em `public/`. `public/` está no `.gitignore` e por isso não entra no commit.
 
 ## Conferência em lote: <data> — achados
 

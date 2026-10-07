@@ -6,22 +6,22 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## O que há aqui
 
-- 23 práticas na espinha de 12 domínios × 4 momentos; 39 das 48 células a definir (`ROTEAMENTO.md`).
-- 111 referências, cada uma conferida na fonte, e 6 skills publicadas.
+- 32 práticas na espinha de 12 domínios × 4 momentos; 30 das 48 células a definir (`ROTEAMENTO.md`).
+- 124 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
 |---|---|---|
 | Guia | Construir com IA (`construir-com-ia`) | 10 |
 | Desenho | Arquitetura e padrões de projeto (`arquitetura`) | 0 |
-| Desenho | Contratos de API (`contratos-api`) | 0 |
-| Desenho | Frontend e UX (`frontend-ux`) | 0 |
-| Dados | Dados e migrations (`dados-migrations`) | 1 |
-| Dados | Privacidade e LGPD (`privacidade-lgpd`) | 0 |
+| Desenho | Contratos de API (`contratos-api`) | 2 |
+| Desenho | Frontend e UX (`frontend-ux`) | 2 |
+| Dados | Dados e migrations (`dados-migrations`) | 2 |
+| Dados | Privacidade e LGPD (`privacidade-lgpd`) | 2 |
 | Entrega e operação | Qualidade e BDD (`qualidade-bdd`) | 0 |
 | Entrega e operação | Infra e IaC (`infra-iac`) | 0 |
 | Entrega e operação | CI/CD (`ci-cd`) | 0 |
-| Entrega e operação | Observabilidade e operação (`observabilidade`) | 0 |
+| Entrega e operação | Observabilidade e operação (`observabilidade`) | 2 |
 | Entrega e operação | Segurança (`seguranca`) | 0 |
 | IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 12 |
 

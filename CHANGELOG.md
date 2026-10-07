@@ -32,6 +32,23 @@ Fatia B.1 do domínio Construir com IA e fatia B.2 da faixa IA no produto, em an
   término, escopo e autonomia), P3-04 (agente somente-leitura com identidade própria), P3-05
   (isolamento do conteúdo externo) e P3-06 (MCP fechado por padrão, com allowlist central). Os
   prompts alterados na conferência em lote aguardam novo teste em sessão nova.
+- Nove práticas das faixas de dados, privacidade, contratos, frontend e observabilidade (fatia
+  B.3), com Exemplo executado e registro em `verificacoes/`: DAD-02 (expandir e contrair),
+  LGPD-01 (classificação do dado pessoal), LGPD-02 (dado pessoal fora de prompt, log e teste),
+  API-01 (contrato versionado), API-02 (teste de contrato no CI), UX-01 (os quatro estados),
+  UX-02 (protótipo antes do código), OBS-01 (log estruturado e correlacionado) e OBS-02 (SLO,
+  alerta e runbook).
+- Quatro páginas de domínio novas: `privacidade-lgpd`, `contratos-api`, `frontend-ux` e
+  `observabilidade`.
+- A receita "Adicionar uma migration corretiva", que encadeia DAD-01 e DAD-02.
+- DAD-01: o Exemplo ganha o `flyway validate` executado e a consulta ao
+  `flyway_schema_history` (lacuna 2 do aceite da A.5).
+- Referências novas: `fowler-parallel-change`, `anpd-ripd`, `anpd-guia-agentes-tratamento`,
+  `gateway-poc-cenario-02-policies`, `gateway-poc-cenario-04-vector-stores`,
+  `gateway-poc-cenario-07-tooling`, `gateway-poc-evidencia-tc02-spend-log`, `semver`, `oasdiff`,
+  `nngroup-empty-states`, `wcag-error-suggestion`, `sre-book-monitoring` e
+  `opentelemetry-logs-data-model`; `fowler-evodb`, `lgpd`, `openapi-spec` e `sdd-lifecycle`
+  ampliadas.
 
 ### Alterado
 

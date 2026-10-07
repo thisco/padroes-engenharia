@@ -146,6 +146,12 @@ def test_repositorio_de_distribui_e_ordena():
 
 def test_componentes_do_repositorio_real():
     assert carregar_componentes(RAIZ) == {
+        "gateway-poc": Componente(
+            "gateway-poc",
+            "https://github.com/thisco/gateway-poc",
+            "0.1.0",
+            "571a091c8a8f9ff99aba89c064d69a36ff195bef",
+        ),
         "sdd-lifecycle": Componente(
             "sdd-lifecycle",
             "https://github.com/thisco/sdd-lifecycle",
