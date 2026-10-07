@@ -1,0 +1,21 @@
+id: opentofu
+titulo: OpenTofu
+categoria: iac
+status: experimentar
+versao_minima: "1.13.1"
+dono: engenharia
+praticas: [IAC-02]
+receitas: []
+como_instalar: |
+  Instale o binário `tofu` por Homebrew, pelo método standalone ou pela imagem OCI oficial no GitHub
+  Container Registry [ref:opentofu-instalacao]. O projeto é de código aberto, sob a Mozilla Public
+  License 2.0 [ref:opentofu-licenca]. No fluxo da IAC-02, `tofu plan -out` grava o plano que
+  depois pode ser passado ao `tofu apply` [ref:opentofu-plan], e `tofu init` cria o
+  `.terraform.lock.hcl`, que a documentação recomenda versionar [ref:opentofu-dependency-lock].
+  A única versão testada pelo portal é a 1.13.1.
+limites: |
+  O plano em JSON (`tofu show -json`) é a entrada do verificador da IAC-02 [ref:opentofu-show]; o
+  formato muda entre versões do OpenTofu, e a documentação traz a versão do formato
+  [ref:opentofu-json-format]. O portal só exercitou o fluxo com recursos locais, sem provedor de
+  nuvem real.
+referencias: [opentofu-instalacao, opentofu-licenca, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock]

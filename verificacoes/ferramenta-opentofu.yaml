@@ -1,0 +1,41 @@
+conteudo: ferramenta-opentofu
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: instalação por Homebrew, standalone ou imagem OCI no GitHub Container Registry
+  ref: opentofu-instalacao
+  localizacao: lista de métodos de instalação
+  resultado: confirmada
+- texto: licença Mozilla Public License 2.0
+  ref: opentofu-licenca
+  localizacao: cabeçalho do arquivo LICENSE
+  resultado: confirmada
+- texto: tofu plan -out grava o plano que depois pode ser passado ao tofu apply
+  ref: opentofu-plan
+  localizacao: seção Saved Plans
+  resultado: confirmada
+- texto: tofu init cria o .terraform.lock.hcl e a documentação recomenda versioná-lo
+  ref: opentofu-dependency-lock
+  localizacao: seções sobre o nome do arquivo e a recomendação de versionar
+  resultado: confirmada
+- texto: tofu show -json devolve o plano salvo em JSON
+  ref: opentofu-show
+  localizacao: opção -json
+  resultado: confirmada
+- texto: a documentação do formato JSON traz a versão do formato
+  ref: opentofu-json-format
+  localizacao: seção sobre versão do formato
+  resultado: confirmada
+  nota: a frase de que o formato muda entre versões do OpenTofu é consequência de ele ser versionado
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/opentofu.yml
+  comando: tofu version
+  ambiente: macOS arm64, instalação por Homebrew em /opt/homebrew/bin/tofu
+  resultado: passou
+  evidencia: 'OpenTofu v1.13.1 on darwin_arm64'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.5 pendente"
+  data: '2026-10-07'
+  achados: []

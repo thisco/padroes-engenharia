@@ -1,0 +1,10 @@
+id: pytest-bdd-docs
+titulo: "pytest-bdd: documentação"
+organizacao: pytest-dev
+url: https://pytest-bdd.readthedocs.io/en/stable/
+tipo: comunidade
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "páginas de introdução, instalação (pip install pytest-bdd), recursos Gherkin suportados, licença MIT e requisitos de versão"
+dominios: [qualidade-bdd]
+notas: "Documentação do plugin, versão stable lida em 2026-10-07. O plugin não foi instalado nem executado pelo portal."

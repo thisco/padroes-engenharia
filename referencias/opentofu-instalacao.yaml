@@ -1,0 +1,10 @@
+id: opentofu-instalacao
+titulo: "OpenTofu: métodos de instalação"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/intro/install/
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "lista de métodos: Homebrew, standalone e imagem OCI no GitHub Container Registry"
+dominios: [infra-iac]
+notas: "Fonte aberta, lida em 2026-10-07. O binário `tofu` v1.13.1 foi instalado por Homebrew nas execuções do portal."

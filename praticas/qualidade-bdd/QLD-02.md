@@ -14,7 +14,7 @@ dono: engenharia
 revisado_em: 2026-10-07
 revisar_ate: 2027-04-07
 resumo: "Todo bug corrigido deixa um teste que falha no código com o defeito e passa no corrigido, e um gotcha com sintoma, causa-raiz, correção e regra."
-ferramentas_aprovadas: [sdd-scaffold]
+ferramentas_aprovadas: [sdd-scaffold, pytest]
 exemplos:
   - exemplos/QLD-02/parcelas-com-bug.py
   - exemplos/QLD-02/parcelas.py

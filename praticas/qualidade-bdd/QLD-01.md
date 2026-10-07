@@ -14,7 +14,7 @@ dono: engenharia
 revisado_em: 2026-10-07
 revisar_ate: 2027-04-07
 resumo: "Escreva o teste antes da lógica, veja-o falhar pela ausência da implementação e cole no plano a saída das duas execuções, a que falha e a que passa."
-ferramentas_aprovadas: [sdd-scaffold]
+ferramentas_aprovadas: [sdd-scaffold, pytest]
 exemplos:
   - exemplos/QLD-01/frete-antes.py
   - exemplos/QLD-01/frete.py

@@ -15,7 +15,7 @@ dono: engenharia
 revisado_em: 2026-10-07
 revisar_ate: 2027-04-07
 resumo: "Um único script roda suíte, linter, formatador e cobertura mínima; o job do CI chama esse script, e quem desenvolve o roda antes de pedir revisão."
-ferramentas_aprovadas: [gitlab-ci-local]
+ferramentas_aprovadas: [gitlab-ci-local, pytest]
 exemplos:
   - exemplos/QLD-03/validar.sh
   - exemplos/QLD-03/gitlab-ci.yml

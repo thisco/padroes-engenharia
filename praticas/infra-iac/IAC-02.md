@@ -14,7 +14,7 @@ dono: engenharia
 revisado_em: 2026-10-07
 revisar_ate: 2027-04-07
 resumo: "A infra vive em código versionado, e todo PR que a muda traz o plano gerado, com a destruição de recurso decidida por uma pessoa."
-ferramentas_aprovadas: []
+ferramentas_aprovadas: [opentofu]
 exemplos:
   - exemplos/IAC-02/executar.sh
   - exemplos/IAC-02/modulo-antes/main.tf

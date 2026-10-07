@@ -1,0 +1,10 @@
+id: opentofu-licenca
+titulo: "OpenTofu: arquivo LICENSE do repositório"
+organizacao: "OpenTofu"
+url: https://github.com/opentofu/opentofu/blob/main/LICENSE
+tipo: padrao-aberto
+verificado_em: 2026-10-07
+verificacao: V
+localizacao: "cabeçalho do arquivo: Mozilla Public License, version 2.0"
+dominios: [infra-iac]
+notas: "Código-fonte aberto no GitHub, lido em 2026-10-07."

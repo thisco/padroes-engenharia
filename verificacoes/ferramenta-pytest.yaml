@@ -1,0 +1,44 @@
+conteudo: ferramenta-pytest
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: instalação com pip install -U pytest e conferência com pytest --version
+  ref: pytest-instalacao
+  localizacao: seção Install pytest
+  resultado: confirmada
+- texto: licença MIT
+  ref: pytest-licenca
+  localizacao: cabeçalho do arquivo LICENSE
+  resultado: confirmada
+- texto: descoberta de arquivos test_*.py ou *_test.py
+  ref: pytest-boas-praticas
+  localizacao: seção sobre test discovery
+  resultado: confirmada
+- texto: saída 0 quando todos passam e 1 quando algum falha
+  ref: pytest-exit-codes
+  localizacao: lista dos exit codes
+  resultado: confirmada
+- texto: --cov-fail-under do pytest-cov
+  ref: pytest-cov-config
+  localizacao: opção --cov-fail-under
+  resultado: confirmada
+- texto: padrão do -r e short test summary info
+  ref: pytest-saida
+  localizacao: seção sobre a opção -r
+  resultado: confirmada
+- texto: pytest-bdd escreve cenários em Gherkin no executor do pytest, com licença MIT e instalação por pip
+  ref: pytest-bdd-docs
+  localizacao: introdução, instalação e licença
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: ferramentas/pytest.yml
+  comando: pytest --version
+  ambiente: macOS arm64, venv Python com pytest 9.1.1 e pytest-cov 7.1.0
+  resultado: passou
+  evidencia: 'pytest 9.1.1'
+  data: '2026-10-07'
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.5 pendente"
+  data: '2026-10-07'
+  achados: []

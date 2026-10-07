@@ -1,0 +1,23 @@
+id: pytest
+titulo: pytest
+categoria: teste
+status: adotar
+versao_minima: "9.1.1"
+dono: engenharia
+praticas: [QLD-01, QLD-02, QLD-03]
+receitas: []
+como_instalar: |
+  Instale com `pip install -U pytest` e confira com `pytest --version` [ref:pytest-instalacao]. O
+  projeto é de código aberto, sob a licença MIT [ref:pytest-licenca]. O pytest descobre arquivos
+  `test_*.py` ou `*_test.py` [ref:pytest-boas-praticas] e sai com 0 quando todos os testes passam e
+  com 1 quando algum falha [ref:pytest-exit-codes]. A cobertura mínima vem do plugin pytest-cov, com
+  `--cov-fail-under` [ref:pytest-cov-config]. A única versão testada pelo portal é a 9.1.1.
+
+  Plugin pytest-bdd (candidato, ainda sem prática): escreve os cenários em Gherkin e os liga a
+  funções do pytest, no mesmo executor dos testes de unidade; é de código aberto, sob a licença MIT
+  [ref:pytest-bdd-docs]. O portal não o instalou nem executou.
+limites: |
+  O formato do resumo de falhas e o padrão do `-r` são os do pytest 9 [ref:pytest-saida]; outra
+  linguagem ou outro executor pedem outro formato. O pytest-bdd é um plugin separado, com versão
+  própria, e a documentação lista os requisitos de Python e de pytest dele [ref:pytest-bdd-docs].
+referencias: [pytest-instalacao, pytest-licenca, pytest-boas-praticas, pytest-exit-codes, pytest-cov-config, pytest-saida, pytest-bdd-docs]
