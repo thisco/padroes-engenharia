@@ -31,6 +31,13 @@ melhorou. Por isso o laboratório do portal tem duas etapas separadas: a linha d
 e a otimização, que só roda para o prompt que falhou em algum cenário de validação. Prompt que passa
 em tudo fica como está, ou ganha um cenário mais difícil.
 
+## O que se otimiza e o que só se mede
+
+Os prompts das práticas são medidos a cada release e não são otimizados por padrão. A otimização
+com o GEPA fica para quatro alvos: o roteamento do MCP (`buscar_praticas`), as descrições de skills
+e de ferramentas do MCP, a detecção de perfil do CLI e as mensagens das regras. A decisão é de
+2026-10-07 e está registrada na ADR 0008 (`docs/adr/0008-otimizacao-reflexiva-dos-prompts.md`).
+
 ## O que o laboratório faz
 
 O laboratório vive em `otimizacao/`, com ambiente Python próprio, e nunca é importado pelo gerador
@@ -116,9 +123,10 @@ sessões e da reflexão e para quando a rodada atinge o teto declarado; o piloto
 
 ## Onde a metodologia mora
 
-A decisão está na ADR 0007 (`docs/adr/0007-otimizacao-reflexiva-dos-prompts.md`), e o código e os
+A decisão está na ADR 0008 (`docs/adr/0008-otimizacao-reflexiva-dos-prompts.md`), e o código e os
 cenários, em `otimizacao/`. O relatório de cada rodada, com a nota do prompt atual, a do melhor
 candidato, o diff e o custo, fica em `otimizacao/resultados/`. As execuções que passam entram também
-no registro de verificação da prática. O relatório do piloto nas práticas
+no registro de verificação da prática. A linha de base do piloto nas práticas
 [DAD-01](../praticas/DAD-01.html), [P1-01](../praticas/P1-01.html) e
-[P2-02](../praticas/P2-02.html) ainda não existe; a ferramenta fica em `avaliar` até ele sair.
+[P2-02](../praticas/P2-02.html) está em `otimizacao/resultados/`: nenhum prompt falhou, e por isso o
+GEPA não foi acionado sobre eles; a ferramenta segue em `avaliar`.

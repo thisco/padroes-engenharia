@@ -1,4 +1,4 @@
-# ADR 0007: Otimização reflexiva dos prompts das práticas
+# ADR 0008: Otimização reflexiva dos prompts das práticas
 
 **Data:** 2026-10-07 · **Status:** aceita · **Spec:** `docs/specs/2026-10-07-f0-laboratorio-de-prompts-delta.md`
 · **Origem:** decisão do dono em 2026-10-07, a partir de `docs/research/2026-10-07-gepa-como-motor-de-melhoria.md`
@@ -30,3 +30,9 @@ texto e não compõe em aprendizado contínuo sem controle de regressão.
 - O mesmo laboratório serve à P5 da spec de produto (descrições de ferramentas do MCP, skills,
   mensagens das regras), que o estende em vez de criar outro.
 - Custo do piloto limitado a 10 milhões de tokens; cada rodada futura declara o seu teto.
+- **Restrição de escopo (2026-10-07, decisão do dono depois da linha de base):** os prompts das
+  práticas são medidos a cada release e não são otimizados por padrão; a extensão às onze práticas
+  restantes e ao `resumo` foi descartada. O GEPA fica restrito a quatro alvos: o roteamento do MCP
+  (`buscar_praticas`), as descrições de skills e de ferramentas do MCP, a detecção de perfil do CLI
+  e as mensagens das regras. O item 2 da decisão vale para o piloto da F0; os portões do item 4
+  valem para os quatro alvos.

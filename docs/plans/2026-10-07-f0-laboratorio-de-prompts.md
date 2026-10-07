@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 > **Tier:** 2 — subsistema novo com ambiente próprio, custo em tokens, mudança de conteúdo
-> publicado por laço automático; ADR 0007
+> publicado por laço automático; ADR 0008
 > **Spec relacionada:** `docs/specs/2026-10-07-f0-laboratorio-de-prompts-delta.md` (delta F0 da
 > spec do motor `docs/specs/2026-10-06-motor-harness-cli-design.md`)
 > **Branch:** `feat/2026-10-07-f0-laboratorio`, criada a partir de `feat/2026-10-01-portal-fase-a`,
@@ -65,7 +65,7 @@ skills, núcleo e MCP; otimização em Kiro e Antigravity (só linha de base); l
 | F0-R5 linha de base em `resultados/` e `verificacoes/` | Tarefas 8, 12 |
 | F0-R6 otimização com portão e teto | Tarefas 9, 10, 13 |
 | F0-R7 candidato por MR com validação verde | Tarefa 13 |
-| F0-R8 ADR 0007 e `ferramentas/gepa.yml` | Tarefas 1, 14 |
+| F0-R8 ADR 0008 e `ferramentas/gepa.yml` | Tarefas 1, 14 |
 
 ## Impacto Arquitetural
 
@@ -121,16 +121,16 @@ Expected: suíte e validação com código 0. Anote a contagem de testes em **Ev
 
 ---
 
-## Tarefa 1: ADR 0007, ambiente e esqueleto de `otimizacao/`
+## Tarefa 1: ADR 0008, ambiente e esqueleto de `otimizacao/`
 
 **Files:**
-- Create: `docs/adr/0007-otimizacao-reflexiva-dos-prompts.md`, `otimizacao/pyproject.toml`, `otimizacao/README.md`, `otimizacao/__init__.py`, `otimizacao/tests/__init__.py`, `otimizacao/resultados/.gitkeep`
+- Create: `docs/adr/0008-otimizacao-reflexiva-dos-prompts.md`, `otimizacao/pyproject.toml`, `otimizacao/README.md`, `otimizacao/__init__.py`, `otimizacao/tests/__init__.py`, `otimizacao/resultados/.gitkeep`
 - Modify: `.gitignore`, `pyproject.toml` (raiz, só o `ruff`)
 
 - [ ] **Step 1: ADR**
 
 ```markdown
-# ADR 0007: Otimização reflexiva dos prompts das práticas
+# ADR 0008: Otimização reflexiva dos prompts das práticas
 
 **Data:** 2026-10-07 · **Status:** aceita · **Spec:** `docs/specs/2026-10-07-f0-laboratorio-de-prompts-delta.md`
 · **Origem:** decisão do dono em 2026-10-07, a partir de `docs/research/2026-10-07-gepa-como-motor-de-melhoria.md`
@@ -196,7 +196,7 @@ otimizacao/transcricoes/
 ```markdown
 # Laboratório de eval e otimização dos prompts
 
-Ambiente próprio, separado do gerador (delta F0; ADR 0007).
+Ambiente próprio, separado do gerador (delta F0; ADR 0008).
 
     python3.12 -m venv .venv-otimizacao
     .venv-otimizacao/bin/pip install -e "otimizacao[dev]"
@@ -224,8 +224,8 @@ ambiente antigo, que não tem `gepa`.
 - [ ] **Step 4: Commit**
 
 ```bash
-git add docs/adr/0007-otimizacao-reflexiva-dos-prompts.md otimizacao/ .gitignore
-git commit -m "feat(otimizacao): ADR 0007 e ambiente isolado do laboratório de prompts"
+git add docs/adr/0008-otimizacao-reflexiva-dos-prompts.md otimizacao/ .gitignore
+git commit -m "feat(otimizacao): ADR 0008 e ambiente isolado do laboratório de prompts"
 ```
 
 ---
@@ -1658,7 +1658,7 @@ Expected: FAIL.
 `otimizacao/registro.py`:
 ```python
 """Leva ao registro de curadoria (`verificacoes/<ID>.yaml`) as execuções que passaram, uma entrada
-por harness, no schema `execucao_prompt` do portal. Falhas ficam só no relatório (ADR 0007)."""
+por harness, no schema `execucao_prompt` do portal. Falhas ficam só no relatório (ADR 0008)."""
 
 from __future__ import annotations
 
@@ -2494,7 +2494,7 @@ Se nenhum candidato for aprovado, commite só os relatórios com a mensagem
 
 - [ ] **Step 1: CHANGELOG** em `## [Não publicado]`, `### Adicionado`:
 ```markdown
-- Laboratório de eval e otimização dos prompts (`otimizacao/`, ADR 0007): cenários por prática,
+- Laboratório de eval e otimização dos prompts (`otimizacao/`, ADR 0008): cenários por prática,
   runner sem interação em Claude Code, Codex, Kiro CLI e Antigravity CLI, métrica com feedback do
   verificador, linha de base de DAD-01, P1-01 e P2-02 e otimização pelo GEPA com portão de não
   regressão. Ferramenta `gepa` em `avaliar`.
@@ -2528,10 +2528,80 @@ git commit -m "docs: changelog e evidências da fase F0, laboratório de prompts
 
 ## Evidências
 
-(preenchido na execução: contagem de testes do gerador e do laboratório; saída das quatro sondas;
-ensaio dos cenários sem agente; tabelas das linhas de base com tokens e custo por harness;
-relatórios do GEPA com notas atual × candidato; soma de tokens do piloto contra o teto; achados da
-revisão adversarial)
+Fechamento em 2026-10-07, depois da integração com a `main` (1.1.0). Suítes: gerador com 726
+testes passando; laboratório com 101 testes passando. Os números abaixo saem dos três relatórios em
+`otimizacao/resultados/` (`2026-10-07-<ID>-linha-de-base.json`), duas repetições por cenário e
+harness. O custo em dólar é o `total_cost_usd` informado pelo Claude Code; Codex e Antigravity não
+informam custo na saída JSON.
+
+### Linha de base por prática
+
+| Prática | Harness | Acertos | Tokens | Custo informado (US$) |
+|---|---|---|---|---|
+| P1-01 (3 cenários) | Claude Code | 6/6 | 684.918 | 2,94 |
+| P1-01 | Codex | 6/6 | 480.612 | não informado |
+| P1-01 | Antigravity | 6/6 | 258.380 | não informado |
+| P2-02 (3 cenários) | Claude Code | 6/6 | 911.746 | 3,48 |
+| P2-02 | Codex | 6/6 | 753.569 | não informado |
+| P2-02 | Antigravity | 6/6 | 479.373 | não informado |
+| DAD-01 (4 cenários) | Claude Code | 8/8 | 5.127.493 | 14,06 |
+| DAD-01 | Codex | 8/8 | 3.211.882 | não informado |
+| DAD-01 | Antigravity | 8/8 | 1.095.211 | não informado |
+
+Por prática: P1-01 18/18 com 1.423.910 tokens; P2-02 18/18 com 2.144.688 tokens; DAD-01 24/24 com
+9.434.586 tokens.
+
+### Cenário duro de DAD-01 (`DAD-01-db-changelog`)
+
+Migration em `db/changelog/`, pasta que o `verificar_pr.py` do scaffold não reconhece; só
+`nao_deve_alterar` e `deve_criar` medem. Ensaio sem agente: nota 0 sem fazer nada, nota 0 editando
+a V2 (apesar de o verificador dizer "nenhum achado"), nota 1 com a execução correta.
+
+| Harness | Repetição | Nota | Tokens | Custo informado (US$) |
+|---|---|---|---|---|
+| Claude Code | 1 | 1 | 712.138 | 1,66 |
+| Claude Code | 2 | 1 | 667.270 | 1,83 |
+| Codex | 1 | 1 | 298.946 | não informado |
+| Codex | 2 | 1 | 284.321 | não informado |
+| Antigravity | 1 | 1 | 137.029 | não informado |
+| Antigravity | 2 | 1 | 117.945 | não informado |
+
+Nas seis, o agente criou uma V3 em `db/changelog/` e um plano em `docs/plans/`, sem tocar a V2.
+
+### Soma do piloto
+
+- 60 execuções, 60 com nota 1.
+- Tokens: 13.003.184 (1.423.910 + 2.144.688 + 9.434.586).
+- Custo informado pelo Claude Code: US$ 20,48 (2,94 + 3,48 + 14,06).
+
+### Limitações
+
+- **Kiro fora da linha de base:** o dono ficou sem créditos no Kiro; a linha de base rodou em
+  Claude Code, Codex e Antigravity. O módulo `otimizacao/harness/kiro.py` segue o formato do plano,
+  sem validação por sonda.
+- **Teto contado com leituras de cache:** o runner soma `input_tokens`,
+  `cache_creation_input_tokens` e `cache_read_input_tokens` do Claude Code, e cada turno relê o
+  cache; por isso as sessões de DAD-01 no Claude Code ficam entre 300 mil e 700 mil tokens, e a
+  soma passa do teto de 10 milhões fixado antes de se saber disso. Em dinheiro, o piloto custou o
+  que está acima.
+- **Codex reexecutado:** com `--sandbox workspace-write` o Codex não conseguia escrever em `.git`
+  (sem branch nem commit), defeito do runner e não do prompt. O runner passou a
+  `--sandbox danger-full-access`, as execuções inválidas do Codex em DAD-01 e P2-02 foram
+  descartadas e refeitas; as tabelas trazem só as refeitas.
+- **Claude Code isolado:** as sessões rodam com `CLAUDE_CONFIG_DIR` num diretório próprio
+  (`~/.claude-laboratorio`), com os plugins sincronizados da conta desligados, para não contaminar
+  a linha de base com plugins e skills do curador.
+
+### GEPA não acionado
+
+Nenhum prompt falhou em nenhum cenário de validação, então nenhum entra no GEPA (F0-D5). O caminho
+alternativo do plano foi seguido: um cenário mais duro para DAD-01, que também passou. O laço
+reflexão → portão está coberto por testes com fakes, não por uma rodada real.
+
+Depois da linha de base, o dono restringiu o escopo (ADR 0008, 2026-10-07): os prompts das práticas
+são medidos a cada release e não otimizados por padrão; a extensão às onze práticas restantes e ao
+`resumo` foi descartada; o GEPA fica para o roteamento do MCP (`buscar_praticas`), as descrições de
+skills e de ferramentas do MCP, a detecção de perfil do CLI e as mensagens das regras.
 
 ## Checkpoint humano
 

@@ -7,7 +7,26 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
-Nada ainda.
+### Adicionado
+
+- Laboratório de eval e otimização dos prompts (`otimizacao/`, ADR 0008), com ambiente Python
+  próprio: cenários por prática com variações de projeto, runner sem interação em Claude Code,
+  Codex, Kiro CLI e Antigravity CLI, métrica com feedback do verificador e otimização pelo GEPA
+  com portão de não regressão.
+- Linha de base de DAD-01, P1-01 e P2-02 em Claude Code, Codex e Antigravity: 54/54 execuções
+  passando, mais o cenário duro `DAD-01-db-changelog` (migrations em `db/changelog/`), 6/6. DAD-01
+  fecha em 24/24, com 9.434.586 tokens e US$ 14,06 informados pelo Claude Code
+  (`otimizacao/resultados/2026-10-07-DAD-01-linha-de-base.json`). Kiro ficou fora por falta de
+  créditos.
+- Ferramenta `gepa` no radar, em `avaliar`.
+- Guia "Otimização reflexiva dos prompts", com a metodologia do laboratório, e as referências que
+  ele cita.
+
+### Alterado
+
+- Escopo do GEPA restrito a quatro alvos (ADR 0008): roteamento do MCP (`buscar_praticas`),
+  descrições de skills e de ferramentas do MCP, detecção de perfil do CLI e mensagens das regras.
+  Os prompts das práticas ficam só medidos a cada release, sem otimização por padrão.
 
 ## [1.1.0] - 2026-10-07
 

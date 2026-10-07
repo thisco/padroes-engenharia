@@ -233,7 +233,7 @@ Catálogo de terceiro só é listado publicamente depois de triagem humana e dos
 verdes. O Agent Hub público do guild.ai lista agentes com nomes de teste de XSS; esse é o
 resultado de publicar sem triagem, e esta spec não o repete.
 
-A avaliação com e sem ganha um laço de **otimização reflexiva por release** ([delta F0](2026-10-07-f0-laboratorio-de-prompts-delta.md), [análise do GEPA](../research/2026-10-07-gepa-como-motor-de-melhoria.md)): o laboratório da F0 roda sobre os cenários de eval, otimiza os textos que o agente lê (prompts das práticas, descrições de ferramentas do MCP e de skills, mensagens das regras) com portão de não regressão, e o candidato entra por MR. Nunca em runtime: o serviço serve o texto da release, e só ele. Custo da ordem de 1 a 4 milhões de tokens por rodada, uma vez por release.
+A avaliação com e sem ganha um laço de **otimização reflexiva por release** ([delta F0](2026-10-07-f0-laboratorio-de-prompts-delta.md), [análise do GEPA](../research/2026-10-07-gepa-como-motor-de-melhoria.md)): o laboratório da F0 roda sobre os cenários de eval, otimiza os textos que o agente lê (roteamento do MCP em `buscar_praticas`, descrições de ferramentas do MCP e de skills, detecção de perfil do CLI, mensagens das regras) com portão de não regressão, e o candidato entra por MR. Os prompts das práticas continuam no eval como medida por release, sem otimização por padrão (decisão de 2026-10-07, ADR 0008). Nunca em runtime: o serviço serve o texto da release, e só ele. Custo da ordem de 1 a 4 milhões de tokens por rodada, uma vez por release.
 
 ## 12. Threat model
 
@@ -303,7 +303,7 @@ spec irmã.
 | **P2 · Serviço MCP remoto e self-hosted** | adaptador sobre graphify HTTP com as três ferramentas, autenticação por tenant, versão fixada por chamada, `compose.yml`, página de instalação, `--mcp remoto` no CLI para os quatro harnesses, transporte remoto do Codex confirmado | PR3, PR4, PR5; critérios 2, 3 e 5 |
 | **P3 · Publicação nos marketplaces** | `padroes-plugins` com o **plugin do Claude Code** (marketplace próprio, `.mcp.json` remoto, skills, `SessionStart`), marketplace do Codex, Power do Kiro, plugin do Antigravity, `.well-known/skills`, PyPI | PR7; critérios 1 e 4; pedido de listagem nos diretórios oficiais enviado onde houver processo |
 | **P4 · Telemetria e painel** | opt-in no CLI, eventos agregados, política de privacidade, painel do tenant, decisão sobre servidor próprio (§5.3) com medição de latência | PR8; critérios 6 e 7 |
-| **P5 · Modelo comercial e eval** | eval com e sem (§11) como aviso, cobertura publicada, otimização reflexiva por release reaproveitando `otimizacao/` da F0, escolha entre as opções do §10 com os dados da P4, ADR | PR9; decisão registrada |
+| **P5 · Modelo comercial e eval** | eval com e sem (§11) como aviso, cobertura publicada, otimização reflexiva por release dos quatro alvos do §11 (roteamento do MCP, descrições de skills e de ferramentas, detecção de perfil do CLI, mensagens das regras) reaproveitando `otimizacao/` da F0, medição dos prompts das práticas, escolha entre as opções do §10 com os dados da P4, ADR | PR9; decisão registrada |
 
 ## 17. Fora de escopo
 

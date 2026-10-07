@@ -32,7 +32,7 @@ como o GEPA consome.
 
 | ID | Decisão |
 |---|---|
-| F0-D1 | **Alvo:** só os blocos `prompt` de `### Para o agente`. A prosa das seções com citação `[ref:]` fica fora: um otimizador não mantém a integridade das citações, e o validador reprovaria. `resumo` e descrições de skills ficam para uma extensão, depois do piloto. |
+| F0-D1 | **Alvo:** só os blocos `prompt` de `### Para o agente`. A prosa das seções com citação `[ref:]` fica fora: um otimizador não mantém a integridade das citações, e o validador reprovaria. **Escopo revisto pelo dono em 2026-10-07, depois da linha de base:** os prompts das práticas são medidos a cada release e **não** são otimizados por padrão; a extensão às onze práticas restantes e ao `resumo` foi descartada. Os alvos de otimização do GEPA passam a ser quatro: o roteamento do MCP (`buscar_praticas`), as descrições de skills e de ferramentas do MCP, a detecção de perfil do CLI e as mensagens das regras (ADR 0008). |
 | F0-D2 | **Piloto:** DAD-01, P1-01 e P2-02. Linha de base medida nos quatro harnesses; otimização só em Claude Code e Codex CLI. Teto de 10 milhões de tokens para o piloto inteiro, imposto pelo runner. |
 | F0-D3 | **Laboratório isolado:** pasta `otimizacao/` com ambiente Python próprio (`dspy==3.4.0`, `gepa==0.1.4`, Python 3.12), nunca importada por `portal/`, `scripts/` ou `tests/` do gerador. O gerador continua sem dependência nova. |
 | F0-D4 | **O harness é o modelo da tarefa.** O adapter do GEPA não chama um LLM: ele roda o prompt no CLI do harness, sem interação, num projeto de teste descartável, e devolve a nota do verificador. O modelo de reflexão é um LLM forte chamado pelo GEPA, fixado no plano. |
@@ -158,8 +158,12 @@ o agente não é determinístico).
 
 ## 6. Fora de escopo
 
-- Prosa das práticas, `resumo`, títulos, descrições de skills, núcleo e descrições de ferramentas
-  do MCP (ficam para a extensão da F0 e para a F5 e P5).
+- Prosa das práticas, `resumo`, títulos e núcleo. A extensão da otimização às onze práticas
+  restantes e ao `resumo` foi descartada em 2026-10-07: os prompts das práticas ficam só medidos,
+  por release, e não otimizados por padrão.
+- Os quatro alvos de otimização (roteamento do MCP em `buscar_praticas`, descrições de skills e de
+  ferramentas do MCP, detecção de perfil do CLI, mensagens das regras) ficam para a F5 e a P5,
+  que reaproveitam o laboratório da F0.
 - Otimização em Kiro e Antigravity (só linha de base).
 - Rodar o laço no CI; na F0 ele roda na máquina do curador.
 - Modelos locais como `reflection_lm`.
@@ -187,9 +191,11 @@ o agente não é determinístico).
 ### Spec de produto, §11 (acrescenta ao fim)
 
 A avaliação com e sem ganha um laço de **otimização reflexiva por release**: o laboratório da F0
-roda sobre os cenários de eval, otimiza os textos que o agente lê (prompts das práticas,
-descrições de ferramentas do MCP e de skills, mensagens das regras) com portão de não regressão,
-e o candidato entra por MR. Nunca em runtime: o serviço serve o texto da release, e só ele.
+roda sobre os cenários de eval, otimiza os textos que o agente lê (roteamento do MCP em
+`buscar_praticas`, descrições de ferramentas do MCP e de skills, detecção de perfil do CLI,
+mensagens das regras) com portão de não regressão, e o candidato entra por MR. Os prompts das
+práticas entram no eval só como medida, sem otimização por padrão. Nunca em runtime: o serviço
+serve o texto da release, e só ele.
 
 ### Spec de produto, §16, fase P5
 
