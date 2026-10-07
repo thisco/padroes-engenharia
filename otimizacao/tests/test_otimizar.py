@@ -3,6 +3,8 @@
 import os
 from pathlib import Path
 
+import pytest
+
 from otimizacao import metrica, projeto
 from otimizacao import otimizar as modulo
 from otimizacao.cenarios import Cenario, Comando, Verificacao
@@ -71,3 +73,81 @@ def test_reflexao_indisponivel_para_antes_de_gastar(tmp_path, monkeypatch):
     assert r["parcial"] is True and r["aprovado"] is False
     assert "reflexão indisponível" in r["motivos"][0]
     assert r["tokens"] == 12 and "candidato" not in r
+
+
+class _Saida:
+    def __init__(self, candidato):
+        self.best_candidate = {modulo.COMPONENTE: candidato}
+
+
+def _preparar(tmp_path, monkeypatch, prompt="Faça {m} X-01"):
+    base = tmp_path / "base"
+    base.mkdir()
+    (base / "AGENTS.md").write_text("", encoding="utf-8")
+    monkeypatch.setitem(projeto.BASES, "fake", base)
+    monkeypatch.setenv("PATH", f"{FALSOS}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.delenv("FALSO_FALHA", raising=False)
+    cenarios = [
+        Cenario(
+            "X-01-a", "X-01", "X-01-prompt-1", "treino", "fake",
+            (), ("touch ok",), {}, Verificacao((Comando("test -f ok", 0),)),
+        ),
+        Cenario(
+            "X-01-b", "X-01", "X-01-prompt-1", "validacao", "fake",
+            (), ("touch ok",), {}, Verificacao((Comando("test -f ok", 0),)),
+        ),
+    ]  # fmt: skip
+    monkeypatch.setattr(modulo, "carregar_cenarios", lambda pasta, pratica: cenarios)
+    monkeypatch.setattr(modulo, "texto_do_prompt", lambda raiz, id_: prompt)
+
+
+def test_run_dir_fica_em_transcricoes_e_nao_em_resultados(tmp_path, monkeypatch):
+    _preparar(tmp_path, monkeypatch)
+    monkeypatch.setattr(modulo, "PASTA_RESULTADOS", tmp_path / "resultados")
+    monkeypatch.setattr(modulo.gepa, "optimize", lambda **kw: _Saida("Faça {m} X-01"))
+    transcricoes = tmp_path / "t"
+    r = modulo.otimizar(tmp_path, "X-01", ["claude-code"], 5, metrica.Teto(100_000), transcricoes)
+    assert r["run_dir"].startswith(str(transcricoes)) and Path(r["run_dir"]).is_dir()
+    assert not list((tmp_path / "resultados").glob("gepa-*"))
+    assert r["parcial"] is False and r["aprovado"] is False  # empate sem encurtar
+
+
+def test_prompt_atual_que_viola_as_proprias_restricoes_aborta(tmp_path, monkeypatch):
+    _preparar(tmp_path, monkeypatch, prompt="Faça {m} sem o id")
+    with pytest.raises(SystemExit, match="o prompt atual não passa nas restrições"):
+        modulo.otimizar(tmp_path, "X-01", ["claude-code"], 5, metrica.Teto(100_000), tmp_path / "t")
+
+
+def test_falha_fatal_na_ultima_iteracao_marca_parcial_e_guarda_candidato(tmp_path, monkeypatch):
+    _preparar(tmp_path, monkeypatch)
+    teto = metrica.Teto(100_000)
+
+    def otimizar_falso(**kw):
+        teto.falha_fatal = RuntimeError("reflexão falhou: x")
+        return _Saida("Faça {m} X-01")
+
+    monkeypatch.setattr(modulo.gepa, "optimize", otimizar_falso)
+    r = modulo.otimizar(tmp_path, "X-01", ["claude-code"], 5, teto, tmp_path / "t")
+    assert r["parcial"] is True and "falha fatal" in r["motivos"][0]
+    assert r["candidato"] == "Faça {m} X-01" and "notas_atual" in r
+
+
+def test_teto_no_portao_final_preserva_baseline_e_candidato(tmp_path, monkeypatch):
+    _preparar(tmp_path, monkeypatch, prompt="Faça X-01 com cuidado e sem pressa")
+    teto = metrica.Teto(100_000)
+
+    def otimizar_falso(**kw):
+        teto.registrar(10**6)
+        return _Saida("Faça X-01 com cuidado e sem pressa ok")
+
+    monkeypatch.setattr(modulo.gepa, "optimize", otimizar_falso)
+    r = modulo.otimizar(tmp_path, "X-01", ["claude-code"], 5, teto, tmp_path / "t")
+    assert r["parcial"] is True and r["candidato"] == "Faça X-01 com cuidado e sem pressa ok"
+    assert "notas_atual" in r and "notas_candidato" not in r
+    _, md = modulo.gravar_relatorio_otimizacao(r, tmp_path / "res")
+    texto = md.read_text(encoding="utf-8")
+    assert (
+        "**parcial: teto de" in texto
+        and "Faça X-01 com cuidado e sem pressa ok" in texto
+        and "| - |" in texto
+    )

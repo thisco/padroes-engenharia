@@ -94,7 +94,8 @@ def otimizar(
     id_prompt = cenarios[0].prompt
     atual = texto_do_prompt(raiz, id_prompt)
     adapter = AdapterHarness(raiz, harnesses, teto, transcricoes, atual=atual, modelo=modelo_treino)
-    run_dir = PASTA_RESULTADOS / f"gepa-{pratica}-{datetime.date.today().isoformat()}"
+    # Fora do git: o GEPA grava estado em pickle e retoma de um gepa_state.bin existente.
+    run_dir = transcricoes / f"gepa-{pratica}-{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}"
     resultado: dict = {
         "pratica": pratica,
         "prompt": id_prompt,
@@ -103,7 +104,13 @@ def otimizar(
         "atual": atual,
         "parcial": False,
         "modelo_treino": modelo_treino,
+        "run_dir": str(run_dir),
     }
+    problemas = restricoes_do_candidato(atual, atual, pratica)
+    if problemas:
+        raise SystemExit(
+            f"{pratica}: o prompt atual não passa nas restrições: {'; '.join(problemas)}"
+        )
     refletir = refletir_com_claude(teto, modelo_reflexao)
     try:
         refletir("Responda apenas a palavra OK.")
@@ -118,7 +125,9 @@ def otimizar(
         )
         return resultado
     try:
+        run_dir.mkdir(parents=True, exist_ok=True)
         notas_atual = _notas(validacao, harnesses, atual, atual, raiz, teto, transcricoes)
+        resultado["notas_atual"] = notas_atual
         saida = gepa.optimize(
             seed_candidate={COMPONENTE: atual},
             trainset=treino,
@@ -134,6 +143,9 @@ def otimizar(
             display_progress_bar=False,
         )
         candidato = saida.best_candidate[COMPONENTE]
+        resultado["candidato"] = candidato
+        if teto.falha_fatal is not None:
+            raise FalhaFatal(f"falha fatal registrada: {teto.falha_fatal}")
         notas_candidato = (
             _notas(validacao, harnesses, candidato, atual, raiz, teto, transcricoes)
             if candidato != atual
@@ -166,29 +178,32 @@ def gravar_relatorio_otimizacao(resultado: dict, pasta: Path) -> tuple[Path, Pat
         f"# Otimização de {resultado['pratica']} ({resultado['prompt']}), {resultado['data']}",
         "",
         f"Harnesses: {', '.join(resultado['harnesses'])} · tokens: {resultado['tokens']}"
-        + (" · **parcial: teto atingido**" if resultado["parcial"] else ""),
+        + (
+            f" · **parcial: {(resultado.get('motivos') or ['parcial'])[0]}**"
+            if resultado["parcial"]
+            else ""
+        ),
         "",
     ]
-    if "candidato" in resultado:
+    if "notas_atual" in resultado:
         linhas += ["| Cenário/harness | Atual | Candidato |", "|---|---|---|"]
+        notas_candidato = resultado.get("notas_candidato", {})
         for k in sorted(resultado["notas_atual"]):
             linhas.append(
-                f"| {k} | {resultado['notas_atual'][k]} | "
-                f"{resultado['notas_candidato'].get(k, '-')} |"
+                f"| {k} | {resultado['notas_atual'][k]} | {notas_candidato.get(k, '-')} |"
             )
+        linhas.append("")
+    motivos = resultado.get("motivos", [])
+    if "aprovado" in resultado:
         linhas += [
-            "",
             f"**Aprovado:** {'sim' if resultado['aprovado'] else 'não'}"
-            + (f" ({'; '.join(resultado['motivos'])})" if resultado["motivos"] else ""),
+            + (f" ({'; '.join(motivos)})" if motivos else ""),
             "",
-            "## Candidato",
-            "",
-            "```prompt",
-            resultado["candidato"],
-            "```",
         ]
+    if "candidato" in resultado:
+        linhas += ["## Candidato", "", "```prompt", resultado["candidato"], "```"]
     else:
-        linhas += [f"Sem candidato: {'; '.join(resultado['motivos'])}"]
+        linhas += [f"Sem candidato: {'; '.join(motivos)}"]
     md.write_text("\n".join(linhas) + "\n", encoding="utf-8")
     return js, md
 
