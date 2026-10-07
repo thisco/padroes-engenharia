@@ -165,8 +165,12 @@ Prompt para ligar os gates e tratar o que eles reprovam:
 Aplique a prática CICD-01 do portal de padrões de engenharia neste repositório. Use um único shell
 ou refaça as variáveis a cada comando.
 
-0. Rode curl -fsS {URL do portal}/.well-known/mecanismos/index.json. Se não responder, pare e me
-   avise. Anote o campo sha256 do arquivo verificar_pr.py.
+O portal tem dois endereços: {URL do portal no host}, que você usa nos comandos rodados no seu
+shell, e {URL do portal no job}, que o job usa de dentro do contêiner Docker (num portal publicado,
+os dois são o mesmo).
+
+0. Rode curl -fsS {URL do portal no host}/.well-known/mecanismos/index.json. Se não responder, pare e
+   me avise. Anote o campo sha256 do arquivo verificar_pr.py.
 1. Crie o .gitlab-ci.yml com um estágio "gates" e três jobs, todos com imagem python:3.11 e
    rules: - if: $CI_PIPELINE_SOURCE == "merge_request_event":
    - lint: pip install --quiet --disable-pip-version-check ruff==0.16.10; ruff check .;
@@ -175,7 +179,7 @@ ou refaça as variáveis a cada comando.
    - verificador-de-pr, com variables GIT_DEPTH "0": guarde ALVO="$CI_MERGE_REQUEST_TARGET_BRANCH_NAME";
      se refs/remotes/origin/$ALVO não existir, git fetch origin
      "+refs/heads/$ALVO:refs/remotes/origin/$ALVO"; confirme com git rev-parse --verify;
-     baixe {URL do portal}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py para
+     baixe {URL do portal no job}/.well-known/mecanismos/sdd-scaffold/verificar_pr.py para
      /tmp/verificar_pr.py com curl -fsSL; confira o SHA-256 anotado no passo 0 com
      echo "<sha256>  /tmp/verificar_pr.py" | sha256sum -c -; só então rode
      python3 -I /tmp/verificar_pr.py --base "origin/$ALVO".
