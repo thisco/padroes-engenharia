@@ -7,6 +7,10 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+Nada ainda.
+
+## [1.0.0] - 2026-10-07
+
 Fase B fechada, fatias B.1 a B.5: 48 práticas em 12 domínios, 4 guias, 8 receitas, 2 starters, 1 caso, as
 apresentações e o radar com 14 fichas, sobre os componentes `sdd-scaffold` 1.7.1 e `sdd-lifecycle` 3.0.0.
 A B.5 fecha os mínimos do §10, trata as pendências das quatro fatias anteriores e traz o motor que elas

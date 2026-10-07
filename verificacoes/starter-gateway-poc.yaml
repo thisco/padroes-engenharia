@@ -107,6 +107,24 @@ execucoes:
     intactos. Isto prova a trava do passo 1, não a instalação: a execução completa do prompt segue pendente
     de máquina ou porta livre. Transcrição em curadoria-a5/transcricoes/starter-gateway-poc-prompt-1.bruta.jsonl.'
   data: '2026-10-06'
+- tipo: prompt
+  prompt: starter-gateway-poc-prompt-1
+  harness: claude-code
+  ambiente: sessão nova em pasta vazia (~/curadoria-a5/b5-starter-gateway-prompt), porta 4000 livre e
+    sem contêiner poc-gateway, poc-db ou poc-ollama; outra PoC no ar com o mesmo nome de projeto compose
+    (governanca-ia-poc), o que levou ao uso de projeto isolado (-p gateway-poc-v010)
+  resultado: falhou
+  motivo: o docker compose up foi negado pelo classificador de permissões da sessão de teste, não pelo
+    prompt nem pelo starter; a execução não passou do passo 4
+  evidencia: 'passos 1 a 3 executados: pré-requisitos conferidos (Compose v5.1.3, git 2.50.1, curl 8.7.1),
+    porta 4000 livre e nomes de contêiner livres, clone da tag v0.1.0 no commit
+    571a091c8a8f9ff99aba89c064d69a36ff195bef, .env criado com chaves novas e ignorado pelo git (git
+    check-ignore). O agente parou antes do up por conta própria ao ver que o projeto compose
+    governanca-ia-poc já existia com volumes de outra PoC, e com o projeto isolado autorizado o up foi
+    negado pelo classificador. Decisão do dono (2026-10-07): merge da fase B sem a prova completa; ela
+    fica como pendência pós-v1, a rodar em máquina sem outra cópia da PoC. Transcrição em
+    curadoria-a5/transcricoes/starter-gateway-poc-prompt-2.bruta.jsonl.'
+  data: '2026-10-07'
 revisao_adversarial:
   revisor: conferente independente, modelo econômico (ADR 0005)
   data: '2026-10-06'

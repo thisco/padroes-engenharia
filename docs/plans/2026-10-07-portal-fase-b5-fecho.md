@@ -94,9 +94,9 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   uma em sessão nova, com o build servido, as duas specs e sem este plano, como na A.5 (M15).
   Relatórios em `docs/research/2026-10-AA-revisao-b5-{frontend,mockups,conteudo}.md`.
 - [x] **T10.** Tratar os achados de T8 e T9 (sem reteste de prompt).
-- [ ] **T11 (merge e tag).** `main` está no merge-base (`6b910a9`): merge por fast-forward,
+- [x] **T11 (merge e tag).** `main` está no merge-base (`6b910a9`): merge por fast-forward,
   tag `v<versão>` anotada. Se o classificador barrar, o comando exato vai ao dono.
-- [ ] **T12.** Checkpoint do dono: fase B fechada.
+- [x] **T12.** Checkpoint do dono: fase B fechada.
 
 ## Evidências
 
@@ -334,3 +334,25 @@ Contagem: 1 alto, 3 médios e 17 baixos.
 - (10) Registros: resolvido para os dez do escopo. Os guias, as quatro receitas, `ferramenta-opentofu`, `ferramenta-pytest` e `pessoas-e-normas` trazem o revisor "conferência em lote (ADR 0005), sessão independente" e os achados por slug (guia 3 com 4, guia 4 com 3). Comparação estrutural do YAML antigo com o novo em todos os 16 arquivos de `verificacoes/` do commit: nenhuma chave nem valor sumiu; só mudaram `revisor`, `data` da revisão e os índices de `afirmacoes` por inserção (brownfield 24→26, harness 29→30, todos os textos antigos presentes; `execucoes` idêntico). Continuam "provisória" cinco registros fora desta lista: `OBS-01`, `OBS-02`, `observabilidade`, `receita-ligar-aplicacao-ao-gateway` e `starter-gateway-poc` — baixo, a T11/checkpoint decide (o do starter depende da prova do `docker compose`).
 - (11) "SGD": parcial. O comando pedido devolve só três linhas, todas em `docs/research/`: `2026-10-07-revisao-b5-mockups.md:32` (relatório que cita a ADR 0006) e `benchmark-portais-praticas-ia.md:31` e `:141` ("SGD" ali é a Secretaria de Governo Digital, um órgão que o benchmark cita, e não o caso). Nenhuma está em guia, receita, ficha, página, caso, motor ou teste (os dois dados de teste ganharam nome neutro em e358df1) — baixo, aceitável se `docs/research/` ficar fora da regra.
 - (12) `validar.py`: resolvido. "validação ok: nenhum erro." sobre o `public/` regenerado. A árvore tem `README.md` e `docs/research/2026-10-07-revisao-b5-frontend.md` modificados por outra tarefa, que não toquei.
+
+## Checkpoint: 2026-10-07
+
+**Aprovou:** o dono do portal ("1 1.0.0, 2 sem, 3 ok, 4 ok"). **Decisões:**
+
+1. **Versão 1.0.0.** O schema de caso mudou (`dono` obrigatório), major pelo `niveis-de-risco.yml`,
+   e a fase B fecha o conteúdo da v1. `CHANGELOG.md` move `[Não publicado]` para `[1.0.0] -
+   2026-10-07`; `portal/config.yml` passa a `1.0.0`.
+2. **Starter `gateway-poc`:** merge sem a prova completa da instalação. O testador executou os
+   passos 1 a 3 com a porta 4000 livre; o `docker compose up` foi negado pelo classificador de
+   permissões da sessão de teste (não pelo prompt). Registrado em `verificacoes/starter-gateway-poc.yaml`
+   como execução `falhou` com motivo; a prova completa é pendência pós-v1.
+3. **Pendências pós-v1** aceitas como listadas na T10 (ficha de conceito com "Práticas", nome na
+   célula da espinha e subtítulo da faixa, roteamento por tarefa, backlog por célula, select do
+   radar a 400px, `BASE:` em YAML e links em HTML bruto na regra de link, `[ref:]` cru nas saídas
+   `.md`, meta de 55 práticas, `pytest-bdd` sem ficha).
+4. **Merge e tag:** fast-forward da branch na `main` e tag anotada `v1.0.0`; os 2 commits da fase A
+   com trailer ficam (decisão de 2026-10-07).
+
+Custo da fatia: estimativa de 4 milhões de tokens, com 5 autores, 7 testadores, a revisão forte do
+motor (opus), o conferente (com reconferência), três revisores de produto (frontend com
+reconferência) e os autores de T7 e T10. Custo da fase B inteira (B.1 a B.5): cerca de 16 milhões.
