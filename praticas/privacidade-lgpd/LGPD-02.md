@@ -15,6 +15,7 @@ revisado_em: 2026-10-06
 revisar_ate: 2027-04-06
 resumo: "CPF e e-mail em claro não vão para fixture de teste, log nem prompt: o dado é mascarado antes do modelo e do log, e o teste usa dado sintético."
 ferramentas_aprovadas: []
+mapeia: [lgpd:art-6]
 exemplos:
   - exemplos/LGPD-02/verificar-dado-em-claro.py
   - exemplos/LGPD-02/antes/tests/fixtures/cliente.json

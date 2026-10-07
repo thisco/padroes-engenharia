@@ -15,6 +15,7 @@ revisado_em: 2026-10-06
 revisar_ate: 2027-04-06
 resumo: "Todo campo de schema entra num registro do projeto com classe e, se for dado pessoal, com a finalidade, antes de a migration existir."
 ferramentas_aprovadas: []
+mapeia: [lgpd:art-6]
 exemplos:
   - exemplos/LGPD-01/V1__cria_cliente.sql
   - exemplos/LGPD-01/dados.md

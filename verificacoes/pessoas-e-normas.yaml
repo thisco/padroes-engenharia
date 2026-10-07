@@ -1,0 +1,41 @@
+conteudo: pessoas-e-normas
+verificado_em: '2026-10-07'
+verificador: agente-curadoria
+afirmacoes:
+- texto: Em sessões típicas, a pessoa toma cerca de 70% das decisões de planejamento e cerca de 20% das de execução.
+  ref: anthropic-claude-code-expertise
+  localizacao: números de decisões de planejamento e de execução nas sessões (já verificados em o-problema)
+  resultado: confirmada
+- texto: Cada sessão começa sem memória da anterior.
+  ref: anthropic-effective-harnesses
+  localizacao: seção sobre sessões sem memória
+  resultado: confirmada
+- texto: Agentes tendem a elogiar o próprio trabalho, e separar quem faz de quem avalia é uma alavanca forte, embora não elimine de imediato a complacência.
+  ref: anthropic-harness-design
+  localizacao: seção sobre separar gerador e avaliador
+  resultado: confirmada
+- texto: A LGPD define dado pessoal e tratamento e exige finalidade e necessidade.
+  ref: lgpd
+  localizacao: art. 5º, I e X; art. 6º, I e III
+  resultado: confirmada
+- texto: A Portaria MGI 3.485 institui a Política de Governança de IA do Ministério e vale para os órgãos do Ministério e usuários do ColaboraGov.
+  ref: portaria-mgi-3485
+  localizacao: texto da notícia (fonte secundária; o texto oficial devolveu 403)
+  resultado: parcial
+  nota: A referência é [S]; o texto da página ressalva que o escopo vem de fonte secundária e não afirma que a portaria obriga quem usa o portal.
+- texto: O PL 2338/2023 foi aprovado no Senado em 2024-12-10, remetido à Câmara em 2025-03-17 e estava em tramitação na Câmara em 2026-10-06.
+  ref: pl-2338-congresso
+  localizacao: campos de situação e notas da referência
+  resultado: confirmada
+- texto: O NIST AI RMF 1.0 foi publicado em 2023-01-26 e é de uso voluntário.
+  ref: nist-ai-rmf
+  localizacao: página do framework, lançamento e frase sobre uso voluntário
+  resultado: confirmada
+- texto: A ISO/IEC 42001:2023, publicada em 2023-12-18, especifica requisitos de um sistema de gestão de IA para organizações que fornecem ou usam produtos e serviços com IA.
+  ref: iso-iec-42001
+  localizacao: página do catálogo da IEC, escopo e data
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "provisória: conferência em lote da B.5 pendente"
+  data: '2026-10-07'
+  achados: []
