@@ -51,6 +51,7 @@ from portal.gerador.exemplos import (
     prompts_de,
     secoes,
 )
+from portal.gerador.gatilhos import mecanismo_de, problemas_da_mensagem, problemas_dos_gatilhos
 from portal.gerador.mecanismos import PASTA as PASTA_MECANISMOS
 from portal.gerador.mecanismos import Mecanismo, carregar_mecanismos
 from portal.gerador.ninhos import PECAS
@@ -521,7 +522,7 @@ MECANISMO_EXTERNO = re.compile(
 )
 TIPOS_FORTES = frozenset({"normativo", "vendor", "padrao-aberto"})
 
-RAIZES_DE_MECANISMO = ("scripts/", "portal/", ".gitlab-ci.yml")
+RAIZES_DE_MECANISMO = ("scripts/", "portal/", "verificadores/", ".gitlab-ci.yml")
 
 
 def normalizar_versao(versao: str) -> str:
@@ -534,24 +535,58 @@ ID_NO_TEXTO = re.compile(r"\b[A-Z][A-Z0-9]*-[0-9]{2}\b")
 
 @regra
 def regra_mecanismo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """Força acima de `orienta` exige mecanismo; todo mecanismo declarado precisa resolver.
+    """Força acima de `orienta` exige mecanismo; todo verificador declarado precisa resolver.
 
-    Formas aceitas: caminho de arquivo dentro do repositório, ou
+    Formas do verificador: caminho de arquivo dentro do repositório, ou
     `<componente>:<caminho>@<versao>` com componente e versão iguais aos de `componentes.yml`.
+    O bloco estruturado pode não ter verificador: os gatilhos bastam (ADR 0009).
     """
     erros: list[Erro] = []
     for p in repo.praticas:
         forca = _texto(p.meta, "forca")
-        mecanismo = _texto(p.meta, "mecanismo")
-        if mecanismo is None:
+        m = mecanismo_de(p.meta)
+        if m is None:
             if forca is not None and forca != "orienta":
                 valor = f"força {forca} sem mecanismo"
                 erros.append(Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO, valor))
             continue
-        problema = _problema_do_mecanismo(mecanismo, contexto)
+        if m.verificador is None:
+            continue
+        problema = _problema_do_mecanismo(m.verificador, contexto)
         if problema:
-            valor = f"{mecanismo}: {problema}"
+            valor = f"{m.verificador}: {problema}"
             erros.append(Erro(p.caminho_relativo, "mecanismo", codigos.R_MECANISMO, valor))
+    return erros
+
+
+@regra
+def regra_gatilhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-GATILHO (spec do motor §6.1): força dura exige gatilho de harness e de Git ou CI;
+    cada gatilho é coerente (ferramenta, comando, caminhos, repetição)."""
+    erros: list[Erro] = []
+    for p in repo.praticas:
+        m = mecanismo_de(p.meta)
+        if m is None:
+            continue
+        for problema in problemas_dos_gatilhos(_texto(p.meta, "forca"), m):
+            erros.append(
+                Erro(p.caminho_relativo, "mecanismo.gatilhos", codigos.R_GATILHO, problema)
+            )
+    return erros
+
+
+@regra
+def regra_mensagem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-MENSAGEM (spec do motor §6.1): o que o agente lê ao ser bloqueado."""
+    erros: list[Erro] = []
+    for p in repo.praticas:
+        m = mecanismo_de(p.meta)
+        if m is None:
+            continue
+        for problema in problemas_da_mensagem(p.chave, m):
+            erros.append(
+                Erro(p.caminho_relativo, "mecanismo.mensagem", codigos.R_MENSAGEM, problema)
+            )
     return erros
 
 
@@ -570,9 +605,13 @@ def _problema_do_mecanismo(mecanismo: str, contexto: Contexto) -> str:
         return "caminho fora do repositório"
     relativo = alvo.relative_to(raiz).as_posix()
     if not any(relativo == r or relativo.startswith(r) for r in RAIZES_DE_MECANISMO):
-        return "caminho interno fora de scripts/, portal/ ou .gitlab-ci.yml"
+        return "caminho interno fora de scripts/, portal/, verificadores/ ou .gitlab-ci.yml"
     if not alvo.is_file():
         return "caminho inexistente"
+    if relativo.startswith("verificadores/"):
+        teste = raiz / "tests" / "verificadores" / f"test_{alvo.stem}.py"
+        if not teste.is_file():
+            return f"sem teste em tests/verificadores/test_{alvo.stem}.py"
     return ""
 
 
@@ -1124,7 +1163,8 @@ def regra_mecanismos_hospedados(
             erros.append(Erro(registro, m.arquivo, codigos.R_MECANISMO_HOSPEDADO, valor))
     origens = {(m.componente, m.origem) for m in hospedados}
     for p in repo.praticas:
-        mecanismo = _texto(p.meta, "mecanismo")
+        m = mecanismo_de(p.meta)
+        mecanismo = m.verificador if m else None
         externo = MECANISMO_EXTERNO.match(mecanismo) if mecanismo else None
         if externo and (externo["componente"], externo["caminho"]) not in origens:
             valor = f"{mecanismo}: arquivo não hospedado em {PASTA_MECANISMOS}/"

@@ -154,5 +154,41 @@ def test_caminho_interno_so_vale_em_scripts_portal_ou_ci(tmp_path):
         ARQUIVO,
         "mecanismo",
         "R-MECANISMO",
-        "docs/nota.md: caminho interno fora de scripts/, portal/ ou .gitlab-ci.yml",
+        "docs/nota.md: caminho interno fora de scripts/, portal/, verificadores/ ou .gitlab-ci.yml",
     )
+
+
+def test_mecanismo_em_bloco_resolve_pelo_verificador(tmp_path):
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "scripts" / "validar.py").write_text("", encoding="utf-8")
+    p = com_mecanismo(fabrica.MECANISMO_BLOQUEIA)
+    assert rodar(regra_mecanismo, [p], tmp_path) == []
+
+
+def test_mecanismo_em_bloco_sem_verificador_e_valido(tmp_path):
+    m = dict(fabrica.MECANISMO_BLOQUEIA, verificador=None)
+    assert rodar(regra_mecanismo, [com_mecanismo(m)], tmp_path) == []
+
+
+def test_mecanismo_em_bloco_com_verificador_inexistente(tmp_path):
+    m = dict(fabrica.MECANISMO_BLOQUEIA, verificador="scripts/nao_existe.py")
+    assert rodar(regra_mecanismo, [com_mecanismo(m)], tmp_path) == [
+        Erro(ARQUIVO, "mecanismo", "R-MECANISMO", "scripts/nao_existe.py: caminho inexistente")
+    ]
+
+
+def test_verificador_em_verificadores_exige_teste(tmp_path):
+    (tmp_path / "verificadores").mkdir()
+    (tmp_path / "verificadores" / "dad_01.py").write_text("", encoding="utf-8")
+    m = dict(fabrica.MECANISMO_BLOQUEIA, verificador="verificadores/dad_01.py")
+    assert rodar(regra_mecanismo, [com_mecanismo(m)], tmp_path) == [
+        Erro(
+            ARQUIVO,
+            "mecanismo",
+            "R-MECANISMO",
+            "verificadores/dad_01.py: sem teste em tests/verificadores/test_dad_01.py",
+        )
+    ]
+    (tmp_path / "tests" / "verificadores").mkdir(parents=True)
+    (tmp_path / "tests" / "verificadores" / "test_dad_01.py").write_text("", encoding="utf-8")
+    assert rodar(regra_mecanismo, [com_mecanismo(m)], tmp_path) == []

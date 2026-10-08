@@ -22,6 +22,8 @@ R_REF_CONJUNTO = "R-REF-CONJUNTO"
 R_REFERENCIA = "R-REFERENCIA"
 R_MECANISMO = "R-MECANISMO"
 R_MECANISMO_HOSPEDADO = "R-MECANISMO-HOSPEDADO"
+R_GATILHO = "R-GATILHO"
+R_MENSAGEM = "R-MENSAGEM"
 R_ADOTAR = "R-ADOTAR"
 R_EVITAR = "R-EVITAR"
 R_VERIFICACAO = "R-VERIFICACAO"
@@ -54,6 +56,8 @@ DESCRICOES: dict[str, str] = {
     R_REFERENCIA: "referência com URL https inválida ou data impossível",
     R_MECANISMO: "força acima de orienta sem mecanismo resolvível",
     R_MECANISMO_HOSPEDADO: "mecanismo hospedado divergente do registro, ou script não hospedado",
+    R_GATILHO: "gatilhos do mecanismo incoerentes com a força ou entre si",
+    R_MENSAGEM: "mensagem do mecanismo ausente, longa, sem ID no início ou sem URL no fim",
     R_ADOTAR: "status adotar sem referência forte nem caso interno",
     R_EVITAR: "status evitar sem indicar a prática que substitui",
     R_VERIFICACAO: "registro de verificação ausente, defasado, incompleto ou sem revisão",
