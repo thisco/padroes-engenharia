@@ -51,7 +51,7 @@ def aprovar(
     ganhou = any(notas_candidato.get(k, 0.0) > v for k, v in notas_atual.items())
     if not ganhou and len(candidato) >= len(atual):
         return False, [
-            "sem ganho em nenhum cenário e maior que o atual "
+            "sem ganho em nenhum cenário e maior ou igual ao atual "
             f"({len(atual)} → {len(candidato)} caracteres)"
         ]
     return True, []

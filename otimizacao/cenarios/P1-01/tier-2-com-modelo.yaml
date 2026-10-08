@@ -15,6 +15,6 @@ verificacao:
       deve_conter: ["todos os planos declaram o tier"]
     - comando: grep -Eq '^> \*\*Tier:\*\* 2' docs/plans/2*.md
       saida_esperada: 0
-  nao_deve_alterar: ["AGENTS.md", "docs/plans/MODELO-plano.md", "docs/steering/*.md"]
+  nao_deve_alterar: ["AGENTS.md", "docs/plans/MODELO-plano.md", "docs/steering/*.md", "scripts/verificar*"]
   deve_criar: ["docs/plans/2*.md"]
   nao_deve_criar: ["src/*", "*.py"]

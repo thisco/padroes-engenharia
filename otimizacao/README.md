@@ -20,3 +20,22 @@ O harness do Claude Code roda com `CLAUDE_CONFIG_DIR` num diretório isolado (pa
 (`CLAUDE_CONFIG_DIR=~/.claude-laboratorio claude login`) e desligue nele os plugins sincronizados da
 conta (`enabledPlugins` com `false` em `settings.json`), para que plugins e skills do curador não
 entrem na medição.
+
+O `pyproject.toml` declara o pacote `otimizacao` (com `otimizacao.harness`) mapeado para esta
+pasta, então a instalação editável deixa `import otimizacao` funcionar de qualquer diretório. Os
+módulos acham cenários, resultados e o catálogo pelo caminho do próprio arquivo; mesmo assim, rode
+os comandos acima a partir da raiz do repositório.
+
+## Segurança
+
+Os três CLIs rodam com as ferramentas aprovadas automaticamente, com o usuário do sistema
+operacional de quem cura: o Claude Code com `--permission-mode acceptEdits` e Bash liberado, o Codex
+com `--sandbox danger-full-access` e o Antigravity com `--dangerously-skip-permissions`. A cópia
+descartável do projeto limita o diretório de trabalho, não o alcance do agente: ele tem shell,
+saída de rede, o ambiente herdado (com todo token exportado no shell), `~/.ssh`, as credenciais de
+nuvem e do `gh` e o `~/.claude-laboratorio` com login feito. No modo de otimização, os prompts
+executados são candidatos gerados por um LLM, não o texto revisado do catálogo.
+
+Recomendação: rode o laboratório com um usuário do sistema dedicado, num contêiner ou numa VM. Uma
+lista de variáveis de ambiente permitidas, repassada aos CLIs no lugar do ambiente inteiro, está
+prevista para a P5.

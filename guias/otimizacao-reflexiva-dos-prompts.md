@@ -47,16 +47,21 @@ do portal. Ele trabalha com quatro peças:
   preparam um projeto de teste descartável com uma variação: um repositório sem remoto, uma pasta de
   migrations com outro nome, uma spec ambígua. Os cenários se dividem em treino e validação.
 - **Runner sem interação.** O runner roda o prompt no harness, dentro da cópia do projeto, sem
-  ninguém para responder. Os quatro harnesses têm esse modo. O Claude Code roda com `claude -p`, e
-  com `--bare` ignora hooks, skills, servidores MCP e qualquer `CLAUDE.md`, do projeto ou do
-  usuário, e não usa o login da assinatura: com a API da Anthropic, pede `ANTHROPIC_API_KEY` ou um
-  `apiKeyHelper`, e os provedores de nuvem usam as próprias credenciais [ref:claude-code-headless]. O Codex roda com `codex exec`, que aceita
-  `--json`, `--sandbox workspace-write`, `--ephemeral` e `--ignore-user-config`
-  [ref:codex-nao-interativo]. O Kiro roda com `kiro-cli chat --no-interactive`, com a chave em
-  `KIRO_API_KEY` e as ferramentas liberadas por `--trust-all-tools`; a chave de API só existe nos
+  ninguém para responder. Os quatro harnesses têm esse modo. O Claude Code roda com `claude -p`
+  [ref:claude-code-headless]; o laboratório não usa `--bare`, porque roda com o login da assinatura
+  e não com chave de API. Em vez disso, cada sessão usa um `CLAUDE_CONFIG_DIR` isolado
+  (`~/.claude-laboratorio`), onde os plugins sincronizados da conta ficam desligados, e anula hooks
+  e servidores MCP por flags (`--settings` com hooks vazios, `--mcp-config` vazio e
+  `--strict-mcp-config`). O Codex roda com `codex exec`, que aceita `--json`, `--ephemeral` e
+  `--ignore-user-config` [ref:codex-nao-interativo]; o laboratório usa `--sandbox
+  danger-full-access`, porque o sandbox `workspace-write` bloqueia escritas em `.git` e o agente não
+  consegue criar branch nem commitar. O Kiro roda com `kiro-cli chat --no-interactive`, com a chave
+  em `KIRO_API_KEY` e as ferramentas liberadas por `--trust-all-tools`; a chave de API só existe nos
   planos Pro, Pro+, Pro Max e Power [ref:kiro-headless], o que condiciona a linha de base no Kiro. O
   Antigravity roda com `agy -p`, e sem credencial em cache sai com erro em vez de esperar
-  [ref:antigravity-headless].
+  [ref:antigravity-headless]; o laboratório o roda com `--dangerously-skip-permissions`. Os três
+  harnesses medidos rodam, portanto, com as ferramentas aprovadas automaticamente; o README de
+  `otimizacao/` descreve o alcance disso e como isolar a máquina.
 - **Verificador como métrica.** Depois do agente, o runner roda o verificador da própria prática
   (por exemplo, o `verificar_pr.py` da DAD-01) e confere os arquivos que deviam ou não mudar. A nota
   é 0 ou 1, e o feedback é sempre um texto: a saída do verificador, o arquivo que não devia ter
@@ -108,8 +113,12 @@ vez, recebe nota 0 sem nem rodar o harness.
 
 Há ainda o custo. Cada avaliação é uma sessão de agente, e a saída JSON do Claude Code traz o custo
 estimado em `total_cost_usd` [ref:claude-code-headless]. O laboratório soma os tokens de todas as
-sessões e da reflexão e para quando a rodada atinge o teto declarado; o piloto inteiro tem teto de
-10 milhões de tokens.
+sessões e da reflexão e para quando a invocação atinge o teto declarado. O teto vale por
+invocação do CLI (2 milhões de tokens por padrão na linha de base, 3 milhões na otimização), não
+pelo piloto inteiro. A meta de 10 milhões de tokens para o piloto não foi cumprida: ele somou
+13,0 milhões, contando as leituras de cache do Claude Code, e US$ 20,48 informados pelo Claude
+Code, sem contar as execuções descartadas do Codex. Cada rodada futura declara o seu teto por
+invocação.
 
 ## Ferramentas
 
@@ -118,15 +127,17 @@ sessões e da reflexão e para quando a rodada atinge o teto declarado; o piloto
   [ref:dspy-gepa].
 - **Harnesses sem interação**: [Claude Code](../ferramentas/claude-code.html),
   [Codex](../ferramentas/codex.html), [Kiro](../ferramentas/kiro.html) e
-  [Antigravity](../ferramentas/antigravity.html). A linha de base roda nos quatro; a otimização do
-  piloto roda só no Claude Code e no Codex.
+  [Antigravity](../ferramentas/antigravity.html). A linha de base do piloto rodou em três: Claude
+  Code, Codex e Antigravity. O Kiro tem runner, mas não rodou, por falta de créditos. A otimização
+  fica para o Claude Code e o Codex.
 
 ## Onde a metodologia mora
 
 A decisão está na ADR 0008 (`docs/adr/0008-otimizacao-reflexiva-dos-prompts.md`), e o código e os
-cenários, em `otimizacao/`. O relatório de cada rodada, com a nota do prompt atual, a do melhor
-candidato, o diff e o custo, fica em `otimizacao/resultados/`. As execuções que passam entram também
-no registro de verificação da prática. A linha de base do piloto nas práticas
+cenários, em `otimizacao/`. O relatório de cada rodada de otimização fica em
+`otimizacao/resultados/`, com a nota do prompt atual e a do candidato por cenário e harness, o
+texto do candidato, os tokens consumidos e o caminho do `run_dir` do GEPA. As execuções que passam
+entram também no registro de verificação da prática. A linha de base do piloto nas práticas
 [DAD-01](../praticas/DAD-01.html), [P1-01](../praticas/P1-01.html) e
 [P2-02](../praticas/P2-02.html) está em `otimizacao/resultados/`: nenhum prompt falhou, e por isso o
 GEPA não foi acionado sobre eles; a ferramenta segue em `avaliar`.

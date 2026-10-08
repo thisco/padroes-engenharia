@@ -36,7 +36,7 @@ def test_empate_so_passa_se_encurtar():
     assert aprovar(ATUAL, "Faça {m} X-01. Passo 1.", NOTAS, NOTAS, "X-01") == (True, [])
     ok, motivos = aprovar(ATUAL, ATUAL + " Passo 5.", NOTAS, NOTAS, "X-01")
     assert not ok and motivos == [
-        "sem ganho em nenhum cenário e maior que o atual (50 → 59 caracteres)"
+        "sem ganho em nenhum cenário e maior ou igual ao atual (50 → 59 caracteres)"
     ]
 
 

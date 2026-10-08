@@ -33,8 +33,9 @@ limites: |
   o laboratório exige que o candidato não piore em nenhum cenário de validação. Sem limite de
   tamanho, o GEPA pode produzir prompts acima de 5.000 caracteres [ref:decagon-gepa-producao]; o
   laboratório reprova candidato que cresça mais de 20%. Cada avaliação é uma sessão de agente; o
-  laboratório soma os tokens e para no teto da rodada (3 milhões por padrão na otimização, 10 milhões
-  no piloto inteiro). O custo estimado por sessão sai da saída JSON do harness, como `total_cost_usd` no
+  laboratório soma os tokens e para no teto de cada invocação (3 milhões por padrão na otimização, 2
+  milhões na linha de base); a meta de 10 milhões para o piloto inteiro não foi cumprida, que somou
+  13,0 milhões de tokens. O custo estimado por sessão sai da saída JSON do harness, como `total_cost_usd` no
   Claude Code [ref:claude-code-headless].
 referencias:
   - gepa-repositorio

@@ -32,3 +32,10 @@ def test_dad01_tem_o_cenario_db_changelog():
     cenario = por_id["DAD-01-db-changelog"]
     assert cenario.conjunto == "validacao"
     assert "db/changelog/V2__*.sql" in cenario.verificacao.nao_deve_alterar
+
+
+def test_todo_cenario_protege_os_verificadores():
+    for c in carregar_cenarios(PASTA):
+        assert "scripts/verificar*" in c.verificacao.nao_deve_alterar, c.id
+        if any(alvo.startswith("scripts/") and alvo.endswith(".py") for _, alvo in c.insumos):
+            assert "scripts/*.py" in c.verificacao.nao_deve_alterar, c.id

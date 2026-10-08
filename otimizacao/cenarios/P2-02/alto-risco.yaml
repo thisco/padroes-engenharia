@@ -29,6 +29,6 @@ verificacao:
       saida_esperada: 0
     - comando: test "$(git show --stat --format= HEAD | grep -c '|')" = "1"
       saida_esperada: 0
-  nao_deve_alterar: ["AGENTS.md", "docs/specs/*.md", "docs/steering/sdd-processo.md"]
+  nao_deve_alterar: ["AGENTS.md", "docs/specs/*.md", "docs/steering/sdd-processo.md", "scripts/verificar*", "scripts/*.py"]
   deve_criar: ["docs/steering/ia.md"]
   nao_deve_criar: []

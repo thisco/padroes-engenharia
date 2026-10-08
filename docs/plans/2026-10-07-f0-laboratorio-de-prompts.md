@@ -2573,6 +2573,10 @@ Nas seis, o agente criou uma V3 em `db/changelog/` e um plano em `docs/plans/`, 
 - 60 execuções, 60 com nota 1.
 - Tokens: 13.003.184 (1.423.910 + 2.144.688 + 9.434.586).
 - Custo informado pelo Claude Code: US$ 20,48 (2,94 + 3,48 + 14,06).
+- As execuções descartadas do Codex (ver Limitações) não entram nesta soma.
+- **Critério 4 do §5 do delta não cumprido:** o piloto passou de 10 milhões de tokens. O `Teto` do
+  runner vale por invocação do CLI (2 milhões por padrão na linha de base), não pelo piloto
+  inteiro; as rodadas futuras declaram o teto por invocação (ADR 0008).
 
 ### Limitações
 

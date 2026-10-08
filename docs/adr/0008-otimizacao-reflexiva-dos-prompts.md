@@ -20,8 +20,10 @@ texto e não compõe em aprendizado contínuo sem controle de regressão.
 4. Portões: só se otimiza o que falha na linha de base; candidato não pode piorar em nenhum
    cenário de validação nem crescer mais de 20%; candidato entra por MR. Teto de tokens por
    rodada, imposto pelo runner.
-5. Execuções que passam entram em `verificacoes/<ID>.yaml`; as que falham ficam no relatório em
-   `otimizacao/resultados/`, porque o schema só registra `passou` e `falhou-como-esperado`.
+5. Execuções que passam entram em `verificacoes/<ID>.yaml`; as que falham ficam, por escolha, só no
+   relatório em `otimizacao/resultados/`, para que o registro de curadoria continue sendo evidência
+   do que passou. O schema (`esquemas/verificacao.schema.json`) aceita `resultado: falhou` com
+   `motivo` obrigatório desde a 1.0.0, e a curadoria pode registrar uma falha assim quando quiser.
 
 ## Consequências
 
@@ -29,7 +31,11 @@ texto e não compõe em aprendizado contínuo sem controle de regressão.
   do piloto.
 - O mesmo laboratório serve à P5 da spec de produto (descrições de ferramentas do MCP, skills,
   mensagens das regras), que o estende em vez de criar outro.
-- Custo do piloto limitado a 10 milhões de tokens; cada rodada futura declara o seu teto.
+- O teto de tokens (`Teto`) vale por invocação do CLI (2 milhões por padrão na linha de base,
+  3 milhões na otimização), não pelo piloto inteiro. A meta de 10 milhões de tokens para o piloto
+  não foi cumprida: o piloto somou 13.003.184 tokens, contando as leituras de cache do Claude Code,
+  e US$ 20,48 informados pelo Claude Code, sem contar as execuções descartadas do Codex. Cada rodada
+  futura declara o seu teto por invocação.
 - **Restrição de escopo (2026-10-07, decisão do dono depois da linha de base):** os prompts das
   práticas são medidos a cada release e não são otimizados por padrão; a extensão às onze práticas
   restantes e ao `resumo` foi descartada. O GEPA fica restrito a quatro alvos: o roteamento do MCP

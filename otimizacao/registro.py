@@ -1,5 +1,6 @@
 """Leva ao registro de curadoria (`verificacoes/<ID>.yaml`) as execuções que passaram, uma entrada
-por harness, no schema `execucao_prompt` do portal. Falhas ficam só no relatório (ADR 0008)."""
+por harness, no schema `execucao_prompt` do portal. Falhas ficam só no relatório por escolha (ADR
+0008, item 5); o schema aceita `resultado: falhou` com `motivo`, que a curadoria registra à mão."""
 
 from __future__ import annotations
 

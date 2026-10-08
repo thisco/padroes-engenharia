@@ -22,6 +22,6 @@ verificacao:
       saida_esperada: 0
     - comando: grep -Eq '^> \*\*Tier:\*\* [0-2]' docs/plans/2*.md && grep -q '^## Rollback' docs/plans/2*.md
       saida_esperada: 0
-  nao_deve_alterar: ["db/migration/V1__*.sql", "db/migration/V2__*.sql"]
+  nao_deve_alterar: ["db/migration/V1__*.sql", "db/migration/V2__*.sql", "scripts/verificar*", "scripts/*.py"]
   deve_criar: ["db/migration/V3__*.sql", "docs/plans/2*.md"]
   nao_deve_criar: []

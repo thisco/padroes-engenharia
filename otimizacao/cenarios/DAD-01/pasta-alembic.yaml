@@ -26,6 +26,6 @@ verificacao:
       saida_esperada: 0
     - comando: grep -Eq '^> \*\*Tier:\*\* [0-2]' docs/plans/2*.md && grep -q '^## Rollback' docs/plans/2*.md
       saida_esperada: 0
-  nao_deve_alterar: ["alembic/versions/0001_*.py", "alembic/versions/0002_*.py"]
+  nao_deve_alterar: ["alembic/versions/0001_*.py", "alembic/versions/0002_*.py", "scripts/verificar*", "scripts/*.py"]
   deve_criar: ["alembic/versions/0003_*.py", "docs/plans/2*.md"]
   nao_deve_criar: []

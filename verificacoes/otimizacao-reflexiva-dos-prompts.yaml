@@ -2,18 +2,20 @@ conteudo: otimizacao-reflexiva-dos-prompts
 verificado_em: '2026-10-07'
 verificador: agente-curadoria
 afirmacoes:
-- texto: o Claude Code roda sem interação com claude -p; com --bare ignora hooks, skills, servidores MCP e qualquer CLAUDE.md, não usa o login da assinatura, pede ANTHROPIC_API_KEY ou apiKeyHelper com a API da Anthropic, e os provedores de nuvem usam as próprias credenciais
+- texto: o Claude Code roda sem interação com claude -p
   ref: claude-code-headless
-  localizacao: seções 'Basic usage' e 'Start faster with bare mode' (parágrafos sobre auto-discovery e credenciais)
+  localizacao: seção 'Basic usage'
   resultado: confirmada
+  nota: Revisão de 2026-10-07, depois da revisão final da fase F0. O guia deixou de atribuir à fonte o isolamento do laboratório; o modo --bare não é usado (o laboratório roda com o login da assinatura), e o CLAUDE_CONFIG_DIR isolado, os plugins desligados e as flags que anulam hooks e MCP são escolhas do laboratório, sem citação.
 - texto: a saída JSON do Claude Code traz o custo estimado em total_cost_usd
   ref: claude-code-headless
   localizacao: seção 'Pipe data through Claude', parágrafo sobre --output-format json ('client-side estimates')
   resultado: confirmada
-- texto: o Codex roda sem interação com codex exec, que aceita --json, --sandbox workspace-write, --ephemeral e --ignore-user-config
+- texto: o Codex roda sem interação com codex exec, que aceita --json, --ephemeral e --ignore-user-config
   ref: codex-nao-interativo
   localizacao: abertura da página e descrição das flags
   resultado: confirmada
+  nota: Revisão de 2026-10-07, depois da revisão final da fase F0. O guia tirou --sandbox workspace-write da afirmação citada; o uso de --sandbox danger-full-access, porque o workspace-write bloqueia escritas em .git, é observação do laboratório, sem citação.
 - texto: o Kiro roda com kiro-cli chat --no-interactive, com a chave em KIRO_API_KEY e as ferramentas liberadas por --trust-all-tools
   ref: kiro-headless
   localizacao: seções de autenticação, execução e autorização de ferramentas
@@ -94,3 +96,12 @@ revisao_adversarial:
   - afirmacao: O Kiro roda com `kiro-cli chat --no-interactive`, com a chave em `KIRO_API_KEY` [ref:kiro-headless]
     problema: correto, mas omite que a fonte restringe a chave de API aos planos Pro, Pro+, Pro Max e Power, o que condiciona a linha de base no Kiro
     tratamento: o texto acrescenta a restrição de plano
+  - afirmacao: O Claude Code roda com `claude -p`, e com `--bare` ignora hooks, skills, servidores MCP e qualquer `CLAUDE.md` [ref:claude-code-headless]
+    problema: revisão final da fase F0 (2026-10-07); o laboratório não usa --bare, e o texto dava a entender que o isolamento vinha da flag citada
+    tratamento: o guia foi revisado em 2026-10-07 e descreve o isolamento real (CLAUDE_CONFIG_DIR isolado, plugins desligados, hooks e MCP anulados por flags), sem atribuí-lo à fonte; a citação fica só para claude -p
+  - afirmacao: O Codex roda com `codex exec`, que aceita `--json`, `--sandbox workspace-write`, `--ephemeral` e `--ignore-user-config` [ref:codex-nao-interativo]
+    problema: revisão final da fase F0 (2026-10-07); o laboratório roda o Codex com --sandbox danger-full-access, porque o workspace-write bloqueia escritas em .git
+    tratamento: o guia cita a fonte só para codex exec, --json, --ephemeral e --ignore-user-config e diz, sem citação, que o laboratório usa danger-full-access e por quê
+  - afirmacao: A linha de base roda nos quatro; o relatório traz o diff e o custo; o piloto inteiro tem teto de 10 milhões de tokens
+    problema: revisão final da fase F0 (2026-10-07); a linha de base rodou em três harnesses (Kiro sem créditos), o relatório não traz diff nem custo em dólar e o teto vale por invocação, com o piloto em 13,0 milhões de tokens
+    tratamento: o guia corrige os três pontos; não são afirmações citadas

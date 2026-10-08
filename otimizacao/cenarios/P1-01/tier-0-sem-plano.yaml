@@ -12,7 +12,7 @@ verificacao:
   comandos:
     - comando: bash scripts/verificar-tier.sh .
       saida_esperada: 0
-  nao_deve_alterar: ["AGENTS.md", "README.md"]
+  nao_deve_alterar: ["AGENTS.md", "README.md", "scripts/verificar*"]
   deve_criar: []
   nao_deve_criar: ["docs/plans/2*.md"]
   resposta_deve_conter: ['tier\W*0\b']
