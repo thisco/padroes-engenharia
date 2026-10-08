@@ -104,3 +104,28 @@ def test_legenda_de_status_em_grade():
     css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
     assert re.search(r"\.legenda-status\s*\{[^}]*display:\s*grid", css)
     assert re.search(r"\.st\.adotar\s*\{", css) and re.search(r"\.st\.evitar\s*\{", css)
+
+
+PUBLICADA = "Classificar toda mudança em tier antes de codar"
+
+
+def test_candidata_ja_publicada_como_pratica_nao_aparece():
+    from portal.gerador.renderizar import candidatas_do_dominio
+
+    dominio = Conteudo(
+        "dominio",
+        "praticas/construir-com-ia/_dominio.md",
+        fabrica.meta_dominio(
+            candidatas=[
+                {"titulo": PUBLICADA, "momento": "antes-de-escrever"},
+                {
+                    "titulo": "classificar TODA mudanca em tier, antes de codar.",
+                    "momento": "enquanto-escreve",
+                },
+                {"titulo": "Plano com checkboxes", "momento": "enquanto-escreve"},
+            ]
+        ),
+        "",
+    )
+    s = fabrica.site(dominio, fabrica.pratica(), fabrica.referencia())
+    assert candidatas_do_dominio(s, dominio) == ["Plano com checkboxes (Enquanto escreve)"]

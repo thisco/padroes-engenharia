@@ -5,13 +5,6 @@ descricao: "Como o time prova que a mudança funciona: teste que falha antes de 
 steering: [qualidade]
 skills: []
 referencias: [sdd-scaffold-steering-qualidade, sdd-scaffold-steering-troubleshooting]
-candidatas:
-  - titulo: Lógica começa por um teste que falha, com as duas execuções no plano
-    momento: enquanto-escreve
-  - titulo: Bug vira teste que reproduz o defeito, depois vira regra
-    momento: depois-da-entrega
-  - titulo: "Validação local rígida: o que o CI roda, roda antes do push"
-    momento: antes-do-merge
 revisado_em: 2026-10-07
 ---
 

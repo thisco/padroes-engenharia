@@ -24,6 +24,10 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Alterado
 
+- Páginas de domínio: a seção "Práticas candidatas, ainda sem texto" deixa de listar práticas já
+  publicadas. As candidatas cobertas saíram dos `_dominio.md` de onze domínios, e o gerador esconde a
+  candidata cujo título coincide com o de uma prática do domínio, para a lista não voltar a envelhecer.
+
 - Menu Entender ganha o item "Otimização dos prompts", que leva ao guia da otimização
   reflexiva (ADR 0008); antes ele só aparecia em Comece aqui › Para entender antes.
 

@@ -6,18 +6,8 @@ steering: [seguranca]
 skills: [threat-model]
 referencias: [azure-apim-ai-gateway, sdd-scaffold-readme]
 candidatas:
-  - titulo: Classificar escopo (P2) e agência (P3)
-    momento: antes-de-escrever
   - titulo: Ameaças OWASP LLM e de agentes
     momento: antes-de-escrever
-  - titulo: Dado pessoal mascarado antes do modelo
-    momento: enquanto-escreve
-  - titulo: Evals como teste no CI
-    momento: antes-do-merge
-  - titulo: MCP fechado por padrão
-    momento: antes-do-merge
-  - titulo: Custo por chave virtual
-    momento: depois-da-entrega
 revisado_em: 2026-10-04
 ---
 

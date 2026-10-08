@@ -5,15 +5,6 @@ descricao: "Como as decisões de estrutura viram registro, desenho e regra chec�
 steering: [arquitetura]
 skills: [arquitetura-viva]
 referencias: [sdd-scaffold-arquitetura-viva, nygard-adr, cockburn-hexagonal, c4model-diagramas]
-candidatas:
-  - titulo: Decisão de arquitetura vira ADR antes do código
-    momento: antes-de-escrever
-  - titulo: "Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR"
-    momento: antes-do-merge
-  - titulo: "Portas e adaptadores: o domínio não importa framework, e o linter impõe"
-    momento: enquanto-escreve
-  - titulo: C4 em dois níveis como fonte, não como ilustração
-    momento: antes-de-escrever
 revisado_em: 2026-10-07
 ---
 

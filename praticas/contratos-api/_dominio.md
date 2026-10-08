@@ -8,10 +8,6 @@ referencias: [openapi-spec]
 candidatas:
   - titulo: Contrato gerado do código ou código gerado do contrato
     momento: antes-de-escrever
-  - titulo: Contrato de API versionado, com mudança incompatível em versão nova e ADR
-    momento: antes-de-escrever
-  - titulo: Teste de contrato no CI, que reprova a quebra no merge
-    momento: antes-do-merge
 revisado_em: 2026-10-06
 ---
 

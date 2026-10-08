@@ -6,10 +6,6 @@ steering: [seguranca]
 skills: [threat-model]
 referencias: [lgpd]
 candidatas:
-  - titulo: Classifique o dado pessoal antes de escrever
-    momento: antes-de-escrever
-  - titulo: Dado pessoal não entra em prompt, log nem teste sem máscara
-    momento: enquanto-escreve
   - titulo: RIPD antes do tratamento de alto risco
     momento: antes-de-escrever
 revisado_em: 2026-10-06
