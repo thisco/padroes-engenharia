@@ -2278,12 +2278,130 @@ o tamanho em caracteres do núcleo do perfil de três domínios.
 
 ## Evidências
 
-(preenchido na execução)
+Estado final da branch `feat/2026-10-08-motor-f1` (commit base 620fc84, antes do commit desta tarefa), em 2026-10-08.
+
+| Verificação | Resultado |
+|---|---|
+| `.venv/bin/python -m pytest -q` | 831 passed in 55.24s |
+| `.venv/bin/ruff check .` | All checks passed! |
+| `.venv/bin/ruff format --check .` | 351 files already formatted |
+| `.venv/bin/python scripts/validar.py` | validação ok: nenhum erro. |
+| dois `scripts/gerar.py --saida` (pastas `a` e `b`) e `diff -r a b` | saída vazia (build determinístico) |
+
+### `python3 pacote/consultar.py "migration já aplicada"`
+
+```text
+DAD-01 · Migration já aplicada não se edita · bloqueia · dados-migrations × antes-do-merge · http://localhost:8000/praticas/DAD-01.md
+  vizinhos: ARQ-01, CICD-01, DAD-02, LGPD-01, P1-01, P1-03, ferramenta:alembic, ferramenta:flyway, ferramenta:sdd-scaffold, skill:migrations-reversiveis
+DAD-02 · Expanda e contraia: a mudança de schema em duas etapas compatíveis · orienta · dados-migrations × enquanto-escreve · http://localhost:8000/praticas/DAD-02.md
+  vizinhos: DAD-01, IAC-01, IAC-03, ferramenta:alembic, ferramenta:flyway, skill:migrations-reversiveis
+LGPD-01 · Classifique o dado pessoal antes de escrever · orienta · privacidade-lgpd × antes-de-escrever · http://localhost:8000/praticas/LGPD-01.md
+  vizinhos: DAD-01, LGPD-02
+```
+
+(753 caracteres, cerca de 190 tokens; limite de 1.500 tokens.)
+
+### `python3 pacote/consultar.py --dominio construir-com-ia | head`
+
+```text
+P1-01 · Classificar toda mudança em tier antes de codar · orienta · construir-com-ia × antes-de-escrever · http://localhost:8000/praticas/P1-01.md
+  vizinhos: DAD-01, P1-03, P1-04, P1-05, P1-06, P1-08, P1-09, QLD-01, ferramenta:antigravity, ferramenta:claude-code, ferramenta:codex, ferramenta:copilot, ferramenta:kiro, ferramenta:sdd-lifecycle, ferramenta:sdd-scaffold, skill:sdd-lifecycle
+P1-03 · Mantenha a constituição curta e carregada em todo turno · orienta · construir-com-ia × antes-de-escrever · http://localhost:8000/praticas/P1-03.md
+  vizinhos: CICD-01, DAD-01, P1-01, P1-07, QLD-03, ferramenta:claude-code, ferramenta:codex, ferramenta:gitlab-ci-local, ferramenta:sdd-scaffold, skill:sdd-lifecycle, steering:sdd-processo
+P1-04 · Escreva a spec como delta da mudança · orienta · construir-com-ia × antes-de-escrever · http://localhost:8000/praticas/P1-04.md
+  vizinhos: P1-01, P1-05, P1-06, P1-08, P1-10, P1-11, ferramenta:claude-code, ferramenta:codex, ferramenta:sdd-lifecycle, ferramenta:sdd-scaffold, skill:sdd-lifecycle
+P1-05 · Marque a ambiguidade na spec e resolva antes do plano · avisa · construir-com-ia × antes-de-escrever · http://localhost:8000/praticas/P1-05.md
+  vizinhos: P1-01, P1-04, P1-06, ferramenta:claude-code, ferramenta:codex, ferramenta:sdd-lifecycle, ferramenta:sdd-scaffold, skill:sdd-lifecycle
+P1-06 · Registre quem aprovou a spec antes do plano · avisa · construir-com-ia × antes-de-escrever · http://localhost:8000/praticas/P1-06.md
+  vizinhos: P1-01, P1-04, P1-05, P1-09, ferramenta:claude-code, ferramenta:codex, ferramenta:sdd-lifecycle, ferramenta:sdd-scaffold, skill:sdd-lifecycle
+```
+
+### Núcleo do perfil de três domínios
+
+`construir-com-ia`, `dados-migrations` e `seguranca`: **1.137 caracteres** (1.165 bytes, 16 linhas, cerca de
+284 tokens), contra a meta de 2.500 tokens, 100 linhas e 8 KB.
+
+### Pacote real: DAD-01 em `regras.json`, `nucleo/celulas` e `nucleo/hooks` (passo 3 da Tarefa 12)
+
+`pacote/regras.json` traz a DAD-01 com 3 gatilhos (`antes-de-ferramenta`, `pre-commit` e `ci`) e a mensagem
+com a URL do portal já resolvida (aqui `http://localhost:8000`, a `url_base` padrão do build local):
+
+```json
+{
+  "dominio": "dados-migrations",
+  "forca": "bloqueia",
+  "gatilhos": [
+    {
+      "caminhos": [
+        "**/migration/**",
+        "**/migrations/**",
+        "**/alembic/versions/**"
+      ],
+      "comando": null,
+      "evento": "antes-de-ferramenta",
+      "ferramenta": [
+        "editar",
+        "escrever"
+      ]
+    },
+    {
+      "caminhos": [
+        "**/migration/**",
+        "**/migrations/**",
+        "**/alembic/versions/**"
+      ],
+      "comando": null,
+      "evento": "pre-commit",
+      "ferramenta": []
+    },
+    {
+      "caminhos": [],
+      "comando": null,
+      "evento": "ci",
+      "ferramenta": []
+    }
+  ],
+  "id": "DAD-01",
+  "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: http://localhost:8000/praticas/DAD-01.md#como-aplicar",
+  "momento": "antes-do-merge",
+  "url": "http://localhost:8000/praticas/DAD-01.md",
+  "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+}
+```
+
+`pacote/nucleo/celulas/dados-migrations.md`, linha da DAD-01 com `bloqueia`:
+
+```text
+- DAD-01 · Migration já aplicada não se edita · bloqueia
+- dados-migrations: 1 prática orienta; consulte `padroes rota --dominio dados-migrations`
+```
+
+`pacote/nucleo/hooks/dados-migrations.txt`:
+
+```text
+DAD-01
+```
 
 ## Checkpoint humano
 
-1. **Aprovar a F1** e a versão minor (1.2.0) da próxima release.
-2. **Ordem das próximas fases**: pelo delta, o que paga mais em seguida é o CLI de instalação (F4), que
-   leva o núcleo, o pacote e o `consultar.py` aos projetos; o runtime de hook (F2) só tem a DAD-01 como
-   regra dura. Decidir se a F4 vem antes da F2.
-3. **Curadoria em paralelo**: quais práticas `orienta` merecem força dura com mecanismo (F1E-D5).
+1. **Aprovar a F1** e a versão minor (**1.2.0**) da próxima release (ADR 0007: acréscimo compatível de schema).
+2. **Ordem das próximas fases**: proposta da análise da F1, **F4 antes da F2**. O CLI de instalação leva o
+   núcleo, o pacote e o `consultar.py` aos projetos; o runtime de hook (F2) só tem a DAD-01 como regra dura.
+   Decidir se a F4 vem antes da F2.
+3. **Curadoria em paralelo** (F1E-D5): quais práticas `orienta` merecem força dura com mecanismo. Hoje o catálogo
+   tem 1 `bloqueia`, 5 `avisa` e 42 `orienta`.
+4. **Requisitos herdados pela F2** (e pela F4, quando indicado):
+   - `verificar_pacote` robusto a manifesto adulterado: chave com `..` ou absoluta e JSON malformado devem
+     virar `Erro`, não exceção.
+   - Pacote anexado como asset de `release:` em vez de artefato do job.
+   - Membros do tar com prefixo `./` (efeito do `tar -C public/pacote .`): o consumidor precisa tolerá-lo.
+   - Quem chama `compor_bloco` passa os domínios na ordem da espinha, sem repetição.
+   - Semântica gatilho/verificador: o gatilho só diz quando o verificador roda; quem decide negar é o
+     verificador (ex.: `verificar_pr.py` decide "migration já aplicada" contra a branch de destino), nunca o
+     casamento do glob. Está na spec do motor (§6.5) e na ADR 0009.
+5. **Busca léxica do `consultar.py`** fraca em pergunta genérica ("revisão de código por IA") e sem radical
+   ("migração" não casa com "migration"). Não é defeito da F1: é alvo do GEPA no roteamento (escopo aprovado
+   pelo dono na ADR 0008).
+6. **Ambiente**: o repositório fica em `~/Documents`, sincronizado pelo iCloud, que criou cópias
+   "arquivo 2.py" (duas entraram num commit e foram removidas). Recomenda-se mover o repositório para fora do
+   iCloud.

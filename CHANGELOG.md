@@ -21,11 +21,20 @@ retirado, minor para conteúdo novo, patch para texto e links.
 - Ferramenta `gepa` no radar, em `avaliar`.
 - Guia "Otimização reflexiva dos prompts", com a metodologia do laboratório, e as referências que
   ele cita.
+- Mecanismo estruturado da prática (`verificador`, `gatilhos`, `mensagem`), com as regras `R-GATILHO`,
+  `R-MENSAGEM`, `R-NUCLEO`, `R-SKILL-ORCAMENTO` e `R-PACOTE` (ADR 0009). A forma antiga continua válida
+  como gatilho `ci` implícito.
+- Pacote de distribuição em `public/pacote/`: manifesto com sha256, `plugin.json`, `regras.json`,
+  núcleo por domínio, skills, roteamento, grafo do catálogo (`grafo/graph.json`) e `consultar.py`, que
+  responde por ponteiros dentro de um orçamento de tokens sem nenhuma dependência.
+- DAD-01 declara gatilhos de harness, pre-commit e CI.
 
 ### Alterado
 
 - Menu Entender ganha o item "Otimização dos prompts", que leva ao guia da otimização
   reflexiva (ADR 0008); antes ele só aparecia em Comece aqui › Para entender antes.
+- Ficha da prática resume o mecanismo em bloco em vez de imprimir o valor cru.
+- A checagem de links confere o verificador externo também quando o mecanismo está em bloco.
 
 - Escopo do GEPA restrito a quatro alvos (ADR 0008): roteamento do MCP (`buscar_praticas`),
   descrições de skills e de ferramentas do MCP, detecção de perfil do CLI e mensagens das regras.
