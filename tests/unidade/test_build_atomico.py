@@ -154,3 +154,15 @@ def test_excecao_na_geracao_preserva_a_saida_anterior(repo_minimo, tmp_path, mon
         construir(repo_minimo, saida, **PARAMETROS)
     assert (saida / "index.html").read_text(encoding="utf-8") == "anterior"
     assert not (tmp_path / "public.tmp").exists()
+
+
+def test_pacote_reprovado_preserva_a_saida_anterior(repo_minimo, tmp_path, monkeypatch):
+    saida = tmp_path / "public"
+    escrever(saida, "index.html", "anterior")
+    erro = Erro("pacote/regras.json", "manifesto", "R-PACOTE", "sha256 x difere do manifesto (y)")
+    monkeypatch.setattr(build, "verificar_pacote", lambda pasta: [erro])
+    assert construir(repo_minimo, saida, **PARAMETROS) == [erro]
+    assert (saida / "index.html").read_text(encoding="utf-8") == "anterior"
+    assert sorted(p.name for p in saida.iterdir()) == ["index.html"]
+    assert not (tmp_path / "public.tmp").exists()
+    assert not (tmp_path / "public.old").exists()

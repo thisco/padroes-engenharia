@@ -17,7 +17,7 @@ from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
 from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes
-from portal.gerador.saidas import dados_roteamento, para_json
+from portal.gerador.saidas import _de, dados_roteamento, para_json
 
 PASTA_PACOTE = "pacote"
 VERSAO_FORMATO_PACOTE = 1
@@ -28,16 +28,16 @@ def plugin_json(site: Site) -> dict[str, Any]:
     """Manifesto Agent Plugins 1.0: só `$schema` e `name` são padronizados; os demais campos
     são os que Codex e Kiro Powers leem."""
     faixas = [f.slug for f in site.espinha.faixas]
-    return {
+    dados: dict[str, Any] = {
         "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         "name": NOME_PLUGIN,
         "version": site.versao,
-        "description": (
-            f"{site.nome}: práticas com força, roteamento e skills, de {site.organizacao}."
-        ),
-        "author": {"name": site.organizacao},
+        "description": f"{site.nome}: práticas com força, roteamento e skills{_de(site)}.",
         "keywords": ["padroes", "engenharia", "sdd", *faixas],
     }
+    if site.organizacao:
+        dados["author"] = {"name": site.organizacao}
+    return dados
 
 
 def montar_pacote(site: Site) -> dict[str, bytes]:
@@ -57,8 +57,10 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
     for s in site.repo.skills:
         pasta = (site.raiz / s.caminho_relativo).parent
         for arquivo in sorted(pasta.rglob("*")):
-            if arquivo.is_file() and not arquivo.is_symlink():
-                relativo = arquivo.relative_to(pasta).as_posix()
+            partes = arquivo.relative_to(pasta).parts
+            oculto = any(p.startswith(".") or p == "__pycache__" for p in partes)
+            if arquivo.is_file() and not arquivo.is_symlink() and not oculto:
+                relativo = "/".join(partes)
                 arquivos[f"skills/{s.chave}/{relativo}"] = arquivo.read_bytes()
     for constituicao in constituicoes(site):
         arquivos[f"constituicao/{Path(constituicao).name}"] = (

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from dataclasses import replace
 
 from portal.gerador.erros import Erro
 from portal.gerador.pacote import (
@@ -58,11 +59,33 @@ def test_pacote_tem_as_entradas_da_f1_e_leva_a_skill_inteira(repo_minimo):
 
 
 def test_plugin_json_segue_agent_plugins(repo_minimo):
-    dados = plugin_json(_site(repo_minimo))
+    site = _site(repo_minimo)
+    dados = plugin_json(site)
     assert dados["$schema"] == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
     assert dados["name"] == "padroes-engenharia"
     assert dados["version"] == "0.1.0"
-    assert "keywords" in dados and "description" in dados
+    assert dados["author"] == {"name": site.organizacao}
+    assert dados["description"].endswith(f"skills de {site.organizacao}.")
+    assert "keywords" in dados
+
+
+def test_plugin_json_sem_organizacao_omite_autor(repo_minimo):
+    site = replace(_site(repo_minimo), organizacao="")
+    dados = plugin_json(site)
+    assert "author" not in dados
+    assert dados["description"].endswith("skills.") and " de ." not in dados["description"]
+
+
+def test_pacote_nao_leva_arquivos_ocultos_nem_pycache(repo_minimo):
+    site = _site(repo_minimo)
+    pasta = repo_minimo / "skills" / "curadoria-de-pratica"
+    (pasta / ".DS_Store").write_bytes(b"x")
+    (pasta / "references" / ".oculto.md").write_text("x", encoding="utf-8")
+    (pasta / "__pycache__").mkdir()
+    (pasta / "__pycache__" / "x.pyc").write_bytes(b"x")
+    arquivos = montar_pacote(site)
+    assert not [c for c in arquivos if ".DS_Store" in c or "__pycache__" in c or "/." in c]
+    assert "skills/curadoria-de-pratica/references/guia.md" in arquivos
 
 
 def test_manifesto_lista_todo_arquivo_com_sha256(repo_minimo):
