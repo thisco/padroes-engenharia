@@ -122,3 +122,31 @@ def test_mensagem_sem_quebra_de_linha_e_ate_400():
     assert problemas_da_mensagem("P1-01", _m(mensagem=longa)) == [
         f"mensagem com {len(longa)} caracteres; o limite é 400"
     ]
+
+
+@pytest.mark.parametrize("escalar", [5, True, "ci"])
+def test_gatilhos_escalar_degrada_sem_excecao(escalar):
+    m = mecanismo_de({"mecanismo": {"verificador": "v", "gatilhos": escalar}})
+    assert m.gatilhos == ()
+
+
+def test_ferramenta_e_caminhos_que_nao_sao_lista_viram_vazios():
+    bloco = {"gatilhos": [{"evento": "antes-de-ferramenta", "ferramenta": "shell", "caminhos": 7}]}
+    (g,) = mecanismo_de({"mecanismo": bloco}).gatilhos
+    assert g.ferramenta == ()
+    assert g.caminhos == ()
+    bloco = {"gatilhos": [{"evento": "pre-commit", "ferramenta": 3, "caminhos": "a/**"}]}
+    (g,) = mecanismo_de({"mecanismo": bloco}).gatilhos
+    assert g.ferramenta == () and g.caminhos == ()
+
+
+def test_item_nao_dict_e_ignorado_e_evento_ausente_vira_vazio():
+    bloco = {"gatilhos": ["ci", {"ferramenta": ["shell"]}, {"evento": 3}]}
+    m = mecanismo_de({"mecanismo": bloco})
+    assert [g.evento for g in m.gatilhos] == ["", ""]
+
+
+def test_avisa_sem_gatilho():
+    sem = MecanismoDaPratica("scripts/validar.py", (), None)
+    assert problemas_dos_gatilhos("avisa", sem) == ["força avisa exige pelo menos um gatilho"]
+    assert problemas_dos_gatilhos(None, sem) == []

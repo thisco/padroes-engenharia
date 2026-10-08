@@ -49,7 +49,7 @@ def mecanismo_de(meta: dict[str, Any]) -> MecanismoDaPratica | None:
         return MecanismoDaPratica(valor, (Gatilho("ci"),), None, implicito=True)
     if not isinstance(valor, dict):
         return None
-    gatilhos = tuple(_gatilho(g) for g in valor.get("gatilhos") or [] if isinstance(g, dict))
+    gatilhos = tuple(_gatilho(g) for g in _lista(valor.get("gatilhos")) if isinstance(g, dict))
     verificador = valor.get("verificador")
     mensagem = valor.get("mensagem")
     return MecanismoDaPratica(
@@ -59,12 +59,18 @@ def mecanismo_de(meta: dict[str, Any]) -> MecanismoDaPratica | None:
     )
 
 
+def _lista(valor: Any) -> list[Any]:
+    """Só lista vale; escalar ou string (typo de YAML) vira vazio e o schema reporta."""
+    return valor if isinstance(valor, list) else []
+
+
 def _gatilho(dados: dict[str, Any]) -> Gatilho:
     comando = dados.get("comando")
+    evento = dados.get("evento")
     return Gatilho(
-        evento=str(dados.get("evento", "")),
-        ferramenta=tuple(f for f in dados.get("ferramenta") or [] if isinstance(f, str)),
-        caminhos=tuple(c for c in dados.get("caminhos") or [] if isinstance(c, str)),
+        evento=evento if isinstance(evento, str) else "",
+        ferramenta=tuple(f for f in _lista(dados.get("ferramenta")) if isinstance(f, str)),
+        caminhos=tuple(c for c in _lista(dados.get("caminhos")) if isinstance(c, str)),
         comando=comando if isinstance(comando, str) else None,
     )
 
