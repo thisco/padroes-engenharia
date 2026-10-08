@@ -160,7 +160,11 @@ def repo_exemplo(repo_minimo: Path) -> Path:
                 },
                 {"evento": "ci"},
             ],
-            "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: {URL do portal}/praticas/DAD-01.md#como-aplicar",
+            "mensagem": (
+                "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência"
+                " e declare o rollback no plano."
+                " Como aplicar: {URL do portal}/praticas/DAD-01.md#como-aplicar"
+            ),
         },
     )
     exemplo = (
