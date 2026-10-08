@@ -1,3 +1,4 @@
+# verificado_em 2026-10-08 (rodada de correção 1 da curadoria de força dura): as afirmações externas não mudaram nesta rodada e foram verificadas em 2026-10-06
 # prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão do dono)
 conteudo: LGPD-02
 verificado_em: '2026-10-08'
@@ -104,10 +105,10 @@ execucoes:
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: verificadores/lgpd_02.py
-  comando: python3 -I verificadores/lgpd_02.py --evento pre-commit | ci --base HEAD~1 | antes-de-ferramenta (JSON no stdin), sobre exemplos/LGPD-02/antes e depois num repositório Git temporário; pytest -q tests/verificadores/test_lgpd_02.py
-  ambiente: repositório Git novo em /tmp/cfd-t2-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (T2 da curadoria de força dura)
+  comando: python3 -I verificadores/lgpd_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre exemplos/LGPD-02/antes e depois num repositório Git temporário; pytest -q tests/verificadores/test_lgpd_02.py
+  ambiente: repositório Git novo em /tmp/cfd-t2-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (T2 da curadoria de força dura, rodada de correção 1)
   resultado: passou
-  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit anterior: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"), saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. antes-de-ferramenta com o conteúdo do log em logs/: duas linhas e saída 1; o mesmo conteúdo em src/x.py: saída 0. pytest: 51 passed em tests/verificadores.'
+  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit de depois: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"; o CPF do prompt passou da grafia com espaços, que o verificador hospedado não acusa, para a canônica). Dados do antes tornados sintéticos nesta rodada: CPF de base artificial 123.456.789 com dígitos verificadores calculados e e-mail em cliente-ficticio-padroes.com.br, domínio não reservado para teste e inexistente (`dig +short cliente-ficticio-padroes.com.br ANY` sem saída; `host cliente-ficticio-padroes.com.br` dá not found: 3(NXDOMAIN)); o candidato do Exemplo também acusa as seis linhas e sai 1, e sobre depois/ sai 0 com 4 arquivos varridos, saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. ci com --base HEAD: saída 0 (nada mudou). pre-commit com uma linha limpa acrescentada ao log que já tinha CPF no HEAD: saída 0 (só a linha nova conta). Linha com URL SSH do Git, URL com credencial e e-mail em example.com: saída 0. antes-de-ferramenta com o log que só traz linhas já existentes em disco: saída 0. pytest: tests/verificadores/test_lgpd_02.py com a suíte inteira verde.'
   data: '2026-10-08'
 - tipo: prompt
   prompt: LGPD-02-prompt-1
@@ -134,26 +135,27 @@ execucoes:
     claro'', saída 1; arquivo que não é UTF-8 nem UTF-16: ''não varrido'', saída 1.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-06'
+  revisor: sessao-independente
+  data: '2026-10-08'
   achados:
-  - afirmacao: 'exemplos/LGPD-02/verificar-dado-em-claro.py: pasta vazia e arquivo que não decodifica'
-    problema: '[médio] com tests/ vazia imprimia ''0 arquivos varridos'' e saía 0, e o arquivo que não decodifica
-      em UTF-8 era pulado em silêncio (UTF-16 com CPF válido saía 0).'
-    tratamento: 'Tratado: nenhum arquivo varrido sai 1 com mensagem; o arquivo é lido em UTF-8 e, se falhar, em
-      UTF-16; se nenhuma serve, é listado como ''não varrido'' e o verificador sai 1.'
-  - afirmacao: LGPD-02.md, limites do verificador
-    problema: '[médio] escape unicode, base64, CPF partido em linhas e dígito verificador inválido passam, e o texto
-      não os declarava.'
-    tratamento: 'Tratado só no texto, sem mudar o verificador: o Como verificar diz que ele cobre CPF em texto claro
-      (com ou sem pontuação, UTF-8 ou UTF-16) e não cobre esses casos, que a revisão humana e a P2-04 (gateway)
-      complementam.'
-  - afirmacao: LGPD-02.md, saída do estado depois ('8 arquivos varridos')
-    problema: '[baixo] a pasta depois/ do Exemplo tem 4 arquivos; o 8 vinha do projeto-teste.'
-    tratamento: 'Tratado: a saída registrada passou a ''4 arquivos varridos'', com a frase de que o número varia
-      com o projeto.'
-  - afirmacao: LGPD-02, achado herdado (11 dígitos tratado como CPF)
-    problema: '[baixo] o verificador confere os dígitos e não acusa o protocolo de 11 dígitos; a troca indevida
-      foi do agente do teste de prompt, que trocou por arquivo e não por ocorrência.'
-    tratamento: 'Tratado no Como aplicar (passo 8): número de 11 dígitos não é CPF por si só e a troca é por ocorrência,
-      não por arquivo. O prompt não foi alterado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 7 (Rode/Deixe o verificador do portal ligado)'
+    problema: '[médio] não dizia de onde vem o verificador hospedado nem como ligar cada evento.'
+    tratamento: 'Tratado: o passo 7 diz que ele vem em pacote/verificadores/lgpd_02.py, que até o instalador (F4) se copia para o projeto, e mostra as duas linhas de comando (pre-commit e ci com --base).'
+  - afirmacao: 'LGPD-02.md, Exemplo: saídas mostradas'
+    problema: '[médio] a saída do Exemplo é do script candidato, não do verificador hospedado, e o texto não dizia.'
+    tratamento: 'Tratado: o Exemplo diz que as saídas são do script candidato (exemplos/LGPD-02/verificar-dado-em-claro.py), que o mecanismo hospedado é verificadores/lgpd_02.py e qual é o critério mais estrito dele.'
+  - afirmacao: 'LGPD-02.md, Para o agente: prompt manda rodar o candidato'
+    problema: '[médio] o prompt usa o candidato enquanto o passo 7 manda o hospedado, sem dizer qual vale onde.'
+    tratamento: 'Tratado só no texto: uma frase antes do bloco diz que o prompt usa o candidato do Exemplo. O prompt não foi alterado e não foi reexecutado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 4 (domínio reservado para teste)'
+    problema: '[baixo] não dizia quais domínios de teste o verificador aceita.'
+    tratamento: 'Tratado: o passo 4 e a mensagem do mecanismo nomeiam example.com, example.net, example.org (e subdomínios) e os TLDs .test, .example, .invalid e .localhost, e dizem que exemplo.com e empresa.com.br são acusados.'
+  - afirmacao: 'LGPD-02.md, passo 8 (troque cada ocorrência acusada)'
+    problema: '[médio] com o arquivo inteiro varrido, corrigir só a ocorrência acusada era impossível.'
+    tratamento: 'Tratado no verificador e no texto: ele passou a acusar só linhas novas ou alteradas (harness contra o disco, pre-commit contra o HEAD, ci contra a base); o passo 8 e Os limites dizem isso.'
+  - afirmacao: 'LGPD-02.md, Como verificar: Não acusa ... nem texto de documentação'
+    problema: '[baixo] exagero: documentação dentro de tests/, logs/ e prompts/ também é varrida.'
+    tratamento: 'Tratado: a frase saiu; o Como verificar diz que a documentação dentro das três pastas também é varrida e lista o que não é acusado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 6 (índice vetorial)'
+    problema: '[baixo] o passo não é executável num repositório vazio; é leitura, e já era assim.'
+    tratamento: 'Sem mudança: passo de leitura, que cita fonte e uma leitura do portal já marcada como tal.'

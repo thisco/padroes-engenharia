@@ -13,7 +13,7 @@ mecanismo:
       caminhos: ["tests/**", "logs/**", "prompts/**"]
     - evento: pre-commit
     - evento: ci
-  mensagem: "LGPD-02: CPF ou e-mail em claro em teste, log ou prompt; troque por [CPF] e [EMAIL] ou por dado sintético (CPF gerado na hora, e-mail em example.com). Como aplicar: {URL do portal}/praticas/LGPD-02.md#como-aplicar"
+  mensagem: "LGPD-02: CPF ou e-mail em claro em teste, log ou prompt; troque por [CPF] e [EMAIL] ou por dado sintético (CPF gerado na hora, e-mail em example.com, example.org, example.net ou .test). Como aplicar: {URL do portal}/praticas/LGPD-02.md#como-aplicar"
 status: experimentar
 aplica: []
 referencias: [lgpd, gateway-poc-cenario-02-policies, gateway-poc-cenario-04-vector-stores]
@@ -83,35 +83,53 @@ amplia onde o dado existe e quem o alcança sem que a tarefa precise disso.
 3. Se usar um detector por reconhecimento de entidades para nomes e endereços, confira o que ele
    troca: na avaliação do gateway, o detector trocou a palavra "autorizada" por `<LOCATION>` na
    resposta, um falso positivo em português [ref:gateway-poc-cenario-02-policies].
-4. Em teste, gere o dado: use uma função de CPF sintético, como a do Exemplo, e e-mail num domínio
-   reservado para teste, e nunca copie ficha de produção para fixture.
+4. Em teste, gere o dado: use uma função de CPF sintético, como a do Exemplo, e nunca copie ficha de
+   produção para fixture. O e-mail de teste fica num domínio reservado, e o verificador do portal
+   aceita `example.com`, `example.net` e `example.org` (e seus subdomínios) e os TLDs `.test`,
+   `.example`, `.invalid` e `.localhost`. `exemplo.com` e `cliente-ficticio-padroes.com.br` não são reservados e são
+   acusados. Do CPF ele acusa só as formas `000.000.000-00` e 11 dígitos colados, com os dígitos
+   verificadores conferidos.
 5. Registre contagens, tamanhos e IDs técnicos no log, e não o corpo da requisição.
 6. Trate o índice vetorial como mais um destino do dado: na avaliação do gateway, uma chave sem
    permissão específica de vector store leu o store inteiro [ref:gateway-poc-cenario-04-vector-stores].
    O corpus era fictício; a leitura do portal é que o mesmo acesso exporia dado pessoal, se ele
    estivesse lá.
-7. Deixe o verificador do portal ligado (`verificadores/lgpd_02.py`): ele barra a edição em `tests/`,
-   `logs/` e `prompts/`, o commit e o CI quando há CPF ou e-mail em claro.
+7. Ligue o verificador do portal. Ele vem no pacote gerado (`pacote/verificadores/lgpd_02.py`); até o
+   instalador (F4), copie-o para o projeto e ligue cada evento. O hook de `pre-commit` roda uma
+   linha, e um job de CI roda a outra, com o SHA da base da MR:
+
+   ```bash
+   python3 verificadores/lgpd_02.py --evento pre-commit
+   python3 verificadores/lgpd_02.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+   ```
+
+   O evento `antes-de-ferramenta` é ligado pelo harness do agente a partir do pacote, e barra a
+   edição em `tests/`, `logs/` e `prompts/` antes de ela acontecer.
 8. Um número de 11 dígitos não é CPF por si só: o verificador só acusa o que passa na conferência
-   dos dígitos, e um protocolo ou um ID de pedido pode ter 11 dígitos sem ser CPF. Ao corrigir, troque
-   cada ocorrência acusada (arquivo e linha), e não o arquivo inteiro.
+   dos dígitos, e um protocolo ou um ID de pedido pode ter 11 dígitos sem ser CPF. O verificador do
+   portal acusa só linhas novas ou alteradas, então ao corrigir você troca cada ocorrência acusada
+   (arquivo e linha), e não o arquivo inteiro; o que já estava no arquivo antes não é acusado.
 
 ## Exemplo
 
 ### Antes e depois
 
-Antes, o projeto tem um CPF e um e-mail em claro nos três lugares. Os arquivos de exemplo, com um
-número de CPF de exemplo (os dígitos verificadores conferem):
+Antes, o projeto tem um CPF e um e-mail em claro nos três lugares. Os dados do "antes" são
+sintéticos, gerados para o exemplo, e não correspondem a pessoa real: o CPF tem base artificial
+(`123.456.789`) com os dígitos verificadores calculados, e o domínio do e-mail não existe (consulta
+DNS sem resposta). Os arquivos de exemplo:
 
 ```json
-{"nome": "Ana Souza", "cpf": "111.444.777-35", "email": "ana.souza@empresa.com.br"}
+{"nome": "Cliente Fictício", "cpf": "123.456.789-09", "email": "cliente.ficticio@cliente-ficticio-padroes.com.br"}
 ```
 
 ```text
-2026-10-06T10:02:11Z INFO segunda-via recebida payload={"cpf": "11144477735", "email": "ana.souza@empresa.com.br"}
+2026-10-06T10:02:11Z INFO segunda-via recebida payload={"cpf": "12345678909", "email": "cliente.ficticio@cliente-ficticio-padroes.com.br"}
 ```
 
-O verificador sai com 1 e não imprime o dado achado, só o arquivo, a linha e o tipo:
+O script candidato do Exemplo (`exemplos/LGPD-02/verificar-dado-em-claro.py`) sai com 1 e não imprime
+o dado achado, só o arquivo, a linha e o tipo. A saída abaixo e a do estado depois são dele; o
+mecanismo hospedado é `verificadores/lgpd_02.py`, que imprime só as linhas `<caminho>:<linha>: <tipo>`:
 
 ```text
 tests/fixtures/cliente.json:1: CPF em claro
@@ -136,7 +154,7 @@ traz marcadores, e o teste que precisa de um CPF válido o gera na hora:
 
 <!-- incluir: exemplos/LGPD-02/depois/tests/sintetico.py -->
 
-O verificador, rodado só com os arquivos da pasta `depois/` do Exemplo, sai com 0 (o número de
+O script candidato, rodado só com os arquivos da pasta `depois/` do Exemplo, sai com 0 (o número de
 arquivos varia com o projeto):
 
 ```text
@@ -145,14 +163,16 @@ LGPD-02: 4 arquivos varridos, nenhum CPF ou e-mail em claro.
 
 O verificador do Exemplo. O CPF e o e-mail usam a mesma regex da máscara da P2-04, com a conferência
 dos dígitos verificadores. A versão que o portal hospeda e que roda como mecanismo é
-`verificadores/lgpd_02.py`, com o mesmo critério de CPF e de e-mail e o contrato de entrada e saída
-dos verificadores internos:
+`verificadores/lgpd_02.py`, com o contrato de entrada e saída dos verificadores internos e um critério
+mais estrito: acusa só linhas novas ou alteradas, só as formas canônicas de CPF, e não acusa credencial
+em URL, a forma `usuario@host:caminho` do Git nem os domínios reservados para teste.
 
 <!-- incluir: exemplos/LGPD-02/verificar-dado-em-claro.py -->
 
 ### Para o agente
 
-Regra curta para o `AGENTS.md` do projeto:
+O prompt abaixo usa o script candidato do Exemplo (`scripts/verificar-dado-em-claro.py`), não o
+verificador hospedado. Regra curta para o `AGENTS.md` do projeto:
 
 ```markdown
 Dado pessoal (CPF, e-mail) não vai em fixture de teste, em log nem em prompt. Use [CPF] e [EMAIL],
@@ -187,26 +207,37 @@ com CPF e e-mail em claro em `tests/`, `logs/` e `prompts/`.
 O portal hospeda o verificador `verificadores/lgpd_02.py`, e a força é `bloqueia`. Ele roda em três
 eventos: antes de o agente editar ou escrever um arquivo em `tests/`, `logs/` ou `prompts/`; no
 `pre-commit`, sobre o que está no índice; e no `ci`, sobre os arquivos que mudaram entre `--base` e
-`HEAD`. Em qualquer evento só valem os arquivos sob essas três pastas, na raiz do projeto.
+`HEAD`. Em qualquer evento só valem os arquivos sob essas três pastas, na raiz do projeto, e a
+documentação dentro delas também é varrida.
 
-Ele acusa CPF com os dois dígitos verificadores corretos (com ponto, hífen, espaço ou colado) e
-e-mail de domínio que não seja `example.com`, `example.org` ou `example.net` (uma escolha do
-Exemplo). Não acusa número de 11 dígitos de verificador inválido, CPF de exemplo como `000.000.000-00`
-nem texto de documentação. A saída tem uma linha por achado, `<caminho>:<linha>: CPF em claro` ou
-`<caminho>:<linha>: e-mail em claro`, e nunca o dado achado. Sai com 0 quando não há o que apontar, 1
-com achado e 2 quando não consegue decidir (evento que não atende, entrada inválida, `ci` sem
-`--base`, fora de um repositório Git). O arquivo que não decodifica em UTF-8 nem em UTF-16 é
-pulado, com um aviso em stderr.
+Ele acusa só linhas novas ou alteradas: no harness, as que o conteúdo novo tem a mais que o arquivo em
+disco; no `pre-commit`, as que o índice tem a mais que o `HEAD`; no `ci`, as que o `HEAD` tem a mais que
+`--base`. O número da linha é o do conteúdo novo. O que já estava no arquivo não barra a edição nem a
+correção linha a linha.
+
+O que é acusado: CPF nas formas `000.000.000-00` ou 11 dígitos colados, com os dois dígitos
+verificadores corretos, e e-mail de domínio que não seja reservado para teste (`example.com`,
+`example.net`, `example.org` e subdomínios, e os TLDs `.test`, `.example`, `.invalid` e `.localhost`).
+Antes de buscar, a linha perde os caracteres Unicode de formatação (como U+200B) e os dígitos Unicode
+viram ASCII, para um caractere invisível ou um dígito largo não contornar a busca. Não é e-mail a
+credencial em URL (`https://usuario:senha@host`) nem a forma `usuario@host:caminho` do Git. A saída tem
+uma linha por achado, `<caminho>:<linha>: CPF em claro` ou `<caminho>:<linha>: e-mail em claro`, e
+nunca o dado achado. Sai com 0 quando não há o que apontar, 1 com achado e 2 quando não consegue
+decidir: evento que não atende, entrada inválida, `ci` sem `--base`, fora de um repositório Git, ou
+`editar`/`escrever` sem o conteúdo do arquivo.
 
 Para rodar à mão no índice do projeto: `python3 verificadores/lgpd_02.py --evento pre-commit`. Para
 comparar com a base da MR: `python3 verificadores/lgpd_02.py --evento ci --base <ref>`.
 
 Os limites: o verificador não distingue CPF real de CPF sintético com dígitos válidos, e por isso o
 teste gera o CPF na hora e não o escreve no arquivo; por outro lado, um número de 11 dígitos que por
-acaso passe na conferência dos dígitos é acusado. Ele não vê nome, telefone, endereço, CPF de outro
-formato ou por extenso, o dado dentro de arquivo binário ou compactado, nem o que está fora das três
-pastas, como o código que monta o log ou o prompt em tempo de execução, o tráfego de produção e o
-índice vetorial. Não cobre CPF com escape unicode (`\u0031...`), em base64, partido em mais de uma
-linha nem com dígito verificador inválido: isso é o que a revisão humana do código e a P2-04 (a
-máscara no gateway, no caminho do modelo) complementam. A máscara reduz onde o dado existe, mas o que
-já foi commitado continua no histórico do repositório e pede outra providência.
+acaso passe na conferência dos dígitos é acusado. Outras grafias de CPF não são acusadas (grupos
+separados por espaço, `000.000.000.00`, por extenso, com escape unicode, em base64 ou partido em mais
+de uma linha), nem CPF de dígito verificador inválido. Binário não é varrido: arquivo que não é UTF-8
+(com ou sem BOM) nem UTF-16 com BOM, ou que tem extensão de binário conhecida, é pulado com um aviso em
+stderr. E-mail dentro de uma URL com credencial também não é acusado. Ele não vê nome, telefone,
+endereço, o dado dentro de arquivo compactado, nem o que está fora das três pastas, como o código que
+monta o log ou o prompt em tempo de execução, o tráfego de produção e o índice vetorial. Isso é o que a
+revisão humana do código e a P2-04 (a máscara no gateway, no caminho do modelo) complementam. A máscara
+reduz onde o dado existe, mas o que já foi commitado continua no histórico do repositório e pede outra
+providência.

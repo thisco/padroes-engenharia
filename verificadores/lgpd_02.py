@@ -1,7 +1,9 @@
-"""LGPD-02: reprova CPF ou e-mail em claro em tests/, logs/ e prompts/.
+"""LGPD-02: reprova CPF ou e-mail em claro, em linhas novas, em tests/, logs/ e prompts/.
 
 Contrato: `python3 verificadores/lgpd_02.py --evento <evento> [--base <ref>]`.
-Atende `antes-de-ferramenta` (JSON no stdin), `pre-commit` (lê o índice) e `ci` (lê `--base..HEAD`).
+Atende `antes-de-ferramenta` (JSON no stdin), `pre-commit` (lê o índice) e `ci` (`--base` e `HEAD`).
+Só acusa linha nova ou alterada: no harness, em relação ao arquivo em disco; no pre-commit, em
+relação ao `HEAD`; no ci, em relação à `--base`.
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso
 ou estado indeterminado (mensagem em stderr). O dado achado nunca é impresso: só o tipo e a posição.
 """
@@ -13,16 +15,29 @@ import json
 import re
 import subprocess
 import sys
-from pathlib import PurePosixPath
+import unicodedata
+from collections import Counter
+from pathlib import Path, PurePosixPath
 
 PASTAS = ("tests", "logs", "prompts")
-# Aceita ponto, hífen ou espaço (ou nada) entre os grupos, em qualquer combinação (como na P2-04).
-CPF = re.compile(r"(?<!\d)(\d{3})[.\s-]?(\d{3})[.\s-]?(\d{3})[.\s-]?(\d{2})(?!\d)")
+# Só as formas canônicas: `ddd.ddd.ddd-dd` e 11 dígitos colados, sempre com os dígitos conferidos.
+# Fora: `ddd.ddd.ddd.dd` (parece IPv4), grupos separados por espaço, número colado a outro número.
+CPF = re.compile(r"(?<![\d.,])(?:\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})(?!\d|[.,]\d)")
 # O domínio termina em letras (2 ou mais): `a@b.T` de multiplicação de matrizes não é e-mail.
-EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
-# Escolha do Exemplo: domínios que o time reserva para e-mail de teste.
-DOMINIOS_DE_TESTE = {"example.com", "example.org", "example.net"}
-IGNORADOS = {".pyc", ".png", ".jpg", ".gif", ".pdf", ".zip", ".gz", ".sqlite"}
+# `usuario@host:caminho` é a forma SCP do Git, não e-mail.
+EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])(?!:[^\s:])")
+# Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail.
+CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/\s@]*@")
+# Domínios que o time reserva para e-mail de teste: example.com/net/org e subdomínios (RFC 2606) e
+# os TLDs reservados .test, .example, .invalid e .localhost (RFC 2606 e RFC 6761).
+DOMINIOS_DE_TESTE = ("example.com", "example.net", "example.org")
+TLDS_DE_TESTE = {"test", "example", "invalid", "localhost"}
+IGNORADOS = {
+    ".pyc", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".jar",
+    ".xlsx", ".docx", ".der", ".p12", ".woff", ".woff2", ".mp4", ".sqlite",
+}  # fmt: skip
+MODOS_PULADOS = {"160000", "120000"}  # submódulo (gitlink) e link simbólico
+TEMPO_GIT = 60  # segundos; o git não pode travar o hook
 
 
 class Indeterminado(Exception):
@@ -40,48 +55,77 @@ def cpf_valido(digitos: str) -> bool:
     return True
 
 
+def normaliza(linha: str) -> str:
+    """Tira caracteres de formatação (U+200B etc.) e põe dígitos Unicode em ASCII, para um caractere
+    invisível ou um dígito largo não contornar a busca."""
+    letras = []
+    for c in linha:
+        if unicodedata.category(c) == "Cf":
+            continue
+        d = unicodedata.digit(c, None) if c.isdigit() else None
+        letras.append(str(d) if d is not None else c)
+    return "".join(letras)
+
+
+def e_dominio_de_teste(dominio: str) -> bool:
+    dominio = dominio.lower()
+    if dominio.rsplit(".", 1)[-1] in TLDS_DE_TESTE:
+        return True
+    return any(dominio == d or dominio.endswith("." + d) for d in DOMINIOS_DE_TESTE)
+
+
 def achados_da_linha(linha: str) -> list[str]:
+    linha = normaliza(linha)
     achados = []
-    if any(cpf_valido("".join(m.groups())) for m in CPF.finditer(linha)):
+    if any(cpf_valido(re.sub(r"\D", "", m.group())) for m in CPF.finditer(linha)):
         achados.append("CPF em claro")
-    if any(m.group(1).lower() not in DOMINIOS_DE_TESTE for m in EMAIL.finditer(linha)):
+    sem_credencial = CREDENCIAL_EM_URL.sub("", linha)
+    if any(not e_dominio_de_teste(m.group(1)) for m in EMAIL.finditer(sem_credencial)):
         achados.append("e-mail em claro")
     return achados
 
 
 def varre_caminho(caminho: str) -> bool:
     """Só vale o que está sob tests/, logs/ ou prompts/ da raiz do projeto, em texto."""
-    partes = PurePosixPath(caminho).parts
-    if len(partes) < 2 or partes[0] not in PASTAS or ".." in partes:
+    p = PurePosixPath(caminho)
+    if len(p.parts) < 2 or p.parts[0] not in PASTAS or ".." in p.parts:
         return False
-    return PurePosixPath(caminho).suffix not in IGNORADOS and "__pycache__" not in partes
+    return p.suffix.lower() not in IGNORADOS and "__pycache__" not in p.parts
 
 
 def decodifica(dados: bytes) -> str | None:
-    """Texto em UTF-8 ou, se falhar, em UTF-16; None se nenhuma das duas serve.
+    """Texto em UTF-8 (com ou sem BOM) ou em UTF-16 com BOM; None para o resto (binário)."""
+    try:
+        if dados.startswith((b"\xff\xfe", b"\xfe\xff")):
+            texto = dados.decode("utf-16")
+        else:
+            texto = dados.decode("utf-8-sig")
+    except UnicodeError:
+        return None
+    return None if "\x00" in texto else texto
 
-    UTF-16 sem BOM decodifica como UTF-8 com um NUL entre as letras; tirar os NUL o conserta.
-    """
-    for codificacao in ("utf-8", "utf-16"):
-        try:
-            return dados.decode(codificacao).replace("\x00", "")
-        except UnicodeError:
+
+def achados_do_arquivo(caminho: str, novo: str, antigo: str | None) -> list[str]:
+    """Linhas de `novo` que não existem em `antigo`, contadas por texto: duplicar uma linha antiga
+    é linha nova, e corrigir uma de duas ocorrências iguais não é."""
+    existentes = Counter(antigo.splitlines()) if antigo else Counter()
+    achados = []
+    for n, linha in enumerate(novo.splitlines(), start=1):
+        if existentes[linha] > 0:
+            existentes[linha] -= 1
             continue
-    return None
-
-
-def achados_do_arquivo(caminho: str, texto: str) -> list[str]:
-    # Nunca imprime o dado achado: o relatório do verificador também vai para o CI.
-    return [
-        f"{caminho}:{n}: {achado}"
-        for n, linha in enumerate(texto.splitlines(), start=1)
-        for achado in achados_da_linha(linha)
-    ]
+        # Nunca imprime o dado achado: o relatório do verificador também vai para o CI.
+        achados += [f"{caminho}:{n}: {a}" for a in achados_da_linha(linha)]
+    return achados
 
 
 def git(raiz: str | None, *args: str) -> bytes:
     try:
-        r = subprocess.run(["git", *args], cwd=raiz, capture_output=True, check=False)
+        r = subprocess.run(
+            ["git", *args], cwd=raiz, capture_output=True, timeout=TEMPO_GIT, check=False
+        )
+    except subprocess.TimeoutExpired as erro:
+        raise Indeterminado(f"git passou de {TEMPO_GIT}s") from erro
     except OSError as erro:
         raise Indeterminado(f"não consegui rodar o git: {erro}") from erro
     if r.returncode != 0:
@@ -90,17 +134,30 @@ def git(raiz: str | None, *args: str) -> bytes:
     return r.stdout
 
 
-def varre_revisao(raiz: str, nomes: bytes, ref: str, avisos: list[str]) -> list[str]:
-    """Varre cada caminho de `nomes` (separado por NUL) como está em `ref` (":" é o índice)."""
+def varre_diferenca(
+    raiz: str, comparacao: list[str], antes: str, depois: str, avisos: list[str]
+) -> list[str]:
+    """Varre as linhas novas dos arquivos adicionados ou modificados sob as três pastas.
+
+    `comparacao` são os argumentos do `git diff`; `antes` e `depois` são os prefixos de `git show`
+    do lado antigo (`HEAD:` ou `<base>:`) e do novo (`:` é o índice)."""
+    comando = ["diff", "--raw", "--no-abbrev", "--no-renames", "--diff-filter=AM", "-z"]
+    campos = git(raiz, *comando, *comparacao, "--", *PASTAS).split(b"\0")
     achados: list[str] = []
-    for nome in sorted(n.decode("utf-8", "replace") for n in nomes.split(b"\0") if n):
-        if not varre_caminho(nome):
+    for i in range(0, len(campos) - 1, 2):
+        # ":<modo antigo> <modo novo> <sha antigo> <sha novo> <status>", depois o caminho
+        modo_antigo, modo_novo = campos[i].decode().lstrip(":").split()[:2]
+        caminho = campos[i + 1].decode("utf-8", "replace")
+        if modo_novo in MODOS_PULADOS or not varre_caminho(caminho):
             continue
-        texto = decodifica(git(raiz, "show", f"{ref}{nome}"))
-        if texto is None:
-            avisos.append(f"{nome}: não varrido (não decodifica em UTF-8 nem em UTF-16)")
+        novo = decodifica(git(raiz, "show", f"{depois}{caminho}"))
+        if novo is None:
+            avisos.append(f"{caminho}: não varrido (binário ou codificação não reconhecida)")
             continue
-        achados += achados_do_arquivo(nome, texto)
+        antigo = None
+        if set(modo_antigo) != {"0"}:
+            antigo = decodifica(git(raiz, "show", f"{antes}{caminho}"))
+        achados += achados_do_arquivo(caminho, novo, antigo)
     return achados
 
 
@@ -114,23 +171,33 @@ def evento_harness() -> list[str]:
     caminho, conteudo = entrada.get("caminho"), entrada.get("conteudo")
     if not all(v is None or isinstance(v, str) for v in (caminho, conteudo)):
         raise Indeterminado("`caminho` e `conteudo` devem ser texto ou null")
-    if caminho is None or conteudo is None or not varre_caminho(caminho):
+    if caminho is None or not varre_caminho(caminho):
         return []
-    return achados_do_arquivo(caminho, conteudo)
+    if conteudo is None:
+        if entrada.get("ferramenta") in ("editar", "escrever"):
+            raise Indeterminado(f"{caminho}: sem `conteudo` para uma escrita; não dá para avaliar")
+        return []
+    cwd = entrada.get("cwd")
+    try:
+        antigo = decodifica((Path(cwd if isinstance(cwd, str) else ".") / caminho).read_bytes())
+    except OSError:
+        antigo = None
+    return achados_do_arquivo(caminho, conteudo, antigo)
+
+
+def raiz_do_projeto() -> str:
+    return git(None, "rev-parse", "--show-toplevel").decode("utf-8").strip()
 
 
 def evento_pre_commit(avisos: list[str]) -> list[str]:
-    raiz = git(None, "rev-parse", "--show-toplevel").decode("utf-8").strip()
-    nomes = git(raiz, "diff", "--cached", "--name-only", "--diff-filter=ACMR", "-z")
-    return varre_revisao(raiz, nomes, ":", avisos)
+    # `diff --cached` sem revisão compara com o HEAD, ou com a árvore vazia se ainda não há commit.
+    return varre_diferenca(raiz_do_projeto(), ["--cached"], "HEAD:", ":", avisos)
 
 
 def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
     if not base:
         raise Indeterminado("o evento ci exige --base <ref>")
-    raiz = git(None, "rev-parse", "--show-toplevel").decode("utf-8").strip()
-    nomes = git(raiz, "diff", "--name-only", "--diff-filter=ACMR", "-z", base, "HEAD")
-    return varre_revisao(raiz, nomes, "HEAD:", avisos)
+    return varre_diferenca(raiz_do_projeto(), [base, "HEAD"], f"{base}:", "HEAD:", avisos)
 
 
 def decide(evento: str, base: str | None, avisos: list[str]) -> list[str]:

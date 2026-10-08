@@ -1,6 +1,7 @@
 """Testes do verificador da LGPD-02: dado pessoal em claro em tests/, logs/ e prompts/.
 
-Nenhum CPF vale como literal aqui: o teste o monta na hora, com os dígitos verificadores certos."""
+Este arquivo não traz, literal, nada que o próprio verificador acuse: CPFs e e-mails de pessoa são
+montados em tempo de execução (último teste da seção "o próprio arquivo")."""
 
 from __future__ import annotations
 
@@ -12,6 +13,14 @@ import pytest
 from tests.verificadores.conftest import PASTA_VERIFICADORES, RepoGit, rodar
 
 SCRIPT = PASTA_VERIFICADORES / "lgpd_02.py"
+ARROBA = "@"
+
+
+def email(local: str, dominio: str) -> str:
+    return local + ARROBA + dominio
+
+
+EMAIL_REAL = email("ana.souza", "cliente-ficticio-padroes.com.br")
 
 
 def _digito(digitos: list[int]) -> int:
@@ -35,18 +44,30 @@ def cpf_invalido() -> str:
     return valido[:10] + str((int(valido[10]) + 1) % 10)
 
 
-def harness(caminho: str | None, conteudo: str | None, evento: str = "antes-de-ferramenta"):
+def harness(
+    caminho: str | None,
+    conteudo: str | None,
+    evento: str = "antes-de-ferramenta",
+    ferramenta: str = "escrever",
+    cwd: str = "/projeto-que-nao-existe",
+):
     entrada = {
-        "ferramenta": "escrever",
+        "ferramenta": ferramenta,
         "caminho": caminho,
         "conteudo": conteudo,
         "comando": None,
-        "cwd": "/projeto",
+        "cwd": cwd,
     }
     return rodar(SCRIPT, evento, entrada=entrada)
 
 
-# --- antes-de-ferramenta ---------------------------------------------------------------------
+def casa(conteudo: str, caminho: str = "tests/a.txt") -> bool:
+    r = harness(caminho, conteudo + "\n")
+    assert r.returncode in (0, 1) and "Traceback" not in r.stderr
+    return r.returncode == 1
+
+
+# --- antes-de-ferramenta: o que é dado pessoal -----------------------------------------------
 
 
 def test_harness_pega_cpf_em_teste_e_nao_imprime_o_valor():
@@ -79,51 +100,184 @@ def test_harness_ignora_caminho_fora_das_pastas(caminho: str | None):
     assert r.returncode == 0 and r.stdout == ""
 
 
-def test_harness_sem_conteudo_nao_casa():
-    assert harness("tests/a.txt", None).returncode == 0
-
-
 def test_harness_pega_email_real_e_so_mostra_o_tipo():
-    r = harness("logs/app.log", "envio para ana.souza@empresa.com.br\n")
+    r = harness("logs/app.log", f"envio para {EMAIL_REAL}\n")
     assert r.returncode == 1
     assert r.stdout.splitlines() == ["logs/app.log:1: e-mail em claro"]
     assert "ana.souza" not in r.stdout + r.stderr
 
 
-@pytest.mark.parametrize("dominio", ["example.com", "example.org", "example.net", "EXAMPLE.COM"])
-def test_harness_email_de_dominio_de_teste_e_inocente(dominio: str):
-    assert harness("tests/a.py", f"ana@{dominio}\n").returncode == 0
-
-
 def test_harness_cpf_e_email_na_mesma_linha_dao_dois_achados():
-    r = harness("prompts/p.txt", f"ana@empresa.com.br {cpf()}\n")
-    assert r.returncode == 1
+    r = harness("prompts/p.txt", f"{EMAIL_REAL} {cpf()}\n")
     assert r.stdout.splitlines() == [
         "prompts/p.txt:1: CPF em claro",
         "prompts/p.txt:1: e-mail em claro",
     ]
 
 
+def test_harness_cpf_com_o_digito_verificador_trocado_nao_casa():
+    # Mesma linha; só o último dígito muda.
+    assert casa(f"{cpf()}") and not casa(f"{cpf_invalido()}")
+
+
+# CPF: só as formas canônicas (ddd.ddd.ddd-dd e 11 dígitos colados), com dígito conferido.
+
+
+def test_cpf_canonico_pega_e_as_outras_grafias_nao():
+    c = cpf()
+    assert casa(f"cpf {com_pontuacao(c)}") and casa(f"cpf {c}")
+    espacado = f"{c[:3]} {c[3:6]} {c[6:9]} {c[9:]}"
+    assert not casa(f"valor {espacado}")
+    assert not casa(f"valor {c[:3]}.{c[3:6]}.{c[6:9]}.{c[9:]}")  # parece IPv4
+    assert not casa(f"valor {c[:3]}.{c[3:6]}.{c[6:9]}{c[9:]}")
+
+
+def test_ipv4_nao_e_cpf():
+    assert not casa("host 100.100.100.17 e 10.0.0.1")
+
+
 @pytest.mark.parametrize(
     "texto",
     [
-        f"protocolo {cpf_invalido()}",  # 11 dígitos, dígito verificador inválido
-        "documento 11111111111",  # dígitos repetidos
-        f"pedido {cpf()}0",  # 12 dígitos
-        f"pedido 9{cpf()}",  # 12 dígitos, com um a mais antes
-        "formato 000.000.000-00 e XXX.XXX.XXX-XX",  # texto de documentação
-        "ana@example.com e m = a@b.T",  # domínio de teste e produto de matrizes
+        f"protocolo {cpf_invalido()}",
+        "documento 11111111111",
+        f"pedido {cpf()}0",
+        f"pedido 9{cpf()}",
+        f"medida 3.{cpf()}",
+        f"medida {cpf()},5",
+        "formato 000.000.000-00 e XXX.XXX.XXX-XX",
     ],
 )
-def test_harness_nao_barra_texto_legitimo(texto: str):
-    r = harness("tests/doc.md", texto + "\n")
-    assert r.returncode == 0 and r.stdout == ""
+def test_nao_barra_numero_que_nao_e_cpf(texto: str):
+    assert not casa(texto)
 
 
-def test_harness_cpf_com_um_digito_a_menos_difere_so_no_digito():
-    pega = harness("tests/a.txt", f"{cpf()}\n")
-    inocente = harness("tests/a.txt", f"{cpf_invalido()}\n")
-    assert (pega.returncode, inocente.returncode) == (1, 0)
+@pytest.mark.parametrize(
+    "dominio",
+    [
+        "example.com",
+        "example.org",
+        "example.net",
+        "EXAMPLE.COM",
+        "mail.example.com",
+        "a.b.example.org",
+        "teste.test",
+        "dev.example",
+        "x.invalid",
+        "app.localhost",
+    ],
+)
+def test_email_de_dominio_reservado_para_teste_e_inocente(dominio: str):
+    assert not casa(email("ana", dominio))
+
+
+@pytest.mark.parametrize(
+    "dominio",
+    ["exemplo.com", "cliente-ficticio-padroes.com.br", "notexample.com", "example.com.br"],
+)
+def test_email_de_dominio_comum_pega(dominio: str):
+    assert casa(email("ana", dominio))
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "https://usuario:senha" + ARROBA + "host.interno/rota",
+        "ssh://git" + ARROBA + "gitlab.com/grupo/projeto.git",
+        "postgres://app:segredo" + ARROBA + "db.interno:5432/base",
+        "git" + ARROBA + "gitlab.com:grupo/projeto.git",
+        "remote: git" + ARROBA + "github.com:org/repo.git",
+        "produto a" + ARROBA + "b.T",
+    ],
+)
+def test_url_com_credencial_e_forma_scp_do_git_nao_sao_email(texto: str):
+    assert not casa(texto)
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        f"contato: {EMAIL_REAL}",
+        f"mailto:{EMAIL_REAL}",
+        f"https://portal.interno/ajuda?email={EMAIL_REAL}",
+        f"falha ao enviar para {EMAIL_REAL}: timeout",
+    ],
+)
+def test_email_comum_em_log_continua_pegando(texto: str):
+    assert casa(texto)
+
+
+def test_url_com_credencial_e_email_na_mesma_linha_pega_so_o_email():
+    r = harness("logs/a.log", f"ssh://git{ARROBA}gitlab.com/g/p.git por {EMAIL_REAL}\n")
+    assert r.stdout.splitlines() == ["logs/a.log:1: e-mail em claro"]
+
+
+# --- normalização: caracteres invisíveis e dígitos Unicode -----------------------------------
+
+
+def test_caractere_invisivel_dentro_do_cpf_nao_contorna():
+    c = cpf()
+    com_zwsp = f"{c[:3]}​.{c[3:6]}.{c[6:9]}-{c[9:]}"
+    assert casa(f"cpf {com_zwsp}")
+    assert not casa(f"cpf {c[:3]}x.{c[3:6]}.{c[6:9]}-{c[9:]}")  # difere só no caractere visível
+
+
+def test_digito_unicode_no_cpf_nao_contorna():
+    c = cpf()
+    largos = "".join(chr(0xFF10 + int(d)) for d in c)
+    assert casa(f"cpf {largos}")
+    arabicos = "".join(chr(0x0660 + int(d)) for d in c)
+    assert casa(f"cpf {arabicos}")
+
+
+def test_caractere_invisivel_dentro_do_email_nao_contorna():
+    assert casa(f"{EMAIL_REAL[:3]}​{EMAIL_REAL[3:]}")
+
+
+# --- antes-de-ferramenta: só o que mudou e o que é indeterminado ------------------------------
+
+
+def test_harness_acusa_so_linhas_novas_e_numera_pelo_conteudo_novo(tmp_path: Path):
+    antigo = f"cpf {cpf()}\nlimpa\n"
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "a.txt").write_text(antigo, encoding="utf-8")
+    inocente = harness("tests/a.txt", antigo + "outra limpa\n", cwd=str(tmp_path))
+    assert inocente.returncode == 0 and inocente.stdout == ""
+    novo = antigo + f"cpf {cpf('987654321')}\n"
+    pega = harness("tests/a.txt", novo, cwd=str(tmp_path))
+    assert pega.stdout.splitlines() == ["tests/a.txt:3: CPF em claro"]
+
+
+def test_harness_linha_antiga_duplicada_conta_como_nova(tmp_path: Path):
+    linha = f"cpf {cpf()}\n"
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "a.txt").write_text(linha, encoding="utf-8")
+    assert harness("tests/a.txt", linha, cwd=str(tmp_path)).returncode == 0
+    r = harness("tests/a.txt", linha + linha, cwd=str(tmp_path))
+    assert r.stdout.splitlines() == ["tests/a.txt:2: CPF em claro"]
+
+
+def test_harness_corrigir_uma_de_duas_ocorrencias_iguais_nao_e_barrado(tmp_path: Path):
+    linha = f"cpf {cpf()}\n"
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "a.txt").write_text(linha + linha, encoding="utf-8")
+    assert harness("tests/a.txt", linha, cwd=str(tmp_path)).returncode == 0
+
+
+def test_harness_arquivo_inexistente_em_disco_tem_todas_as_linhas_novas(tmp_path: Path):
+    r = harness("tests/novo.txt", f"limpa\ncpf {cpf()}\n", cwd=str(tmp_path))
+    assert r.stdout.splitlines() == ["tests/novo.txt:2: CPF em claro"]
+
+
+@pytest.mark.parametrize("ferramenta", ["editar", "escrever"])
+def test_harness_sem_conteudo_em_escrita_e_indeterminado(ferramenta: str):
+    r = harness("tests/a.txt", None, ferramenta=ferramenta)
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
+
+
+def test_harness_sem_conteudo_em_outra_ferramenta_ou_fora_das_pastas_nao_casa():
+    assert harness("tests/a.txt", None, ferramenta="ler").returncode == 0
+    assert harness("src/a.py", None, ferramenta="escrever").returncode == 0
 
 
 def test_harness_depois_de_ferramenta_nao_e_atendido():
@@ -137,6 +291,11 @@ def test_harness_depois_de_ferramenta_nao_e_atendido():
 def test_harness_com_tipos_errados_sai_2(entrada: dict):
     r = rodar(SCRIPT, "antes-de-ferramenta", entrada=entrada)
     assert r.returncode == 2 and "Traceback" not in r.stderr
+
+
+def test_harness_stdin_vazio_sai_2():
+    r = rodar(SCRIPT, "antes-de-ferramenta", entrada="")
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
 
 
 # --- pre-commit ------------------------------------------------------------------------------
@@ -160,7 +319,30 @@ def test_pre_commit_inocente_com_o_arquivo_limpo_no_indice(repo_git: RepoGit):
     assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
 
 
-def test_pre_commit_ignora_arquivo_fora_das_pastas_e_a_partir_de_subpasta(repo_git: RepoGit):
+def test_pre_commit_acusa_so_linhas_que_nao_estao_no_head(repo_git: RepoGit):
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\n")
+    repo_git.adicionar("tests/a.txt")
+    repo_git.commitar("antigo")
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\nlimpa\n")
+    repo_git.adicionar("tests/a.txt")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\ncpf {cpf('987654321')}\n")
+    repo_git.adicionar("tests/a.txt")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.stdout.splitlines() == ["tests/a.txt:2: CPF em claro"]
+
+
+def test_pre_commit_em_repositorio_sem_head_tem_todas_as_linhas_novas(tmp_path: Path):
+    repo = RepoGit(tmp_path / "vazio")
+    repo.raiz.mkdir()
+    repo._git("init", "--quiet", "--initial-branch=main")
+    repo.escrever("logs/a.log", f"cpf {cpf()}\n")
+    repo.adicionar("logs/a.log")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo.raiz)
+    assert r.stdout.splitlines() == ["logs/a.log:1: CPF em claro"]
+
+
+def test_pre_commit_ignora_arquivo_fora_das_pastas_e_roda_de_subpasta(repo_git: RepoGit):
     repo_git.escrever("src/a.py", f"cpf = '{cpf()}'\n")
     repo_git.escrever("tests/dados/b.txt", "limpo\n")
     repo_git.adicionar("src/a.py", "tests/dados/b.txt")
@@ -177,12 +359,35 @@ def test_pre_commit_binario_nao_varrido_avisa_sem_casar(repo_git: RepoGit):
     assert "tests/dados.bin: não varrido" in r.stderr
 
 
-def test_pre_commit_le_utf16(repo_git: RepoGit):
-    destino = repo_git.escrever("logs/a.log", "")
-    destino.write_bytes(f"cpf {cpf()}\n".encode("utf-16"))
-    repo_git.adicionar("logs/a.log")
+def test_pre_commit_utf16_so_com_bom(repo_git: RepoGit):
+    texto = f"cpf {cpf()}\n"
+    repo_git.escrever("logs/com_bom.log", "").write_bytes(texto.encode("utf-16"))
+    repo_git.escrever("logs/sem_bom.log", "").write_bytes(texto.encode("utf-16-le"))
+    repo_git.adicionar("logs/com_bom.log", "logs/sem_bom.log")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
-    assert r.returncode == 1 and r.stdout.splitlines() == ["logs/a.log:1: CPF em claro"]
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == ["logs/com_bom.log:1: CPF em claro"]
+    assert "logs/sem_bom.log: não varrido" in r.stderr
+
+
+def test_pre_commit_utf8_com_bom_e_varrido(repo_git: RepoGit):
+    repo_git.escrever("logs/a.log", "").write_bytes(("﻿" + f"cpf {cpf()}\n").encode("utf-8"))
+    repo_git.adicionar("logs/a.log")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 1
+
+
+def test_pre_commit_pula_extensao_binaria_conhecida(repo_git: RepoGit):
+    repo_git.escrever("tests/a.xlsx", f"cpf {cpf()}\n")
+    repo_git.adicionar("tests/a.xlsx")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 0 and r.stdout == ""
+
+
+def test_pre_commit_pula_submodulo(repo_git: RepoGit):
+    sha = repo_git._git("rev-parse", "HEAD")
+    repo_git._git("update-index", "--add", "--cacheinfo", f"160000,{sha},tests/sub")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 0 and r.stdout == "" and r.stderr == ""
 
 
 def test_pre_commit_fora_de_repositorio_sai_2(tmp_path: Path):
@@ -195,7 +400,7 @@ def test_pre_commit_fora_de_repositorio_sai_2(tmp_path: Path):
 
 def test_ci_pega_o_que_o_head_traz_em_relacao_a_base(repo_git: RepoGit):
     base = repo_git._git("rev-parse", "HEAD")
-    repo_git.escrever("prompts/p.txt", f"ficha de ana@empresa.com.br {cpf()}\n")
+    repo_git.escrever("prompts/p.txt", f"ficha de {EMAIL_REAL} {cpf()}\n")
     repo_git.adicionar("prompts/p.txt")
     repo_git.commitar("feat: prompt")
     r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
@@ -206,7 +411,7 @@ def test_ci_pega_o_que_o_head_traz_em_relacao_a_base(repo_git: RepoGit):
     ]
 
 
-def test_ci_inocente_quando_o_dado_ja_estava_na_base_e_o_arquivo_nao_mudou(repo_git: RepoGit):
+def test_ci_inocente_quando_o_arquivo_nao_mudou(repo_git: RepoGit):
     repo_git.escrever("tests/a.txt", f"{cpf()}\n")
     repo_git.adicionar("tests/a.txt")
     repo_git.commitar("antes")
@@ -217,12 +422,46 @@ def test_ci_inocente_quando_o_dado_ja_estava_na_base_e_o_arquivo_nao_mudou(repo_
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
 
 
+def test_ci_acusa_so_linhas_que_nao_estao_na_base(repo_git: RepoGit):
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\n")
+    repo_git.adicionar("tests/a.txt")
+    repo_git.commitar("antigo")
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\nlimpa\n")
+    repo_git.adicionar("tests/a.txt")
+    repo_git.commitar("limpa")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    repo_git.escrever("tests/a.txt", f"cpf {cpf()}\nlimpa\ncpf {cpf('987654321')}\n")
+    repo_git.adicionar("tests/a.txt")
+    repo_git.commitar("novo")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.stdout.splitlines() == ["tests/a.txt:3: CPF em claro"]
+
+
+def test_ci_pula_submodulo(repo_git: RepoGit):
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git._git("update-index", "--add", "--cacheinfo", f"160000,{base},tests/sub")
+    repo_git.commitar("submódulo")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+
+
+def test_ci_sem_base_sai_2(repo_git: RepoGit):
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz)
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
+
+
 def test_ci_com_base_inexistente_sai_2(repo_git: RepoGit):
     r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base="nao-existe")
     assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
 
 
-# --- isolado, como o pacote gerado -----------------------------------------------------------
+# --- o próprio arquivo e o pacote ------------------------------------------------------------
+
+
+def test_este_arquivo_de_teste_nao_traz_dado_pessoal_literal():
+    texto = Path(__file__).read_text(encoding="utf-8")
+    r = harness("tests/verificadores/test_lgpd_02.py", texto)
+    assert r.returncode == 0 and r.stdout == ""
 
 
 def test_script_do_pacote_roda_isolado_fora_do_repositorio(
