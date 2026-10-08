@@ -1,5 +1,5 @@
 conteudo: CICD-02
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a capacidade trabalhar em lotes pequenos é quebrar o trabalho em unidades curtas e independentes, o que reduz o tempo para ter retorno sobre as mudanças e facilita achar e corrigir problemas
@@ -54,6 +54,13 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: 'base inexistente: "ERRO: base origin/nao-existe não encontrada", saída 1; diff vazio: "ERRO: nenhuma mudança medida contra origin/main", saída 1; limite 0: "ERRO: os limites precisam ser inteiros positivos", saída 1; yarn.lock de 5000 linhas com --ignorar ''*.lock'': "1 arquivo(s), 1 linha(s) ... 1 ignorado(s): dentro do limite", saída 0; sem --ignorar: "2 arquivo(s), 5001 linha(s) ... MR grande demais", saída 1.'
   data: '2026-10-07'
+- tipo: arquivo
+  arquivo: verificadores/cicd_02.py
+  comando: PADROES_MR_MAX_LINHAS=400 PADROES_MR_MAX_ARQUIVOS=15 python3 -I verificadores/cicd_02.py --evento ci --base <sha> (e sem as variáveis, base inexistente e pre-commit), num repositório Git temporário; pytest -q tests/verificadores/test_cicd_02.py
+  ambiente: repositório Git novo em /tmp/cfd-t3-cicd com um commit-base e uma MR de três módulos de cinco arquivos de 25 linhas cada, mais um yarn.lock de 5000 linhas; Python 3.14.8; macOS (T3 da curadoria de força dura). Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'sem variáveis: cinco linhas "app/clientes/<arquivo>.py:0: MR com 15 arquivo(s) e 375 linha(s) mudadas (limite de 10 arquivos e 200 linhas); este arquivo muda 25 linha(s)", saída 1, com o yarn.lock de 5000 linhas fora da conta. Com PADROES_MR_MAX_ARQUIVOS=15 e PADROES_MR_MAX_LINHAS=400: nada em stdout, saída 0. Base inexistente: "CICD-02: base nao-existe não encontrada (clone raso? use GIT_DEPTH 0)" em stderr, saída 2. Evento pre-commit: "evento não atendido: pre-commit (atende só ci)", saída 2. pytest: 91 passed em tests/verificadores, 30 deles em test_cicd_02.py.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: CICD-02-prompt-1
   harness: claude-code

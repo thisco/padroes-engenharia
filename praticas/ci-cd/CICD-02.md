@@ -5,8 +5,12 @@ resumo: "A merge request fica abaixo de um limite declarado de arquivos e linhas
 dominio: ci-cd
 subdominio: null
 momento: enquanto-escreve
-forca: orienta
-mecanismo: null
+forca: avisa
+mecanismo:
+  verificador: verificadores/cicd_02.py
+  gatilhos:
+    - evento: ci
+  mensagem: "CICD-02: a MR passou do teto de arquivos ou de linhas; divida em MRs independentes, cada uma verde, em vez de subir o limite. Como aplicar: {URL do portal}/praticas/CICD-02.md#como-aplicar"
 status: experimentar
 aplica: []
 ferramentas_aprovadas: [gitlab-ci-local]
@@ -22,8 +26,8 @@ referencias:
   - gitlab-ci-local-readme
 relacionadas: [CICD-01, CICD-03]
 dono: engenharia
-revisado_em: 2026-10-07
-revisar_ate: 2027-04-07
+revisado_em: 2026-10-08
+revisar_ate: 2027-04-08
 ---
 
 ## O que fazer
@@ -92,7 +96,10 @@ grande causa a queda em um projeto.
 
 ### Antes e depois
 
-O job e o verificador, que mede o diff e imprime as cinco maiores mudanças quando reprova:
+O job e o verificador, que mede o diff e imprime as cinco maiores mudanças quando reprova. A versão
+que o portal hospeda e que roda como mecanismo é `verificadores/cicd_02.py`, com os mesmos tetos e a
+mesma medida, lida das variáveis `PADROES_MR_MAX_ARQUIVOS` e `PADROES_MR_MAX_LINHAS` e com o contrato de
+entrada e saída dos verificadores internos; o do Exemplo é o que o job acima copia para `scripts/`:
 
 <!-- incluir: exemplos/CICD-02/gitlab-ci.yml -->
 
@@ -166,19 +173,35 @@ local.
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O verificador candidato é o
-job `tamanho-da-mr` do Exemplo: ele sai com 0 se o diff contra a base está dentro dos dois tetos, e
-com 1 se passa de um deles ou se não consegue medir (base ausente, `git` com erro ou travado por mais
-de 60 s, diff vazio, limite inválido). Para valer como trava, o merge check **Pipelines must
-succeed** precisa estar marcado [ref:gitlab-pipeline-obrigatorio].
+O portal hospeda o verificador `verificadores/cicd_02.py`, e a força é `avisa`. Ele roda só no evento
+`ci`, com `--base <ref>` (por exemplo, `$CI_MERGE_REQUEST_DIFF_BASE_SHA`): mede o diff
+`--base...HEAD`, a partir do ancestral comum, e conta os arquivos mudados e as linhas acrescentadas
+mais as removidas. Qualquer outro evento sai com 2.
 
-Os limites: o job foi executado com o `gitlab-ci-local` e o Docker, e não num GitLab. Linhas e
-arquivos medem o tamanho do texto, e não o risco: uma linha numa migration pesa mais que cem de
-teste, e o verificador não sabe a diferença. Arquivo binário conta como arquivo e como zero linha.
-Renomear conta como remover e criar. A MR em que todos os arquivos casam com `--ignorar` (por
-exemplo, só lockfile) reprova com "nenhuma mudança medida"; ela pede outro job ou uma exceção
-declarada. Quem quer burlar o teto divide uma mudança acoplada em MRs
-que só funcionam juntas, e isso o job não vê; a dica é cada MR ser entregável sozinha. O job roda
-o script da própria MR, então o CODEOWNERS (ou rodar o script da base) é parte da trava. O DORA
-trata o lote pequeno em horas e dias de trabalho, e o teto de MR é uma aproximação dele
-[ref:dora-small-batches].
+Os tetos padrão são os do Exemplo, 10 arquivos e 200 linhas, e o projeto os troca com variáveis de
+ambiente do job, em inteiros positivos: `PADROES_MR_MAX_ARQUIVOS` e `PADROES_MR_MAX_LINHAS`. Valor
+que não seja inteiro positivo sai com 2 e uma mensagem. O que conta como linha mudada segue o
+Exemplo: acrescidas mais removidas; arquivo binário conta como arquivo e como zero linha; renomear
+conta como remover e criar; `*.lock` e `package-lock.json` (em qualquer pasta) ficam fora da conta.
+Arquivo gerado que não seja lockfile conta, porque o verificador não tem como saber que foi gerado.
+
+A saída tem até cinco linhas, uma por arquivo dos que mais mudaram, no formato
+`<caminho>:0: MR com N arquivo(s) e M linha(s) mudadas (limite de X arquivos e Y linhas); este arquivo
+muda K linha(s)`. Sai com 0 dentro dos tetos, 1 acima de um deles e 2 quando não consegue decidir:
+evento que não atende, `--base` ausente ou inexistente (clone raso: use `GIT_DEPTH: "0"`), diff vazio,
+`git` com erro ou parado por mais de 60 s, fora de um repositório Git, ou teto inválido. Isso difere
+do Exemplo em dois pontos: lá esses casos saem com 1, e a MR só de lockfile reprova com "nenhuma
+mudança medida"; aqui o estado indeterminado sai com 2 e a MR só de lockfile passa com 0.
+
+Para rodar à mão, no clone completo com a base disponível:
+`PADROES_MR_MAX_LINHAS=300 python3 verificadores/cicd_02.py --evento ci --base origin/main`.
+
+Os limites: o job do Exemplo foi executado com o `gitlab-ci-local` e o Docker, e não num GitLab, e o
+`verificadores/cicd_02.py` foi executado em repositórios Git de teste, não num pipeline de GitLab.
+Linhas e arquivos medem o tamanho do texto, e não o risco: uma linha numa migration pesa mais que cem
+de teste, e o verificador não sabe a diferença. Quem quer burlar o teto divide uma mudança acoplada
+em MRs que só funcionam juntas, e isso ele não vê; a dica é cada MR ser entregável sozinha. A força
+`avisa` não impede o merge: quem impede é o merge check **Pipelines must succeed**, marcado no
+projeto [ref:gitlab-pipeline-obrigatorio]. O job roda o script da própria MR, então o CODEOWNERS (ou
+rodar o script da base) é parte da trava. O DORA trata o lote pequeno em horas e dias de trabalho, e
+o teto de MR é uma aproximação dele [ref:dora-small-batches].

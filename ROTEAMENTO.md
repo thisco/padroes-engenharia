@@ -16,7 +16,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
 | Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
-| CI/CD (`ci-cd`) | a definir | CICD-02 (só orienta) | CICD-01 (avisa) | CICD-03 (só orienta) |
+| CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (só orienta) | SEG-02 (só orienta) | a definir |
 | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (só orienta), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (só orienta) | P2-06 (só orienta) |
@@ -32,7 +32,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | ARQ-03 | Portas e adaptadores: o domínio não importa framework, e o linter impõe | só orienta | experimentar | nada |
 | ARQ-04 | C4 em dois níveis como fonte, não como ilustração | só orienta | experimentar | nada |
 | CICD-01 | Pipeline obrigatória com gates: lint, suíte e verificador de PR | avisa | experimentar | nada |
-| CICD-02 | Lote pequeno: MR curta, frequente e verde | só orienta | experimentar | nada |
+| CICD-02 | Lote pequeno: MR curta, frequente e verde | avisa | experimentar | nada |
 | CICD-03 | Entrega rastreável: tag semântica, changelog e artefato do commit | só orienta | experimentar | nada |
 | DAD-01 | Migration já aplicada não se edita | bloqueia | adotar | `skill:migrations-reversiveis` |
 | DAD-02 | Expanda e contraia: a mudança de schema em duas etapas compatíveis | só orienta | experimentar | `skill:migrations-reversiveis` |
