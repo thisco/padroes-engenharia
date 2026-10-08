@@ -8,7 +8,7 @@ portal.
 
 Uso: python3 consultar.py "pergunta" [--budget 1500] [--grafo caminho]
      python3 consultar.py --dominio dados-migrations [--momento antes-do-merge]
-Saída: 0 com resposta (mesmo sem prática encontrada) · 2 grafo ausente ou inválido.
+Saída: 0 com resposta (mesmo sem prática) · 2 grafo ausente, malformado ou uso inválido.
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ from pathlib import Path
 CARACTERES_POR_TOKEN = 4
 ORCAMENTO_PADRAO = 1500
 RESERVA_MARCADOR = 120
+ORCAMENTO_MINIMO = RESERVA_MARCADOR // CARACTERES_POR_TOKEN
 ID_PRATICA = re.compile(r"\b[A-Za-z][A-Za-z0-9]*-\d{2}\b")
 PARADAS = frozenset(
     "a o e de da do das dos em no na nos nas um uma uns umas para por com sem que se ao aos as os "
@@ -38,7 +39,7 @@ def _normalizar(texto: str) -> str:
 
 def _termos(texto: str) -> list[str]:
     return [
-        t for t in re.split(r"[^a-z0-9]+", _normalizar(texto)) if len(t) > 2 and t not in PARADAS
+        t for t in re.split(r"[^a-z0-9]+", _normalizar(texto)) if len(t) > 1 and t not in PARADAS
     ]
 
 
@@ -60,7 +61,7 @@ def buscar(
     for termos in textos.values():
         for t in termos:
             frequencia[t] = frequencia.get(t, 0) + 1
-    consulta = _termos(pergunta)
+    consulta = list(dict.fromkeys(_termos(pergunta)))
     ids = {m.upper() for m in ID_PRATICA.findall(pergunta)}
     pontos: dict[str, float] = {}
     for nid, termos in textos.items():
@@ -130,6 +131,19 @@ def _formatar(ordem: list[str], por_id: dict, vizinhos: dict, orcamento: int) ->
     return "\n".join(linhas)[:maximo]
 
 
+def _validar_formato(nos: object, links: object) -> None:
+    if not isinstance(nos, list) or not all(isinstance(n, dict) and "id" in n for n in nos):
+        raise ValueError("`nodes` precisa ser lista de objetos com `id`")
+    if not all(isinstance(n["id"], str) for n in nos):
+        raise ValueError("`id` de nó precisa ser texto")
+    campos = ("source", "target", "relation")
+    if not isinstance(links, list) or not all(
+        isinstance(link, dict) and all(isinstance(link.get(c), str) for c in campos)
+        for link in links
+    ):
+        raise ValueError("`links` precisa ser lista de objetos com source, target e relation")
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Consulta o grafo do catálogo de práticas.")
     parser.add_argument("pergunta", nargs="?")
@@ -140,13 +154,18 @@ def main(argv: list[str] | None = None) -> int:
         "--grafo", type=Path, default=Path(__file__).resolve().parent / "grafo" / "graph.json"
     )
     args = parser.parse_args(argv)
-    if not args.pergunta and not args.dominio:
-        parser.error("informe uma pergunta ou --dominio")
+    if bool(args.pergunta) == bool(args.dominio):
+        print("informe uma pergunta ou --dominio, não os dois", file=sys.stderr)
+        return 2
+    if args.budget < ORCAMENTO_MINIMO:
+        print(f"--budget precisa ser de pelo menos {ORCAMENTO_MINIMO} tokens", file=sys.stderr)
+        return 2
     try:
         dados = json.loads(args.grafo.read_text(encoding="utf-8"))
         nos, links = dados["nodes"], dados["links"]
-    except (OSError, ValueError, KeyError) as exc:
-        print(f"grafo indisponível em {args.grafo}: {exc}", file=sys.stderr)
+        _validar_formato(nos, links)
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        print(f"grafo indisponível em {args.grafo}: {exc!r}", file=sys.stderr)
         return 2
     if args.dominio:
         print(rota(nos, links, args.dominio, args.momento, args.budget))

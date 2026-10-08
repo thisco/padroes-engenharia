@@ -137,3 +137,54 @@ def test_copia_do_pacote_roda_isolada_sem_o_portal(tmp_path):
     )
     assert resultado.returncode == 0, resultado.stderr
     assert resultado.stdout.startswith("DAD-01 ")
+
+
+def _main_com(tmp_path, conteudo, *extra):
+    grafo = tmp_path / "graph.json"
+    grafo.write_text(conteudo if isinstance(conteudo, str) else json.dumps(conteudo), "utf-8")
+    return consultar.main(["migration", "--grafo", str(grafo), *extra])
+
+
+def test_grafo_malformado_sai_com_2_e_mensagem(tmp_path, capsys):
+    casos = [
+        [],
+        "{ nao e json",
+        {"nodes": NOS},
+        {"nodes": {"a": 1}, "links": []},
+        {"nodes": [{"label": "sem id"}], "links": []},
+        {"nodes": [{"id": 1}], "links": []},
+        {"nodes": NOS, "links": [{"source": "DAD-01", "target": "P1-01"}]},
+        {"nodes": NOS, "links": [{"target": "a", "relation": "x"}]},
+        {"nodes": NOS, "links": ["x"]},
+    ]
+    for caso in casos:
+        assert _main_com(tmp_path, caso) == 2
+        assert "grafo indisponível" in capsys.readouterr().err
+
+
+def test_sigla_de_duas_letras_casa_e_stopword_curta_nao():
+    nos = [dict(NOS[1], id="QLD-03", label="QLD-03 O CI roda antes do push", rationale="")]
+    assert consultar.buscar(nos, [], "CI").startswith("QLD-03 ")
+    nos_ia = [dict(NOS[1], id="P2-01", label="P2-01 Uso de IA no produto", rationale="")]
+    assert consultar.buscar(nos_ia, [], "IA").startswith("P2-01 ")
+    assert consultar.buscar(NOS, LINKS, "de da do em no na os as um se ou e o a").startswith(
+        "nenhuma prática"
+    )
+
+
+def test_termo_repetido_conta_uma_vez():
+    assert consultar.buscar(NOS, LINKS, "migration") == consultar.buscar(
+        NOS, LINKS, "migration migration migration"
+    )
+
+
+def test_budget_invalido_sai_com_2(tmp_path, capsys):
+    for b in ("0", "-5", str(consultar.ORCAMENTO_MINIMO - 1)):
+        assert _main_com(tmp_path, {"nodes": NOS, "links": LINKS}, "--budget", b) == 2
+        assert "--budget" in capsys.readouterr().err
+    assert _main_com(tmp_path, {"nodes": NOS, "links": LINKS}, "--budget", "100") == 0
+
+
+def test_pergunta_e_dominio_juntos_sai_com_2(tmp_path, capsys):
+    assert _main_com(tmp_path, {"nodes": NOS, "links": LINKS}, "--dominio", "dados-migrations") == 2
+    assert "não os dois" in capsys.readouterr().err
