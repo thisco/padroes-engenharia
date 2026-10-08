@@ -56,25 +56,25 @@ execucoes:
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/tests/fixtures/cliente.json
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'tests/fixtures/cliente.json:1: CPF em claro e e-mail em claro; saída 1, sem imprimir o dado.'
-  data: '2026-10-06'
+  evidencia: 'dado sintético (CPF 123.456.789-09, e-mail em cliente-ficticio-padroes.com.br): tests/fixtures/cliente.json:1: CPF em claro e e-mail em claro nos dois verificadores; saída 1, sem imprimir o dado.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/logs/atendimento.log
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'logs/atendimento.log:1: CPF em claro e e-mail em claro (a linha 2, com protocolo de 11 dígitos de verificador inválido, não é acusada); saída 1.'
-  data: '2026-10-06'
+  evidencia: 'logs/atendimento.log:1: CPF em claro e e-mail em claro nos dois verificadores (a linha 2, com protocolo de 11 dígitos de verificador inválido, não é acusada); saída 1.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/prompts/segunda-via.txt
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'prompts/segunda-via.txt:1: CPF em claro (com espaços) e e-mail em claro; saída 1.'
-  data: '2026-10-06'
+  evidencia: 'prompts/segunda-via.txt:1: CPF em claro (agora na forma ddd.ddd.ddd-dd, que o hospedado acusa) e e-mail em claro nos dois verificadores; saída 1.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/depois/tests/fixtures/cliente.json
   comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado depois)
@@ -106,9 +106,9 @@ execucoes:
 - tipo: arquivo
   arquivo: verificadores/lgpd_02.py
   comando: python3 -I verificadores/lgpd_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre exemplos/LGPD-02/antes e depois num repositório Git temporário; pytest -q tests/verificadores/test_lgpd_02.py
-  ambiente: repositório Git novo em /tmp/cfd-t2-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (T2 da curadoria de força dura, rodada de correção 1)
+  ambiente: repositórios Git novos em /tmp/cfd-t2-lgpd e /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (rodadas de correção 1 e 2)
   resultado: passou
-  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit de depois: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"; o CPF do prompt passou da grafia com espaços, que o verificador hospedado não acusa, para a canônica). Dados do antes tornados sintéticos nesta rodada: CPF de base artificial 123.456.789 com dígitos verificadores calculados e e-mail em cliente-ficticio-padroes.com.br, domínio não reservado para teste e inexistente (`dig +short cliente-ficticio-padroes.com.br ANY` sem saída; `host cliente-ficticio-padroes.com.br` dá not found: 3(NXDOMAIN)); o candidato do Exemplo também acusa as seis linhas e sai 1, e sobre depois/ sai 0 com 4 arquivos varridos, saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. ci com --base HEAD: saída 0 (nada mudou). pre-commit com uma linha limpa acrescentada ao log que já tinha CPF no HEAD: saída 0 (só a linha nova conta). Linha com URL SSH do Git, URL com credencial e e-mail em example.com: saída 0. antes-de-ferramenta com o log que só traz linhas já existentes em disco: saída 0. pytest: tests/verificadores/test_lgpd_02.py com a suíte inteira verde.'
+  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit de depois: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"), saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. ci com --base HEAD: saída 0 (nada mudou). pre-commit com uma linha limpa acrescentada ao log que já tinha CPF no HEAD: saída 0 (só a linha nova conta). Linha com URL SSH do Git, URL com credencial e e-mail em example.com: saída 0. antes-de-ferramenta com o log que só traz linhas já existentes em disco: saída 0. Dados do antes sintéticos (CPF 123.456.789-09; e-mail em cliente-ficticio-padroes.com.br, domínio sem registro: dig +short ... ANY sem saída e host dá NXDOMAIN). Rodada 2: CPF em CSV (1,<cpf>,Jo), texto com NUL e renomeação cobertos nos três eventos pelos testes de tests/verificadores/test_lgpd_02.py (109 passed).'
   data: '2026-10-08'
 - tipo: prompt
   prompt: LGPD-02-prompt-1
@@ -149,7 +149,7 @@ revisao_adversarial:
     tratamento: 'Tratado só no texto: uma frase antes do bloco diz que o prompt usa o candidato do Exemplo. O prompt não foi alterado e não foi reexecutado.'
   - afirmacao: 'LGPD-02.md, Como aplicar, passo 4 (domínio reservado para teste)'
     problema: '[baixo] não dizia quais domínios de teste o verificador aceita.'
-    tratamento: 'Tratado: o passo 4 e a mensagem do mecanismo nomeiam example.com, example.net, example.org (e subdomínios) e os TLDs .test, .example, .invalid e .localhost, e dizem que exemplo.com e empresa.com.br são acusados.'
+    tratamento: 'Tratado: o passo 4 nomeia example.com, example.net, example.org (e subdomínios) e os TLDs .test, .example, .invalid e .localhost, e diz que exemplo.com e cliente-ficticio-padroes.com.br são acusados; a mensagem do mecanismo nomeia example.com, example.org, example.net e .test.'
   - afirmacao: 'LGPD-02.md, passo 8 (troque cada ocorrência acusada)'
     problema: '[médio] com o arquivo inteiro varrido, corrigir só a ocorrência acusada era impossível.'
     tratamento: 'Tratado no verificador e no texto: ele passou a acusar só linhas novas ou alteradas (harness contra o disco, pre-commit contra o HEAD, ci contra a base); o passo 8 e Os limites dizem isso.'
@@ -159,3 +159,12 @@ revisao_adversarial:
   - afirmacao: 'LGPD-02.md, Como aplicar, passo 6 (índice vetorial)'
     problema: '[baixo] o passo não é executável num repositório vazio; é leitura, e já era assim.'
     tratamento: 'Sem mudança: passo de leitura, que cita fonte e uma leitura do portal já marcada como tal.'
+  - afirmacao: 'verificadores/lgpd_02.py: CPF em CSV (re-revisão da rodada 1, N1)'
+    problema: '[importante] a rodada 1 tirou a vírgula das fronteiras e o CPF em CSV (1,<cpf>,Jo) deixou de ser acusado; o mesmo vale para ponto.'
+    tratamento: 'Tratado: a fronteira do CPF é só "não é dígito"; nos 11 dígitos colados, letra e hífen colados excluem (hash, hex, UUID). Testes em CSV, JSON, chave=valor, YAML e URL; Os limites documenta.'
+  - afirmacao: 'verificadores/lgpd_02.py: arquivo UTF-8 com NUL (re-revisão da rodada 1, N2)'
+    problema: '[importante] o NUL tornava o arquivo binário no pre-commit e no ci (saída 0), enquanto o harness barrava o mesmo conteúdo.'
+    tratamento: 'Tratado: binário é só o que não decodifica; o NUL sai na normalização. Teste passa o mesmo conteúdo com NUL pelos três eventos e espera 1 nos três.'
+  - afirmacao: 'verificadores/lgpd_02.py: normalização, número de linha, URL sem barra, SCP, renomeação, aviso por extensão (re-revisão, Minor)'
+    problema: '[baixo] NFKC e invisíveis incompletos; splitlines divergia do editor; userinfo atravessava ?, # e aspas; SCP aceitava qualquer coisa após ":"; renomeação acusava a fixture antiga; extensão ignorada não avisava.'
+    tratamento: 'Tratado: NFKC, invisíveis (Cf, U+034F, U+115F, U+1160, U+3164, U+FE00-FE0F, U+FFA0) e acento combinante colado a dígito; quebra só em \n; userinfo sem / ? # aspas nem espaço; SCP só com / ou .git depois do ":"; git diff -M com AMRT e comparação com o caminho antigo; aviso em stderr por extensão. Um teste para cada.'

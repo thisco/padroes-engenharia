@@ -143,8 +143,7 @@ def test_ipv4_nao_e_cpf():
         "documento 11111111111",
         f"pedido {cpf()}0",
         f"pedido 9{cpf()}",
-        f"medida 3.{cpf()}",
-        f"medida {cpf()},5",
+        f"hash a{cpf()}b e uuid 0000-{cpf()}-ffff",
         "formato 000.000.000-00 e XXX.XXX.XXX-XX",
     ],
 )
@@ -359,15 +358,13 @@ def test_pre_commit_binario_nao_varrido_avisa_sem_casar(repo_git: RepoGit):
     assert "tests/dados.bin: não varrido" in r.stderr
 
 
-def test_pre_commit_utf16_so_com_bom(repo_git: RepoGit):
+def test_pre_commit_le_utf16_com_bom(repo_git: RepoGit):
     texto = f"cpf {cpf()}\n"
     repo_git.escrever("logs/com_bom.log", "").write_bytes(texto.encode("utf-16"))
-    repo_git.escrever("logs/sem_bom.log", "").write_bytes(texto.encode("utf-16-le"))
-    repo_git.adicionar("logs/com_bom.log", "logs/sem_bom.log")
+    repo_git.adicionar("logs/com_bom.log")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.returncode == 1
-    assert r.stdout.splitlines() == ["logs/com_bom.log:1: CPF em claro"]
-    assert "logs/sem_bom.log: não varrido" in r.stderr
+    assert "logs/com_bom.log:1: CPF em claro" in r.stdout.splitlines()
 
 
 def test_pre_commit_utf8_com_bom_e_varrido(repo_git: RepoGit):
@@ -376,11 +373,12 @@ def test_pre_commit_utf8_com_bom_e_varrido(repo_git: RepoGit):
     assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 1
 
 
-def test_pre_commit_pula_extensao_binaria_conhecida(repo_git: RepoGit):
+def test_pre_commit_pula_extensao_binaria_conhecida_e_avisa(repo_git: RepoGit):
     repo_git.escrever("tests/a.xlsx", f"cpf {cpf()}\n")
     repo_git.adicionar("tests/a.xlsx")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.returncode == 0 and r.stdout == ""
+    assert "tests/a.xlsx: não varrido" in r.stderr
 
 
 def test_pre_commit_pula_submodulo(repo_git: RepoGit):
@@ -475,3 +473,132 @@ def test_script_do_pacote_roda_isolado_fora_do_repositorio(
     entrada["conteudo"] = cpf_invalido()
     inocente = rodar(copia, "antes-de-ferramenta", entrada=entrada, cwd=tmp_path, isolado=True)
     assert inocente.returncode == 0
+
+
+# --- rodada 2: CSV, NUL, normalização completa, linhas, URL, SCP, renomeação -------------------
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "1,{c},Jo",
+        "1,{p},Jo",
+        "{c},35",
+        "cpf={c}",
+        '"{c}"',
+        '{{"cpf":"{p}"}}',
+        "cpf: {c}",
+        "https://x.io/u?cpf={c}&a=1",
+    ],
+)
+def test_cpf_em_csv_json_yaml_log_e_url_pega(texto: str):
+    c = cpf()
+    assert casa(texto.format(c=c, p=com_pontuacao(c)))
+
+
+def test_cpf_colado_a_letra_ou_hifen_nao_pega_mas_com_aspas_pega():
+    c = cpf()
+    assert not casa(f"a{c}b") and not casa(f"x-{c}-y")
+    assert casa(f'"{c}"') and casa(f"cpf={c}")
+
+
+def test_texto_com_nul_e_varrido_igual_nos_tres_eventos(repo_git: RepoGit):
+    conteudo = f"cpf {cpf()}\n\x00\x00lixo\n"
+    assert harness("tests/n.txt", conteudo).stdout.splitlines() == ["tests/n.txt:1: CPF em claro"]
+    repo_git.escrever("tests/n.txt", "").write_bytes(conteudo.encode("utf-8"))
+    repo_git.adicionar("tests/n.txt")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.commitar("com nul")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert pre.stdout.splitlines() == ci.stdout.splitlines() == ["tests/n.txt:1: CPF em claro"]
+    assert pre.returncode == ci.returncode == 1
+
+
+def test_nul_no_meio_do_cpf_nao_contorna():
+    c = cpf()
+    assert casa(f"cpf {c[:5]}\x00{c[5:]}")
+
+
+@pytest.mark.parametrize(
+    "variante",
+    [
+        lambda c: "\u034f".join(c),  # joiner de grafema entre todos os dígitos
+        lambda c: c[:3] + "\u3164" + c[3:],
+        lambda c: c[:3] + "\ufe0f" + c[3:],
+        lambda c: c[:5] + "\u0301" + c[5:],  # acento combinante isolado entre dígitos
+        lambda c: f"{c[:3]}\uff0e{c[3:6]}\uff0e{c[6:9]}\uff0d{c[9:]}",  # ponto e hífen largos
+    ],
+    ids=["034f", "3164", "fe0f", "acento", "pontuacao-larga"],
+)
+def test_normalizacao_completa_do_cpf(variante):
+    assert casa("cpf " + variante(cpf()))
+
+
+def test_arroba_larga_no_email_nao_contorna():
+    assert casa(email("ana", "empresa.com.br").replace(ARROBA, "\uff20"))
+    assert not casa(email("ana", "example.com").replace(ARROBA, "\uff20"))
+
+
+def test_numero_de_linha_bate_com_o_editor():
+    c = cpf()
+    esperado = ["tests/a.txt:3: CPF em claro"]
+    assert (
+        harness("tests/a.txt", f"a\r\nb\x0bc\u2028d\x0c\ncpf {c}\n").stdout.splitlines() == esperado
+    )
+    assert harness("tests/a.txt", f"a\nb\ncpf {c}\n").stdout.splitlines() == esperado
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "https://api.interno?email={e}",
+        "https://site.interno#u={e}",
+        '{{"site":"https://","email":"{e}"}}',
+        "https://x.io/p?email={e}",
+    ],
+)
+def test_email_em_url_sem_barra_pega(texto: str):
+    assert casa(texto.format(e=EMAIL_REAL))
+
+
+@pytest.mark.parametrize("sufixo", [":Senha123", ":8080", ": falhou"])
+def test_email_seguido_de_dois_pontos_que_nao_e_caminho_pega(sufixo: str):
+    assert casa(EMAIL_REAL + sufixo)
+
+
+def test_forma_scp_so_com_caminho_de_repositorio_e_inocente():
+    assert not casa("git" + ARROBA + "gitlab.com:grupo/projeto.git")
+    assert not casa("git" + ARROBA + "gitlab.com:projeto.git")
+    assert casa("git" + ARROBA + "gitlab.com:Senha123")
+
+
+def test_pre_commit_renomear_fixture_antiga_nao_acusa(repo_git: RepoGit):
+    repo_git.escrever("tests/velho.txt", f"cpf {cpf()}\nlinha\n")
+    repo_git.adicionar("tests/velho.txt")
+    repo_git.commitar("antigo")
+    repo_git._git("mv", "tests/velho.txt", "tests/novo.txt")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
+    repo_git.escrever("tests/novo.txt", f"cpf {cpf()}\nlinha\ncpf {cpf('987654321')}\n")
+    repo_git.adicionar("tests/novo.txt")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.stdout.splitlines() == ["tests/novo.txt:3: CPF em claro"]
+
+
+def test_ci_renomear_fixture_antiga_nao_acusa(repo_git: RepoGit):
+    repo_git.escrever("tests/velho.txt", f"cpf {cpf()}\nlinha\n")
+    repo_git.adicionar("tests/velho.txt")
+    base = repo_git.commitar("antigo")
+    repo_git._git("mv", "tests/velho.txt", "tests/novo.txt")
+    repo_git.commitar("renomeia")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    repo_git.escrever("tests/novo.txt", f"cpf {cpf()}\nlinha\ncpf {cpf('987654321')}\n")
+    repo_git.adicionar("tests/novo.txt")
+    repo_git.commitar("acrescenta")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.stdout.splitlines() == ["tests/novo.txt:3: CPF em claro"]
+
+
+def test_harness_extensao_de_binario_avisa_e_nao_casa():
+    r = harness("tests/a.xlsx", cpf())
+    assert r.returncode == 0 and "tests/a.xlsx: não varrido" in r.stderr

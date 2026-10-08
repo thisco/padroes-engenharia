@@ -21,16 +21,21 @@ from pathlib import Path, PurePosixPath
 
 PASTAS = ("tests", "logs", "prompts")
 # Só as formas canônicas: `ddd.ddd.ddd-dd` e 11 dígitos colados, sempre com os dígitos conferidos.
-# Fora: `ddd.ddd.ddd.dd` (parece IPv4), grupos separados por espaço, número colado a outro número.
-CPF = re.compile(r"(?<![\d.,])(?:\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})(?!\d|[.,]\d)")
+# Fora: `ddd.ddd.ddd.dd` (parece IPv4) e grupos separados por espaço. A fronteira é "não é dígito"
+# (vírgula de CSV e ponto valem como fronteira); nos 11 dígitos colados, letra e hífen coladas
+# também excluem, para não casar trecho de hash, hex ou UUID.
+CPF = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)|(?<![A-Za-z0-9-])\d{11}(?![A-Za-z0-9-])")
 # O domínio termina em letras (2 ou mais): `a@b.T` de multiplicação de matrizes não é e-mail.
-# `usuario@host:caminho` é a forma SCP do Git, não e-mail.
-EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])(?!:[^\s:])")
-# Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail.
-CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/\s@]*@")
+EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
+# Forma SCP do Git (`usuario@host:grupo/projeto.git`): depois do ":" vem caminho de repositório.
+SCP = re.compile(r":(?=[^\s:]*(?:/|\.git(?![\w-])))[^\s:]+")
+# Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail. O
+# userinfo não atravessa `/ ? # " '` nem espaço.
+CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s@]*@")
 # Domínios que o time reserva para e-mail de teste: example.com/net/org e subdomínios (RFC 2606) e
 # os TLDs reservados .test, .example, .invalid e .localhost (RFC 2606 e RFC 6761).
 DOMINIOS_DE_TESTE = ("example.com", "example.net", "example.org")
+INVISIVEIS = {0x34F, 0x115F, 0x1160, 0x3164, 0xFFA0}  # além da categoria Cf
 TLDS_DE_TESTE = {"test", "example", "invalid", "localhost"}
 IGNORADOS = {
     ".pyc", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".jar",
@@ -55,16 +60,23 @@ def cpf_valido(digitos: str) -> bool:
     return True
 
 
+def invisivel(c: str) -> bool:
+    o = ord(c)
+    return unicodedata.category(c) == "Cf" or o in INVISIVEIS or 0xFE00 <= o <= 0xFE0F or o == 0
+
+
 def normaliza(linha: str) -> str:
-    """Tira caracteres de formatação (U+200B etc.) e põe dígitos Unicode em ASCII, para um caractere
-    invisível ou um dígito largo não contornar a busca."""
-    letras = []
-    for c in linha:
-        if unicodedata.category(c) == "Cf":
+    """NFKC (dígitos, `＠`, `．` e `－` largos viram ASCII), sem NUL, caracteres invisíveis nem
+    acento combinante colado a dígito ou pontuação, para nada disso contornar a busca."""
+    sem = "".join(c for c in linha if not invisivel(c))
+    saida: list[str] = []
+    for c in unicodedata.normalize("NFKC", sem):
+        if invisivel(c):
             continue
-        d = unicodedata.digit(c, None) if c.isdigit() else None
-        letras.append(str(d) if d is not None else c)
-    return "".join(letras)
+        if unicodedata.category(c) == "Mn" and saida and saida[-1] in "0123456789.-":
+            continue
+        saida.append(c)
+    return "".join(saida)
 
 
 def e_dominio_de_teste(dominio: str) -> bool:
@@ -80,37 +92,54 @@ def achados_da_linha(linha: str) -> list[str]:
     if any(cpf_valido(re.sub(r"\D", "", m.group())) for m in CPF.finditer(linha)):
         achados.append("CPF em claro")
     sem_credencial = CREDENCIAL_EM_URL.sub("", linha)
-    if any(not e_dominio_de_teste(m.group(1)) for m in EMAIL.finditer(sem_credencial)):
+    if any(
+        not e_dominio_de_teste(m.group(1)) and not SCP.match(sem_credencial, m.end())
+        for m in EMAIL.finditer(sem_credencial)
+    ):
         achados.append("e-mail em claro")
     return achados
 
 
-def varre_caminho(caminho: str) -> bool:
-    """Só vale o que está sob tests/, logs/ ou prompts/ da raiz do projeto, em texto."""
+def nas_pastas(caminho: str) -> bool:
+    """Está sob tests/, logs/ ou prompts/ da raiz do projeto."""
     p = PurePosixPath(caminho)
-    if len(p.parts) < 2 or p.parts[0] not in PASTAS or ".." in p.parts:
+    return len(p.parts) >= 2 and p.parts[0] in PASTAS and ".." not in p.parts
+
+
+def varre_caminho(caminho: str, avisos: list[str]) -> bool:
+    """Vale o que está nas três pastas e não é binário conhecido; pular por extensão avisa."""
+    p = PurePosixPath(caminho)
+    if not nas_pastas(caminho) or "__pycache__" in p.parts:
         return False
-    return p.suffix.lower() not in IGNORADOS and "__pycache__" not in p.parts
+    if p.suffix.lower() in IGNORADOS:
+        avisos.append(f"{caminho}: não varrido (extensão de binário conhecida)")
+        return False
+    return True
 
 
 def decodifica(dados: bytes) -> str | None:
-    """Texto em UTF-8 (com ou sem BOM) ou em UTF-16 com BOM; None para o resto (binário)."""
+    """Texto em UTF-8 (com ou sem BOM) ou em UTF-16 com BOM; None para o que não decodifica.
+
+    O NUL não torna o arquivo binário: `normaliza` o remove antes da busca."""
     try:
         if dados.startswith((b"\xff\xfe", b"\xfe\xff")):
-            texto = dados.decode("utf-16")
-        else:
-            texto = dados.decode("utf-8-sig")
+            return dados.decode("utf-16")
+        return dados.decode("utf-8-sig")
     except UnicodeError:
         return None
-    return None if "\x00" in texto else texto
+
+
+def linhas(texto: str) -> list[str]:
+    """Quebra só em `\\n` (tirando o `\\r` final), para o número bater com o do editor e do Git."""
+    return [linha[:-1] if linha.endswith("\r") else linha for linha in texto.split("\n")]
 
 
 def achados_do_arquivo(caminho: str, novo: str, antigo: str | None) -> list[str]:
     """Linhas de `novo` que não existem em `antigo`, contadas por texto: duplicar uma linha antiga
     é linha nova, e corrigir uma de duas ocorrências iguais não é."""
-    existentes = Counter(antigo.splitlines()) if antigo else Counter()
+    existentes = Counter(linhas(antigo)) if antigo else Counter()
     achados = []
-    for n, linha in enumerate(novo.splitlines(), start=1):
+    for n, linha in enumerate(linhas(novo), start=1):
         if existentes[linha] > 0:
             existentes[linha] -= 1
             continue
@@ -137,31 +166,35 @@ def git(raiz: str | None, *args: str) -> bytes:
 def varre_diferenca(
     raiz: str, comparacao: list[str], antes: str, depois: str, avisos: list[str]
 ) -> list[str]:
-    """Varre as linhas novas dos arquivos adicionados ou modificados sob as três pastas.
+    """Varre as linhas novas dos arquivos adicionados, modificados, renomeados ou com tipo trocado.
 
     `comparacao` são os argumentos do `git diff`; `antes` e `depois` são os prefixos de `git show`
-    do lado antigo (`HEAD:` ou `<base>:`) e do novo (`:` é o índice)."""
-    comando = ["diff", "--raw", "--no-abbrev", "--no-renames", "--diff-filter=AM", "-z"]
-    campos = git(raiz, *comando, *comparacao, "--", *PASTAS).split(b"\0")
+    do lado antigo (`HEAD:` ou `<base>:`) e do novo (`:` é o índice). Na renomeação, a comparação é
+    com o conteúdo do caminho antigo."""
+    comando = ["diff", "--raw", "--no-abbrev", "-M", "--diff-filter=AMRT", "-z"]
+    pedacos = git(raiz, *comando, *comparacao, "--", *PASTAS).split(b"\0")
     achados: list[str] = []
-    for i in range(0, len(campos) - 1, 2):
-        # ":<modo antigo> <modo novo> <sha antigo> <sha novo> <status>", depois o caminho
-        modo_antigo, modo_novo = campos[i].decode().lstrip(":").split()[:2]
-        caminho = campos[i + 1].decode("utf-8", "replace")
-        if modo_novo in MODOS_PULADOS or not varre_caminho(caminho):
+    i = 0
+    while i < len(pedacos) and pedacos[i]:
+        # ":<modo antigo> <modo novo> <sha antigo> <sha novo> <status>", depois um ou dois caminhos
+        campos = pedacos[i].decode().lstrip(":").split()
+        status = campos[4][0]
+        n = 2 if status in "RC" else 1
+        caminhos = [p.decode("utf-8", "replace") for p in pedacos[i + 1 : i + 1 + n]]
+        i += 1 + n
+        velho, caminho = caminhos[0], caminhos[-1]
+        if campos[1] in MODOS_PULADOS or not varre_caminho(caminho, avisos):
             continue
         novo = decodifica(git(raiz, "show", f"{depois}{caminho}"))
         if novo is None:
             avisos.append(f"{caminho}: não varrido (binário ou codificação não reconhecida)")
             continue
-        antigo = None
-        if set(modo_antigo) != {"0"}:
-            antigo = decodifica(git(raiz, "show", f"{antes}{caminho}"))
+        antigo = decodifica(git(raiz, "show", f"{antes}{velho}")) if status != "A" else None
         achados += achados_do_arquivo(caminho, novo, antigo)
     return achados
 
 
-def evento_harness() -> list[str]:
+def evento_harness(avisos: list[str]) -> list[str]:
     try:
         entrada = json.loads(sys.stdin.buffer.read().decode("utf-8"))
     except ValueError as erro:
@@ -171,7 +204,7 @@ def evento_harness() -> list[str]:
     caminho, conteudo = entrada.get("caminho"), entrada.get("conteudo")
     if not all(v is None or isinstance(v, str) for v in (caminho, conteudo)):
         raise Indeterminado("`caminho` e `conteudo` devem ser texto ou null")
-    if caminho is None or not varre_caminho(caminho):
+    if caminho is None or not varre_caminho(caminho, avisos):
         return []
     if conteudo is None:
         if entrada.get("ferramenta") in ("editar", "escrever"):
@@ -202,7 +235,7 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
 
 def decide(evento: str, base: str | None, avisos: list[str]) -> list[str]:
     if evento == "antes-de-ferramenta":
-        return evento_harness()
+        return evento_harness(avisos)
     if evento == "pre-commit":
         return evento_pre_commit(avisos)
     if evento == "ci":
