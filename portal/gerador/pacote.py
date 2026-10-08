@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from portal.gerador.erros import R_PACOTE, Erro
+from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
 from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes
@@ -20,7 +21,6 @@ from portal.gerador.saidas import dados_roteamento, para_json
 
 PASTA_PACOTE = "pacote"
 VERSAO_FORMATO_PACOTE = 1
-VERSAO_FORMATO_GRAFO = 1
 NOME_PLUGIN = "padroes-engenharia"
 
 
@@ -45,6 +45,7 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
         "plugin.json": para_json(plugin_json(site)).encode("utf-8"),
         "regras.json": para_json(compilar_regras(site)).encode("utf-8"),
         "grafo/roteamento.json": para_json(dados_roteamento(site)).encode("utf-8"),
+        "grafo/graph.json": para_json(montar_grafo(site)).encode("utf-8"),
         "nucleo/cabecalho.md": ("\n".join(cabecalho(site.versao)) + "\n").encode("utf-8"),
     }
     # Ordem da espinha, sem repetição: o pacote é reprodutível byte a byte.

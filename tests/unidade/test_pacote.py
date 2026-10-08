@@ -42,6 +42,7 @@ def test_pacote_tem_as_entradas_da_f1_e_leva_a_skill_inteira(repo_minimo):
         "plugin.json",
         "regras.json",
         "grafo/roteamento.json",
+        "grafo/graph.json",
         "nucleo/cabecalho.md",
         "skills/curadoria-de-pratica/SKILL.md",
         "skills/curadoria-de-pratica/PROCEDENCIA.md",
