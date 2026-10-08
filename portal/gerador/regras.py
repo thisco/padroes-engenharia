@@ -52,9 +52,11 @@ from portal.gerador.exemplos import (
     secoes,
 )
 from portal.gerador.gatilhos import mecanismo_de, problemas_da_mensagem, problemas_dos_gatilhos
+from portal.gerador.grafo import montar_catalogo
 from portal.gerador.mecanismos import PASTA as PASTA_MECANISMOS
 from portal.gerador.mecanismos import Mecanismo, carregar_mecanismos
 from portal.gerador.ninhos import PECAS
+from portal.gerador.nucleo import compor_bloco, problemas_do_bloco
 
 
 @dataclass(frozen=True)
@@ -588,6 +590,14 @@ def regra_mensagem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
                 Erro(p.caminho_relativo, "mecanismo.mensagem", codigos.R_MENSAGEM, problema)
             )
     return erros
+
+
+@regra
+def regra_nucleo(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-NUCLEO (spec do motor §7.1): o bloco do perfil mais completo cabe no limite."""
+    catalogo = montar_catalogo(repo, espinha)
+    bloco = compor_bloco(catalogo, "0.0.0", [f.slug for f in espinha.faixas])
+    return [Erro("praticas/", "nucleo", codigos.R_NUCLEO, p) for p in problemas_do_bloco(bloco)]
 
 
 def _problema_do_mecanismo(mecanismo: str, contexto: Contexto) -> str:
