@@ -4,15 +4,23 @@ titulo: Dado pessoal não entra em prompt, log nem teste sem máscara
 dominio: privacidade-lgpd
 subdominio: null
 momento: enquanto-escreve
-forca: orienta
-mecanismo: null
+forca: bloqueia
+mecanismo:
+  verificador: verificadores/lgpd_02.py
+  gatilhos:
+    - evento: antes-de-ferramenta
+      ferramenta: [editar, escrever]
+      caminhos: ["tests/**", "logs/**", "prompts/**"]
+    - evento: pre-commit
+    - evento: ci
+  mensagem: "LGPD-02: CPF ou e-mail em claro em teste, log ou prompt; troque por [CPF] e [EMAIL] ou por dado sintético (CPF gerado na hora, e-mail em example.com). Como aplicar: {URL do portal}/praticas/LGPD-02.md#como-aplicar"
 status: experimentar
 aplica: []
 referencias: [lgpd, gateway-poc-cenario-02-policies, gateway-poc-cenario-04-vector-stores]
 relacionadas: [LGPD-01, P2-04, P3-05]
 dono: engenharia
-revisado_em: 2026-10-06
-revisar_ate: 2027-04-06
+revisado_em: 2026-10-08
+revisar_ate: 2027-04-08
 resumo: "CPF e e-mail em claro não vão para fixture de teste, log nem prompt: o dado é mascarado antes do modelo e do log, e o teste usa dado sintético."
 ferramentas_aprovadas: []
 mapeia: [lgpd:art-6]
@@ -82,7 +90,8 @@ amplia onde o dado existe e quem o alcança sem que a tarefa precise disso.
    permissão específica de vector store leu o store inteiro [ref:gateway-poc-cenario-04-vector-stores].
    O corpus era fictício; a leitura do portal é que o mesmo acesso exporia dado pessoal, se ele
    estivesse lá.
-7. Rode o verificador do Exemplo no CI. Ele varre `tests/`, `logs/` e `prompts/`.
+7. Deixe o verificador do portal ligado (`verificadores/lgpd_02.py`): ele barra a edição em `tests/`,
+   `logs/` e `prompts/`, o commit e o CI quando há CPF ou e-mail em claro.
 8. Um número de 11 dígitos não é CPF por si só: o verificador só acusa o que passa na conferência
    dos dígitos, e um protocolo ou um ID de pedido pode ter 11 dígitos sem ser CPF. Ao corrigir, troque
    cada ocorrência acusada (arquivo e linha), e não o arquivo inteiro.
@@ -134,8 +143,10 @@ arquivos varia com o projeto):
 LGPD-02: 4 arquivos varridos, nenhum CPF ou e-mail em claro.
 ```
 
-O verificador. O CPF e o e-mail usam a mesma regex da máscara da P2-04, com a conferência dos
-dígitos verificadores:
+O verificador do Exemplo. O CPF e o e-mail usam a mesma regex da máscara da P2-04, com a conferência
+dos dígitos verificadores. A versão que o portal hospeda e que roda como mecanismo é
+`verificadores/lgpd_02.py`, com o mesmo critério de CPF e de e-mail e o contrato de entrada e saída
+dos verificadores internos:
 
 <!-- incluir: exemplos/LGPD-02/verificar-dado-em-claro.py -->
 
@@ -173,22 +184,29 @@ com CPF e e-mail em claro em `tests/`, `logs/` e `prompts/`.
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O candidato é o
-`verificar-dado-em-claro.py` do Exemplo, no CI do projeto. Ele varre `tests/`, `logs/` e `prompts/`
-e reprova o arquivo com CPF de dígitos verificadores válidos (com ponto, hífen, espaço ou colado) ou
-com e-mail de domínio que não seja `example.com`, `example.org` ou `example.net` (uma escolha do
-Exemplo). Também reprova a raiz sem nenhuma das três pastas e a raiz em que nenhum arquivo foi varrido (as
-pastas vazias), para um caminho errado ou vazio não virar um "nenhum achado". O arquivo que não
-decodifica em UTF-8 é lido como UTF-16; se nem assim, o verificador o lista como "não varrido" e
-sai com 1. Sai com 0 ou 1 e nunca imprime o dado achado.
+O portal hospeda o verificador `verificadores/lgpd_02.py`, e a força é `bloqueia`. Ele roda em três
+eventos: antes de o agente editar ou escrever um arquivo em `tests/`, `logs/` ou `prompts/`; no
+`pre-commit`, sobre o que está no índice; e no `ci`, sobre os arquivos que mudaram entre `--base` e
+`HEAD`. Em qualquer evento só valem os arquivos sob essas três pastas, na raiz do projeto.
+
+Ele acusa CPF com os dois dígitos verificadores corretos (com ponto, hífen, espaço ou colado) e
+e-mail de domínio que não seja `example.com`, `example.org` ou `example.net` (uma escolha do
+Exemplo). Não acusa número de 11 dígitos de verificador inválido, CPF de exemplo como `000.000.000-00`
+nem texto de documentação. A saída tem uma linha por achado, `<caminho>:<linha>: CPF em claro` ou
+`<caminho>:<linha>: e-mail em claro`, e nunca o dado achado. Sai com 0 quando não há o que apontar, 1
+com achado e 2 quando não consegue decidir (evento que não atende, entrada inválida, `ci` sem
+`--base`, fora de um repositório Git). O arquivo que não decodifica em UTF-8 nem em UTF-16 é
+pulado, com um aviso em stderr.
+
+Para rodar à mão no índice do projeto: `python3 verificadores/lgpd_02.py --evento pre-commit`. Para
+comparar com a base da MR: `python3 verificadores/lgpd_02.py --evento ci --base <ref>`.
 
 Os limites: o verificador não distingue CPF real de CPF sintético com dígitos válidos, e por isso o
 teste gera o CPF na hora e não o escreve no arquivo; por outro lado, um número de 11 dígitos que por
 acaso passe na conferência dos dígitos é acusado. Ele não vê nome, telefone, endereço, CPF de outro
 formato ou por extenso, o dado dentro de arquivo binário ou compactado, nem o que está fora das três
 pastas, como o código que monta o log ou o prompt em tempo de execução, o tráfego de produção e o
-índice vetorial. O verificador cobre CPF em texto claro (com ou sem pontuação, em UTF-8 ou UTF-16) e e-mail fora dos
-domínios de teste. Não cobre CPF com escape unicode (`\u0031...`), em base64, partido em mais de uma
+índice vetorial. Não cobre CPF com escape unicode (`\u0031...`), em base64, partido em mais de uma
 linha nem com dígito verificador inválido: isso é o que a revisão humana do código e a P2-04 (a
-máscara no gateway, no caminho do modelo) complementam. A máscara reduz onde o dado existe, mas o que já foi commitado continua no
-histórico do repositório e pede outra providência.
+máscara no gateway, no caminho do modelo) complementam. A máscara reduz onde o dado existe, mas o que
+já foi commitado continua no histórico do repositório e pede outra providência.

@@ -1,6 +1,6 @@
 # prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão do dono)
 conteudo: LGPD-02
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: tratamento é toda operação com dado pessoal, incluindo armazenamento, arquivamento e transmissão (art. 5º,
@@ -102,6 +102,13 @@ execucoes:
   resultado: passou
   evidencia: 'prompt com [CPF] e [EMAIL]: sem achado; saída 0.'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: verificadores/lgpd_02.py
+  comando: python3 -I verificadores/lgpd_02.py --evento pre-commit | ci --base HEAD~1 | antes-de-ferramenta (JSON no stdin), sobre exemplos/LGPD-02/antes e depois num repositório Git temporário; pytest -q tests/verificadores/test_lgpd_02.py
+  ambiente: repositório Git novo em /tmp/cfd-t2-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (T2 da curadoria de força dura)
+  resultado: passou
+  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit anterior: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"), saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. antes-de-ferramenta com o conteúdo do log em logs/: duas linhas e saída 1; o mesmo conteúdo em src/x.py: saída 0. pytest: 51 passed em tests/verificadores.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: LGPD-02-prompt-1
   harness: claude-code

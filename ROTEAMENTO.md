@@ -13,7 +13,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | Contratos de API (`contratos-api`) | API-01 (só orienta) | a definir | API-02 (só orienta) | a definir |
 | Frontend e UX (`frontend-ux`) | UX-02 (só orienta) | UX-01 (só orienta) | a definir | a definir |
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
-| Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (só orienta) | a definir | a definir |
+| Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
 | Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (só orienta) | CICD-01 (avisa) | CICD-03 (só orienta) |
@@ -40,7 +40,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | IAC-02 | Infra declarada em código, com o plano de mudança revisado no PR | só orienta | experimentar | nada |
 | IAC-03 | Rollback declarado e testado antes do deploy | só orienta | experimentar | `skill:migrations-reversiveis` |
 | LGPD-01 | Classifique o dado pessoal antes de escrever | só orienta | experimentar | nada |
-| LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | só orienta | experimentar | nada |
+| LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | bloqueia | experimentar | nada |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | só orienta | experimentar | nada |
 | OBS-02 | SLO, alerta e runbook antes do deploy | só orienta | experimentar | nada |
 | P1-01 | Classificar toda mudança em tier antes de codar | só orienta | experimentar | `skill:sdd-lifecycle` |
