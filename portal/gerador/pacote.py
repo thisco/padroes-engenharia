@@ -47,6 +47,7 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
         "grafo/roteamento.json": para_json(dados_roteamento(site)).encode("utf-8"),
         "grafo/graph.json": para_json(montar_grafo(site)).encode("utf-8"),
         "nucleo/cabecalho.md": ("\n".join(cabecalho(site.versao)) + "\n").encode("utf-8"),
+        "consultar.py": (Path(__file__).resolve().parent / "consultar.py").read_bytes(),
     }
     # Ordem da espinha, sem repetição: o pacote é reprodutível byte a byte.
     for slug in dict.fromkeys(f.slug for f in site.espinha.faixas):
