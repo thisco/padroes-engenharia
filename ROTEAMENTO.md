@@ -19,7 +19,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (só orienta) | SEG-02 (só orienta) | a definir |
-| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (só orienta), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (só orienta) | P2-06 (só orienta) |
+| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (só orienta) | P2-06 (só orienta) |
 
 ## Práticas
 
@@ -53,7 +53,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | P1-09 | Revise contra a spec, com veredito por requisito | avisa | adotar | `skill:sdd-lifecycle` |
 | P1-10 | Reconcilie o drift entre spec e código antes do merge | só orienta | avaliar | `skill:sdd-lifecycle` |
 | P1-11 | Arquive a spec e destile o permanente em steering e ADR | só orienta | adotar | `skill:sdd-lifecycle` |
-| P2-01 | Toda chamada a modelo passa pelo gateway com chave virtual | só orienta | experimentar | nada |
+| P2-01 | Toda chamada a modelo passa pelo gateway com chave virtual | avisa | experimentar | nada |
 | P2-02 | Classifique o escopo e o risco da aplicação antes de escrever | só orienta | experimentar | nada |
 | P2-03 | Registre no catálogo o modelo, a retenção e o operador dos dados | só orienta | experimentar | nada |
 | P2-04 | Mascare o dado pessoal antes de enviar ao modelo | só orienta | experimentar | nada |
