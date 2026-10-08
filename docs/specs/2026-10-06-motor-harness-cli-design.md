@@ -112,16 +112,16 @@ projeto: quem clona o repositório precisa só de `python3`, não do pacote `pad
 
 ## 5. Pacote de distribuição
 
-Gerado pelo monorepo a cada release em `dist/padroes-<versao>/` e publicado como tarball e no
-Pages, ao lado de `public/`.
+Gerado pelo monorepo em `public/pacote/` (a versão está no `manifesto.json`) e anexado à release
+como `padroes-pacote-<tag>.tar.gz` (ADR 0009).
 
 ```
-padroes-<versao>/
+pacote/
 ├── manifesto.json            versão, commit, data, sha256 de cada arquivo, formato do grafo
 ├── plugin.json               manifesto Agent Plugins 1.0 (name, version, description, keywords)
 ├── skills/<nome>/SKILL.md    skills do catálogo, no formato agentskills.io
 ├── mcp.json                  servidor graphify local sobre grafo/graph.json, 3 ferramentas expostas
-├── nucleo/AGENTS.bloco.md    bloco gerenciado, modelo com placeholders de perfil (§7.1)
+├── nucleo/                   cabecalho.md, celulas/<dominio>.md, hooks/<dominio>.txt; o CLI compõe o bloco (§7.1)
 ├── regras.json               regras compiladas (§6.2), independentes de harness
 ├── perfil/sinais.yml         sinais de detecção de perfil (§7.2)
 ├── grafo/graph.json          grafo do catálogo (§9)
@@ -147,7 +147,8 @@ manifesto deles a partir do mesmo conteúdo. O pacote também é publicado em
 ### 6.1 Extensão do frontmatter da prática
 
 O campo `mecanismo` do v0 (§6.6 da spec do portal) aceitava um caminho. Passa a aceitar também
-um bloco estruturado. A forma antiga continua válida e equivale a `verificador:` sem gatilhos.
+um bloco estruturado. A forma antiga continua válida e equivale a `verificador:` com um
+único gatilho `ci` implícito, o que mantém válidas as práticas `avisa` já publicadas (ADR 0009).
 
 ```yaml
 forca: bloqueia
@@ -543,6 +544,8 @@ Cada fase termina com checkpoint humano, evidência em `docs/plans/` e `pytest`,
 | **F4 · CLI** | `instalar`, `perfil`, `doctor`, `atualizar`, `verificar`, `remover`, `desligar`, lockfile, merge gerenciado, job de CI modelo, lints §8.2 | integração em fixture com arquivos pré-existentes; idempotência; dogfooding no monorepo |
 | **F5 · Grafo e recuperação** | `grafo_catalogo.py`, `graph.json` no pacote, `mcp.json` com três ferramentas, `consultar` e `rota`, teste de tokens | critérios 5 e 7; regra 17 do validador ativa |
 | **F6 · Piloto e release v1.0** | instalação em um projeto real do departamento, evidência ponta a ponta nos quatro harnesses, `CHANGELOG`, release com tarball e `.well-known`, aposentadoria do scaffold decidida | critérios 1 a 9; decisão registrada em ADR |
+
+As linhas F1 e F5 foram substituídas pelo [delta de 2026-10-08](2026-10-08-f1-enxuta-delta.md).
 
 A spec irmã começa depois da F5, porque precisa do contrato do pacote e do grafo estáveis.
 
