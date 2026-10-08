@@ -3,6 +3,8 @@ com a URL absoluta e a mensagem já com a URL do portal."""
 
 import json
 
+from portal.gerador.gatilhos import e_hook
+from portal.gerador.nucleo import hooks_do_dominio
 from portal.gerador.regras_harness import VERSAO_FORMATO_REGRAS, compilar_regras
 from portal.gerador.saidas import para_json
 from tests import fabrica
@@ -79,7 +81,7 @@ def test_regras_em_ordem_de_id_e_json_deterministico():
     assert json.loads(para_json(compilar_regras(site)))["versao_formato"] == 1
 
 
-def test_mecanismo_malformado_ou_sem_verificador_e_pulado_sem_excecao():
+def test_sem_verificador_sai_com_null_e_tipo_errado_e_pulado_sem_excecao():
     sem_verificador = fabrica.pratica(
         fabrica.meta_pratica(id="P1-01", forca="avisa", mecanismo={"gatilhos": [{"evento": "ci"}]})
     )
@@ -88,7 +90,21 @@ def test_mecanismo_malformado_ou_sem_verificador_e_pulado_sem_excecao():
         fabrica.meta_pratica(id="P1-03", forca="avisa", mecanismo="scripts/validar.py")
     )
     regras = compilar_regras(_site(sem_verificador, tipo_errado, valida))["regras"]
-    assert [r["id"] for r in regras] == ["P1-03"]
+    assert [r["id"] for r in regras] == ["P1-01", "P1-03"]
+    assert regras[0]["verificador"] is None
+
+
+def test_bloqueia_sem_verificador_vira_regra_e_hook_e_tipo_errado_nenhum_dos_dois():
+    sem_verificador = {k: v for k, v in fabrica.MECANISMO_BLOQUEIA.items() if k != "verificador"}
+    sem = fabrica.pratica(
+        fabrica.meta_pratica(id="P1-01", forca="bloqueia", mecanismo=sem_verificador)
+    )
+    errado = fabrica.pratica(fabrica.meta_pratica(id="P1-02", forca="bloqueia", mecanismo=42))
+    site = _site(sem, errado)
+    regras = compilar_regras(site)["regras"]
+    assert [(r["id"], r["verificador"]) for r in regras] == [("P1-01", None)]
+    assert hooks_do_dominio(site.catalogo, "construir-com-ia") == ["P1-01"]
+    assert e_hook(sem.meta) and not e_hook(errado.meta)
 
 
 def test_orienta_com_mecanismo_nao_gera_regra():

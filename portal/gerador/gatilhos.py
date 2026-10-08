@@ -59,6 +59,17 @@ def mecanismo_de(meta: dict[str, Any]) -> MecanismoDaPratica | None:
     )
 
 
+def vira_regra(meta: dict[str, Any]) -> bool:
+    """A prática entra em `regras.json`: força acima de `orienta` e mecanismo legível. Sem
+    `verificador`, o casamento do gatilho é a própria decisão (spec do motor §6.5)."""
+    return meta.get("forca") in ("avisa", *FORCAS_DURAS) and mecanismo_de(meta) is not None
+
+
+def e_hook(meta: dict[str, Any]) -> bool:
+    """A prática vira hook: força dura e o mesmo critério de `vira_regra`."""
+    return meta.get("forca") in FORCAS_DURAS and vira_regra(meta)
+
+
 def _lista(valor: Any) -> list[Any]:
     """Só lista vale; escalar ou string (typo de YAML) vira vazio e o schema reporta."""
     return valor if isinstance(valor, list) else []

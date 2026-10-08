@@ -10,12 +10,12 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from portal.gerador.gatilhos import e_hook
 from portal.gerador.grafo import Catalogo
 from portal.gerador.vocabulario import ROTULO_FORCA, plural
 
 LIMITE_LINHAS = 100
 LIMITE_BYTES = 8192
-FORCAS_DE_HOOK = ("bloqueia", "pede-aprovacao")
 
 
 def cabecalho(versao: str) -> list[str]:
@@ -46,9 +46,7 @@ def linhas_do_dominio(catalogo: Catalogo, slug: str) -> list[str]:
 
 
 def hooks_do_dominio(catalogo: Catalogo, slug: str) -> list[str]:
-    return [
-        p.chave for p in catalogo.praticas_do_dominio(slug) if p.meta.get("forca") in FORCAS_DE_HOOK
-    ]
+    return [p.chave for p in catalogo.praticas_do_dominio(slug) if e_hook(p.meta)]
 
 
 def compor_bloco(catalogo: Catalogo, versao: str, dominios: Sequence[str]) -> str:
