@@ -6,10 +6,6 @@ steering: [frontend-ux]
 skills: [estados-de-interface]
 referencias: [estados-de-interface]
 candidatas:
-  - titulo: Toda tela tem os quatro estados
-    momento: enquanto-escreve
-  - titulo: Protótipo antes do código, e o estado vazio não é erro
-    momento: antes-de-escrever
   - titulo: Acessibilidade conferida no CI
     momento: antes-do-merge
 revisado_em: 2026-10-06

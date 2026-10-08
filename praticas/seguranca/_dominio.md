@@ -5,13 +5,6 @@ descricao: "Como a mudança é pensada contra ameaças antes de virar código, e
 steering: [seguranca]
 skills: [threat-model]
 referencias: [sdd-scaffold-threat-model]
-candidatas:
-  - titulo: Threat-model em cinco perguntas antes de escrever
-    momento: antes-de-escrever
-  - titulo: Segredo não entra no repositório, com varredura no CI e antes do commit
-    momento: antes-do-merge
-  - titulo: Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa
-    momento: enquanto-escreve
 revisado_em: 2026-10-07
 ---
 

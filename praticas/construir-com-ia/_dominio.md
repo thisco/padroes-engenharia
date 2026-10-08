@@ -9,18 +9,12 @@ starter: sdd-scaffold
 candidatas:
   - titulo: Constituição e memória lidas
     momento: antes-de-escrever
-  - titulo: Checkpoint humano da spec
-    momento: antes-de-escrever
   - titulo: Plano com checkboxes
     momento: enquanto-escreve
   - titulo: Branch isolada por mudança
     momento: enquanto-escreve
   - titulo: Evidência colada no plano
     momento: antes-do-merge
-  - titulo: Revisão adversarial contra a spec
-    momento: antes-do-merge
-  - titulo: Memória destilada, bug vira regra
-    momento: depois-da-entrega
 revisado_em: 2026-10-04
 ---
 

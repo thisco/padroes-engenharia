@@ -5,13 +5,6 @@ descricao: "Ambiente local reproduzível, infra declarada em código com o plano
 steering: [infra-devops]
 skills: [migrations-reversiveis]
 referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, opentofu-plan]
-candidatas:
-  - titulo: Ambiente local reproduzível por compose, com ordem de rebuild escrita
-    momento: antes-de-escrever
-  - titulo: Infra declarada em código, com o plano de mudança revisado no PR
-    momento: antes-do-merge
-  - titulo: Rollback declarado e testado antes do deploy
-    momento: depois-da-entrega
 revisado_em: 2026-10-07
 ---
 

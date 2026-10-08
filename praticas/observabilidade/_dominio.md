@@ -6,10 +6,6 @@ steering: []
 skills: []
 referencias: [sre-book-slo]
 candidatas:
-  - titulo: Log estruturado, correlacionado e sem dado pessoal
-    momento: enquanto-escreve
-  - titulo: SLO, alerta e runbook antes do deploy
-    momento: depois-da-entrega
   - titulo: Métricas dos quatro sinais de ouro
     momento: depois-da-entrega
 revisado_em: 2026-10-06

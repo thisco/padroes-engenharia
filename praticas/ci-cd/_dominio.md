@@ -5,13 +5,6 @@ descricao: "O que o pipeline do GitLab exige antes do merge e na hora da release
 steering: []
 skills: []
 referencias: [gitlab-pipeline-obrigatorio, dora-small-batches]
-candidatas:
-  - titulo: "Pipeline obrigatória com gates: lint, suíte e verificador de PR"
-    momento: antes-do-merge
-  - titulo: "Lote pequeno: MR curta, frequente e verde"
-    momento: enquanto-escreve
-  - titulo: "Entrega rastreável: tag semântica, changelog e artefato do commit"
-    momento: depois-da-entrega
 revisado_em: 2026-10-07
 ---
 

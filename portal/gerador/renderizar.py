@@ -3,6 +3,7 @@ de página. Cada função devolve o HTML pronto; quem grava em disco é `saidas.
 
 from __future__ import annotations
 
+import re
 import unicodedata
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, replace
@@ -491,11 +492,25 @@ def scaffold_do_dominio(site: Site, faixa: Faixa, raiz: str = "../") -> list[Any
     return itens or ["nada: o scaffold ainda não cobre esta faixa"]
 
 
+def _titulo_comparavel(titulo: str) -> str:
+    """Título sem acento, caixa e pontuação: a mesma prática escrita de outro jeito casa."""
+    sem_acento = unicodedata.normalize("NFKD", titulo).encode("ascii", "ignore").decode()
+    return " ".join(re.findall(r"[a-z0-9]+", sem_acento.lower()))
+
+
 def candidatas_do_dominio(site: Site, dominio: Conteudo | None) -> list[str]:
+    """As candidatas do `_dominio.md` que ainda não viraram prática: a que tem o mesmo título de uma
+    prática do domínio some da página, para a lista não envelhecer quando a prática é publicada."""
     if dominio is None:
         return []
+    publicadas = {
+        _titulo_comparavel(str(p.meta.get("titulo", "")))
+        for p in site.catalogo.praticas_do_dominio(dominio.chave)
+    }
     resultado = []
     for candidata in dominio.meta.get("candidatas") or []:
+        if _titulo_comparavel(str(candidata.get("titulo", ""))) in publicadas:
+            continue
         momento = site.espinha.momento(str(candidata.get("momento", "")))
         resultado.append(f"{candidata.get('titulo', '')} ({momento.titulo if momento else ''})")
     return resultado
