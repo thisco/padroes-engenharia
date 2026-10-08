@@ -100,6 +100,7 @@ NAV = (
             ("Glossário", "glossario.html"),
             ("Casos", "casos.html"),
             ("Apresentações", "apresentacoes.html"),
+            ("Otimização dos prompts", "guias/otimizacao-reflexiva-dos-prompts.html"),
         ),
     ),
     ("Para agentes", (("Para agentes", "para-agentes.html"),)),

@@ -24,6 +24,9 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Alterado
 
+- Menu Entender ganha o item "Otimização dos prompts", que leva ao guia da otimização
+  reflexiva (ADR 0008); antes ele só aparecia em Comece aqui › Para entender antes.
+
 - Escopo do GEPA restrito a quatro alvos (ADR 0008): roteamento do MCP (`buscar_praticas`),
   descrições de skills e de ferramentas do MCP, detecção de perfil do CLI e mensagens das regras.
   Os prompts das práticas ficam só medidos a cada release, sem otimização por padrão.
