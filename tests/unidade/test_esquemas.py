@@ -232,3 +232,45 @@ def test_caso_rejeita_dono_que_nao_e_slug(dono):
         fabrica.meta_caso(dono=dono), carregar_validador(PASTA, "caso"), "c.md"
     )
     assert [e.campo for e in erros] == ["dono"]
+
+
+def _erros_pratica(meta):
+    return validar_instancia(meta, carregar_validador(PASTA, "pratica"), "p.md")
+
+
+def test_mecanismo_aceita_string_nulo_e_bloco():
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=None)) == []
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo="scripts/validar.py")) == []
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=fabrica.MECANISMO_BLOQUEIA)) == []
+
+
+def test_mecanismo_bloco_exige_gatilhos_e_recusa_campo_estranho():
+    sem_gatilhos = {"verificador": "scripts/validar.py", "mensagem": "P1-01: x https://p"}
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=sem_gatilhos)) != []
+    estranho = dict(fabrica.MECANISMO_BLOQUEIA, extra=1)
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=estranho)) != []
+
+
+def test_gatilho_recusa_evento_e_ferramenta_fora_do_vocabulario():
+    ruim = dict(
+        fabrica.MECANISMO_BLOQUEIA, gatilhos=[dict(fabrica.GATILHO_HARNESS, evento="antes")]
+    )
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=ruim)) != []
+    ruim = dict(
+        fabrica.MECANISMO_BLOQUEIA, gatilhos=[dict(fabrica.GATILHO_HARNESS, ferramenta=["rm"])]
+    )
+    assert _erros_pratica(fabrica.meta_pratica(mecanismo=ruim)) != []
+
+
+def test_catalogo_aceita_pratica_com_mecanismo_em_bloco():
+    catalogo = fabrica.meta_catalogo()
+    catalogo["praticas"][0]["mecanismo"] = fabrica.MECANISMO_BLOQUEIA
+    validador = carregar_validador(PASTA, "catalogo")
+    assert validar_instancia(catalogo, validador, "catalogo.json") == []
+
+
+def test_catalogo_recusa_mecanismo_em_bloco_invalido():
+    catalogo = fabrica.meta_catalogo()
+    catalogo["praticas"][0]["mecanismo"] = dict(fabrica.MECANISMO_BLOQUEIA, extra=1)
+    validador = carregar_validador(PASTA, "catalogo")
+    assert validar_instancia(catalogo, validador, "catalogo.json") != []

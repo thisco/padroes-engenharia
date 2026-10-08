@@ -20,6 +20,26 @@ from portal.gerador.renderizar import Site, montar_site
 
 RAIZ = Path(__file__).resolve().parent.parent
 COMMIT = "0123456789abcdef0123456789abcdef01234567"
+GATILHO_HARNESS = {
+    "evento": "antes-de-ferramenta",
+    "ferramenta": ["editar", "escrever"],
+    "caminhos": ["**/migrations/**"],
+    "comando": None,
+}
+GATILHO_GIT = {
+    "evento": "pre-commit",
+    "ferramenta": [],
+    "caminhos": ["**/migrations/**"],
+    "comando": None,
+}
+MECANISMO_BLOQUEIA = {
+    "verificador": "scripts/validar.py",
+    "gatilhos": [GATILHO_HARNESS, GATILHO_GIT],
+    "mensagem": (
+        "P1-01: migration já aplicada não se edita. "
+        "Como aplicar: {URL do portal}/praticas/P1-01.md#como-aplicar"
+    ),
+}
 
 CORPO_PRATICA = """## O que fazer
 

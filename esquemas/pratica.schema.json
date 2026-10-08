@@ -15,7 +15,7 @@
     "subdominio": {"type": ["string", "null"], "minLength": 1},
     "momento": {"type": "string", "minLength": 1},
     "forca": {"enum": ["bloqueia", "pede-aprovacao", "avisa", "orienta"]},
-    "mecanismo": {"type": ["string", "null"], "minLength": 1},
+    "mecanismo": {"$ref": "#/$defs/mecanismo"},
     "status": {"enum": ["adotar", "experimentar", "avaliar", "evitar"]},
     "aplica": {
       "type": "array",
@@ -40,6 +40,42 @@
     "revisar_ate": {"$ref": "#/$defs/data"}
   },
   "$defs": {
+    "mecanismo": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "minLength": 1},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gatilhos"],
+          "properties": {
+            "verificador": {"type": ["string", "null"], "minLength": 1},
+            "gatilhos": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/gatilho"}},
+            "mensagem": {"type": ["string", "null"], "minLength": 1, "maxLength": 400}
+          }
+        }
+      ]
+    },
+    "gatilho": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evento"],
+      "properties": {
+        "evento": {
+          "enum": [
+            "antes-de-ferramenta", "depois-de-ferramenta", "ao-enviar-prompt", "ao-parar",
+            "pre-commit", "commit-msg", "ci"
+          ]
+        },
+        "ferramenta": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["ler", "editar", "escrever", "shell", "web", "mcp"]}
+        },
+        "caminhos": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "comando": {"type": ["string", "null"], "minLength": 1}
+      }
+    },
     "data": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
     "slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"},
     "exemplo": {
