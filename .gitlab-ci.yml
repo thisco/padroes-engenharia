@@ -1,8 +1,8 @@
 # Pipeline do portal (spec §12.2): validar → testar → seguranca → gerar → publicar.
 # Bloqueios do §12.1: validar.py (1–8, 10 e 12), determinismo (9), gitleaks (11).
 # Avisos do §12.1: job agendado `avisos`, que nunca bloqueia.
-# O job `pages` publica no GitLab Pages só na branch padrão; `pacote` anexa o site em tar.gz
-# a cada tag v* (spec §7.4).
+# O job `pages` publica no GitLab Pages só na branch padrão; `pacote` anexa o site e o pacote de
+# distribuição em tar.gz a cada tag v* (spec §7.4; ADR 0009).
 
 stages:
   - validar
@@ -114,6 +114,7 @@ pages:
   script:
     - test -f public/index.html
     - test -f public/llms.txt
+    - test -f public/pacote/manifesto.json
   artifacts:
     paths:
       - public
@@ -129,10 +130,12 @@ pacote:
     - VERSAO=$(python -c 'import json; print(json.load(open("public/catalogo.json"))["versao"])')
     - test "$CI_COMMIT_TAG" = "v$VERSAO"
     - tar -czf "padroes-engenharia-$CI_COMMIT_TAG.tar.gz" -C public .
+    - tar -czf "padroes-pacote-$CI_COMMIT_TAG.tar.gz" -C public/pacote .
   artifacts:
     name: "padroes-engenharia-$CI_COMMIT_TAG"
     paths:
       - padroes-engenharia-$CI_COMMIT_TAG.tar.gz
+      - padroes-pacote-$CI_COMMIT_TAG.tar.gz
     expire_in: never
 
 avisos:

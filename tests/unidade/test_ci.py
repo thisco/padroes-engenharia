@@ -74,8 +74,18 @@ def test_avisos_so_no_agendamento_e_nunca_bloqueiam():
 def test_pacote_nas_tags_v_com_o_nome_da_spec():
     pacote = job("pacote")
     assert pacote["rules"] == [{"if": "$CI_COMMIT_TAG =~ /^v/"}]
-    assert pacote["artifacts"]["paths"] == ["padroes-engenharia-$CI_COMMIT_TAG.tar.gz"]
+    assert "padroes-engenharia-$CI_COMMIT_TAG.tar.gz" in pacote["artifacts"]["paths"]
     assert 'test "$CI_COMMIT_TAG" = "v$VERSAO"' in comandos("pacote")
+
+
+def test_pages_confere_o_manifesto_do_pacote():
+    assert "test -f public/pacote/manifesto.json" in comandos("pages")
+
+
+def test_job_pacote_anexa_o_pacote_de_distribuicao():
+    script = comandos("pacote")
+    assert 'tar -czf "padroes-pacote-$CI_COMMIT_TAG.tar.gz" -C public/pacote .' in script
+    assert "padroes-pacote-$CI_COMMIT_TAG.tar.gz" in job("pacote")["artifacts"]["paths"]
 
 
 def test_todo_script_citado_existe():
