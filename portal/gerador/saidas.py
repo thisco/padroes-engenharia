@@ -19,6 +19,7 @@ from typing import Any
 from portal.gerador.apresentacoes import PASTA as PASTA_APRESENTACOES
 from portal.gerador.carregar import Conteudo
 from portal.gerador.exemplos import caminho_seguro, expandir_inclusoes, inclusoes, linguagem_de
+from portal.gerador.gatilhos import texto_mecanismo
 from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.paginas import (
     PAGINAS_ESTRUTURADAS,
@@ -288,7 +289,7 @@ def md_pratica(site: Site, p: Conteudo) -> str:
         dominio,
         f"- Momento: {momento.titulo} (`{m['momento']}`)",
         f"- Força: {m['forca']}",
-        f"- Mecanismo: `{m['mecanismo']}`" if m.get("mecanismo") else "- Mecanismo: nenhum",
+        f"- Mecanismo: `{texto_mecanismo(m)}`" if m.get("mecanismo") else "- Mecanismo: nenhum",
         f"- Status: {m['status']}",
         "- Aplica: "
         + (

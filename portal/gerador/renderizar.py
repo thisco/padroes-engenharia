@@ -19,6 +19,7 @@ from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import MARCADOR, numerar, sem_marcadores
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.exemplos import Prompt, blocos, expandir_inclusoes, prompts_de, secoes
+from portal.gerador.gatilhos import texto_mecanismo
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 from portal.gerador.ninhos import NINHOS
@@ -240,6 +241,7 @@ def criar_ambiente(raiz: Path) -> Environment:
         FIGURA_DA_SECAO=FIGURA_DA_SECAO,
         descrever_ninho=descrever_ninho,
         descrever_forcas=descrever_forcas,
+        texto_mecanismo=texto_mecanismo,
     )
     ambiente.globals.update(
         FORCAS=FORCAS,

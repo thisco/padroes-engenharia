@@ -112,3 +112,16 @@ def test_escreve_html_e_md_lado_a_lado(tmp_path):
 
 def test_todo_caminho_gerado_tem_gerador():
     assert {caminho for caminho, _ in PAGINAS_GERADAS} <= set(GERADORES)
+
+
+def test_ficha_da_pratica_resume_o_mecanismo_em_bloco():
+    p = fabrica.pratica(
+        fabrica.meta_pratica(forca="bloqueia", mecanismo=fabrica.MECANISMO_BLOQUEIA)
+    )
+    s = fabrica.site(p, fabrica.referencia())
+    paginas = {pg.caminho: pg for pg in montar_paginas(s)}
+    html = paginas["praticas/P1-01.html"].html
+    assert "scripts/validar.py; 2 gatilhos: antes-de-ferramenta, pre-commit" in html
+    assert "{&#39;" not in html and "{'" not in html
+    md = md_pratica(s, p)
+    assert "- Mecanismo: `scripts/validar.py; 2 gatilhos: antes-de-ferramenta, pre-commit`" in md

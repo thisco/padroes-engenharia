@@ -34,7 +34,7 @@
     <section>
       <h2>Mecanismo</h2>
 {% if p.meta.mecanismo %}
-      <p><code>{{ p.meta.mecanismo }}</code></p>
+      <p><code>{{ texto_mecanismo(p.meta) }}</code></p>
 {% else %}
       <p class="vazia">Sem mecanismo: a prática orienta, não impede.</p>
 {% endif %}
