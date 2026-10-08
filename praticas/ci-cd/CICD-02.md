@@ -23,6 +23,7 @@ referencias:
   - gitlab-mr-pipelines
   - gitlab-pipeline-obrigatorio
   - gitlab-git-depth
+  - gitlab-allow-failure
   - gitlab-ci-local-readme
   - gitlab-variaveis-predefinidas
 relacionadas: [CICD-01, CICD-03]
@@ -42,7 +43,7 @@ Entregue em merge requests (MR) pequenas, que entram cedo e com o pipeline verde
    fixa um número, e o time ajusta o seu pela própria experiência.
 2. **Um job que mede e avisa.** O job calcula o diff da branch contra a base e sai com 1 se o
    teto for passado, e com 2 se não conseguir medir. Com `allow_failure: true`, o job fica laranja
-   e não derruba o pipeline: é um aviso. Roda só em pipeline de MR, pela regra
+   e não derruba o pipeline: é um aviso [ref:gitlab-allow-failure]. Roda só em pipeline de MR, pela regra
    `$CI_PIPELINE_SOURCE == "merge_request_event"`, que roda a cada commit novo na branch da MR
    [ref:gitlab-mr-pipelines].
 3. **Divida antes de abrir, não depois do protesto do revisor.** Uma mudança grande vira uma
@@ -102,8 +103,8 @@ grande causa a queda em um projeto.
    Saída 0: dentro dos tetos. Saída 1: MR acima de um teto, com até cinco linhas dos arquivos que
    mais mudaram; o job fica laranja. Saída 2: não conseguiu medir (base ausente, diff vazio, teto
    inválido); com `allow_failure: true` isso também fica laranja, e a mensagem em stderr diz o motivo.
-3. Mantenha `GIT_DEPTH: "0"`: o diff precisa do histórico e da base, e o clone raso não os traz
-   [ref:gitlab-git-depth]. O job do Exemplo (candidato, abaixo) usa a branch de destino em vez do SHA
+3. Mantenha `GIT_DEPTH: "0"`, que desliga o clone raso [ref:gitlab-git-depth]; o `git diff` com
+   `--base` precisa do commit da base no clone. O job do Exemplo (candidato, abaixo) usa a branch de destino em vez do SHA
    base e por isso confere a `origin/<alvo>` com dois `git rev-parse`.
 4. Para rodar o job na sua máquina, o jeito mais curto é o verificador direto, sem GitLab, no clone
    completo e com a base disponível: `python3 -I verificadores/cicd_02.py --evento ci --base
@@ -244,7 +245,7 @@ Linhas e arquivos medem o tamanho do texto, e não o risco: uma linha numa migra
 de teste, e o verificador não sabe a diferença. Quem quer burlar o teto divide uma mudança acoplada
 em MRs que só funcionam juntas, e isso ele não vê; a dica é cada MR ser entregável sozinha. A força
 `avisa` não impede o merge: o job do passo 2 leva `allow_failure: true`, fica laranja e deixa o
-merge livre, mesmo com **Pipelines must succeed** marcado; quem quiser barrar troca a força no próprio
+merge livre, mesmo com **Pipelines must succeed** marcado [ref:gitlab-allow-failure]; quem quiser barrar troca a força no próprio
 projeto, como no passo 5. O `allow_failure` é configuração do pipeline e não foi exercitado num GitLab
 real. O job roda o script da própria MR, então o CODEOWNERS (ou
 rodar o script da base) é parte da trava. O DORA trata o lote pequeno em horas e dias de trabalho, e

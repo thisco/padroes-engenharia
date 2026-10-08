@@ -261,6 +261,36 @@ def test_ignora_caminho_fora_da_raiz_ou_ausente(caminho: str | None):
     assert r.returncode == 0 and r.stdout == ""
 
 
+# --- caminho: separador do Windows e caminho absoluto ----------------------------------------
+
+
+def test_caminho_com_barra_invertida_vale_como_com_barra():
+    r = harness("src\\app.py", f'URL = "{url(OPENAI)}"\n')
+    assert r.stdout.splitlines() == [f"src/app.py:1: chamada direta ao provedor ({OPENAI})"]
+    # Mesmo caminho; só a pasta de teste isenta, também com barra invertida.
+    assert harness("tests\\app.py", f'URL = "{url(OPENAI)}"\n').returncode == 0
+
+
+def test_caminho_absoluto_dentro_do_cwd_vira_relativo(tmp_path: Path):
+    r = harness(str(tmp_path / "src" / "app.py"), f'URL = "{url(OPENAI)}"\n', cwd=str(tmp_path))
+    assert r.stdout.splitlines() == [f"src/app.py:1: chamada direta ao provedor ({OPENAI})"]
+    teste = harness(str(tmp_path / "tests" / "a.py"), f'URL = "{url(OPENAI)}"\n', cwd=str(tmp_path))
+    assert teste.returncode == 0
+
+
+def test_caminho_absoluto_compara_com_o_arquivo_em_disco(tmp_path: Path):
+    linha = f'URL = "{url(OPENAI)}"\n'
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src" / "app.py").write_text(linha, encoding="utf-8")
+    alvo = str(tmp_path / "src" / "app.py")
+    assert harness(alvo, linha + "x = 1\n", cwd=str(tmp_path)).returncode == 0
+
+
+def test_caminho_absoluto_fora_do_cwd_nao_e_do_projeto(tmp_path: Path):
+    r = harness("/outro/lugar/src/app.py", f'URL = "{url(OPENAI)}"\n', cwd=str(tmp_path))
+    assert r.returncode == 0 and r.stdout == ""
+
+
 # --- normalização: caracteres invisíveis -----------------------------------------------------
 
 

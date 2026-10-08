@@ -1,6 +1,8 @@
 """P2-01: aponta chamada direta a provedor de modelo e chave de provedor em código.
 
 Contrato: `python3 verificadores/p2_01.py --evento <evento> [--base <ref>]`.
+No harness, `caminho` aceita `\\` e caminho absoluto (medido contra `cwd`; fora dele, não é do
+projeto).
 Atende `antes-de-ferramenta` (JSON no stdin) e `ci` (`--base` e `HEAD`); outro evento sai 2.
 Só acusa linha nova ou alterada: no harness, em relação ao arquivo em disco; no ci, em relação à
 `--base` (arquivo renomeado compara com o caminho antigo).
@@ -117,6 +119,18 @@ def varre_caminho(caminho: str) -> bool:
     return not stem.endswith(("Test", "Tests"))
 
 
+def relativo_a_raiz(caminho: str, cwd: str | None) -> str | None:
+    """Caminho com `/`, relativo à raiz: `\\` vira `/` e o absoluto é medido contra `cwd`.
+    None quando o absoluto está fora da raiz (não é do projeto)."""
+    caminho = caminho.replace("\\", "/")
+    if not (caminho.startswith("/") or re.match(r"[A-Za-z]:/", caminho)):
+        return caminho
+    raiz = (cwd or "").replace("\\", "/").rstrip("/") + "/"
+    if raiz == "/" or not caminho.startswith(raiz):
+        return None
+    return caminho[len(raiz) :]
+
+
 def decodifica(dados: bytes) -> str | None:
     """Texto em UTF-8 (com ou sem BOM) ou em UTF-16 com BOM; None para o resto (binário)."""
     try:
@@ -166,13 +180,15 @@ def evento_harness() -> list[str]:
     caminho, conteudo = entrada.get("caminho"), entrada.get("conteudo")
     if not all(v is None or isinstance(v, str) for v in (caminho, conteudo)):
         raise Indeterminado("`caminho` e `conteudo` devem ser texto ou null")
+    cwd = entrada.get("cwd")
+    if caminho is not None:
+        caminho = relativo_a_raiz(caminho, cwd if isinstance(cwd, str) else None)
     if caminho is None or not varre_caminho(caminho):
         return []
     if conteudo is None:
         if entrada.get("ferramenta") in ("editar", "escrever"):
             raise Indeterminado(f"{caminho}: sem `conteudo` para uma escrita; não dá para avaliar")
         return []
-    cwd = entrada.get("cwd")
     try:
         antigo = decodifica((Path(cwd if isinstance(cwd, str) else ".") / caminho).read_bytes())
     except OSError:

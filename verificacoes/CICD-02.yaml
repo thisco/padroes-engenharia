@@ -1,4 +1,4 @@
-# afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-07); só a de CI_MERGE_REQUEST_DIFF_BASE_SHA é nova
+# afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-07); novas: CI_MERGE_REQUEST_DIFF_BASE_SHA, GIT_DEPTH (reescrita) e allow_failure
 conteudo: CICD-02
 verificado_em: '2026-10-08'
 verificador: agente-curadoria
@@ -32,9 +32,13 @@ afirmacoes:
   ref: gitlab-pipeline-obrigatorio
   localizacao: seção do merge check (aberta na web em 2026-10-07)
   resultado: confirmada
-- texto: GIT_DEPTH 0 desliga o clone raso, e o diff precisa do histórico e da branch de destino
+- texto: GIT_DEPTH 0 desliga o clone raso
   ref: gitlab-git-depth
-  localizacao: seção 'Limit the number of changes fetched during clone' (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-10-08; frase 'To disable shallow clone and make GitLab CI/CD fetch all branches and tags each time, keep the value empty or set to 0'). A parte 'o diff precisa do commit da base no clone' é do portal, sem referência."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-10-08; 'an orange warning indicates that a job failed. However, the pipeline is successful and the associated commit is marked as passed with no warnings'). Que a MR possa entrar é consequência e não foi exercitada num GitLab real."
   resultado: confirmada
 - texto: o gitlab-ci-local executa pipelines como shell ou Docker
   ref: gitlab-ci-local-readme
@@ -42,7 +46,7 @@ afirmacoes:
   resultado: confirmada
 - texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
   ref: gitlab-variaveis-predefinidas
-  localizacao: 'tabela de variáveis de pipelines de merge request (aberta na web em 2026-10-08; linha "CI_MERGE_REQUEST_DIFF_BASE_SHA", "The base SHA of the merge request diff")'
+  localizacao: 'tabela de variáveis de pipelines de merge request (aberta na web em 2026-10-08, de novo na rodada de correção; linha "CI_MERGE_REQUEST_DIFF_BASE_SHA", "The base SHA of the merge request diff")'
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -117,3 +121,6 @@ revisao_adversarial:
   - afirmacao: 'verificadores/cicd_02.py: teto com mais de 4300 dígitos'
     problema: '[alto] int() levantava ValueError, saída 1 com traceback.'
     tratamento: 'Tratado: teto de até 9 dígitos ASCII; o resto sai 2 com mensagem. Testes com 10 dígitos, 5000 dígitos e dígitos Unicode.'
+  - afirmacao: 'CICD-02.md, passos 2 e 3: "GIT_DEPTH 0 traz o histórico de que o diff precisa" e o job laranja que não impede o merge'
+    problema: '[ref] a fonte do GIT_DEPTH só diz que desliga o clone raso; nenhuma referência sustentava o allow_failure; as duas afirmações foram copiadas sem reabrir a página (rodada de correção 1, T4).'
+    tratamento: 'Tratado: o passo 3 diz só que GIT_DEPTH 0 desliga o clone raso [ref:gitlab-git-depth] e, sem referência, que o git diff com --base precisa do commit da base; o job laranja cita a nova gitlab-allow-failure (página aberta em 2026-10-08); o texto continua dizendo que o allow_failure não foi exercitado num GitLab real.'
