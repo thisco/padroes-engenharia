@@ -146,7 +146,22 @@ def repo_exemplo(repo_minimo: Path) -> Path:
         dominio="dados-migrations",
         momento="antes-do-merge",
         forca="bloqueia",
-        mecanismo="sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+        mecanismo={
+            "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+            "gatilhos": [
+                {
+                    "evento": "antes-de-ferramenta",
+                    "ferramenta": ["editar", "escrever"],
+                    "caminhos": ["**/migration/**", "**/migrations/**", "**/alembic/versions/**"],
+                },
+                {
+                    "evento": "pre-commit",
+                    "caminhos": ["**/migration/**", "**/migrations/**", "**/alembic/versions/**"],
+                },
+                {"evento": "ci"},
+            ],
+            "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: {URL do portal}/praticas/DAD-01.md#como-aplicar",
+        },
     )
     exemplo = (
         "## Exemplo\n\n### Antes e depois\n\n```sql\nALTER TABLE x ADD COLUMN y int;\n```\n\n"
