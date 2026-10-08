@@ -54,6 +54,18 @@ python3 verificadores/<id>.py --evento <evento> [--base <ref>]
 - **Achado não vaza segredo:** quando o achado é um valor sensível (segredo, CPF), a linha de saída
   mostra só o tipo e a posição, nunca o valor.
 
+### Força no Git e no CI
+
+O verificador só decide `casa` ou `nao-casa`; a força vira comportamento fora do harness assim:
+
+- `bloqueia`: o hook de pre-commit sai com o código do verificador (1 ou 2 barram o commit) e o job de
+  CI falha com 1 ou 2.
+- `avisa`: o pre-commit imprime os achados e sai 0, e o job de CI leva `allow_failure: true` (fica
+  laranja e não impede o merge, mesmo com "Pipelines must succeed").
+- `pede-aprovacao` só existe no harness (CFD-D5).
+
+O texto de cada prática mostra o job de CI com essa configuração e diz o que cada saída significa.
+
 ## 4. As sete práticas
 
 | Prática | Força | Gatilhos | Verificador (origem) |

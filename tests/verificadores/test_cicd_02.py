@@ -102,7 +102,11 @@ def test_teto_de_linhas_sobrescrito_por_variavel(
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
 
 
-@pytest.mark.parametrize("valor", ["0", "-3", "dez", "", "1.5"])
+@pytest.mark.parametrize(
+    "valor",
+    ["0", "-3", "dez", "", "1.5", "9" * 10, "9" * 5000, "０１"],
+    ids=["zero", "negativo", "texto", "vazio", "decimal", "dez-digitos", "gigante", "unicode"],
+)
 @pytest.mark.parametrize("nome", ["PADROES_MR_MAX_ARQUIVOS", "PADROES_MR_MAX_LINHAS"])
 def test_teto_invalido_sai_2(
     repo_git: RepoGit, tetos: None, monkeypatch: pytest.MonkeyPatch, nome: str, valor: str
@@ -179,6 +183,68 @@ def test_ci_mede_a_partir_do_ancestral_comum(repo_git: RepoGit, tetos: None):
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base="main").returncode == 0
 
 
+def test_outros_lockfiles_nao_contam_e_o_resto_conta(repo_git: RepoGit, tetos: None):
+    base = mr(
+        repo_git,
+        {"pnpm-lock.yaml": linhas(900), "go.sum": linhas(900), "npm-shrinkwrap.json": linhas(900)},
+    )
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    # Mesmo volume; só o nome deixa de ser de lockfile.
+    base = mr(repo_git, {"pnpm-lock.yml": linhas(900)})
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 1
+
+
+def test_renomear_conta_como_remover_e_criar(
+    repo_git: RepoGit, tetos: None, monkeypatch: pytest.MonkeyPatch
+):
+    repo_git.escrever("src/velho.py", linhas(10))
+    repo_git.adicionar("src/velho.py")
+    repo_git.commitar("feat: velho")
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git._git("mv", "src/velho.py", "src/novo.py")
+    repo_git.commitar("refactor: renomeia")
+    monkeypatch.setenv("PADROES_MR_MAX_ARQUIVOS", "2")
+    monkeypatch.setenv("PADROES_MR_MAX_LINHAS", "20")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    monkeypatch.setenv("PADROES_MR_MAX_ARQUIVOS", "1")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1 and "2 arquivo(s) e 20 linha(s)" in r.stdout
+
+
+def test_gitlink_nao_conta(repo_git: RepoGit, tetos: None, monkeypatch: pytest.MonkeyPatch):
+    base = repo_git._git("rev-parse", "HEAD")
+    sha = repo_git._git("rev-parse", "HEAD")
+    repo_git._git("update-index", "--add", "--cacheinfo", f"160000,{sha},vendor/sub")
+    repo_git.escrever("src/a.py", "x = 1\n")
+    repo_git.adicionar("src/a.py")
+    repo_git.commitar("chore: submódulo")
+    monkeypatch.setenv("PADROES_MR_MAX_ARQUIVOS", "1")
+    monkeypatch.setenv("PADROES_MR_MAX_LINHAS", "1")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    # Mesmo diff com o submódulo mais um arquivo comum a mais: passa do teto de 1 arquivo.
+    repo_git.escrever("src/b.py", "x = 2\n")
+    repo_git.adicionar("src/b.py")
+    repo_git.commitar("feat: b")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1 and "2 arquivo(s)" in r.stdout
+
+
+def test_mudanca_so_de_modo_conta_arquivo_e_zero_linha(
+    repo_git: RepoGit, tetos: None, monkeypatch: pytest.MonkeyPatch
+):
+    repo_git.escrever("run.sh", "echo oi\n")
+    repo_git.adicionar("run.sh")
+    repo_git.commitar("feat: run")
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git._git("update-index", "--chmod=+x", "run.sh")
+    repo_git.commitar("chore: executável")
+    monkeypatch.setenv("PADROES_MR_MAX_LINHAS", "1")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+    monkeypatch.setenv("PADROES_MR_MAX_ARQUIVOS", "1")
+    base_dois = mr(repo_git, {"a.txt": "a\n", "b.txt": "b\n"})
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base_dois).returncode == 1
+
+
 # --- estado indeterminado e uso errado: saída 2 -----------------------------------------------
 
 
@@ -188,6 +254,17 @@ def test_ci_sem_diferenca_sai_2(repo_git: RepoGit, tetos: None):
     assert r.returncode == 2 and r.stderr.strip() and r.stdout == ""
 
 
+def test_ci_sem_base_sai_2(repo_git: RepoGit, tetos: None):
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz)
+    assert r.returncode == 2 and "--base" in r.stderr and "Traceback" not in r.stderr
+
+
+def test_ci_sem_diferenca_sugere_conferir_a_base(repo_git: RepoGit, tetos: None):
+    base = repo_git._git("rev-parse", "HEAD")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert "base" in r.stderr and "HEAD" in r.stderr
+
+
 def test_ci_com_base_inexistente_sai_2(repo_git: RepoGit, tetos: None):
     r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base="origin/nao-existe")
     assert r.returncode == 2 and "origin/nao-existe" in r.stderr and "Traceback" not in r.stderr
@@ -195,7 +272,9 @@ def test_ci_com_base_inexistente_sai_2(repo_git: RepoGit, tetos: None):
 
 def test_ci_fora_de_repositorio_sai_2(tmp_path: Path, tetos: None):
     r = rodar(SCRIPT, "ci", cwd=tmp_path, base="main")
-    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
+    assert r.returncode == 2 and "Traceback" not in r.stderr
+    assert "repository" in r.stderr.lower() or "repositório" in r.stderr.lower()
+    assert "não encontrada" not in r.stderr
 
 
 @pytest.mark.parametrize("evento", ["antes-de-ferramenta", "depois-de-ferramenta", "pre-commit"])

@@ -2,9 +2,11 @@
 
 Contrato: `python3 verificadores/cicd_02.py --evento ci --base <ref>`. Só o evento `ci` é atendido.
 Mede o diff `--base...HEAD` (a partir do ancestral comum): arquivos mudados e linhas acrescentadas
-mais removidas. Lockfiles (`*.lock`, `package-lock.json`) não contam. Binário conta como arquivo e
-como zero linha. Os tetos são 10 arquivos e 200 linhas, sobrescritos pelas variáveis de ambiente
-`PADROES_MR_MAX_ARQUIVOS` e `PADROES_MR_MAX_LINHAS` (inteiros positivos).
+mais removidas. Lockfiles (`*.lock`, `package-lock.json`, `npm-shrinkwrap.json`, `pnpm-lock.yaml`,
+`go.sum`) e gitlinks (submódulos) não contam. Binário e mudança só de modo contam como arquivo e
+como zero linha; renomear conta como remover e criar. Os tetos são 10 arquivos e 200 linhas,
+sobrescritos pelas variáveis de ambiente `PADROES_MR_MAX_ARQUIVOS` e `PADROES_MR_MAX_LINHAS`
+(inteiros positivos de até 9 dígitos).
 Saída: 0 dentro dos tetos; 1 acima de um deles, com até cinco linhas `<caminho>:0: <motivo>` (os
 arquivos que mais mudaram); 2 erro de uso ou estado indeterminado (mensagem em stderr).
 """
@@ -22,7 +24,10 @@ MAX_ARQUIVOS_PADRAO = 10
 MAX_LINHAS_PADRAO = 200
 VARIAVEL_ARQUIVOS = "PADROES_MR_MAX_ARQUIVOS"
 VARIAVEL_LINHAS = "PADROES_MR_MAX_LINHAS"
-IGNORADOS = ("*.lock", "package-lock.json")  # escolha do Exemplo: não são escritos por gente
+# Lockfiles não são escritos por gente (escolha do Exemplo, ampliada com os de npm, pnpm e Go).
+IGNORADOS = ("*.lock", "package-lock.json", "npm-shrinkwrap.json", "pnpm-lock.yaml", "go.sum")
+GITLINK = "160000"
+MAX_DIGITOS = 9
 TEMPO_GIT = 60  # segundos; o git não pode travar o job
 MAIORES = 5
 
@@ -35,8 +40,11 @@ def teto(nome: str, padrao: int) -> int:
     bruto = os.environ.get(nome)
     if bruto is None:
         return padrao
-    if not bruto.isascii() or not bruto.isdigit() or int(bruto) < 1:
-        raise Indeterminado(f"{nome} deve ser um inteiro positivo, e veio {bruto!r}")
+    if not (bruto.isascii() and bruto.isdigit() and len(bruto) <= MAX_DIGITOS and int(bruto) >= 1):
+        raise Indeterminado(
+            f"{nome} deve ser um inteiro positivo de até {MAX_DIGITOS} dígitos, "
+            f"e veio um valor de {len(bruto)} caractere(s) que não serve"
+        )
     return int(bruto)
 
 
@@ -58,13 +66,27 @@ def ignorado(caminho: str) -> bool:
     return any(fnmatch.fnmatchcase(nome, padrao) for padrao in IGNORADOS)
 
 
+def gitlinks(base: str) -> set[str]:
+    """Caminhos que são gitlink (submódulo) de um lado ou do outro do diff."""
+    saida = git("diff", "--raw", "-z", "--no-renames", f"{base}...HEAD").decode("utf-8", "replace")
+    pedacos = saida.split("\0")
+    achados: set[str] = set()
+    for i in range(0, len(pedacos) - 1, 2):
+        modos = pedacos[i].lstrip(":").split(" ")[:2]
+        if GITLINK in modos:
+            achados.add(pedacos[i + 1])
+    return achados
+
+
 def medir(base: str) -> list[tuple[str, int]]:
-    """Devolve [(arquivo, linhas)] do diff `base...HEAD`, sem os ignorados."""
+    """Devolve [(arquivo, linhas)] do diff `base...HEAD`, sem os ignorados e sem gitlinks."""
+    git("rev-parse", "--show-toplevel")  # fora de um repositório, o erro do git já diz isso
     try:
         git("rev-parse", "--verify", "--quiet", f"{base}^{{commit}}")
     except Indeterminado as erro:
         raise Indeterminado(f"base {base} não encontrada (clone raso? use GIT_DEPTH 0)") from erro
     saida = git("diff", "--numstat", "-z", "--no-renames", f"{base}...HEAD")
+    submodulos = gitlinks(base)
     medidos: list[tuple[str, int]] = []
     vistos = 0
     for registro in saida.decode("utf-8", "replace").split("\0"):
@@ -72,13 +94,16 @@ def medir(base: str) -> list[tuple[str, int]]:
             continue
         acrescidas, removidas, caminho = registro.split("\t", 2)
         vistos += 1
-        if ignorado(caminho):
+        if ignorado(caminho) or caminho in submodulos:
             continue
         # Binário vem como "-": conta como arquivo, com 0 linhas.
         total = 0 if acrescidas == "-" else int(acrescidas) + int(removidas)
         medidos.append((caminho, total))
     if not vistos:
-        raise Indeterminado(f"nenhuma mudança entre {base} e HEAD: não há o que medir")
+        raise Indeterminado(
+            f"nenhuma mudança entre {base} e HEAD: confira a base "
+            "(--base igual a HEAD, ou base errada)"
+        )
     return medidos
 
 
