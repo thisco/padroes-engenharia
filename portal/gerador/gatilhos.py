@@ -20,7 +20,10 @@ EVENTOS_DE_FERRAMENTA = ("antes-de-ferramenta", "depois-de-ferramenta")
 FERRAMENTAS = ("ler", "editar", "escrever", "shell", "web", "mcp")
 FORCAS_DURAS = ("bloqueia", "pede-aprovacao")
 LIMITE_MENSAGEM = 400
-MARCADORES_URL = ("{URL do portal}", "<URL do portal>")
+# Os marcadores da URL do portal no conteúdo. Quem resolve é `renderizar.com_url_do_portal`:
+# base pública vira a URL; base local fica no marcador com ângulos, o mesmo do site.
+MARCADOR_URL_LOCAL = "<URL do portal>"
+MARCADORES_URL = ("{URL do portal}", MARCADOR_URL_LOCAL)
 URL_NO_FIM = re.compile(r"(https?://\S+|\{URL do portal\}\S*|<URL do portal>\S*)$")
 
 

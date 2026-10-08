@@ -61,6 +61,7 @@ from portal.gerador.renderizar import (
     caminho_de,
     campos_de,
     celulas_a_definir,
+    com_url_do_portal,
     constituicoes,
     descrever_forcas,
     descrever_ninho,
@@ -636,6 +637,20 @@ def _item(slug: str, titulo: str, caminho: str, meta: dict[str, Any] | None = No
     return {**(meta or {}), "slug": slug, "titulo": titulo, "url": caminho, "md": para_md(caminho)}
 
 
+def mecanismo_publicado(mecanismo: Any, site: Site) -> Any:
+    """O `mecanismo` como está no frontmatter, com a `mensagem` do bloco resolvida pela mesma
+    política de `regras.json` (`com_url_do_portal`); as outras formas passam intactas."""
+    if isinstance(mecanismo, dict) and isinstance(mecanismo.get("mensagem"), str):
+        return {**mecanismo, "mensagem": com_url_do_portal(mecanismo["mensagem"], site)}
+    return mecanismo
+
+
+def _meta_publicada(meta: dict[str, Any], site: Site) -> dict[str, Any]:
+    if "mecanismo" not in meta:
+        return dict(meta)
+    return {**meta, "mecanismo": mecanismo_publicado(meta["mecanismo"], site)}
+
+
 def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
     """`catalogo.json` (spec §7.3): todo item com os metadados completos, mais versão e commit.
 
@@ -667,7 +682,7 @@ def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
         "data": site.data,
         "url_base": site.url_base,
         "praticas": [
-            {**p.meta, "url": caminho_de(p), "md": para_md(caminho_de(p))}
+            {**_meta_publicada(p.meta, site), "url": caminho_de(p), "md": para_md(caminho_de(p))}
             for p in site.catalogo.praticas.values()
         ],
         "referencias": [dict(r.meta) for r in repo.referencias],
@@ -777,7 +792,7 @@ def dados_roteamento(site: Site) -> dict[str, Any]:
                         "titulo": p.meta["titulo"],
                         "forca": p.meta["forca"],
                         "status": p.meta["status"],
-                        "mecanismo": p.meta.get("mecanismo"),
+                        "mecanismo": mecanismo_publicado(p.meta.get("mecanismo"), site),
                         "aplica": list(p.meta.get("aplica") or []),
                         "md": para_md(caminho_de(p)),
                         "md_url": site.url(para_md(caminho_de(p))),

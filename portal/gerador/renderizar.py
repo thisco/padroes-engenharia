@@ -19,7 +19,7 @@ from portal.gerador.carregar import Conteudo, Repositorio, carregar
 from portal.gerador.citacoes import MARCADOR, numerar, sem_marcadores
 from portal.gerador.espinha import Espinha, Faixa, carregar_espinha
 from portal.gerador.exemplos import Prompt, blocos, expandir_inclusoes, prompts_de, secoes
-from portal.gerador.gatilhos import texto_mecanismo
+from portal.gerador.gatilhos import MARCADOR_URL_LOCAL, MARCADORES_URL, texto_mecanismo
 from portal.gerador.grafo import ORDEM_FORCA, Catalogo, montar_catalogo
 from portal.gerador.markdown import para_html
 from portal.gerador.ninhos import NINHOS
@@ -201,7 +201,6 @@ def montar_site(
     )
 
 
-MARCADORES_URL = ("{URL do portal}", "<URL do portal>")
 CAMPOS_COM_CORPO = ("praticas", "dominios", "conceitos", "guias", "casos", "paginas", "receitas")
 
 
@@ -209,15 +208,19 @@ def _com_url_do_portal(repo: Repositorio, url: str) -> Repositorio:
     """Troca os marcadores de URL do portal pelo endereço publicado (base não local)."""
 
     def trocar(c: Conteudo) -> Conteudo:
-        corpo = c.corpo
-        for marcador in MARCADORES_URL:
-            corpo = corpo.replace(marcador, url)
+        corpo = trocar_marcadores_url(c.corpo, url)
         return replace(c, corpo=corpo) if corpo != c.corpo else c
 
     return replace(
         repo,
         **{campo: tuple(trocar(c) for c in getattr(repo, campo)) for campo in CAMPOS_COM_CORPO},
     )
+
+
+def trocar_marcadores_url(texto: str, url: str) -> str:
+    for marcador in MARCADORES_URL:
+        texto = texto.replace(marcador, url)
+    return texto
 
 
 def criar_ambiente(raiz: Path) -> Environment:
@@ -394,8 +397,14 @@ DESCRICAO_INICIO = (
 def url_portal(site: Site) -> str:
     """A URL do portal para outro projeto: `<URL do portal>` quando a base é local."""
     if eh_local(site.url_base):
-        return "<URL do portal>"
+        return MARCADOR_URL_LOCAL
     return site.url_base.rstrip("/")
+
+
+def com_url_do_portal(texto: str, site: Site) -> str:
+    """A política única do marcador fora do corpo das páginas (regras.json, núcleo, catálogo):
+    a mesma de `url_portal`."""
+    return trocar_marcadores_url(texto, url_portal(site))
 
 
 def bloco_agents(site: Site) -> str:

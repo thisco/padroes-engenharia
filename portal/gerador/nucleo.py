@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from portal.gerador.gatilhos import e_hook
+from portal.gerador.gatilhos import MARCADOR_URL_LOCAL, e_hook
 from portal.gerador.grafo import Catalogo
 from portal.gerador.vocabulario import ROTULO_FORCA, plural
 
@@ -18,7 +18,8 @@ LIMITE_LINHAS = 100
 LIMITE_BYTES = 8192
 
 
-def cabecalho(versao: str) -> list[str]:
+def cabecalho(versao: str, url: str) -> list[str]:
+    """`url` já resolvida pela política do site (`renderizar.url_portal`)."""
     return [
         "## Padrões do departamento",
         "Constituição: .padroes/constituicao.md. "
@@ -27,8 +28,7 @@ def cabecalho(versao: str) -> list[str]:
         "consulte o roteamento: ferramenta MCP",
         '`query_graph` do servidor `padroes` ou `padroes consultar "<pergunta>"`. '
         "Leia só as práticas indicadas",
-        "e cite os IDs aplicados na spec e no plano. "
-        "Portal: {URL do portal} (catálogo " + versao + ").",
+        f"e cite os IDs aplicados na spec e no plano. Portal: {url} (catálogo {versao}).",
     ]
 
 
@@ -49,10 +49,12 @@ def hooks_do_dominio(catalogo: Catalogo, slug: str) -> list[str]:
     return [p.chave for p in catalogo.praticas_do_dominio(slug) if e_hook(p.meta)]
 
 
-def compor_bloco(catalogo: Catalogo, versao: str, dominios: Sequence[str]) -> str:
+def compor_bloco(
+    catalogo: Catalogo, versao: str, dominios: Sequence[str], url: str = MARCADOR_URL_LOCAL
+) -> str:
     hooks = [h for d in dominios for h in hooks_do_dominio(catalogo, d)]
     linhas = [f"<!-- padroes:inicio {versao} perfil={','.join(dominios)} -->"]
-    linhas += cabecalho(versao)
+    linhas += cabecalho(versao, url)
     linhas.append(
         "Hooks ativos neste projeto (bloqueiam ou pedem aprovação): "
         + (", ".join(hooks) or "nenhum")

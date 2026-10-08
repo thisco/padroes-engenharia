@@ -16,7 +16,7 @@ from portal.gerador.erros import R_PACOTE, Erro
 from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
 from portal.gerador.regras_harness import compilar_regras
-from portal.gerador.renderizar import Site, constituicoes
+from portal.gerador.renderizar import Site, constituicoes, url_portal
 from portal.gerador.saidas import _de, dados_roteamento, para_json
 
 PASTA_PACOTE = "pacote"
@@ -40,13 +40,17 @@ def plugin_json(site: Site) -> dict[str, Any]:
     return dados
 
 
+def _linhas(linhas: list[str]) -> bytes:
+    return ("\n".join(linhas) + "\n").encode("utf-8")
+
+
 def montar_pacote(site: Site) -> dict[str, bytes]:
     arquivos: dict[str, bytes] = {
         "plugin.json": para_json(plugin_json(site)).encode("utf-8"),
         "regras.json": para_json(compilar_regras(site)).encode("utf-8"),
         "grafo/roteamento.json": para_json(dados_roteamento(site)).encode("utf-8"),
         "grafo/graph.json": para_json(montar_grafo(site)).encode("utf-8"),
-        "nucleo/cabecalho.md": ("\n".join(cabecalho(site.versao)) + "\n").encode("utf-8"),
+        "nucleo/cabecalho.md": _linhas(cabecalho(site.versao, url_portal(site))),
         "consultar.py": (Path(__file__).resolve().parent / "consultar.py").read_bytes(),
     }
     # Ordem da espinha, sem repetição: o pacote é reprodutível byte a byte.

@@ -3,16 +3,17 @@ que o runtime de hook (F2) e os lints do projeto (F4) consomem sem ler o reposit
 
 Só entram práticas com força acima de `orienta` e mecanismo legível (`vira_regra`); sem
 `verificador`, a regra sai com `"verificador": null` e o casamento do gatilho é a decisão (§6.5).
-A ordem é a de ID; a mensagem sai com a URL do portal já resolvida, porque o runtime não conhece
-`url_base`. O arquivo só descreve quando o verificador roda; a semântica de execução fica no motor.
+A ordem é a de ID; a mensagem sai com a URL do portal resolvida pela política do site
+(`com_url_do_portal`), porque o runtime não conhece `url_base`. O arquivo só descreve quando o
+verificador roda; a semântica de execução fica no motor.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from portal.gerador.gatilhos import MARCADORES_URL, mecanismo_de, vira_regra
-from portal.gerador.renderizar import Site, caminho_de, para_md
+from portal.gerador.gatilhos import mecanismo_de, vira_regra
+from portal.gerador.renderizar import Site, caminho_de, com_url_do_portal, para_md
 
 VERSAO_FORMATO_REGRAS = 1
 
@@ -39,7 +40,7 @@ def compilar_regras(site: Site) -> dict[str, Any]:
                     for g in m.gatilhos
                 ],
                 "verificador": m.verificador,
-                "mensagem": _com_url(m.mensagem, site),
+                "mensagem": None if m.mensagem is None else com_url_do_portal(m.mensagem, site),
                 "url": site.url(para_md(caminho_de(p))),
             }
         )
@@ -48,11 +49,3 @@ def compilar_regras(site: Site) -> dict[str, Any]:
         "catalogo": {"nome": site.nome, "versao": site.versao, "commit": site.commit},
         "regras": regras,
     }
-
-
-def _com_url(mensagem: str | None, site: Site) -> str | None:
-    if mensagem is None:
-        return None
-    for marcador in MARCADORES_URL:
-        mensagem = mensagem.replace(marcador, site.url_base.rstrip("/"))
-    return mensagem

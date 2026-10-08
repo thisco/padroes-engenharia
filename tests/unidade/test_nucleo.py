@@ -59,7 +59,7 @@ def test_bloco_composto_tem_marcadores_e_cabe_no_limite():
     assert linhas[0] == "<!-- padroes:inicio 1.0.0 perfil=construir-com-ia,dados-migrations -->"
     assert linhas[-1] == "<!-- padroes:fim -->"
     assert "Hooks ativos neste projeto (bloqueiam ou pedem aprovação): P1-02" in bloco
-    assert "{URL do portal}" in bloco
+    assert "Portal: <URL do portal> (catálogo 1.0.0)." in bloco
     assert problemas_do_bloco(bloco) == []
     assert len(linhas) <= LIMITE_LINHAS and len(bloco.encode("utf-8")) <= LIMITE_BYTES
 
