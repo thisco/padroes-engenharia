@@ -2279,12 +2279,13 @@ o tamanho em caracteres do núcleo do perfil de três domínios.
 ## Evidências
 
 Estado final da branch `feat/2026-10-08-motor-f1` (commit base 620fc84, antes do commit desta tarefa), em 2026-10-08.
+Atualizado depois da onda de correção da revisão final (commit 8a8805c): I1, I2 e M1 a M9.
 
 | Verificação | Resultado |
 |---|---|
-| `.venv/bin/python -m pytest -q` | 831 passed in 55.24s |
+| `.venv/bin/python -m pytest -q` | 837 passed in 43.72s |
 | `.venv/bin/ruff check .` | All checks passed! |
-| `.venv/bin/ruff format --check .` | 351 files already formatted |
+| `.venv/bin/ruff format --check .` | 352 files already formatted |
 | `.venv/bin/python scripts/validar.py` | validação ok: nenhum erro. |
 | dois `scripts/gerar.py --saida` (pastas `a` e `b`) e `diff -r a b` | saída vazia (build determinístico) |
 
@@ -2316,15 +2317,19 @@ P1-06 · Registre quem aprovou a spec antes do plano · avisa · construir-com-i
   vizinhos: P1-01, P1-04, P1-05, P1-09, ferramenta:claude-code, ferramenta:codex, ferramenta:sdd-lifecycle, ferramenta:sdd-scaffold, skill:sdd-lifecycle
 ```
 
-### Núcleo do perfil de três domínios
+### Sempre carregado de um perfil de três domínios (§9.3)
 
-`construir-com-ia`, `dados-migrations` e `seguranca`: **1.137 caracteres** (1.165 bytes, 16 linhas, cerca de
-284 tokens), contra a meta de 2.500 tokens, 100 linhas e 8 KB.
+`construir-com-ia`, `dados-migrations` e `seguranca`: bloco do núcleo com **1.137 caracteres** (1.165 bytes,
+16 linhas) mais as descrições das 6 skills do pacote, **1.887 caracteres**: **3.024 caracteres, cerca de
+756 tokens**, contra a meta de 2.500 tokens; o bloco sozinho fica abaixo de 100 linhas e 8 KB.
 
 ### Pacote real: DAD-01 em `regras.json`, `nucleo/celulas` e `nucleo/hooks` (passo 3 da Tarefa 12)
 
 `pacote/regras.json` traz a DAD-01 com 3 gatilhos (`antes-de-ferramenta`, `pre-commit` e `ci`) e a mensagem
-com a URL do portal já resolvida (aqui `http://localhost:8000`, a `url_base` padrão do build local):
+pela política do site (`com_url_do_portal`): com a `url_base` padrão do build local (`http://localhost:8000`)
+o marcador fica `<URL do portal>`, como no site; com base pública, sai a URL. O cabeçalho do núcleo
+(`Portal: <URL do portal> (catálogo 1.1.0).`) e o `mecanismo.mensagem` de `catalogo.json` e
+`roteamento.json` seguem a mesma política.
 
 ```json
 {
@@ -2362,7 +2367,7 @@ com a URL do portal já resolvida (aqui `http://localhost:8000`, a `url_base` pa
     }
   ],
   "id": "DAD-01",
-  "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: http://localhost:8000/praticas/DAD-01.md#como-aplicar",
+  "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: <URL do portal>/praticas/DAD-01.md#como-aplicar",
   "momento": "antes-do-merge",
   "url": "http://localhost:8000/praticas/DAD-01.md",
   "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
@@ -2402,6 +2407,10 @@ DAD-01
 5. **Busca léxica do `consultar.py`** fraca em pergunta genérica ("revisão de código por IA") e sem radical
    ("migração" não casa com "migration"). Não é defeito da F1: é alvo do GEPA no roteamento (escopo aprovado
    pelo dono na ADR 0008).
-6. **Ambiente**: o repositório fica em `~/Documents`, sincronizado pelo iCloud, que criou cópias
+6. **Para o dono saber (sem reabrir o F1E-D6):** a regra `R-GATILHO` passa a reprovar `bloqueia` e
+   `pede-aprovacao` com `mecanismo` em string, que antes passava. Pela letra da ADR 0007 isso beira um major
+   (regra nova que reprova conteúdo antes válido); nada publicado quebra porque a DAD-01, a única `bloqueia`,
+   foi convertida para o bloco estruturado no mesmo release.
+7. **Ambiente**: o repositório fica em `~/Documents`, sincronizado pelo iCloud, que criou cópias
    "arquivo 2.py" (duas entraram num commit e foram removidas). Recomenda-se mover o repositório para fora do
    iCloud.

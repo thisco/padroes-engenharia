@@ -115,21 +115,25 @@ projeto: quem clona o repositório precisa só de `python3`, não do pacote `pad
 Gerado pelo monorepo em `public/pacote/` (a versão está no `manifesto.json`) e anexado à release
 como `padroes-pacote-<tag>.tar.gz` (ADR 0009).
 
+Itens sem marca de fase saem desde a F1 enxuta; os marcados chegam na fase indicada (§17).
+
 ```
 pacote/
 ├── manifesto.json            versão, commit, data, sha256 de cada arquivo, formato do grafo
 ├── plugin.json               manifesto Agent Plugins 1.0 (name, version, description, keywords)
-├── skills/<nome>/SKILL.md    skills do catálogo, no formato agentskills.io
-├── mcp.json                  servidor graphify local sobre grafo/graph.json, 3 ferramentas expostas
+├── skills/<nome>/            skills do catálogo, no formato agentskills.io (a pasta inteira)
+├── constituicao/             a constituição publicada, para o projeto referenciar em .padroes/
+├── consultar.py              consulta ao grafo só com a biblioteca padrão (§9.2, item 2)
+├── mcp.json                  [F5] servidor graphify local sobre grafo/graph.json, 3 ferramentas expostas
 ├── nucleo/                   cabecalho.md, celulas/<dominio>.md, hooks/<dominio>.txt; o CLI compõe o bloco (§7.1)
 ├── regras.json               regras compiladas (§6.2), independentes de harness
-├── perfil/sinais.yml         sinais de detecção de perfil (§7.2)
+├── perfil/sinais.yml         [F4] sinais de detecção de perfil (§7.2)
 ├── grafo/graph.json          grafo do catálogo (§9)
 ├── grafo/roteamento.json     o mesmo das 48 células do v0, mantido por compatibilidade
-├── hooks/padroes_hook.py     runtime de hook
-├── verificadores/*.py        verificadores citados em regras.json
-├── git/pre-commit.py · commit-msg.py · ci-job.yml
-└── harness/
+├── hooks/padroes_hook.py     [F2] runtime de hook
+├── verificadores/*.py        [F2] verificadores internos citados em regras.json
+├── git/pre-commit.py · commit-msg.py · ci-job.yml   [F2; ci-job.yml na F4]
+└── harness/                  [F2: claude, codex; F3: kiro, antigravity, gemini]
     ├── claude/    settings.fragmento.json (hooks), .claude-plugin/plugin.json, rules/*.md
     ├── codex/     hooks.json, rules/padroes.rules, config.fragmento.toml
     ├── kiro/      hooks/padroes.json, steering/padroes.md
@@ -165,6 +169,10 @@ mecanismo:
     DAD-01: migration já aplicada não se edita. Crie uma nova migration.
     Como aplicar: <url>/praticas/DAD-01.md#como-aplicar
 ```
+
+> **Exemplo ilustrativo.** `verificadores/dad_01.py`, aqui, no §6.2 e no §9.1, mostra a forma de
+> um verificador interno. A DAD-01 publicada usa o verificador externo
+> `sdd-scaffold:template/scripts/verificar_pr.py@1.7.1`, na forma `<componente>:<caminho>@<versao>`.
 
 Regras do validador (acrescentadas ao §12.1 da spec do portal):
 
@@ -247,8 +255,9 @@ ignorada e registrada em `.padroes/log/ferramentas-desconhecidas.txt` para o `do
   casamento do glob. Ex.: `verificar_pr.py` decide "migration já aplicada" contra a branch de
   destino; se o glob de `caminhos` bastasse para negar, o hook barraria a criação da próxima
   migration, que a própria mensagem manda criar. Regra com `verificador` só nega quando ele devolve
-  `casa`; sem `verificador`, o casamento do gatilho é a própria decisão. Tempo total alvo abaixo de 1 segundo; limite duro de 5
-  segundos, abaixo dos 10 segundos configurados nos harnesses.
+  `casa`; sem `verificador`, o casamento do gatilho é a própria decisão.
+- **Tempo:** total alvo abaixo de 1 segundo; limite duro de 5 segundos, abaixo dos 10 segundos
+  configurados nos harnesses.
 - **Saída por dialeto:**
   - Claude Code, Codex, Gemini: JSON em stdout com `hookSpecificOutput.permissionDecision` (ou
     `decision` no Gemini) e `additionalContext`; **negar emite o JSON e sai com 2**; permitir sai
@@ -363,7 +372,7 @@ do **catálogo**, e viaja no pacote.
 | ferramenta | `claude-code`, `kiro` | ferramentas |
 | referência | `anthropic-effective-harnesses` | referências |
 | conceito, guia, caso, exemplo | | conteúdo |
-| mecanismo | `verificadores/dad_01.py` | enforcement |
+| mecanismo | `verificadores/dad_01.py` (ilustrativo, ver §6.1) | enforcement |
 
 | Aresta | De → para |
 |---|---|
@@ -378,6 +387,9 @@ do **catálogo**, e viaja no pacote.
 Cada nó leva `label` em português e, em `rationale`, sinônimos em português e inglês e o resumo
 de uma linha, porque a busca do graphify é léxica (substring e IDF sobre labels, sem stemming
 nem sinônimos) e pontua esses atributos.
+
+> **Nota de fase.** Na F1 enxuta o `rationale` leva só o resumo de uma linha; os sinônimos em
+> português e inglês chegam depois, com a medição da F5.
 
 ### 9.2 Canais de recuperação
 

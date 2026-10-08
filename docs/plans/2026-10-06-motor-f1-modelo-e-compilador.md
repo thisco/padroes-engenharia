@@ -1,5 +1,8 @@
 # Motor de harness, Fase F1 (modelo e compilador): plano de implementação
 
+> **Substituído** pelo plano `docs/plans/2026-10-08-motor-f1-enxuta.md` (ADR 0009). Mantido como
+> registro; não execute as tarefas abaixo.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 > **Tier:** 2 — muda `esquemas/` (risco alto, SemVer major), cria contrato novo (`regras.json`,
