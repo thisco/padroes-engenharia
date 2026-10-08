@@ -970,6 +970,8 @@ def regra_agents(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 # Skills (spec §10 e §11.1; formato Agent Skills) ----------------------------------------------
 
+LIMITE_DESCRICAO_SKILL = 1024
+LIMITE_SOMA_DESCRICOES = 6000
 NOME_SKILL = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SKILLS_NASCIDAS_AQUI = frozenset({"curadoria-de-pratica"})
 
@@ -990,19 +992,19 @@ def regra_skills(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
             valor = f"{nome!r}: use [a-z0-9-], sem hífen nas pontas, até 64 caracteres"
             erros.append(Erro(s.caminho_relativo, "name", codigos.R_SKILL, valor))
         descricao = s.meta.get("description")
-        if not isinstance(descricao, str) or not descricao.strip() or len(descricao) > 1024:
+        if (
+            not isinstance(descricao, str)
+            or not descricao.strip()
+            or len(descricao) > LIMITE_DESCRICAO_SKILL
+        ):
             tamanho = len(descricao) if isinstance(descricao, str) else 0
-            valor = f"{tamanho} caracteres; esperado de 1 a 1024"
+            valor = f"{tamanho} caracteres; esperado de 1 a {LIMITE_DESCRICAO_SKILL}"
             erros.append(Erro(s.caminho_relativo, "description", codigos.R_SKILL, valor))
         procedencia = contexto.raiz / "skills" / pasta / "PROCEDENCIA.md"
         if pasta not in SKILLS_NASCIDAS_AQUI and not procedencia.is_file():
             valor = "cópia sem PROCEDENCIA.md (repositório, versão, commit e origem)"
             erros.append(Erro(f"skills/{pasta}/PROCEDENCIA.md", "arquivo", codigos.R_SKILL, valor))
     return erros
-
-
-LIMITE_DESCRICAO_SKILL = 1024
-LIMITE_SOMA_DESCRICOES = 6000
 
 
 @regra

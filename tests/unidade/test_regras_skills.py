@@ -170,3 +170,8 @@ def test_orcamento_aceita_soma_de_6000(tmp_path):
         fabrica.skill(f"s{i}", {"name": f"s{i}", "description": "x" * 1000}) for i in range(6)
     ]
     assert rodar_orcamento(skills, tmp_path) == []
+
+
+def test_orcamento_aceita_descricao_de_1024(tmp_path):
+    s = fabrica.skill("a", {"name": "a", "description": "x" * 1024})
+    assert rodar_orcamento([s], tmp_path) == []

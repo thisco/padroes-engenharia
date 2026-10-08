@@ -89,3 +89,30 @@ def test_mecanismo_malformado_ou_sem_verificador_e_pulado_sem_excecao():
     )
     regras = compilar_regras(_site(sem_verificador, tipo_errado, valida))["regras"]
     assert [r["id"] for r in regras] == ["P1-03"]
+
+
+def test_orienta_com_mecanismo_nao_gera_regra():
+    p = fabrica.pratica(fabrica.meta_pratica(forca="orienta", mecanismo="scripts/validar.py"))
+    assert compilar_regras(_site(p))["regras"] == []
+
+
+def test_marcador_com_angulos_e_substituido():
+    mecanismo = dict(
+        fabrica.MECANISMO_BLOQUEIA,
+        mensagem="P1-01: não edite. Como aplicar: <URL do portal>/praticas/P1-01.md",
+    )
+    p = fabrica.pratica(fabrica.meta_pratica(forca="bloqueia", mecanismo=mecanismo))
+    (regra,) = compilar_regras(_site(p))["regras"]
+    assert regra["mensagem"] == (
+        "P1-01: não edite. Como aplicar: https://portal.exemplo/praticas/P1-01.md"
+    )
+
+
+def test_url_base_com_barra_final_nao_duplica_a_barra():
+    p = fabrica.pratica(
+        fabrica.meta_pratica(forca="bloqueia", mecanismo=fabrica.MECANISMO_BLOQUEIA)
+    )
+    site = fabrica.site(p, fabrica.referencia(), url_base="https://portal.exemplo/")
+    (regra,) = compilar_regras(site)["regras"]
+    assert "https://portal.exemplo/praticas/P1-01.md#como-aplicar" in regra["mensagem"]
+    assert "//praticas" not in regra["mensagem"]

@@ -146,7 +146,7 @@ def test_mecanismo_aceita_prefixo_v_na_versao(tmp_path):
     assert rodar(regra_mecanismo, [p], tmp_path) == []
 
 
-def test_caminho_interno_so_vale_em_scripts_portal_ou_ci(tmp_path):
+def test_caminho_interno_so_vale_em_scripts_portal_ci_ou_verificadores(tmp_path):
     (tmp_path / "docs").mkdir()
     (tmp_path / "docs" / "nota.md").write_text("x", encoding="utf-8")
     (erro,) = rodar(regra_mecanismo, [com_mecanismo("docs/nota.md", forca="avisa")], tmp_path)

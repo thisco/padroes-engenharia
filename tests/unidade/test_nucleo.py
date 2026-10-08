@@ -82,3 +82,11 @@ def test_bloco_com_todas_as_faixas_e_noventa_duras_estoura_e_e_reportado(tmp_pat
 def test_regra_nucleo_inocente_no_repositorio_pequeno(tmp_path):
     ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
     assert regra_nucleo(Repositorio.de([dura("P1-02")]), fabrica.espinha_real(), ctx) == []
+
+
+def test_problemas_do_bloco_conta_bytes_e_linhas_nos_limites():
+    assert problemas_do_bloco("é" * 5000) == [f"10000 bytes; o limite é {LIMITE_BYTES}"]
+    assert problemas_do_bloco("\n".join(["x"] * 100)) == []
+    assert problemas_do_bloco("\n".join(["x"] * 101)) == [f"101 linhas; o limite é {LIMITE_LINHAS}"]
+    assert problemas_do_bloco("a" * 8192) == []
+    assert problemas_do_bloco("a" * 8193) == [f"8193 bytes; o limite é {LIMITE_BYTES}"]
