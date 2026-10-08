@@ -3,10 +3,10 @@
 from portal.gerador import consultar
 from portal.gerador.grafo_catalogo import montar_grafo
 from portal.gerador.nucleo import compor_bloco
-from portal.gerador.renderizar import montar_site
+from portal.gerador.renderizar import montar_site, url_portal
 from tests import fabrica
 
-LIMITE_NUCLEO_TOKENS = 2500
+LIMITE_SEMPRE_CARREGADO_TOKENS = 2500
 
 
 def _site():
@@ -26,9 +26,16 @@ def test_consulta_de_migration_traz_dad01_dentro_do_orcamento():
     assert len(saida) <= consultar.ORCAMENTO_PADRAO * consultar.CARACTERES_POR_TOKEN
 
 
-def test_nucleo_de_um_perfil_de_tres_dominios_cabe_na_meta():
+def test_sempre_carregado_de_um_perfil_de_tres_dominios_cabe_na_meta():
+    """§9.3: o bloco do perfil mais as descrições das skills que o pacote leva."""
     site = _site()
     bloco = compor_bloco(
-        site.catalogo, site.versao, ["construir-com-ia", "dados-migrations", "seguranca"]
+        site.catalogo,
+        site.versao,
+        ["construir-com-ia", "dados-migrations", "seguranca"],
+        url_portal(site),
     )
-    assert len(bloco) <= LIMITE_NUCLEO_TOKENS * consultar.CARACTERES_POR_TOKEN
+    descricoes = sum(len(s.meta["description"]) for s in site.repo.skills)
+    assert site.repo.skills and descricoes > 0
+    limite = LIMITE_SEMPRE_CARREGADO_TOKENS * consultar.CARACTERES_POR_TOKEN
+    assert len(bloco) + descricoes <= limite

@@ -38,4 +38,4 @@
 
 - **F1E-R1.** `grafo/graph.json` determinístico, com os nós e arestas do §9.1 que o catálogo atual tem (prática, domínio, momento, célula, skill ou steering de `aplica`, ferramenta, referência, conceito, receita) e `rationale` com o resumo, para a busca léxica.
 - **F1E-R2.** `consultar.py` roda com `python3` sem pacote instalado, lê o `graph.json` ao lado dele e responde a uma pergunta ou a `--dominio/--momento` com ponteiros (`ID · título · força · célula · url`) e vizinhos de um salto, dentro de `--budget` (padrão 1.500 tokens, 4 caracteres por token), dizendo quantos itens cortou.
-- **F1E-R3.** Teste de tokens sobre o catálogo real: núcleo de um perfil com três domínios ≤ 2.500 tokens; consulta "migration já aplicada" com DAD-01 em primeiro e saída ≤ 1.500 tokens.
+- **F1E-R3.** Teste de tokens sobre o catálogo real: sempre carregado (§9.3) de um perfil com três domínios, isto é, o bloco do núcleo mais a soma das descrições das skills do pacote, ≤ 2.500 tokens; consulta "migration já aplicada" com DAD-01 em primeiro e saída ≤ 1.500 tokens.

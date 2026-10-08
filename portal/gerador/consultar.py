@@ -8,7 +8,8 @@ portal.
 
 Uso: python3 consultar.py "pergunta" [--budget 1500] [--grafo caminho]
      python3 consultar.py --dominio dados-migrations [--momento antes-do-merge]
-Saída: 0 com resposta (mesmo sem prática) · 2 grafo ausente, malformado ou uso inválido.
+Saída: 0 com resposta (mesmo sem prática) · 2 grafo ausente, malformado ou uso inválido
+(inclusive `--momento` sem `--dominio`).
 """
 
 from __future__ import annotations
@@ -154,6 +155,9 @@ def main(argv: list[str] | None = None) -> int:
         "--grafo", type=Path, default=Path(__file__).resolve().parent / "grafo" / "graph.json"
     )
     args = parser.parse_args(argv)
+    if args.momento and not args.dominio:
+        print("--momento só vale com --dominio", file=sys.stderr)
+        return 2
     if bool(args.pergunta) == bool(args.dominio):
         print("informe uma pergunta ou --dominio, não os dois", file=sys.stderr)
         return 2

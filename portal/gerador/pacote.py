@@ -17,7 +17,7 @@ from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
 from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes, url_portal
-from portal.gerador.saidas import _de, dados_roteamento, para_json
+from portal.gerador.saidas import dados_roteamento, para_json, sufixo_da_organizacao
 
 PASTA_PACOTE = "pacote"
 VERSAO_FORMATO_PACOTE = 1
@@ -26,13 +26,15 @@ NOME_PLUGIN = "padroes-engenharia"
 
 def plugin_json(site: Site) -> dict[str, Any]:
     """Manifesto Agent Plugins 1.0: só `$schema` e `name` são padronizados; os demais campos
-    são os que Codex e Kiro Powers leem."""
+    são os que os harnesses que leem Agent Plugins costumam ler."""
     faixas = [f.slug for f in site.espinha.faixas]
     dados: dict[str, Any] = {
         "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
         "name": NOME_PLUGIN,
         "version": site.versao,
-        "description": f"{site.nome}: práticas com força, roteamento e skills{_de(site)}.",
+        "description": (
+            f"{site.nome}: práticas com força, roteamento e skills{sufixo_da_organizacao(site)}."
+        ),
         "keywords": ["padroes", "engenharia", "sdd", *faixas],
     }
     if site.organizacao:

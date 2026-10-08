@@ -188,3 +188,13 @@ def test_budget_invalido_sai_com_2(tmp_path, capsys):
 def test_pergunta_e_dominio_juntos_sai_com_2(tmp_path, capsys):
     assert _main_com(tmp_path, {"nodes": NOS, "links": LINKS}, "--dominio", "dados-migrations") == 2
     assert "não os dois" in capsys.readouterr().err
+
+
+def test_momento_sem_dominio_sai_com_2_com_ou_sem_pergunta(tmp_path, capsys):
+    grafo = tmp_path / "graph.json"
+    grafo.write_text(json.dumps({"nodes": NOS, "links": LINKS}), encoding="utf-8")
+    momento = ["--momento", "antes-do-merge", "--grafo", str(grafo)]
+    assert consultar.main(["migration", *momento]) == 2
+    assert "--momento só vale com --dominio" in capsys.readouterr().err
+    assert consultar.main(momento) == 2
+    assert consultar.main(["--dominio", "dados-migrations", *momento]) == 0
