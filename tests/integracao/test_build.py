@@ -141,3 +141,11 @@ def test_skill_publicada_com_sha256(publicado):
     indice = json.loads(ler(publicado / ".well-known" / "skills" / "index.json"))
     assert [s["name"] for s in indice["skills"]] == ["curadoria-de-pratica", "sdd-lifecycle"]
     assert (publicado / ".well-known/skills/curadoria-de-pratica/SKILL.md").is_file()
+
+
+def test_build_publica_o_pacote_conferido(publicado):
+    from portal.gerador.pacote import verificar_pacote
+
+    assert (publicado / "pacote" / "manifesto.json").is_file()
+    assert (publicado / "pacote" / "regras.json").is_file()
+    assert verificar_pacote(publicado / "pacote") == []

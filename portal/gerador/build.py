@@ -1,6 +1,7 @@
-"""Build atômico (spec §7.1 e §14): valida, gera numa pasta temporária, varre recursos externos
-e só então troca a pasta de saída. Se a validação, a varredura ou a geração falharem, a saída
-anterior fica intacta e a pasta temporária é apagada.
+"""Build atômico (spec §7.1 e §14): valida, gera numa pasta temporária, varre recursos externos,
+confere o pacote contra o manifesto e só então troca a pasta de saída. Se a validação, a
+varredura, a conferência ou a geração falharem, a saída anterior fica intacta e a pasta
+temporária é apagada.
 
 A troca são dois `rename` na mesma pasta-mãe: a saída antiga sai do caminho e a nova entra.
 Se o segundo falhar, a antiga volta.
@@ -13,6 +14,7 @@ from pathlib import Path
 
 from portal.gerador.erros import R_EXTERNO, R_PROMPT, Erro
 from portal.gerador.externos import EXTERNOS
+from portal.gerador.pacote import PASTA_PACOTE, emitir_pacote, verificar_pacote
 from portal.gerador.regras import validar_tudo
 from portal.gerador.renderizar import montar_site
 from portal.gerador.saidas import emitir
@@ -66,9 +68,10 @@ def construir(
         shutil.rmtree(pasta, ignore_errors=True)
     try:
         emitir(site, temporaria)
-        externos = varrer_externos(temporaria)
-        if externos:
-            return externos
+        emitir_pacote(site, temporaria / PASTA_PACOTE)
+        problemas = varrer_externos(temporaria) + verificar_pacote(temporaria / PASTA_PACOTE)
+        if problemas:
+            return sorted(problemas)
         if saida.exists():
             saida.rename(antiga)
         try:

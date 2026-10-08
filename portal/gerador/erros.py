@@ -42,6 +42,7 @@ R_EXECUCAO = "R-EXECUCAO"
 R_PROMPT = "R-PROMPT"
 R_APRESENTACAO = "R-APRESENTACAO"
 R_LINK_INTERNO = "R-LINK-INTERNO"
+R_PACOTE = "R-PACOTE"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -77,6 +78,10 @@ DESCRICOES: dict[str, str] = {
     R_PROMPT: "prompt de exemplo fora do lugar, ausente onde é obrigatório ou sem execução",
     R_APRESENTACAO: "apresentação sem registro ou deck, com página ausente ou recurso externo",
     R_LINK_INTERNO: "link relativo do Markdown para arquivo ou página que não existe",
+    R_PACOTE: (
+        "pacote de distribuição sem manifesto ou com arquivo fora dele, ausente "
+        "ou com sha256 divergente"
+    ),
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
 }
 
