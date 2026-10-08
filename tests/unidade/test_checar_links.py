@@ -125,6 +125,30 @@ def test_mecanismo_externo_conferido_no_commit_fixado():
     ]
 
 
+def test_mecanismo_externo_em_bloco_entra_na_checagem():
+    verificador = "sdd-scaffold:template/scripts/verificar_pr.py@1.7.0"
+    bloco = {**fabrica.MECANISMO_BLOQUEIA, "verificador": verificador}
+    p = fabrica.pratica(fabrica.meta_pratica(forca="bloqueia", mecanismo=bloco))
+    url = f"{RAW}/{SCAFFOLD.commit}/template/scripts/verificar_pr.py"
+    ausente = falso({(url, "HEAD"): cl.Resposta(404), (url, "GET"): cl.Resposta(404)})
+    assert cl.avisos_mecanismos(Repositorio.de([p]), {"sdd-scaffold": SCAFFOLD}, ausente) == [
+        cl.Aviso(
+            "mecanismo",
+            "praticas/construir-com-ia/P1-01.md",
+            f"P1-01: {verificador}: caminho ausente no commit fixado 06a382b938af",
+        )
+    ]
+
+
+def test_mecanismo_interno_em_bloco_nao_e_conferido_aqui():
+    p = fabrica.pratica(
+        fabrica.meta_pratica(forca="bloqueia", mecanismo=fabrica.MECANISMO_BLOQUEIA)
+    )
+    fetch = falso()
+    assert cl.avisos_mecanismos(Repositorio.de([p]), {"sdd-scaffold": SCAFFOLD}, fetch) == []
+    assert fetch.chamadas == []
+
+
 def test_mecanismo_interno_nao_e_conferido_aqui():
     p = fabrica.pratica(fabrica.meta_pratica(forca="bloqueia", mecanismo="scripts/validar.py"))
     fetch = falso()

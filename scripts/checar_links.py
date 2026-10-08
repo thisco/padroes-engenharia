@@ -36,6 +36,7 @@ from portal.gerador.carregar import (  # noqa: E402
     carregar_componentes,
 )
 from portal.gerador.espinha import carregar_espinha  # noqa: E402
+from portal.gerador.gatilhos import mecanismo_de  # noqa: E402
 from portal.gerador.grafo import montar_catalogo  # noqa: E402
 from portal.gerador.regras import MECANISMO_EXTERNO, carregar_contexto  # noqa: E402
 
@@ -142,7 +143,9 @@ def avisos_mecanismos(
 ) -> list[Aviso]:
     avisos = []
     for p in repo.praticas:
-        externo = MECANISMO_EXTERNO.match(str(p.meta.get("mecanismo") or ""))
+        m = mecanismo_de(p.meta)
+        verificador = (m.verificador if m else None) or ""
+        externo = MECANISMO_EXTERNO.match(verificador)
         componente = componentes.get(externo["componente"]) if externo else None
         if componente is None:
             continue
@@ -151,7 +154,7 @@ def avisos_mecanismos(
         if problema == "HTTP 404":
             problema = f"caminho ausente no commit fixado {componente.commit[:12]}"
         if problema:
-            mensagem = f"{p.chave}: {p.meta['mecanismo']}: {problema}"
+            mensagem = f"{p.chave}: {verificador}: {problema}"
             avisos.append(Aviso("mecanismo", p.caminho_relativo, mensagem))
     return avisos
 

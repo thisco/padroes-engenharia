@@ -125,3 +125,18 @@ def test_ficha_da_pratica_resume_o_mecanismo_em_bloco():
     assert "{&#39;" not in html and "{'" not in html
     md = md_pratica(s, p)
     assert "- Mecanismo: `scripts/validar.py; 2 gatilhos: antes-de-ferramenta, pre-commit`" in md
+
+
+def test_ficha_da_pratica_mantem_a_forma_string_e_a_ausencia():
+    for mecanismo, esperado_md in (
+        ("scripts/validar.py", "- Mecanismo: `scripts/validar.py`"),
+        (None, "- Mecanismo: nenhum"),
+    ):
+        p = fabrica.pratica(fabrica.meta_pratica(forca="bloqueia", mecanismo=mecanismo))
+        s = fabrica.site(p, fabrica.referencia())
+        html = {pg.caminho: pg for pg in montar_paginas(s)}["praticas/P1-01.html"].html
+        assert esperado_md in md_pratica(s, p)
+        if mecanismo:
+            assert "<p><code>scripts/validar.py</code></p>" in html
+        else:
+            assert "Sem mecanismo: a prática orienta, não impede." in html
