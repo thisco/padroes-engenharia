@@ -33,3 +33,6 @@ Na `main` em 1.1.0, 42 das 48 práticas só orientam, e a medição da F0 mostro
   fase que possa tocar `skills/`, e esta ADR é a fonte até lá.
 - DAD-01 é a primeira prática convertida; as cinco `avisa` seguem na forma antiga.
 - O runtime de hook (F2), os adaptadores (F2, F3), o CLI (F4) e o MCP local (F5) consomem este pacote.
+- Semântica do gatilho (requisito da F2): o gatilho só diz quando o verificador roda; quem decide negar é o
+  verificador (ex.: `verificar_pr.py` decide "migration já aplicada" contra a branch de destino), nunca o
+  casamento do glob, senão o hook barraria a criação da próxima migration que a mensagem manda criar.

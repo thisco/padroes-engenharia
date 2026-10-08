@@ -83,10 +83,10 @@ ele não é fail-closed ([GSA, `ensure-contract`](https://github.com/GSA-TTS/age
 ```
 praticas/<faixa>/<ID>.md (frontmatter + mecanismo)  ──┐
 esquemas/espinha.yml · skills/ · referencias/          ├─► scripts/gerar.py ─► public/ (portal v0)
-                                                       │                   └─► dist/padroes-<versao>/ (pacote, §5)
+                                                       │                   └─► public/pacote/ (pacote, §5)
                                                        └─► scripts/validar.py (regras novas, §8.1)
 
-dist/padroes-<versao>/ ─► release GitLab (tarball + Pages) ─► padroes instalar ─► projeto do time
+public/pacote/ ─► release GitLab (padroes-pacote-<tag>.tar.gz + Pages) ─► padroes instalar ─► projeto do time
                                                                                ├─ .padroes/ (cópia fixada: regras.json, grafo, hook runtime, scripts Git)
                                                                                ├─ AGENTS.md (bloco gerenciado), .claude/ .codex/ .kiro/ .agents/ (projeções)
                                                                                ├─ hooks Git (pre-commit, commit-msg) e job de CI
@@ -98,7 +98,7 @@ dist/padroes-<versao>/ ─► release GitLab (tarball + Pages) ─► padroes in
 | Componente | Pasta | Responsabilidade | Depende de |
 |---|---|---|---|
 | Compilador de regras | `portal/gerador/regras_harness.py` | lê o `mecanismo` de cada prática e produz `regras.json` (§6.2) | modelo de conteúdo, `espinha.yml` |
-| Gerador do pacote | `portal/gerador/pacote.py` | monta `dist/padroes-<versao>/` com manifesto e sha256 | compilador, adaptadores, grafo |
+| Gerador do pacote | `portal/gerador/pacote.py` | monta `public/pacote/` (gerado no build, anexado à release como `padroes-pacote-<tag>.tar.gz`) com manifesto e sha256 | compilador, adaptadores, grafo |
 | Adaptadores | `portal/gerador/adaptadores/{claude,codex,kiro,antigravity,gemini,git}.py` | projetam `regras.json`, skills e MCP no formato de cada harness | tabela de ferramentas (§6.4) |
 | Gerador do grafo | `portal/gerador/grafo_catalogo.py` | emite `graph.json` no formato node-link do graphify, determinístico, sem LLM | catálogo |
 | Runtime de hook | `hooks/padroes_hook.py` (arquivo único, só stdlib) | lê o evento do harness, avalia `regras.json`, responde no dialeto certo | nada além de Python 3.11+ |
@@ -242,7 +242,12 @@ ignorada e registrada em `.padroes/log/ferramentas-desconhecidas.txt` para o `do
   diretório de trabalho, texto do prompt quando o evento é de prompt.
 - **Avaliação:** regra casa quando evento, categoria de ferramenta e caminho ou comando batem;
   se há `verificador`, ele é chamado com a entrada normalizada e devolve `casa` ou `nao-casa`
-  com motivo. Mais restritivo vence. Tempo total alvo abaixo de 1 segundo; limite duro de 5
+  com motivo. Mais restritivo vence.
+  **O gatilho só diz QUANDO o verificador roda; quem decide negar é o verificador**, nunca o
+  casamento do glob. Ex.: `verificar_pr.py` decide "migration já aplicada" contra a branch de
+  destino; se o glob de `caminhos` bastasse para negar, o hook barraria a criação da próxima
+  migration, que a própria mensagem manda criar. Regra com `verificador` só nega quando ele devolve
+  `casa`; sem `verificador`, o casamento do gatilho é a própria decisão. Tempo total alvo abaixo de 1 segundo; limite duro de 5
   segundos, abaixo dos 10 segundos configurados nos harnesses.
 - **Saída por dialeto:**
   - Claude Code, Codex, Gemini: JSON em stdout com `hookSpecificOutput.permissionDecision` (ou
@@ -268,7 +273,7 @@ ignorada e registrada em `.padroes/log/ferramentas-desconhecidas.txt` para o `do
 
 ### 7.1 Bloco gerenciado no `AGENTS.md`
 
-Um único bloco entre marcadores, gerado a partir de `nucleo/AGENTS.bloco.md` e do perfil:
+Um único bloco entre marcadores, composto pelo perfil a partir de `nucleo/cabecalho.md`, `nucleo/celulas/<dominio>.md` e `nucleo/hooks/<dominio>.txt`:
 
 ```markdown
 <!-- padroes:inicio v1.0.0 perfil=api-python,postgres,iac -->
@@ -321,7 +326,7 @@ confirmado vai para o lockfile. Sem confirmação, o CLI instala só o núcleo e
 
 13. Força acima de `orienta` sem `mecanismo.gatilhos` válido (§6.1).
 14. `mensagem` ausente, acima de 400 caracteres ou sem ID e URL.
-15. `nucleo/AGENTS.bloco.md` renderizado para qualquer perfil acima de 100 linhas ou 8 KB.
+15. Bloco composto de `nucleo/cabecalho.md`, `nucleo/celulas/<dominio>.md` e `nucleo/hooks/<dominio>.txt` para qualquer perfil acima de 100 linhas ou 8 KB.
 16. Descrição de skill acima de 1.024 caracteres; soma das descrições das skills do perfil
     padrão acima de 6.000 caracteres (margem sobre os 8.000 do Codex).
 17. `graph.json` não determinístico ou com nó sem `source_file`.
@@ -476,7 +481,7 @@ temporário e renomeia).
 - **Componentes externos:** `graphify` entra em `componentes.yml` com versão fixada (hoje 0.9.76
   instalada; 0.9.77 publicada). `sdd-scaffold` permanece fixado até a aposentadoria (D5).
 - **Repositório:** novas pastas `cli/`, `hooks/`, `verificadores/`, `portal/gerador/adaptadores/`
-  e saída `dist/`. As pastas ⏭ `hooks/`, `adaptadores/` e `pacotes/` do §5 do v0 nascem aqui com
+  e saída `public/pacote/`. As pastas ⏭ `hooks/`, `adaptadores/` e `pacotes/` do §5 do v0 nascem aqui com
   esses nomes.
 
 ## 15. Requisitos
@@ -538,7 +543,7 @@ Cada fase termina com checkpoint humano, evidência em `docs/plans/` e `pytest`,
 | Fase | Entrega | Critério de saída |
 |---|---|---|
 | **F0 · Laboratório de prompts** ([delta de 2026-10-07](2026-10-07-f0-laboratorio-de-prompts-delta.md)) | `otimizacao/` com runner sem interação nos quatro harnesses, métrica com feedback do verificador, cenários, linha de base de DAD-01, P1-01 e P2-02, otimização em Claude Code e Codex com portão de não regressão, ADR e `ferramentas/gepa.yml` | critérios do §5 do delta; independe da F1 e pode correr em paralelo |
-| **F1 · Modelo e compilador** | bloco `mecanismo` no schema, regras 13 a 17 e 20 do validador, `regras.json`, `nucleo/AGENTS.bloco.md`, gerador do pacote com manifesto; 3 práticas reais convertidas (DAD-01, P1-01, P2-01) | pacote gerado deterministicamente; validador reprova fixtures inválidas |
+| **F1 · Modelo e compilador** | substituída pela F1 enxuta ([delta de 2026-10-08](2026-10-08-f1-enxuta-delta.md)): bloco `mecanismo` no schema, `regras.json`, núcleo por domínio (`nucleo/cabecalho.md`, `celulas/`, `hooks/`) e pacote com manifesto; só a DAD-01 foi convertida | pacote gerado deterministicamente; validador reprova fixtures inválidas |
 | **F2 · Runtime e adaptadores Claude Code e Codex, hooks Git** | `padroes_hook.py`, adaptadores dos dois harnesses, `pre-commit.py`, `commit-msg.py`, fixtures de payload reais, verificador de DAD-01 | sessão real nos dois harnesses nega a edição; fixtures passam; tempo < 1 s |
 | **F3 · Adaptadores Kiro e Antigravity, Gemini parcial** | tabela de ferramentas confirmada no payload, degradação do Kiro, `plugin.json` Agent Plugins, manifestos próprios de Claude e Antigravity | sessão real nos dois harnesses; `claude plugin validate --strict` aprova |
 | **F4 · CLI** | `instalar`, `perfil`, `doctor`, `atualizar`, `verificar`, `remover`, `desligar`, lockfile, merge gerenciado, job de CI modelo, lints §8.2 | integração em fixture com arquivos pré-existentes; idempotência; dogfooding no monorepo |
