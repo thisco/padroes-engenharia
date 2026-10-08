@@ -26,6 +26,7 @@ from portal.gerador.regras import (
     regra_referencias,
     regra_secoes,
     regra_skills,
+    regra_skills_orcamento,
     regra_verificacao,
     regra_vinculos,
 )
@@ -38,6 +39,11 @@ def rodar(conteudos, tmp_path, com_procedencia=()):
         (tmp_path / "skills" / pasta / "PROCEDENCIA.md").write_text("# Procedência\n")
     ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
     return regra_skills(Repositorio.de(conteudos), fabrica.espinha_real(), ctx)
+
+
+def rodar_orcamento(conteudos, tmp_path):
+    ctx = Contexto(raiz=tmp_path, componentes={}, ids_retirados=frozenset())
+    return regra_skills_orcamento(Repositorio.de(conteudos), fabrica.espinha_real(), ctx)
 
 
 def test_skills_inocente_copia_com_procedencia_e_curadoria_sem(tmp_path):
@@ -121,7 +127,46 @@ def test_validar_tudo_roda_todas_as_regras_na_ordem():
         regra_verificacao,
         regra_agents,
         regra_skills,
+        regra_skills_orcamento,
         regra_apresentacoes,
         regra_link_interno,
         regra_mecanismos_hospedados,
     ]
+
+
+def test_orcamento_inocente(tmp_path):
+    skills = [fabrica.skill("a"), fabrica.skill("b")]
+    assert rodar_orcamento(skills, tmp_path) == []
+
+
+def test_orcamento_pega_descricao_acima_de_1024(tmp_path):
+    longa = fabrica.skill("a", {"name": "a", "description": "x" * 1025})
+    assert rodar_orcamento([longa], tmp_path) == [
+        Erro(
+            "skills/a/SKILL.md",
+            "description",
+            "R-SKILL-ORCAMENTO",
+            "1025 caracteres; o limite é 1024",
+        )
+    ]
+
+
+def test_orcamento_pega_soma_acima_de_6000(tmp_path):
+    skills = [
+        fabrica.skill(f"s{i}", {"name": f"s{i}", "description": "x" * 1000}) for i in range(7)
+    ]
+    assert rodar_orcamento(skills, tmp_path) == [
+        Erro(
+            "skills/",
+            "description",
+            "R-SKILL-ORCAMENTO",
+            "soma de 7000 caracteres; o limite é 6000",
+        )
+    ]
+
+
+def test_orcamento_aceita_soma_de_6000(tmp_path):
+    skills = [
+        fabrica.skill(f"s{i}", {"name": f"s{i}", "description": "x" * 1000}) for i in range(6)
+    ]
+    assert rodar_orcamento(skills, tmp_path) == []

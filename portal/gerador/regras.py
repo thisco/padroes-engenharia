@@ -1001,6 +1001,27 @@ def regra_skills(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 
 
+LIMITE_DESCRICAO_SKILL = 1024
+LIMITE_SOMA_DESCRICOES = 6000
+
+
+@regra
+def regra_skills_orcamento(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-SKILL-ORCAMENTO (spec do motor §8.1, regra 16): o que os harnesses carregam sempre."""
+    erros: list[Erro] = []
+    soma = 0
+    for s in repo.skills:
+        descricao = _texto(s.meta, "description") or ""
+        soma += len(descricao)
+        if len(descricao) > LIMITE_DESCRICAO_SKILL:
+            valor = f"{len(descricao)} caracteres; o limite é {LIMITE_DESCRICAO_SKILL}"
+            erros.append(Erro(s.caminho_relativo, "description", codigos.R_SKILL_ORCAMENTO, valor))
+    if soma > LIMITE_SOMA_DESCRICOES:
+        valor = f"soma de {soma} caracteres; o limite é {LIMITE_SOMA_DESCRICOES}"
+        erros.append(Erro("skills/", "description", codigos.R_SKILL_ORCAMENTO, valor))
+    return erros
+
+
 # Apresentações (delta das apresentações, R4) ---------------------------------------------------
 
 

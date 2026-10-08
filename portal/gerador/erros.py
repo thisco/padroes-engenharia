@@ -30,6 +30,7 @@ R_EVITAR = "R-EVITAR"
 R_VERIFICACAO = "R-VERIFICACAO"
 R_AGENTS = "R-AGENTS"
 R_SKILL = "R-SKILL"
+R_SKILL_ORCAMENTO = "R-SKILL-ORCAMENTO"
 R_GERADO_DIVERGENTE = "R-GERADO-DIVERGENTE"
 R_EXTERNO = "R-EXTERNO"
 R_PRATICA_FORA = "R-PRATICA-FORA"
@@ -65,6 +66,7 @@ DESCRICOES: dict[str, str] = {
     R_VERIFICACAO: "registro de verificação ausente, defasado, incompleto ou sem revisão",
     R_AGENTS: "AGENTS.md ausente, grande demais ou com constituição divergente",
     R_SKILL: "skill fora da especificação Agent Skills ou sem PROCEDENCIA.md",
+    R_SKILL_ORCAMENTO: "descrição de skill acima de 1024 caracteres ou soma acima de 6000",
     R_GERADO_DIVERGENTE: "README.md ou ROTEAMENTO.md diferente do que o gerador produz",
     R_EXTERNO: "recurso externo em <link>, <script> ou @import",
     R_PRATICA_FORA: "prática fora de praticas/<faixa>/<ID>.md",
