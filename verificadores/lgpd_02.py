@@ -20,11 +20,15 @@ from collections import Counter
 from pathlib import Path, PurePosixPath
 
 PASTAS = ("tests", "logs", "prompts")
-# Só as formas canônicas: `ddd.ddd.ddd-dd` e 11 dígitos colados, sempre com os dígitos conferidos.
-# Fora: `ddd.ddd.ddd.dd` (parece IPv4) e grupos separados por espaço. A fronteira é "não é dígito"
-# (vírgula de CSV e ponto valem como fronteira); nos 11 dígitos colados, letra e hífen coladas
-# também excluem, para não casar trecho de hash, hex ou UUID.
-CPF = re.compile(r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)|(?<![A-Za-z0-9-])\d{11}(?![A-Za-z0-9-])")
+# Só as formas canônicas, sempre com os dígitos conferidos: `ddd.ddd.ddd-dd`, `ddddddddd-dd` e 11
+# dígitos colados. Fora: `ddd.ddd.ddd.dd` (parece IPv4) e grupos separados por espaço. A fronteira é
+# "não é dígito" (a vírgula de CSV vale como fronteira); nos colados, letra e hífen coladas excluem
+# (trecho de hash, hex ou UUID) e o ponto decimal também (`3.<11 dígitos>`, `<11 dígitos>.50`).
+CPF = re.compile(
+    r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)"
+    r"|(?<![A-Za-z0-9-])\d{9}-\d{2}(?![A-Za-z0-9-])"
+    r"|(?<![A-Za-z0-9-])(?<!\d\.)\d{11}(?![A-Za-z0-9-])(?!\.\d)"
+)
 # O domínio termina em letras (2 ou mais): `a@b.T` de multiplicação de matrizes não é e-mail.
 EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
 # Forma SCP do Git (`usuario@host:grupo/projeto.git`): depois do ":" vem caminho de repositório.
@@ -35,7 +39,7 @@ CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s@]*@")
 # Domínios que o time reserva para e-mail de teste: example.com/net/org e subdomínios (RFC 2606) e
 # os TLDs reservados .test, .example, .invalid e .localhost (RFC 2606 e RFC 6761).
 DOMINIOS_DE_TESTE = ("example.com", "example.net", "example.org")
-INVISIVEIS = {0x34F, 0x115F, 0x1160, 0x3164, 0xFFA0}  # além da categoria Cf
+INVISIVEIS = {0x34F, 0x115F, 0x1160, 0x17B4, 0x17B5, 0x3164, 0xFFA0}  # além da categoria Cf
 TLDS_DE_TESTE = {"test", "example", "invalid", "localhost"}
 IGNORADOS = {
     ".pyc", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".pdf", ".zip", ".gz", ".jar",
@@ -62,21 +66,23 @@ def cpf_valido(digitos: str) -> bool:
 
 def invisivel(c: str) -> bool:
     o = ord(c)
-    return unicodedata.category(c) == "Cf" or o in INVISIVEIS or 0xFE00 <= o <= 0xFE0F or o == 0
+    return (
+        unicodedata.category(c) in ("Cf", "Mn")
+        or o in INVISIVEIS
+        or 0xFE00 <= o <= 0xFE0F
+        or 0xE0100 <= o <= 0xE01EF
+        or 0x180B <= o <= 0x180D
+        or o == 0
+    )
 
 
 def normaliza(linha: str) -> str:
-    """NFKC (dígitos, `＠`, `．` e `－` largos viram ASCII), sem NUL, caracteres invisíveis nem
-    acento combinante colado a dígito ou pontuação, para nada disso contornar a busca."""
+    """NFKC (dígitos, `＠`, `．` e `－` largos viram ASCII), sem NUL, caracteres invisíveis, marcas
+    combinantes nem seletores de variação, e `%40` vira `@` (e-mail em URL), para nada disso
+    contornar a busca."""
     sem = "".join(c for c in linha if not invisivel(c))
-    saida: list[str] = []
-    for c in unicodedata.normalize("NFKC", sem):
-        if invisivel(c):
-            continue
-        if unicodedata.category(c) == "Mn" and saida and saida[-1] in "0123456789.-":
-            continue
-        saida.append(c)
-    return "".join(saida)
+    nfkc = "".join(c for c in unicodedata.normalize("NFKC", sem) if not invisivel(c))
+    return re.sub("%40", "@", nfkc, flags=re.IGNORECASE)
 
 
 def e_dominio_de_teste(dominio: str) -> bool:
@@ -100,6 +106,18 @@ def achados_da_linha(linha: str) -> list[str]:
     return achados
 
 
+def relativo_a_raiz(caminho: str, cwd: str | None) -> str:
+    """Caminho com `/`, relativo à raiz: `\\` vira `/` e o absoluto é medido contra `cwd`.
+    Absoluto fora da raiz é indeterminado."""
+    caminho = caminho.replace("\\", "/")
+    if not (caminho.startswith("/") or re.match(r"[A-Za-z]:/", caminho)):
+        return caminho
+    raiz = (cwd or "").replace("\\", "/").rstrip("/") + "/"
+    if raiz == "/" or not caminho.startswith(raiz):
+        raise Indeterminado(f"{caminho}: caminho absoluto fora da raiz do projeto (cwd)")
+    return caminho[len(raiz) :]
+
+
 def nas_pastas(caminho: str) -> bool:
     """Está sob tests/, logs/ ou prompts/ da raiz do projeto."""
     p = PurePosixPath(caminho)
@@ -118,15 +136,17 @@ def varre_caminho(caminho: str, avisos: list[str]) -> bool:
 
 
 def decodifica(dados: bytes) -> str | None:
-    """Texto em UTF-8 (com ou sem BOM) ou em UTF-16 com BOM; None para o que não decodifica.
+    """Texto em UTF-8 (com ou sem BOM), em UTF-16 com BOM ou, sem NUL, em Latin-1; None é binário.
 
-    O NUL não torna o arquivo binário: `normaliza` o remove antes da busca."""
+    O NUL não torna o arquivo binário se ele é UTF-8: `normaliza` o remove antes da busca."""
     try:
         if dados.startswith((b"\xff\xfe", b"\xfe\xff")):
             return dados.decode("utf-16")
         return dados.decode("utf-8-sig")
     except UnicodeError:
-        return None
+        # Sem NUL é texto em outra codificação (cp1252 do Excel): o Latin-1 nunca falha e CPF e
+        # e-mail são ASCII. Com NUL e fora do UTF-8 é binário.
+        return None if b"\0" in dados else dados.decode("latin-1")
 
 
 def linhas(texto: str) -> list[str]:
@@ -204,13 +224,15 @@ def evento_harness(avisos: list[str]) -> list[str]:
     caminho, conteudo = entrada.get("caminho"), entrada.get("conteudo")
     if not all(v is None or isinstance(v, str) for v in (caminho, conteudo)):
         raise Indeterminado("`caminho` e `conteudo` devem ser texto ou null")
+    cwd = entrada.get("cwd")
+    if caminho is not None:
+        caminho = relativo_a_raiz(caminho, cwd if isinstance(cwd, str) else None)
     if caminho is None or not varre_caminho(caminho, avisos):
         return []
     if conteudo is None:
         if entrada.get("ferramenta") in ("editar", "escrever"):
             raise Indeterminado(f"{caminho}: sem `conteudo` para uma escrita; não dá para avaliar")
         return []
-    cwd = entrada.get("cwd")
     try:
         antigo = decodifica((Path(cwd if isinstance(cwd, str) else ".") / caminho).read_bytes())
     except OSError:

@@ -351,7 +351,7 @@ def test_pre_commit_ignora_arquivo_fora_das_pastas_e_roda_de_subpasta(repo_git: 
 
 def test_pre_commit_binario_nao_varrido_avisa_sem_casar(repo_git: RepoGit):
     destino = repo_git.escrever("tests/dados.bin", "")
-    destino.write_bytes(b"\xff\xfd\x80")
+    destino.write_bytes(b"\xff\x00\xfd\x80")  # NUL e não é UTF-8: binário
     repo_git.adicionar("tests/dados.bin")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.returncode == 0 and r.stdout == ""
@@ -602,3 +602,94 @@ def test_ci_renomear_fixture_antiga_nao_acusa(repo_git: RepoGit):
 def test_harness_extensao_de_binario_avisa_e_nao_casa():
     r = harness("tests/a.xlsx", cpf())
     assert r.returncode == 0 and "tests/a.xlsx: não varrido" in r.stderr
+
+
+# --- rodada 3: cp1252, %40, decimal, ddddddddd-dd, caminho absoluto, marcas, tipo trocado ------
+
+CSV_CP1252 = "José," + cpf() + "," + EMAIL_REAL + "\n"
+
+
+def test_csv_em_cp1252_e_varrido_nos_tres_eventos(repo_git: RepoGit):
+    esperado = ["tests/clientes.csv:1: CPF em claro", "tests/clientes.csv:1: e-mail em claro"]
+    assert harness("tests/clientes.csv", CSV_CP1252).stdout.splitlines() == esperado
+    repo_git.escrever("tests/clientes.csv", "").write_bytes(CSV_CP1252.encode("cp1252"))
+    repo_git.adicionar("tests/clientes.csv")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.commitar("csv")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert pre.stdout.splitlines() == ci.stdout.splitlines() == esperado
+    assert pre.returncode == ci.returncode == 1 and pre.stderr == ""
+
+
+def test_csv_em_cp1252_sem_dado_pessoal_e_inocente(repo_git: RepoGit):
+    repo_git.escrever("tests/c.csv", "").write_bytes("José,Ação,ok\n".encode("cp1252"))
+    repo_git.adicionar("tests/c.csv")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 0 and r.stderr == ""
+
+
+@pytest.mark.parametrize("codigo", ["%40", "%40".lower()])
+def test_email_com_arroba_codificada_em_url_pega(codigo: str):
+    linha = f"GET /api?email=ana.souza{codigo}cliente-ficticio-padroes.com.br HTTP/1.1"
+    assert casa(linha)
+    assert not casa(linha.replace("cliente-ficticio-padroes.com.br", "example.com"))
+
+
+@pytest.mark.parametrize("texto", ["medida 3.{c}", "lat=-23.{c},lon=1", "valor {c}.50"])
+def test_decimal_com_11_casas_nao_e_cpf(texto: str):
+    assert not casa(texto.format(c=cpf()))
+
+
+def test_cpf_no_fim_de_frase_e_em_csv_continua_pegando():
+    assert casa(f"o cpf era {cpf()}.") and casa(f"1,{cpf()},Jo")
+
+
+def test_cpf_sem_pontos_com_hifen_pega_e_com_dv_errado_nao():
+    c = cpf()
+    assert casa(f"cpf {c[:9]}-{c[9:]}")
+    i = cpf_invalido()
+    assert not casa(f"cpf {i[:9]}-{i[9:]}")
+
+
+def test_caminho_absoluto_e_com_barra_invertida(tmp_path: Path):
+    esperado = ["tests/a.txt:1: CPF em claro"]
+    absoluto = harness(str(tmp_path / "tests" / "a.txt"), cpf(), cwd=str(tmp_path))
+    assert absoluto.stdout.splitlines() == esperado
+    assert harness("tests\\a.txt", cpf()).stdout.splitlines() == esperado
+    assert harness("src\\a.txt", cpf()).returncode == 0
+
+
+def test_caminho_absoluto_fora_do_cwd_sai_2(tmp_path: Path):
+    r = harness("/outro/lugar/tests/a.txt", cpf(), cwd=str(tmp_path))
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
+
+
+def test_pastas_sao_sensiveis_a_maiusculas():
+    assert harness("Tests/a.txt", cpf()).returncode == 0
+    assert harness("tests/a.txt", cpf()).returncode == 1
+
+
+@pytest.mark.parametrize(
+    "marca", ["\u0301", "\U000e0100", "\u180b", "\u17b4", "\u17b5"], ids=lambda m: hex(ord(m))
+)
+def test_marca_ou_seletor_no_email_nao_contorna(marca: str):
+    assert casa(email("ana" + marca, "cliente-ficticio-padroes.com.br"))
+    assert casa(ARROBA.join(["ana", marca + "cliente-ficticio-padroes.com.br"]))
+    assert casa(f"cpf {cpf()[:5]}{marca}{cpf()[5:]}")
+
+
+def test_tipo_trocado_de_link_simbolico_para_arquivo_com_cpf_pega(repo_git: RepoGit):
+    destino = repo_git.raiz / "tests" / "l.txt"
+    destino.parent.mkdir()
+    destino.symlink_to("alvo")
+    repo_git.adicionar("tests/l.txt")
+    base = repo_git.commitar("link")
+    destino.unlink()
+    destino.write_text(f"cpf {cpf()}\n", encoding="utf-8")
+    repo_git.adicionar("tests/l.txt")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert pre.returncode == 1 and pre.stdout.splitlines() == ["tests/l.txt:1: CPF em claro"]
+    repo_git.commitar("arquivo")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert ci.returncode == 1 and ci.stdout.splitlines() == ["tests/l.txt:1: CPF em claro"]

@@ -215,18 +215,19 @@ disco; no `pre-commit`, as que o índice tem a mais que o `HEAD`; no `ci`, as qu
 `--base`. O número da linha é o do conteúdo novo. O que já estava no arquivo não barra a edição nem a
 correção linha a linha.
 
-O que é acusado: CPF na forma `ddd.ddd.ddd-dd` ou em 11 dígitos colados, com os dois dígitos
+O que é acusado: CPF na forma `ddd.ddd.ddd-dd`, `ddddddddd-dd` ou em 11 dígitos colados, com os dois dígitos
 verificadores corretos, e e-mail de domínio que não seja reservado para teste (`example.com`,
 `example.net`, `example.org` e subdomínios, e os TLDs `.test`, `.example`, `.invalid` e `.localhost`).
 Antes de buscar, a linha é normalizada (NFKC, de modo que dígitos, `＠`, `．` e `－` largos viram
-ASCII), perde o NUL, os caracteres invisíveis (como U+200B) e o acento combinante colado a dígito, para
-nada disso contornar a busca. Não é e-mail a credencial em URL (`https://usuario:senha@host`) nem a
+ASCII), perde o NUL, os caracteres invisíveis (como U+200B), as marcas combinantes e os seletores de
+variação, e `%40` vira `@`, para nada disso contornar a busca. Não é e-mail a credencial em URL (`https://usuario:senha@host`) nem a
 forma `usuario@host:caminho/repositorio.git` do Git; e-mail numa URL sem credencial, como em
 `https://site?email=...`, é acusado. A linha é a do editor e do Git (quebra só em `\n`). A saída tem
 uma linha por achado, `<caminho>:<linha>: CPF em claro` ou `<caminho>:<linha>: e-mail em claro`, e
 nunca o dado achado. Sai com 0 quando não há o que apontar, 1 com achado e 2 quando não consegue
 decidir: evento que não atende, entrada inválida, `ci` sem `--base`, fora de um repositório Git, ou
-`editar`/`escrever` sem o conteúdo do arquivo.
+`editar`/`escrever` sem o conteúdo do arquivo, ou caminho absoluto fora da raiz (`cwd`). No harness, o
+caminho pode chegar absoluto ou com `\\`, e o verificador o relativiza contra `cwd`.
 
 Para rodar à mão no índice do projeto: `python3 verificadores/lgpd_02.py --evento pre-commit`. Para
 comparar com a base da MR: `python3 verificadores/lgpd_02.py --evento ci --base <ref>`.
@@ -236,17 +237,22 @@ Os limites:
   O `ci` compara com a base da MR (`$CI_MERGE_REQUEST_DIFF_BASE_SHA`, que é o ancestral comum); comparar
   com a ponta da branch alvo acusaria linhas que não são da MR.
 - CPF: só a forma `ddd.ddd.ddd-dd` e os 11 dígitos colados, com os dígitos conferidos. Não são acusados
-  grupos separados por espaço, `ddd.ddd.ddd.dd`, CPF por extenso, com escape unicode, em base64 ou
+  grupos separados por espaço, `ddd.ddd.ddd.dd`, decimal com 11 casas (`3.<11 dígitos>`), CPF por extenso, com escape unicode, em base64 ou
   partido em mais de uma linha, nem CPF de dígito verificador inválido. Os 11 dígitos colados a letra ou
   hífen (trecho de hash, hex ou UUID) também ficam de fora. Ele não distingue CPF real de CPF sintético
   com dígitos válidos, e por isso o teste gera o CPF na hora e não o escreve no arquivo; um número de
-  11 dígitos que por acaso passe na conferência é acusado.
+  11 dígitos que por acaso passe na conferência é acusado, como um celular de 11 dígitos (que também
+  é dado pessoal).
 - E-mail: os domínios aceitos são os reservados para teste, acima. Um `x@obj.attr` em código Python
   conta como e-mail (limite conhecido; use domínio reservado para teste). E-mail dentro de uma URL com
   credencial não é acusado.
-- Binário é o que não decodifica em UTF-8 (com ou sem BOM) nem em UTF-16 com BOM; o NUL sozinho não
-  torna o arquivo binário. Esse arquivo e os de extensão de binário conhecida (como `.xlsx`, `.jar`,
-  `.woff`) são pulados com um aviso em stderr.
+- Texto que não é UTF-8 (como o CSV em cp1252 do Excel no Windows) é lido como Latin-1 e varrido.
+  Binário é só o arquivo com NUL que não decodifica em UTF-8 nem em UTF-16 com BOM, e os de extensão de
+  binário conhecida (como `.xlsx`, `.jar`, `.woff`); esses são pulados com um aviso em stderr.
+- As pastas `tests/`, `logs/` e `prompts/` são sensíveis a maiúsculas: `Tests/` não é `tests/`.
+- É um verificador de padrão: não pega dado ofuscado de propósito (esquema de URL inventado antes do
+  e-mail, pontuação trocada como travessão ou barra no CPF, codificação em base64) e não substitui a
+  revisão.
 - Ele não vê nome, telefone, endereço, o dado dentro de arquivo compactado, nem o que está fora das três
   pastas, como o código que monta o log ou o prompt em tempo de execução, o tráfego de produção e o
   índice vetorial. Isso é o que a revisão humana do código e a P2-04 (a máscara no gateway, no caminho
