@@ -36,6 +36,36 @@ def test_rodar_passa_evento_base_e_entrada_ao_script(tmp_path: Path):
     assert r.stdout.splitlines() == ["['--evento', 'ci', '--base', 'abc']", '{"a": 1}', "1"]
 
 
+def test_repo_git_ignora_git_dir_herdado_e_hooks_da_configuracao_global(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    hooks = tmp_path / "hooks"
+    hooks.mkdir()
+    gancho = hooks / "pre-commit"
+    gancho.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    gancho.chmod(0o755)
+    global_ = tmp_path / "gitconfig"
+    global_.write_text(f"[core]\n\thooksPath = {hooks}\n", encoding="utf-8")
+    outro = tmp_path / "outro"
+    outro.mkdir()
+    monkeypatch.setenv("GIT_DIR", str(outro / ".git"))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(global_))
+    monkeypatch.setenv("PYTHONPATH", str(outro))
+    raiz = tmp_path / "r"
+    raiz.mkdir()
+    repo = RepoGit(raiz)
+    repo._git("init", "--quiet", "--initial-branch=main")
+    repo._git("config", "user.name", "T")
+    repo._git("config", "user.email", "t@example.com")
+    repo.escrever("a.txt", "a\n")
+    repo.adicionar("a.txt")
+    assert len(repo.commitar("c")) == 40
+    assert not (outro / ".git").exists()
+    eco = tmp_path / "eco.py"
+    eco.write_text("import os\nprint(os.environ.get('PYTHONPATH'), os.environ.get('GIT_DIR'))\n")
+    assert rodar(eco, "ci").stdout.strip() == "None None"
+
+
 def test_repo_git_cria_commit_inicial_e_permite_novo_commit(repo_git: RepoGit):
     inicial = repo_git._git("rev-parse", "HEAD")
     repo_git.escrever("src/a.py", "x = 1\n")

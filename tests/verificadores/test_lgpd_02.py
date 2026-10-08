@@ -4,7 +4,7 @@ Nenhum CPF vale como literal aqui: o teste o monta na hora, com os dígitos veri
 
 from __future__ import annotations
 
-import shutil
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -225,10 +225,11 @@ def test_ci_com_base_inexistente_sai_2(repo_git: RepoGit):
 # --- isolado, como o pacote gerado -----------------------------------------------------------
 
 
-def test_script_copiado_roda_isolado_fora_do_repositorio(tmp_path: Path):
-    copia = tmp_path / "projeto" / "verificadores" / "lgpd_02.py"
-    copia.parent.mkdir(parents=True)
-    shutil.copy(SCRIPT, copia)
+def test_script_do_pacote_roda_isolado_fora_do_repositorio(
+    tmp_path: Path, verificador_do_pacote: Callable[[str], Path]
+):
+    copia = verificador_do_pacote("lgpd_02.py")
+    assert copia.read_bytes() == SCRIPT.read_bytes()
     entrada = {"ferramenta": "escrever", "caminho": "tests/a.txt", "conteudo": cpf(), "cwd": "/p"}
     pega = rodar(copia, "antes-de-ferramenta", entrada=entrada, cwd=tmp_path, isolado=True)
     assert pega.returncode == 1 and pega.stdout.splitlines() == ["tests/a.txt:1: CPF em claro"]
