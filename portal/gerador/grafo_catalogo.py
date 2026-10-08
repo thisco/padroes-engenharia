@@ -10,6 +10,7 @@ from typing import Any
 from portal.gerador.renderizar import Site, caminho_de, para_md
 
 VERSAO_FORMATO_GRAFO = 1
+ESPINHA = "esquemas/espinha.yml"
 
 
 def _normalizar(texto: str) -> str:
@@ -18,7 +19,8 @@ def _normalizar(texto: str) -> str:
 
 def montar_grafo(site: Site) -> dict[str, Any]:
     nos: dict[str, dict[str, Any]] = {}
-    arestas: set[tuple[str, str, str]] = set()
+    # (origem, destino, relação) → menor caminho de quem declarou; a escolha é determinística.
+    arestas: dict[tuple[str, str, str], str] = {}
 
     def no(
         id_: str,
@@ -44,22 +46,31 @@ def montar_grafo(site: Site) -> dict[str, Any]:
                 **extra,
             }
 
-    def liga(origem: str, destino: str, relacao: str) -> None:
-        arestas.add((origem, destino, relacao))
+    def liga(origem: str, destino: str, relacao: str, fonte: str) -> None:
+        chave = (origem, destino, relacao)
+        arestas[chave] = min(fonte, arestas.get(chave, fonte))
+
+    # Itens de `aplica` sem arquivo local (skill ausente, steering externo) apontam para a
+    # prática que os declara: a de menor caminho.
+    declarante: dict[str, str] = {}
+    for p in site.catalogo.praticas.values():
+        for item in p.meta.get("aplica") or []:
+            declarante[item] = min(p.caminho_relativo, declarante.get(item, p.caminho_relativo))
+    skills = {f"skill:{k.chave}": k.caminho_relativo for k in site.repo.skills}
 
     espinha = site.espinha
     for f in espinha.faixas:
-        no(f"dominio:{f.slug}", f.titulo, "dominio", "esquemas/espinha.yml", f.subtitulo, f.slug)
+        no(f"dominio:{f.slug}", f.titulo, "dominio", ESPINHA, f.subtitulo, f.slug)
     for m in espinha.momentos:
-        no(f"momento:{m.slug}", m.titulo, "momento", "esquemas/espinha.yml", m.acao, "espinha")
+        no(f"momento:{m.slug}", m.titulo, "momento", ESPINHA, m.acao, "espinha")
     for c in site.catalogo.celulas:
         if not c.praticas:
             continue
         celula = f"celula:{c.dominio}|{c.momento}"
         rotulo = f"{espinha.faixa(c.dominio).titulo} · {espinha.momento(c.momento).titulo}"
-        no(celula, rotulo, "celula", "esquemas/espinha.yml", "", c.dominio)
-        liga(celula, f"dominio:{c.dominio}", "pertence")
-        liga(celula, f"momento:{c.momento}", "pertence")
+        no(celula, rotulo, "celula", ESPINHA, "", c.dominio)
+        liga(celula, f"dominio:{c.dominio}", "pertence", ESPINHA)
+        liga(celula, f"momento:{c.momento}", "pertence", ESPINHA)
 
     referencias = {r.chave: r for r in site.repo.referencias}
     for p in site.catalogo.praticas.values():
@@ -77,13 +88,15 @@ def montar_grafo(site: Site) -> dict[str, Any]:
             momento=m["momento"],
             url=site.url(para_md(caminho_de(p))),
         )
-        liga(p.chave, f"celula:{m['dominio']}|{m['momento']}", "pertence")
+        origem = p.caminho_relativo
+        liga(p.chave, f"celula:{m['dominio']}|{m['momento']}", "pertence", origem)
         for item in m.get("aplica") or []:
-            no(item, item, item.partition(":")[0], "", "", "aplica")
-            liga(p.chave, item, "aplica")
+            fonte = skills.get(item, declarante[item])
+            no(item, item, item.partition(":")[0], fonte, "", "ferramentas")
+            liga(p.chave, item, "aplica", origem)
         for fid in m.get("ferramentas_aprovadas") or []:
             no(f"ferramenta:{fid}", fid, "ferramenta", f"ferramentas/{fid}.yml", "", "ferramentas")
-            liga(p.chave, f"ferramenta:{fid}", "usa")
+            liga(p.chave, f"ferramenta:{fid}", "usa", origem)
         for rid in m.get("referencias") or []:
             r = referencias.get(rid)
             if r is not None:
@@ -95,10 +108,10 @@ def montar_grafo(site: Site) -> dict[str, Any]:
                     str(r.meta.get("organizacao", "")),
                     "referencias",
                 )
-                liga(p.chave, f"ref:{rid}", "cita")
+                liga(p.chave, f"ref:{rid}", "cita", origem)
         for outra in m.get("relacionadas") or []:
             if outra in site.catalogo.praticas:
-                liga(p.chave, outra, "relaciona")
+                liga(p.chave, outra, "relaciona", origem)
 
     for c in site.repo.conceitos:
         cid = f"conceito:{c.chave}"
@@ -112,7 +125,7 @@ def montar_grafo(site: Site) -> dict[str, Any]:
         )
         for pid in c.meta.get("praticas") or []:
             if pid in site.catalogo.praticas:
-                liga(cid, pid, "explica")
+                liga(cid, pid, "explica", c.caminho_relativo)
     for r in site.repo.receitas:
         rid = f"receita:{r.chave.removeprefix('receita-')}"
         no(
@@ -125,7 +138,7 @@ def montar_grafo(site: Site) -> dict[str, Any]:
         )
         for pid in r.meta.get("praticas") or []:
             if pid in site.catalogo.praticas:
-                liga(rid, pid, "ensina")
+                liga(rid, pid, "ensina", r.caminho_relativo)
 
     links = [
         {
@@ -135,8 +148,9 @@ def montar_grafo(site: Site) -> dict[str, Any]:
             "confidence": "EXTRACTED",
             "confidence_score": 1.0,
             "weight": 1.0,
+            "source_file": fonte,
         }
-        for a, b, rel in sorted(arestas)
+        for (a, b, rel), fonte in sorted(arestas.items())
         if a in nos and b in nos
     ]
     return {
