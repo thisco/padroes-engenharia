@@ -20,6 +20,7 @@ from portal.gerador.renderizar import Site, constituicoes, url_portal
 from portal.gerador.saidas import dados_roteamento, para_json, sufixo_da_organizacao
 
 PASTA_PACOTE = "pacote"
+PASTA_VERIFICADORES = "verificadores"
 VERSAO_FORMATO_PACOTE = 1
 NOME_PLUGIN = "padroes-engenharia"
 
@@ -69,6 +70,10 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
             if arquivo.is_file() and not arquivo.is_symlink() and not oculto:
                 relativo = "/".join(partes)
                 arquivos[f"skills/{s.chave}/{relativo}"] = arquivo.read_bytes()
+    # Verificadores internos (delta da curadoria §3): só os `.py`, em ordem; o README fica fora.
+    for arquivo in sorted((site.raiz / PASTA_VERIFICADORES).glob("*.py")):
+        if arquivo.is_file() and not arquivo.is_symlink() and not arquivo.name.startswith("."):
+            arquivos[f"verificadores/{arquivo.name}"] = arquivo.read_bytes()
     for constituicao in constituicoes(site):
         arquivos[f"constituicao/{Path(constituicao).name}"] = (
             site.raiz / constituicao
