@@ -1,0 +1,11 @@
+id: github-codeowners
+titulo: "About code owners (documentação do GitHub)"
+organizacao: GitHub
+url: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções do local do arquivo CODEOWNERS (.github/, raiz ou docs/) e da exigência de revisão de code owners pela proteção de branch"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08. O nome exato da opção da regra de proteção de branch não foi lido nesta rodada; o texto da prática diz só que a proteção de branch exige a revisão de quem é dono do código."

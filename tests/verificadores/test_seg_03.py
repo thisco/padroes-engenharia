@@ -1111,6 +1111,43 @@ PEDEM = [
     "ｎｐｍ install left-pad",
     "np​m install left-pad",
     "pip install -- requests",
+    "pip install -r reqs/base.txt",
+    "pip freeze > requirements.txt",
+    "npx cowsay oi",
+    "npx -y create-react-app app",
+    "npx -p typescript tsc",
+    "bunx cowsay oi",
+    "bun x cowsay oi",
+    "pnpm dlx cowsay oi",
+    "yarn dlx cowsay oi",
+    "yarn global add cowsay",
+    "npm exec cowsay oi",
+    "npm exec -- cowsay oi",
+    "npm x cowsay oi",
+    "uvx ruff check",
+    "uvx --from httpie http",
+    "uv tool install ruff",
+    "uv tool run ruff",
+    "uv run --with requests python x.py",
+    "pipx run cowsay",
+    "pipx install cowsay",
+    "cargo install ripgrep",
+    "cargo install --path ./ferramenta",
+    "go install golang.org/x/tools/cmd/stringer@v0.20.0",
+    "go run golang.org/x/tools/cmd/stringer@latest",
+    "go mod tidy",
+    "go -C web mod tidy",
+    "echo 'flask==3.0' >> requirements.txt",
+    "echo flask > requirements-dev.txt",
+    "printf 'x' | tee -a web/requirements.txt",
+    "sed -i 's/1/2/' package.json",
+    "sed -i.bak 's/1/2/' pyproject.toml",
+    "cp /tmp/novo.toml Cargo.toml",
+    "mv go.mod.novo go.mod",
+    "cat x >> dependencias-aprovadas.txt",
+    "cd app && echo 'org.a:b' >> build.gradle.kts",
+    "npm pkg set dependencies.left-pad=1.0.0",
+    "NPX cowsay oi",
     "npm install --registry https://exemplo.test/npm",
     "xargs npm install left-pad",
     'eval "npm install left-pad"',
@@ -1137,7 +1174,6 @@ INOCENTES = [
     "pip install .",
     "pip install -e .[dev]",
     "pip list",
-    "pip freeze > requirements.txt",
     "python -m pytest",
     "python -m pip --version",
     "uv sync",
@@ -1154,17 +1190,33 @@ INOCENTES = [
     "go get",
     "go get ./...",
     "go get .",
-    "go mod tidy",
     "go test ./...",
     'grep "npm install" README.md',
     "grep -rn 'pip install' docs/",
     "cat requirements.txt",
     "echo hello",
     "ls -la",
-    "npx prettier --write .",
+    "npx --version",
     "pip",
     "installer add pacote",
     "snpm install x",
+    "uv run pytest",
+    "uv run --no-sync pytest",
+    "uvx --version",
+    "pipx list",
+    "cargo install",
+    "go install ./...",
+    "go run main.go",
+    "go run ./cmd/app",
+    "go mod download",
+    "pnpm exec jest",
+    "npm exec",
+    "cat requirements.txt",
+    "grep flask requirements.txt > /dev/null",
+    "git diff package.json",
+    "pip install -r requirements-dev.txt",
+    "echo ok > saida.txt",
+    "npm pkg get version",
     "git commit -m 'npm install left-pad'",
     'git commit -m "uv add requests"',
     'echo "npm install left-pad"',
@@ -1209,9 +1261,10 @@ def test_comando_com_segredo_nao_vaza_na_saida():
     assert pede(r) and SEGREDO not in r.stdout + r.stderr
 
 
-def test_comando_sem_comando_ou_ausente_passa():
-    assert passa(shell(None))
+def test_comando_vazio_passa_e_comando_nulo_e_indeterminado():
     assert passa(shell(""))
+    r = shell(None)
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
 
 
 def test_citacao_textual_fora_de_aspas_e_falso_positivo_aceito():
@@ -1253,7 +1306,7 @@ def test_o_gatilho_de_shell_da_pratica_cobre_todo_comando_que_o_verificador_pega
     compilada = re.compile(regex)
     for comando in PEDEM:
         if comando.startswith(("ｎ", "np​")):
-            continue  # o runtime normaliza o comando antes de casar? não: o verificador é a trava
+            continue  # o gatilho vê o texto cru; a normalização é do verificador
         assert compilada.search(comando), comando
 
 
@@ -1263,6 +1316,7 @@ def test_o_gatilho_de_caminhos_da_pratica_traz_os_sete_arquivos_na_raiz_e_em_pas
     m = mecanismo_de(_meta_da_pratica())
     gatilho = next(g for g in m.gatilhos if g.ferramenta == ("editar", "escrever"))
     for nome in (
+        "dependencias-aprovadas.txt",
         "pyproject.toml",
         "requirements*.txt",
         "package.json",
@@ -1320,3 +1374,187 @@ def test_este_arquivo_nao_traz_literal_o_valor_sensivel_que_o_verificador_escond
     assert not re.search(r"tok-[A-Za-z0-9]{6,}", texto)
     r = harness(RAIZ, "tests/verificadores/test_seg_03.py", texto)
     assert passa(r)
+
+
+# --- rodada de correção 1: origem e fonte removidas, overrides, parser, CLI, lista aprovada ------
+
+
+def _pede_ao_trocar(tmp_path: Path, caminho: str, antes: str, depois: str) -> bool:
+    projeto(tmp_path, **{caminho: antes})
+    return pede(harness(tmp_path, caminho, depois))
+
+
+def test_requirements_fonte_removida_pede_e_dependencia_comum_removida_nao(tmp_path: Path):
+    fonte = f"--index-url {ESQUEMA}h.exemplo.test/s\n"
+    com = fonte + "a==1\nb==1\n"
+    assert _pede_ao_trocar(tmp_path, "requirements.txt", com, "a==1\nb==1\n")
+    assert not _pede_ao_trocar(tmp_path, "requirements.txt", com, fonte + "a==1\n")
+
+
+def test_requirements_uma_de_duas_fontes_removida_pede(tmp_path: Path):
+    duas = f"--extra-index-url {ESQUEMA}x.test/s\n-f {ESQUEMA}y.test/f\na==1\n"
+    um = f"--extra-index-url {ESQUEMA}x.test/s\na==1\n"
+    assert _pede_ao_trocar(tmp_path, "requirements.txt", duas, um)
+
+
+def test_requirements_dependencia_que_perde_a_origem_pede(tmp_path: Path):
+    antes = "foo @ https://exemplo.test/foo.tar.gz\n"
+    assert _pede_ao_trocar(tmp_path, "requirements.txt", antes, "foo==1\n")
+
+
+def test_requirements_linha_de_comentario_nao_e_continuada_pela_barra(tmp_path: Path):
+    projeto(tmp_path, **{"requirements.txt": "a==1\n"})
+    r = harness(tmp_path, "requirements.txt", "a==1\n# nota com barra \\\nnovo-pacote==1\n")
+    assert pede(r) and nomes_em(r) == ["novo-pacote"]
+    assert r.stdout.startswith("requirements.txt:3: ")
+
+
+@pula_sem_tomllib
+def test_pyproject_fonte_removida_pede(tmp_path: Path):
+    uv = PYPROJECT_BASE + '[[tool.uv.index]]\nname = "p"\nurl = "https://exemplo.test/s"\n'
+    assert _pede_ao_trocar(tmp_path, "pyproject.toml", uv, PYPROJECT_BASE)
+    src = PYPROJECT_BASE + '[tool.uv.sources]\nrequests = {git = "https://exemplo.test/r.git"}\n'
+    assert _pede_ao_trocar(tmp_path, "pyproject.toml", src, PYPROJECT_BASE)
+    poetry = '[tool.poetry.dependencies]\nrequests = {version = "^2", source = "privada"}\n'
+    sem = poetry.replace(', source = "privada"', "")
+    assert _pede_ao_trocar(tmp_path, "pyproject.toml", poetry, sem)
+
+
+@pula_sem_tomllib
+@pytest.mark.parametrize(
+    "extra",
+    [
+        '[tool.uv]\noverride-dependencies = ["requests==2.0"]\n',
+        '[tool.pdm.resolution.overrides]\nrequests = "2.0"\n',
+    ],
+)
+def test_pyproject_overrides_novos_pedem_e_so_a_versao_nao(tmp_path: Path, extra: str):
+    projeto(tmp_path, **{"pyproject.toml": PYPROJECT_BASE})
+    assert pede(harness(tmp_path, "pyproject.toml", PYPROJECT_BASE + extra))
+    projeto(tmp_path, **{"pyproject.toml": PYPROJECT_BASE + extra})
+    assert passa(harness(tmp_path, "pyproject.toml", PYPROJECT_BASE + extra.replace("2.0", "2.1")))
+
+
+@pula_sem_tomllib
+def test_pyproject_override_com_origem_trocada_pede(tmp_path: Path):
+    antes = PYPROJECT_BASE + '[tool.uv]\noverride-dependencies = ["requests==2.0"]\n'
+    url = "requests @ https://exemplo.test/r.tgz"
+    depois = PYPROJECT_BASE + f'[tool.uv]\noverride-dependencies = ["{url}"]\n'
+    assert _pede_ao_trocar(tmp_path, "pyproject.toml", antes, depois)
+
+
+@pytest.mark.parametrize(
+    "secao",
+    [
+        {"overrides": {"a": "1.0.0"}},
+        {"resolutions": {"a": "1.0.0"}},
+        {"pnpm": {"overrides": {"a": "1.0.0"}}},
+        {"overrides": {"b": {".": "1.0.0", "a": "2.0.0"}}},
+    ],
+)
+def test_package_json_overrides_novos_pedem(tmp_path: Path, secao: dict):
+    projeto(tmp_path, **{"package.json": '{"name": "x"}'})
+    r = harness(tmp_path, "package.json", json.dumps({"name": "x", **secao}))
+    assert pede(r) and "override" in r.stdout
+
+
+def test_package_json_override_com_nova_versao_passa_e_com_origem_nova_pede(tmp_path: Path):
+    projeto(tmp_path, **{"package.json": json.dumps({"overrides": {"a": "1.0.0"}})})
+    assert passa(harness(tmp_path, "package.json", json.dumps({"overrides": {"a": "2.0.0"}})))
+    assert pede(harness(tmp_path, "package.json", json.dumps({"overrides": {"a": "github:f/a"}})))
+
+
+@pytest.mark.parametrize(
+    "spec",
+    [
+        "git@github.com:dono/a.git",
+        "a.tgz",
+        "a.tar",
+        "a.tar.gz",
+        "dono/a",
+        "github:dono/a",
+        "file:../a",
+        "./a",
+    ],
+)
+def test_package_json_formas_de_origem_que_o_npm_aceita(tmp_path: Path, spec: str):
+    projeto(tmp_path, **{"package.json": json.dumps({"dependencies": {"a": "^1"}})})
+    assert pede(harness(tmp_path, "package.json", json.dumps({"dependencies": {"a": spec}})))
+
+
+def test_package_json_origem_removida_pede(tmp_path: Path):
+    antes = json.dumps({"dependencies": {"a": "git+https://exemplo.test/a.git"}})
+    assert _pede_ao_trocar(
+        tmp_path, "package.json", antes, json.dumps({"dependencies": {"a": "^1"}})
+    )
+
+
+def test_gomod_require_colado_ao_parenteses_abre_bloco(tmp_path: Path):
+    projeto(tmp_path, **{"go.mod": "module x\n"})
+    r = harness(tmp_path, "go.mod", "module x\nrequire(\n\tgithub.com/a/b v1.0.0\n)\n")
+    assert pede(r) and nomes_em(r) == ["github.com/a/b"]
+    r = harness(tmp_path, "go.mod", "module x\nreplace(\n\tgithub.com/a/b => ../b\n)\n")
+    assert pede(r) and nomes_em(r) == ["github.com/a/b"]
+    r = harness(tmp_path, "go.mod", "module x\nrequire ( github.com/a/b v1.0.0 )\n")
+    assert pede(r) and nomes_em(r) == ["github.com/a/b"]
+
+
+def test_gomod_replace_removido_pede(tmp_path: Path):
+    antes = GOMOD + "\nreplace github.com/a/b => ../b\n"
+    assert _pede_ao_trocar(tmp_path, "go.mod", antes, GOMOD)
+
+
+@pula_sem_tomllib
+def test_cargo_package_igual_ao_nome_nao_e_origem_e_underscore_vale(tmp_path: Path):
+    projeto(tmp_path, **{"Cargo.toml": CARGO_BASE})
+    igual = CARGO_BASE.replace('"1.0"', '{ version = "1.0", package = "serde" }')
+    assert passa(harness(tmp_path, "Cargo.toml", igual))
+    novo = CARGO_BASE + '[dev_dependencies]\nrand = "0.8"\n'
+    assert nomes_em(harness(tmp_path, "Cargo.toml", novo)) == ["rand"]
+    novo = CARGO_BASE + "[target.'cfg(unix)'.build_dependencies]\ncc = \"1\"\n"
+    assert nomes_em(harness(tmp_path, "Cargo.toml", novo)) == ["cc"]
+
+
+@pula_sem_tomllib
+def test_cargo_origem_removida_pede(tmp_path: Path):
+    antes = CARGO_BASE.replace('"1.0"', '{ git = "https://exemplo.test/s.git" }')
+    assert _pede_ao_trocar(tmp_path, "Cargo.toml", antes, CARGO_BASE)
+
+
+def test_pom_repositorio_removido_pede_e_distribution_management_nao_e_fonte(tmp_path: Path):
+    repo = (
+        "<repositories><repository><id>r</id><url>https://exemplo.test/m2</url>"
+        "</repository></repositories>"
+    )
+    com = POM.replace("</project>", repo + "</project>")
+    assert _pede_ao_trocar(tmp_path, "pom.xml", com, POM)
+    destino = (
+        "<distributionManagement><repository><id>d</id><url>https://exemplo.test/publica</url>"
+        "</repository></distributionManagement>"
+    )
+    com_destino = POM.replace("</project>", destino + "</project>")
+    projeto(tmp_path, **{"pom.xml": POM})
+    assert passa(harness(tmp_path, "pom.xml", com_destino))
+    projeto(tmp_path, **{"pom.xml": com_destino})
+    assert passa(harness(tmp_path, "pom.xml", POM))
+
+
+def test_gradle_repositorio_removido_pede(tmp_path: Path):
+    extra = "    mavenCentral()\n    maven { url 'https://exemplo.test/m2' }\n"
+    com = GRADLE.replace("    mavenCentral()\n", extra)
+    assert _pede_ao_trocar(tmp_path, "build.gradle", com, GRADLE)
+
+
+def test_lista_aprovada_pede_em_qualquer_edicao_mesmo_sem_conteudo(tmp_path: Path):
+    projeto(tmp_path, **{"dependencias-aprovadas.txt": "a  # motivo de uso\n"})
+    for caminho in ("dependencias-aprovadas.txt", "app/dependencias-aprovadas.txt"):
+        r = harness(tmp_path, caminho, "a  # motivo de uso\nb  # outro motivo\n")
+        assert pede(r) and r.stdout.startswith(f"{caminho}:0: ")
+    assert pede(harness(tmp_path, "dependencias-aprovadas.txt", None))
+    assert passa(harness(tmp_path, "dependencias-aprovadas.md", "x"))
+    assert passa(harness(tmp_path, "node_modules/x/dependencias-aprovadas.txt", "x"))
+
+
+def test_comando_que_escreve_no_arquivo_nao_mostra_o_conteudo():
+    r = shell(f"echo 'flask=={SEGREDO}' >> requirements.txt")
+    assert pede(r) and SEGREDO not in r.stdout and "flask" not in r.stdout

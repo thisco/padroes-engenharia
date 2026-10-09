@@ -90,7 +90,10 @@ from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
 PASTAS_DE_TERCEIROS = {"node_modules", ".venv", "venv", "vendor", "site-packages"}
-PADROES_DE_NOME = ("pyproject.toml", "package.json", "go.mod", "pom.xml", "cargo.toml")
+LISTA_APROVADA = "dependencias-aprovadas.txt"
+PADROES_DE_NOME = (
+    "pyproject.toml", "package.json", "go.mod", "pom.xml", "cargo.toml", LISTA_APROVADA
+)  # fmt: skip
 PADROES_COM_CURINGA = ("requirements*.txt", "build.gradle*")
 LIMITE_DE_ACHADOS = 20
 LIMITE_DO_NOME = 80
@@ -258,7 +261,8 @@ def linhas_logicas(texto: str) -> list[tuple[int, str]]:
         linha = bruta.rstrip("\r")
         if not atual:
             inicio = n
-        if linha.endswith("\\"):
+        # Como o pip: a barra no fim de uma linha de comentário não continua a linha.
+        if linha.endswith("\\") and not re.match(r"\s*#", linha):
             atual += linha[:-1] + " "
             continue
         atual += linha
@@ -357,6 +361,24 @@ def conjunto_pyproject(caminho: str, texto: str) -> dict[str, Dep]:
     for grupo, lista in _dict(_dict(ferramentas.get("pdm")).get("dev-dependencies")).items():
         _lista_pep508(caminho, f"pdm.dev-dependencies.{grupo}", lista, conj)
     _fontes_de_url(_dict(ferramentas.get("pdm")).get("source"), conj)
+    # Overrides trocam o que se instala sem passar pelas listas acima: contam como origem.
+    sobrepostas: dict[str, Dep] = {}
+    _lista_pep508(
+        caminho,
+        "uv.override-dependencies",
+        _dict(ferramentas.get("uv")).get("override-dependencies"),
+        sobrepostas,
+    )
+    for nome, spec in _dict(
+        _dict(_dict(ferramentas.get("pdm")).get("resolution")).get("overrides")
+    ).items():
+        texto_spec = spec if isinstance(spec, str) else ""
+        origem = texto_spec if URL_OU_CAMINHO.match(texto_spec) or "@" in texto_spec else ""
+        somar(sobrepostas, _norm_py(nome), origem, nome)
+    for chave, dep in sobrepostas.items():
+        exibir = f"override:{dep.exibir}" if dep.exibir else None
+        for origem in dep.origens:
+            somar(conj, f"override:{chave}", origem, exibir)
     return conj
 
 
@@ -405,7 +427,7 @@ def conjunto_cargo(caminho: str, texto: str) -> dict[str, Dep]:
     tabelas.append(_dict(dados.get("workspace")).get("dependencies"))
     for alvo in _dict(dados.get("target")).values():
         for n in nomes:
-            tabelas.append(_dict(alvo).get(n))
+            tabelas += [_dict(alvo).get(n), _dict(alvo).get(n.replace("-", "_"))]
     for tabela in tabelas:
         for nome, spec in _dict(tabela).items():
             _dependencia_cargo(conj, nome, spec, "")
@@ -420,7 +442,10 @@ def conjunto_cargo(caminho: str, texto: str) -> dict[str, Dep]:
 def _dependencia_cargo(conj: dict[str, Dep], nome: str, spec: object, base: str) -> None:
     origem = base
     if isinstance(spec, dict):
-        partes = _origem_de_tabela(spec, ("git", "path", "registry", "registry-index", "package"))
+        partes = _origem_de_tabela(spec, ("git", "path", "registry", "registry-index"))
+        real = spec.get("package")
+        if real is not None and _norm_cargo(str(real)) != _norm_cargo(nome):
+            partes = "|".join(x for x in (partes, f"package={real}") if x)
         origem = "|".join(x for x in (base, partes) if x)
     somar(conj, _norm_cargo(nome), origem, nome)
 
@@ -428,8 +453,6 @@ def _dependencia_cargo(conj: dict[str, Dep], nome: str, spec: object, base: str)
 # --- package.json -------------------------------------------------------------------------------
 
 SECOES_NPM = ("dependencies", "devDependencies", "optionalDependencies", "peerDependencies")
-SCHEMA_NPM = re.compile(r"^(?:[A-Za-z][A-Za-z0-9+.-]*:|\.{0,2}/|~/)")
-GITHUB_ABREVIADO = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:#.*)?$")
 
 
 def _sem_repeticao(pares: list[tuple[str, object]]) -> dict:
@@ -450,7 +473,9 @@ def origem_npm(spec: object) -> str:
         return "npm:" + (alias.rsplit("@", 1)[0] if "@" in alias[1:] else alias)
     if s.startswith("workspace:"):
         return ""
-    if SCHEMA_NPM.match(s) or GITHUB_ABREVIADO.match(s):
+    # Só versão, intervalo ou tag do registro é origem vazia; o resto (git, `user/repo`, URL,
+    # arquivo, `git@host:x/y.git`, `x.tgz`) é o que o `npm-package-arg` lê como outra origem.
+    if re.search(r"[/:@]", s) or s.lower().endswith((".tgz", ".tar", ".tar.gz")):
         return s
     return ""
 
@@ -473,12 +498,33 @@ def conjunto_package_json(caminho: str, texto: str) -> dict[str, Dep]:
             raise Indeterminado(f"{caminho}: `{secao}` deve ser um objeto")
         for nome, spec in grupo.items():
             somar(conj, nome, origem_npm(spec), nome)
+    for grupo in (
+        dados.get("overrides"),
+        dados.get("resolutions"),
+        _dict(dados.get("pnpm")).get("overrides"),
+    ):
+        _overrides_npm(caminho, grupo, conj, "")
     return conj
+
+
+def _overrides_npm(caminho: str, grupo: object, conj: dict[str, Dep], pai: str) -> None:
+    """`overrides`, `resolutions` e `pnpm.overrides`: nome (ou `.`, o pai) -> especificação, com
+    objetos aninhados. Cada entrada é um item `override:<nome>` com a origem da especificação."""
+    if grupo is None:
+        return
+    if not isinstance(grupo, dict):
+        raise Indeterminado(f"{caminho}: `overrides` deve ser um objeto")
+    for nome, spec in grupo.items():
+        alvo = pai if nome == "." else nome
+        if isinstance(spec, dict):
+            _overrides_npm(caminho, spec, conj, alvo)
+        else:
+            somar(conj, f"override:{alvo}", origem_npm(spec), f"override:{alvo}")
 
 
 # --- go.mod -------------------------------------------------------------------------------------
 
-TOKEN_GO = re.compile(r'"(?:[^"\\]|\\.)*"|`[^`]*`|//.*|[^\s"`]+')
+TOKEN_GO = re.compile(r'"(?:[^"\\]|\\.)*"|`[^`]*`|//.*|[()]|[^\s"`()]+')
 
 
 def _tokens_go(linha: str) -> list[str]:
@@ -495,21 +541,23 @@ def conjunto_gomod(texto: str) -> dict[str, Dep]:
     bloco: str | None = None
     for linha in texto.split("\n"):
         tokens = _tokens_go(linha)
-        if not tokens:
-            continue
+        if bloco is None and len(tokens) >= 2 and tokens[1] == "(":
+            bloco, tokens = tokens[0], tokens[2:]  # `require (` e `require(` abrem o bloco
         if bloco is not None:
-            if tokens[0] == ")":
-                bloco = None
-                continue
+            fecha = bool(tokens) and tokens[-1] == ")"
+            tokens = tokens[:-1] if fecha else tokens
             diretiva, args = bloco, tokens
-        else:
+            if fecha:
+                bloco = None
+        elif tokens:
             diretiva, args = tokens[0], tokens[1:]
-            if args and args[0] == "(":
-                bloco = diretiva
-                continue
-        if diretiva == "require" and args:
+        else:
+            continue
+        if not args:
+            continue
+        if diretiva == "require":
             somar(conj, args[0], "", args[0])
-        elif diretiva == "tool" and args:
+        elif diretiva == "tool":
             somar(conj, f"tool:{args[0]}", "", f"tool:{args[0]}")
         elif diretiva == "replace" and "=>" in args:
             destino = args[args.index("=>") + 1 :]
@@ -526,6 +574,15 @@ DECLARACAO_XML = re.compile(r"^\s*<\?xml[^>]*\?>")
 
 def _local(tag: object) -> str:
     return tag.split("}", 1)[-1] if isinstance(tag, str) else ""
+
+
+def _dentro_de(el: ET.Element, pais: dict, nome: str) -> bool:
+    """Algum ancestral do elemento tem essa tag (o repositório de publicação não é fonte)."""
+    while el in pais:
+        el = pais[el]
+        if _local(el.tag) == nome:
+            return True
+    return False
 
 
 def _texto_filho(elemento: ET.Element, nome: str) -> str:
@@ -563,7 +620,9 @@ def conjunto_pom(caminho: str, texto: str) -> dict[str, Dep]:
             somar(conj, f"extensao:{grupo}:{artefato}", "", f"extensao:{grupo}:{artefato}")
         elif nome == "parent" and pai == "project" and artefato:
             somar(conj, f"parent:{grupo}:{artefato}", "", f"parent:{grupo}:{artefato}")
-        elif nome in ("repository", "pluginRepository"):
+        elif nome in ("repository", "pluginRepository") and not _dentro_de(
+            el, pais, "distributionManagement"
+        ):
             url = _texto_filho(el, "url")
             if url:
                 somar(conj, REPOSITORIO, url, None)
@@ -731,8 +790,8 @@ def linha_do_nome(texto: str, nome: str | None) -> int:
 
 
 def motivo(chave: str, dep: Dep, existia: bool) -> str:
-    if chave == FONTE or chave == REPOSITORIO:
-        return "fonte de pacotes (índice, registro ou repositório) nova ou alterada"
+    if chave in FONTES:
+        return "fonte de pacotes (índice, registro ou repositório) nova, alterada ou removida"
     if chave == INCLUI:
         return "inclusão de outro arquivo de requisitos nova"
     if chave.startswith("?:"):
@@ -745,14 +804,33 @@ def motivo(chave: str, dep: Dep, existia: bool) -> str:
     return f"dependência {nome} nova no conjunto declarado"
 
 
+FONTES = (FONTE, REPOSITORIO)
+
+
 def dependencias_novas(caminho: str, conteudo: str, raiz: Path) -> list[tuple[str, Dep, bool]]:
+    """(chave, item, já existia) do que pede aprovação: nome novo, origem nova, origem que sumiu, e
+    fonte de pacotes (índice, registro, repositório) alterada ou removida, em qualquer direção.
+    Remover só o nome de uma dependência comum não pede."""
     novo = conjunto_do_texto(caminho, conteudo)
     antigo = conjunto_em_disco(raiz, caminho)
-    return [
-        (chave, dep, chave in antigo)
-        for chave, dep in novo.items()
-        if chave not in antigo or dep.origens - antigo[chave].origens
-    ]
+    achados = []
+    for chave, dep in novo.items():
+        if chave not in antigo:
+            achados.append((chave, dep, False))
+            continue
+        antes = antigo[chave].origens
+        if chave in FONTES:
+            mudou = dep.origens != antes
+        else:
+            mudou = bool(dep.origens - antes) or bool((antes - {""}) - dep.origens)
+        if mudou:
+            achados.append((chave, dep, True))
+    for chave in FONTES:
+        if chave in antigo and chave not in novo:
+            achados.append(
+                (chave, Dep(None, set()), True)
+            )  # fonte removida: sem origens no conteúdo
+    return achados
 
 
 def linha_da_origem(texto: str, chave: str, dep: Dep) -> int:
@@ -773,7 +851,9 @@ def achados_do_arquivo(caminho: str, conteudo: str, raiz: Path) -> list[str]:
     novas = dependencias_novas(caminho, conteudo, raiz)
     achados = []
     for chave, dep, existia in novas[:LIMITE_DE_ACHADOS]:
-        if dep.exibir is None:
+        if chave in FONTES and not dep.origens:
+            linha = 0
+        elif dep.exibir is None:
             linha = linha_da_origem(conteudo, chave, dep)
         else:
             linha = linha_do_nome(conteudo, dep.exibir)
@@ -786,19 +866,23 @@ def achados_do_arquivo(caminho: str, conteudo: str, raiz: Path) -> list[str]:
 
 # --- shell: acrescentar pacote pela CLI ---------------------------------------------------------
 
+# Programa -> verbos que instalam ou executam um pacote (o pacote vem depois do verbo).
 VERBOS = {
-    "npm": {"install", "i", "add"},
-    "pnpm": {"add", "install", "i"},
-    "yarn": {"add"},
-    "bun": {"add", "install", "i"},
+    "npm": {"install", "i", "add", "exec", "x"},
+    "pnpm": {"add", "install", "i", "dlx"},
+    "yarn": {"add", "dlx"},
+    "bun": {"add", "install", "i", "x"},
     "pip": {"install"},
-    "uv": {"add"},
+    "pipx": {"install", "run"},
+    "uv": {"add", "tool", "run"},
     "poetry": {"add"},
     "pdm": {"add"},
     "pipenv": {"install"},
-    "cargo": {"add"},
-    "go": {"get"},
+    "cargo": {"add", "install"},
+    "go": {"get", "install", "run", "mod"},
 }
+# Programas que executam um pacote que o projeto pode não ter declarado, sem verbo.
+EXECUTORES = {"npx", "bunx", "uvx"}
 # Opções de gerenciador antes do verbo que levam um valor.
 OPCOES_GLOBAIS_COM_VALOR = set("--prefix --cwd -C --dir --filter --workspace --project".split())
 # Opções depois do verbo que levam um valor (o valor não é pacote).
@@ -814,11 +898,38 @@ OPCOES_DE_FONTE = set(
     "--default-index".split()
 )
 OPCOES_DE_FONTE_DO_PIP = {"-i", "-f"}
+OPCOES_DE_FONTE_DOS_EXECUTORES = {"-p", "--package", "--from", "--with"}
 OPCOES_DE_REQUISITOS = {"-r", "--requirement", "--requirements"}
+SECOES_DO_PACKAGE_JSON = (
+    "dependencies",
+    "devdependencies",
+    "optionaldependencies",
+    "peerdependencies",
+    "overrides",
+)
 ALVO_TRIVIAL = re.compile(r"^(?:\.|\./\.\.\.|\.\.\.|\.\[[^\]]*\])$")
 SEPARADOR = re.compile(r"&&|\|\||[;&|\n]")
 EXECUTAVEL = re.compile(r"\.(?:exe|cmd|bat|ps1)$")
-MOTIVO_CLI = "acrescentar pacote pela CLI ({}) pede aprovação (a pessoa decide a dependência)"
+MOTIVO_CLI = (
+    "instalar ou executar pacote pela CLI ({}) pede aprovação (a pessoa decide a dependência)"
+)
+ESCRITA_PELO_SHELL = "escrita"
+MOTIVO_ESCRITA = (
+    "escrever pelo shell num arquivo de dependências ou na lista aprovada pede aprovação "
+    "(a pessoa decide a dependência)"
+)
+_NOME_DE_ARQUIVO = (
+    r"(?:requirements[\w.-]*\.txt|package\.json|pyproject\.toml|go\.mod|pom\.xml"
+    r"|build\.gradle[\w.]*|cargo\.toml|dependencias-aprovadas\.txt)(?![\w.-])"
+)
+_DESTINO = rf"[^\s'\";&|]*{_NOME_DE_ARQUIVO}"
+ESCRITA_NO_ARQUIVO = re.compile(
+    rf">>?\s*['\"]?{_DESTINO}"
+    rf"|\btee\b[^;&|]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:sed|perl)\b[^;&|]*\s(?:-[A-Za-z]*i|--in-place)[^;&|]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:cp|mv)\b[^;&|]*\s['\"]?{_DESTINO}['\"]?\s*$",
+    re.IGNORECASE,
+)
 
 
 def _programa(token: str) -> str:
@@ -826,34 +937,49 @@ def _programa(token: str) -> str:
     return "pip" if re.fullmatch(r"pip[0-9.]*", base) else base
 
 
-def _tem_pacote(programa: str, resto: list[str], verbo: str) -> bool:
+def _tem_pacote(programa: str, resto: list[str], verbo: str = "") -> bool:
     """Há argumento de pacote (ou de fonte) depois do verbo."""
+    posicionais: list[str] = []
     i = 0
     while i < len(resto):
         token = resto[i]
         if token == "--":
-            return any(not ALVO_TRIVIAL.match(t) for t in resto[i + 1 :])
+            posicionais += resto[i + 1 :]
+            break
         if token.startswith("-") and len(token) > 1:
-            opcao, igual, _ = token.partition("=")
+            opcao, igual, valor = token.partition("=")
             if opcao in OPCOES_DE_FONTE or (programa == "pip" and opcao in OPCOES_DE_FONTE_DO_PIP):
                 return True
+            if programa in EXECUTORES | {"uv"} and opcao in OPCOES_DE_FONTE_DOS_EXECUTORES:
+                return True
             if opcao in OPCOES_DE_REQUISITOS:
-                if programa != "pip":
+                alvo = valor if igual else (resto[i + 1] if i + 1 < len(resto) else "")
+                nome = posixpath.basename(alvo.replace("\\", "/")).lower()
+                if programa != "pip" or not (
+                    fnmatch.fnmatchcase(nome, "requirements*.txt")
+                    or fnmatch.fnmatchcase(nome, "requirements*.lock")
+                ):
                     return True
                 i += 0 if igual else 1
             elif opcao in OPCOES_COM_VALOR:
                 i += 0 if igual else 1
             i += 1
             continue
-        if not ALVO_TRIVIAL.match(token):
-            return True
+        posicionais.append(token)
         i += 1
-    return False
+    posicionais = [t for t in posicionais if not ALVO_TRIVIAL.match(t)]
+    if programa == "go" and verbo in ("install", "run"):
+        return any("@" in t for t in posicionais)
+    return bool(posicionais)
 
 
 def _no_segmento(tokens: list[str]) -> str | None:
     for i, token in enumerate(tokens):
         programa = _programa(token)
+        if programa in EXECUTORES:
+            if _tem_pacote(programa, tokens[i + 1 :]):
+                return programa
+            continue
         verbos = VERBOS.get(programa)
         if not verbos:
             continue
@@ -865,21 +991,45 @@ def _no_segmento(tokens: list[str]) -> str | None:
                 j += 2 if valor else 1
             elif programa == "yarn" and atual == "workspace":
                 j += 2
+            elif programa == "yarn" and atual == "global":
+                j += 1
             else:
                 break
-        if j >= len(tokens) or tokens[j].lower() not in verbos:
+        if j >= len(tokens):
             continue
         verbo = tokens[j].lower()
-        if _tem_pacote(programa, tokens[j + 1 :], verbo):
+        resto = tokens[j + 1 :]
+        if verbo not in verbos and not (programa == "npm" and verbo == "pkg"):
+            continue
+        if programa == "go" and verbo == "mod":
+            achou = bool(resto) and resto[0] == "tidy"
+        elif programa == "uv" and verbo == "tool":
+            achou = (
+                bool(resto) and resto[0] in ("install", "run") and _tem_pacote(programa, resto[1:])
+            )
+        elif programa == "uv" and verbo == "run":
+            achou = any(t.startswith("--with") for t in resto)
+        elif programa == "npm" and verbo == "pkg":
+            achou = (
+                bool(resto)
+                and resto[0] == "set"
+                and any(t.lower().startswith(SECOES_DO_PACKAGE_JSON) for t in resto[1:])
+            )
+        else:
+            achou = _tem_pacote(programa, resto, verbo)
+        if achou:
             return f"{programa} {verbo}"
     return None
 
 
 def acrescenta_pacote(comando: str, profundidade: int = 0) -> str | None:
-    """`gerenciador verbo` se algum comando do texto acrescenta pacote pela CLI, senão None.
-    Entra em `bash -c "..."` e `eval "..."`, que escondem o comando num argumento só."""
+    """`gerenciador verbo` se algum comando do texto instala ou executa pacote pela CLI,
+    `ESCRITA_PELO_SHELL` se escreve num arquivo de dependências, senão None. Entra em
+    `bash -c "..."` e `eval "..."`, que escondem o comando num argumento só."""
     comando = comando.replace("\\\r\n", " ").replace("\\\n", " ")
     for segmento in SEPARADOR.split(comando):
+        if ESCRITA_NO_ARQUIVO.search(segmento):
+            return ESCRITA_PELO_SHELL
         try:
             tokens = shlex.split(segmento)
         except ValueError:
@@ -921,9 +1071,14 @@ def evento_harness() -> list[str]:
         entrada, "caminho", "conteudo", "cwd", "comando"
     )
     if entrada.get("ferramenta") == "shell":
+        if comando is None:
+            raise Indeterminado("shell sem `comando`; não dá para avaliar")
         # Só o gerenciador e o verbo saem: o comando pode carregar token de registro privado.
         achado = acrescenta_pacote(normaliza_comando(comando)) if comando else None
-        return [f"shell:0: {MOTIVO_CLI.format(achado)}"] if achado else []
+        if achado is None:
+            return []
+        motivo_shell = MOTIVO_ESCRITA if achado == ESCRITA_PELO_SHELL else MOTIVO_CLI.format(achado)
+        return [f"shell:0: {motivo_shell}"]
     if caminho is None:
         return []
     bruto = posixpath.normpath(caminho.replace("\\", "/"))
@@ -935,6 +1090,10 @@ def evento_harness() -> list[str]:
         return []
     if not eh_arquivo_de_dependencias(PurePosixPath(caminho).parts):
         return []
+    if PurePosixPath(caminho.lower()).name == LISTA_APROVADA:
+        return [
+            f"{caminho}:0: a lista de dependências aprovadas só muda com aprovação de uma pessoa"
+        ]
     if conteudo is None:
         if entrada.get("ferramenta") in ("editar", "escrever"):
             raise Indeterminado(f"{caminho}: sem `conteudo` para uma escrita; não dá para avaliar")

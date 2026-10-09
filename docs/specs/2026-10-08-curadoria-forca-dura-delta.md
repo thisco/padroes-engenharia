@@ -42,6 +42,7 @@ python3 verificadores/<id>.py --evento <evento> [--base <ref>]
   texto que o arquivo terá depois da operação, ou `null`), `comando` (para `shell`, ou `null`) e `cwd`
   (raiz do projeto). Montar `conteudo` a partir do dialeto de cada harness (Write, Edit, apply_patch) é
   tarefa do runtime da F2, não do verificador. O verificador pode ler o estado atual do arquivo em disco.
+- **Gatilho `comando`:** é uma regex do módulo `re` do Python, aplicada com `re.search` ao comando de `shell`, com flags inline permitidas (`(?i)` no início). Ela só filtra: quem decide é o verificador.
 - **`pre-commit`**: o verificador lê sozinho o que está no índice (`git diff --cached --name-only` e
   `git show :<caminho>`), na raiz dada por `git rev-parse --show-toplevel`.
 - **`ci`**: o verificador compara `--base` (obrigatório; ex.: `$CI_MERGE_REQUEST_DIFF_BASE_SHA`) com
@@ -72,7 +73,7 @@ O texto de cada prática mostra o job de CI com essa configuração e diz o que 
 |---|---|---|---|
 | SEG-02 segredo no repositório | `bloqueia` | `antes-de-ferramenta` (`editar`, `escrever`); `pre-commit`; `ci` | `seg_02.py`, novo: padrões de formato conhecido (chave privada PEM, chave AWS, token GitHub/GitLab, chave de provedor de modelo) e atribuição explícita a nome de segredo; sem entropia genérica |
 | LGPD-02 dado pessoal em claro em teste, log ou prompt | `bloqueia` | `antes-de-ferramenta` (`editar`, `escrever`) em `tests/**`, `logs/**`, `prompts/**`; `pre-commit`; `ci` | `lgpd_02.py`, de `exemplos/LGPD-02/verificar-dado-em-claro.py` (CPF com dígito verificador, e-mail fora dos domínios de teste) |
-| SEG-03 dependência nova | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) nos arquivos de dependência (`pyproject.toml`, `requirements*.txt`, `package.json`, `go.mod`, `pom.xml`, `build.gradle*`, `Cargo.toml`) | `seg_03.py`: casa só quando o conjunto de dependências declaradas muda (nome novo ou removido), não em qualquer edição do arquivo; o candidato de CI do Exemplo segue como opcional |
+| SEG-03 dependência nova | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) nos arquivos de dependência (`pyproject.toml`, `requirements*.txt`, `package.json`, `go.mod`, `pom.xml`, `build.gradle*`, `Cargo.toml`) | `seg_03.py`: casa só quando o conjunto de dependências declaradas muda: nome novo, origem nova ou fonte alterada/removida, e não em qualquer edição do arquivo (remover só o nome de uma dependência comum, ou mudar a versão, não pede); também cobre os comandos de shell que instalam ou executam pacote e a edição da lista aprovada; o candidato de CI do Exemplo segue como opcional |
 | P3-06 MCP e conectores | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) na configuração de MCP (`.mcp.json`, `**/mcp.json`, `**/mcp_config.json`, `.codex/config.toml`, `.gemini/settings.json`, `.kiro/settings/mcp.json`) | `p3_06.py`, de `exemplos/P3-06/verificar-allowlist.py`: casa quando surge servidor fora da allowlist central do projeto, ou quando não há allowlist |
 | P2-01 chamada direta ao provedor | `avisa` | `antes-de-ferramenta` (`editar`, `escrever`) em código; `ci` | `p2_01.py`, porte para Python de `exemplos/P2-01/verificar-chamada-direta.sh` |
 | CICD-02 MR pequena | `avisa` | `ci` | `cicd_02.py`, de `exemplos/CICD-02/verificar-tamanho-mr.py` |

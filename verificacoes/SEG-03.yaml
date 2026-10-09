@@ -95,7 +95,28 @@ afirmacoes:
   ref: "pip-requirements-file"
   localizacao: "seções de estrutura, comentários, formas de requisito e opções"
   resultado: "confirmada"
+- texto: "o arquivo CODEOWNERS fica em .github/, na raiz ou em docs/ no GitHub, e a revisão dos donos do código é exigida pela proteção de branch"
+  ref: "github-codeowners"
+  localizacao: "seções do local do arquivo e da exigência de revisão pelos code owners"
+  resultado: "confirmada"
+  nota: "A página não foi lida até o nome exato da opção da regra de proteção; o texto não a nomeia."
+- texto: "o arquivo CODEOWNERS fica na raiz, em docs/ ou em .gitlab/ no GitLab, a aprovação por code owners se exige no branch protegido, e o recurso é dos planos Premium e Ultimate"
+  ref: "gitlab-codeowners"
+  localizacao: "seções de locais do arquivo, aprovação pelo branch protegido e plano"
+  resultado: "confirmada"
+- texto: "com allow_failure: true a falha do job é um aviso laranja e o pipeline é bem-sucedido"
+  ref: "gitlab-allow-failure"
+  localizacao: "seção 'allow_failure'"
+  resultado: "confirmada"
+  nota: "Aberta de novo em 2026-10-08; o pipeline passar não foi exercitado num GitLab real."
 execucoes:
+- tipo: "arquivo"
+  arquivo: "verificadores/seg_03.py"
+  comando: "python3 -I verificadores/seg_03.py --evento antes-de-ferramenta com shell 'npx cowsay oi', 'uv run pytest', 'echo flask >> requirements.txt', 'pip install -r requirements.lock'; e o job do passo 4: python3 scripts/verificar-dependencias.py --indice https://pypi.org . sobre exemplos/SEG-03/depois"
+  ambiente: "Python 3.14.8; macOS; rede com acesso a pypi.org (só o candidato do Exemplo)"
+  resultado: "passou"
+  evidencia: "npx: 'instalar ou executar pacote pela CLI (npx) pede aprovação', saída 1; 'uv run pytest': saída 0; '>> requirements.txt': 'escrever pelo shell num arquivo de dependências...', saída 1; 'pip install -r requirements.lock': saída 0; o job do passo 4 sobre depois/: 'SEG-03: dependências existentes no índice, aprovadas, fixadas e com hash.', saída 0. A suíte cobre fonte removida, origem perdida, overrides, parser (comentário com barra, require(, git@host: e .tgz), distributionManagement, lista aprovada e os comandos do shell."
+  data: '2026-10-08'
 - tipo: "arquivo"
   arquivo: "verificadores/seg_03.py"
   comando: ".venv/bin/python -m pytest tests/verificadores/test_seg_03.py tests/verificadores/test_contrato_dos_verificadores.py -q; e o script copiado, com python3 -I, sobre requirements.txt com requests==2.0 em disco (acréscimo de flask, só a versão, URL com credencial, npm install left-pad, npm ci, evento pre-commit)"
@@ -182,9 +203,30 @@ execucoes:
     nem trailer.'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-07'
+  revisor: conferência em lote (ADR 0005) e revisão forte da Tarefa 6, sessões independentes
+  data: '2026-10-08'
   achados:
+  - afirmacao: "Fonte privada removida do requirements.txt, pom ou gradle (dependency confusion)"
+    problema: "[importante] só a fonte nova pedia; a removida deixava o nome interno resolver no índice público."
+    tratamento: "Tratado: fonte nova, alterada ou removida pede em qualquer formato; dependência que perde origem também pede."
+  - afirmacao: "overrides, resolutions, pnpm.overrides, override-dependencies do uv e resolution.overrides do PDM"
+    problema: "[importante] trocam a origem sem passar pelas listas lidas."
+    tratamento: "Tratado: lidos como item override:<nome> com a origem da especificação."
+  - afirmacao: "Diferenças de parser com o pip, o npm-package-arg e o go"
+    problema: "[importante] comentário com barra engolia a linha seguinte; require( não abria bloco; git@host:x/y.git, x.tgz e user/repo eram tratados como versão."
+    tratamento: "Tratado, com um teste para cada caso reproduzido."
+  - afirmacao: "npx, uvx, pipx run e afins"
+    problema: "[importante] executam pacote não declarado e não casavam; escrita direta pelo shell num arquivo da tabela também não."
+    tratamento: "Tratado: VERBOS e gatilho cobrem os comandos do item 5 e a escrita por >, >>, tee, sed -i, cp e mv; shell sem comando sai 2."
+  - afirmacao: "dependencias-aprovadas.txt editável"
+    problema: "[importante] a lista que dá a aprovação podia ser editada sem pedido."
+    tratamento: "Tratado: qualquer edição pede; o Como aplicar diz o CODEOWNERS e a regra de proteção que torna a aprovação obrigatória, com fonte."
+  - afirmacao: "Texto: pip install -r, índice, origem do npm, require em bloco e Gradle"
+    problema: "[fonte] afirmações falsas e [ref:gradle-declaring-dependencies] mal posicionado."
+    tratamento: "Tratado: frases corrigidas; a referência do Gradle ficou só no que a página sustenta."
+  - afirmacao: "Executabilidade: passos 3, 4 e 7 do Como aplicar"
+    problema: "[executabilidade] sintaxe e local do CODEOWNERS e a regra de branch não eram dados; o passo 4 não dizia onde obter o candidato, não mostrava o job e o --indice vinha sem valor; o passo 7 não liga hoje."
+    tratamento: "Tratado nos passos 3 e 4; o passo 7 segue dizendo que o gatilho de harness não liga à mão até a F2 e a F4. Passos 1, 2, 5 e 6 executáveis."
   - afirmacao: verificar-dependencias.py --indice aceita qualquer URL, inclusive file://
     problema: '[baixo] só importa se o CI deixar quem abre a MR escolher o argumento.'
     tratamento: 'Tratado: o Limites diz que o índice vem do job do CI, e não da MR.'
