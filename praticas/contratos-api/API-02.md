@@ -4,15 +4,19 @@ titulo: "Teste de contrato no CI: quebra de contrato reprova o merge"
 dominio: contratos-api
 subdominio: null
 momento: antes-do-merge
-forca: orienta
-mecanismo: null
+forca: avisa
+mecanismo:
+  verificador: verificadores/api_02.py
+  gatilhos:
+    - evento: ci
+  mensagem: "API-02: o contrato da API tem mudança incompatível sem versão major nova e sem ADR nova; torne a mudança compatível, ou suba a major em info.version e registre a ADR (API-01). Como aplicar: {URL do portal}/praticas/API-02.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [openapi-spec, oasdiff, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-ci-local-readme]
+referencias: [openapi-spec, oasdiff, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-allow-failure, gitlab-ci-local-readme]
 relacionadas: [API-01]
 dono: engenharia
-revisado_em: 2026-10-06
-revisar_ate: 2027-04-06
+revisado_em: 2026-10-08
+revisar_ate: 2027-04-08
 resumo: "O CI compara o contrato da branch com o da base e reprova a mudança incompatível sem versão nova, e testa a resposta real contra o schema do contrato."
 ferramentas_aprovadas: [gitlab-ci-local]
 exemplos:
@@ -27,8 +31,9 @@ Faça o CI da merge request barrar a quebra de contrato, em vez de depender de q
 diff de um arquivo YAML grande. São duas travas, no mesmo job.
 
 1. **Comparação do contrato da branch com o da base.** O job lê o `api/openapi.yaml` da branch
-   de destino da MR (`origin/<alvo>`) e o da branch da MR, e roda o verificador da API-01 sobre
-   os dois: mudança incompatível sem versão major nova, ou sem uma ADR nova na MR, reprova o job.
+   de destino da MR (`origin/<alvo>`) e o da branch da MR, e roda o verificador `api_02.py` do portal
+   (as regras do verificador da API-01) sobre os dois: mudança incompatível sem versão major nova, ou
+   sem uma ADR nova na MR, faz o job avisar (a força é `avisa`; veja "Como verificar").
    O job só roda em pipeline de merge request, pela regra `$CI_PIPELINE_SOURCE ==
    "merge_request_event"` [ref:gitlab-mr-pipelines]. A variável com a branch de destino,
    `CI_MERGE_REQUEST_TARGET_BRANCH_NAME`, só existe nesse tipo de pipeline
@@ -41,9 +46,10 @@ diff de um arquivo YAML grande. São duas travas, no mesmo job.
    Object da especificação usa palavras-chave de JSON Schema, como `required`
    [ref:openapi-spec], então a validação confere tipo e campos obrigatórios. O caso mínimo é um
    teste por operação que o consumidor usa.
-3. **O job é obrigatório para entrar.** Num projeto GitLab, marque o merge check **Pipelines
-   must succeed**; sem isso, o pipeline vermelho não impede o merge
-   [ref:gitlab-pipeline-obrigatorio].
+3. **Quem quer barrar, e não só avisar, troca a força no próprio projeto.** O job do portal leva
+   `allow_failure: true` e fica laranja [ref:gitlab-allow-failure]. Para o merge ficar bloqueado,
+   tire o `allow_failure` e marque o merge check **Pipelines must succeed**; sem isso, o pipeline
+   vermelho não impede o merge [ref:gitlab-pipeline-obrigatorio].
 
 ## Como aparece quando falta
 
@@ -59,8 +65,31 @@ deixou de devolvê-lo e ninguém notou, porque nenhum teste chama a implementaç
 2. Escreva o teste de contrato (`tests/test_contrato.py` do Exemplo, adaptado) para cada
    operação que os consumidores usam: chame a implementação e valide a resposta contra o schema do
    contrato.
-3. Crie o `.gitlab-ci.yml` com o job `contrato` do Exemplo, ou acrescente-o ao que já existe.
-   O job instala o PyYAML numa versão fixada, porque o verificador precisa dele para ler YAML.
+3. Ligue o verificador do portal. Ele vem no pacote gerado (`pacote/verificadores/api_02.py`,
+   baixado de `<URL do portal>/pacote/verificadores/api_02.py`); até o instalador (F4), copie-o para
+   `verificadores/` do projeto, sem alterá-lo, e acrescente o job `contrato-compativel`:
+
+   ```yaml
+   contrato-compativel:
+     stage: travas
+     image: python:3.11
+     allow_failure: true
+     variables:
+       GIT_DEPTH: "0"
+     rules:
+       - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+     script:
+       - python3 -I verificadores/api_02.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+   ```
+
+   `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da MR e só existe em pipeline de MR
+   [ref:gitlab-variaveis-predefinidas]. Saída 0: nada a apontar. Saída 1: mudança incompatível sem
+   major nova ou sem ADR nova, com uma linha por quebra; o job fica laranja. Saída 2: não decidiu
+   (base ausente, contrato ilegível, YAML fora do subconjunto, Swagger 2.0); com `allow_failure:
+   true` também fica laranja, e a mensagem em stderr diz o motivo. O verificador não instala nada e
+   lê YAML sozinho, no subconjunto descrito em "Como verificar". O teste de contrato da trava 2
+   continua num job à parte (o `contrato` do Exemplo, que usa o PyYAML), sem `allow_failure`, se o
+   time quiser que ele barre.
 4. Para rodar na sua máquina, use o `gitlab-ci-local`, que executa pipelines como shell ou
    Docker [ref:gitlab-ci-local-readme]. Passe as duas variáveis do pipeline de MR, e tenha a
    branch `origin/<alvo>` no clone:
@@ -74,7 +103,12 @@ deixou de devolvê-lo e ninguém notou, porque nenhum teste chama a implementaç
 
 ### Antes e depois
 
-O job `contrato` do projeto (o verificador é o da API-01, e o teste de contrato roda depois dele):
+O job `contrato` do projeto é o candidato do Exemplo: o verificador é o da API-01, o teste de
+contrato roda depois dele, e o PyYAML vem do `pip`. A versão que o portal hospeda e que roda como
+mecanismo é `verificadores/api_02.py` (o job dele está no passo 3 do Como aplicar): ela compara só os
+contratos que o diff toca, sem o PyYAML, e a saída dela é de outro formato (`<arquivo>:0: <operação
+ou schema>: <tipo de quebra>`, descrito em "Como verificar"). O job, o teste e a saída mostrada
+abaixo são do candidato:
 
 <!-- incluir: exemplos/API-02/gitlab-ci.yml -->
 
@@ -161,19 +195,80 @@ repositório `--bare` local.
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O verificador candidato é
-o job `contrato` do Exemplo: ele sai com 0 se o contrato é compatível, ou incompatível com major
-nova e ADR na MR, e se o teste de contrato passa; sai com 1 nos demais casos. Para valer como
-trava, o merge check **Pipelines must succeed** precisa estar marcado [ref:gitlab-pipeline-obrigatorio].
+O portal hospeda o verificador `verificadores/api_02.py`, e a força é `avisa`. Ele roda só no evento
+`ci`, com `--base <ref>` (por exemplo, `$CI_MERGE_REQUEST_DIFF_BASE_SHA`); qualquer outro evento
+sai com 2. O gatilho de harness e o de pre-commit não existem para esta prática, e o evento `ci`
+liga-se à mão: copie o script e use o job do passo 3 do Como aplicar.
 
-Os limites: o job foi executado com o `gitlab-ci-local` e o Docker, e não num GitLab. A ADR só
-conta se estiver commitada na branch e nova em relação à base, e o job aceita qualquer ADR nova em
-`docs/adr/*.md`: ele não confere que a ADR trata dessa mudança, e isso fica para a revisão humana. O teste de contrato do Exemplo
-valida `type`, `properties`, `required`, `items` e `$ref` interno, e só os casos que escreveu: um
-contrato maior pede um validador de JSON Schema completo e um teste por operação usada. A
-comparação herda os limites da API-01. O job roda o verificador da própria MR, então o
-CODEOWNERS (ou rodar o script da base) é parte da trava. O `pip install` do job depende do
-registro de pacotes: a versão do PyYAML está fixada, mas não há hash.
+O que ele compara. O objeto é o contrato inteiro antes e depois: o conteúdo do arquivo no ancestral
+comum de `--base` e `HEAD` contra o conteúdo em `HEAD`, e não as linhas do diff. Casa (sai 1) quando
+há mudança incompatível E não há, ao mesmo tempo, versão major nova em `info.version` e ADR nova no
+diff. Mudança incompatível é a que o candidato da API-01 já considera: endpoint, operação ou código
+de resposta removido; parâmetro removido, novo e obrigatório ou que passou a obrigatório; tipo de
+parâmetro ou de campo mudado; corpo da requisição que passou a obrigatório; campo da resposta
+removido ou que deixou de ser obrigatório; campo da requisição removido, que passou a obrigatório ou
+novo e obrigatório. Campo, parâmetro, resposta, operação ou endpoint novo e opcional é compatível.
+"Major nova" é o primeiro número de `info.version` (X.Y.Z, aceitando sufixo `-rc.1` ou `+build`)
+maior que o da base; "ADR nova" é um `.md` acrescentado diretamente em `docs/adr/` (o arquivo movido
+de outra pasta não conta). A versão só é lida quando há quebra e há ADR nova: sem ADR a MR casa de
+qualquer jeito, e uma `info.version` ilegível com ADR nova sai 2.
+
+Quais arquivos. Por padrão, `openapi*.json`, `openapi*.yaml` e `openapi*.yml`, sem distinguir
+maiúsculas, em qualquer pasta, exceto sob `node_modules/`. Para outro critério, defina
+`PADROES_API02_CONTRATOS` com caminhos ou globs `fnmatch` separados por vírgula, relativos à raiz do
+repositório (`api/clientes.yaml,specs/*.json`): ela substitui o critério padrão, o `*` atravessa `/`, e
+caminho absoluto, `..`, `\` ou item vazio saem 2. Só entram os arquivos que o diff toca. Arquivo com
+esse nome sem a chave `openapi` nos dois lados é pulado. Swagger 2.0 e `openapi` que não comece por `3.`
+saem 2 com mensagem, e o texto diz que não são lidos, porque o verificador compara a estrutura do
+OpenAPI 3.
+
+Contrato novo não casa. Contrato apagado casa se não houver ADR nova (a decisão de retirá-lo é a
+que a ADR registra). Contrato renomeado compara o conteúdo do caminho antigo com o do novo (o Git
+detecta a renomeação com `-M`); a renomeação com edição grande vira apagar e criar, e então o contrato
+apagado casa sem ADR. Renomeação sem edição e mudança só de modo não casam; submódulo e link
+simbólico são pulados.
+
+YAML. O verificador só usa a biblioteca padrão do Python, então lê YAML com um leitor próprio, de
+um subconjunto: mapas e listas em bloco, escalares sem aspas e entre aspas numa linha, `[...]` e
+`{...}` numa linha, `|` e `>` (o texto deles não entra na comparação), comentários, `---` no início;
+`true` e `false` são os booleanos. Contrato fora do subconjunto sai 2 com a linha e o motivo (nunca o
+texto da linha): âncora, alias, tag, chave `<<`, mais de um documento, tabulação na indentação,
+valor em várias linhas, chave complexa, `yes`, `no`, `on` e `off` sem aspas. Com `avisa`, o 2 deixa o
+job laranja e fica registrado; para o contrato passar a ser lido, reescreva-o dentro do subconjunto
+ou use JSON. Isso difere do candidato da API-01, que lê YAML pelo PyYAML e sai 1 em todo erro.
+
+A saída tem uma linha por quebra em stdout, `<arquivo>:0: <operação ou schema>: <tipo de quebra>`
+(por exemplo, `api/openapi.yaml:0: GET /clientes/{id} 200.telefone: campo da resposta removido`), até
+50 linhas e uma de resumo se houver mais; o texto vem do contrato com caracteres de controle trocados
+por `?` e no máximo 120 caracteres, e o verificador nunca imprime o contrato. Em stderr vai uma linha
+por arquivo dizendo o que falta (versão maior nova, ADR nova) e os avisos. Sai com 0 sem quebra a
+apontar, 1 quando casa e 2 quando não consegue decidir: `--base` ausente ou inexistente (clone raso:
+use `GIT_DEPTH: "0"`), histórias sem ancestral comum, diff vazio, `git` com erro ou parado por mais de
+60 s, fora de um repositório Git, `PADROES_API02_CONTRATOS` inválida, JSON ou YAML ilegível, arquivo
+que não é UTF-8 (UTF-8 com ou sem BOM e UTF-16 com BOM são lidos), `$ref` externo ou sem destino. Se
+um contrato é indeterminado e outro tem quebra, sai 2 e as linhas das quebras vão para stderr.
+
+Para rodar à mão, no clone completo com a base disponível:
+`python3 verificadores/api_02.py --evento ci --base origin/main`.
+
+Os limites. O verificador herda os limites do candidato da API-01: compara só o corpo e as respostas
+em `application/json`; não confere enum, formato, limites de tamanho, `oneOf`, `anyOf`, parâmetros
+declarados no nível do caminho, `servers` nem a semântica dos campos; um schema sem `type` nos dois
+lados (por exemplo, o que só tem `allOf`) não é comparado, e o aviso em stderr diz quantos (a
+variante com `allOf` de `exemplos/API-01/` passa com 0 e aviso). Mudança de `$ref` que aponta para
+outro schema só aparece se o tipo ou os campos mudarem. Contrato em `tests/` ou em `docs/` com nome
+`openapi*` também é avaliado; use `PADROES_API02_CONTRATOS` para restringir. A regra da major é a do
+SemVer aplicada ao `info.version`, que é uma convenção da API-01: a especificação define esse campo
+como a versão do documento OpenAPI, distinta da versão da API descrita [ref:openapi-spec]. O
+verificador aceita qualquer `.md` novo em `docs/adr/` e não confere que a ADR trata dessa mudança, e
+isso fica para a revisão humana. O verificador foi executado em repositórios Git de teste e com o
+`gitlab-ci-local`, não num pipeline de GitLab, e o `allow_failure` do job não foi exercitado num
+GitLab real. O job roda o script da própria MR, então o CODEOWNERS (ou rodar o script da base) é parte
+da trava.
+
+A força `avisa` não impede o merge: o job do passo 3 leva `allow_failure: true`, fica laranja e deixa
+o merge livre, mesmo com **Pipelines must succeed** marcado [ref:gitlab-allow-failure]; quem quiser
+barrar troca a força no próprio projeto, como diz a trava 3.
 
 Existem ferramentas de código aberto prontas para esse diff. O oasdiff, por exemplo, tem uma
 GitHub Action e uma imagem Docker para pipelines, e a opção `--fail-on` configura o

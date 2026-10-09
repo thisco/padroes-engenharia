@@ -1,5 +1,6 @@
+# afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-06); novas: allow_failure, CI_MERGE_REQUEST_DIFF_BASE_SHA e info.version (páginas abertas em 2026-10-08)
 conteudo: API-02
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Schema Object da especificação usa palavras-chave de JSON Schema, como required
@@ -30,6 +31,18 @@ afirmacoes:
   ref: gitlab-ci-local-readme
   localizacao: README, instalação e executores (já registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
   resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-10-08; 'an orange warning indicates that a job failed. However, the pipeline is successful and the associated commit is marked as passed with no warnings'). A página não diz como isso interage com Pipelines must succeed; essa consequência não foi exercitada num GitLab real e o texto diz isso."
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request e só existe em pipelines de merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis predefinidas (aberta na web em 2026-10-08; 'The base SHA of the merge request diff', na lista de pipelines de merge request)"
+  resultado: confirmada
+- texto: o campo info.version da especificação é a versão do documento OpenAPI, distinta da versão da especificação e da versão da API descrita
+  ref: openapi-spec
+  localizacao: "seção do Info Object, campo version (versão 3.2.1; aberta na web em 2026-10-08; 'The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the version of the API being described or the version of the OpenAPI Description)')"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/API-02/gitlab-ci.yml
@@ -52,6 +65,13 @@ execucoes:
   resultado: passou
   evidencia: 'obter_cliente(1) devolve (200, corpo) e o corpo valida contra o schema Cliente do contrato v1 e das propostas compatíveis; "Ran 2 tests ... OK".'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: verificadores/api_02.py
+  comando: python3 -I verificadores/api_02.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA" (job contrato-compativel, com npx --yes gitlab-ci-local@4.76.0 --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_DIFF_BASE_SHA=<merge-base> --ignore-predefined-vars CI_PIPELINE_SOURCE contrato-compativel); pytest -q tests/verificadores/test_api_02.py
+  ambiente: /tmp/cfd-t8-ci com remoto --bare local (origin), main com exemplos/API-01/openapi.yaml e duas branches de MR; gitlab-ci-local 4.76.0 no executor shell, porque o daemon do Docker não estava rodando (o job foi rodado sem a linha image:, com o python3 do macOS, Python 3.14.8); verificador sem PyYAML. Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'MR que quebra (proposta-sem-versao.yaml, versão 1.1.0, sem ADR): stdout "api/openapi.yaml:0: GET /clientes/{id} 200.telefone: campo da resposta removido" e "api/openapi.yaml:0: POST /clientes 201.telefone: campo da resposta removido"; stderr "API-02: api/openapi.yaml: 2 quebra(s) de contrato; falta versão maior nova (info.version 1.0.0 -> 1.1.0) e ADR nova em docs/adr/"; saída 1, e o gitlab-ci-local mostra "WARN contrato-compativel" (job laranja, allow_failure). MR compatível (proposta-compativel.yaml): saída 0, "PASS contrato-compativel". pytest: 124 passed em tests/verificadores/test_api_02.py (115 falhavam antes de o verificador existir); suíte inteira 2396 passed.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: API-02-prompt-1
   harness: claude-code
