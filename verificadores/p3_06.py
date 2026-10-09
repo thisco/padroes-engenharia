@@ -10,8 +10,9 @@ Casa em três situações:
 2. `editar`/`escrever` na própria allowlist: qualquer arquivo sob `central/` (pelo nome ou pelo
    caminho real, o que pega link simbólico): "a allowlist central só muda com aprovação". A
    variável `P3_06_ALLOWLIST`, se definida, tem de resolver para dentro de `central/`; senão sai 2;
-3. `shell` que escreve (`>`, `>>`, `tee`, `sed -i`, `cp`/`mv`) num arquivo de configuração de MCP ou
-   em `central/`: "escrita na configuração MCP pelo shell pede aprovação"; e `shell` cujo `comando`
+3. `shell` que escreve (`>`, `>>`, `tee`, `sed -i`, `cp`/`mv` com o destino no fim do comando, antes
+   de `;`, `&`, `|`, quebra de linha ou `)`) num arquivo de configuração de MCP ou em `central/`:
+   "escrita na configuração MCP pelo shell pede aprovação"; e `shell` cujo `comando`
    traz `mcp add` (`claude mcp add`, `codex mcp add`, `gemini mcp add`,
    `add-json`), com ou sem aspas (regex e `shlex`), depois de NFKC e sem invisíveis. Variável e
    apelido de shell (`m=mcp; claude $m add`) não são vistos. A saída não traz o comando, que pode
@@ -29,7 +30,7 @@ no JSON sai 2.
 O objeto da prática é o conjunto de servidores declarados, e não as linhas. Servidor "novo" é o que
 o `conteudo` declara e o arquivo em disco não declarava, ou declarava com outra identidade. A
 identidade é o objeto inteiro do servidor, normalizado, menos os VALORES de `env` e `headers` (as
-chaves contam; o valor de `PATH`, `PYTHONPATH`, `NODE_OPTIONS`, `LD_PRELOAD` e afins também), os
+chaves contam; o valor das variáveis de `ENV_QUE_EXECUTA`, lista fechada, também), os
 campos cosméticos (`timeout`, `description`, `disabled`, `enabled`, timeouts do Codex) e o que é
 vazio ou padrão (`env: {}`, `autoApprove: []`, `trust: false`; as ferramentas gravam isso): assim
 `headersHelper`, `envFile`, `cwd`, `trust`, `autoApprove` e campo futuro entram sem lista. As URLs
@@ -38,6 +39,8 @@ vazio ou padrão (`env: {}`, `autoApprove: []`, `trust: false`; as ferramentas g
 `args` ausente e `[]` são o mesmo. Mudar qualquer parte conta como servidor novo: o nome aprovado
 passaria a apontar para outro binário. Trocar só o valor de um segredo, reordenar, mudar comentário
 ou outra chave do arquivo não muda o conjunto e não casa.
+Servidor que já estava no arquivo desligado (`disabled: true` ou `enabled: false`) e que a edição
+liga conta como novo: "servidor fora da allowlist ligado", se a allowlist não o aprova.
 Arquivo em disco ausente, que não decodifica ou que não lê como JSON/TOML conta como sem
 servidores (assim o agente consegue consertá-lo).
 
@@ -48,7 +51,8 @@ Exemplo da prática, um YAML de subconjunto lido sem dependência:
   - linhas em branco e comentários (`#` no começo da linha) são ignorados;
   - `chave: valor` na coluna 0 (`versao: 1`); `servidores:` abre a lista (ou `servidores: []`);
   - cada servidor começa em `- nome: <texto>`; os demais campos vêm em linhas `chave: valor`;
-  - valor que começa por `[`, `{` ou `"` é JSON; o resto é texto (aspas simples são tiradas);
+  - valor que começa por `[`, `{` ou `"` é JSON, e `true`, `false`, `null` e os números também;
+    o resto é texto (aspas simples são tiradas);
   - `command`, `url` e `type` são texto, e `args` é lista de texto;
   - nenhuma outra forma de YAML (âncora, bloco `|`, lista em várias linhas, comentário no fim).
 Allowlist ilegível (existe e não lê) sai 2; só é aberta quando há servidor novo.
@@ -91,6 +95,8 @@ ENV_QUE_EXECUTA = {
     "PATH", "PYTHONPATH", "PYTHONSTARTUP", "PYTHONHOME", "NODE_OPTIONS", "NODE_PATH", "LD_PRELOAD",
     "LD_LIBRARY_PATH", "DYLD_INSERT_LIBRARIES", "DYLD_LIBRARY_PATH", "JAVA_TOOL_OPTIONS",
     "_JAVA_OPTIONS", "BASH_ENV", "ENV", "PERL5OPT", "PERL5LIB", "RUBYOPT", "RUBYLIB",
+    "NPM_CONFIG_REGISTRY", "PIP_INDEX_URL", "PIP_EXTRA_INDEX_URL", "UV_INDEX_URL",
+    "UV_DEFAULT_INDEX", "UV_EXTRA_INDEX_URL", "CLASSPATH",
 }  # fmt: skip
 NOMES_NA_SAIDA = {"_urls": "url", "_tipo": "type"}
 METADADOS_DA_ALLOWLIST = ("nome", "origem", "revisado_em", "revisado_contra", "versao")
@@ -104,11 +110,13 @@ _NOME_DE_ARQUIVO = (
     r"|\.kiro/settings/mcp\.json|central/[\w./-]+)(?![\w.-])"
 )
 _DESTINO = rf"[^\s'\";&|]*{_NOME_DE_ARQUIVO}"
+# Um comando termina no fim do texto, em `;`, `&`, `|`, quebra de linha ou `)` (subshell).
+_FIM_DO_COMANDO = r"(?=\s*(?:$|[;&|\n)]))"
 ESCRITA_NO_ARQUIVO = re.compile(
     rf">>?\s*['\"]?{_DESTINO}"
-    rf"|\btee\b[^;&|]*{_NOME_DE_ARQUIVO}"
-    rf"|\b(?:sed|perl)\b[^;&|]*\s(?:-[A-Za-z]*i|--in-place)[^;&|]*{_NOME_DE_ARQUIVO}"
-    rf"|\b(?:cp|mv)\b[^;&|]*\s['\"]?{_DESTINO}['\"]?\s*$",
+    rf"|\btee\b[^;&|\n]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:sed|perl)\b[^;&|\n]*\s(?:-[A-Za-z]*i|--in-place)[^;&|\n]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:cp|mv)\b[^;&|\n]*\s['\"]?{_DESTINO}['\"]?{_FIM_DO_COMANDO}",
     re.IGNORECASE,
 )
 MOTIVO_MCP_ADD = "adicionar servidor MCP pela CLI pede aprovação (a allowlist central decide)"
@@ -116,6 +124,7 @@ COMANDO_MCP_ADD = re.compile(r"\bmcp['\"]?\s+['\"]?add", re.IGNORECASE)
 # Ignoráveis por padrão que não são da categoria Cf (Unicode, DerivedCoreProperties).
 INVISIVEIS = {0x34F, 0x115F, 0x1160, 0x17B4, 0x17B5, 0x3164, 0xFFA0}
 ALLOWLIST_PADRAO = "central/mcp-allowlist.yml"
+NUMERO_JSON = re.compile(r"-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?")
 VARIAVEL_ALLOWLIST = "P3_06_ALLOWLIST"
 
 
@@ -372,6 +381,11 @@ def projecao(servidor: dict, da_allowlist: bool = False) -> dict:
     }
 
 
+def desligado(servidor: dict) -> bool:
+    """`disabled: true` ou `enabled: false`: a ferramenta não carrega o servidor."""
+    return servidor.get("disabled") is True or servidor.get("enabled") is False
+
+
 def identidade(servidor: dict, da_allowlist: bool = False) -> tuple[str, ...]:
     return (_canonico(projecao(servidor, da_allowlist)),)
 
@@ -419,6 +433,8 @@ def servidores_em_disco(raiz: Path, caminho: str) -> dict[str, dict]:
 
 def _valor(texto: str, local: str) -> object:
     texto = texto.strip()
+    if texto in ("true", "false", "null") or NUMERO_JSON.fullmatch(texto):
+        return json.loads(texto)
     if texto[:1] in '["{':
         try:
             return json.loads(texto)
@@ -580,11 +596,14 @@ def evento_harness() -> list[str]:
         return []
     novo = servidores_do_texto(caminho, conteudo)
     antigo = servidores_em_disco(raiz, caminho)
-    # Servidor novo ou que mudou o que roda; o que já estava no arquivo não pede de novo.
+    # Servidor novo ou que mudou o que roda; o que já estava no arquivo não pede de novo, a não ser
+    # que estivesse desligado e a edição o ligue.
     novos = [
         nome
         for nome, definicao in novo.items()
-        if nome not in antigo or identidade(definicao) != identidade(antigo[nome])
+        if nome not in antigo
+        or identidade(definicao) != identidade(antigo[nome])
+        or (desligado(antigo[nome]) and not desligado(definicao))
     ]
     if not novos:
         return []
@@ -598,7 +617,11 @@ def evento_harness() -> list[str]:
             continue
         rotulo = f"servidor MCP {json.dumps(nome[:80])}"
         existia = nome in antigo
-        if lista is None:
+        if existia and identidade(novo[nome]) == identidade(antigo[nome]):
+            motivo = f"servidor fora da allowlist ligado ({rotulo} estava desligado)"
+            if lista is None:
+                motivo += f"; o projeto não tem allowlist central ({mostrado})"
+        elif lista is None:
             situacao = "mudou o que executa ou acessa" if existia else "novo"
             motivo = f"{rotulo} {situacao} e o projeto não tem allowlist central ({mostrado})"
         elif aprovado is not None:

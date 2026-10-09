@@ -1325,3 +1325,140 @@ def test_escrita_pelo_shell_nao_imprime_o_comando(tmp_path: Path):
     projeto(tmp_path)
     r = harness_shell(tmp_path, f"echo '{SEGREDO}' > .mcp.json")
     assert r.returncode == 1 and SEGREDO not in r.stdout + r.stderr
+
+
+# --- rodada de correção 4: cadeia de comandos, booleanos da allowlist, servidor ligado, registro -
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "jq '.mcpServers.x={}' .mcp.json > tmp.json && mv tmp.json .mcp.json && git add .mcp.json",
+        "jq . .mcp.json > t; mv t .mcp.json; echo ok",
+        "jq '.mcpServers.x={}' .mcp.json > tmp.json\nmv tmp.json .mcp.json\ngit add .mcp.json",
+        "jq . .mcp.json > t\nmv t .mcp.json\necho ok",
+        "cp evil.json .mcp.json && echo done",
+        "cp evil.json .mcp.json || echo falhou",
+        "(cp evil.json .mcp.json)",
+        "mv novo.yml central/mcp-allowlist.yml; git status",
+    ],
+)
+def test_cp_ou_mv_para_a_configuracao_no_meio_de_uma_cadeia_pede(tmp_path: Path, comando: str):
+    projeto(tmp_path)
+    r = harness_shell(tmp_path, comando)
+    assert r.returncode == 1 and r.stdout.splitlines() == [MOTIVO_ESCRITA_SHELL], comando
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "cp .mcp.json backup.json && echo ok",
+        "mv .mcp.json antigo.json; ls",
+        "cp .mcp.json /tmp/x.json\necho ok",
+        "echo x | tee saida.txt\ncat .mcp.json",
+        "sed -i 's/a/b/' outro.txt\ncat .mcp.json",
+    ],
+)
+def test_comando_que_so_le_a_configuracao_na_cadeia_nao_pede(tmp_path: Path, comando: str):
+    projeto(tmp_path)
+    assert veredito(harness_shell(tmp_path, comando)) == 0, comando
+
+
+def _lista_com(campo: str) -> str:
+    return ALLOWLIST + (
+        '  - nome: gem\n    origem: proprio\n    command: python3\n    args: ["g.py"]\n'
+        f"    {campo}\n    revisado_em: 2026-10-06\n    revisado_contra: criterios-mcp-v1\n"
+    )
+
+
+GEM = {"command": "python3", "args": ["g.py"]}
+
+
+def test_allowlist_com_trust_false_aprova_a_configuracao_sem_trust(tmp_path: Path):
+    projeto(tmp_path, allowlist=_lista_com("trust: false"))
+    r = harness(tmp_path, ".gemini/settings.json", mcp(gem=GEM))
+    assert veredito(r) == 0, r.stdout
+
+
+def test_allowlist_com_trust_true_aprova_a_configuracao_com_trust_true(tmp_path: Path):
+    projeto(tmp_path, allowlist=_lista_com("trust: true"))
+    r = harness(tmp_path, ".gemini/settings.json", mcp(gem={**GEM, "trust": True}))
+    assert veredito(r) == 0, r.stdout
+    assert veredito(harness(tmp_path, ".gemini/settings.json", mcp(gem=GEM))) == 1
+
+
+def test_allowlist_com_numero_e_null_le_como_json(tmp_path: Path):
+    projeto(tmp_path, allowlist=_lista_com("tentativas: 3"))
+    r = harness(tmp_path, ".mcp.json", mcp(gem={**GEM, "tentativas": 3}))
+    assert veredito(r) == 0, r.stdout
+    projeto(tmp_path, allowlist=_lista_com("cwd: null"))
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(gem=GEM))) == 0
+
+
+@pytest.mark.parametrize("desligado", [{"disabled": True}, {"enabled": False}])
+@pytest.mark.parametrize("ligado", [{}, {"disabled": False}, {"enabled": True}])
+def test_servidor_fora_da_allowlist_desligado_que_a_edicao_liga_pede(
+    tmp_path: Path, desligado: dict, ligado: dict
+):
+    projeto(tmp_path, **{".mcp.json": mcp(a={**BUSCA, **desligado})})
+    r = harness(tmp_path, ".mcp.json", mcp(a={**BUSCA, **ligado}))
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == [
+        '.mcp.json:3: servidor fora da allowlist ligado (servidor MCP "a" estava desligado)'
+    ]
+
+
+def test_servidor_desligado_que_continua_desligado_nao_pede(tmp_path: Path):
+    projeto(tmp_path, **{".mcp.json": mcp(a={**BUSCA, "disabled": True})})
+    r = harness(tmp_path, ".mcp.json", mcp(a={**BUSCA, "disabled": True, "timeout": 5}))
+    assert veredito(r) == 0
+    r = harness(tmp_path, ".mcp.json", mcp(a={**BUSCA, "enabled": False}))
+    assert veredito(r) == 0
+
+
+def test_servidor_aprovado_desligado_que_a_edicao_liga_nao_pede(tmp_path: Path):
+    projeto(tmp_path, **{".mcp.json": mcp(**{"docs-internos": {**DOCS, "disabled": True}})})
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": DOCS}))) == 0
+
+
+def test_servidor_desligado_ligado_sem_allowlist_pede_e_diz_isso(tmp_path: Path):
+    projeto(tmp_path, allowlist=None, **{".mcp.json": mcp(a={**BUSCA, "disabled": True})})
+    r = harness(tmp_path, ".mcp.json", mcp(a=BUSCA))
+    assert r.returncode == 1 and "servidor fora da allowlist ligado" in r.stdout
+    assert "não tem allowlist central (central/mcp-allowlist.yml)" in r.stdout
+
+
+@pula_sem_tomllib
+def test_toml_servidor_com_enabled_false_que_a_edicao_liga_pede(tmp_path: Path):
+    antes = '[mcp_servers.a]\ncommand = "x"\nenabled = false\n'
+    projeto(tmp_path, **{".codex__config.toml": antes})
+    r = harness(tmp_path, ".codex/config.toml", '[mcp_servers.a]\ncommand = "x"\n')
+    assert r.returncode == 1 and "servidor fora da allowlist ligado" in r.stdout
+
+
+@pytest.mark.parametrize(
+    "chave",
+    [
+        "NPM_CONFIG_REGISTRY",
+        "PIP_INDEX_URL",
+        "PIP_EXTRA_INDEX_URL",
+        "UV_INDEX_URL",
+        "UV_DEFAULT_INDEX",
+        "UV_EXTRA_INDEX_URL",
+        "CLASSPATH",
+    ],
+)
+def test_trocar_o_valor_de_variavel_de_registro_de_pacote_pede(tmp_path: Path, chave: str):
+    antes = {**COM_ENV, "env": {"TOKEN": "a", chave: "https://registro.example/a"}}
+    projeto(tmp_path, **{".mcp.json": mcp(a=antes)})
+    depois = {**COM_ENV, "env": {"TOKEN": "a", chave: "https://evil.example/" + SEGREDO}}
+    r = harness(tmp_path, ".mcp.json", mcp(a=depois))
+    assert veredito(r) == 1 and '"a"' in r.stdout
+    assert SEGREDO not in r.stdout + r.stderr and "evil.example" not in r.stdout
+
+
+def test_o_texto_da_pratica_nomeia_toda_a_lista_de_env_que_conta_pelo_valor():
+    texto = (RAIZ / "praticas" / "ia-no-produto" / "P3-06.md").read_text(encoding="utf-8")
+    assert "e afins" not in texto
+    for variavel in carregar_script().ENV_QUE_EXECUTA:
+        assert f"`{variavel}`" in texto, variavel

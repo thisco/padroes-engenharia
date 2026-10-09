@@ -1558,3 +1558,28 @@ def test_lista_aprovada_pede_em_qualquer_edicao_mesmo_sem_conteudo(tmp_path: Pat
 def test_comando_que_escreve_no_arquivo_nao_mostra_o_conteudo():
     r = shell(f"echo 'flask=={SEGREDO}' >> requirements.txt")
     assert pede(r) and SEGREDO not in r.stdout and "flask" not in r.stdout
+
+
+# --- rodada de correção 4 da P3-06: fim de comando no cp/mv -------------------------------------
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "(cp /tmp/novo.txt requirements.txt)",
+        "$(mv go.mod.novo go.mod)",
+        "cp /tmp/novo.json package.json && git add package.json",
+        "mv t pyproject.toml; echo ok",
+        "mv t Cargo.toml\necho ok",
+    ],
+)
+def test_cp_ou_mv_para_o_arquivo_de_dependencias_antes_de_outro_comando_pede(comando: str):
+    r = shell(comando)
+    assert pede(r) and "escrever pelo shell" in r.stdout, comando
+
+
+@pytest.mark.parametrize(
+    "comando", ["(cp requirements.txt /tmp/copia.txt)", "mv package.json antigo.json; ls"]
+)
+def test_cp_ou_mv_que_so_le_o_arquivo_de_dependencias_nao_pede(comando: str):
+    assert passa(shell(comando)), comando

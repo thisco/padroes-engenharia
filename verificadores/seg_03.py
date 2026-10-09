@@ -923,11 +923,13 @@ _NOME_DE_ARQUIVO = (
     r"|build\.gradle[\w.]*|cargo\.toml|dependencias-aprovadas\.txt)(?![\w.-])"
 )
 _DESTINO = rf"[^\s'\";&|]*{_NOME_DE_ARQUIVO}"
+# Um comando termina no fim do texto, em `;`, `&`, `|`, quebra de linha ou `)` (subshell).
+_FIM_DO_COMANDO = r"(?=\s*(?:$|[;&|\n)]))"
 ESCRITA_NO_ARQUIVO = re.compile(
     rf">>?\s*['\"]?{_DESTINO}"
     rf"|\btee\b[^;&|]*{_NOME_DE_ARQUIVO}"
     rf"|\b(?:sed|perl)\b[^;&|]*\s(?:-[A-Za-z]*i|--in-place)[^;&|]*{_NOME_DE_ARQUIVO}"
-    rf"|\b(?:cp|mv)\b[^;&|]*\s['\"]?{_DESTINO}['\"]?\s*$",
+    rf"|\b(?:cp|mv)\b[^;&|]*\s['\"]?{_DESTINO}['\"]?{_FIM_DO_COMANDO}",
     re.IGNORECASE,
 )
 
