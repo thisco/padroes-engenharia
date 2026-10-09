@@ -93,7 +93,7 @@ def test_harness_vale_nas_tres_pastas(pasta: str):
 
 @pytest.mark.parametrize(
     "caminho",
-    ["src/tests/a.txt", "tests", "testsuite/a.txt", "../tests/a.txt", "tests/../src/a.txt", None],
+    ["src/tests/a.txt", "tests", "testsuite/a.txt", "tests/../src/a.txt", None],
 )
 def test_harness_ignora_caminho_fora_das_pastas(caminho: str | None):
     r = harness(caminho, f"cpf {cpf()}\n")
@@ -351,7 +351,7 @@ def test_pre_commit_ignora_arquivo_fora_das_pastas_e_roda_de_subpasta(repo_git: 
 
 def test_pre_commit_binario_nao_varrido_avisa_sem_casar(repo_git: RepoGit):
     destino = repo_git.escrever("tests/dados.bin", "")
-    destino.write_bytes(b"\xff\x00\xfd\x80")  # NUL e não é UTF-8: binário
+    destino.write_bytes(b"\xff\x00\xfd")  # NUL, fora do UTF-8 e tamanho ímpar: binário
     repo_git.adicionar("tests/dados.bin")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.returncode == 0 and r.stdout == ""
@@ -693,3 +693,110 @@ def test_tipo_trocado_de_link_simbolico_para_arquivo_com_cpf_pega(repo_git: Repo
     repo_git.commitar("arquivo")
     ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
     assert ci.returncode == 1 and ci.stdout.splitlines() == ["tests/l.txt:1: CPF em claro"]
+
+
+# --- rodada 4: senha codificada na URL, UTF-16 sem BOM, cp1252, caminho normalizado, rótulo ------
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "https://user:p%40ss" + ARROBA + "api.empresa.com/v1",
+        "amqp://guest:gu%40st" + ARROBA + "rabbit.empresa.com.br",
+        "redis://:abc%40def" + ARROBA + "cache.empresa.io:6379",
+    ],
+)
+def test_senha_com_arroba_codificada_na_url_nao_e_email(texto: str):
+    assert not casa(texto)
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "https://x.com/{e}",
+        "https://x.com/a?email={e}",
+        "GET /api?email={c} HTTP/1.1",
+        "https://usuario:senha" + ARROBA + "host.interno/rota contato {e}",
+    ],
+)
+def test_email_fora_do_userinfo_continua_pegando(texto: str):
+    codificado = EMAIL_REAL.replace(ARROBA, "%40")
+    assert casa(texto.format(e=EMAIL_REAL, c=codificado))
+
+
+def test_credencial_sem_codificacao_continua_inocente():
+    assert not casa("postgresql://app:senha" + ARROBA + "db.interno:5432/base")
+
+
+CSV_ACENTO = "José," + cpf() + "," + EMAIL_REAL + "\n"
+
+
+@pytest.mark.parametrize("codificacao", ["utf-16-le", "utf-16-be"])
+def test_utf16_sem_bom_com_acento_e_varrido_nos_tres_eventos(repo_git: RepoGit, codificacao: str):
+    esperado = ["tests/u.csv:1: CPF em claro", "tests/u.csv:1: e-mail em claro"]
+    assert harness("tests/u.csv", CSV_ACENTO).stdout.splitlines() == esperado
+    repo_git.escrever("tests/u.csv", "").write_bytes(CSV_ACENTO.encode(codificacao))
+    repo_git.adicionar("tests/u.csv")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.commitar("utf-16")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert pre.stdout.splitlines() == ci.stdout.splitlines() == esperado
+    assert pre.returncode == ci.returncode == 1 and pre.stderr == ""
+
+
+def test_nul_sem_paridade_dominante_continua_binario(repo_git: RepoGit):
+    repo_git.escrever("tests/d.bin", "").write_bytes(b"\xff\x00\x00\xfd")
+    repo_git.adicionar("tests/d.bin")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 0 and "tests/d.bin: não varrido" in r.stderr
+
+
+@pytest.mark.parametrize("simbolo", ["€", "“aspas”", "–"])
+def test_linha_antiga_em_cp1252_nao_e_nova_no_harness(tmp_path: Path, simbolo: str):
+    antigo = f"{simbolo} José,{cpf()}\nfim\n"
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "c.csv").write_bytes(antigo.encode("cp1252"))
+    r = harness("tests/c.csv", antigo + "nova\n", ferramenta="editar", cwd=str(tmp_path))
+    assert r.returncode == 0 and r.stdout == ""
+    nova = harness("tests/c.csv", antigo + f"{cpf('987654321')}\n", cwd=str(tmp_path))
+    assert nova.stdout.splitlines() == ["tests/c.csv:3: CPF em claro"]
+
+
+@pytest.mark.parametrize(
+    "caminho",
+    ["{cwd}//tests/x.txt", "tests/../tests/x.txt", "src/../tests/x.txt", "./tests//x.txt"],
+)
+def test_caminho_normalizado_continua_no_escopo(tmp_path: Path, caminho: str):
+    r = harness(caminho.format(cwd=tmp_path), cpf(), cwd=str(tmp_path))
+    assert r.returncode == 1 and r.stdout.splitlines() == ["tests/x.txt:1: CPF em claro"]
+
+
+@pytest.mark.parametrize("caminho", ["../fora/x", "..", "../tests/a.txt", "tests/../../x"])
+def test_caminho_que_sobe_acima_da_raiz_sai_2(caminho: str):
+    r = harness(caminho, cpf())
+    assert r.returncode == 2 and r.stderr.strip() and "Traceback" not in r.stderr
+
+
+def test_caminho_absoluto_por_link_simbolico_da_raiz_e_relativizado(tmp_path: Path):
+    raiz = tmp_path / "raiz"
+    (raiz / "tests").mkdir(parents=True)
+    atalho = tmp_path / "atalho"
+    atalho.symlink_to(raiz)
+    esperado = ["tests/x.txt:1: CPF em claro"]
+    pelo_atalho = harness(str(atalho / "tests" / "x.txt"), cpf(), cwd=str(raiz))
+    assert pelo_atalho.stdout.splitlines() == esperado
+    cwd_pelo_atalho = harness(str(raiz / "tests" / "x.txt"), cpf(), cwd=str(atalho))
+    assert cwd_pelo_atalho.stdout.splitlines() == esperado
+    fora = harness(str(tmp_path / "tests" / "x.txt"), cpf(), cwd=str(atalho))
+    assert fora.returncode == 2
+
+
+@pytest.mark.parametrize("rotulo", ["CPF", "cpf", "cpf-", "CPF-", "nº", "Nº", "no", "n°", "nº-"])
+def test_cpf_colado_ao_rotulo_pega(rotulo: str):
+    assert casa(rotulo + cpf())
+
+
+@pytest.mark.parametrize("texto", ["a{c}b", "x{c}", "ab-{c}", "cpf{c}b", "uno{c}", "hcpf{c}"])
+def test_cpf_colado_a_outras_letras_continua_inocente(texto: str):
+    assert not casa(texto.format(c=cpf()))

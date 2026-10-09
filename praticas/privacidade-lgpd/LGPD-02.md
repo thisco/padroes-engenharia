@@ -216,18 +216,21 @@ disco; no `pre-commit`, as que o índice tem a mais que o `HEAD`; no `ci`, as qu
 correção linha a linha.
 
 O que é acusado: CPF na forma `ddd.ddd.ddd-dd`, `ddddddddd-dd` ou em 11 dígitos colados, com os dois dígitos
-verificadores corretos, e e-mail de domínio que não seja reservado para teste (`example.com`,
+verificadores corretos (os 11 colados também quando vêm grudados ao rótulo `cpf`, `nº`, `no` ou `n°`, com ou
+sem hífen, em qualquer caixa), e e-mail de domínio que não seja reservado para teste (`example.com`,
 `example.net`, `example.org` e subdomínios, e os TLDs `.test`, `.example`, `.invalid` e `.localhost`).
 Antes de buscar, a linha é normalizada (NFKC, de modo que dígitos, `＠`, `．` e `－` largos viram
 ASCII), perde o NUL, os caracteres invisíveis (como U+200B), as marcas combinantes e os seletores de
-variação, e `%40` vira `@`, para nada disso contornar a busca. Não é e-mail a credencial em URL (`https://usuario:senha@host`) nem a
+variação, e `%40` vira `@`, para nada disso contornar a busca. Não é e-mail a credencial em URL (`https://usuario:senha@host`, mesmo com `%40` na senha) nem a
 forma `usuario@host:caminho/repositorio.git` do Git; e-mail numa URL sem credencial, como em
 `https://site?email=...`, é acusado. A linha é a do editor e do Git (quebra só em `\n`). A saída tem
 uma linha por achado, `<caminho>:<linha>: CPF em claro` ou `<caminho>:<linha>: e-mail em claro`, e
 nunca o dado achado. Sai com 0 quando não há o que apontar, 1 com achado e 2 quando não consegue
 decidir: evento que não atende, entrada inválida, `ci` sem `--base`, fora de um repositório Git, ou
-`editar`/`escrever` sem o conteúdo do arquivo, ou caminho absoluto fora da raiz (`cwd`). No harness, o
-caminho pode chegar absoluto ou com `\\`, e o verificador o relativiza contra `cwd`.
+`editar`/`escrever` sem o conteúdo do arquivo, ou caminho fora da raiz (`cwd`). No harness, o caminho
+pode chegar absoluto ou com `\\`: o verificador o relativiza contra `cwd` (pelo caminho real, se o prefixo
+não bater, como em link simbólico ou `/tmp` e `/private/tmp`) e o normaliza (`//`, `./` e `a/../b` se
+desfazem). A saída mostra o caminho normalizado, e o que sobe acima da raiz (`../`) sai com 2.
 
 Para rodar à mão no índice do projeto: `python3 verificadores/lgpd_02.py --evento pre-commit`. Para
 comparar com a base da MR: `python3 verificadores/lgpd_02.py --evento ci --base <ref>`.
@@ -239,19 +242,23 @@ Os limites:
 - CPF: só a forma `ddd.ddd.ddd-dd` e os 11 dígitos colados, com os dígitos conferidos. Não são acusados
   grupos separados por espaço, `ddd.ddd.ddd.dd`, decimal com 11 casas (`3.<11 dígitos>`), CPF por extenso, com escape unicode, em base64 ou
   partido em mais de uma linha, nem CPF de dígito verificador inválido. Os 11 dígitos colados a letra ou
-  hífen (trecho de hash, hex ou UUID) também ficam de fora. Ele não distingue CPF real de CPF sintético
+  hífen (trecho de hash, hex ou UUID) também ficam de fora, salvo o rótulo `cpf`, `nº`, `no` ou `n°`: o
+  identificador com hífen (`cliente-<11 dígitos>`) e `<11 dígitos>x` não são acusados, nem o número com
+  casas decimais (`<11 dígitos>.00`). Ele não distingue CPF real de CPF sintético
   com dígitos válidos, e por isso o teste gera o CPF na hora e não o escreve no arquivo; um número de
   11 dígitos que por acaso passe na conferência é acusado, como um celular de 11 dígitos (que também
   é dado pessoal).
 - E-mail: os domínios aceitos são os reservados para teste, acima. Um `x@obj.attr` em código Python
   conta como e-mail (limite conhecido; use domínio reservado para teste). E-mail dentro de uma URL com
-  credencial não é acusado.
-- Texto que não é UTF-8 (como o CSV em cp1252 do Excel no Windows) é lido como Latin-1 e varrido.
-  Binário é só o arquivo com NUL que não decodifica em UTF-8 nem em UTF-16 com BOM, e os de extensão de
-  binário conhecida (como `.xlsx`, `.jar`, `.woff`); esses são pulados com um aviso em stderr.
+  credencial não é acusado. E-mail com domínio não latino (como `.рф`) não é acusado.
+- Texto que não é UTF-8 também é varrido: com NUL, como UTF-16 (com BOM ou, sem ele, pela posição dos
+  NUL); sem NUL, como cp1252 (o CSV do Excel no Windows) ou, se não der, Latin-1. Arquivo com NUL fora do
+  UTF-8 e do UTF-16 é tratado como binário, assim como os de extensão de binário conhecida (como `.xlsx`,
+  `.jar`, `.woff`); esses são pulados com um aviso em stderr.
+- Arquivo em Git LFS só é visto no harness: no `pre-commit` e no `ci` o Git guarda só o ponteiro.
 - As pastas `tests/`, `logs/` e `prompts/` são sensíveis a maiúsculas: `Tests/` não é `tests/`.
 - É um verificador de padrão: não pega dado ofuscado de propósito (esquema de URL inventado antes do
-  e-mail, pontuação trocada como travessão ou barra no CPF, codificação em base64) e não substitui a
+  e-mail, pontuação trocada como travessão ou barra no CPF, outra codificação (entidade HTML, `%` duplo), base64) e não substitui a
   revisão.
 - Ele não vê nome, telefone, endereço, o dado dentro de arquivo compactado, nem o que está fora das três
   pastas, como o código que monta o log ou o prompt em tempo de execução, o tráfego de produção e o

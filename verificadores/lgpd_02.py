@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import posixpath
 import re
 import subprocess
 import sys
@@ -23,19 +25,22 @@ PASTAS = ("tests", "logs", "prompts")
 # Só as formas canônicas, sempre com os dígitos conferidos: `ddd.ddd.ddd-dd`, `ddddddddd-dd` e 11
 # dígitos colados. Fora: `ddd.ddd.ddd.dd` (parece IPv4) e grupos separados por espaço. A fronteira é
 # "não é dígito" (a vírgula de CSV vale como fronteira); nos colados, letra e hífen coladas excluem
-# (trecho de hash, hex ou UUID) e o ponto decimal também (`3.<11 dígitos>`, `<11 dígitos>.50`).
+# (trecho de hash, hex ou UUID) e o ponto decimal também (`3.<11 dígitos>`, `<11 dígitos>.50`). A
+# exceção é o rótulo colado, em qualquer caixa: `cpf`, `nº`, `no` ou `n°`, com ou sem hífen (o `º`
+# já virou `o` no NFKC).
 CPF = re.compile(
     r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)"
     r"|(?<![A-Za-z0-9-])\d{9}-\d{2}(?![A-Za-z0-9-])"
-    r"|(?<![A-Za-z0-9-])(?<!\d\.)\d{11}(?![A-Za-z0-9-])(?!\.\d)"
+    r"|(?:(?<![A-Za-z0-9-])|(?<![A-Za-z0-9])(?i:cpf|n[o°])-?)(?<!\d\.)\d{11}(?![A-Za-z0-9-])(?!\.\d)"
 )
 # O domínio termina em letras (2 ou mais): `a@b.T` de multiplicação de matrizes não é e-mail.
 EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
 # Forma SCP do Git (`usuario@host:grupo/projeto.git`): depois do ":" vem caminho de repositório.
 SCP = re.compile(r":(?=[^\s:]*(?:/|\.git(?![\w-])))[^\s:]+")
 # Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail. O
-# userinfo não atravessa `/ ? # " '` nem espaço.
-CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s@]*@")
+# userinfo vai até o último `@` da autoridade (a senha pode ter `%40`, que já virou `@`) e não
+# atravessa `/ ? # " '` nem espaço.
+CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s]*@")
 # Domínios que o time reserva para e-mail de teste: example.com/net/org e subdomínios (RFC 2606) e
 # os TLDs reservados .test, .example, .invalid e .localhost (RFC 2606 e RFC 6761).
 DOMINIOS_DE_TESTE = ("example.com", "example.net", "example.org")
@@ -107,15 +112,33 @@ def achados_da_linha(linha: str) -> list[str]:
 
 
 def relativo_a_raiz(caminho: str, cwd: str | None) -> str:
-    """Caminho com `/`, relativo à raiz: `\\` vira `/` e o absoluto é medido contra `cwd`.
-    Absoluto fora da raiz é indeterminado."""
+    """Caminho com `/`, relativo à raiz e normalizado: `\\` vira `/`, o absoluto é medido contra
+    `cwd` (pelo prefixo e, se ele não bater, pelo caminho real, que resolve link simbólico) e `//`,
+    `./` e `a/../b` se desfazem. Fora da raiz é indeterminado."""
     caminho = caminho.replace("\\", "/")
-    if not (caminho.startswith("/") or re.match(r"[A-Za-z]:/", caminho)):
-        return caminho
-    raiz = (cwd or "").replace("\\", "/").rstrip("/") + "/"
-    if raiz == "/" or not caminho.startswith(raiz):
+    if caminho.startswith("/") or re.match(r"[A-Za-z]:/", caminho):
+        raiz = (cwd or "").replace("\\", "/").rstrip("/") + "/"
+        if raiz != "/" and caminho.startswith(raiz):
+            caminho = caminho[len(raiz) :].lstrip("/")
+        else:
+            caminho = pelo_caminho_real(caminho, cwd)
+    caminho = posixpath.normpath(caminho)
+    if caminho == ".." or caminho.startswith("../"):
+        raise Indeterminado(f"{caminho}: caminho fora da raiz do projeto (cwd)")
+    return caminho
+
+
+def pelo_caminho_real(caminho: str, cwd: str | None) -> str:
+    """Relativiza pelo `os.path.realpath` dos dois lados (`/tmp` e `/private/tmp`, link simbólico);
+    o nome do arquivo não é resolvido, só a pasta dele."""
+    if not cwd or not (os.path.isabs(caminho) and os.path.isabs(cwd)):
         raise Indeterminado(f"{caminho}: caminho absoluto fora da raiz do projeto (cwd)")
-    return caminho[len(raiz) :]
+    pasta, nome = os.path.split(posixpath.normpath(caminho))
+    real = os.path.join(os.path.realpath(pasta), nome)
+    raiz = os.path.realpath(cwd)
+    if os.path.commonpath([real, raiz]) != raiz or real == raiz:
+        raise Indeterminado(f"{caminho}: caminho absoluto fora da raiz do projeto (cwd)")
+    return os.path.relpath(real, raiz).replace(os.sep, "/")
 
 
 def nas_pastas(caminho: str) -> bool:
@@ -136,7 +159,8 @@ def varre_caminho(caminho: str, avisos: list[str]) -> bool:
 
 
 def decodifica(dados: bytes) -> str | None:
-    """Texto em UTF-8 (com ou sem BOM), em UTF-16 com BOM ou, sem NUL, em Latin-1; None é binário.
+    """Texto em UTF-8 (com ou sem BOM), em UTF-16 (com BOM ou pela posição dos NUL) ou, sem NUL,
+    em cp1252 ou Latin-1; None é binário.
 
     O NUL não torna o arquivo binário se ele é UTF-8: `normaliza` o remove antes da busca."""
     try:
@@ -144,9 +168,31 @@ def decodifica(dados: bytes) -> str | None:
             return dados.decode("utf-16")
         return dados.decode("utf-8-sig")
     except UnicodeError:
-        # Sem NUL é texto em outra codificação (cp1252 do Excel): o Latin-1 nunca falha e CPF e
-        # e-mail são ASCII. Com NUL e fora do UTF-8 é binário.
-        return None if b"\0" in dados else dados.decode("latin-1")
+        pass
+    if b"\0" in dados:
+        return utf16_sem_bom(dados)
+    # Sem NUL é texto em outra codificação (cp1252 do Excel, com `€`, aspas curvas e travessão);
+    # o Latin-1 nunca falha, e CPF e e-mail são ASCII.
+    try:
+        return dados.decode("cp1252")
+    except UnicodeError:
+        return dados.decode("latin-1")
+
+
+def utf16_sem_bom(dados: bytes) -> str | None:
+    """UTF-16 sem BOM: com tamanho par, a maioria dos NUL nas posições ímpares é `utf-16-le` (o
+    byte alto do ASCII vem depois), nas pares é `utf-16-be`. Sem maioria, ou se não decodifica,
+    é binário."""
+    if len(dados) % 2:
+        return None
+    impares = dados[1::2].count(0)
+    pares = dados[0::2].count(0)
+    if impares == pares:
+        return None
+    try:
+        return dados.decode("utf-16-le" if impares > pares else "utf-16-be")
+    except UnicodeError:
+        return None
 
 
 def linhas(texto: str) -> list[str]:
