@@ -1,0 +1,10 @@
+id: gitleaks-config
+titulo: "Gitleaks default configuration (gitleaks.toml)"
+organizacao: Gitleaks
+url: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+tipo: comunidade
+verificado_em: 2026-10-08
+verificacao: S
+localizacao: "regra openai-api-key: sk-(?:proj|svcacct|admin)-; regras anthropic-api-key e anthropic-admin-api-key (sk-ant-api03-, sk-ant-admin01-)"
+dominios: [seguranca]
+notas: "Fonte secundária para os formatos de outros emissores: é a regra de um scanner, não a documentação do emissor. Usada só para sk-proj- e sk-svcacct-, que a OpenAI não documenta em página aberta."

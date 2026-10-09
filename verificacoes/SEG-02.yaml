@@ -1,5 +1,5 @@
 conteudo: SEG-02
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: segredo nunca é commitado, vive em variável de ambiente em runtime e o scanner roda bloqueante
@@ -43,6 +43,86 @@ afirmacoes:
 - texto: o gitlab-ci-local executa pipelines como shell ou Docker
   ref: gitlab-ci-local-readme
   localizacao: README, instalação e executores (já registrada em API-02)
+  resultado: confirmada
+- texto: o rótulo PEM PRIVATE KEY (PKCS 8) e o ENCRYPTED PRIVATE KEY são as codificações textuais de chave privada; PUBLIC KEY é a da chave pública
+  ref: rfc-7468
+  localizacao: seções 10, 11 e 13 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave privada de curva elíptica em PEM fica entre -----BEGIN EC PRIVATE KEY----- e -----END EC PRIVATE KEY-----
+  ref: rfc-5915
+  localizacao: seção 4 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o OpenSSL grava a chave RSA no formato tradicional com -----BEGIN RSA PRIVATE KEY-----, que no PEM cifrado traz as linhas Proc-Type e DEK-Info
+  ref: openssl-pem
+  localizacao: seção 'PEM ENCRYPTION FORMAT' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o OpenSSH grava a chave privada no formato próprio com o cabeçalho -----BEGIN OPENSSH PRIVATE KEY-----
+  ref: openssh-sshkey
+  localizacao: sshkey.c, '#define MARK_BEGIN' (aberto em 2026-10-08)
+  resultado: confirmada
+- texto: a armadura OpenPGP usa BEGIN PGP PRIVATE KEY BLOCK para chave privada
+  ref: rfc-9580
+  localizacao: seção 6.2.1, tabela 16 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: na IAM, o prefixo AKIA é de chave de acesso e ASIA de chave de acesso temporária (STS)
+  ref: aws-iam-identificadores
+  localizacao: seção 'Understanding unique ID prefixes' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de exemplo da documentação da AWS é AKIAIOSFODNN7EXAMPLE (20 caracteres, AKIA e mais 16), e a secreta de exemplo é wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  ref: aws-chaves-de-acesso
+  localizacao: parágrafo de abertura (aberto em 2026-10-08)
+  resultado: confirmada
+  nota: a página não fixa o tamanho; os 16 caracteres depois do prefixo são o tamanho do exemplo documentado.
+- texto: o GitHub emite tokens com os prefixos ghp_ (pessoal clássico), github_pat_ (pessoal de granularidade fina), gho_ (OAuth), ghu_, ghs_ e ghr_ (GitHub App)
+  ref: github-formatos-de-token
+  localizacao: seção "GitHub's token formats" (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o token no formato atual tem 30 caracteres aleatórios de [a-zA-Z0-9] e uma soma CRC32 de 6 caracteres em base62 depois do prefixo
+  ref: github-blog-formato-de-token
+  localizacao: seções sobre entropia e soma de verificação (aberta em 2026-10-08)
+  resultado: confirmada
+  nota: o post não fala de github_pat_; o mínimo de 50 caracteres para ele é escolha do verificador (o gitleaks usa 82).
+- texto: a tabela de prefixos do GitLab traz glpat-, gloas-, gldt-, glrt- e glrtr-, glcbt-, glptt-, glft-, glimt-, glagent-, glwt-, glsoat- e glffct-
+  ref: gitlab-prefixos-de-token
+  localizacao: seção 'Token prefixes' (aberta em 2026-10-08)
+  resultado: confirmada
+  nota: o mínimo de 20 caracteres depois do prefixo é escolha do verificador, igual ao da regra gitlab-pat do gitleaks.
+- texto: a chave de API da Anthropic é um segredo sk-ant-api...
+  ref: anthropic-autenticacao-api
+  localizacao: tabela inicial e exemplos da seção 'Create and use a key' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de Admin da Anthropic começa com sk-ant-admin
+  ref: anthropic-admin-api
+  localizacao: quadro inicial (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de Admin da OpenAI começa com sk-admin-
+  ref: openai-openapi
+  localizacao: openapi.yaml, exemplos de Admin API Keys (baixado em 2026-10-08)
+  resultado: confirmada
+- texto: a regra openai-api-key do gitleaks cobre os prefixos sk-proj-, sk-svcacct- e sk-admin-
+  ref: gitleaks-config
+  localizacao: config/gitleaks.toml, regra openai-api-key (baixado em 2026-10-08)
+  resultado: confirmada
+  nota: fonte secundária, declarada como tal no texto; help.openai.com e platform.openai.com responderam 403 nesta rodada.
+- texto: os tokens do Slack começam com xoxb- (bot), xoxp- (usuário), xapp- (nível de app) e xwfp- (workflow)
+  ref: slack-tipos-de-token
+  localizacao: seções de cada tipo de token (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: com a rotação, o access token ganha o prefixo xoxe. e o refresh token começa com xoxe-
+  ref: slack-rotacao-de-token
+  localizacao: exemplos de resposta (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: tabela de variáveis, linha CI_MERGE_REQUEST_DIFF_BASE_SHA ('The base SHA of the merge request diff'), aberta em 2026-10-08
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso (job do verificador do portal)
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone', aberta em 2026-10-08
+  resultado: confirmada
+- texto: o job só impede o merge com o merge check que exige pipeline bem-sucedido
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: "'You can configure your project to require a complete and successful pipeline before merge', aberta em 2026-10-08"
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -102,6 +182,13 @@ execucoes:
   resultado: passou
   evidencia: 'gitleaks: no leaks found; compile do arquivo sem erro.'
   data: '2026-10-07'
+- tipo: arquivo
+  arquivo: verificadores/seg_02.py
+  comando: python3 -I verificadores/seg_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre o estado antes (app/config.py de plantar-segredo.sh) e depois (config-depois.py) do Exemplo num repositório Git temporário; .venv/bin/python -m pytest -q tests/verificadores/test_seg_02.py
+  ambiente: repositório Git novo em /tmp/cfd-t7-seg02 com o script copiado; Python 3.14.8; macOS (T7 da curadoria de força dura). O job de CI não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): pre-commit e ci com saída 0 e nada em stdout. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. tests/verificadores/test_seg_02.py: 244 passed. Varredura de falso positivo (só a busca, sem o filtro de linhas novas): o próprio repositório (2.845 arquivos de texto), .venv/lib/python3.14/site-packages, /usr/share, /opt/homebrew/lib/node_modules e site-packages, e cinco repositórios de código locais: 2 achados, um repo_token real num .coveralls.yml publicado num pacote npm e nenhum falso positivo depois dos ajustes (detalhe no relatório da T7).'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: SEG-02-prompt-1
   harness: claude-code

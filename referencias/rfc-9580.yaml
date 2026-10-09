@@ -1,0 +1,11 @@
+id: rfc-9580
+titulo: "RFC 9580: OpenPGP"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc9580
+tipo: padrao-aberto
+publicado_em: 2024-07-01
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 6.2.1 (Armor Header Line), tabela 16: BEGIN PGP PRIVATE KEY BLOCK para chaves privadas e BEGIN PGP PUBLIC KEY BLOCK para públicas"
+dominios: [seguranca]
+notas: null

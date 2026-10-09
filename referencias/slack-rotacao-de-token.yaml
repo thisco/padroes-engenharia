@@ -1,0 +1,10 @@
+id: slack-rotacao-de-token
+titulo: "Using token rotation"
+organizacao: Slack
+url: https://docs.slack.dev/authentication/using-token-rotation
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "exemplos de resposta: access_token com o prefixo xoxe. (xoxe.xoxb-, xoxe.xoxp-, xoxe.xapp-) e refresh_token começando por xoxe-"
+dominios: [seguranca]
+notas: null
