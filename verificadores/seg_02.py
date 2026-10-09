@@ -30,19 +30,27 @@ Só acusa linha nova ou alterada: no harness, em relação ao arquivo em disco; 
 relação ao `HEAD`; no ci, em relação à `--base` (renomeação compara com o caminho antigo). A chave
 privada vale como um bloco: é acusada se o cabeçalho ou a linha de base64 que a confirma é nova.
 
-No harness, `shell` casa quando o comando escreve num arquivo do projeto (`>`, `>>`, `tee`,
+`shell` casa quando o comando escreve num arquivo do projeto (`>`, `>>`, `tee`,
 `sed -i`, `perl -i`) e traz, em qualquer parte, um segredo da lista: a saída é
 `shell:0: <tipo> escrito pelo shell`. No harness, arquivo que o Git ignora (`git check-ignore`) e
 arquivo fora da raiz do projeto não são deste repositório: saída 0. O `git add -f` de um arquivo
 ignorado é pego no pre-commit e no ci.
 
+No harness, a raiz do projeto é o toplevel do Git a partir de `cwd` (`git rev-parse
+--show-toplevel`; fora de repositório, o próprio `cwd`): o caminho, a isenção e o `.gitignore` são
+medidos a partir dela. Caminho absoluto sem `cwd` e falha do git num repositório saem 2.
+
 Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; padrão sem
 `/` vale em qualquer pasta; `#` é comentário). Ele é lido do lado da comparação (o `HEAD` no
 harness e no pre-commit, ou o disco no harness fora de repositório Git; a `--base` no ci): a
-isenção só vale depois de entrar na branch de destino.
+isenção vale no harness e no pre-commit depois de commitada, e no ci depois de entrar na branch de
+destino (a autoridade é o ci da MR). Padrão sem nenhum nome (`**`, `*`, `**/*`, `.`, `/`) sai 2
+("isenção ampla demais"); o próprio `.seg02-ignorar` nunca é isento.
 
 No ci, `--base` de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou
-agendado) compara com a árvore vazia: tudo o que o `HEAD` tem é varrido.
+agendado) compara com a árvore vazia: tudo o que o `HEAD` tem é varrido, com a isenção do `HEAD`.
+
+Tokens de exemplo publicados pelos emissores (`EXEMPLOS_DOCUMENTADOS`) não são acusados.
 
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso ou
 estado indeterminado (mensagem em stderr). O valor achado nunca é impresso, nem um trecho dele.
@@ -64,6 +72,8 @@ from collections import Counter
 from pathlib import Path, PurePosixPath
 
 ARQUIVO_DE_ISENCAO = ".seg02-ignorar"
+# Padrão de isenção sem nenhum nome (só `*`, `?`, `.` e `/`) isenta tudo ou quase tudo: é recusado.
+AMPLA_DEMAIS = re.compile(r"[*?./]+")
 TRACOS = "-" * 5
 # Os rótulos de PEM de chave privada; o texto é montado por partes para este arquivo não se acusar.
 ROTULOS_PEM = (
@@ -113,6 +123,28 @@ FORMATOS = (
             r"(?<![A-Za-z0-9_.-])(?:(?:xoxe\.)?(?:xoxb|xoxp|xapp)|xwfp|xoxe)-([A-Za-z0-9-]{20,})"
         ),
     ),
+)
+# Tokens de exemplo que os emissores publicam na própria documentação, comparados pelo casamento
+# inteiro (lista fechada; montados em partes para o arquivo não trazer o valor literal):
+# - GitHub, "Authorizing OAuth apps", seção "2. Users are redirected back to your site by GitHub";
+# - GitHub, REST "Revoke a list of credentials", exemplo do corpo da requisição;
+# - GitLab, API de runners, seção "Verify authentication for a registered runner".
+EXEMPLOS_DOCUMENTADOS = frozenset(
+    {
+        "gh" + "o_" + "16C7e42F292c6912E7710c838347Ae178B4a",
+        "gh"
+        + "r_"
+        + "1B4a2e77838347a7E420ce178F2E7c6912E169246c34E1ccbF66C46812d16D5B1A9Dc86A1498",
+        "gh" + "p_" + "1234567890abcdef" * 2 + "12345678",
+        "github"
+        + "_pat_"
+        + "0A1B2C3D4E5F6G7H8I9J0K_ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        + "abcdefghijklmnopqrstuvwxyz0123456",
+        "gh" + "o_" + "1234567890abcdef" * 2 + "12345678",
+        "gh" + "u_" + "1234567890abcdef" * 2 + "12345678",
+        "gh" + "r_" + "1234567890abcdef" * 4 + "1234567890ab",
+        "gl" + "rt-" + "6337ff461c94fd3fa32ba3b1ff4125",
+    }
 )
 MOTIVO_PEM = "chave privada"
 MOTIVO_URL = "senha em URL"
@@ -287,6 +319,11 @@ def tipos_da_linha(linha: str, padroes_de_atribuicao: tuple[re.Pattern[str], ...
     """Os tipos de segredo de uma linha já normalizada; a atribuição só conta se a linha não traz
     um formato da lista (o mesmo segredo não é acusado duas vezes)."""
     tipos = []
+    for _, padrao in FORMATOS:
+        # O exemplo documentado sai da linha: nem o formato nem a atribuição o acusam.
+        linha = padrao.sub(
+            lambda m: "EXEMPLO" if m.group(0) in EXEMPLOS_DOCUMENTADOS else m.group(0), linha
+        )
     for tipo, padrao in FORMATOS:
         for m in padrao.finditer(linha):
             corpo = next(g for g in m.groups() if g is not None)
@@ -413,10 +450,14 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
         linha = linha.strip()
         if not linha or linha.startswith("#"):
             continue
+        if AMPLA_DEMAIS.fullmatch(linha):
+            # `**`, `*`, `**/*`, `.`, `/`: isentaria tudo ou quase tudo.
+            raise Indeterminado(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
+                "arquivos pelo nome"
+            )
         pasta = linha.endswith("/")
         linha = linha.strip("/")
-        if not linha:
-            continue
         regex = ""
         i = 0
         while i < len(linha):
@@ -443,6 +484,9 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
 
 
 def isento(caminho: str, padroes: list[re.Pattern[str]]) -> bool:
+    """O próprio `.seg02-ignorar` nunca é isento."""
+    if caminho == ARQUIVO_DE_ISENCAO:
+        return False
     return any(p.fullmatch(caminho) for p in padroes)
 
 
@@ -611,8 +655,10 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
     if re.fullmatch(r"0{40}|0{64}", base):
         # Base de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou agendado):
         # compara com a árvore vazia, ou seja, varre tudo o que o HEAD tem.
+        # A isenção é a do HEAD: o conteúdo da branch padrão já passou pela revisão.
         revisao = git(raiz, "hash-object", "-t", "tree", os.devnull).decode().strip()
-        return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", [], avisos)
+        isencao = isencao_no_git(raiz, "HEAD")
+        return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", isencao, avisos)
     revisao = git(raiz, "rev-parse", "--verify", f"{base}^{{commit}}").decode().strip()
     isencao = isencao_no_git(raiz, revisao)
     return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", isencao, avisos)
@@ -621,23 +667,56 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
 # --- harness --------------------------------------------------------------------------------------
 
 
-def isencao_do_harness(cwd: str | None) -> list[re.Pattern[str]]:
-    """No harness, a isenção vem do `HEAD` quando `cwd` é um repositório Git (a que já passou pela
-    revisão; o agente não se isenta gravando o arquivo no disco); fora de repositório, do disco."""
+def raiz_do_harness(cwd: str | None) -> tuple[str | None, bool]:
+    """A raiz do projeto no harness e se ela é um repositório Git: o toplevel do Git a partir de
+    `cwd` (em monorepo, o `cwd` acompanha o `cd` do agente); fora de repositório, o próprio `cwd`.
+    Falha do git num repositório real (dono diferente, `.git` corrompido) é indeterminada."""
+    if not cwd or not os.path.isdir(cwd):
+        return cwd, False
     try:
-        raiz = git(cwd or ".", "rev-parse", "--show-toplevel").decode("utf-8").strip()
-    except Indeterminado:
-        raiz = None
-    if raiz is not None:
+        r = subprocess.run(
+            ["git", "-C", cwd, "rev-parse", "--show-toplevel"],
+            capture_output=True,
+            timeout=TEMPO_GIT,
+            check=False,
+            env={**os.environ, "LC_ALL": "C"},
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return cwd, False  # sem git: não dá para ver repositório nenhum
+    if r.returncode == 0:
+        return r.stdout.decode("utf-8").strip(), True
+    erro = r.stderr.decode("utf-8", "replace").strip()
+    if "not a git repository" in erro.lower():
+        return cwd, False
+    raise Indeterminado(f"git rev-parse falhou em {cwd}: {erro}")
+
+
+def isencao_do_harness(raiz: str | None, em_git: bool) -> list[re.Pattern[str]]:
+    """No harness, a isenção vem do `HEAD` do repositório (a que já passou pela revisão; o agente
+    não se isenta gravando o arquivo no disco); fora de repositório Git, do disco."""
+    if em_git and raiz:
         try:
             head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
         except Indeterminado:
             return []  # repositório sem commit: nenhuma isenção revisada
         return isencao_no_git(raiz, head)
     try:
-        return padroes_de_isencao(decodifica((Path(cwd or ".") / ARQUIVO_DE_ISENCAO).read_bytes()))
+        return padroes_de_isencao(decodifica((Path(raiz or ".") / ARQUIVO_DE_ISENCAO).read_bytes()))
     except OSError:
         return []
+
+
+def absoluto(caminho: str) -> bool:
+    return caminho.startswith("/") or re.match(r"[A-Za-z]:/", caminho) is not None
+
+
+def relativo_ao_projeto(caminho: str, cwd: str | None, raiz: str | None) -> str | None:
+    """O caminho (relativo a `cwd`, ou absoluto) medido a partir da raiz do projeto; None fora
+    dela."""
+    caminho = caminho.replace("\\", "/")
+    if not absoluto(caminho) and cwd:
+        caminho = posixpath.normpath(cwd.replace("\\", "/").rstrip("/") + "/" + caminho)
+    return relativo_a_raiz(caminho, raiz)
 
 
 def palavras_do_shell(comando: str) -> list[str] | None:
@@ -696,19 +775,21 @@ def destinos_de_escrita(comando: str) -> list[str]:
     return destinos
 
 
-def no_projeto(destino: str, cwd: str | None, isencao: list[re.Pattern[str]]) -> bool:
+def no_projeto(
+    destino: str, cwd: str | None, raiz: str | None, em_git: bool, isencao: list[re.Pattern[str]]
+) -> bool:
     """O destino fica no projeto e pode entrar no repositório. Destino de variável (`$ARQ`) conta
-    como no projeto; `/dev/`, `~`, caminho fora de `cwd`, arquivo isento e arquivo que o Git
+    como no projeto; `/dev/`, `~`, caminho fora da raiz, arquivo isento e arquivo que o Git
     ignora não."""
     if destino.startswith("$"):
         return True
     if destino.startswith(("~", "/dev/")) or not destino:
         return False
-    relativo = relativo_a_raiz(destino, cwd)
+    relativo = relativo_ao_projeto(destino, cwd, raiz)
     return (
         relativo is not None
         and not isento(relativo, isencao)
-        and not ignorado_pelo_git(relativo, cwd)
+        and not (em_git and ignorado_pelo_git(relativo, raiz))
     )
 
 
@@ -735,8 +816,9 @@ def evento_shell(comando: str | None, cwd: str | None) -> list[str]:
     tipos = dict.fromkeys(tipo for _, _, tipo in achados_do_texto(comando, padroes))
     if not tipos:
         return []
-    isencao = isencao_do_harness(cwd)
-    if not any(no_projeto(d, cwd, isencao) for d in destinos_de_escrita(comando)):
+    raiz, em_git = raiz_do_harness(cwd)
+    isencao = isencao_do_harness(raiz, em_git)
+    if not any(no_projeto(d, cwd, raiz, em_git, isencao) for d in destinos_de_escrita(comando)):
         return []
     # Só o tipo sai: o comando carrega o próprio segredo.
     return [f"shell:0: {motivo(t)} escrito pelo shell" for t in tipos]
@@ -766,18 +848,24 @@ def evento_harness(avisos: list[str]) -> list[str]:
         return []
     if caminho is None or conteudo is None:
         raise Indeterminado("sem `caminho` ou sem `conteudo` para uma escrita; não dá para avaliar")
-    relativo = relativo_a_raiz(caminho, cwd)
-    if relativo is None:
-        return []  # fora da raiz do projeto: não é deste repositório
-    if binario_conhecido(relativo, avisos):
+    caminho = caminho.replace("\\", "/")
+    if absoluto(caminho) and not cwd:
+        raise Indeterminado("caminho absoluto sem `cwd`; não dá para dizer se é do projeto")
+    if binario_conhecido(posixpath.normpath(caminho), avisos):
         return []
     # O Git só é consultado quando o conteúdo traz segredo, para o harness seguir rápido.
-    if not achados_do_arquivo(relativo, conteudo, None):
+    if not achados_do_arquivo(caminho, conteudo, None):
         return []
-    if isento(relativo, isencao_do_harness(cwd)) or ignorado_pelo_git(relativo, cwd):
+    raiz, em_git = raiz_do_harness(cwd)
+    relativo = relativo_ao_projeto(caminho, cwd, raiz)
+    if relativo is None:
+        return []  # fora da raiz do projeto: não é deste repositório
+    if isento(relativo, isencao_do_harness(raiz, em_git)) or (
+        em_git and ignorado_pelo_git(relativo, raiz)
+    ):
         return []
     try:
-        antigo = decodifica((Path(cwd or ".") / relativo).read_bytes())
+        antigo = decodifica((Path(raiz or ".") / relativo).read_bytes())
     except OSError:
         antigo = None
     return achados_do_arquivo(relativo, conteudo, antigo)

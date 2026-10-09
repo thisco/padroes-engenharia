@@ -18,7 +18,7 @@ mecanismo:
   mensagem: "SEG-02: segredo em claro (chave privada, chave de acesso da AWS, token do GitHub, do GitLab ou do Slack, chave de provedor de modelo ou senha em literal); leia o valor de variável de ambiente e, se ele já foi publicado, rotacione a credencial. Como aplicar: {URL do portal}/praticas/SEG-02.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [sdd-scaffold-threat-model, gitleaks-readme, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-ci-local-readme, rfc-7468, rfc-5915, rfc-9580, openssl-pem, openssh-sshkey, aws-iam-identificadores, aws-chaves-de-acesso, github-formatos-de-token, github-blog-formato-de-token, gitlab-prefixos-de-token, anthropic-autenticacao-api, anthropic-admin-api, openai-openapi, gitleaks-config, slack-tipos-de-token, slack-rotacao-de-token]
+referencias: [sdd-scaffold-threat-model, gitleaks-readme, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-ci-local-readme, rfc-7468, rfc-5915, rfc-9580, openssl-pem, openssh-sshkey, aws-iam-identificadores, aws-chaves-de-acesso, github-formatos-de-token, github-blog-formato-de-token, gitlab-prefixos-de-token, anthropic-autenticacao-api, anthropic-admin-api, openai-openapi, gitleaks-config, slack-tipos-de-token, slack-rotacao-de-token, github-oauth-apps, github-rest-revogacao, gitlab-api-runners]
 relacionadas: [SEG-01, SEG-03]
 dono: engenharia
 revisado_em: 2026-10-08
@@ -117,7 +117,10 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    Na branch padrão, a base é `$CI_COMMIT_BEFORE_SHA`, o último commit que a branch tinha antes do
    push; ele é de zeros no primeiro push e em pipeline manual ou agendado
    [ref:gitlab-variaveis-predefinidas], e com a base de zeros o verificador varre tudo o que o `HEAD`
-   tem. Base vazia sai 2 e falha o job. Push em outra branch, sem MR, não roda o job: o segredo é
+   tem, com a isenção do próprio `HEAD` (o conteúdo da branch padrão já passou pela revisão). Essa
+   varredura completa acusa o segredo legado que estiver no `HEAD` sem isenção: rotacione a
+   credencial e isente o arquivo numa MR, ou limpe o histórico. Base vazia sai 2 e falha o job. Depois
+   de um force-push na branch padrão, o commit anterior pode faltar no clone, e o job sai 2. Push em outra branch, sem MR, não roda o job: o segredo é
    barrado quando a MR abre ou quando chega à branch padrão. E
    `GIT_DEPTH: "0"` desliga o clone raso [ref:gitlab-git-depth]: o `git diff` com `--base` precisa do
    commit da base no clone. Saída 0: nada a apontar, o job passa. Saída 1: segredo em linha que a MR
@@ -155,9 +158,12 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
 8. Falso positivo, ou um arquivo que precisa de uma chave de teste (a chave privada de um teste de
    TLS, por exemplo), se trata numa MR própria, que a revisão veja. No verificador do portal, ponha o caminho
    ou o padrão no `.seg02-ignorar`, na raiz, um por linha (`tests/fixtures/tls/**`; padrão sem `/`
-   vale em qualquer pasta; `#` é comentário). Ele é lido da base da comparação (o `HEAD` no
-   `pre-commit` e a base da MR no CI): a isenção só vale depois que a MR que a cria entra na branch de
-   destino, e a mesma MR não isenta o próprio segredo. No gitleaks, use o `.gitleaksignore`
+   vale em qualquer pasta; `#` é comentário; os caminhos são medidos a partir da raiz do repositório
+   Git). Ele é lido da base da comparação: no harness e no `pre-commit`, a isenção vale depois de
+   commitada; no CI, depois que a MR que a cria entra na branch de destino. A mesma MR não isenta o
+   próprio segredo. Padrão sem nenhum nome, que isentaria tudo ou quase tudo (`**`, `*`, `**/*`,
+   `*.*`, `.`, `/`), é recusado: o verificador sai 2 com "isenção ampla demais". O próprio
+   `.seg02-ignorar` nunca é isento. Ponha o `.seg02-ignorar` no CODEOWNERS (passo 6). No gitleaks, use o `.gitleaksignore`
    [ref:gitleaks-readme].
 
 ## Exemplo
@@ -282,11 +288,15 @@ O portal hospeda o verificador `verificadores/seg_02.py`, e a força é `bloquei
 eventos: antes de o agente editar ou escrever um arquivo, ou de rodar um comando de shell que escreve
 num arquivo do projeto; no `pre-commit`, sobre o que está no índice; e no `ci`, sobre os arquivos que
 mudaram entre `--base` e `HEAD`. Vale para qualquer arquivo do projeto, sem pasta restrita, menos os
-isentos no `.seg02-ignorar`. No `ci`, `--base` de zeros varre todo o conteúdo do `HEAD`. No harness, o arquivo que o Git ignora (`git check-ignore`, como o `.env`
-do passo 1 do Como aplicar) e o arquivo fora da raiz do projeto (`~/.npmrc`, `/tmp`) não são deste
-repositório e não são acusados, na escrita direta e na escrita pelo shell; o `git add -f` de um
-arquivo ignorado é acusado no `pre-commit` e no `ci`. Para rodar à mão no índice: `python3 verificadores/seg_02.py --evento
-pre-commit`; para comparar com a base da MR: `python3 verificadores/seg_02.py --evento ci --base <ref>`.
+isentos no `.seg02-ignorar`. No `ci`, `--base` de zeros varre todo o conteúdo do `HEAD`, com a
+isenção do `HEAD`. No harness, a raiz do projeto é a raiz do repositório Git
+(`git rev-parse --show-toplevel` a partir do `cwd`; fora de repositório, o próprio `cwd`): num
+monorepo, a escrita em outra pasta do mesmo repositório é do projeto. O arquivo que o Git ignora
+(`git check-ignore`, como o `.env` do passo 1 do Como aplicar) e o arquivo fora da raiz (`~/.npmrc`,
+`/tmp`) não são deste repositório e não são acusados, na escrita direta e na escrita pelo shell; o
+`git add -f` de um arquivo ignorado é acusado no `pre-commit` e no `ci`. Para rodar à mão no índice:
+`python3 verificadores/seg_02.py --evento pre-commit`; para comparar com a base da MR:
+`python3 verificadores/seg_02.py --evento ci --base <ref>`.
 
 O que ele acusa é uma lista fechada de formatos que os emissores documentam, sem medir entropia:
 
@@ -334,7 +344,12 @@ O que ele acusa é uma lista fechada de formatos que os emissores documentam, se
 Não é acusado o valor de exemplo óbvio: com `EXAMPLE`, `xxxx`, `***`, `...`, `<...>`, `${...}`,
 `$(...)`, `{{...}}`, `changeme`, `your`, `sua`, `seu`, `test`, `fake`, `dummy`, `sample`,
 `placeholder`, `redacted` ou as sequências de documentação `111-222-333` e `1234-5678` (como no
-exemplo de token da documentação do Slack), ou com três caracteres distintos ou menos. Na atribuição, que é a regra
+exemplo de token da documentação do Slack), ou com três caracteres distintos ou menos. Também não
+são acusados, comparados pelo valor inteiro, os tokens de exemplo que os próprios emissores publicam:
+os da página de autorização de apps OAuth do GitHub [ref:github-oauth-apps], os do exemplo de
+revogação de credenciais da API REST do GitHub [ref:github-rest-revogacao] e o do runner da API de
+runners do GitLab [ref:gitlab-api-runners]. Um exemplo que só aparece em página de terceiros
+continua acusado. Na atribuição, que é a regra
 de menor certeza, também não: referência a variável ou cofre (`os.environ[...]`, `os.environ/VAR`,
 `arn:`), URL, caminho de arquivo, nome de variável em maiúsculas, palavra só de letras, hash declarado
 (`sha256:`, `sha512-`, como nos lockfiles), valor que contém `password`, `secret` ou `token`, sequência
@@ -352,13 +367,17 @@ que já estava no arquivo também é acusado. A saída tem uma linha por achado,
 trecho dele; no shell, `shell:0: <tipo> escrito pelo shell`. Sai com 0 quando não há o que apontar,
 1 com achado e 2 quando não consegue decidir: evento que não atende, entrada inválida, `editar` ou
 `escrever` sem caminho ou sem conteúdo, `ci` sem `--base`, ou `pre-commit` e `ci` fora de um
-repositório Git.
+repositório Git, falha do git num repositório (configuração corrompida, dono diferente) ou caminho
+absoluto sem `cwd`.
 
 O `.seg02-ignorar` é lido do lado da comparação: do `HEAD` no harness e no `pre-commit` (do disco, no
-harness fora de repositório Git) e da base no `ci`; o agente não se isenta gravando o arquivo e o
+harness fora de repositório Git) e da base no `ci`. A isenção vale no harness e no `pre-commit` depois
+de commitada, e no `ci` depois de entrar na branch de destino; o agente não se isenta gravando o arquivo e o
 segredo em seguida. A isenção acrescentada junto com o segredo não o libera no commit nem na MR; ela
 passa primeiro pela revisão, numa MR própria. O próprio `.seg02-ignorar` é varrido como qualquer
-arquivo.
+arquivo e nunca é isento, e o padrão sem nenhum nome (`**`, `*`, `**/*`, `*.*`, `.`, `/`) sai 2 com
+"isenção ampla demais" sempre que a isenção é lida (no `pre-commit` e no `ci`, sempre; no harness,
+quando o conteúdo traz segredo).
 
 Os limites:
 - A lista é fechada: segredo de outro formato (token de outro serviço, senha curta, senha em literal
@@ -382,9 +401,12 @@ Os limites:
   o alvo numa variável (`> "$ARQ"`) conta como dentro. Segredo montado em variável de shell, em script
   intermediário ou em outra codificação não é visto: o verificador protege contra o descuido, não
   contra quem esconde o que faz. O que esse caminho grava é visto de novo no `pre-commit` e no `ci`.
+- A isenção só é autoridade no CI da MR, que a lê da base do destino. Localmente ela vale assim que
+  é commitada: um commit da própria branch com um padrão no `.seg02-ignorar` libera o harness e o
+  `pre-commit` antes de qualquer revisão, e quem barra é o job da MR com o merge check obrigatório e o
+  `.seg02-ignorar` no CODEOWNERS.
 - Submódulo e link simbólico não são lidos (o submódulo é outro repositório, com a própria
-  varredura); arquivo apagado não tem o que varrer. O `cwd` do harness é a raiz do projeto: a
-  isenção e o `.gitignore` são medidos a partir dela.
+  varredura); arquivo apagado não tem o que varrer.
 - Texto que não é UTF-8 também é varrido (UTF-16 com BOM ou pela densidade de NUL, cp1252, Latin-1);
   arquivo binário e extensão de binário conhecida (inclusive `.p12`, `.pfx`, `.jks` e `.der`, que podem
   conter chave) são pulados com aviso em stderr. Arquivo em Git LFS só é visto no harness.

@@ -994,3 +994,143 @@ def test_netrc_com_senha_pega(nome: str):
     linha = f"machine api.interno login app password {SENHA}"
     assert saida(linha, nome) == [f"{nome}:1: {MOTIVO_ATRIBUICAO}"]
     assert not casa("machine api.interno login app password changeme", nome)
+
+
+# --- rodada 2: isenção na varredura completa, raiz pelo toplevel do Git, exemplos documentados ----
+
+
+def test_ci_com_base_de_zeros_respeita_a_isencao_do_head(repo_git: RepoGit):
+    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
+    repo_git.escrever("fixtures/a.key", pem() + "\n")
+    repo_git.adicionar(".seg02-ignorar", "fixtures/a.key")
+    repo_git.commitar("chave de teste isenta")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS).returncode == 0
+    repo_git.escrever("app/a.py", f"A = '{GITHUB}'\n")
+    repo_git.adicionar("app/a.py")
+    repo_git.commitar("segredo fora da isenção")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS)
+    assert r.returncode == 1 and r.stdout.splitlines() == ["app/a.py:1: token do GitHub em claro"]
+
+
+def monorepo(repo_git: RepoGit) -> Path:
+    (repo_git.raiz / "svc").mkdir()
+    (repo_git.raiz / "other").mkdir()
+    return repo_git.raiz / "svc"
+
+
+@pytest.mark.parametrize("como", ["relativo", "absoluto"])
+def test_monorepo_escrita_em_outra_pasta_do_repositorio_pega(repo_git: RepoGit, como: str):
+    svc = monorepo(repo_git)
+    caminho = "../other/app.py" if como == "relativo" else str(repo_git.raiz / "other" / "app.py")
+    r = harness(caminho, f"A = '{GITHUB}'\n", cwd=str(svc))
+    assert r.returncode == 1 and r.stdout.splitlines() == [
+        "other/app.py:1: token do GitHub em claro"
+    ]
+
+
+def test_monorepo_shell_em_outra_pasta_do_repositorio_pega(repo_git: RepoGit):
+    svc = monorepo(repo_git)
+    r = shell(f"echo 'GITHUB_TOKEN={GITHUB}' >> ../other/app.env", cwd=str(svc))
+    assert r.returncode == 1
+
+
+def test_monorepo_isencao_e_gitignore_medidos_pelo_toplevel(repo_git: RepoGit):
+    svc = monorepo(repo_git)
+    repo_git.escrever(".seg02-ignorar", "svc/tests/**\n")
+    repo_git.escrever(".gitignore", "svc/.env\n")
+    repo_git.adicionar(".seg02-ignorar", ".gitignore")
+    repo_git.commitar("isenção e gitignore na raiz")
+    assert harness("tests/x.py", f"A = '{GITHUB}'\n", cwd=str(svc)).returncode == 0
+    assert harness(".env", f"T={GITHUB}\n", cwd=str(svc)).returncode == 0
+    r = harness("app.py", f"A = '{GITHUB}'\n", cwd=str(svc))
+    assert r.stdout.splitlines() == ["svc/app.py:1: token do GitHub em claro"]
+
+
+def test_sem_cwd_e_caminho_absoluto_sai_2():
+    entrada = {"ferramenta": "escrever", "caminho": "/p/a.py", "conteudo": GITHUB, "cwd": None}
+    r = rodar(SCRIPT, "antes-de-ferramenta", entrada=entrada)
+    assert r.returncode == 2 and r.stderr.strip() and GITHUB not in r.stderr
+
+
+def test_falha_do_git_num_repositorio_real_sai_2(repo_git: RepoGit):
+    # Dono diferente ("dubious ownership") não se simula sem root; uma configuração corrompida faz
+    # o mesmo papel: o git reconhece o repositório e falha.
+    (repo_git.raiz / ".git" / "config").write_text("[core\n", encoding="utf-8")
+    r = harness("a.py", f"A = '{GITHUB}'\n", cwd=str(repo_git.raiz))
+    assert r.returncode == 2 and r.stderr.strip() and GITHUB not in r.stderr
+
+
+# Exemplos documentados pelos emissores (montados em partes; ver EXEMPLOS_DOCUMENTADOS).
+EXEMPLO_GITHUB_OAUTH = "gh" + "o_" + "16C7e42F292c6912E7710c838347Ae178B4a"
+EXEMPLO_GITHUB_REFRESH = (
+    "gh" + "r_" + "1B4a2e77838347a7E420ce178F2E7c6912E169246c34E1ccbF66C46812d16D5B1A9Dc86A1498"
+)
+EXEMPLO_REVOGACAO = [
+    "gh" + "p_" + "1234567890abcdef" * 2 + "12345678",
+    "github"
+    + "_pat_"
+    + "0A1B2C3D4E5F6G7H8I9J0K_"
+    + string.ascii_uppercase
+    + string.ascii_lowercase
+    + "0123456",
+    "gh" + "o_" + "1234567890abcdef" * 2 + "12345678",
+    "gh" + "u_" + "1234567890abcdef" * 2 + "12345678",
+    "gh" + "r_" + "1234567890abcdef" * 4 + "1234567890ab",
+]
+EXEMPLO_GITLAB_RUNNER = "gl" + "rt-" + "6337ff461c94fd3fa32ba3b1ff4125"
+
+
+@pytest.mark.parametrize(
+    "valor",
+    [EXEMPLO_GITHUB_OAUTH, EXEMPLO_GITHUB_REFRESH, *EXEMPLO_REVOGACAO, EXEMPLO_GITLAB_RUNNER],
+    ids=["gho-oauth", "ghr-oauth", "ghp-rev", "pat-rev", "gho-rev", "ghu-rev", "ghr-rev", "glrt"],
+)
+def test_exemplo_documentado_pelo_emissor_e_inocente(valor: str):
+    assert not casa(f'"token": "{valor}"', "docs/api.md")
+    # Um caractere a mais muda o valor: deixa de ser o exemplo documentado.
+    assert casa(f'"token": "{valor}Z"', "docs/api.md")
+
+
+def test_exemplo_de_terceiros_continua_acusado():
+    so_em_terceiros = "gh" + "p_" + "16C7e42F292c6912E7710c838347Ae178B4a"
+    assert casa(f"Password: {so_em_terceiros}", "docs/x.md")
+
+
+# --- rodada 2, revisão de segurança: isenção ampla demais ---------------------------------------
+
+
+@pytest.mark.parametrize("padrao", ["**", "*", "**/*", ".", "/", "./", "*/**", "*.*", "**/*.*"])
+def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: str):
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.escrever(".seg02-ignorar", f"tests/**\n{padrao}\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção ampla")
+    repo_git.escrever("app/a.py", f"A = '{GITHUB}'\n")
+    repo_git.adicionar("app/a.py")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert pre.returncode == 2 and "isenção ampla demais" in pre.stderr
+    hs = harness("app/b.py", f"A = '{GITHUB}'\n", cwd=str(repo_git.raiz))
+    assert hs.returncode == 2 and "isenção ampla demais" in hs.stderr
+    repo_git.commitar("segredo")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS)
+    assert ci.returncode == 2 and "isenção ampla demais" in ci.stderr
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 1  # a base não a tem
+
+
+@pytest.mark.parametrize("padrao", ["*.key", "tests/**", "fixtures/*.pem", "**/testdata/**"])
+def test_isencao_com_nome_ou_pasta_e_aceita(repo_git: RepoGit, padrao: str):
+    repo_git.escrever(".seg02-ignorar", f"{padrao}\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção estreita")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
+
+
+@pytest.mark.parametrize("padrao", [".seg02-ignorar", ".seg02-*", "*ignorar"])
+def test_o_arquivo_de_isencao_nunca_se_isenta(repo_git: RepoGit, padrao: str):
+    repo_git.escrever(".seg02-ignorar", f"{padrao}\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção que casa o próprio arquivo")
+    repo_git.escrever(".seg02-ignorar", f"{padrao}\n# {GITHUB}\n")
+    repo_git.adicionar(".seg02-ignorar")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.stdout.splitlines() == [".seg02-ignorar:2: token do GitHub em claro"]

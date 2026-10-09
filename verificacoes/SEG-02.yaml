@@ -120,6 +120,18 @@ afirmacoes:
   ref: gitlab-variaveis-predefinidas
   localizacao: tabela de variáveis, linhas CI_COMMIT_BEFORE_SHA, CI_COMMIT_BRANCH e CI_DEFAULT_BRANCH (aberta em 2026-10-08, rodada de correção 1)
   resultado: confirmada
+- texto: a página de autorização de apps OAuth do GitHub publica tokens de exemplo (gho_ e ghr_)
+  ref: github-oauth-apps
+  localizacao: seção '2. Users are redirected back to your site by GitHub' (aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
+- texto: o exemplo de revogação de credenciais da API REST do GitHub publica um token de exemplo de cada tipo (ghp_, github_pat_, gho_, ghu_, ghr_)
+  ref: github-rest-revogacao
+  localizacao: seção 'Revoke a list of credentials', corpo de exemplo (aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
+- texto: a API de runners do GitLab publica um token de runner de exemplo com o prefixo glrt-
+  ref: gitlab-api-runners
+  localizacao: seção 'Verify authentication for a registered runner' (página publicada aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
 - texto: GIT_DEPTH 0 desliga o clone raso (job do verificador do portal)
   ref: gitlab-git-depth
   localizacao: seção 'Limit the number of changes fetched during clone', aberta em 2026-10-08
@@ -189,9 +201,9 @@ execucoes:
 - tipo: arquivo
   arquivo: verificadores/seg_02.py
   comando: python3 -I verificadores/seg_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre o estado antes (app/config.py de plantar-segredo.sh) e depois (config-depois.py) do Exemplo; job segredo-no-diff do Como aplicar com npx --yes gitlab-ci-local@4.76.0 --force-shell-executor (MR com CI_MERGE_REQUEST_DIFF_BASE_SHA; branch padrão com CI_COMMIT_BEFORE_SHA de zeros e do commit anterior; MR sem a variável); .venv/bin/python -m pytest -q tests/verificadores/test_seg_02.py
-  ambiente: repositórios Git novos em /tmp/cfd-t7-seg02 e /tmp/cfd-t7b-ci com o script copiado; Python 3.14.8; gitlab-ci-local 4.76.0 sem Docker (shell da máquina, HOME isolado); macOS (T7 e rodada de correção 1). O job não foi executado num GitLab.
+  ambiente: repositórios Git novos em /tmp/cfd-t7-seg02 e /tmp/cfd-t7b-ci com o script copiado; Python 3.14.8; gitlab-ci-local 4.76.0 sem Docker (shell da máquina, HOME isolado); macOS (T7 e rodadas de correção 1 e 2). O job não foi executado num GitLab.
   resultado: passou
-  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): saída 0. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. gitlab-ci-local: MR limpa PASS; branch padrão com base de zeros e HEAD limpo PASS; push direto com a chave na branch padrão FAIL 1 ("app/segredo.py:1: chave de acesso da AWS em claro"); MR com a chave FAIL 1; MR sem a variável de base FAIL 2 ("o evento ci exige --base <ref>"). O hook do Como aplicar recusou o git commit com a chave (saída 1). Rodada 1, pelos testes (272 passed): .env no .gitignore inocente no harness e no shell, acusado com git add -f no pre-commit; escrita fora da raiz sai 0; notebook com aspas escapadas e senha em URL acusados; django-insecure-, exemplo do Slack e JWT inocentes; credentials da AWS e .netrc como configuração; base de zeros varre tudo; isenção do harness lida do HEAD. Varredura de falso positivo depois da rodada: repositório e site gerado sem achado; sistema e repositórios locais com 1 achado real (repo_token num .coveralls.yml de pacote npm).'
+  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): saída 0. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. gitlab-ci-local: MR limpa PASS; branch padrão com base de zeros e HEAD limpo PASS; push direto com a chave na branch padrão FAIL 1 ("app/segredo.py:1: chave de acesso da AWS em claro"); MR com a chave FAIL 1; MR sem a variável de base FAIL 2 ("o evento ci exige --base <ref>"). O hook do Como aplicar recusou o git commit com a chave (saída 1). Rodada 1, pelos testes (272 passed): .env no .gitignore inocente no harness e no shell, acusado com git add -f no pre-commit; escrita fora da raiz sai 0; notebook com aspas escapadas e senha em URL acusados; django-insecure-, exemplo do Slack e JWT inocentes; credentials da AWS e .netrc como configuração; base de zeros varre tudo; isenção do harness lida do HEAD. Rodada 2 (288 passed): base de zeros com a isenção do HEAD; raiz do harness pelo toplevel do Git (monorepo); caminho absoluto sem cwd e falha do git saem 2; exemplos documentados pelos emissores inocentes. gitlab-ci-local na branch padrão com base de zeros: fixture isenta PASS e chave fora da isenção FAIL 1 ("app/outra.key:1: chave privada em claro"). Varredura de falso positivo depois das rodadas: repositório e site gerado sem achado; sistema e repositórios locais com 1 achado real (repo_token num .coveralls.yml de pacote npm).'
   data: '2026-10-08'
 - tipo: prompt
   prompt: SEG-02-prompt-1
@@ -203,9 +215,24 @@ execucoes:
     ("no leaks found"). O diretório .gitlab-ci-local/ ficou untracked no preparo.
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: revisão da T7 (sessão independente, modelo forte) e revisão de segurança automática do commit f7ce022; antes, conferência em lote (ADR 0005)
+  revisor: revisão da T7 e re-revisão da rodada 1 (sessão independente, modelo forte) e revisão de segurança automática do commit f7ce022; antes, conferência em lote (ADR 0005)
   data: '2026-10-08'
   achados:
+  - afirmacao: 'Job segredo-no-diff com base de zeros (re-revisão, A)'
+    problema: '[important] a varredura completa ignorava o .seg02-ignorar e falhava pipeline agendado, manual e primeiro push com fixture isenta (FAIL 1 reproduzido).'
+    tratamento: 'Tratado: com base de zeros, a isenção é a do HEAD; teste com fixture isenta (0) e segredo fora da isenção (1); o texto diz que a varredura completa acusa segredo legado não isento e o que fazer, e que force-push pode tirar a base do clone (saída 2).'
+  - afirmacao: 'Raiz do projeto no harness (re-revisão, B)'
+    problema: '[important] em monorepo o harness media "fora do projeto" e a isenção a partir do cwd; escrita com segredo em outra pasta do mesmo repositório saía 0.'
+    tratamento: 'Tratado (lição 24): a raiz é o toplevel do Git a partir do cwd; fora de repositório, o cwd. Testes com cwd em svc/: ../other/app.py e o absoluto saem 1, echo >> ../other/app.env sai 1, a isenção svc/tests/** casa tests/x.py e o .gitignore da raiz vale.'
+  - afirmacao: 'Caminho absoluto sem cwd (re-revisão, C)'
+    problema: '[minor] saía 0.'
+    tratamento: 'Tratado: sai 2, com teste. Falha do git num repositório real (configuração corrompida, dono diferente) também sai 2, em vez de cair na isenção do disco.'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança de c0379d8: exemption-bypass)'
+    problema: '[important] um commit da própria branch com um padrão no .seg02-ignorar libera o harness e o pre-commit, e um padrão sem nome (**, *, **/*, ., /) isentaria tudo; um padrão podia casar o próprio .seg02-ignorar.'
+    tratamento: 'Tratado: padrão sem nenhum nome sai 2 ("isenção ampla demais") sempre que a isenção é lida; o .seg02-ignorar nunca é isento; testes nos três eventos. A isenção commitada na branch seguir valendo localmente fica como limite escrito (a autoridade é o CI da MR, que lê a base do destino; .seg02-ignorar no CODEOWNERS).'
+  - afirmacao: 'Exemplos documentados pelos emissores'
+    problema: '[minor] os tokens de exemplo das páginas do GitHub e do GitLab eram acusados.'
+    tratamento: 'Tratado: lista fechada EXEMPLOS_DOCUMENTADOS, comparada pelo casamento inteiro, com fonte aberta (github-oauth-apps, github-rest-revogacao, gitlab-api-runners); o exemplo que só aparece em terceiros (ghp_16C7…) segue acusado; teste de cada valor e do valor com um caractere a mais.'
   - afirmacao: 'Como verificar: tamanhos mínimos de github_pat_ (50), GitLab (20) e provedores de modelo (32)'
     problema: '[minor] os tamanhos vinham colados à referência, como se a fonte os desse.'
     tratamento: 'Tratado: cada tamanho que a fonte não dá traz "(mínimo escolhido pelo verificador)", separado da referência.'
