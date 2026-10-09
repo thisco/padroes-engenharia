@@ -249,13 +249,19 @@ Os limites:
   11 dígitos que por acaso passe na conferência é acusado, como um celular de 11 dígitos (que também
   é dado pessoal).
 - E-mail: os domínios aceitos são os reservados para teste, acima. Um `x@obj.attr` em código Python
-  conta como e-mail (limite conhecido; use domínio reservado para teste). E-mail dentro de uma URL com
-  credencial não é acusado. E-mail com domínio não latino (como `.рф`) não é acusado.
-- Texto que não é UTF-8 também é varrido: com NUL, como UTF-16 (com BOM ou, sem ele, pela posição dos
-  NUL); sem NUL, como cp1252 (o CSV do Excel no Windows) ou, se não der, Latin-1. Arquivo com NUL fora do
-  UTF-8 e do UTF-16 é tratado como binário, assim como os de extensão de binário conhecida (como `.xlsx`,
-  `.jar`, `.woff`); esses são pulados com um aviso em stderr.
+  conta como e-mail (limite conhecido; use domínio reservado para teste). E-mail na senha de uma URL com
+  credencial não é acusado; como usuário da URL (`https://<e-mail com %40>:token@host`), é. Um e-mail
+  único colado a uma URL sem `/`, espaço ou aspas entre os dois (`https://host,<e-mail>`) não é
+  acusado, porque é lido como usuário da URL. E-mail com domínio não latino (como `.рф`) não é acusado.
+- Texto que não é UTF-8 também é varrido: com NUL, como UTF-16 (com BOM ou, sem ele, quando os NUL de
+  uma paridade cobrem ao menos metade das unidades de 16 bits e os da outra não passam de um décimo
+  deles, a densidade do texto latino); sem NUL, como cp1252 (o CSV do Excel no Windows) ou, se não der,
+  Latin-1. Arquivo com NUL fora do UTF-8 e do UTF-16 é tratado como binário, assim como os de extensão
+  de binário conhecida (como `.xlsx`, `.jar`, `.woff`); esses são pulados com um aviso em stderr. Texto
+  em UTF-16 sem BOM majoritariamente não latino é tratado como binário.
 - Arquivo em Git LFS só é visto no harness: no `pre-commit` e no `ci` o Git guarda só o ponteiro.
+- Um link simbólico fora das três pastas que aponta para dentro delas só é visto no `pre-commit` e no
+  `ci`: no harness vale o caminho pelo qual o arquivo é editado.
 - As pastas `tests/`, `logs/` e `prompts/` são sensíveis a maiúsculas: `Tests/` não é `tests/`.
 - É um verificador de padrão: não pega dado ofuscado de propósito (esquema de URL inventado antes do
   e-mail, pontuação trocada como travessão ou barra no CPF, outra codificação (entidade HTML, `%` duplo), base64) e não substitui a

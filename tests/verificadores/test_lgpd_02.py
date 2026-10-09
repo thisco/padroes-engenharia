@@ -5,6 +5,7 @@ montados em tempo de execução (último teste da seção "o próprio arquivo").
 
 from __future__ import annotations
 
+import struct
 from collections.abc import Callable
 from pathlib import Path
 
@@ -350,8 +351,10 @@ def test_pre_commit_ignora_arquivo_fora_das_pastas_e_roda_de_subpasta(repo_git: 
 
 
 def test_pre_commit_binario_nao_varrido_avisa_sem_casar(repo_git: RepoGit):
+    # Uma tabela de inteiros de 32 bits (little-endian), como num arquivo de dados: tamanho par e
+    # NUL nas duas paridades. Não é texto, e é pulado com aviso.
     destino = repo_git.escrever("tests/dados.bin", "")
-    destino.write_bytes(b"\xff\x00\xfd")  # NUL, fora do UTF-8 e tamanho ímpar: binário
+    destino.write_bytes(struct.pack("<64I", *range(200, 264)))
     repo_git.adicionar("tests/dados.bin")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.returncode == 0 and r.stdout == ""
@@ -800,3 +803,62 @@ def test_cpf_colado_ao_rotulo_pega(rotulo: str):
 @pytest.mark.parametrize("texto", ["a{c}b", "x{c}", "ab-{c}", "cpf{c}b", "uno{c}", "hcpf{c}"])
 def test_cpf_colado_a_outras_letras_continua_inocente(texto: str):
     assert not casa(texto.format(c=cpf()))
+
+
+# --- rodada 5: densidade de NUL no UTF-16 sem BOM e userinfo que para no @ do usuário ------------
+
+
+def avisa_binario(repo_git: RepoGit, caminho: str, dados: bytes) -> None:
+    assert len(dados) % 2 == 0  # tamanho par: a regra antiga leria como UTF-16
+    repo_git.escrever(caminho, "").write_bytes(dados)
+    repo_git.adicionar(caminho)
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 0 and r.stdout == ""
+    assert f"{caminho}: não varrido" in r.stderr
+
+
+def test_nul_no_inicio_de_texto_em_cp1252_e_binario_com_aviso(repo_git: RepoGit):
+    texto = CSV_ACENTO.encode("cp1252")
+    dados = b"\0" + texto + (b"" if len(texto) % 2 else b"\n")
+    avisa_binario(repo_git, "tests/c.csv", dados)
+
+
+def test_utf8_com_byte_invalido_e_nul_e_binario_com_aviso(repo_git: RepoGit):
+    texto = "registro José ok\n".encode()
+    dados = texto + b"\xff\x00" + (b"\n" if len(texto) % 2 else b"")
+    avisa_binario(repo_git, "logs/a.log", dados)
+
+
+@pytest.mark.parametrize("codificacao", ["utf-16-le", "utf-16-be"])
+def test_utf16_sem_bom_de_texto_latino_continua_pegando(repo_git: RepoGit, codificacao: str):
+    repo_git.escrever("tests/u.csv", "").write_bytes(CSV_ACENTO.encode(codificacao))
+    repo_git.adicionar("tests/u.csv")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 1 and r.stderr == ""
+    esperado = ["tests/u.csv:1: CPF em claro", "tests/u.csv:1: e-mail em claro"]
+    assert r.stdout.splitlines() == esperado
+
+
+def test_email_depois_de_url_sem_barra_nao_some_no_userinfo():
+    outro = email("bruno.lima", "cliente-ficticio-padroes.com.br")
+    assert casa(f"https://h.com,{EMAIL_REAL},{outro}")
+
+
+def test_email_codificado_como_usuario_da_url_pega():
+    codificado = EMAIL_REAL.replace(ARROBA, "%40")
+    assert casa(f"https://{codificado}:tok" + ARROBA + "gitlab.com/g/p.git")
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "https://user:p%40ss" + ARROBA + "api.empresa.com/v1",
+        "amqp://guest:gu%40st" + ARROBA + "rabbit.empresa.com.br",
+        "redis://:abc%40def" + ARROBA + "cache.empresa.io:6379",
+        "mongodb+srv://u:p%40w" + ARROBA + "cluster0.mongodb.net/db",
+        "postgresql://app:senha" + ARROBA + "db.empresa.local:5432/app",
+        "ssh://git" + ARROBA + "gitlab.com/g/p.git",
+    ],
+)
+def test_credencial_em_url_continua_inocente_com_userinfo_estrito(texto: str):
+    assert not casa(texto)

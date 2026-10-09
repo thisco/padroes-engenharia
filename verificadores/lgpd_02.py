@@ -38,9 +38,9 @@ EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
 # Forma SCP do Git (`usuario@host:grupo/projeto.git`): depois do ":" vem caminho de repositório.
 SCP = re.compile(r":(?=[^\s:]*(?:/|\.git(?![\w-])))[^\s:]+")
 # Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail. O
-# userinfo vai até o último `@` da autoridade (a senha pode ter `%40`, que já virou `@`) e não
-# atravessa `/ ? # " '` nem espaço.
-CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s]*@")
+# usuário para no primeiro `@` ou `:`; a senha, depois do `:`, vai até o último `@` da autoridade
+# (ela pode ter `%40`, que já virou `@`). Nenhum dos dois atravessa `/ ? # " '` nem espaço.
+CREDENCIAL_EM_URL = re.compile(r"\b[A-Za-z][\w+.-]*://[^/?#\"'\s@:]*(?::[^/?#\"'\s]*)?@")
 # Domínios que o time reserva para e-mail de teste: example.com/net/org e subdomínios (RFC 2606) e
 # os TLDs reservados .test, .example, .invalid e .localhost (RFC 2606 e RFC 6761).
 DOMINIOS_DE_TESTE = ("example.com", "example.net", "example.org")
@@ -180,14 +180,17 @@ def decodifica(dados: bytes) -> str | None:
 
 
 def utf16_sem_bom(dados: bytes) -> str | None:
-    """UTF-16 sem BOM: com tamanho par, a maioria dos NUL nas posições ímpares é `utf-16-le` (o
-    byte alto do ASCII vem depois), nas pares é `utf-16-be`. Sem maioria, ou se não decodifica,
-    é binário."""
+    """UTF-16 sem BOM, só com a densidade de NUL de texto latino: com tamanho par, os NUL de uma
+    paridade cobrem ao menos metade das unidades de 16 bits e os da outra não passam de um décimo
+    deles. Dominante nas ímpares é `utf-16-le` (o byte alto do ASCII vem depois), nas pares é
+    `utf-16-be`. Fora disso, ou se não decodifica, é binário."""
     if len(dados) % 2:
         return None
+    unidades = len(dados) // 2
     impares = dados[1::2].count(0)
     pares = dados[0::2].count(0)
-    if impares == pares:
+    dominante, outra = max(impares, pares), min(impares, pares)
+    if dominante < 0.5 * unidades or outra > 0.1 * dominante:
         return None
     try:
         return dados.decode("utf-16-le" if impares > pares else "utf-16-be")
