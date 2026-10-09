@@ -27,6 +27,38 @@ afirmacoes:
   ref: anthropic-ciso-agentic-ai
   localizacao: 'seção ''Case study: Claude Cowork'' (''Connector allowlists draw your data boundary'')'
   resultado: confirmada
+- texto: o Claude Code guarda os servidores MCP do escopo de projeto num .mcp.json na raiz do projeto, com o objeto mcpServers
+  ref: claude-code-mcp
+  localizacao: seção do escopo de projeto ('Project-scoped servers ... in a .mcp.json file at your project's root directory'; exemplo com mcpServers)
+  resultado: confirmada
+- texto: o campo type aceita stdio, http e sse, e streamable-http vale como alias de http
+  ref: claude-code-mcp
+  localizacao: lista de valores de type, com a nota sobre o alias streamable-http
+  resultado: confirmada
+- texto: o Gemini CLI lê o objeto mcpServers do settings.json (.gemini/settings.json no projeto), com command, url, httpUrl, args, env, headers e cwd por servidor
+  ref: gemini-cli-mcp
+  localizacao: seções de configuração do servidor (chave mcpServers) e de caminhos dos arquivos (~/.gemini/settings.json e .gemini/settings.json)
+  resultado: confirmada
+- texto: o trust do Gemini CLI é um booleano que dispensa as confirmações do servidor
+  ref: gemini-cli-mcp
+  localizacao: lista de propriedades por servidor ('trust')
+  resultado: confirmada
+- texto: o Codex configura o servidor MCP na tabela [mcp_servers.<nome>] do config.toml, com command, args, env, url e http_headers, e aceita um .codex/config.toml por projeto
+  ref: codex-mcp
+  localizacao: seção de configuração do config.toml ('[mcp_servers.<server-name>]') e de configuração por projeto (.codex/config.toml, projetos confiáveis)
+  resultado: confirmada
+- texto: o Kiro lê o .kiro/settings/mcp.json do workspace, com o objeto mcpServers e command, args, env ou url por servidor
+  ref: kiro-mcp
+  localizacao: seções de localização dos arquivos e de estrutura (chave raiz mcpServers)
+  resultado: confirmada
+- texto: o autoApprove do Kiro lista as ferramentas usadas sem pedir confirmação
+  ref: kiro-mcp
+  localizacao: seção de propriedades de configuração ('autoApprove')
+  resultado: confirmada
+- texto: o VS Code guarda os servidores do workspace no .vscode/mcp.json, num objeto servers no topo (e não mcpServers)
+  ref: vscode-mcp
+  localizacao: seção do arquivo de configuração do workspace ('This format defines servers in a top-level servers object')
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P3-06/verificar-allowlist.py
@@ -71,10 +103,10 @@ execucoes:
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: verificadores/p3_06.py
-  comando: JSON no stdin de python3 -I verificadores/p3_06.py --evento antes-de-ferramenta, num diretório temporário com central/mcp-allowlist.yml (a do Exemplo) e .mcp.json (o do Exemplo); depois com o conteúdo trazendo um servidor fora da lista, só reordenado, sem allowlist, evento ci e conteúdo nulo; pytest -q tests/verificadores/test_p3_06.py
-  ambiente: diretório temporário /tmp/cfd-t5-*; Python 3.14.8; macOS (T5 da curadoria de força dura). Formatos conferidos na documentação dos emissores em 2026-10-08, sem citá-los no texto da prática - Gemini CLI, objeto mcpServers em .gemini/settings.json com command, url, httpUrl, args, env, headers e cwd; Codex, tabela [mcp_servers.<nome>] em config.toml, com .codex/config.toml por projeto e command, args, env, url e http_headers. O gatilho de harness não foi exercitado em runtime (F2 e F4 não existem).
+  comando: JSON no stdin de python3 -I verificadores/p3_06.py --evento antes-de-ferramenta, num diretório temporário com central/mcp-allowlist.yml (a do Exemplo) e .mcp.json (o do Exemplo); depois com o conteúdo trazendo um servidor fora da lista, só reordenado, sem allowlist, em .vscode/mcp.json (chave servers), em .gemini/settings.json com comentário, escrita em central/, comando de shell com mcp add, evento ci e conteúdo nulo; pytest -q tests/verificadores/test_p3_06.py
+  ambiente: diretório temporário /tmp/cfd-t5-*; Python 3.14.8; macOS (T5 da curadoria de força dura, rodada de correção 1). O gatilho de harness não foi exercitado em runtime (F2 e F4 não existem).
   resultado: passou
-  evidencia: 'servidor busca-web novo, com um token em env: ".mcp.json:1: servidor MCP \"busca-web\" novo e fora da allowlist central", saída 1, e o token não aparece na saída; conteúdo só com os dois servidores aprovados em outra ordem: nada, saída 0; sem a pasta central/: "servidor MCP \"x\" novo e o projeto não tem allowlist central (central/mcp-allowlist.yml)", saída 1; evento ci: "P3-06: evento não atendido: ci (atende antes-de-ferramenta)", saída 2; editar sem conteudo: "sem `conteudo` para uma escrita; não dá para avaliar", saída 2. pytest: 103 passed em tests/verificadores/test_p3_06.py.'
+  evidencia: 'servidor busca-web novo com um token em env: ".mcp.json:1: servidor MCP \"busca-web\" novo e fora da allowlist central", saída 1, e o token não aparece na saída; os dois servidores aprovados em outra ordem: nada, saída 0; sem a pasta central/: "... novo e o projeto não tem allowlist central (central/mcp-allowlist.yml)", saída 1; .vscode/mcp.json com servers: pede aprovação; escrita em central/mcp-allowlist.yml: "a allowlist central só muda com aprovação", saída 1; shell "claude mcp add ...": "shell:0: adicionar servidor MCP pela CLI pede aprovação", saída 1, sem o comando; evento ci: "evento não atendido", saída 2; editar sem conteudo: saída 2. pytest: 148 passed em tests/verificadores/test_p3_06.py (33 dos testes da rodada falharam antes da correção).'
   data: '2026-10-08'
 - tipo: prompt
   prompt: P3-06-prompt-1
@@ -132,3 +164,27 @@ revisao_adversarial:
     problema: '[baixo] conferida: commit só com mcp.json (2 inserções, 5 remoções); antes (3 linhas) e depois reproduzidos
       em t9-p3-06.'
     tratamento: Nenhum.
+  - afirmacao: 'Como aplicar 1: "publique os critérios de revisão" e revisado_contra (P3-06.md)'
+    problema: '[executabilidade] os critérios de revisão publicados não existem nem têm modelo; revisado_contra: criterios-mcp-v1 é inventado.'
+    tratamento: 'Tratado na rodada de correção 1 da T5: o passo 1 diz que o portal não publica o documento, que o do Exemplo é fictício, o que ele diz no mínimo, e que revisado_contra é o nome e a tag do documento.'
+  - afirmacao: 'Como aplicar 2: "um arquivo só, no formato genérico com mcpServers"'
+    problema: '[executabilidade e fonte] impossível com vários harnesses: cada ferramenta lê o seu arquivo, e o do VS Code usa servers.'
+    tratamento: 'Tratado: o passo 2 diz qual arquivo cada ferramenta lê, com referência aberta nesta rodada, e que a allowlist central é a única fonte da verdade.'
+  - afirmacao: 'Como aplicar 3: python3 scripts/verificar-allowlist.py'
+    problema: '[executabilidade] o script publicado está em exemplos/P3-06/, não em scripts/.'
+    tratamento: 'Tratado: o passo 3 diz onde o script está e manda copiá-lo para scripts/.'
+  - afirmacao: 'Como aplicar 4: a pasta central/'
+    problema: '[executabilidade] não diz como central/ chega à máquina de quem roda o agente; sem ela todo servidor dá "sem allowlist". Ligar o gatilho é impossível hoje.'
+    tratamento: 'Tratado: o passo 4 diz clone ou submódulo do repositório central no commit fixado, o .gitignore, o efeito da pasta ausente, e repete que o gatilho de harness não liga hoje (F2 e F4). Passos 5 e 6 são executáveis.'
+  - afirmacao: 'Formatos de configuração de Gemini, Codex, Kiro, VS Code e Claude Code (Como verificar)'
+    problema: '[fonte] afirmados sem [ref:]: os formatos externos não tinham fonte aberta na rodada.'
+    tratamento: 'Tratado: referências claude-code-mcp, gemini-cli-mcp, codex-mcp, kiro-mcp e vscode-mcp, abertas em 2026-10-08, com as afirmações registradas acima. serverUrl saiu do texto, porque nenhuma fonte citada o menciona; o verificador continua lendo o campo.'
+  - afirmacao: '"mcp.json ... objeto mcpServers" (Como verificar)'
+    problema: '[fonte] falso para o VS Code, cujo .vscode/mcp.json usa servers; o verificador não lia essa chave (brecha de pede-aprovacao).'
+    tratamento: 'Tratado: o texto e o verificador leem servers em qualquer mcp.json.'
+  - afirmacao: '"mudar uma chave que não é de servidor não pede nada" (Como verificar)'
+    problema: '[fonte] falso para JSONC: .gemini/settings.json com comentário caía em JSON inválido, saída 2.'
+    tratamento: 'Tratado: o verificador aceita comentário e vírgula final; testes com o tema trocado e com servidor novo.'
+  - afirmacao: 'Revisão de segurança automática do commit 2980b94 (4 achados) e revisão forte da T5'
+    problema: 'identidade do servidor sem args de comando que não é lançador, type sem normalização, servers do VS Code, allowlist editável pelo agente, mcp add pelo shell, pasta vendor acima do projeto e arquivo ilegível em disco.'
+    tratamento: 'Tratado na rodada 1: identidade completa (command, args, URLs, type normalizado), servers, JSONC, gatilho em central/**, gatilho de shell para mcp add, terceiros só depois de relativizar, arquivo em disco ilegível como vazio.'

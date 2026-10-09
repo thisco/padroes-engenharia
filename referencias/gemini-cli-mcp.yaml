@@ -1,0 +1,11 @@
+id: gemini-cli-mcp
+titulo: MCP servers with the Gemini CLI
+organizacao: Google
+url: https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções de configuração: chave mcpServers em settings.json (.gemini/settings.json por projeto), chaves command, url, httpUrl, args, env, headers, cwd e trust"
+dominios:
+- ia-no-produto
+notas: null

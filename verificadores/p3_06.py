@@ -2,24 +2,33 @@
 
 Contrato: `python3 verificadores/p3_06.py --evento antes-de-ferramenta` (JSON no stdin).
 Só atende `antes-de-ferramenta`; qualquer outro evento (`depois-de-ferramenta`, `pre-commit`, `ci`)
-sai 2. `caminho` aceita `\\` e caminho absoluto (medido contra `cwd`; fora dele, sai 2).
+sai 2. `caminho` aceita `\\`, caminho absoluto (medido contra `cwd`; fora dele, sai 2) e `//`, `.` e
+`x/..` (normalizados).
 
-Arquivos lidos (qualquer pasta, salvo código de terceiros): `.mcp.json`, `mcp.json`,
-`mcp_config.json`, `.gemini/settings.json`, `.kiro/settings/mcp.json` (JSON, objeto `mcpServers`)
-e `.codex/config.toml` (TOML, tabelas `[mcp_servers.<nome>]`; exige `tomllib`, do Python 3.11, e sem
-ele sai 2 com mensagem). JSON com comentário ou vírgula sobrando não é JSON: sai 2. Chave repetida
-no JSON também.
+Casa em três situações:
+1. `editar`/`escrever` na configuração de MCP com servidor novo fora da allowlist (abaixo);
+2. `editar`/`escrever` na própria allowlist: qualquer arquivo sob `central/` e o caminho da variável
+   `P3_06_ALLOWLIST`, quando relativo ao projeto: "a allowlist central só muda com aprovação";
+3. `shell` cujo `comando` casa `\\bmcp\\s+add\\b` (`claude mcp add`, `codex mcp add`,
+   `gemini mcp add`, `add-json`), depois de NFKC e sem invisíveis.
+   A saída não traz o comando, que pode ter segredo.
+
+Arquivos de configuração (qualquer pasta, fora de código de terceiros, medido depois de relativizar
+o caminho): `.mcp.json`, `mcp.json`, `mcp_config.json`, `.gemini/settings.json`,
+`.kiro/settings/mcp.json` (JSON, objeto `mcpServers`; em `mcp.json`, também o objeto `servers`, do
+VS Code, `.vscode/mcp.json`) e `.codex/config.toml` (TOML, tabelas `[mcp_servers.<nome>]`; exige
+`tomllib`, do Python 3.11, e sem ele sai 2 com mensagem). O JSON aceita comentário `//` e `/* */` e
+vírgula final (JSONC). Chave repetida no JSON sai 2.
 
 O objeto da prática é o conjunto de servidores declarados, e não as linhas. Servidor "novo" é o que
 o `conteudo` declara e o arquivo em disco não declarava, ou declarava com outra identidade. A
-identidade é o que decide o que roda: `command`, a URL (`url`, `httpUrl` ou `serverUrl`) e `type`;
-e os `args`, quando o `command` é um lançador de pacote ou de imagem (npx, uvx, pipx, bunx, pnpx,
-pnpm, yarn, npm, uv, bun, deno, docker, podman), porque ali os `args` nomeiam o código baixado.
-Trocar o comando ou a URL de um servidor existente conta como servidor novo: o nome aprovado passa
-a apontar para outro binário. Reordenar, mudar comentário, `env`, `headers`, `cwd` ou argumento de
-comando que não é lançador não muda o conjunto e não casa. Arquivo em disco ausente, ou que não lê
-como JSON/TOML, conta como sem servidores; o que não decodifica
-(UTF-8, UTF-16 com BOM ou cp1252) sai 2.
+identidade é o que o servidor executa ou acessa: `command`, todos os `args`, todos os campos de URL
+(`url`, `httpUrl`, `serverUrl`) e o `type` normalizado (ausente vale `stdio` com `command` e `http`
+com URL; `sse` e `streamable-http` contam como `http`); `args` ausente e `[]` são o mesmo. Mudar
+qualquer um conta como servidor novo: o nome aprovado passaria a apontar para outro binário.
+Reordenar, mudar comentário, outra chave do arquivo, `env`, `headers` ou `cwd` não muda o conjunto e
+não casa. Arquivo em disco ausente, que não decodifica ou que não lê como JSON/TOML conta como sem
+servidores (assim o agente consegue consertá-lo).
 
 Servidor novo casa se a allowlist não o aprova: ele não está na lista, ou a identidade difere da
 entrada. Sem allowlist, casa com o motivo dizendo isso. A allowlist é `central/mcp-allowlist.yml`
@@ -46,6 +55,7 @@ import os
 import posixpath
 import re
 import sys
+import unicodedata
 from pathlib import Path, PurePosixPath
 
 ARQUIVOS_POR_NOME = {".mcp.json", "mcp.json", "mcp_config.json"}
@@ -55,11 +65,12 @@ ARQUIVOS_POR_SUFIXO = (
     (".kiro", "settings", "mcp.json"),
 )
 PASTAS_DE_TERCEIROS = {"node_modules", ".venv", "venv", "vendor", "site-packages"}
-LANCADORES = {
-    "npx", "uvx", "pipx", "bunx", "pnpx", "pnpm", "yarn", "npm", "uv", "bun", "deno", "docker",
-    "podman",
-}  # fmt: skip
 CAMPOS_DE_URL = ("url", "httpUrl", "serverUrl")
+PASTA_CENTRAL = "central"
+MOTIVO_MCP_ADD = "adicionar servidor MCP pela CLI pede aprovação (a allowlist central decide)"
+COMANDO_MCP_ADD = re.compile(r"\bmcp\s+add\b", re.IGNORECASE)
+# Ignoráveis por padrão que não são da categoria Cf (Unicode, DerivedCoreProperties).
+INVISIVEIS = {0x34F, 0x115F, 0x1160, 0x17B4, 0x17B5, 0x3164, 0xFFA0}
 ALLOWLIST_PADRAO = "central/mcp-allowlist.yml"
 VARIAVEL_ALLOWLIST = "P3_06_ALLOWLIST"
 
@@ -71,13 +82,50 @@ class Indeterminado(Exception):
 # --- caminho ------------------------------------------------------------------------------------
 
 
-def eh_configuracao(partes: tuple[str, ...]) -> bool:
+def parece_configuracao(partes: tuple[str, ...]) -> bool:
+    """O nome (e a pasta pai, quando a tabela pede) é de arquivo de configuração de MCP."""
     baixas = tuple(p.lower() for p in partes)
-    if not baixas or set(baixas[:-1]) & PASTAS_DE_TERCEIROS:
+    if not baixas:
         return False
     if baixas[-1] in ARQUIVOS_POR_NOME:
         return True
     return any(baixas[-len(s) :] == s for s in ARQUIVOS_POR_SUFIXO)
+
+
+def eh_configuracao(partes: tuple[str, ...]) -> bool:
+    """Como `parece_configuracao`, mas fora de código de terceiros. Vale para o caminho já
+    relativo à raiz: uma pasta chamada `vendor` acima do projeto não isenta o arquivo."""
+    pastas = {p.lower() for p in partes[:-1]}
+    return parece_configuracao(partes) and not pastas & PASTAS_DE_TERCEIROS
+
+
+def _invisivel(c: str) -> bool:
+    o = ord(c)
+    return (
+        unicodedata.category(c) == "Cf"
+        or o in INVISIVEIS
+        or 0xFE00 <= o <= 0xFE0F
+        or 0xE0100 <= o <= 0xE01EF
+        or 0x180B <= o <= 0x180F
+    )
+
+
+def normaliza_comando(comando: str) -> str:
+    """NFKC e sem caracteres invisíveis, para letras largas ou um invisível não contornarem."""
+    sem = "".join(c for c in comando if not _invisivel(c))
+    return "".join(c for c in unicodedata.normalize("NFKC", sem) if not _invisivel(c))
+
+
+def na_pasta_da_allowlist(caminho: str) -> bool:
+    """Escrita em `central/` ou no arquivo da `P3_06_ALLOWLIST` (relativo ao projeto)."""
+    partes = PurePosixPath(caminho).parts
+    if len(partes) > 1 and partes[0].lower() == PASTA_CENTRAL:
+        return True
+    indicado = os.environ.get(VARIAVEL_ALLOWLIST)
+    if not indicado:
+        return False
+    indicado = posixpath.normpath(indicado.replace("\\", "/"))
+    return not indicado.startswith(("/", "..")) and caminho == indicado
 
 
 def relativo_a_raiz(caminho: str, cwd: str | None) -> str:
@@ -118,9 +166,56 @@ def _sem_repeticao(pares: list[tuple[str, object]]) -> dict:
     return dict(pares)
 
 
+def jsonc_para_json(texto: str) -> str:
+    """Tira `//` e `/* */` e a vírgula antes de `}` ou `]`, fora de string, e guarda as quebras de
+    linha (o número da linha continua o do conteúdo). Comentário de bloco sem fechar fica como
+    está, e o JSON inválido sai 2."""
+    saida: list[str] = []
+    n = len(texto)
+
+    def pula_comentario(k: int) -> int:
+        """Índice depois do comentário que começa em k, ou k se ali não há comentário."""
+        if texto.startswith("//", k):
+            fim = texto.find("\n", k)
+            return n if fim < 0 else fim
+        if texto.startswith("/*", k):
+            fim = texto.find("*/", k + 2)
+            return k if fim < 0 else fim + 2
+        return k
+
+    def proximo_significativo(k: int) -> str:
+        while k < n:
+            if texto[k].isspace():
+                k += 1
+            elif (depois := pula_comentario(k)) != k:
+                k = depois
+            else:
+                return texto[k]
+        return ""
+
+    i = 0
+    while i < n:
+        c = texto[i]
+        if c == '"':
+            j = i + 1
+            while j < n and texto[j] != '"':
+                j += 2 if texto[j] == "\\" else 1
+            saida.append(texto[i : j + 1])
+            i = j + 1
+        elif (depois := pula_comentario(i)) != i:
+            saida.append("\n" * texto.count("\n", i, depois))
+            i = depois
+        elif c == "," and proximo_significativo(i + 1) in ("}", "]"):
+            i += 1
+        else:
+            saida.append(c)
+            i += 1
+    return "".join(saida)
+
+
 def servidores_do_texto(caminho: str, texto: str) -> dict[str, dict]:
     """Nome -> definição dos servidores que o texto declara. Texto em branco não declara nenhum."""
-    texto = texto.lstrip("﻿")
+    texto = texto.lstrip("\ufeff")
     if not texto.strip():
         return {}
     if caminho.lower().endswith(".toml"):
@@ -135,22 +230,30 @@ def servidores_do_texto(caminho: str, texto: str) -> dict[str, dict]:
             dados = tomllib.loads(texto)
         except (tomllib.TOMLDecodeError, RecursionError) as erro:
             raise Indeterminado(f"{caminho}: TOML inválido ({type(erro).__name__})") from erro
-        chave = "mcp_servers"
+        chaves: tuple[str, ...] = ("mcp_servers",)
     else:
         try:
-            dados = json.loads(texto, object_pairs_hook=_sem_repeticao)
+            dados = json.loads(jsonc_para_json(texto), object_pairs_hook=_sem_repeticao)
         except json.JSONDecodeError as erro:
             raise Indeterminado(
                 f"{caminho}: JSON inválido ({erro.msg}, linha {erro.lineno})"
             ) from erro
         except (ValueError, RecursionError) as erro:
             raise Indeterminado(f"{caminho}: JSON não avaliável ({erro})") from erro
-        chave = "mcpServers"
+        # O VS Code (`.vscode/mcp.json`) guarda os servidores em `servers`. Em qualquer `mcp.json`
+        # lê-se também essa chave (ler mais do que o harness é o lado seguro).
+        nome_do_arquivo = PurePosixPath(caminho.lower()).name
+        chaves = ("mcpServers", "servers") if nome_do_arquivo == "mcp.json" else ("mcpServers",)
     if not isinstance(dados, dict):
         raise Indeterminado(f"{caminho}: o arquivo deve ser um objeto")
-    servidores = dados.get(chave, {})
-    if not isinstance(servidores, dict):
-        raise Indeterminado(f"{caminho}: `{chave}` deve ser um objeto de servidores")
+    servidores: dict[str, dict] = {}
+    for chave in chaves:
+        grupo = dados.get(chave, {})
+        if not isinstance(grupo, dict):
+            raise Indeterminado(f"{caminho}: `{chave}` deve ser um objeto de servidores")
+        if servidores.keys() & grupo.keys():
+            raise Indeterminado(f"{caminho}: servidor repetido em `mcpServers` e em `servers`")
+        servidores.update(grupo)
     for nome, definicao in servidores.items():
         if not isinstance(definicao, dict):
             raise Indeterminado(f"{caminho}: o servidor {json.dumps(nome[:40])} deve ser um objeto")
@@ -161,19 +264,36 @@ def _canonico(valor: object) -> str:
     return json.dumps(valor, sort_keys=True, ensure_ascii=True)
 
 
-def _lancador(comando: object) -> bool:
-    if not isinstance(comando, str):
-        return False
-    base = comando.replace("\\", "/").rsplit("/", 1)[-1].lower()
-    return re.sub(r"\.(?:cmd|exe|bat)$", "", base) in LANCADORES
+_HTTP = {"http", "sse", "streamable-http", "streamable_http"}
+
+
+def _tipo(servidor: dict) -> str | None:
+    """Transporte normalizado: ausente vale `stdio` com `command` e `http` com URL; `sse` e
+    `streamable-http` contam como `http`."""
+    bruto = servidor.get("type")
+    if isinstance(bruto, str):
+        tipo = bruto.strip().lower()
+        return "http" if tipo in _HTTP else tipo
+    if bruto is not None:
+        return _canonico(bruto)
+    if servidor.get("command") is not None:
+        return "stdio"
+    if any(servidor.get(c) is not None for c in CAMPOS_DE_URL):
+        return "http"
+    return None
 
 
 def identidade(servidor: dict) -> tuple[str, ...]:
-    """O que decide o que roda: comando, URL, tipo e, para lançador de pacote, os args."""
-    comando = servidor.get("command")
-    url = next((servidor[c] for c in CAMPOS_DE_URL if servidor.get(c) is not None), None)
-    args = servidor.get("args") if _lancador(comando) else None
-    return (_canonico(comando), _canonico(url), _canonico(servidor.get("type")), _canonico(args))
+    """O que o servidor executa ou acessa: `command`, todos os `args`, todos os campos de URL e o
+    `type` normalizado. `args` ausente e `args: []` são o mesmo. `env`, `headers` e `cwd` ficam de
+    fora (limite escrito na prática)."""
+    urls = tuple(_canonico(servidor.get(c)) for c in CAMPOS_DE_URL)
+    return (
+        _canonico(servidor.get("command")),
+        _canonico(servidor.get("args") or []),
+        *urls,
+        _canonico(_tipo(servidor)),
+    )
 
 
 def decodifica(dados: bytes) -> str | None:
@@ -193,15 +313,13 @@ def decodifica(dados: bytes) -> str | None:
 
 def servidores_em_disco(raiz: Path, caminho: str) -> dict[str, dict]:
     """O que o arquivo em disco declara hoje; ausente ou que não lê como JSON/TOML conta como nenhum
-    servidor. Texto que não decodifica é indeterminado."""
+    servidor, como o que não decodifica (assim o agente consegue consertar o arquivo)."""
     try:
         texto = decodifica((raiz / caminho).read_bytes())
     except OSError:
         return {}
     if texto is None:
-        raise Indeterminado(
-            f"{caminho}: o arquivo em disco não decodifica (UTF-8, UTF-16 ou cp1252)"
-        )
+        return {}
     try:
         return servidores_do_texto(caminho, texto)
     except Indeterminado:
@@ -321,6 +439,13 @@ def linha_do_servidor(caminho: str, texto: str, nome: str) -> int:
     return 0
 
 
+def _texto_ou_none(entrada: dict, *campos: str) -> list[str | None]:
+    valores = [entrada.get(c) for c in campos]
+    if not all(v is None or isinstance(v, str) for v in valores):
+        raise Indeterminado(f"`{'`, `'.join(campos)}` devem ser texto ou null")
+    return valores
+
+
 def evento_harness() -> list[str]:
     try:
         entrada = json.loads(sys.stdin.buffer.read().decode("utf-8"))
@@ -328,15 +453,28 @@ def evento_harness() -> list[str]:
         raise Indeterminado(f"stdin não é um JSON válido: {erro}") from erro
     if not isinstance(entrada, dict):
         raise Indeterminado("stdin deve ser um objeto JSON")
-    caminho, conteudo, cwd = entrada.get("caminho"), entrada.get("conteudo"), entrada.get("cwd")
-    if not all(v is None or isinstance(v, str) for v in (caminho, conteudo, cwd)):
-        raise Indeterminado("`caminho`, `conteudo` e `cwd` devem ser texto ou null")
+    caminho, conteudo, cwd, comando = _texto_ou_none(
+        entrada, "caminho", "conteudo", "cwd", "comando"
+    )
+    if entrada.get("ferramenta") == "shell":
+        # Só o motivo sai: o comando pode carregar segredo (`--env CHAVE=...`).
+        if comando is not None and COMANDO_MCP_ADD.search(normaliza_comando(comando)):
+            return ["shell:0: " + MOTIVO_MCP_ADD]
+        return []
     if caminho is None:
         return []
     bruto = posixpath.normpath(caminho.replace("\\", "/"))
-    if not eh_configuracao(PurePosixPath(bruto).parts):
+    try:
+        caminho = relativo_a_raiz(caminho, cwd)
+    except Indeterminado:
+        if parece_configuracao(PurePosixPath(bruto).parts):
+            raise
         return []
-    caminho = relativo_a_raiz(caminho, cwd)
+    if na_pasta_da_allowlist(caminho):
+        return [
+            f"{caminho}:0: a allowlist central só muda com aprovação "
+            "(pedido de revisão no repositório central)"
+        ]
     if not eh_configuracao(PurePosixPath(caminho).parts):
         return []
     if conteudo is None:
@@ -363,14 +501,14 @@ def evento_harness() -> list[str]:
         rotulo = f"servidor MCP {json.dumps(nome[:80])}"
         existia = nome in antigo
         if lista is None:
-            situacao = "mudou de comando, URL ou pacote" if existia else "novo"
+            situacao = "mudou o que executa ou acessa" if existia else "novo"
             motivo = f"{rotulo} {situacao} e o projeto não tem allowlist central ({mostrado})"
         elif aprovado is not None:
             motivo = (
-                f"{rotulo} difere do aprovado na allowlist central (comando, URL, tipo ou pacote)"
+                f"{rotulo} difere do aprovado na allowlist central (comando, args, URL ou tipo)"
             )
         elif existia:
-            motivo = f"{rotulo} mudou de comando, URL ou pacote e a allowlist central não o aprova"
+            motivo = f"{rotulo} mudou o que executa ou acessa e a allowlist central não o aprova"
         else:
             motivo = f"{rotulo} novo e fora da allowlist central"
         achados.append(f"{caminho}:{linha_do_servidor(caminho, conteudo, nome)}: {motivo}")
