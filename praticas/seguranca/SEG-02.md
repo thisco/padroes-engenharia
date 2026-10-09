@@ -76,7 +76,10 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    execução, nunca por arquivo versionado. Guarde um `.env.example` só com os nomes, e confira que
    o `.env` está no `.gitignore`.
 2. Ligue o verificador do portal. Ele vem no pacote gerado; baixe-o do portal publicado
-   (`<URL do portal>/pacote/verificadores/seg_02.py`) para `verificadores/seg_02.py` no repositório.
+   (`<URL do portal>/pacote/verificadores/seg_02.py`, em que `<URL do portal>` é o endereço onde este
+   portal está publicado; na página publicada, o link já sai completo) para `verificadores/seg_02.py`
+   no repositório. Sem acesso ao portal publicado, copie o arquivo `verificadores/seg_02.py` do
+   repositório do portal: é o mesmo script.
    Até o instalador (F4) e o runtime de hooks (F2) existirem, o gatilho de harness (antes de o agente
    editar, escrever ou escrever pelo shell) não se liga à mão; o que funciona hoje é o `pre-commit` e o
    CI. O hook local, em `.git/hooks/pre-commit` (com `chmod +x`):
@@ -87,7 +90,9 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    ```
 
    A saída 1 (segredo em linha nova) e a 2 (não conseguiu decidir) barram o commit. No CI, como a
-   força é `bloqueia`, o job falha com 1 ou 2, sem `allow_failure`:
+   força é `bloqueia`, o job falha com 1 ou 2, sem `allow_failure` e sem `|| true`. Ele roda na
+   merge request e também no push da branch padrão, para o push direto nela não passar sem
+   varredura:
 
    ```yaml
    segredo-no-diff:
@@ -97,16 +102,29 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
        GIT_DEPTH: "0"
      rules:
        - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
      script:
-       - python3 -I verificadores/seg_02.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+       - git config --global --add safe.directory "$PWD"
+       - BASE="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}"
+       - python3 -I verificadores/seg_02.py --evento ci --base "$BASE"
    ```
 
-   `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da MR [ref:gitlab-variaveis-predefinidas], e
+   O stage `travas` precisa estar declarado em `stages:` no `.gitlab-ci.yml` (o job `segredos` do
+   Exemplo declara o mesmo). A linha do `safe.directory` é a mesma do job do Exemplo: sem ela, o Git
+   pode recusar o clone feito por outro usuário do contêiner.
+
+   `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da MR [ref:gitlab-variaveis-predefinidas].
+   Na branch padrão, a base é `$CI_COMMIT_BEFORE_SHA`, o último commit que a branch tinha antes do
+   push; ele é de zeros no primeiro push e em pipeline manual ou agendado
+   [ref:gitlab-variaveis-predefinidas], e com a base de zeros o verificador varre tudo o que o `HEAD`
+   tem. Base vazia sai 2 e falha o job. Push em outra branch, sem MR, não roda o job: o segredo é
+   barrado quando a MR abre ou quando chega à branch padrão. E
    `GIT_DEPTH: "0"` desliga o clone raso [ref:gitlab-git-depth]: o `git diff` com `--base` precisa do
    commit da base no clone. Saída 0: nada a apontar, o job passa. Saída 1: segredo em linha que a MR
    traz, uma linha por achado com o arquivo, a linha e o tipo, nunca o valor; o job falha. Saída 2: não
    conseguiu decidir (base ausente, clone raso); o job também falha, e a mensagem em stderr diz o
-   motivo. O job não foi exercitado num GitLab real. Ele só impede o merge com o merge check
+   motivo. O job foi rodado com o `gitlab-ci-local` (passo 5), com `--force-shell-executor`, sem
+   Docker, e não num GitLab real. Ele só impede o merge com o merge check
    **Pipelines must succeed** marcado [ref:gitlab-pipeline-obrigatorio] (passo 6).
 3. Acrescente o job `segredos` do Exemplo ao `.gitlab-ci.yml`. A imagem do gitleaks tem o próprio
    `gitleaks` como entrypoint, e o job o zera para rodar o script num shell; a imagem fica
@@ -120,7 +138,13 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    Docker [ref:gitlab-ci-local-readme]. Passe as duas variáveis do pipeline de MR e tenha a branch
    `origin/<alvo>` no clone: `npx --yes gitlab-ci-local@4.76.0 --variable
    CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_TARGET_BRANCH_NAME=main
-   --ignore-predefined-vars CI_PIPELINE_SOURCE segredos`.
+   --ignore-predefined-vars CI_PIPELINE_SOURCE segredos`. O job `segredo-no-diff` do passo 2 pede a
+   base da MR no lugar da branch de destino: `npx --yes gitlab-ci-local@4.76.0 --variable
+   CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_DIFF_BASE_SHA=$(git merge-base
+   origin/main HEAD) --ignore-predefined-vars CI_PIPELINE_SOURCE,CI_MERGE_REQUEST_DIFF_BASE_SHA
+   segredo-no-diff`. Sem Docker, `--force-shell-executor` roda o script no shell da máquina, com o
+   `python3` e o `git` dela; o `git config --global` do job grava, então, no `~/.gitconfig` de quem
+   roda.
 6. Marque o merge check obrigatório e ponha o `.gitlab-ci.yml` e o `.seg02-ignorar` sob CODEOWNERS da
    engenharia: quem altera o job ou a isenção na MR altera o que avalia a MR.
 7. Quando o verificador ou o job reprovar: se a branch **não foi publicada**, tire o segredo do
@@ -258,7 +282,10 @@ O portal hospeda o verificador `verificadores/seg_02.py`, e a força é `bloquei
 eventos: antes de o agente editar ou escrever um arquivo, ou de rodar um comando de shell que escreve
 num arquivo do projeto; no `pre-commit`, sobre o que está no índice; e no `ci`, sobre os arquivos que
 mudaram entre `--base` e `HEAD`. Vale para qualquer arquivo do projeto, sem pasta restrita, menos os
-isentos no `.seg02-ignorar`. Para rodar à mão no índice: `python3 verificadores/seg_02.py --evento
+isentos no `.seg02-ignorar`. No `ci`, `--base` de zeros varre todo o conteúdo do `HEAD`. No harness, o arquivo que o Git ignora (`git check-ignore`, como o `.env`
+do passo 1 do Como aplicar) e o arquivo fora da raiz do projeto (`~/.npmrc`, `/tmp`) não são deste
+repositório e não são acusados, na escrita direta e na escrita pelo shell; o `git add -f` de um
+arquivo ignorado é acusado no `pre-commit` e no `ci`. Para rodar à mão no índice: `python3 verificadores/seg_02.py --evento
 pre-commit`; para comparar com a base da MR: `python3 verificadores/seg_02.py --evento ci --base <ref>`.
 
 O que ele acusa é uma lista fechada de formatos que os emissores documentam, sem medir entropia:
@@ -267,40 +294,52 @@ O que ele acusa é uma lista fechada de formatos que os emissores documentam, se
   `ENCRYPTED PRIVATE KEY` [ref:rfc-7468], `EC PRIVATE KEY` [ref:rfc-5915], `RSA PRIVATE KEY` (o
   formato tradicional do OpenSSL, que pode vir com as linhas `Proc-Type` e `DEK-Info`)
   [ref:openssl-pem], `OPENSSH PRIVATE KEY` [ref:openssh-sshkey] e `PGP PRIVATE KEY BLOCK`
-  [ref:rfc-9580], seguido de uma linha de base64 de 32 caracteres ou mais (na linha seguinte ou, num
+  [ref:rfc-9580], seguido de uma linha de base64 de 32 caracteres ou mais (mínimo escolhido pelo
+  verificador) (na linha seguinte ou, num
   JSON, depois do `\n` na mesma linha). Chave pública e certificado não são acusados, nem o cabeçalho
   sem corpo ou com `...` no lugar dele;
 - **chave de acesso da AWS**: `AKIA` (chave de acesso) ou `ASIA` (chave temporária)
   [ref:aws-iam-identificadores], seguidos de 16 maiúsculas ou dígitos, o tamanho da chave de exemplo
   da documentação [ref:aws-chaves-de-acesso];
-- **token do GitHub**: `ghp_`, `gho_`, `ghu_`, `ghs_` e `ghr_` com 36 caracteres ou mais, e
-  `github_pat_` com 50 ou mais [ref:github-formatos-de-token]; o token do formato atual tem 30
-  caracteres aleatórios e 6 de soma de verificação depois do prefixo [ref:github-blog-formato-de-token];
+- **token do GitHub**: os prefixos `ghp_`, `gho_`, `ghu_`, `ghs_`, `ghr_` e `github_pat_`
+  [ref:github-formatos-de-token]. Depois de `ghp_` e afins vêm 36 caracteres ou mais: o token do
+  formato atual tem 30 caracteres aleatórios e 6 de soma de verificação depois do prefixo
+  [ref:github-blog-formato-de-token]. Depois de `github_pat_`, 50 ou mais (mínimo escolhido pelo
+  verificador);
 - **token do GitLab**: os prefixos da tabela da documentação (`glpat-`, `gloas-`, `gldt-`, `glrt-`,
   `glrtr-`, `glcbt-`, `glptt-`, `glft-`, `glimt-`, `glagent-`, `glwt-`, `glsoat-` e `glffct-`)
-  [ref:gitlab-prefixos-de-token], com 20 caracteres ou mais;
+  [ref:gitlab-prefixos-de-token], seguidos de 20 caracteres ou mais (mínimo escolhido pelo
+  verificador);
 - **chave de provedor de modelo**: `sk-ant-`, que abre a chave de API e a chave de Admin da Anthropic
   [ref:anthropic-autenticacao-api] [ref:anthropic-admin-api], e `sk-admin-`, a chave de Admin da
-  OpenAI [ref:openai-openapi], com 32 caracteres ou mais; `sk-proj-` e `sk-svcacct-`, da OpenAI, entram
-  pela regra do gitleaks [ref:gitleaks-config], porque a OpenAI não os documenta numa página aberta (a
-  fonte é secundária);
+  OpenAI [ref:openai-openapi]; `sk-proj-` e `sk-svcacct-`, da OpenAI, entram pela regra do gitleaks
+  [ref:gitleaks-config], porque a OpenAI não os documenta numa página aberta (a fonte é secundária).
+  Depois do prefixo, 32 caracteres ou mais (mínimo escolhido pelo verificador);
 - **token do Slack**: `xoxb-`, `xoxp-`, `xapp-` e `xwfp-` [ref:slack-tipos-de-token] e os rotativos
-  `xoxe.` e `xoxe-` [ref:slack-rotacao-de-token], com 20 caracteres ou mais;
+  `xoxe.` e `xoxe-` [ref:slack-rotacao-de-token], seguidos de 20 caracteres ou mais (mínimo
+  escolhido pelo verificador);
+- **senha em URL**: a senha de 16 caracteres ou mais na URL com usuário (`esquema://usuario:<senha>@host`,
+  como numa `DATABASE_URL`), em qualquer arquivo, com as mesmas exceções de exemplo da atribuição
+  (`user:password@`, `${DB_PASSWORD}`, `changeme`);
 - **senha ou token atribuído**: um literal de 16 caracteres ou mais, sem espaço, atribuído a um nome
   que termina em `password`, `passwd`, `pwd`, `pass`, `passphrase`, `secret`, `token`, `apikey`,
   `senha` ou em `key` depois de `api`, `secret`, `private`, `auth`, `access`, `client`, `signing`,
   `encryption` ou `master` (`DB_PASSWORD`, `apiKey`, `client_secret`, `spring.datasource.password`).
   Entre aspas vale em qualquer arquivo (`=`, `:`, `:=`, `=>`, argumento nomeado); sem aspas, só em
   configuração (`.env`, YAML, `.properties`, `.ini`, `.cfg`, `.conf`, `.toml`, shell, `Dockerfile`,
-  `.npmrc`, `.pypirc`). Comparação (`==`, `!=`) não é atribuição.
+  `.npmrc`, `.pypirc` e o `credentials` da AWS), e no `.netrc` (`password <senha>`). Em `.json` e `.ipynb`, a linha também é lida sem o
+  escape de string do JSON, para pegar o `api_key = \"...\"` de uma célula de notebook. Comparação
+  (`==`, `!=`) não é atribuição.
 
 Não é acusado o valor de exemplo óbvio: com `EXAMPLE`, `xxxx`, `***`, `...`, `<...>`, `${...}`,
 `$(...)`, `{{...}}`, `changeme`, `your`, `sua`, `seu`, `test`, `fake`, `dummy`, `sample`,
-`placeholder` ou `redacted`, ou com três caracteres distintos ou menos. Na atribuição, que é a regra
+`placeholder`, `redacted` ou as sequências de documentação `111-222-333` e `1234-5678` (como no
+exemplo de token da documentação do Slack), ou com três caracteres distintos ou menos. Na atribuição, que é a regra
 de menor certeza, também não: referência a variável ou cofre (`os.environ[...]`, `os.environ/VAR`,
 `arn:`), URL, caminho de arquivo, nome de variável em maiúsculas, palavra só de letras, hash declarado
 (`sha256:`, `sha512-`, como nos lockfiles), valor que contém `password`, `secret` ou `token`, sequência
-de exemplo (`abc123`, `123456`) e base64 de uma frase ou de um exemplo. Um nome como `token_url`,
+de exemplo (`abc123`, `123456`), base64 de uma frase ou de um exemplo, JWT (três segmentos base64url
+a partir de `eyJ`) e a chave que o Django gera marcada como insegura (`django-insecure-…`). Um nome como `token_url`,
 `password_hash`, `next_page_token` ou `csrf_token` não é de segredo.
 
 Antes de buscar, cada linha passa por NFKC e perde o NUL, os caracteres invisíveis, as marcas
@@ -312,11 +351,12 @@ que já estava no arquivo também é acusado. A saída tem uma linha por achado,
 `<caminho>:<linha>: chave de acesso da AWS em claro` (ou o tipo que for), e nunca o valor nem um
 trecho dele; no shell, `shell:0: <tipo> escrito pelo shell`. Sai com 0 quando não há o que apontar,
 1 com achado e 2 quando não consegue decidir: evento que não atende, entrada inválida, `editar` ou
-`escrever` sem caminho ou sem conteúdo, `ci` sem `--base`, fora de um repositório Git, ou segredo num
-arquivo fora da raiz do projeto (`cwd`), em que não dá para dizer se ele entra no repositório.
+`escrever` sem caminho ou sem conteúdo, `ci` sem `--base`, ou `pre-commit` e `ci` fora de um
+repositório Git.
 
-O `.seg02-ignorar` é lido do lado da comparação: do disco no harness, do `HEAD` no `pre-commit` e da
-base da MR no `ci`. A isenção acrescentada junto com o segredo não o libera no commit nem na MR; ela
+O `.seg02-ignorar` é lido do lado da comparação: do `HEAD` no harness e no `pre-commit` (do disco, no
+harness fora de repositório Git) e da base no `ci`; o agente não se isenta gravando o arquivo e o
+segredo em seguida. A isenção acrescentada junto com o segredo não o libera no commit nem na MR; ela
 passa primeiro pela revisão, numa MR própria. O próprio `.seg02-ignorar` é varrido como qualquer
 arquivo.
 
@@ -325,14 +365,26 @@ Os limites:
   com espaço, chave AWS secreta sem o nome ao lado) passa. A senha atribuída é a regra de menor
   certeza e pode acusar um valor de teste que não pareça exemplo; nesse caso, use um valor óbvio
   (`changeme`, `test`) ou leia do ambiente. A chave que o Django grava no `settings.py` novo
-  (`SECRET_KEY = 'django-insecure-…'`) é acusada: leia-a do ambiente.
+  (`SECRET_KEY = 'django-insecure-…'`) não é acusada; troque-a por variável de ambiente antes de
+  publicar. JWT não é acusado. Também não são vistos: a coluna de senha num CSV sem prefixo de
+  formato, `<password>` em XML, `Password=…;` de connection string do .NET, `token=` sem aspas num
+  `.log`, e chave DSA (`DSA PRIVATE KEY`, obsoleta e sem fonte aberta na rodada).
+- Fixture de teste com um valor de formato real (`ghp_` e 36 caracteres, por exemplo) é acusada:
+  monte o valor em tempo de execução, em partes, ou isente o arquivo numa MR própria. Renomear um
+  arquivo isento para um caminho fora da isenção não acusa o que já estava nele (a comparação é com
+  o caminho antigo); só as linhas novas ou alteradas contam.
 - O gitleaks do Exemplo mede entropia e tem mais regras [ref:gitleaks-readme]; o verificador do portal
   é mais estreito de propósito, para não barrar trabalho legítimo, e os dois se complementam.
 - No shell, ele vê `>`, `>>`, `&>`, `tee`, `sed -i` e `perl -i` com o segredo escrito no próprio
-  comando, em qualquer parte dele. Escrita em `/dev/`, em `~` ou fora do projeto não é acusada; o alvo
-  numa variável (`> "$ARQ"`) conta como dentro. Segredo montado em variável de shell, em script
+  comando, em qualquer parte dele: um token usado no comando (num cabeçalho do `curl`, por exemplo) é
+  acusado se o mesmo comando redireciona a saída para um arquivo do projeto, mesmo sem gravar o
+  token. Escrita em `/dev/`, em `~`, fora do projeto ou num arquivo que o Git ignora não é acusada;
+  o alvo numa variável (`> "$ARQ"`) conta como dentro. Segredo montado em variável de shell, em script
   intermediário ou em outra codificação não é visto: o verificador protege contra o descuido, não
   contra quem esconde o que faz. O que esse caminho grava é visto de novo no `pre-commit` e no `ci`.
+- Submódulo e link simbólico não são lidos (o submódulo é outro repositório, com a própria
+  varredura); arquivo apagado não tem o que varrer. O `cwd` do harness é a raiz do projeto: a
+  isenção e o `.gitignore` são medidos a partir dela.
 - Texto que não é UTF-8 também é varrido (UTF-16 com BOM ou pela densidade de NUL, cp1252, Latin-1);
   arquivo binário e extensão de binário conhecida (inclusive `.p12`, `.pfx`, `.jks` e `.der`, que podem
   conter chave) são pulados com aviso em stderr. Arquivo em Git LFS só é visto no harness.
@@ -346,4 +398,4 @@ Os limites:
   segredo no que está em stage ou se o gitleaks não está instalado.
 - O hook de `pre-commit` é local e pode ser pulado; a trava que vale é o CI com o merge check
   obrigatório. O que a prática não faz é descobrir a credencial já usada por alguém: se o segredo foi
-  publicado, a resposta é rotacionar, e o verificador só avisa.
+  publicado, a resposta é rotacionar, e o verificador não revoga a credencial.

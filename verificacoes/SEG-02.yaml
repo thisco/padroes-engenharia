@@ -116,6 +116,10 @@ afirmacoes:
   ref: gitlab-variaveis-predefinidas
   localizacao: tabela de variáveis, linha CI_MERGE_REQUEST_DIFF_BASE_SHA ('The base SHA of the merge request diff'), aberta em 2026-10-08
   resultado: confirmada
+- texto: CI_COMMIT_BEFORE_SHA é o último commit da branch antes do push e é de zeros em pipeline de MR, agendado, manual e no primeiro commit de uma branch; CI_COMMIT_BRANCH e CI_DEFAULT_BRANCH dão a branch do pipeline e a padrão
+  ref: gitlab-variaveis-predefinidas
+  localizacao: tabela de variáveis, linhas CI_COMMIT_BEFORE_SHA, CI_COMMIT_BRANCH e CI_DEFAULT_BRANCH (aberta em 2026-10-08, rodada de correção 1)
+  resultado: confirmada
 - texto: GIT_DEPTH 0 desliga o clone raso (job do verificador do portal)
   ref: gitlab-git-depth
   localizacao: seção 'Limit the number of changes fetched during clone', aberta em 2026-10-08
@@ -184,10 +188,10 @@ execucoes:
   data: '2026-10-07'
 - tipo: arquivo
   arquivo: verificadores/seg_02.py
-  comando: python3 -I verificadores/seg_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre o estado antes (app/config.py de plantar-segredo.sh) e depois (config-depois.py) do Exemplo num repositório Git temporário; .venv/bin/python -m pytest -q tests/verificadores/test_seg_02.py
-  ambiente: repositório Git novo em /tmp/cfd-t7-seg02 com o script copiado; Python 3.14.8; macOS (T7 da curadoria de força dura). O job de CI não foi executado num GitLab.
+  comando: python3 -I verificadores/seg_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre o estado antes (app/config.py de plantar-segredo.sh) e depois (config-depois.py) do Exemplo; job segredo-no-diff do Como aplicar com npx --yes gitlab-ci-local@4.76.0 --force-shell-executor (MR com CI_MERGE_REQUEST_DIFF_BASE_SHA; branch padrão com CI_COMMIT_BEFORE_SHA de zeros e do commit anterior; MR sem a variável); .venv/bin/python -m pytest -q tests/verificadores/test_seg_02.py
+  ambiente: repositórios Git novos em /tmp/cfd-t7-seg02 e /tmp/cfd-t7b-ci com o script copiado; Python 3.14.8; gitlab-ci-local 4.76.0 sem Docker (shell da máquina, HOME isolado); macOS (T7 e rodada de correção 1). O job não foi executado num GitLab.
   resultado: passou
-  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): pre-commit e ci com saída 0 e nada em stdout. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. tests/verificadores/test_seg_02.py: 244 passed. Varredura de falso positivo (só a busca, sem o filtro de linhas novas): o próprio repositório (2.845 arquivos de texto), .venv/lib/python3.14/site-packages, /usr/share, /opt/homebrew/lib/node_modules e site-packages, e cinco repositórios de código locais: 2 achados, um repo_token real num .coveralls.yml publicado num pacote npm e nenhum falso positivo depois dos ajustes (detalhe no relatório da T7).'
+  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): saída 0. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. gitlab-ci-local: MR limpa PASS; branch padrão com base de zeros e HEAD limpo PASS; push direto com a chave na branch padrão FAIL 1 ("app/segredo.py:1: chave de acesso da AWS em claro"); MR com a chave FAIL 1; MR sem a variável de base FAIL 2 ("o evento ci exige --base <ref>"). O hook do Como aplicar recusou o git commit com a chave (saída 1). Rodada 1, pelos testes (272 passed): .env no .gitignore inocente no harness e no shell, acusado com git add -f no pre-commit; escrita fora da raiz sai 0; notebook com aspas escapadas e senha em URL acusados; django-insecure-, exemplo do Slack e JWT inocentes; credentials da AWS e .netrc como configuração; base de zeros varre tudo; isenção do harness lida do HEAD. Varredura de falso positivo depois da rodada: repositório e site gerado sem achado; sistema e repositórios locais com 1 achado real (repo_token num .coveralls.yml de pacote npm).'
   data: '2026-10-08'
 - tipo: prompt
   prompt: SEG-02-prompt-1
@@ -199,9 +203,39 @@ execucoes:
     ("no leaks found"). O diretório .gitlab-ci-local/ ficou untracked no preparo.
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-07'
+  revisor: revisão da T7 (sessão independente, modelo forte) e revisão de segurança automática do commit f7ce022; antes, conferência em lote (ADR 0005)
+  data: '2026-10-08'
   achados:
+  - afirmacao: 'Como verificar: tamanhos mínimos de github_pat_ (50), GitLab (20) e provedores de modelo (32)'
+    problema: '[minor] os tamanhos vinham colados à referência, como se a fonte os desse.'
+    tratamento: 'Tratado: cada tamanho que a fonte não dá traz "(mínimo escolhido pelo verificador)", separado da referência.'
+  - afirmacao: 'Exemplo óbvio não é acusado'
+    problema: '[important] o exemplo de token da documentação do Slack (xoxp-111-222-333-...) era acusado.'
+    tratamento: 'Tratado: 111-222-333 e 1234-5678 entram nos marcadores de exemplo, com teste.'
+  - afirmacao: 'Escrita fora do projeto não é acusada'
+    problema: '[important] só valia no shell; escrever com caminho fora de cwd saía 2 (negar).'
+    tratamento: 'Tratado (lição 23): escrita fora da raiz sai 0 nos dois caminhos, com teste (inclusive ~/.npmrc e /tmp).'
+  - afirmacao: 'Como aplicar, passo 1 (.env no .gitignore)'
+    problema: '[critical] o harness barrava a escrita do segredo no .env ignorado, o caminho que a prática manda seguir.'
+    tratamento: 'Tratado: arquivo que o Git ignora (git check-ignore) é inocente no harness e no destino do shell; o git add -f é acusado no pre-commit e no ci, com testes.'
+  - afirmacao: 'Os limites'
+    problema: '[important] omitiam senha em URL, notebook com aspas duplas escapadas e o credentials da AWS.'
+    tratamento: 'Tratado: senha em URL acusada (com as exceções de exemplo); .json e .ipynb lidos também desescapados; credentials e .netrc como configuração; os limites ganham CSV, XML, connection string do .NET, token= em .log, JWT, chave DSA, fixture com prefixo real, renomeação para fora da isenção e o token usado no comando com redirecionamento.'
+  - afirmacao: 'django-insecure- e JWT de documentação'
+    problema: '[important] eram acusados como senha atribuída.'
+    tratamento: 'Tratado: os dois ficam fora da regra de atribuição, com teste, e o texto diz para trocar a chave do Django por variável de ambiente antes de publicar.'
+  - afirmacao: 'Como aplicar, passos 2 e 5 (executabilidade)'
+    problema: '[important] URL do pacote não dita, stage travas não declarado, safe.directory ausente e gitlab-ci-local sem a variável da base para o job novo.'
+    tratamento: 'Tratado: o passo 2 diz o que é <URL do portal> e como copiar o arquivo do repositório; o job tem safe.directory e o texto pede stages:; o passo 5 mostra o comando com CI_MERGE_REQUEST_DIFF_BASE_SHA; o job foi rodado no gitlab-ci-local (shell, sem Docker).'
+  - afirmacao: 'Job segredo-no-diff (revisão de segurança: ci-gate-bypass)'
+    problema: '[important] o job só rodava em pipeline de MR: push direto na branch padrão passava sem varredura.'
+    tratamento: 'Tratado: regra para a branch padrão com base CI_COMMIT_BEFORE_SHA; base de zeros varre todo o HEAD (verificador); base vazia sai 2; sem allow_failure nem || true. Push em outra branch sem MR fica como limite escrito.'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança: fail-open)'
+    problema: '[important] no harness, a isenção vinha do disco: gravar o .seg02-ignorar e depois o segredo passava.'
+    tratamento: 'Tratado: no harness, a isenção vem do HEAD quando há repositório Git (do disco só fora dele), com teste. Os demais caminhos de saída 0 sem varrer são binário por extensão (avisa em stderr), arquivo ignorado e fora da raiz (lição 23); não há limite de tamanho nem exceção engolida (erro do git sai 2).'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança: incomplete-scan)'
+    problema: '[minor] arquivos sem extensão de configuração (credentials, .netrc) não tinham a regra sem aspas; submódulo, link simbólico e arquivo apagado não são lidos.'
+    tratamento: 'Tratado: credentials e .netrc entram; os formatos com prefixo e a chave PEM valem em qualquer arquivo (id_rsa, Dockerfile, .npmrc, .tfvars, .env.local já eram lidos). Submódulo, link simbólico e arquivo apagado ficam em Os limites.'
   - afirmacao: exemplos/SEG-02/plantar-segredo.sh escreve app/config.py
     problema: '[baixo] sobrescrevia o arquivo sem aviso se o diretório fosse um projeto real.'
     tratamento: 'Tratado: aviso no cabeçalho e o script se recusa (saída 1) se app/config.py já existir;

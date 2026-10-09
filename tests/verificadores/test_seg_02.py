@@ -518,12 +518,13 @@ def test_caminho_absoluto_com_barra_invertida_e_normalizado(tmp_path: Path):
     assert harness("./app//x/../a.py", GITHUB).stdout.splitlines() == esperado
 
 
-def test_caminho_fora_da_raiz_com_segredo_sai_2_e_sem_segredo_sai_0(tmp_path: Path):
-    for caminho in ("/outro/lugar/a.py", "../fora/a.py"):
-        com = harness(caminho, GITHUB, cwd=str(tmp_path))
-        assert com.returncode == 2 and com.stderr.strip() and "Traceback" not in com.stderr
-        assert GITHUB not in com.stderr
-        assert harness(caminho, "x = 1\n", cwd=str(tmp_path)).returncode == 0
+@pytest.mark.parametrize(
+    "caminho", ["/outro/lugar/a.py", "../fora/a.py", str(Path.home() / ".npmrc"), "/tmp/x.env"]
+)
+def test_caminho_fora_da_raiz_nao_e_deste_repositorio(tmp_path: Path, caminho: str):
+    # Lição 23: o segredo não entra neste repositório; sai 0, igual à escrita pelo shell.
+    r = harness(caminho, f"//npm.pkg.github.com/:_authToken={GITHUB}\n", cwd=str(tmp_path))
+    assert r.returncode == 0 and r.stdout == "" and GITHUB not in r.stderr
 
 
 def test_caminho_absoluto_por_link_simbolico_da_raiz(tmp_path: Path):
@@ -820,3 +821,176 @@ def test_script_do_pacote_roda_isolado_fora_do_repositorio(
     entrada["conteudo"] = GITHUB[:-1]
     inocente = rodar(copia, "antes-de-ferramenta", entrada=entrada, cwd=tmp_path, isolado=True)
     assert inocente.returncode == 0
+
+
+# --- rodada 1: arquivo ignorado, notebook, senha em URL, inocentes de ferramenta ------------------
+
+
+def repo_com_env(tmp_path: Path, ignorado: bool) -> Path:
+    raiz = tmp_path / "proj"
+    repo = RepoGit(raiz)
+    raiz.mkdir()
+    repo._git("init", "--quiet", "--initial-branch=main")
+    if ignorado:
+        repo.escrever(".gitignore", ".env\n")
+    return raiz
+
+
+@pytest.mark.parametrize("ignorado", [False, True])
+def test_env_ignorado_pelo_git_e_inocente_no_harness(tmp_path: Path, ignorado: bool):
+    # Mesmo conteúdo; só o .gitignore muda. É o passo 1 da prática (o .env fora do Git).
+    raiz = repo_com_env(tmp_path, ignorado)
+    conteudo = f"GITHUB_TOKEN={GITHUB}\n"
+    escrita = harness(".env", conteudo, cwd=str(raiz))
+    absoluta = harness(str(raiz / ".env"), conteudo, cwd=str(raiz))
+    pelo_shell = shell(f"echo 'GITHUB_TOKEN={GITHUB}' >> .env", cwd=str(raiz))
+    esperado = 0 if ignorado else 1
+    assert escrita.returncode == absoluta.returncode == pelo_shell.returncode == esperado
+    assert GITHUB not in escrita.stdout + escrita.stderr + pelo_shell.stdout
+
+
+def test_env_ignorado_continua_acusado_no_pre_commit_com_add_forcado(repo_git: RepoGit):
+    repo_git.escrever(".gitignore", ".env\n")
+    repo_git.escrever(".env", f"GITHUB_TOKEN={GITHUB}\n")
+    repo_git._git("add", "-f", ".gitignore", ".env")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 1 and r.stdout.splitlines() == [".env:1: token do GitHub em claro"]
+
+
+def test_notebook_com_aspas_duplas_escapadas_pega():
+    import json
+
+    def notebook(linha: str) -> str:
+        return json.dumps({"cells": [{"source": ["import openai\n", linha]}]}, indent=1)
+
+    r = harness("nb.ipynb", notebook(f'openai.api_key = "{SENHA}"\n'))
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == [f"nb.ipynb:6: {MOTIVO_ATRIBUICAO}"]
+    assert not casa(notebook('openai.api_key = os.environ["OPENAI_API_KEY"]\n'), "nb.ipynb")
+    assert casa(json.dumps({"apiKey": SENHA}), "config.json")
+
+
+MOTIVO_URL = "senha em URL em claro"
+
+
+@pytest.mark.parametrize(
+    ("caminho", "molde"),
+    [
+        (".env", "DATABASE_URL=postgres://app:{s}@db.interno:5432/app"),
+        ("app/db.py", 'DATABASE_URL = "postgres://app:{s}@db.interno:5432/app"'),
+        ("docs/a.md", "redis://:{s}@cache.interno:6379/0"),
+    ],
+)
+def test_senha_em_url_pega(caminho: str, molde: str):
+    senha_url = corpo(24, 50)
+    r = harness(caminho, molde.format(s=senha_url) + "\n")
+    assert r.stdout.splitlines() == [f"{caminho}:1: {MOTIVO_URL}"]
+    assert senha_url not in r.stdout + r.stderr
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "postgres://user:password@localhost:5432/app",
+        "postgres://app:${{DB_PASSWORD}}@db:5432/app",
+        "postgres://app:changeme-changeme-123@db/app",
+        "mysql://root:<sua-senha-do-banco>@localhost/app",
+        "https://usuario:senha@host.interno/rota",
+        "postgres://app:{curta}@db/app",
+        "ssh://git@gitlab.com/grupo/projeto.git",
+    ],
+)
+def test_url_com_senha_de_exemplo_ou_curta_nao_pega(texto: str):
+    assert not casa(texto.format(curta=SENHA[:15]), ".env")
+
+
+def test_chave_insegura_do_django_e_inocente():
+    insegura = (
+        "django-"
+        + "insecure-"
+        + corpo(50, 51, string.ascii_lowercase + string.digits + "!@#%^&*(-_=+)")
+    )
+    assert not casa(f"SECRET_KEY = '{insegura}'", "mysite/settings.py")
+    assert casa(f"SECRET_KEY = '{insegura[16:]}'", "mysite/settings.py")
+
+
+@pytest.mark.parametrize(
+    "texto",
+    [
+        "Exemplo: `" + "xo" + "xp-111-222-333-" + corpo(32, 52, "0123456789abcdef") + "`",
+        "token: " + "xo" + "xb-1234-5678-" + corpo(20, 53, string.ascii_lowercase),
+    ],
+)
+def test_exemplo_de_documentacao_do_slack_e_inocente(texto: str):
+    assert not casa(texto, "docs/slack.md")
+
+
+def test_jwt_fica_fora_da_regra_de_atribuicao():
+    def b64(texto: str) -> str:
+        return base64.urlsafe_b64encode(texto.encode()).decode().rstrip("=")
+
+    jwt = ".".join([b64('{"alg":"HS256","typ":"JWT"}'), b64('{"sub":"1234567890"}'), corpo(43, 54)])
+    assert not casa(f'token = "{jwt}"', "tests/test_auth.py")
+    assert not casa(f'const token = "{jwt}";', "README.md")
+
+
+def test_arquivo_credentials_da_aws_e_configuracao():
+    secreta = corpo(40, 55, string.ascii_letters + string.digits + "+/")
+    linha = f"[default]\naws_secret_access_key = {secreta}\n"
+    assert saida(linha, ".aws/credentials") == [f".aws/credentials:2: {MOTIVO_ATRIBUICAO}"]
+    assert not casa(linha, ".aws/notas.md")
+
+
+def test_renomear_arquivo_isento_para_fora_da_isencao_nao_acusa_o_antigo(repo_git: RepoGit):
+    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
+    repo_git.escrever("fixtures/a.key", pem() + "\n")
+    repo_git.adicionar(".seg02-ignorar", "fixtures/a.key")
+    repo_git.commitar("chave de teste isenta")
+    (repo_git.raiz / "outra").mkdir()
+    repo_git._git("mv", "fixtures/a.key", "outra/a.key")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
+    repo_git.escrever("outra/a.key", pem() + "\n" + pem(semente=3) + "\n")
+    repo_git.adicionar("outra/a.key")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.stdout.splitlines() == [f"outra/a.key:{len(pem().splitlines()) + 1}: {MOTIVO_PEM}"]
+
+
+# --- rodada 1, revisão de segurança: branch padrão, isenção no harness, .netrc ------------------
+
+ZEROS = "0" * 40
+
+
+def test_ci_com_base_de_zeros_varre_o_repositorio_inteiro(repo_git: RepoGit):
+    # O CI_COMMIT_BEFORE_SHA é de zeros no primeiro push, em pipeline manual e agendado.
+    repo_git.escrever("antigo.py", f"A = '{GITHUB}'\n")
+    repo_git.adicionar("antigo.py")
+    repo_git.commitar("segredo antigo")
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS)
+    assert r.returncode == 1 and r.stdout.splitlines() == ["antigo.py:1: token do GitHub em claro"]
+    repo_git.escrever("antigo.py", "A = os.environ['A']\n")
+    repo_git.adicionar("antigo.py")
+    repo_git.commitar("limpa")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS).returncode == 0
+
+
+def test_ci_com_base_vazia_sai_2(repo_git: RepoGit):
+    # `--base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"` fora de pipeline de MR chega vazio: não passa.
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base="")
+    assert r.returncode == 2 and r.stderr.strip()
+
+
+def test_isencao_no_harness_vem_do_head_quando_ha_repositorio(repo_git: RepoGit):
+    # O agente não se isenta escrevendo o .seg02-ignorar no disco e o segredo em seguida.
+    cwd = str(repo_git.raiz)
+    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
+    assert harness("fixtures/a.key", pem(), cwd=cwd).returncode == 1
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção revisada")
+    assert harness("fixtures/a.key", pem(), cwd=cwd).returncode == 0
+
+
+@pytest.mark.parametrize("nome", [".netrc", "_netrc"])
+def test_netrc_com_senha_pega(nome: str):
+    linha = f"machine api.interno login app password {SENHA}"
+    assert saida(linha, nome) == [f"{nome}:1: {MOTIVO_ATRIBUICAO}"]
+    assert not casa("machine api.interno login app password changeme", nome)

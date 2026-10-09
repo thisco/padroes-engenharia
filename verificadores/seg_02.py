@@ -18,9 +18,13 @@ O que é acusado (lista fechada, só formatos que os emissores documentam):
 - token do Slack: `xoxb-`, `xoxp-`, `xapp-`, `xwfp-`, os rotativos `xoxe.` e `xoxe-`, e 20;
 - literal de 16 caracteres ou mais, sem espaço, atribuído a um nome de segredo (`password`,
   `secret`, `token`, `api_key`, `senha`...): entre aspas em qualquer arquivo; sem aspas só em
-  configuração (`.env`, YAML, `.properties`, `.ini`, shell, `Dockerfile`, `.npmrc`...).
+  configuração (`.env`, YAML, `.properties`, `.ini`, shell, `Dockerfile`, `.npmrc`,
+  `credentials`...) e no `.netrc` (`password <senha>`); em JSON e notebook, também com o `\\"` do
+  JSON desescapado;
+- senha de 16 caracteres ou mais na URL (`esquema://usuario:<senha>@host`).
 Exemplo óbvio não é acusado: `EXAMPLE`, `xxxx`, `...`, `<...>`, `${...}`, `{{...}}`, `changeme`,
-`your`, `sua`, `fake`, `dummy`, `placeholder` e afins. Não há busca por entropia.
+`your`, `sua`, `fake`, `dummy`, `placeholder`, `111-222-333` e afins; na atribuição, também
+`django-insecure-...` e JWT. Não há busca por entropia.
 
 Só acusa linha nova ou alterada: no harness, em relação ao arquivo em disco; no pre-commit, em
 relação ao `HEAD`; no ci, em relação à `--base` (renomeação compara com o caminho antigo). A chave
@@ -28,12 +32,17 @@ privada vale como um bloco: é acusada se o cabeçalho ou a linha de base64 que 
 
 No harness, `shell` casa quando o comando escreve num arquivo do projeto (`>`, `>>`, `tee`,
 `sed -i`, `perl -i`) e traz, em qualquer parte, um segredo da lista: a saída é
-`shell:0: <tipo> escrito pelo shell`.
+`shell:0: <tipo> escrito pelo shell`. No harness, arquivo que o Git ignora (`git check-ignore`) e
+arquivo fora da raiz do projeto não são deste repositório: saída 0. O `git add -f` de um arquivo
+ignorado é pego no pre-commit e no ci.
 
 Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; padrão sem
-`/` vale em qualquer pasta; `#` é comentário). Ele é lido do lado da comparação (o disco no
-harness, o `HEAD` no pre-commit e a `--base` no ci): a isenção só vale depois de entrar na branch
-de destino.
+`/` vale em qualquer pasta; `#` é comentário). Ele é lido do lado da comparação (o `HEAD` no
+harness e no pre-commit, ou o disco no harness fora de repositório Git; a `--base` no ci): a
+isenção só vale depois de entrar na branch de destino.
+
+No ci, `--base` de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou
+agendado) compara com a árvore vazia: tudo o que o `HEAD` tem é varrido.
 
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso ou
 estado indeterminado (mensagem em stderr). O valor achado nunca é impresso, nem um trecho dele.
@@ -106,11 +115,12 @@ FORMATOS = (
     ),
 )
 MOTIVO_PEM = "chave privada"
+MOTIVO_URL = "senha em URL"
 MOTIVO_ATRIBUICAO = "senha ou token em literal atribuído a nome de segredo"
 # Valor de exemplo, referência ou marcador: não é segredo.
 EXEMPLO = re.compile(
     r"example|exemplo|sample|dummy|fake|placeholder|redacted|changeme|change_me|your|test"
-    r"|(?:^|[^A-Za-z])(?:sua|seu)(?:$|[^A-Za-z])|x{4,}|\*{3,}|\.\.\.|…|<|>|\$\{|\$\(|\{\{|\}\}"
+    r"|(?:^|[^A-Za-z])(?:sua|seu)(?:$|[^A-Za-z])|111-222-333|1234-5678|x{4,}|\*{3,}|\.\.\.|…|<|>|\$\{|\$\(|\{\{|\}\}"
     r"|%\(|#\{",
     re.IGNORECASE,
 )
@@ -135,6 +145,9 @@ _VALOR_SEM_ASPAS = r"(?P<valor>[^\s\"'`#;|&<>(){}\[\],$!*][^\s\"'`#;|&<>(){}\[\]
 ATRIBUICAO_EM_CONFIGURACAO = re.compile(
     _NOME + r"[ \t]*[=:][ \t]*" + _VALOR_SEM_ASPAS + r"(?=[ \t]*(?:#.*)?$)"
 )
+# `.netrc`: `machine <host> login <usuário> password <senha>`, separado por espaço.
+ATRIBUICAO_NO_NETRC = re.compile(r"(?:^|\s)(?P<nome>password)\s+(?P<valor>\S{16,})")
+ARQUIVOS_NETRC = {".netrc", "_netrc"}
 ATRIBUICAO_NO_SHELL = re.compile(
     _NOME + r"[ \t]*=[ \t]*" + _VALOR_SEM_ASPAS + r"(?=$|[\s\"'`;|&<>)])"
 )
@@ -150,12 +163,24 @@ HASH_DECLARADO = re.compile(r"^(?:sha\d+|md5|h1)[-:]", re.IGNORECASE)
 REFERENCIA = re.compile(
     r"^(?:os\.environ/|env[:.]|vault:|arn:|secretsmanager:|ssm:)", re.IGNORECASE
 )
+# Valor que a própria ferramenta marca como inseguro (o `SECRET_KEY` do `startproject` do Django) e
+# JWT (três segmentos base64url a partir de `eyJ`): ficam fora da regra de atribuição.
+GERADO_INSEGURO = re.compile(r"^django-insecure-")
+JWT = re.compile(r"^eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]*$")
+# Senha na userinfo de uma URL: `esquema://usuario:<senha>@host`.
+SENHA_EM_URL = re.compile(
+    r"\b[A-Za-z][\w+.-]*://[^/?#\"'`\s@:]*:(?P<valor>[^/?#\"'`\s@]{16,})@[\w.-]"
+)
 BASE64 = re.compile(r"^(?:[A-Za-z0-9+/]{4})+(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$")
 # Sequência de teclado ou de exemplo (`abc123`, `123456`): só na atribuição, que é a regra de menor
 # certeza; nos formatos com prefixo, uma sequência assim continua sendo acusada.
 SEQUENCIA_DE_EXEMPLO = re.compile(r"abc123|123456|abcdef|qwerty", re.IGNORECASE)
 PALAVRA_DE_SEGREDO_NO_VALOR = re.compile(r"password|senha|secret|segredo|token", re.IGNORECASE)
-CONFIGURACAO_POR_NOME = {".env", ".npmrc", ".pypirc", "dockerfile", "containerfile"}
+CONFIGURACAO_POR_NOME = {
+    ".env", ".npmrc", ".pypirc", "dockerfile", "containerfile", "credentials",
+}  # fmt: skip
+# Em JSON e notebook, o código vem em string com `\"`: a atribuição é buscada também desescapada.
+JSON_POR_EXTENSAO = {".json", ".ipynb"}
 CONFIGURACAO_POR_EXTENSAO = {
     ".env", ".properties", ".ini", ".cfg", ".conf", ".yaml", ".yml", ".toml", ".sh", ".bash",
     ".zsh", ".dockerfile",
@@ -234,6 +259,8 @@ def valor_de_segredo(valor: str) -> bool:
         or SO_LETRAS.match(valor)
         or HASH_DECLARADO.match(valor)
         or REFERENCIA.match(valor)
+        or GERADO_INSEGURO.match(valor)
+        or JWT.match(valor)
         or PALAVRA_DE_SEGREDO_NO_VALOR.search(valor)
         or SEQUENCIA_DE_EXEMPLO.search(valor)
         or base64_de_texto_de_exemplo(valor)
@@ -268,6 +295,8 @@ def tipos_da_linha(linha: str, padroes_de_atribuicao: tuple[re.Pattern[str], ...
                 break
     if tipos:
         return tipos
+    if any(valor_de_segredo(m.group("valor")) for m in SENHA_EM_URL.finditer(linha)):
+        return [MOTIVO_URL]
     for padrao in padroes_de_atribuicao:
         for m in padrao.finditer(linha):
             if nome_de_segredo(m.group("nome")) and valor_de_segredo(m.group("valor")):
@@ -293,16 +322,19 @@ def confirma_corpo_pem(linhas: list[str], i: int, fim_do_cabecalho: int) -> int 
 
 def padroes_do_arquivo(caminho: str) -> tuple[re.Pattern[str], ...]:
     """Entre aspas vale em qualquer arquivo; sem aspas, só em configuração."""
+    if PurePosixPath(caminho).name.lower() in ARQUIVOS_NETRC:
+        return (ATRIBUICAO_COM_ASPAS, ATRIBUICAO_NO_NETRC)
     if e_configuracao(caminho):
         return (ATRIBUICAO_COM_ASPAS, ATRIBUICAO_EM_CONFIGURACAO)
     return (ATRIBUICAO_COM_ASPAS,)
 
 
 def achados_do_texto(
-    texto: str, padroes: tuple[re.Pattern[str], ...]
+    texto: str, padroes: tuple[re.Pattern[str], ...], desescapa: bool = False
 ) -> list[tuple[int, int, str]]:
     """Achados `(linha inicial, linha final, tipo)` de todo o texto, com linhas contadas a partir
-    de 1. A chave privada ocupa do cabeçalho à linha que a confirma."""
+    de 1. A chave privada ocupa do cabeçalho à linha que a confirma. Com `desescapa` (JSON e
+    notebook), a linha é lida também sem o escape de string do JSON (`\\"` vira `"`)."""
     linhas = [normaliza(x) for x in quebra_linhas(texto)]
     achados = []
     for i, linha in enumerate(linhas):
@@ -311,8 +343,17 @@ def achados_do_texto(
             j = confirma_corpo_pem(linhas, i, m.end())
             if j is not None:
                 achados.append((i + 1, j + 1, MOTIVO_PEM))
-        achados += [(i + 1, i + 1, tipo) for tipo in tipos_da_linha(linha, padroes)]
+        tipos = tipos_da_linha(linha, padroes)
+        if not tipos and desescapa and "\\" in linha:
+            tipos = tipos_da_linha(desescapa_json(linha), padroes)
+        achados += [(i + 1, i + 1, tipo) for tipo in tipos]
     return achados
+
+
+def desescapa_json(linha: str) -> str:
+    return re.sub(
+        r"\\(.)", lambda m: {"n": " ", "t": " ", "r": " "}.get(m.group(1), m.group(1)), linha
+    )
 
 
 def e_configuracao(caminho: str) -> bool:
@@ -347,7 +388,8 @@ def achados_do_arquivo(caminho: str, novo: str, antigo: str | None) -> list[str]
     novas = linhas_novas(novo, antigo)
     vistos = set()
     saida = []
-    for inicio, fim, tipo in achados_do_texto(novo, padroes_do_arquivo(caminho)):
+    desescapa = PurePosixPath(caminho).suffix.lower() in JSON_POR_EXTENSAO
+    for inicio, fim, tipo in achados_do_texto(novo, padroes_do_arquivo(caminho), desescapa):
         if (inicio, tipo) in vistos or not novas.intersection(range(inicio, fim + 1)):
             continue
         vistos.add((inicio, tipo))
@@ -566,6 +608,11 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
     if not base:
         raise Indeterminado("o evento ci exige --base <ref>")
     raiz = raiz_do_projeto()
+    if re.fullmatch(r"0{40}|0{64}", base):
+        # Base de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou agendado):
+        # compara com a árvore vazia, ou seja, varre tudo o que o HEAD tem.
+        revisao = git(raiz, "hash-object", "-t", "tree", os.devnull).decode().strip()
+        return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", [], avisos)
     revisao = git(raiz, "rev-parse", "--verify", f"{base}^{{commit}}").decode().strip()
     isencao = isencao_no_git(raiz, revisao)
     return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", isencao, avisos)
@@ -574,7 +621,19 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
 # --- harness --------------------------------------------------------------------------------------
 
 
-def isencao_em_disco(cwd: str | None) -> list[re.Pattern[str]]:
+def isencao_do_harness(cwd: str | None) -> list[re.Pattern[str]]:
+    """No harness, a isenção vem do `HEAD` quando `cwd` é um repositório Git (a que já passou pela
+    revisão; o agente não se isenta gravando o arquivo no disco); fora de repositório, do disco."""
+    try:
+        raiz = git(cwd or ".", "rev-parse", "--show-toplevel").decode("utf-8").strip()
+    except Indeterminado:
+        raiz = None
+    if raiz is not None:
+        try:
+            head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
+        except Indeterminado:
+            return []  # repositório sem commit: nenhuma isenção revisada
+        return isencao_no_git(raiz, head)
     try:
         return padroes_de_isencao(decodifica((Path(cwd or ".") / ARQUIVO_DE_ISENCAO).read_bytes()))
     except OSError:
@@ -638,24 +697,47 @@ def destinos_de_escrita(comando: str) -> list[str]:
 
 
 def no_projeto(destino: str, cwd: str | None, isencao: list[re.Pattern[str]]) -> bool:
-    """O destino fica no projeto. Destino de variável (`$ARQ`) conta como no projeto; `/dev/`, `~` e
-    caminho fora de `cwd` não; nem arquivo isento."""
+    """O destino fica no projeto e pode entrar no repositório. Destino de variável (`$ARQ`) conta
+    como no projeto; `/dev/`, `~`, caminho fora de `cwd`, arquivo isento e arquivo que o Git
+    ignora não."""
     if destino.startswith("$"):
         return True
     if destino.startswith(("~", "/dev/")) or not destino:
         return False
     relativo = relativo_a_raiz(destino, cwd)
-    return relativo is not None and not isento(relativo, isencao)
+    return (
+        relativo is not None
+        and not isento(relativo, isencao)
+        and not ignorado_pelo_git(relativo, cwd)
+    )
+
+
+def ignorado_pelo_git(relativo: str, cwd: str | None) -> bool:
+    """O Git ignora o caminho (`git check-ignore`): ele não entra no repositório por um `git add`
+    comum, e o `git add -f` é pego no pre-commit e no ci. Fora de um repositório Git (ou sem o git),
+    não é ignorado."""
+    try:
+        r = subprocess.run(
+            ["git", "-C", cwd or ".", "check-ignore", "-q", "--", relativo],
+            capture_output=True,
+            timeout=TEMPO_GIT,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return r.returncode == 0
 
 
 def evento_shell(comando: str | None, cwd: str | None) -> list[str]:
     if not comando:
         return []
-    isencao = isencao_em_disco(cwd)
-    if not any(no_projeto(d, cwd, isencao) for d in destinos_de_escrita(comando)):
-        return []
     padroes = (ATRIBUICAO_COM_ASPAS, ATRIBUICAO_NO_SHELL, ATRIBUICAO_EM_CONFIGURACAO)
     tipos = dict.fromkeys(tipo for _, _, tipo in achados_do_texto(comando, padroes))
+    if not tipos:
+        return []
+    isencao = isencao_do_harness(cwd)
+    if not any(no_projeto(d, cwd, isencao) for d in destinos_de_escrita(comando)):
+        return []
     # Só o tipo sai: o comando carrega o próprio segredo.
     return [f"shell:0: {motivo(t)} escrito pelo shell" for t in tipos]
 
@@ -686,13 +768,13 @@ def evento_harness(avisos: list[str]) -> list[str]:
         raise Indeterminado("sem `caminho` ou sem `conteudo` para uma escrita; não dá para avaliar")
     relativo = relativo_a_raiz(caminho, cwd)
     if relativo is None:
-        if achados_do_texto(conteudo, padroes_do_arquivo(caminho)):
-            raise Indeterminado(
-                "segredo num arquivo fora da raiz do projeto (cwd); não dá para dizer se ele "
-                "entra no repositório"
-            )
+        return []  # fora da raiz do projeto: não é deste repositório
+    if binario_conhecido(relativo, avisos):
         return []
-    if isento(relativo, isencao_em_disco(cwd)) or binario_conhecido(relativo, avisos):
+    # O Git só é consultado quando o conteúdo traz segredo, para o harness seguir rápido.
+    if not achados_do_arquivo(relativo, conteudo, None):
+        return []
+    if isento(relativo, isencao_do_harness(cwd)) or ignorado_pelo_git(relativo, cwd):
         return []
     try:
         antigo = decodifica((Path(cwd or ".") / relativo).read_bytes())
