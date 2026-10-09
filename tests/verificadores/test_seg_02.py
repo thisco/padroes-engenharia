@@ -1114,7 +1114,8 @@ def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: 
     repo_git.commitar("segredo")
     ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS)
     assert ci.returncode == 2 and "isenção ampla demais" in ci.stderr
-    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 1  # a base não a tem
+    # A MR que a introduz também sai 2: a isenção ampla é recusada quando entra (rodada 3).
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 2
 
 
 @pytest.mark.parametrize("padrao", ["*.key", "tests/**", "fixtures/*.pem", "**/testdata/**"])
@@ -1134,3 +1135,64 @@ def test_o_arquivo_de_isencao_nunca_se_isenta(repo_git: RepoGit, padrao: str):
     repo_git.adicionar(".seg02-ignorar")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert r.stdout.splitlines() == [".seg02-ignorar:2: token do GitHub em claro"]
+
+
+# --- rodada 3: a isenção ampla é recusada ao entrar, e corrigi-la não trava -----------------------
+
+
+def test_harness_que_escreve_isencao_ampla_sai_2(repo_git: RepoGit):
+    r = harness(".seg02-ignorar", "tests/**\n**\n", cwd=str(repo_git.raiz))
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
+    assert harness(".seg02-ignorar", "tests/**\n", cwd=str(repo_git.raiz)).returncode == 0
+
+
+def test_shell_que_escreve_isencao_ampla_sai_2(repo_git: RepoGit):
+    r = shell("echo '**' >> .seg02-ignorar", cwd=str(repo_git.raiz))
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
+    assert shell("echo 'tests/**' >> .seg02-ignorar", cwd=str(repo_git.raiz)).returncode == 0
+
+
+def test_pre_commit_e_ci_que_introduzem_isencao_ampla_saem_2(repo_git: RepoGit):
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.escrever(".seg02-ignorar", "**\n")
+    repo_git.adicionar(".seg02-ignorar")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert pre.returncode == 2 and "isenção ampla demais" in pre.stderr
+    repo_git.commitar("isenção ampla, sem segredo")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert ci.returncode == 2 and "isenção ampla demais" in ci.stderr
+
+
+def repo_com_isencao_ampla_em_vigor(repo_git: RepoGit) -> str:
+    # Repositório em que a isenção ampla já entrou (antes desta regra): a base a tem.
+    repo_git.escrever(".seg02-ignorar", "**\n")
+    repo_git.adicionar(".seg02-ignorar")
+    return repo_git.commitar("isenção ampla em vigor")
+
+
+@pytest.mark.parametrize("nova", ["tests/**\n", None])
+def test_corrigir_isencao_ampla_em_vigor_nao_trava(repo_git: RepoGit, nova: str | None):
+    base = repo_com_isencao_ampla_em_vigor(repo_git)
+    if nova is None:
+        repo_git._git("rm", "-q", ".seg02-ignorar")
+    else:
+        repo_git.escrever(".seg02-ignorar", nova)
+        repo_git.adicionar(".seg02-ignorar")
+    assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
+    repo_git.escrever("app/a.py", f"A = '{GITHUB}'\n")
+    repo_git.adicionar("app/a.py")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert pre.returncode == 1 and pre.stdout.splitlines() == [
+        "app/a.py:1: token do GitHub em claro"
+    ]
+    repo_git.commitar("corrige a isenção e traz segredo")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert ci.returncode == 1 and ci.stdout.splitlines() == ["app/a.py:1: token do GitHub em claro"]
+
+
+def test_corrigir_isencao_ampla_sem_segredo_passa_no_ci(repo_git: RepoGit):
+    base = repo_com_isencao_ampla_em_vigor(repo_git)
+    repo_git.escrever(".seg02-ignorar", "tests/**\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("estreita a isenção")
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0

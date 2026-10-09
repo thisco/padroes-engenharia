@@ -45,7 +45,10 @@ Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, 
 harness e no pre-commit, ou o disco no harness fora de repositório Git; a `--base` no ci): a
 isenção vale no harness e no pre-commit depois de commitada, e no ci depois de entrar na branch de
 destino (a autoridade é o ci da MR). Padrão sem nenhum nome (`**`, `*`, `**/*`, `.`, `/`) sai 2
-("isenção ampla demais"); o próprio `.seg02-ignorar` nunca é isento.
+("isenção ampla demais") quando entra: no conteúdo que o harness escreve no `.seg02-ignorar`
+(direto ou pelo shell), no índice do pre-commit e no `HEAD` do ci. Se só o lado da comparação o
+tem e o lado novo o tira ou estreita, vale a isenção nova. O próprio `.seg02-ignorar` nunca é
+isento.
 
 No ci, `--base` de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou
 agendado) compara com a árvore vazia: tudo o que o `HEAD` tem é varrido, com a isenção do `HEAD`.
@@ -229,6 +232,10 @@ TEMPO_GIT = 60  # segundos; o git não pode travar o hook
 
 class Indeterminado(Exception):
     """Erro de uso ou estado que impede decidir: vira saída 2 com a mensagem."""
+
+
+class IsencaoAmpla(Indeterminado):
+    """O `.seg02-ignorar` tem padrão que isentaria tudo ou quase tudo."""
 
 
 # --- normalização e busca ---------------------------------------------------------------------
@@ -452,7 +459,7 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
             continue
         if AMPLA_DEMAIS.fullmatch(linha):
             # `**`, `*`, `**/*`, `.`, `/`: isentaria tudo ou quase tudo.
-            raise Indeterminado(
+            raise IsencaoAmpla(
                 f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
                 "arquivos pelo nome"
             )
@@ -584,14 +591,30 @@ def git(raiz: str | None, *args: str) -> bytes:
 
 
 def isencao_no_git(raiz: str, revisao: str | None) -> list[re.Pattern[str]]:
-    """O `.seg02-ignorar` da revisão de comparação; sem revisão (repositório sem commit) ou sem o
-    arquivo nela, não há isenção."""
+    """O `.seg02-ignorar` de uma revisão (ou do índice, com `:`); sem revisão (repositório sem
+    commit) ou sem o arquivo nela, não há isenção."""
     if revisao is None:
         return []
-    listado = git(raiz, "ls-tree", "--name-only", revisao, "--", ARQUIVO_DE_ISENCAO)
+    if revisao == ":":
+        listado = git(raiz, "ls-files", "--cached", "--", ARQUIVO_DE_ISENCAO)
+        objeto = f":{ARQUIVO_DE_ISENCAO}"
+    else:
+        listado = git(raiz, "ls-tree", "--name-only", revisao, "--", ARQUIVO_DE_ISENCAO)
+        objeto = f"{revisao}:{ARQUIVO_DE_ISENCAO}"
     if not listado.strip():
         return []
-    return padroes_de_isencao(decodifica(git(raiz, "show", f"{revisao}:{ARQUIVO_DE_ISENCAO}")))
+    return padroes_de_isencao(decodifica(git(raiz, "show", objeto)))
+
+
+def isencao_da_comparacao(raiz: str, antes: str | None, depois: str) -> list[re.Pattern[str]]:
+    """A isenção do lado da comparação (`antes`), com o lado novo (`depois`) validado: padrão amplo
+    que entra sai 2 em qualquer caso. Se só o lado da comparação tem o padrão amplo, o lado novo o
+    corrigiu, e vale a isenção nova (corrigir não trava)."""
+    nova = isencao_no_git(raiz, depois)
+    try:
+        return isencao_no_git(raiz, antes)
+    except IsencaoAmpla:
+        return nova
 
 
 def varre_diferenca(
@@ -645,7 +668,8 @@ def evento_pre_commit(avisos: list[str]) -> list[str]:
     except Indeterminado:
         head = None  # repositório sem commit: tudo no índice é novo
     # `diff --cached` sem revisão compara com o HEAD, ou com a árvore vazia se ainda não há commit.
-    return varre_diferenca(raiz, ["--cached"], "HEAD:", ":", isencao_no_git(raiz, head), avisos)
+    isencao = isencao_da_comparacao(raiz, head, ":")
+    return varre_diferenca(raiz, ["--cached"], "HEAD:", ":", isencao, avisos)
 
 
 def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
@@ -660,7 +684,7 @@ def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
         isencao = isencao_no_git(raiz, "HEAD")
         return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", isencao, avisos)
     revisao = git(raiz, "rev-parse", "--verify", f"{base}^{{commit}}").decode().strip()
-    isencao = isencao_no_git(raiz, revisao)
+    isencao = isencao_da_comparacao(raiz, revisao, "HEAD")
     return varre_diferenca(raiz, [revisao, "HEAD"], f"{revisao}:", "HEAD:", isencao, avisos)
 
 
@@ -699,7 +723,10 @@ def isencao_do_harness(raiz: str | None, em_git: bool) -> list[re.Pattern[str]]:
             head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
         except Indeterminado:
             return []  # repositório sem commit: nenhuma isenção revisada
-        return isencao_no_git(raiz, head)
+        try:
+            return isencao_no_git(raiz, head)
+        except IsencaoAmpla:
+            pass  # a ampla em vigor se corrige no disco: vale a do disco, validada abaixo
     try:
         return padroes_de_isencao(decodifica((Path(raiz or ".") / ARQUIVO_DE_ISENCAO).read_bytes()))
     except OSError:
@@ -812,6 +839,8 @@ def ignorado_pelo_git(relativo: str, cwd: str | None) -> bool:
 def evento_shell(comando: str | None, cwd: str | None) -> list[str]:
     if not comando:
         return []
+    if ARQUIVO_DE_ISENCAO in comando:
+        valida_isencao_pelo_shell(comando, cwd)
     padroes = (ATRIBUICAO_COM_ASPAS, ATRIBUICAO_NO_SHELL, ATRIBUICAO_EM_CONFIGURACAO)
     tipos = dict.fromkeys(tipo for _, _, tipo in achados_do_texto(comando, padroes))
     if not tipos:
@@ -822,6 +851,17 @@ def evento_shell(comando: str | None, cwd: str | None) -> list[str]:
         return []
     # Só o tipo sai: o comando carrega o próprio segredo.
     return [f"shell:0: {motivo(t)} escrito pelo shell" for t in tipos]
+
+
+def valida_isencao_pelo_shell(comando: str, cwd: str | None) -> None:
+    """O comando que escreve no `.seg02-ignorar` da raiz não pode levar um padrão amplo: as palavras
+    do comando (inclusive as linhas de um heredoc) são conferidas como linhas de isenção."""
+    raiz, _ = raiz_do_harness(cwd)
+    alvos = [relativo_ao_projeto(d, cwd, raiz) for d in destinos_de_escrita(comando)]
+    if ARQUIVO_DE_ISENCAO not in alvos:
+        return
+    palavras = palavras_do_shell(comando) or comando.split()
+    padroes_de_isencao("\n".join(p for p in palavras if AMPLA_DEMAIS.fullmatch(p)))
 
 
 def texto_ou_none(entrada: dict, *campos: str) -> list[str | None]:
@@ -851,6 +891,10 @@ def evento_harness(avisos: list[str]) -> list[str]:
     caminho = caminho.replace("\\", "/")
     if absoluto(caminho) and not cwd:
         raise Indeterminado("caminho absoluto sem `cwd`; não dá para dizer se é do projeto")
+    if PurePosixPath(caminho).name == ARQUIVO_DE_ISENCAO:
+        raiz, _ = raiz_do_harness(cwd)
+        if relativo_ao_projeto(caminho, cwd, raiz) == ARQUIVO_DE_ISENCAO:
+            padroes_de_isencao(conteudo)  # a isenção ampla é recusada quando entra
     if binario_conhecido(posixpath.normpath(caminho), avisos):
         return []
     # O Git só é consultado quando o conteúdo traz segredo, para o harness seguir rápido.

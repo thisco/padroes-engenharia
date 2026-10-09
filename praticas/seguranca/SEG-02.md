@@ -28,6 +28,7 @@ ferramentas_aprovadas: [gitleaks, gitlab-ci-local]
 exemplos:
   - exemplos/SEG-02/config-depois.py
   - exemplos/SEG-02/gitlab-ci.yml
+  - exemplos/SEG-02/job-segredo-no-diff.yml
   - exemplos/SEG-02/plantar-segredo.sh
   - exemplos/SEG-02/pre-commit.sh
 ---
@@ -90,27 +91,24 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    ```
 
    A saída 1 (segredo em linha nova) e a 2 (não conseguiu decidir) barram o commit. No CI, como a
-   força é `bloqueia`, o job falha com 1 ou 2, sem `allow_failure` e sem `|| true`. Ele roda na
-   merge request e também no push da branch padrão, para o push direto nela não passar sem
-   varredura:
+   força é `bloqueia`, o job falha com 1 ou 2, sem `allow_failure`, sem `|| true` e sem `when: manual`.
+   Ele roda na merge request e também no push da branch padrão, para o push direto nela não passar
+   sem varredura. O job não roda o `verificadores/seg_02.py` da própria MR, que a MR poderia alterar
+   para sair 0: ele baixa o verificador do portal publicado, confere que o portal está na versão
+   fixada em `PADROES_VERSAO` e que o sha256 do arquivo é o do `manifesto.json` do pacote, e só então
+   o roda. A conferência usa só o `python3 -I` e a biblioteca padrão (o job, com o `stages:`, é o
+   `job-segredo-no-diff.yml` do Exemplo):
 
-   ```yaml
-   segredo-no-diff:
-     stage: travas
-     image: python:3.11
-     variables:
-       GIT_DEPTH: "0"
-     rules:
-       - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-       - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-     script:
-       - git config --global --add safe.directory "$PWD"
-       - BASE="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}"
-       - python3 -I verificadores/seg_02.py --evento ci --base "$BASE"
-   ```
+<!-- incluir: exemplos/SEG-02/job-segredo-no-diff.yml -->
 
-   O stage `travas` precisa estar declarado em `stages:` no `.gitlab-ci.yml` (o job `segredos` do
-   Exemplo declara o mesmo). A linha do `safe.directory` é a mesma do job do Exemplo: sem ela, o Git
+   Até o instalador (F4), essa é a forma recomendada. Ao subir a versão do portal, troque
+   `PADROES_VERSAO`; se o portal publicado mudar de versão antes disso, o job falha até a troca. Quem
+   preferir copiar o arquivo para o projeto e rodar `verificadores/seg_02.py` no job põe esse caminho
+   no CODEOWNERS e aceita que a MR que o altera seja revisada por um dono. O job baixa os dois
+   arquivos do mesmo portal: a conferência protege contra a MR, não contra o portal.
+
+   O stage `travas` precisa estar declarado em `stages:`: o arquivo do Exemplo o declara, e, se o seu
+   `.gitlab-ci.yml` já tem `stages:`, acrescente `travas` a ele em vez de copiar a lista. A linha do `safe.directory` é a mesma do job do Exemplo: sem ela, o Git
    pode recusar o clone feito por outro usuário do contêiner.
 
    `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da MR [ref:gitlab-variaveis-predefinidas].
@@ -120,15 +118,19 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    tem, com a isenção do próprio `HEAD` (o conteúdo da branch padrão já passou pela revisão). Essa
    varredura completa acusa o segredo legado que estiver no `HEAD` sem isenção: rotacione a
    credencial e isente o arquivo numa MR, ou limpe o histórico. Base vazia sai 2 e falha o job. Depois
-   de um force-push na branch padrão, o commit anterior pode faltar no clone, e o job sai 2. Push em outra branch, sem MR, não roda o job: o segredo é
-   barrado quando a MR abre ou quando chega à branch padrão. E
-   `GIT_DEPTH: "0"` desliga o clone raso [ref:gitlab-git-depth]: o `git diff` com `--base` precisa do
-   commit da base no clone. Saída 0: nada a apontar, o job passa. Saída 1: segredo em linha que a MR
-   traz, uma linha por achado com o arquivo, a linha e o tipo, nunca o valor; o job falha. Saída 2: não
-   conseguiu decidir (base ausente, clone raso); o job também falha, e a mensagem em stderr diz o
-   motivo. O job foi rodado com o `gitlab-ci-local` (passo 5), com `--force-shell-executor`, sem
-   Docker, e não num GitLab real. Ele só impede o merge com o merge check
-   **Pipelines must succeed** marcado [ref:gitlab-pipeline-obrigatorio] (passo 6).
+   de um force-push na branch padrão, o commit anterior pode faltar no clone, e o job sai 2. Push em
+   outra branch, sem MR, não roda o job: o segredo é barrado quando a MR abre ou quando chega à
+   branch padrão. Um projeto que não roda pipeline de MR (só de branch) só confere a branch padrão.
+   Um push direto na branch padrão com a base de zeros (o primeiro push) que traga a isenção e o
+   segredo juntos passa, porque a isenção vem do `HEAD` desse mesmo push: proteja a branch padrão
+   contra push direto. E `GIT_DEPTH: "0"` desliga o clone raso [ref:gitlab-git-depth]: o `git diff`
+   com `--base` precisa do commit da base no clone. Saída 0: nada a apontar, o job passa. Saída 1:
+   segredo em linha que a MR traz, uma linha por achado com o arquivo, a linha e o tipo, nunca o
+   valor; o job falha. Saída 2: não conseguiu decidir (base ausente, clone raso, isenção ampla); o job
+   também falha, e a mensagem em stderr diz o motivo. O job foi rodado com o `gitlab-ci-local` (passo
+   5), com `--force-shell-executor`, sem Docker, servindo o pacote gerado por HTTP local, e não num
+   GitLab real. Ele só impede o merge com o merge check **Pipelines must succeed** marcado
+   [ref:gitlab-pipeline-obrigatorio] (passo 6).
 3. Acrescente o job `segredos` do Exemplo ao `.gitlab-ci.yml`. A imagem do gitleaks tem o próprio
    `gitleaks` como entrypoint, e o job o zera para rodar o script num shell; a imagem fica
    fixada pela tag e pelo digest (`v8.30.1@sha256:c00b6bd0…` no Exemplo, a release que o portal usou,
@@ -145,11 +147,14 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    base da MR no lugar da branch de destino: `npx --yes gitlab-ci-local@4.76.0 --variable
    CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_DIFF_BASE_SHA=$(git merge-base
    origin/main HEAD) --ignore-predefined-vars CI_PIPELINE_SOURCE,CI_MERGE_REQUEST_DIFF_BASE_SHA
-   segredo-no-diff`. Sem Docker, `--force-shell-executor` roda o script no shell da máquina, com o
+   segredo-no-diff`; para testar contra um pacote local, acrescente `--variable
+   PADROES_URL=http://localhost:<porta>` com a pasta gerada por `scripts/gerar.py` servida por
+   `python3 -m http.server`. Sem Docker, `--force-shell-executor` roda o script no shell da máquina, com o
    `python3` e o `git` dela; o `git config --global` do job grava, então, no `~/.gitconfig` de quem
    roda.
-6. Marque o merge check obrigatório e ponha o `.gitlab-ci.yml` e o `.seg02-ignorar` sob CODEOWNERS da
-   engenharia: quem altera o job ou a isenção na MR altera o que avalia a MR.
+6. Marque o merge check obrigatório e ponha o `.gitlab-ci.yml` e o `.seg02-ignorar` (e o
+   `verificadores/seg_02.py`, se o job o roda do projeto) sob CODEOWNERS da engenharia: quem altera o
+   job, a isenção ou o verificador na MR altera o que avalia a MR.
 7. Quando o verificador ou o job reprovar: se a branch **não foi publicada**, tire o segredo do
    arquivo e reescreva o commit (`git commit --amend`), para o intervalo da MR não o conter mais. Se
    foi publicada, considere a credencial comprometida: rotacione primeiro e só depois limpe o histórico
@@ -162,9 +167,12 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    Git). Ele é lido da base da comparação: no harness e no `pre-commit`, a isenção vale depois de
    commitada; no CI, depois que a MR que a cria entra na branch de destino. A mesma MR não isenta o
    próprio segredo. Padrão sem nenhum nome, que isentaria tudo ou quase tudo (`**`, `*`, `**/*`,
-   `*.*`, `.`, `/`), é recusado: o verificador sai 2 com "isenção ampla demais". O próprio
-   `.seg02-ignorar` nunca é isento. Ponha o `.seg02-ignorar` no CODEOWNERS (passo 6). No gitleaks, use o `.gitleaksignore`
-   [ref:gitleaks-readme].
+   `*.*`, `.`, `/`), é recusado quando entra, em qualquer evento: o harness que escreve o
+   `.seg02-ignorar` (direto ou pelo shell), o `pre-commit` do commit que o traz e o CI da MR que o
+   traz saem 2 com "isenção ampla demais", haja segredo ou não. A correção de uma isenção ampla que já
+   estava em vigor passa: quando só o lado da comparação tem o padrão amplo e o lado novo o tira ou o
+   estreita, vale a isenção nova. O próprio `.seg02-ignorar` nunca é isento. Ponha o `.seg02-ignorar`
+   no CODEOWNERS (passo 6). No gitleaks, use o `.gitleaksignore` [ref:gitleaks-readme].
 
 ## Exemplo
 
@@ -376,8 +384,8 @@ de commitada, e no `ci` depois de entrar na branch de destino; o agente não se 
 segredo em seguida. A isenção acrescentada junto com o segredo não o libera no commit nem na MR; ela
 passa primeiro pela revisão, numa MR própria. O próprio `.seg02-ignorar` é varrido como qualquer
 arquivo e nunca é isento, e o padrão sem nenhum nome (`**`, `*`, `**/*`, `*.*`, `.`, `/`) sai 2 com
-"isenção ampla demais" sempre que a isenção é lida (no `pre-commit` e no `ci`, sempre; no harness,
-quando o conteúdo traz segredo).
+"isenção ampla demais" quando entra (no lado novo de qualquer evento) e quando é lida do lado da
+comparação sem que o lado novo a corrija.
 
 Os limites:
 - A lista é fechada: segredo de outro formato (token de outro serviço, senha curta, senha em literal
