@@ -1583,3 +1583,34 @@ def test_cp_ou_mv_para_o_arquivo_de_dependencias_antes_de_outro_comando_pede(com
 )
 def test_cp_ou_mv_que_so_le_o_arquivo_de_dependencias_nao_pede(comando: str):
     assert passa(shell(comando)), comando
+
+
+# --- rodada de correção 5 da P3-06: redirecionamento e comentário depois do destino -------------
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "cp /tmp/r.txt requirements.txt 2>&1",
+        "mv t package.json 2>/dev/null",
+        "cp /tmp/r.txt requirements.txt # x",
+        "mv t go.mod >/dev/null 2>&1 && echo ok",
+        "cp /tmp/p.toml pyproject.toml 2>>erros.log",
+    ],
+)
+def test_cp_ou_mv_para_o_arquivo_de_dependencias_com_redirecionamento_depois_pede(comando: str):
+    r = shell(comando)
+    assert pede(r) and "escrever pelo shell" in r.stdout, comando
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "cat requirements.txt 2>/dev/null",
+        "cp requirements.txt /tmp/x 2>&1",
+        "mv package.json antigo.json 2>/dev/null",
+        "cp requirements.txt /tmp/copia.txt # backup",
+    ],
+)
+def test_ler_o_arquivo_de_dependencias_com_redirecionamento_nao_pede(comando: str):
+    assert passa(shell(comando)), comando

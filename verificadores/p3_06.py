@@ -11,7 +11,8 @@ Casa em três situações:
    caminho real, o que pega link simbólico): "a allowlist central só muda com aprovação". A
    variável `P3_06_ALLOWLIST`, se definida, tem de resolver para dentro de `central/`; senão sai 2;
 3. `shell` que escreve (`>`, `>>`, `tee`, `sed -i`, `cp`/`mv` com o destino no fim do comando, antes
-   de `;`, `&`, `|`, quebra de linha ou `)`) num arquivo de configuração de MCP ou em `central/`:
+   de `;`, `&`, `|`, quebra de linha, `)`, crase, redirecionamento como `2>&1` ou `2>/dev/null`, ou
+   comentário `# ...`) num arquivo de configuração de MCP ou em `central/`:
    "escrita na configuração MCP pelo shell pede aprovação"; e `shell` cujo `comando`
    traz `mcp add` (`claude mcp add`, `codex mcp add`, `gemini mcp add`,
    `add-json`), com ou sem aspas (regex e `shlex`), depois de NFKC e sem invisíveis. Variável e
@@ -53,7 +54,8 @@ Exemplo da prática, um YAML de subconjunto lido sem dependência:
   - cada servidor começa em `- nome: <texto>`; os demais campos vêm em linhas `chave: valor`;
   - valor que começa por `[`, `{` ou `"` é JSON, e `true`, `false`, `null` e os números também;
     o resto é texto (aspas simples são tiradas);
-  - `command`, `url` e `type` são texto, e `args` é lista de texto;
+  - `nome`, `command`, `url`, `httpUrl`, `serverUrl` e `type` são sempre texto (`command: 2026` não
+    vira número), e `args` é lista de texto; na comparação, `1000` e `1000.0` são o mesmo número;
   - nenhuma outra forma de YAML (âncora, bloco `|`, lista em várias linhas, comentário no fim).
 Allowlist ilegível (existe e não lê) sai 2; só é aberta quando há servidor novo.
 
@@ -100,6 +102,8 @@ ENV_QUE_EXECUTA = {
 }  # fmt: skip
 NOMES_NA_SAIDA = {"_urls": "url", "_tipo": "type"}
 METADADOS_DA_ALLOWLIST = ("nome", "origem", "revisado_em", "revisado_contra", "versao")
+# Na allowlist, estes campos são sempre texto: `command: 2026` não vira número.
+CAMPOS_DE_TEXTO = ("nome", "command", "type") + CAMPOS_DE_URL
 ARQUIVOS_JSONC = (".gemini/settings.json", ".vscode/mcp.json")
 PASTA_CENTRAL = "central"
 MOTIVO_ESCRITA_PELO_SHELL = (
@@ -110,8 +114,9 @@ _NOME_DE_ARQUIVO = (
     r"|\.kiro/settings/mcp\.json|central/[\w./-]+)(?![\w.-])"
 )
 _DESTINO = rf"[^\s'\";&|]*{_NOME_DE_ARQUIVO}"
-# Um comando termina no fim do texto, em `;`, `&`, `|`, quebra de linha ou `)` (subshell).
-_FIM_DO_COMANDO = r"(?=\s*(?:$|[;&|\n)]))"
+# Um comando termina no fim do texto, em `;`, `&`, `|`, quebra de linha, `)` (subshell) ou crase, e
+# o destino também acaba antes de um redirecionamento (`2>&1`, `2>/dev/null`, `&>`) ou de `# ...`.
+_FIM_DO_COMANDO = r"(?=\s*(?:$|[;&|\n)`]|\d*[<>]|&>|\s#))"
 ESCRITA_NO_ARQUIVO = re.compile(
     rf">>?\s*['\"]?{_DESTINO}"
     rf"|\btee\b[^;&|\n]*{_NOME_DE_ARQUIVO}"
@@ -350,6 +355,17 @@ def _tipo(servidor: dict) -> str | None:
     return None
 
 
+def _numero_normal(valor: object) -> object:
+    """`1000.0` e `1e3` valem como `1000`, em qualquer profundidade (o booleano fica como está)."""
+    if isinstance(valor, float) and valor.is_integer():
+        return int(valor)
+    if isinstance(valor, dict):
+        return {k: _numero_normal(v) for k, v in valor.items()}
+    if isinstance(valor, list):
+        return [_numero_normal(v) for v in valor]
+    return valor
+
+
 def projecao(servidor: dict, da_allowlist: bool = False) -> dict:
     """O objeto inteiro do servidor, normalizado, menos o que não muda o que ele executa ou pode
     fazer: os VALORES de `env`, `headers` e `http_headers` (as chaves contam; o valor das variáveis
@@ -357,7 +373,7 @@ def projecao(servidor: dict, da_allowlist: bool = False) -> dict:
     ferramentas gravam `env: {}`, `autoApprove: []`, `trust: false`). As URLs viram um conjunto, sem
     importar o campo; `type` é o normalizado. Na allowlist, os metadados da revisão saem."""
     ficam = {
-        k: v
+        k: _numero_normal(v)
         for k, v in servidor.items()
         if k not in CAMPOS_COSMETICOS + CAMPOS_DE_URL + ("type",)
         and not (da_allowlist and k in METADADOS_DA_ALLOWLIST)
@@ -393,7 +409,8 @@ def identidade(servidor: dict, da_allowlist: bool = False) -> tuple[str, ...]:
 def campos_que_diferem(novo: dict, aprovado: dict) -> str:
     """Nomes (nunca valores) dos campos da projeção que diferem entre a configuração e a lista."""
     a, b = projecao(novo), projecao(aprovado, da_allowlist=True)
-    chaves = sorted(k for k in a.keys() | b.keys() if a.get(k) != b.get(k))
+    # Pela forma canônica, e não por `!=`: em Python `True == 1`, e a lista sairia vazia.
+    chaves = sorted(k for k in a.keys() | b.keys() if _canonico(a.get(k)) != _canonico(b.get(k)))
     nomes = [NOMES_NA_SAIDA.get(k, k.removeprefix("_")) for k in chaves]
     return ", ".join(dict.fromkeys(n[:40] for n in nomes))
 
@@ -431,9 +448,11 @@ def servidores_em_disco(raiz: Path, caminho: str) -> dict[str, dict]:
 # --- allowlist ----------------------------------------------------------------------------------
 
 
-def _valor(texto: str, local: str) -> object:
+def _valor(texto: str, local: str, chave: str = "") -> object:
     texto = texto.strip()
-    if texto in ("true", "false", "null") or NUMERO_JSON.fullmatch(texto):
+    if chave not in CAMPOS_DE_TEXTO and (
+        texto in ("true", "false", "null") or NUMERO_JSON.fullmatch(texto)
+    ):
         return json.loads(texto)
     if texto[:1] in '["{':
         try:
@@ -478,7 +497,7 @@ def ler_allowlist(texto: str, origem: str) -> dict[str, dict]:
         chave, dois, resto = corpo.partition(":")
         if not dois or not chave.strip():
             raise Indeterminado(f"allowlist ilegível: {local}: esperava `chave: valor`")
-        servidores[-1][chave.strip()] = _valor(resto, local)
+        servidores[-1][chave.strip()] = _valor(resto, local, chave.strip())
     if not tem_chave:
         raise Indeterminado(f"allowlist ilegível: {origem}: sem a chave `servidores:`")
     return _validar_allowlist(servidores, origem)
@@ -492,7 +511,7 @@ def _validar_allowlist(servidores: list[dict], origem: str) -> dict[str, dict]:
             raise Indeterminado(f"allowlist ilegível: {origem}: entrada sem `nome`")
         if nome in por_nome:
             raise Indeterminado(f"allowlist ilegível: {origem}: nome repetido ({json.dumps(nome)})")
-        for campo in ("command", "url", "type"):
+        for campo in CAMPOS_DE_TEXTO[1:]:
             if campo in entrada and not isinstance(entrada[campo], str):
                 raise Indeterminado(
                     f"allowlist ilegível: {origem}: {nome}: `{campo}` deve ser texto"

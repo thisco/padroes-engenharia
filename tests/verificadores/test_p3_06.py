@@ -1462,3 +1462,79 @@ def test_o_texto_da_pratica_nomeia_toda_a_lista_de_env_que_conta_pelo_valor():
     assert "e afins" not in texto
     for variavel in carregar_script().ENV_QUE_EXECUTA:
         assert f"`{variavel}`" in texto, variavel
+
+
+# --- rodada de correção 5: redirecionamento depois do destino, texto e números na allowlist -----
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "mv tmp.json .mcp.json 2>&1",
+        "mv t .mcp.json 2>/dev/null",
+        "mv t .mcp.json >/dev/null 2>&1 && echo ok",
+        "cp evil.json .mcp.json # copia",
+        "cp evil.json .mcp.json 2>>erros.log",
+        "mv t central/mcp-allowlist.yml 2>&1",
+        "jq . .mcp.json > t && mv t .mcp.json 2>/dev/null && git add .mcp.json",
+    ],
+)
+def test_cp_ou_mv_para_a_configuracao_com_redirecionamento_depois_pede(
+    tmp_path: Path, comando: str
+):
+    projeto(tmp_path)
+    r = harness_shell(tmp_path, comando)
+    assert r.returncode == 1 and r.stdout.splitlines() == [MOTIVO_ESCRITA_SHELL], comando
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "cat .mcp.json 2>/dev/null",
+        "cp .mcp.json /tmp/x.json 2>&1",
+        "mv .mcp.json antigo.json 2>/dev/null",
+        "cp .mcp.json backup.json # copia de seguranca",
+        "jq . .mcp.json 2>&1 | less",
+    ],
+)
+def test_ler_a_configuracao_com_redirecionamento_nao_pede(tmp_path: Path, comando: str):
+    projeto(tmp_path)
+    assert veredito(harness_shell(tmp_path, comando)) == 0, comando
+
+
+def test_allowlist_nome_e_command_numericos_sao_texto(tmp_path: Path):
+    lista = ALLOWLIST + "  - nome: 123\n    origem: proprio\n    command: 2026\n"
+    projeto(tmp_path, allowlist=lista)
+    r = harness(tmp_path, ".mcp.json", mcp(**{"123": {"command": "2026"}}))
+    assert veredito(r) == 0, r.stderr
+
+
+@pytest.mark.parametrize("campo", ["url", "httpUrl", "serverUrl", "type"])
+def test_allowlist_campos_de_url_e_type_nunca_viram_numero(tmp_path: Path, campo: str):
+    definicao = {"url": "https://a.example/x", campo: "1"} if campo != "url" else {"url": "1"}
+    linhas = "".join(f"    {k}: {v}\n" for k, v in definicao.items())
+    projeto(tmp_path, allowlist=ALLOWLIST + "  - nome: n\n" + linhas)
+    r = harness(tmp_path, ".mcp.json", mcp(n=definicao))
+    assert veredito(r) == 0, r.stdout + r.stderr
+
+
+def test_allowlist_numero_inteiro_escrito_como_float_e_o_mesmo(tmp_path: Path):
+    projeto(tmp_path, allowlist=_lista_com("tentativas: 1e3"))
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(gem={**GEM, "tentativas": 1000}))) == 0
+    projeto(tmp_path, allowlist=_lista_com("tentativas: 1000.0"))
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(gem={**GEM, "tentativas": 1000}))) == 0
+
+
+def test_booleano_e_numero_diferem_e_o_motivo_nomeia_o_campo(tmp_path: Path):
+    projeto(tmp_path, allowlist=_lista_com("tentativas: true"))
+    r = harness(tmp_path, ".mcp.json", mcp(gem={**GEM, "tentativas": 1}))
+    assert r.returncode == 1
+    assert "campo que executa ou dá acesso: tentativas)" in r.stdout, r.stdout
+
+
+def test_o_motivo_de_diferenca_nunca_sai_com_a_lista_de_campos_vazia(tmp_path: Path):
+    for allow, valor in (("tentativas: 1.5", 2), ("tentativas: false", 0), ("x: 0", False)):
+        campo = allow.split(":")[0]
+        projeto(tmp_path, allowlist=_lista_com(allow))
+        r = harness(tmp_path, ".mcp.json", mcp(gem={**GEM, campo: valor}))
+        assert r.returncode == 1 and "acesso: )" not in r.stdout, (allow, r.stdout)

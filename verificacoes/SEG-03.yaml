@@ -122,7 +122,7 @@ execucoes:
   comando: ".venv/bin/python -m pytest tests/verificadores/test_seg_03.py tests/verificadores/test_contrato_dos_verificadores.py -q; e o script copiado, com python3 -I, sobre requirements.txt com requests==2.0 em disco (acréscimo de flask, só a versão, URL com credencial, npm install left-pad, npm ci, evento pre-commit)"
   ambiente: "Python 3.14.8 (tomllib); macOS; diretório temporário sem rede; nenhum teste usa a rede"
   resultado: "passou"
-  evidencia: "acréscimo de flask: \"requirements.txt:2: dependência \"flask\" nova no conjunto declarado\", saída 1; só a versão (2.0 para 2.1): saída 0; URL com usuário e token: \"requirements.txt:2: dependência por URL ou caminho nova ou com origem alterada\", saída 1, sem a URL nem o token; \"npm install left-pad\": \"shell:0: acrescentar pacote pela CLI (npm install) pede aprovação...\", saída 1, sem o comando; \"npm ci\": saída 0; pre-commit: saída 2 com \"evento não atendido\". Os testes cobrem os sete formatos (nome novo, só versão, remoção, origem alterada, arquivo em disco quebrado), DTD no pom.xml (saída 2), caminho, 100 comandos de shell e a execução isolada do script do pacote."
+  evidencia: "acréscimo de flask: \"requirements.txt:2: dependência \"flask\" nova no conjunto declarado\", saída 1; só a versão (2.0 para 2.1): saída 0; URL com usuário e token: \"requirements.txt:2: dependência por URL ou caminho nova ou com origem alterada\", saída 1, sem a URL nem o token; \"npm install left-pad\": \"shell:0: acrescentar pacote pela CLI (npm install) pede aprovação...\", saída 1, sem o comando; \"npm ci\": saída 0; pre-commit: saída 2 com \"evento não atendido\". Rodada de correção 5 da P3-06: \"cp /tmp/r.txt requirements.txt 2>&1\", \"mv t package.json 2>/dev/null\" e \"cp ... requirements.txt # x\" pedem, saída 1; \"cat requirements.txt 2>/dev/null\": saída 0. Os testes cobrem os sete formatos (nome novo, só versão, remoção, origem alterada, arquivo em disco quebrado), DTD no pom.xml (saída 2), caminho, 100 comandos de shell e a execução isolada do script do pacote."
   data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/SEG-03/verificar-dependencias.py
@@ -230,6 +230,9 @@ revisao_adversarial:
   - afirmacao: verificar-dependencias.py --indice aceita qualquer URL, inclusive file://
     problema: '[baixo] só importa se o CI deixar quem abre a MR escolher o argumento.'
     tratamento: 'Tratado: o Limites diz que o índice vem do job do CI, e não da MR.'
+  - afirmacao: "Escrita pelo shell com cp ou mv e redirecionamento depois do destino (re-revisão da rodada 4 da P3-06)"
+    problema: "[importante] cp /tmp/r.txt requirements.txt 2>&1, mv t package.json 2>/dev/null e cp ... requirements.txt # x passavam: o fim do comando não aceitava redirecionamento nem comentário."
+    tratamento: "Tratado em 2026-10-08 (rodada de correção 5 da P3-06): o destino termina também antes de redirecionamento, crase e comentário, e o ramo cp|mv não atravessa quebra de linha; testes que pedem e leituras com redirecionamento que continuam passando."
 # Rodada de 2026-10-08: nenhum prompt de exemplo mudou; o prompt SEG-03-prompt-1 e as execuções do candidato
 # de CI (verificar-dependencias.py) de 2026-10-07 seguem valendo. As afirmações externas anteriores
 # (usenix, owasp, pypi-json-api, pip-hash-checking) não mudaram.
