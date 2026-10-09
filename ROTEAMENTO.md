@@ -18,7 +18,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
-| Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (só orienta) | SEG-02 (só orienta) | a definir |
+| Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (só orienta) | a definir |
 | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (pede aprovação) | P2-06 (só orienta) |
 
 ## Práticas
@@ -70,6 +70,6 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | QLD-03 | Validação local rígida: o que o CI roda, roda antes do push | só orienta | experimentar | `steering:qualidade` |
 | SEG-01 | Threat-model em cinco perguntas antes de escrever | só orienta | experimentar | nada |
 | SEG-02 | Segredo não entra no repositório, com varredura no CI e antes do commit | só orienta | experimentar | nada |
-| SEG-03 | Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa | só orienta | experimentar | nada |
+| SEG-03 | Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa | pede aprovação | experimentar | nada |
 | UX-01 | Toda tela tem os quatro estados: carregando, vazio, erro e sucesso | só orienta | experimentar | `skill:estados-de-interface` |
 | UX-02 | Protótipo antes do código, e o estado vazio não é erro | só orienta | experimentar | `skill:estados-de-interface` |

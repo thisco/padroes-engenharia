@@ -1,0 +1,11 @@
+id: poetry-managing-dependencies
+titulo: "Managing dependencies (documentação do Poetry)"
+organizacao: Poetry
+url: https://python-poetry.org/docs/managing-dependencies/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção 'Dependency groups' ([tool.poetry.group.<nome>.dependencies])"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

@@ -1,0 +1,11 @@
+id: gradle-declaring-dependencies
+titulo: "Declaring dependencies (documentação do Gradle)"
+organizacao: Gradle
+url: https://docs.gradle.org/current/userguide/declaring_dependencies.html
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "bloco dependencies {}, configurações implementation, compileOnly, runtimeOnly e testImplementation, notação 'grupo:nome:versão', project() e files()"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

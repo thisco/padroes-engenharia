@@ -1,0 +1,11 @@
+id: poetry-dependency-specification
+titulo: "Dependency specification (documentação do Poetry)"
+organizacao: Poetry
+url: https://python-poetry.org/docs/dependency-specification/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções das dependências git, path, url e da chave source (repositório alternativo)"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

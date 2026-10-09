@@ -4,15 +4,24 @@ titulo: Dependência conferida, com pacote existente, lockfile com hash e aprova
 dominio: seguranca
 subdominio: null
 momento: enquanto-escreve
-forca: orienta
-mecanismo: null
+forca: pede-aprovacao
+mecanismo:
+  verificador: verificadores/seg_03.py
+  gatilhos:
+    - evento: antes-de-ferramenta
+      ferramenta: [editar, escrever]
+      caminhos: ["pyproject.toml", "**/pyproject.toml", "requirements*.txt", "**/requirements*.txt", "package.json", "**/package.json", "go.mod", "**/go.mod", "pom.xml", "**/pom.xml", "build.gradle*", "**/build.gradle*", "Cargo.toml", "**/Cargo.toml"]
+    - evento: antes-de-ferramenta
+      ferramenta: [shell]
+      comando: "\\b(?:npm|pnpm|yarn|bun|pip3?|uv|poetry|pdm|pipenv|cargo|go)\\b[\\s\\S]*\\b(?:install|add|get|i)\\b"
+  mensagem: "SEG-03: dependência nova (arquivo de dependências ou pacote instalado pela CLI); proponha o pacote com o motivo e espere a aprovação de uma pessoa, que a registra em dependencias-aprovadas.txt. Como aplicar: {URL do portal}/praticas/SEG-03.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [usenix-pacotes-alucinados, owasp-llm-top10, pypi-json-api, pip-hash-checking]
+referencias: [usenix-pacotes-alucinados, owasp-llm-top10, pypi-json-api, pip-hash-checking, pypa-pyproject-toml, pypa-dependency-groups, poetry-dependency-specification, poetry-managing-dependencies, uv-project-dependencies, npm-package-json, npm-install, cargo-specifying-dependencies, cargo-overriding-dependencies, cargo-workspaces, go-mod-reference, maven-pom, gradle-declaring-dependencies, pip-requirements-file]
 relacionadas: [SEG-01, SEG-02]
 dono: engenharia
-revisado_em: 2026-10-07
-revisar_ate: 2027-04-07
+revisado_em: 2026-10-08
+revisar_ate: 2027-04-08
 resumo: "Cada dependência proposta pelo agente é conferida no índice, aprovada por uma pessoa e fixada em lockfile com hash; pacote inventado não entra."
 ferramentas_aprovadas: []
 exemplos:
@@ -85,6 +94,10 @@ adulteração remota [ref:pip-hash-checking].
    então escreve a linha em `dependencias-aprovadas.txt`.
 6. Quando o verificador disser que o pacote não existe, remova a linha. O agente não escolhe um
    substituto: ele lista as alternativas que conhece, e a pessoa decide e aprova.
+7. No harness do agente, o `seg_03.py` pede a aprovação de uma pessoa quando uma dependência nova aparece num
+   arquivo de dependências ou num comando de instalação. Ele vem em `pacote/verificadores/seg_03.py`, baixado
+   de `<URL do portal>/pacote/verificadores/seg_03.py`. Hoje o gatilho de harness não liga à mão: até o runtime
+   (F2) e o instalador (F4), o que funciona é o passo 4, no CI.
 
 ## Exemplo
 
@@ -95,7 +108,7 @@ O caso é um `requirements.txt` em que um assistente acrescentou uma dependênci
 
 <!-- incluir: exemplos/SEG-03/antes/requirements.txt -->
 
-O verificador sai com 1:
+O verificador do Exemplo, `verificar-dependencias.py`, sai com 1:
 
 ```text
 antes: padroes-eng-pacote-inexistente-7f3a: sem aprovação com motivo em dependencias-aprovadas.txt
@@ -170,8 +183,93 @@ commitados, além do `uv` e da rede.
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O verificador candidato é o
-`verificar-dependencias.py` do Exemplo, que roda no CI antes da instalação. Ele sai com 1 se um dos
+O portal hospeda o verificador `verificadores/seg_03.py`, e a força é `pede-aprovacao`: ele não nega, pede a
+confirmação da pessoa antes de o agente agir. Ele roda em um evento só, `antes-de-ferramenta`, e casa em duas
+situações: (1) `editar` ou `escrever` num arquivo de dependências cujo conteúdo declara uma dependência que o
+arquivo em disco não declarava; (2) `shell` cujo comando acrescenta pacote pela linha de comando, que é o jeito
+normal de um agente fazer isso sem tocar o arquivo. Não há `pre-commit` nem `ci`, porque `pede-aprovacao` só
+existe no harness: `depois-de-ferramenta`, `pre-commit` e `ci` saem com 2. Por isso o job de CI desta prática é
+o candidato do Exemplo, opcional e independente (veja abaixo), e não há job de CI do `seg_03.py`.
+
+**Os arquivos.** Em qualquer pasta fora de código de terceiros (`node_modules`, `.venv`, `venv`, `vendor`,
+`site-packages`, medidos dentro do projeto): `pyproject.toml`, `requirements*.txt`, `package.json`, `go.mod`,
+`pom.xml`, `build.gradle*` e `Cargo.toml`. O que ele lê de cada um, só com a biblioteca padrão:
+
+- `requirements*.txt`: um requisito por linha, com comentário `#` e continuação por `\`; `nome @ url`, URL e
+  caminho são origens; `-r`, `-e`, `-i`/`--index-url`, `--extra-index-url` e `-f`/`--find-links` contam
+  como itens (inclusão de arquivo e fonte de pacotes); `-c` não conta [ref:pip-requirements-file].
+- `pyproject.toml`: `dependencies`, `optional-dependencies` e `build-system.requires` [ref:pypa-pyproject-toml];
+  `[dependency-groups]` [ref:pypa-dependency-groups]; do Poetry, as tabelas `dependencies` e
+  `group.<nome>.dependencies`, com `git`, `path`, `url` e `source` como origem
+  [ref:poetry-dependency-specification] [ref:poetry-managing-dependencies]; do uv, `[tool.uv.sources]`,
+  `[[tool.uv.index]]` e o `dev-dependencies` legado [ref:uv-project-dependencies]. A chave `python` do Poetry
+  não é dependência.
+- `package.json`: `dependencies`, `devDependencies`, `optionalDependencies` e `peerDependencies`; é origem
+  qualquer especificação que não seja versão ou intervalo: URL, git, `user/repo`, `file:` e caminho
+  [ref:npm-package-json], e o alias `npm:<pacote>@x`, que vale pelo pacote real [ref:npm-install].
+- `Cargo.toml`: `[dependencies]`, `[dev-dependencies]`, `[build-dependencies]`, as mesmas por plataforma, com
+  `git`, `path`, `registry` e `package` (crate renomeado) como origem [ref:cargo-specifying-dependencies];
+  `[workspace.dependencies]` [ref:cargo-workspaces] e `[patch]` [ref:cargo-overriding-dependencies].
+- `go.mod`: os módulos de `require` (em linha ou em bloco, com ou sem `// indirect`), a diretiva `tool`
+  e o destino de `replace` como origem; `exclude`, `retract` e a versão do `go` não contam [ref:go-mod-reference].
+- `pom.xml`: cada `dependency`, os `plugin`, o `parent` e a URL de `repository` e `pluginRepository` como fonte;
+  o escopo `system` com `systemPath` é origem [ref:maven-pom]. O XML com `DOCTYPE` ou `ENTITY` não é lido
+  (saída 2 no conteúdo): o `xml.etree` da biblioteca padrão não é usado sobre DTD, para nenhuma entidade ser
+  expandida.
+- `build.gradle*`, Groovy ou Kotlin, por regex conservadora, sobre o texto sem comentário: uma configuração do bloco
+  `dependencies` (`implementation`, `api`, `compileOnly`, `runtimeOnly`, `testImplementation`, `kapt`,
+  `classpath` e as que terminam em `Implementation`) seguida de `"grupo:artefato[:versão]"`, de `group:` e
+  `name:`, de alias de catálogo (`libs.x.y`), de `files(...)` ou de `kotlin("x")`; `id` dentro de `plugins {}`; e,
+  dentro de `repositories {}`, `url`, `maven("...")` e os repositórios nomeados (`google()`, `mavenCentral()`,
+  `jcenter()`). O módulo do próprio build, `project(":x")`, não conta [ref:gradle-declaring-dependencies].
+
+**O que casa.** Ele olha o conjunto de dependências declaradas, e não as linhas. Cada item é um nome mais a origem
+em que ele aparece; a origem é vazia no registro padrão e, no resto, o que o arquivo diz (URL, git, caminho,
+registro ou fonte nomeada, pacote real de um alias). Uma dependência é nova quando o conteúdo que o agente quer
+gravar declara um nome que o arquivo em disco não declarava, ou o mesmo nome com uma origem que ele não tinha;
+trocar o índice ou o registro, apontar para URL, git ou caminho local, ou pôr um repositório novo conta como
+novo, porque é o vetor do pacote trocado. Não casa: remover dependência; mudar só a versão ou o intervalo de uma
+dependência que já existia (`requests==2.0` para `requests==2.1`, `^1` para `^2`; um pacote existente pode
+subir de versão sem nova aprovação, e a versão é o que o lockfile com hash e a revisão do diff prendem); mudar
+`extras`, `features`, marcador, hash, comentário, ordem, descrição, nome ou versão do projeto, `scripts`; e mover
+a dependência entre `dependencies` e `devDependencies`, porque o nome é o mesmo. O arquivo em disco ausente,
+quebrado ou que não decodifica conta como vazio, para o agente conseguir consertá-lo; as dependências dele
+pedem de novo. O conteúdo novo que não lê no formato, o `conteudo` ausente numa escrita, o caminho absoluto fora
+do `cwd` e o evento que ele não atende saem com 2.
+
+**Pela linha de comando.** O verificador reconhece `npm install <pacote>` (e `i`, `add`), `pnpm add`, `yarn add`,
+`bun add`, `uv add`, `pip install` (também `python -m pip` e `uv pip install`), `poetry add`, `pdm add`,
+`pipenv install`, `cargo add` e `go get` com argumento de pacote, URL ou caminho, ou com opção de fonte
+(`--index-url`, `--registry`, `--git`, `--path`). O mesmo comando sem pacote (`npm install`, `npm ci`,
+`pip install -r requirements.txt`, `go get ./...`) não casa. Ele procura o comando em cada trecho separado por
+`&&`, `;`, `|` ou quebra de linha, e dentro de `bash -c "..."` e `eval "..."`. A saída mostra só o gerenciador e
+o verbo, nunca o comando, que pode levar o token de um registro privado. Comando que só cita o texto sem aspas
+(`echo npm install x`) casa: é falso positivo aceito, e a pessoa só responde "não" ao pedido.
+
+Cada achado sai em uma linha, `<caminho>:<linha>: <motivo>`, até 20 e um resumo do resto. O motivo traz o nome do
+pacote quando ele é um nome (`dependência "flask" nova no conjunto declarado`) e nunca URL, caminho ou
+linha do arquivo, que podem carregar credencial (`https://usuario:token@...` num `requirements.txt` ou num
+repositório do Gradle):
+
+```text
+requirements.txt:2: dependência "flask" nova no conjunto declarado
+```
+
+Hoje o gatilho de harness não liga à mão: até o runtime (F2) e o instalador (F4), não há hook que o chame
+(o passo 7 do Como aplicar diz o que se faz até lá). O pacote publicado traz o script em
+`pacote/verificadores/seg_03.py`, baixado do portal, e para ver o veredito sem o runtime alimenta-se o
+script direto, como o runtime fará, com o JSON normalizado no stdin:
+
+```bash
+printf '%s' '{"ferramenta":"escrever","caminho":"requirements.txt","conteudo":"flask==3.0\n","comando":null,"cwd":"."}' \
+  | python3 verificadores/seg_03.py --evento antes-de-ferramenta
+printf '%s' '{"ferramenta":"shell","caminho":null,"conteudo":null,"comando":"npm install left-pad","cwd":"."}' \
+  | python3 verificadores/seg_03.py --evento antes-de-ferramenta
+```
+
+O candidato de CI do Exemplo, `verificar-dependencias.py`, segue como opção e faz outra coisa: confere o
+`requirements.txt` inteiro contra o índice, a aprovação e o lockfile, e roda no CI antes da instalação. A versão
+hospedada, a que pede aprovação no harness, é `verificadores/seg_03.py`. O candidato sai com 1 se um dos
 três arquivos falta ou está vazio, se uma linha do `requirements.txt` não tem o formato
 `nome` ou `nome==versão` (opção como `-r` e URL reprovam), se a dependência não existe no índice,
 se a versão fixada não existe, se não há aprovação com motivo de pelo menos três palavras, se ela
@@ -183,13 +281,18 @@ padrão) ou responde com algo diferente de 200 e 404:
 
 Os limites: existir no índice não é ser seguro. Um nome que um modelo inventou e que um atacante
 registrou depois existe, e passa na consulta; é por isso que a aprovação de uma pessoa, com o
-motivo, é parte da prática, e não um complemento. O verificador não olha o conteúdo do pacote, o
-histórico do projeto, a idade, a popularidade nem vulnerabilidades conhecidas (isso pede uma
-ferramenta de auditoria). Ele confere as dependências diretas no índice e exige hash no lockfile
-inteiro, mas não prova que o lockfile saiu do `requirements.txt` do commit: gere o lockfile na MR e
-reveja o diff dele. O índice usado é o `pypi.org`; um índice privado pode ter outra rota, e o
-`--indice` serve para apontar outro (aceita qualquer URL, inclusive `file://`); por isso o índice
-vem do job do CI, e quem abre a MR não escolhe o argumento. O Exemplo cobre só Python e `requirements.txt`; `pyproject.toml`,
-`package.json` e afins pedem o mesmo desenho com a ferramenta do ecossistema. A injeção de prompt
-tem outras formas além do nome de pacote, e a página do OWASP citada trata a categoria geral
-[ref:owasp-llm-top10].
+motivo, é parte da prática, e não um complemento. O `seg_03.py` não consulta o índice (o hook não usa rede), não
+olha o conteúdo do pacote, a idade, a popularidade nem vulnerabilidades conhecidas (isso pede uma ferramenta de
+auditoria), e não confere o lockfile nem a aprovação: ele só faz a pessoa ver que a dependência é nova. Uma
+dependência existente que sobe de versão passa, e quem confere o que mudou é o diff do lockfile na MR. Fora do
+que ele lê: `requirements/*.txt` e outros nomes fora de `requirements*.txt`, `settings.gradle` e o catálogo
+`libs.versions.toml` (o alias `libs.x` é visto, mas não o que ele aponta), `overrides` e `resolutions` do
+`package.json`, tabelas de outras ferramentas do `pyproject.toml` (hatch, setuptools dinâmico), `.npmrc` e a
+configuração de índice fora do arquivo, e propriedades `${...}` do Maven, que valem pelo texto. Um nome com
+caractere invisível conta como nome diferente (pede). O que o agente grava por `sed`, editor ou script fora do
+harness passa, e `pip install -r arquivo` não casa, porque o arquivo, se for do projeto, já passou pela edição.
+O `seg_03.py` lê arquivo em UTF-8, UTF-16 com BOM ou cp1252; o TOML exige o Python 3.11 (`tomllib`) e, abaixo
+disso, o `pyproject.toml` e o `Cargo.toml` saem com 2 e dizem o motivo, enquanto os outros formatos seguem. O
+`--indice` do candidato do Exemplo serve para apontar outro índice (aceita qualquer URL, inclusive `file://`); por
+isso o índice vem do job do CI, e quem abre a MR não escolhe o argumento. A injeção de prompt tem outras formas
+além do nome de pacote, e a página do OWASP citada trata a categoria geral [ref:owasp-llm-top10].

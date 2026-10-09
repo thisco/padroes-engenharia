@@ -1,5 +1,5 @@
 conteudo: SEG-03
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o estudo analisou 576.000 amostras de código de 16 modelos em duas linguagens e achou ao menos
@@ -35,7 +35,74 @@ afirmacoes:
   localizacao: seção 'Hash-checking Mode'
   resultado: confirmada
   nota: 'O comportamento no desencontro de hash não vem da página: foi observado na execução (pip 26.2.1).'
+- texto: "project.dependencies é uma lista de especificadores de dependência, project.optional-dependencies é uma tabela de listas e build-system.requires lista as dependências do sistema de build"
+  ref: "pypa-pyproject-toml"
+  localizacao: "seções 'dependencies', 'optional-dependencies' e 'Declaring build system dependencies: the [build-system] table'"
+  resultado: "confirmada"
+- texto: "a tabela [dependency-groups] tem grupos definidos pela pessoa, cada um com uma lista de requisitos (texto ou tabela include-group)"
+  ref: "pypa-dependency-groups"
+  localizacao: "seções 'Dependency Groups' e 'Dependency Group Include'"
+  resultado: "confirmada"
+- texto: "o Poetry declara dependências em tabelas, com as chaves git, path, url e source para origem que não é o índice padrão"
+  ref: "poetry-dependency-specification"
+  localizacao: "seções das dependências git, path, url e do repositório alternativo (source)"
+  resultado: "confirmada"
+  nota: "A página não descreve os grupos nem [[tool.poetry.source]]; os grupos estão na referência seguinte, e o [[tool.poetry.source]] só aparece em exemplo, por isso o texto não o afirma como documentado."
+- texto: "os grupos de dependências do Poetry se declaram em [tool.poetry.group.<nome>.dependencies]"
+  ref: "poetry-managing-dependencies"
+  localizacao: "seção 'Dependency groups'"
+  resultado: "confirmada"
+  nota: "A página não trata o dev-dependencies como legado; o verificador o lê por precaução, e o texto não afirma o status dele."
+- texto: "o uv guarda origens alternativas em [tool.uv.sources] (index, git, url, path, workspace), os índices em [[tool.uv.index]] e o dev-dependencies legado em [tool.uv]"
+  ref: "uv-project-dependencies"
+  localizacao: "seções [tool.uv.sources], [tool.uv.index] e dev-dependencies"
+  resultado: "confirmada"
+- texto: "o package.json tem os campos dependencies, devDependencies, optionalDependencies e peerDependencies, e a especificação pode ser intervalo de versão, URL, git, user/repo ou file:"
+  ref: "npm-package-json"
+  localizacao: "seções de cada campo e 'Dependencies' (formas de especificação)"
+  resultado: "confirmada"
+- texto: "o npm install tem os aliases add e i, e instala um pacote sob outro nome com <alias>@npm:<nome>"
+  ref: "npm-install"
+  localizacao: "lista de aliases e seção de alias de pacote"
+  resultado: "confirmada"
+  nota: "No package.json o alias aparece como \"nome\": \"npm:real@x\"; essa forma foi lida pelo verificador a partir da sintaxe da página, e o teste do portal a cobre."
+- texto: "o Cargo declara dependências em [dependencies], [dev-dependencies], [build-dependencies] e por plataforma, com git, path, registry e package (renomear o crate)"
+  ref: "cargo-specifying-dependencies"
+  localizacao: "seções [dependencies], git, path, registry, 'Renaming dependencies', dev, build e 'Platform specific dependencies'"
+  resultado: "confirmada"
+- texto: "a seção [patch] do Cargo.toml sobrepõe dependências por outras cópias, com sintaxe parecida com a de [dependencies]"
+  ref: "cargo-overriding-dependencies"
+  localizacao: "seção 'The [patch] section'"
+  resultado: "confirmada"
+- texto: "a tabela workspace.dependencies define as dependências herdadas pelos membros do workspace"
+  ref: "cargo-workspaces"
+  localizacao: "seção 'The dependencies table'"
+  resultado: "confirmada"
+- texto: "o go.mod declara módulos com require (em linha ou em bloco, // indirect), replace (destino que é caminho local ou módulo com versão), tool, exclude e retract"
+  ref: "go-mod-reference"
+  localizacao: "seção 'go.mod files', diretivas require, replace, tool, exclude e retract"
+  resultado: "confirmada"
+- texto: "o pom.xml declara dependencies com groupId, artifactId, version, scope e systemPath, o parent, os plugins de build e os repositories e pluginRepositories com url"
+  ref: "maven-pom"
+  localizacao: "seções Dependencies, Parent, Build plugins, Repositories e Plugin Repositories"
+  resultado: "confirmada"
+- texto: "o Gradle declara dependências no bloco dependencies com configurações (implementation, compileOnly, runtimeOnly, testImplementation), na notação 'grupo:nome:versão', e project() e files() para módulo e arquivo local"
+  ref: "gradle-declaring-dependencies"
+  localizacao: "bloco dependencies {}, configurações, notação em texto, project e files"
+  resultado: "confirmada"
+  nota: "A página não traz a notação de mapa (group/name), o alias de catálogo, a configuração api, os blocos plugins e repositories; o verificador lê tudo isso, e o texto da prática o descreve como comportamento do verificador, sem afirmar a documentação do Gradle."
+- texto: "o arquivo de requisitos do pip tem um requisito por linha, comentário com #, continuação por barra invertida, URL com @, e as opções -r, -c, -e, -i, --extra-index-url, -f e --hash"
+  ref: "pip-requirements-file"
+  localizacao: "seções de estrutura, comentários, formas de requisito e opções"
+  resultado: "confirmada"
 execucoes:
+- tipo: "arquivo"
+  arquivo: "verificadores/seg_03.py"
+  comando: ".venv/bin/python -m pytest tests/verificadores/test_seg_03.py tests/verificadores/test_contrato_dos_verificadores.py -q; e o script copiado, com python3 -I, sobre requirements.txt com requests==2.0 em disco (acréscimo de flask, só a versão, URL com credencial, npm install left-pad, npm ci, evento pre-commit)"
+  ambiente: "Python 3.14.8 (tomllib); macOS; diretório temporário sem rede; nenhum teste usa a rede"
+  resultado: "passou"
+  evidencia: "acréscimo de flask: \"requirements.txt:2: dependência \"flask\" nova no conjunto declarado\", saída 1; só a versão (2.0 para 2.1): saída 0; URL com usuário e token: \"requirements.txt:2: dependência por URL ou caminho nova ou com origem alterada\", saída 1, sem a URL nem o token; \"npm install left-pad\": \"shell:0: acrescentar pacote pela CLI (npm install) pede aprovação...\", saída 1, sem o comando; \"npm ci\": saída 0; pre-commit: saída 2 com \"evento não atendido\". Os testes cobrem os sete formatos (nome novo, só versão, remoção, origem alterada, arquivo em disco quebrado), DTD no pom.xml (saída 2), caminho, 100 comandos de shell e a execução isolada do script do pacote."
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/SEG-03/verificar-dependencias.py
   comando: python3 verificar-dependencias.py <dir> sobre antes/ e depois/, com --indice em porta fechada,
@@ -121,3 +188,6 @@ revisao_adversarial:
   - afirmacao: verificar-dependencias.py --indice aceita qualquer URL, inclusive file://
     problema: '[baixo] só importa se o CI deixar quem abre a MR escolher o argumento.'
     tratamento: 'Tratado: o Limites diz que o índice vem do job do CI, e não da MR.'
+# Rodada de 2026-10-08: nenhum prompt de exemplo mudou; o prompt SEG-03-prompt-1 e as execuções do candidato
+# de CI (verificar-dependencias.py) de 2026-10-07 seguem valendo. As afirmações externas anteriores
+# (usenix, owasp, pypi-json-api, pip-hash-checking) não mudaram.

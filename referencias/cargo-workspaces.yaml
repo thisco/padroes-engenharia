@@ -1,0 +1,11 @@
+id: cargo-workspaces
+titulo: "Workspaces (The Cargo Book)"
+organizacao: Rust Project
+url: https://doc.rust-lang.org/cargo/reference/workspaces.html
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção 'The dependencies table' ([workspace.dependencies])"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."
