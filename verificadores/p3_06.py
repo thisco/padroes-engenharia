@@ -10,7 +10,9 @@ Casa em três situações:
 2. `editar`/`escrever` na própria allowlist: qualquer arquivo sob `central/` (pelo nome ou pelo
    caminho real, o que pega link simbólico): "a allowlist central só muda com aprovação". A
    variável `P3_06_ALLOWLIST`, se definida, tem de resolver para dentro de `central/`; senão sai 2;
-3. `shell` cujo `comando` traz `mcp add` (`claude mcp add`, `codex mcp add`, `gemini mcp add`,
+3. `shell` que escreve (`>`, `>>`, `tee`, `sed -i`, `cp`/`mv`) num arquivo de configuração de MCP ou
+   em `central/`: "escrita na configuração MCP pelo shell pede aprovação"; e `shell` cujo `comando`
+   traz `mcp add` (`claude mcp add`, `codex mcp add`, `gemini mcp add`,
    `add-json`), com ou sem aspas (regex e `shlex`), depois de NFKC e sem invisíveis. Variável e
    apelido de shell (`m=mcp; claude $m add`) não são vistos. A saída não traz o comando, que pode
    ter segredo.
@@ -27,7 +29,9 @@ no JSON sai 2.
 O objeto da prática é o conjunto de servidores declarados, e não as linhas. Servidor "novo" é o que
 o `conteudo` declara e o arquivo em disco não declarava, ou declarava com outra identidade. A
 identidade é o objeto inteiro do servidor, normalizado, menos os VALORES de `env` e `headers` (as
-chaves contam) e os campos cosméticos (`timeout`, `description`, `disabled`, `enabled`): assim
+chaves contam; o valor de `PATH`, `PYTHONPATH`, `NODE_OPTIONS`, `LD_PRELOAD` e afins também), os
+campos cosméticos (`timeout`, `description`, `disabled`, `enabled`, timeouts do Codex) e o que é
+vazio ou padrão (`env: {}`, `autoApprove: []`, `trust: false`; as ferramentas gravam isso): assim
 `headersHelper`, `envFile`, `cwd`, `trust`, `autoApprove` e campo futuro entram sem lista. As URLs
 (`url`, `httpUrl`, `serverUrl`) valem como conjunto, sem importar o campo; o `type` é normalizado
 (ausente vale `stdio` com `command` e `http` com URL; `sse` e `streamable-http` contam como `http`);
@@ -76,10 +80,37 @@ PASTAS_DE_TERCEIROS = {"node_modules", ".venv", "venv", "vendor", "site-packages
 CAMPOS_DE_URL = ("url", "httpUrl", "serverUrl")
 # Na identidade só as chaves contam; o valor de um segredo pode girar sem pedir aprovação.
 CAMPOS_SO_CHAVES = ("env", "headers", "http_headers")
-CAMPOS_COSMETICOS = ("timeout", "description", "disabled", "enabled")
+CAMPOS_COSMETICOS = (
+    "timeout", "description", "disabled", "enabled", "startup_timeout_sec", "tool_timeout_sec",
+    "startup_timeout_ms", "alwaysLoad", "_meta",
+)  # fmt: skip
+# Valores que são o padrão da ferramenta: iguais a ausente.
+VALORES_PADRAO = {"trust": False, "disabled": False, "enabled": True}
+# Variáveis de ambiente que mudam o que o processo executa: o valor conta (a chave sempre conta).
+ENV_QUE_EXECUTA = {
+    "PATH", "PYTHONPATH", "PYTHONSTARTUP", "PYTHONHOME", "NODE_OPTIONS", "NODE_PATH", "LD_PRELOAD",
+    "LD_LIBRARY_PATH", "DYLD_INSERT_LIBRARIES", "DYLD_LIBRARY_PATH", "JAVA_TOOL_OPTIONS",
+    "_JAVA_OPTIONS", "BASH_ENV", "ENV", "PERL5OPT", "PERL5LIB", "RUBYOPT", "RUBYLIB",
+}  # fmt: skip
+NOMES_NA_SAIDA = {"_urls": "url", "_tipo": "type"}
 METADADOS_DA_ALLOWLIST = ("nome", "origem", "revisado_em", "revisado_contra", "versao")
 ARQUIVOS_JSONC = (".gemini/settings.json", ".vscode/mcp.json")
 PASTA_CENTRAL = "central"
+MOTIVO_ESCRITA_PELO_SHELL = (
+    "escrita na configuração MCP pelo shell pede aprovação (a allowlist central decide)"
+)
+_NOME_DE_ARQUIVO = (
+    r"(?:\.mcp\.json|mcp\.json|mcp_config\.json|\.codex/config\.toml|\.gemini/settings\.json"
+    r"|\.kiro/settings/mcp\.json|central/[\w./-]+)(?![\w.-])"
+)
+_DESTINO = rf"[^\s'\";&|]*{_NOME_DE_ARQUIVO}"
+ESCRITA_NO_ARQUIVO = re.compile(
+    rf">>?\s*['\"]?{_DESTINO}"
+    rf"|\btee\b[^;&|]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:sed|perl)\b[^;&|]*\s(?:-[A-Za-z]*i|--in-place)[^;&|]*{_NOME_DE_ARQUIVO}"
+    rf"|\b(?:cp|mv)\b[^;&|]*\s['\"]?{_DESTINO}['\"]?\s*$",
+    re.IGNORECASE,
+)
 MOTIVO_MCP_ADD = "adicionar servidor MCP pela CLI pede aprovação (a allowlist central decide)"
 COMANDO_MCP_ADD = re.compile(r"\bmcp['\"]?\s+['\"]?add", re.IGNORECASE)
 # Ignoráveis por padrão que não são da categoria Cf (Unicode, DerivedCoreProperties).
@@ -310,12 +341,12 @@ def _tipo(servidor: dict) -> str | None:
     return None
 
 
-def identidade(servidor: dict, da_allowlist: bool = False) -> tuple[str, ...]:
-    """O objeto inteiro do servidor, normalizado, menos os VALORES de `env` e `headers` (as chaves
-    contam) e os campos cosméticos. Assim `headersHelper`, `envFile`, `cwd`, `trust` e campo futuro
-    que execute algo entram sem lista. As URLs viram um conjunto, sem importar o campo; `type` é o
-    normalizado; `args` ausente e `[]` são o mesmo. Na allowlist, os metadados da revisão ficam
-    de fora."""
+def projecao(servidor: dict, da_allowlist: bool = False) -> dict:
+    """O objeto inteiro do servidor, normalizado, menos o que não muda o que ele executa ou pode
+    fazer: os VALORES de `env`, `headers` e `http_headers` (as chaves contam; o valor das variáveis
+    de ambiente que mudam a execução também), os campos cosméticos e o que é vazio ou padrão (as
+    ferramentas gravam `env: {}`, `autoApprove: []`, `trust: false`). As URLs viram um conjunto, sem
+    importar o campo; `type` é o normalizado. Na allowlist, os metadados da revisão saem."""
     ficam = {
         k: v
         for k, v in servidor.items()
@@ -324,13 +355,33 @@ def identidade(servidor: dict, da_allowlist: bool = False) -> tuple[str, ...]:
     }
     for chave in CAMPOS_SO_CHAVES:
         if isinstance(ficam.get(chave), dict):
-            ficam[chave] = sorted(ficam[chave])
-    ficam["args"] = ficam.get("args") or []
+            valores = ficam[chave]
+            ficam[chave] = sorted(valores)
+            if chave == "env":
+                criticos = {k: v for k, v in valores.items() if k.upper() in ENV_QUE_EXECUTA}
+                if criticos:
+                    ficam["_env_que_executa"] = criticos
     ficam["_urls"] = sorted(
         _canonico(servidor[c]) for c in CAMPOS_DE_URL if servidor.get(c) is not None
     )
     ficam["_tipo"] = _tipo(servidor)
-    return (_canonico(ficam),)
+    return {
+        k: v
+        for k, v in ficam.items()
+        if v is not None and v != {} and v != [] and VALORES_PADRAO.get(k, object()) != v
+    }
+
+
+def identidade(servidor: dict, da_allowlist: bool = False) -> tuple[str, ...]:
+    return (_canonico(projecao(servidor, da_allowlist)),)
+
+
+def campos_que_diferem(novo: dict, aprovado: dict) -> str:
+    """Nomes (nunca valores) dos campos da projeção que diferem entre a configuração e a lista."""
+    a, b = projecao(novo), projecao(aprovado, da_allowlist=True)
+    chaves = sorted(k for k in a.keys() | b.keys() if a.get(k) != b.get(k))
+    nomes = [NOMES_NA_SAIDA.get(k, k.removeprefix("_")) for k in chaves]
+    return ", ".join(dict.fromkeys(n[:40] for n in nomes))
 
 
 def decodifica(dados: bytes) -> str | None:
@@ -503,6 +554,8 @@ def evento_harness() -> list[str]:
         # Só o motivo sai: o comando pode carregar segredo (`--env CHAVE=...`).
         if comando is not None and comando_adiciona_servidor(comando):
             return ["shell:0: " + MOTIVO_MCP_ADD]
+        if comando is not None and ESCRITA_NO_ARQUIVO.search(normaliza_comando(comando)):
+            return ["shell:0: " + MOTIVO_ESCRITA_PELO_SHELL]
         return []
     if caminho is None:
         return []
@@ -550,7 +603,8 @@ def evento_harness() -> list[str]:
             motivo = f"{rotulo} {situacao} e o projeto não tem allowlist central ({mostrado})"
         elif aprovado is not None:
             motivo = (
-                f"{rotulo} difere do aprovado na allowlist central (comando, args, URL ou tipo)"
+                f"{rotulo} difere do aprovado na allowlist central "
+                f"(campo que executa ou dá acesso: {campos_que_diferem(novo[nome], aprovado)})"
             )
         elif existia:
             motivo = f"{rotulo} mudou o que executa ou acessa e a allowlist central não o aprova"

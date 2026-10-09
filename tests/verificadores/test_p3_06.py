@@ -1154,3 +1154,174 @@ def test_link_simbolico_para_dentro_de_terceiros_continua_isento(tmp_path: Path)
     (tmp_path / "node_modules").mkdir()
     (tmp_path / "atalho").symlink_to("node_modules", target_is_directory=True)
     assert veredito(harness(tmp_path, "atalho/mcp.json", mcp(x={"command": "evil"}))) == 0
+
+
+# --- env que muda a execução conta pelo valor ---------------------------------------------------
+
+COM_ENV = {"command": "python3", "args": ["s.py"], "env": {"TOKEN": "a", "PYTHONPATH": "lib"}}
+LISTA_COM_ENV = ALLOWLIST + (
+    '  - nome: com-env\n    origem: proprio\n    command: python3\n    args: ["s.py"]\n'
+    '    env: {"TOKEN": "", "PYTHONPATH": "lib"}\n    revisado_em: 2026-10-06\n'
+    "    revisado_contra: criterios-mcp-v1\n"
+)
+
+
+@pytest.mark.parametrize(
+    "chave",
+    ["PYTHONPATH", "NODE_OPTIONS", "LD_PRELOAD", "PATH", "pythonpath", "DYLD_INSERT_LIBRARIES"],
+)
+def test_trocar_o_valor_de_env_que_muda_a_execucao_pede(tmp_path: Path, chave: str):
+    antes = {**COM_ENV, "env": {"TOKEN": "a", chave: "lib"}}
+    projeto(tmp_path, **{".mcp.json": mcp(a=antes)})
+    depois = {**COM_ENV, "env": {"TOKEN": "a", chave: "/tmp/evil"}}
+    r = harness(tmp_path, ".mcp.json", mcp(a=depois))
+    assert veredito(r) == 1 and '"a"' in r.stdout
+    assert "/tmp/evil" not in r.stdout + r.stderr
+
+
+def test_trocar_o_valor_de_env_comum_continua_livre(tmp_path: Path):
+    projeto(tmp_path, **{".mcp.json": mcp(a=COM_ENV)})
+    depois = {**COM_ENV, "env": {"TOKEN": "b", "PYTHONPATH": "lib"}}
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(a=depois))) == 0
+
+
+def test_env_que_muda_a_execucao_fora_do_valor_aprovado_pede_no_servidor_novo(tmp_path: Path):
+    projeto(tmp_path, allowlist=LISTA_COM_ENV)
+    ok = {**COM_ENV, "env": {"TOKEN": "x", "PYTHONPATH": "lib"}}
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"com-env": ok}))) == 0
+    mau = {**COM_ENV, "env": {"TOKEN": "x", "PYTHONPATH": "/tmp/evil"}}
+    assert veredito(harness(tmp_path, ".mcp.json", mcp(**{"com-env": mau}))) == 1
+
+
+# --- vazio é ausente ----------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "gravado",
+    [
+        {"env": {}},
+        {"headers": {}},
+        {"env": None},
+        {"autoApprove": []},
+        {"disabledTools": []},
+        {"alwaysAllow": []},
+        {"trust": False},
+        {"disabled": False},
+        {"enabled": True},
+        {"timeout": 60},
+        {"startup_timeout_sec": 20, "tool_timeout_sec": 60},
+        {"startup_timeout_ms": 10000},
+        {"alwaysLoad": True},
+        {"_meta": {"x": 1}},
+        {"type": "stdio", "env": {}},
+    ],
+)
+def test_o_que_as_ferramentas_gravam_sozinhas_nao_pede(tmp_path: Path, gravado: dict):
+    projeto(tmp_path)
+    r = harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": {**DOCS, **gravado}}))
+    assert veredito(r) == 0, gravado
+
+
+@pula_sem_tomllib
+def test_toml_do_codex_com_timeouts_da_ferramenta_nao_pede(tmp_path: Path):
+    lista = ALLOWLIST + (
+        '  - nome: local2\n    origem: proprio\n    command: python3\n    args: ["servidor.py"]\n'
+        "    revisado_em: 2026-10-06\n    revisado_contra: criterios-mcp-v1\n"
+    )
+    projeto(tmp_path, allowlist=lista)
+    toml = (
+        '[mcp_servers.local2]\ncommand = "python3"\nargs = ["servidor.py"]\n'
+        "startup_timeout_sec = 20\ntool_timeout_sec = 60\n"
+    )
+    assert veredito(harness(tmp_path, ".codex/config.toml", toml)) == 0
+
+
+@pytest.mark.parametrize(
+    "serio",
+    [
+        {"trust": True},
+        {"autoApprove": ["ferramenta"]},
+        {"cwd": "/tmp"},
+        {"includeTools": ["a"]},
+        {"excludeTools": ["a"]},
+        {"oauth": {"x": 1}},
+    ],
+)
+def test_o_que_da_acesso_continua_pedindo_mesmo_com_o_vazio_ignorado(tmp_path: Path, serio: dict):
+    projeto(tmp_path)
+    r = harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": {**DOCS, **serio}}))
+    assert veredito(r) == 1
+
+
+# --- motivo traz os nomes dos campos que diferem, sem valores -----------------------------------
+
+
+def test_motivo_do_servidor_que_difere_traz_os_nomes_dos_campos(tmp_path: Path):
+    projeto(tmp_path)
+    mau = {**DOCS, "headersHelper": "sh " + SEGREDO, "trust": True}
+    r = harness(tmp_path, ".mcp.json", mcp(**{"docs-internos": mau}))
+    assert r.returncode == 1
+    assert "campo que executa ou dá acesso: headersHelper, trust" in r.stdout
+    assert SEGREDO not in r.stdout + r.stderr
+
+
+def test_motivo_nomeia_url_e_type_quando_sao_eles(tmp_path: Path):
+    projeto(tmp_path)
+    r = harness(
+        tmp_path, ".mcp.json", mcp(**{"rastreador-de-chamados": {"url": "https://a.example/x"}})
+    )
+    assert "campo que executa ou dá acesso: url" in r.stdout
+
+
+# --- escrita na configuração pelo shell ---------------------------------------------------------
+
+MOTIVO_ESCRITA_SHELL = (
+    "shell:0: escrita na configuração MCP pelo shell pede aprovação (a allowlist central decide)"
+)
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "echo '{}' > .mcp.json",
+        "echo '{}' >> .gemini/settings.json",
+        "cat x > sub/mcp.json",
+        "jq '.a=1' mcp_config.json > mcp_config.json.tmp && mv mcp_config.json.tmp mcp_config.json",
+        "printf x | tee .kiro/settings/mcp.json",
+        "sed -i 's/a/b/' .codex/config.toml",
+        "sed -i.bak 's/a/b/' .vscode/mcp.json",
+        "cp novo.json .mcp.json",
+        "echo x > central/mcp-allowlist.yml",
+        'echo x >> "central/outra.yml"',
+        "cd app && echo '{}' > .mcp.json",
+    ],
+)
+def test_escrita_na_configuracao_ou_em_central_pelo_shell_pede(tmp_path: Path, comando: str):
+    projeto(tmp_path)
+    r = harness_shell(tmp_path, comando)
+    assert r.returncode == 1 and r.stdout.splitlines() == [MOTIVO_ESCRITA_SHELL], comando
+
+
+@pytest.mark.parametrize(
+    "comando",
+    [
+        "cat .mcp.json",
+        "git add .mcp.json",
+        "echo x > outro.json",
+        "cat central/mcp-allowlist.yml",
+        "diff .mcp.json novo.json",
+        "grep mcp docs/leia-me.md",
+        "echo x > mcp.json.md",
+        "sed 's/a/b/' .mcp.json",
+        "cp .mcp.json /tmp/backup.json",
+    ],
+)
+def test_ler_a_configuracao_pelo_shell_nao_pede(tmp_path: Path, comando: str):
+    projeto(tmp_path)
+    assert veredito(harness_shell(tmp_path, comando)) == 0, comando
+
+
+def test_escrita_pelo_shell_nao_imprime_o_comando(tmp_path: Path):
+    projeto(tmp_path)
+    r = harness_shell(tmp_path, f"echo '{SEGREDO}' > .mcp.json")
+    assert r.returncode == 1 and SEGREDO not in r.stdout + r.stderr
