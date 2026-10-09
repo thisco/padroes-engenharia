@@ -19,7 +19,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (só orienta) | SEG-02 (só orienta) | a definir |
-| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (só orienta) | P2-06 (só orienta) |
+| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (pede aprovação) | P2-06 (só orienta) |
 
 ## Práticas
 
@@ -64,7 +64,7 @@ Ache a linha do domínio da mudança e a coluna do momento e leia as práticas d
 | P3-03 | Declare no prompt o critério de término, o escopo e os limites de autonomia | só orienta | experimentar | nada |
 | P3-04 | Agente somente-leitura por padrão, com identidade própria e aprovação para escrever | só orienta | adotar | nada |
 | P3-05 | Isole o conteúdo externo contra prompt injection | só orienta | experimentar | nada |
-| P3-06 | MCP e conectores fechados por padrão, com allowlist central | só orienta | experimentar | nada |
+| P3-06 | MCP e conectores fechados por padrão, com allowlist central | pede aprovação | experimentar | nada |
 | QLD-01 | Lógica começa por um teste que falha, com as duas execuções no plano | só orienta | experimentar | `steering:qualidade` |
 | QLD-02 | Bug vira teste que reproduz o defeito, depois vira regra | só orienta | experimentar | `steering:qualidade`, `steering:troubleshooting` |
 | QLD-03 | Validação local rígida: o que o CI roda, roda antes do push | só orienta | experimentar | `steering:qualidade` |

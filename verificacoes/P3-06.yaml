@@ -1,5 +1,5 @@
 conteudo: P3-06
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o servidor MCP oferece recursos (contexto e dados), prompts (mensagens com modelo para a pessoa) e ferramentas
@@ -69,6 +69,13 @@ execucoes:
   evidencia: 'clone na tag, commit conferido, ''P3-06: 2 servidores MCP, todos na allowlist e iguais ao aprovado.'',
     saída 0; com o commit trocado o test falha (saída 1) antes do verificador.'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: verificadores/p3_06.py
+  comando: JSON no stdin de python3 -I verificadores/p3_06.py --evento antes-de-ferramenta, num diretório temporário com central/mcp-allowlist.yml (a do Exemplo) e .mcp.json (o do Exemplo); depois com o conteúdo trazendo um servidor fora da lista, só reordenado, sem allowlist, evento ci e conteúdo nulo; pytest -q tests/verificadores/test_p3_06.py
+  ambiente: diretório temporário /tmp/cfd-t5-*; Python 3.14.8; macOS (T5 da curadoria de força dura). Formatos conferidos na documentação dos emissores em 2026-10-08, sem citá-los no texto da prática - Gemini CLI, objeto mcpServers em .gemini/settings.json com command, url, httpUrl, args, env, headers e cwd; Codex, tabela [mcp_servers.<nome>] em config.toml, com .codex/config.toml por projeto e command, args, env, url e http_headers. O gatilho de harness não foi exercitado em runtime (F2 e F4 não existem).
+  resultado: passou
+  evidencia: 'servidor busca-web novo, com um token em env: ".mcp.json:1: servidor MCP \"busca-web\" novo e fora da allowlist central", saída 1, e o token não aparece na saída; conteúdo só com os dois servidores aprovados em outra ordem: nada, saída 0; sem a pasta central/: "servidor MCP \"x\" novo e o projeto não tem allowlist central (central/mcp-allowlist.yml)", saída 1; evento ci: "P3-06: evento não atendido: ci (atende antes-de-ferramenta)", saída 2; editar sem conteudo: "sem `conteudo` para uma escrita; não dá para avaliar", saída 2. pytest: 103 passed em tests/verificadores/test_p3_06.py.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: P3-06-prompt-1
   harness: claude-code
