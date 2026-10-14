@@ -1080,7 +1080,7 @@ git ls-remote https://github.com/obra/superpowers refs/tags/v6.4.1
 git ls-remote https://github.com/mattpocock/skills HEAD
 ```
 
-Esperado: o superpowers devolve `b92c4fa87ea1252077a7f7d3bf420e52325dd25e` (se a tag for
+Esperado: o superpowers devolve `5bf4e78011075bcfc0dc295f0724994cd123ee71` (se a tag for
 anotada, use a linha `^{}`). Para o Matt, use `49dd158d1076134a641b33efb035946536778336`; se o
 `HEAD` já andou, mantenha esse commit, que é o lido na análise, e confirme que ele existe:
 `git fetch` num clone e `git cat-file -t 49dd158d`. Se um dos commits não bater ou não existir,
@@ -1099,7 +1099,7 @@ def test_colecoes_fixadas():
     componentes = carregar_componentes(fabrica.RAIZ)
     assert componentes["superpowers"].repo == "https://github.com/obra/superpowers"
     assert componentes["superpowers"].versao == "6.4.1"
-    assert componentes["superpowers"].commit == "b92c4fa87ea1252077a7f7d3bf420e52325dd25e"
+    assert componentes["superpowers"].commit == "5bf4e78011075bcfc0dc295f0724994cd123ee71"
     assert componentes["mattpocock-skills"].repo == "https://github.com/mattpocock/skills"
     assert componentes["mattpocock-skills"].versao == "1.3.1"
     assert componentes["mattpocock-skills"].commit == "49dd158d1076134a641b33efb035946536778336"
@@ -1113,7 +1113,7 @@ Comando: `pytest tests/unidade/test_trilha_componentes.py -v`. Esperado: FAIL co
   superpowers:
     repo: https://github.com/obra/superpowers
     versao: "6.4.1"
-    commit: b92c4fa87ea1252077a7f7d3bf420e52325dd25e
+    commit: 5bf4e78011075bcfc0dc295f0724994cd123ee71
   mattpocock-skills:
     repo: https://github.com/mattpocock/skills
     versao: "1.3.1"
@@ -1919,7 +1919,7 @@ def test_pagina_mostra_colecao_caminho_e_caso():
     site, f = site_e_skill()
     html = html_ferramenta(site, f)
     assert "obra/superpowers" in html
-    assert "b92c4fa" in html
+    assert "5bf4e78" in html
     assert "Codar · Planejar" in html
     assert "casos/origem-do-modelo.html" in html
 
@@ -2292,7 +2292,7 @@ Entrega: (R14)
 
 **Arquivos:** 13 arquivos `ferramentas/sp-<nome>.yml`; referências
 `referencias/superpowers-<nome>.yaml` (uma por `SKILL.md`, tipo `comunidade`, `url`
-`https://github.com/obra/superpowers/blob/b92c4fa87ea1252077a7f7d3bf420e52325dd25e/skills/<nome>/SKILL.md`,
+`https://github.com/obra/superpowers/blob/5bf4e78011075bcfc0dc295f0724994cd123ee71/skills/<nome>/SKILL.md`,
 `versao: "6.4.1"`, `verificacao: V` depois de conferida); registros
 `verificacoes/ferramenta-sp-<nome>.yaml`.
 
