@@ -763,6 +763,13 @@ def constituicoes(site: Site) -> list[str]:
     ]
 
 
+def texto_origem(origem: dict[str, Any]) -> str:
+    """A origem do caso em uma linha: repositório e commit, ou o material sanitizado."""
+    if "material" in origem:
+        return "material sanitizado neste portal"
+    return f"{origem['repo']} @ {origem['commit']}"
+
+
 def descricao_de(site: Site, conteudo: Conteudo) -> str:
     """Resumo de uma linha do conteúdo, usado no topo da página, no llms.txt e na busca."""
     meta = conteudo.meta
@@ -779,7 +786,7 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
     if conteudo.tipo == "guia":
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
-        return f"Caso de {meta['origem']['repo']}, {meta['periodo']}."
+        return f"Caso: {texto_origem(meta['origem'])}, {meta['periodo']}."
     if conteudo.tipo == "receita":
         return str(meta["objetivo"])
     return sem_marcadores(str(meta.get("descricao") or ""))
@@ -803,7 +810,7 @@ def campos_de(conteudo: Conteudo) -> list[tuple[str, str]]:
     elif conteudo.tipo == "caso":
         origem = meta["origem"]
         campos = [
-            ("Origem", f"{origem['repo']} @ {origem['commit']}"),
+            ("Origem", texto_origem(origem)),
             ("Período", meta["periodo"]),
         ]
     if meta.get("revisado_em"):

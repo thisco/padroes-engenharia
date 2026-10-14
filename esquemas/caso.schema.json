@@ -1,20 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Caso",
-  "description": "casos/<slug>.md (spec §6.4). Todo número tem valor, data e fonte; a origem fixa repositório e commit.",
+  "description": "casos/<slug>.md (spec §6.4). Todo número tem valor, data e fonte; a origem fixa repositório e commit, ou aponta material sanitizado em casos/fontes/<slug>/ (spec da trilha, R6).",
   "type": "object",
   "additionalProperties": false,
   "required": ["titulo", "origem", "periodo", "numeros", "referencias", "dono"],
   "properties": {
     "titulo": {"type": "string", "minLength": 1},
     "origem": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["repo", "commit"],
-      "properties": {
-        "repo": {"type": "string", "minLength": 1},
-        "commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"}
-      }
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["repo", "commit"],
+          "properties": {
+            "repo": {"type": "string", "minLength": 1},
+            "commit": {"type": "string", "pattern": "^[0-9a-f]{7,40}$"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["material"],
+          "properties": {
+            "material": {"type": "string", "pattern": "^casos/fontes/[a-z0-9][a-z0-9-]*/$"}
+          }
+        }
+      ]
     },
     "periodo": {"type": "string", "minLength": 1},
     "numeros": {

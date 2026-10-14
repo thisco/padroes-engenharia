@@ -726,6 +726,20 @@ def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
     return erros
 
 
+@regra
+def regra_caso_origem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-CASO-ORIGEM (spec da trilha, R6): o material sanitizado citado na origem existe."""
+    erros: list[Erro] = []
+    for c in repo.casos:
+        origem = c.meta.get("origem")
+        material = origem.get("material") if isinstance(origem, dict) else None
+        if isinstance(material, str) and not (contexto.raiz / material).is_dir():
+            erros.append(
+                Erro(c.caminho_relativo, "origem.material", codigos.R_CASO_ORIGEM, material)
+            )
+    return erros
+
+
 # Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
 
 SECOES_PRATICA = (

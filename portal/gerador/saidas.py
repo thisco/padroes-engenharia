@@ -966,6 +966,14 @@ def copiar_apresentacoes(site: Site, saida: Path) -> None:
                     copiar(arquivo, destino)
 
 
+def copiar_fontes_de_casos(site: Site, saida: Path, raiz: Path | None = None) -> None:
+    """Publica `casos/fontes/**/*.md` com a mesma árvore, para a fonte do caso abrir no site
+    (spec da trilha, R14). `raiz` existe para os testes; o build usa a do site."""
+    base = (raiz or site.raiz) / "casos" / "fontes"
+    for arquivo in sorted(base.rglob("*.md")):
+        copiar(arquivo, saida / "casos" / "fontes" / arquivo.relative_to(base))
+
+
 def emitir(site: Site, saida: Path) -> list[Pagina]:
     """Grava em `saida` todas as saídas do §7.2 e do §7.3 e devolve as páginas."""
     paginas = montar_paginas(site)
@@ -998,6 +1006,7 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
         if arquivo.is_file() and not arquivo.is_symlink():
             copiar(arquivo, saida / arquivo.relative_to(site.raiz))
     copiar_apresentacoes(site, saida)
+    copiar_fontes_de_casos(site, saida)
     for origem, destino, padroes in ESTATICOS:
         for padrao in padroes:
             for arquivo in sorted((site.raiz / origem).glob(padrao)):
