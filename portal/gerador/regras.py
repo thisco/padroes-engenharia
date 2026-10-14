@@ -740,6 +740,46 @@ def regra_caso_origem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     return erros
 
 
+@regra
+def regra_trilhas(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-TRILHA e R-CASO-REF (spec da trilha, R5): cada item é uma ferramenta `skill` que
+    declara aquele passo; uma skill por passo; trilha em adotar só com itens em adotar."""
+    ferramentas = {(_texto(f.meta, "id") or _nome(f)): f.meta for f in repo.ferramentas}
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for t in repo.trilhas:
+        arquivo = t.caminho_relativo
+        adotar = _texto(t.meta, "status") == "adotar"
+        vistos: set[tuple[str, str]] = set()
+        for i, item in enumerate(_itens(t, "sequencia")):
+            fid = str(item.get("ferramenta"))
+            chave = (str(item.get("momento")), str(item.get("passo")))
+            meta = ferramentas.get(fid)
+            if meta is None or meta.get("categoria") != "skill":
+                valor = f"{fid} não é ferramenta skill"
+                erros.append(Erro(arquivo, f"sequencia.{i}.ferramenta", codigos.R_TRILHA, valor))
+                continue
+            declarados = {
+                (str(c.get("momento")), str(c.get("passo")))
+                for c in meta.get("caminhos") or []
+                if isinstance(c, dict)
+            }
+            if chave not in declarados:
+                valor = f"{fid} não declara {chave[0]}/{chave[1]}"
+                erros.append(Erro(arquivo, f"sequencia.{i}", codigos.R_TRILHA, valor))
+            if chave in vistos:
+                valor = f"passo repetido: {chave[0]}/{chave[1]}"
+                erros.append(Erro(arquivo, f"sequencia.{i}", codigos.R_TRILHA, valor))
+            vistos.add(chave)
+            if adotar and meta.get("status") != "adotar":
+                valor = f"{fid} não está em adotar"
+                erros.append(Erro(arquivo, f"sequencia.{i}.ferramenta", codigos.R_TRILHA, valor))
+        for slug in _lista(t.meta, "casos"):
+            if slug not in casos:
+                erros.append(Erro(arquivo, "casos", codigos.R_CASO_REF, slug))
+    return erros
+
+
 # Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
 
 SECOES_PRATICA = (

@@ -582,3 +582,29 @@ def site(*conteudos: Conteudo, apresentacoes: tuple[Apresentacao, ...] = (), **b
     return montar_site(
         RAIZ, repo=Repositorio.de(conteudos), apresentacoes=apresentacoes, **parametros
     )
+
+
+def meta_trilha(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "id": "de-origem",
+            "titulo": "De origem",
+            "origem": "obra/superpowers",
+            "status": "avaliar",
+            "sequencia": [
+                {
+                    "ferramenta": "sp-writing-plans",
+                    "momento": "enquanto-escreve",
+                    "passo": "planejar",
+                }
+            ],
+            "bom_quando": "a mudança é grande e pede subagentes.",
+            "cuidado": "o plugin traz o bootstrap que obriga a acionar skills.",
+        },
+        alteracoes,
+    )
+
+
+def trilha(meta: dict[str, Any] | None = None) -> Conteudo:
+    meta = meta_trilha() if meta is None else meta
+    return Conteudo("trilha", f"trilhas/{meta['id']}.yml", meta, "")

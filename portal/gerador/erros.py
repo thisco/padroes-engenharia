@@ -49,6 +49,7 @@ R_CAMINHO = "R-CAMINHO"
 R_COLECAO = "R-COLECAO"
 R_CASO_REF = "R-CASO-REF"
 R_CASO_ORIGEM = "R-CASO-ORIGEM"
+R_TRILHA = "R-TRILHA"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -95,6 +96,9 @@ DESCRICOES: dict[str, str] = {
     R_COLECAO: "ferramenta skill sem coleção, ou com coleção fora de componentes.yml",
     R_CASO_REF: "caso citado que não existe em casos/",
     R_CASO_ORIGEM: "origem do caso aponta material que não existe em casos/fontes/",
+    R_TRILHA: (
+        "trilha com item que não é skill, passo não declarado, passo repetido ou status incoerente"
+    ),
 }
 
 

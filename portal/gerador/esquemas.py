@@ -25,6 +25,7 @@ ESQUEMAS = (
     "receita",
     "starter",
     "ferramenta",
+    "trilha",
     "glossario",
     "apresentacao",
 )
@@ -42,6 +43,7 @@ ESQUEMA_POR_TIPO = {
     "receita": "receita",
     "starter": "starter",
     "ferramenta": "ferramenta",
+    "trilha": "trilha",
     "glossario": "glossario",
 }
 

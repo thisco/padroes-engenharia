@@ -31,6 +31,7 @@ from portal.gerador.regras import (
     regra_secoes,
     regra_skills,
     regra_skills_orcamento,
+    regra_trilhas,
     regra_verificacao,
     regra_vinculos,
 )
@@ -128,6 +129,7 @@ def test_validar_tudo_roda_todas_as_regras_na_ordem():
         regra_passos,
         regra_caminhos,
         regra_caso_origem,
+        regra_trilhas,
         regra_secoes,
         regra_exemplo,
         regra_execucao,
