@@ -250,3 +250,27 @@
 <p class="vazia">Sem referências.</p>
 {% endif %}
 {%- endmacro %}
+
+{# O ciclo da trilha (spec da trilha, R8 e R11): três etapas em linha e o laço Aprender. #}
+{% macro ciclo(dados, raiz="", compacto=False) -%}
+<div class="ciclo{% if compacto %} ciclo-compacto{% endif %}" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
+  <ol class="ciclo-etapas">
+{% for c in dados.caixas %}
+    <li class="ciclo-caixa">
+      <h3 class="ciclo-etapa">{{ c.etapa }}</h3>
+{% if not compacto %}
+      <ul class="ciclo-marcos">
+{% for m in c.marcos %}
+        <li class="ciclo-marco{% if not m.mecanismo %} orienta{% endif %}"><a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span> {{ m.titulo }}</a></li>
+{% endfor %}
+      </ul>
+{% if c.sem_mecanismo %}
+      <p class="ciclo-nota">Sem marco com mecanismo ainda. <a href="{{ raiz }}espinha.html#momento-{{ c.momento }}">Ver na espinha</a></p>
+{% endif %}
+{% endif %}
+    </li>
+{% endfor %}
+  </ol>
+  <p class="ciclo-laco"><b>{{ dados.laco.etapa }}</b>{% if not compacto %}: {% for m in dados.laco.marcos %}<a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span></a>{% if not loop.last %} · {% endif %}{% endfor %}{% endif %} <span aria-hidden="true">↺</span></p>
+</div>
+{%- endmacro %}

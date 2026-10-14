@@ -36,6 +36,7 @@ from portal.gerador.renderizar import (
     vinculos_de,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
+from portal.gerador.trilha import html_trilha, md_trilha
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
 # Campos que são identificadores ou rótulos de máquina: não passam pelo Markdown.
@@ -972,6 +973,7 @@ PAGINAS_ESTRUTURADAS: dict[
 ] = {
     "o-problema": (html_o_problema, md_o_problema),
     "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
+    "trilha": (html_trilha, md_trilha),
 }
 
 

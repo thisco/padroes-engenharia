@@ -479,3 +479,52 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
   }
 }
 /* fim dos modos de trabalho */
+
+/* Trilha (spec 2026-10-14-trilha-sdd): azul sólido = marco com mecanismo; âmbar tracejado = caminho. */
+.tr-legenda { margin-top: 8px; font-size: 13px; }
+.tr-amostra { display: inline-block; width: 14px; height: 14px; margin: 0 6px 0 0; vertical-align: -2px; border-radius: 2px; }
+.tr-amostra.caminho { margin-left: 14px; }
+.tr-amostra.marco { background: var(--gov-claro); border: 2px solid var(--gov); }
+.tr-amostra.caminho { background: var(--ambar-claro); border: 1.5px dashed var(--ambar); }
+
+.ciclo { margin: 24px 0; }
+.ciclo-etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.ciclo-caixa { position: relative; min-width: 0; padding: 12px 14px; background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; }
+.ciclo-caixa:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--tinta-2); }
+.ciclo-etapa { margin: 0 0 8px; font-size: 16px; }
+.ciclo-marcos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ciclo-marco { padding: 6px 10px; font-size: 13px; background: var(--gov-claro); border: 2px solid var(--gov); border-radius: 2px; color: var(--tinta); }
+.ciclo-marco.orienta { background: transparent; border: 1.5px dashed var(--traco); }
+.ciclo-nota { margin: 8px 0 0; font-size: 12px; color: var(--tinta-2); }
+.ciclo-laco { margin: 14px 0 0; padding-top: 8px; border-top: 2px dashed var(--ambar); color: var(--ambar-texto); font-size: 13px; }
+.ciclo-compacto .ciclo-caixa { padding: 8px 12px; }
+.ciclo-compacto .ciclo-etapa { margin: 0; font-size: 14px; }
+
+.tr-trilhas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.tr-trilha { min-width: 0; padding: 12px 14px; background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; }
+.tr-trilha h3 { margin: 4px 0 8px; }
+.tr-seq { margin: 0 0 8px; padding-left: 20px; font-size: 13px; }
+
+.tr-filtros { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 16px; }
+.tr-chip { padding: 4px 12px; font: inherit; font-size: 13px; color: var(--tinta); background: var(--gov-claro); border: 2px solid var(--gov); border-radius: 2px; cursor: pointer; }
+.tr-chip[aria-pressed="false"] { background: transparent; border: 1.5px dashed var(--traco); }
+
+.tr-etapa { margin: 22px 0; }
+.tr-marcos { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.tr-marco { padding: 6px 10px; font-size: 13px; background: var(--gov-claro); border: 2px solid var(--gov); border-radius: 2px; color: var(--tinta); }
+.tr-marco.orienta { background: transparent; border: 1.5px dashed var(--traco); }
+.tr-passo { display: grid; grid-template-columns: minmax(150px, 210px) 1fr; gap: 14px; padding: 10px 0; border-top: 1px solid var(--regra); }
+.tr-passo > div { min-width: 0; }
+.tr-opcoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; min-width: 0; }
+.tr-op { min-width: 0; padding: 8px 10px; font-size: 13px; color: var(--tinta); background: var(--ambar-claro); border: 1.5px dashed var(--ambar); border-radius: 2px; }
+.tr-op.complemento { background: var(--branco); border-color: var(--traco); }
+.tr-op p { margin: 0 0 4px; }
+.tr-cuidado { color: var(--tinta-2); }
+.tr-vazio { margin: 0; font-size: 13px; color: var(--tinta-2); }
+.tr-op[hidden], .tr-vazio[hidden], .tr-chip[hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .ciclo-etapas { grid-template-columns: 1fr; gap: 24px; }
+  .ciclo-caixa:not(:last-child)::after { content: "↓"; right: auto; left: 50%; top: auto; bottom: -22px; transform: translateX(-50%); }
+  .tr-passo { grid-template-columns: 1fr; }
+}

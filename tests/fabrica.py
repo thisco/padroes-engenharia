@@ -608,3 +608,16 @@ def meta_trilha(**alteracoes: Any) -> dict[str, Any]:
 def trilha(meta: dict[str, Any] | None = None) -> Conteudo:
     meta = meta_trilha() if meta is None else meta
     return Conteudo("trilha", f"trilhas/{meta['id']}.yml", meta, "")
+
+
+CORPO_TRILHA = """## Atritos
+
+Cada coleção resolve o laço do TDD de um jeito [ref:ref-forte].
+"""
+
+
+def pagina_trilha() -> Conteudo:
+    meta = meta_pagina(
+        titulo="Trilha", lead="Uma trilha, não um trilho.", referencias=["ref-forte"]
+    )
+    return Conteudo("pagina", "paginas/trilha.md", meta, CORPO_TRILHA)

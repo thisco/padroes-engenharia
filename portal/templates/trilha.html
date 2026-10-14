@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <div><p>{{ lead }}</p>
+    <p class="tr-legenda"><span class="tr-amostra marco"></span>marco: prática do portal; sólido quando tem mecanismo
+      <span class="tr-amostra caminho"></span>caminho: skill que ajuda a chegar ao marco</p></div>
+</div>
+{{ c.ciclo(ciclo, raiz) }}
+{% if trilhas %}
+<section aria-label="Trilhas prontas">
+  <h2>Trilhas prontas</h2>
+  <div class="tr-trilhas">
+{% for t in trilhas %}
+    <article class="tr-trilha" id="trilha-{{ t.id }}">
+      <p class="mono pequeno">{{ t.origem }} · <span class="st {{ t.status }}">{{ t.status }}</span></p>
+      <h3>{{ t.titulo }}</h3>
+      <ol class="tr-seq">{% for i in t.itens %}<li><span class="pequeno">{{ i.etapa }} · {{ i.passo }}</span> {% if i.href %}<a href="{{ raiz }}{{ i.href }}">{{ i.ferramenta }}</a>{% else %}{{ i.ferramenta }}{% endif %}</li>{% endfor %}</ol>
+      <p><b>Bom quando</b> {{ t.bom_quando }}</p>
+      <p><b>Cuidado</b> {{ t.cuidado }}</p>
+{% for caso in t.casos %}
+      <p><a href="{{ raiz }}{{ caso.href }}">Caso: {{ caso.titulo }}</a></p>
+{% endfor %}
+    </article>
+{% endfor %}
+  </div>
+</section>
+{% endif %}
+<section aria-label="Mapa por etapa">
+  <h2>Marcos e caminhos por etapa</h2>
+{% if colecoes %}
+  <div class="tr-filtros" role="group" aria-label="Filtrar por coleção">
+{% for col in colecoes %}
+    <button type="button" class="tr-chip" data-colecao-filtro="{{ col.nome }}" aria-pressed="true" hidden>{{ col.rotulo }}</button>
+{% endfor %}
+  </div>
+{% endif %}
+{% for e in mapa %}
+  <div class="tr-etapa" id="etapa-{{ e.slug }}">
+    <h3>{{ e.etapa }} <span class="pequeno">{{ e.titulo }}</span></h3>
+    <ul class="tr-marcos">{% for m in e.marcos %}<li class="tr-marco{% if not m.mecanismo %} orienta{% endif %}"><a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span> {{ m.titulo }}</a> <span class="mono pequeno">{{ m.forca }}</span></li>{% endfor %}</ul>
+{% for p in e.passos %}
+    <div class="tr-passo">
+      <div><b>{{ p.titulo }}</b><p class="pequeno">{{ p.desc }}</p></div>
+      <div class="tr-opcoes">
+{% for op in p.caminhos %}
+        <article class="tr-op{% if op.papel == 'complemento' %} complemento{% endif %}" data-colecao="{{ op.colecao }}">
+          <p><a href="{{ raiz }}{{ op.href }}" class="mono">{{ op.titulo }}</a> <span class="mono pequeno">{{ op.colecao }} · {{ op.status }}{% if op.papel == 'complemento' %} · complemento{% endif %}</span></p>
+          <p>Bom quando {{ op.bom_quando }}</p>
+{% if op.cuidado %}
+          <p class="tr-cuidado">Cuidado: {{ op.cuidado }}</p>
+{% endif %}
+        </article>
+{% endfor %}
+        <p class="tr-vazio"{% if p.caminhos %} hidden{% endif %}>Ainda não há caminho para este passo.</p>
+      </div>
+    </div>
+{% endfor %}
+  </div>
+{% endfor %}
+</section>
+{% if corpo %}
+<section aria-label="Atritos"><div class="texto">
+{{ corpo }}
+</div></section>
+{% endif %}
+<script src="{{ raiz }}tema/trilha.js" defer></script>
+{% endblock %}

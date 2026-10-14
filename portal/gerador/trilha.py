@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Any
 
 from portal.gerador.carregar import Conteudo, carregar_componentes
-from portal.gerador.renderizar import Site, caminho_de
+from portal.gerador.renderizar import Site, caminho_de, renderizar
 
 ORDEM_STATUS = {"adotar": 0, "experimentar": 1, "avaliar": 2, "evitar": 3}
 
@@ -173,3 +173,52 @@ def trilhas(site: Site) -> list[dict[str, Any]]:
         )
     resultado.sort(key=lambda t: (ORDEM_STATUS[t["status"]], not t["casos"], t["id"]))
     return resultado
+
+
+def html_trilha(site: Site, pagina: Conteudo) -> str:
+    # Imports aqui dentro: `paginas.py` importa este módulo no topo (PAGINAS_ESTRUTURADAS).
+    from portal.gerador.paginas import citar, corpo_da_pagina, ids_da_pagina
+
+    ids = ids_da_pagina(site, pagina)
+    usadas = {f.meta.get("colecao") for f in _skills(site)}
+    return renderizar(
+        site,
+        "trilha.html",
+        caminho_de(pagina),
+        titulo=pagina.meta["titulo"],
+        descricao=str(pagina.meta.get("descricao") or pagina.meta.get("lead") or ""),
+        lead=citar(pagina.meta.get("lead", ""), ids, "lead"),
+        ciclo=ciclo(site),
+        trilhas=trilhas(site),
+        mapa=mapa(site),
+        colecoes=[c for nome, c in colecoes(site).items() if nome in usadas],
+        corpo=corpo_da_pagina(pagina, ids),
+        referencias=site.catalogo.referencias_de(pagina),
+    )
+
+
+def md_trilha(site: Site, pagina: Conteudo) -> str:
+    from portal.gerador.texto_md import juntar, md_lista_referencias
+
+    partes = [str(pagina.meta.get("lead", ""))]
+    for e in mapa(site):
+        linhas = [f"## {e['etapa']}", ""]
+        linhas += [f"- Marco {m['id']} ({m['forca']}): {m['titulo']}" for m in e["marcos"]]
+        for p in e["passos"]:
+            linhas += ["", f"### {p['titulo']}", ""]
+            linhas += [
+                f"- {c['titulo']} ({c['colecao']}, {c['status']}): {c['bom_quando']}"
+                for c in p["caminhos"]
+            ] or ["- Ainda não há caminho para este passo."]
+        partes.append("\n".join(linhas))
+    blocos = ["## Trilhas prontas"]
+    for t in trilhas(site):
+        seq = " → ".join(f"{i['ferramenta']} ({i['etapa']} · {i['passo']})" for i in t["itens"])
+        blocos.append(
+            f"### {t['titulo']} ({t['status']})\n\n{seq}\n\n"
+            f"Bom quando {t['bom_quando']}\n\nCuidado: {t['cuidado']}"
+        )
+    partes.append("\n\n".join(blocos))
+    partes.append(pagina.corpo)
+    partes.append(md_lista_referencias(site, pagina))
+    return juntar(f"# {pagina.meta['titulo']}", *partes)

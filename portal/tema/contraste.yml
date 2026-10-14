@@ -8,6 +8,7 @@ pares:
   - {texto: tinta, fundo: papel-2}
   - {texto: tinta, fundo: branco}
   - {texto: tinta, fundo: gov-claro}
+  - {texto: tinta, fundo: ambar-claro}
   - {texto: tinta, fundo: harness}
   - {texto: tinta-2, fundo: papel}
   - {texto: tinta-2, fundo: papel-2}
