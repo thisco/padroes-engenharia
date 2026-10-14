@@ -44,6 +44,9 @@ R_APRESENTACAO = "R-APRESENTACAO"
 R_LINK_INTERNO = "R-LINK-INTERNO"
 R_PACOTE = "R-PACOTE"
 R_PASSO = "R-PASSO"
+R_CAMINHO = "R-CAMINHO"
+R_COLECAO = "R-COLECAO"
+R_CASO_REF = "R-CASO-REF"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -85,6 +88,9 @@ DESCRICOES: dict[str, str] = {
     ),
     R_PASSO: "passo repetido no mesmo momento de esquemas/espinha.yml",
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
+    R_CAMINHO: "ferramenta skill sem caminho, ou com caminho fora dos passos da espinha",
+    R_COLECAO: "ferramenta skill sem coleção, ou com coleção fora de componentes.yml",
+    R_CASO_REF: "caso citado que não existe em casos/",
 }
 
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Ferramenta",
-  "description": "ferramentas/<id>.yml (delta v1.1 §6.4 e R21): ferramenta que as práticas citam, com status no radar. Status evitar exige a alternativa (regra 9).",
+  "description": "ferramentas/<id>.yml (delta v1.1 §6.4 e R21): ferramenta que as práticas citam, com status no radar. Status evitar exige a alternativa (regra 9). Categoria skill: coleção em componentes.yml e caminhos na espinha (spec da trilha, R2).",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,13 +12,30 @@
     "id": {"$ref": "#/$defs/slug"},
     "titulo": {"type": "string", "minLength": 1},
     "categoria": {
-      "enum": ["harness", "gateway", "migration", "iac", "teste", "seguranca", "sdd", "ci"]
+      "enum": ["harness", "gateway", "migration", "iac", "teste", "seguranca", "sdd", "ci", "skill"]
     },
     "status": {"enum": ["adotar", "experimentar", "avaliar", "evitar"]},
     "versao_minima": {"type": "string", "minLength": 1},
     "dono": {"$ref": "#/$defs/slug"},
     "praticas": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
     "receitas": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
+    "colecao": {"$ref": "#/$defs/slug"},
+    "caminhos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["momento", "passo", "papel", "bom_quando"],
+        "properties": {
+          "momento": {"$ref": "#/$defs/slug"},
+          "passo": {"$ref": "#/$defs/slug"},
+          "papel": {"enum": ["caminho", "complemento"]},
+          "bom_quando": {"type": "string", "minLength": 1},
+          "cuidado": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "casos": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}},
     "como_instalar": {"type": "string", "minLength": 1},
     "limites": {"type": "string", "minLength": 1},
     "alternativa": {"type": "string", "minLength": 1},

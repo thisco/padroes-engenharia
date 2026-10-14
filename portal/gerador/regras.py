@@ -677,6 +677,33 @@ def regra_passos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 
 
+@regra
+def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-CAMINHO, R-COLECAO e R-CASO-REF (spec da trilha, R2): a ferramenta `skill` tem coleção
+    fixada e caminhos em passos da espinha; todo caso citado por ferramenta existe."""
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for f in repo.ferramentas:
+        arquivo = f.caminho_relativo
+        for slug in _lista(f.meta, "casos"):
+            if slug not in casos:
+                erros.append(Erro(arquivo, "casos", codigos.R_CASO_REF, slug))
+        if _texto(f.meta, "categoria") != "skill":
+            continue
+        colecao = _texto(f.meta, "colecao")
+        if colecao not in contexto.componentes:
+            erros.append(Erro(arquivo, "colecao", codigos.R_COLECAO, colecao or "ausente"))
+        caminhos = _itens(f, "caminhos")
+        if not caminhos:
+            erros.append(Erro(arquivo, "caminhos", codigos.R_CAMINHO, "skill sem caminho"))
+        for i, caminho in enumerate(caminhos):
+            momento = espinha.momento(str(caminho.get("momento")))
+            if momento is None or momento.passo(str(caminho.get("passo"))) is None:
+                valor = f"{caminho.get('momento')}/{caminho.get('passo')}"
+                erros.append(Erro(arquivo, f"caminhos.{i}", codigos.R_CAMINHO, valor))
+    return erros
+
+
 # Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
 
 SECOES_PRATICA = (

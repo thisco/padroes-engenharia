@@ -724,6 +724,7 @@ CATEGORIAS_DA_FERRAMENTA = {
     "seguranca": "Segurança",
     "sdd": "SDD",
     "ci": "CI",
+    "skill": "Skill",
 }
 
 

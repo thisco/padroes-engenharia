@@ -304,6 +304,35 @@ def meta_ferramenta(**alteracoes: Any) -> dict[str, Any]:
     )
 
 
+def meta_ferramenta_skill(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "id": "sp-writing-plans",
+            "titulo": "writing-plans",
+            "categoria": "skill",
+            "colecao": "superpowers",
+            "status": "avaliar",
+            "versao_minima": "6.4.1",
+            "dono": "engenharia",
+            "praticas": [],
+            "receitas": [],
+            "caminhos": [
+                {
+                    "momento": "enquanto-escreve",
+                    "passo": "planejar",
+                    "papel": "caminho",
+                    "bom_quando": "o plano precisa de passos pequenos por tarefa.",
+                    "cuidado": "grava em docs/superpowers/plans se o projeto não disser outro lugar.",
+                }
+            ],
+            "como_instalar": "Instale o plugin da coleção.",
+            "limites": "Conduz a execução do plano.",
+            "referencias": ["ref-forte"],
+        },
+        alteracoes,
+    )
+
+
 def meta_glossario(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
