@@ -1809,7 +1809,7 @@ def test_sem_a_pagina_o_item_some():
 def test_inicio_mostra_o_ciclo_e_o_link():
     site = fabrica.site(fabrica.pagina_trilha(), fabrica.referencia())
     html = html_inicio(site)
-    assert 'class="ciclo ciclo-compacto"' in html
+    assert 'class="ciclo-trilha ciclo-compacto"' in html
     assert 'href="trilha.html"' in html
     assert "Ver a coluna na espinha" not in html
 
