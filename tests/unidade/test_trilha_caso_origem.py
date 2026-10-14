@@ -21,7 +21,8 @@ def test_schema_aceita_as_duas_formas():
     assert validar_instancia(fabrica.meta_caso(), validador, "casos/x.md") == []
     assert validar_instancia(caso_material().meta, validador, "casos/x.md") == []
     fora = fabrica.meta_caso(origem={"material": "outro/lugar/"})
-    assert [e.regra for e in validar_instancia(fora, validador, "casos/x.md")] == ["R-ESQUEMA"]
+    erros = validar_instancia(fora, validador, "casos/x.md")
+    assert [(e.regra, e.campo) for e in erros] == [("R-ESQUEMA", "origem.material")]
 
 
 def test_pasta_ausente_reprova(tmp_path):

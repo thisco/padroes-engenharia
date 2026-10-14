@@ -64,7 +64,7 @@ def test_instancia_da_fabrica_e_valida(nome):
         ("dominio", {"descricao": ""}, "descricao"),
         ("conceito", {"ninho": "outro"}, "ninho"),
         ("guia", {"tempo_leitura": 0}, "tempo_leitura"),
-        ("caso", {"origem": {"repo": "x", "commit": "nao-hex"}}, "origem"),
+        ("caso", {"origem": {"repo": "x", "commit": "nao-hex"}}, "origem.commit"),
         ("pagina", {"titulo": 3}, "titulo"),
         ("verificacao", {"afirmacoes": []}, "afirmacoes"),
         ("catalogo", {"versao": "v1"}, "versao"),
