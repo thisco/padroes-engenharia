@@ -113,7 +113,7 @@ script local sem dependência.
   `Momento.passos: tuple[Passo, ...] = ()`; `Momento.passo(slug: str) -> Passo | None`;
   `codigos.R_PASSO = "R-PASSO"`; `regra_passos(repo, espinha, contexto) -> list[Erro]`.
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R1 da spec da trilha: etapa e passos por momento, slug de passo único no momento."""
@@ -171,12 +171,12 @@ def test_espinha_real_passa_na_r_passo(tmp_path: Path):
     assert regra_passos(Repositorio(), fabrica.espinha_real(), ctx) == []
 ```
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_espinha.py -v`
 Esperado: FAIL com `ImportError: cannot import name 'Passo'`.
 
-- [ ] **Passo 3: implementar em `espinha.py`**
+- [x] **Passo 3: implementar em `espinha.py`**
 
 ```python
 @dataclass(frozen=True)
@@ -211,7 +211,7 @@ Em `carregar_espinha`, no construtor de `Momento`, acrescente:
 
 Atualize a docstring do módulo: "faixas, momentos (com etapa e passos) e prefixos de ID".
 
-- [ ] **Passo 4: preencher `esquemas/espinha.yml`**
+- [x] **Passo 4: preencher `esquemas/espinha.yml`**
 
 Em cada momento, depois de `acao`, acrescente `etapa` e `passos` exatamente assim:
 
@@ -263,7 +263,7 @@ Em cada momento, depois de `acao`, acrescente `etapa` e `passos` exatamente assi
 Acrescente ao comentário do topo: "etapa e passos: o ciclo da página da trilha (spec
 2026-10-14-trilha-sdd, R1)."
 
-- [ ] **Passo 5: código e regra**
+- [x] **Passo 5: código e regra**
 
 Em `erros.py`, depois de `R_PACOTE`:
 
@@ -294,13 +294,13 @@ def regra_passos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 ```
 
-- [ ] **Passo 6: rodar e ver passar, mais a suíte**
+- [x] **Passo 6: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_espinha.py -v` e `pytest -q`
 Esperado: os 4 testes novos passam e a suíte continua verde. Se algum teste existente comparar
 a lista de `DESCRICOES` com os códigos, ele já cobre o código novo pela descrição acima.
 
-- [ ] **Passo 7: commit**
+- [x] **Passo 7: commit**
 
 ```bash
 git add esquemas/espinha.yml portal/gerador/espinha.py portal/gerador/erros.py portal/gerador/regras.py tests/unidade/test_trilha_espinha.py
@@ -324,7 +324,7 @@ Entrega: (R1)
   contexto) -> list[Erro]`; códigos `R_CAMINHO`, `R_COLECAO`, `R_CASO_REF`;
   `CATEGORIAS_DA_FERRAMENTA["skill"] == "Skill"`.
 
-- [ ] **Passo 1: fábrica**
+- [x] **Passo 1: fábrica**
 
 Em `tests/fabrica.py`, depois de `meta_ferramenta`:
 
@@ -358,7 +358,7 @@ def meta_ferramenta_skill(**alteracoes: Any) -> dict[str, Any]:
     )
 ```
 
-- [ ] **Passo 2: escrever os testes que falham**
+- [x] **Passo 2: escrever os testes que falham**
 
 ```python
 """R2 da spec da trilha: ferramenta skill com coleção fixada, caminhos na espinha e casos."""
@@ -445,12 +445,12 @@ def test_radar_conhece_a_categoria_skill():
     assert CATEGORIAS_DA_FERRAMENTA["skill"] == "Skill"
 ```
 
-- [ ] **Passo 3: rodar e ver falhar**
+- [x] **Passo 3: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_ferramenta_skill.py -v`
 Esperado: FAIL com `ImportError: cannot import name 'regra_caminhos'`.
 
-- [ ] **Passo 4: schema**
+- [x] **Passo 4: schema**
 
 Em `esquemas/ferramenta.schema.json`:
 - acrescente `"skill"` ao `enum` de `categoria`;
@@ -479,7 +479,7 @@ Em `esquemas/ferramenta.schema.json`:
 - atualize a `description` do schema: "… Categoria skill: coleção em componentes.yml e caminhos
   na espinha (spec da trilha, R2)."
 
-- [ ] **Passo 5: códigos, regra e categoria**
+- [x] **Passo 5: códigos, regra e categoria**
 
 `erros.py`:
 
@@ -531,12 +531,12 @@ def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
     "skill": "Skill",
 ```
 
-- [ ] **Passo 6: rodar e ver passar, mais a suíte**
+- [x] **Passo 6: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_ferramenta_skill.py -v` e `pytest -q`
 Esperado: tudo verde.
 
-- [ ] **Passo 7: commit**
+- [x] **Passo 7: commit**
 
 ```bash
 git add esquemas/ferramenta.schema.json portal/gerador/erros.py portal/gerador/regras.py portal/gerador/paginas.py tests/fabrica.py tests/unidade/test_trilha_ferramenta_skill.py
@@ -555,7 +555,7 @@ Entrega: (R2)
 - Consome: `fabrica.meta_ferramenta_skill` (tarefa 2), `TIPOS_FORTES` (`regras.py:525`).
 - Produz: `regra_adotar_skill(repo, espinha, contexto) -> list[Erro]`; código `R_ADOTAR_SKILL`.
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R3 da spec da trilha: skill em adotar exige caso interno ou referência forte [V]."""
@@ -606,12 +606,12 @@ Antes de rodar, confira em `tests/fabrica.py` que `meta_referencia()` devolve `t
 `verificacao: V` e `id: ref-forte`; se o id for outro, ajuste `meta_ferramenta_skill` para citar
 esse id.
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_adotar_skill.py -v`
 Esperado: FAIL com `ImportError: cannot import name 'regra_adotar_skill'`.
 
-- [ ] **Passo 3: implementar**
+- [x] **Passo 3: implementar**
 
 `erros.py`: `R_ADOTAR_SKILL = "R-ADOTAR-SKILL"` e
 `R_ADOTAR_SKILL: "ferramenta skill em adotar sem caso interno nem referência forte",`.
@@ -641,11 +641,11 @@ def regra_adotar_skill(repo: Repositorio, espinha: Espinha, contexto: Contexto) 
     return erros
 ```
 
-- [ ] **Passo 4: rodar e ver passar, mais a suíte**
+- [x] **Passo 4: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_adotar_skill.py -v` e `pytest -q`
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add portal/gerador/erros.py portal/gerador/regras.py tests/unidade/test_trilha_adotar_skill.py
@@ -667,7 +667,7 @@ Entrega: (R3)
 - Produz: `regra_caso_origem(repo, espinha, contexto) -> list[Erro]`; `R_CASO_ORIGEM`;
   `texto_origem(origem: dict) -> str` em `renderizar.py`; `copiar_fontes_de_casos(site, saida) -> None`.
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R6 da spec da trilha: origem do caso também como material sanitizado no repositório."""
@@ -721,12 +721,12 @@ def test_fontes_sao_publicadas_com_a_subpasta(tmp_path):
     assert (saida / MATERIAL / "relato.md").read_text(encoding="utf-8") == "# Relato\n"
 ```
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_caso_origem.py -v`
 Esperado: FAIL com `ImportError`.
 
-- [ ] **Passo 3: schema**
+- [x] **Passo 3: schema**
 
 Em `esquemas/caso.schema.json`, troque o valor de `properties.origem` por:
 
@@ -757,7 +757,7 @@ Em `esquemas/caso.schema.json`, troque o valor de `properties.origem` por:
 e acrescente à `description`: "ou aponta material sanitizado em casos/fontes/<slug>/ (spec da
 trilha, R6)".
 
-- [ ] **Passo 4: regra, texto da origem e cópia**
+- [x] **Passo 4: regra, texto da origem e cópia**
 
 `erros.py`: `R_CASO_ORIGEM = "R-CASO-ORIGEM"` e
 `R_CASO_ORIGEM: "origem do caso aponta material que não existe em casos/fontes/",`.
@@ -806,12 +806,12 @@ def copiar_fontes_de_casos(site: Site, saida: Path, raiz: Path | None = None) ->
 Em `emitir`, logo depois de `copiar_apresentacoes(site, saida)`, chame
 `copiar_fontes_de_casos(site, saida)`.
 
-- [ ] **Passo 5: rodar e ver passar, mais a suíte**
+- [x] **Passo 5: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_caso_origem.py -v` e `pytest -q`
 Esperado: tudo verde. O caso do gateway continua válido (teste 1).
 
-- [ ] **Passo 6: commit**
+- [x] **Passo 6: commit**
 
 ```bash
 git add esquemas/caso.schema.json portal/gerador/erros.py portal/gerador/regras.py portal/gerador/renderizar.py portal/gerador/saidas.py tests/unidade/test_trilha_caso_origem.py
@@ -836,7 +836,7 @@ Entrega: (R6, parte de R14)
   `fabrica.meta_trilha(**alteracoes) -> dict`; `fabrica.trilha(meta=None) -> Conteudo`;
   `regra_trilhas(repo, espinha, contexto) -> list[Erro]`; código `R_TRILHA`.
 
-- [ ] **Passo 1: fábrica**
+- [x] **Passo 1: fábrica**
 
 ```python
 def meta_trilha(**alteracoes: Any) -> dict[str, Any]:
@@ -861,7 +861,7 @@ def trilha(meta: dict[str, Any] | None = None) -> Conteudo:
     return Conteudo("trilha", f"trilhas/{meta['id']}.yml", meta, "")
 ```
 
-- [ ] **Passo 2: escrever os testes que falham**
+- [x] **Passo 2: escrever os testes que falham**
 
 ```python
 """R5 da spec da trilha: trilha pronta, uma skill por passo, coerente com o status."""
@@ -949,12 +949,12 @@ def test_caso_da_trilha_existe(tmp_path):
     ]
 ```
 
-- [ ] **Passo 3: rodar e ver falhar**
+- [x] **Passo 3: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_tipo.py -v`
 Esperado: FAIL (fábrica ou schema ausentes).
 
-- [ ] **Passo 4: schema `esquemas/trilha.schema.json`**
+- [x] **Passo 4: schema `esquemas/trilha.schema.json`**
 
 ```json
 {
@@ -991,7 +991,7 @@ Esperado: FAIL (fábrica ou schema ausentes).
 }
 ```
 
-- [ ] **Passo 5: carga, schema registrado e regra**
+- [x] **Passo 5: carga, schema registrado e regra**
 
 `carregar.py`:
 - em `FONTES`, depois de `("ferramenta", "ferramentas/*.yml")`, acrescente
@@ -1050,13 +1050,13 @@ def regra_trilhas(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> li
     return erros
 ```
 
-- [ ] **Passo 6: rodar e ver passar, mais a suíte**
+- [x] **Passo 6: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_tipo.py -v` e `pytest -q`
 Se um teste de estrutura listar os tipos de `FONTES` ou os schemas de `ESQUEMAS`, atualize a
 lista esperada dele com `trilha`. É o mesmo acréscimo, sem outra mudança.
 
-- [ ] **Passo 7: commit**
+- [x] **Passo 7: commit**
 
 ```bash
 git add esquemas/trilha.schema.json portal/gerador/carregar.py portal/gerador/esquemas.py portal/gerador/erros.py portal/gerador/regras.py tests/fabrica.py tests/unidade/test_trilha_tipo.py
@@ -1071,7 +1071,7 @@ Entrega: (R5)
 - Alterar: `componentes.yml`
 - Teste: `tests/unidade/test_trilha_componentes.py` (novo)
 
-- [ ] **Passo 1: reconferir os commits na origem**
+- [x] **Passo 1: reconferir os commits na origem**
 
 Comandos:
 
@@ -1086,7 +1086,7 @@ anotada, use a linha `^{}`). Para o Matt, use `49dd158d1076134a641b33efb03594653
 `git fetch` num clone e `git cat-file -t 49dd158d`. Se um dos commits não bater ou não existir,
 **pare** e volte à spec (constituição, princípio 4).
 
-- [ ] **Passo 2: teste que falha**
+- [x] **Passo 2: teste que falha**
 
 ```python
 """R4 da spec da trilha: as coleções das skills externas estão fixadas."""
@@ -1107,7 +1107,7 @@ def test_colecoes_fixadas():
 
 Comando: `pytest tests/unidade/test_trilha_componentes.py -v`. Esperado: FAIL com `KeyError`.
 
-- [ ] **Passo 3: acrescentar a `componentes.yml`**
+- [x] **Passo 3: acrescentar a `componentes.yml`**
 
 ```yaml
   superpowers:
@@ -1123,11 +1123,11 @@ Comando: `pytest tests/unidade/test_trilha_componentes.py -v`. Esperado: FAIL co
 Acrescente ao comentário do topo: "Coleções de skills externas (spec da trilha, R4): a
 ferramenta `skill` aponta a coleção pelo nome."
 
-- [ ] **Passo 4: rodar o teste, `python scripts/validar.py` e a suíte**
+- [x] **Passo 4: rodar o teste, `python scripts/validar.py` e a suíte**
 
 Esperado: teste verde; o validador sai com 0.
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add componentes.yml tests/unidade/test_trilha_componentes.py
@@ -1138,7 +1138,7 @@ Entrega: (R4)
 
 ### Checkpoint humano 1
 
-- [ ] Colar no fim deste plano a saída de `pytest -q`, `ruff check .` e `python scripts/validar.py`.
+- [x] Colar no fim deste plano a saída de `pytest -q`, `ruff check .` e `python scripts/validar.py`.
 - [ ] **PAUSA.** O dono confere o modelo de dados, as sete regras e os commits das coleções
   antes da Fase 2.
 
@@ -2558,4 +2558,23 @@ Esperado:
 
 ## Evidências
 
-(colar aqui as saídas dos checkpoints e da tarefa 21)
+### Checkpoint 1 (2026-10-14, fim da Fase 1)
+
+Commits `8b39a76..91c857c` (tarefas 1 a 6, cada uma com revisão de spec e qualidade; tarefas 4 e 6 com uma rodada de correção).
+
+```text
+$ .venv/bin/python -m pytest -q
+874 passed in 41.48s
+$ .venv/bin/ruff check .
+All checks passed!
+$ .venv/bin/python scripts/validar.py
+validação ok: nenhum erro.
+```
+
+Decisões tomadas na execução:
+- Tarefa 4: `origem` do caso usa `if`/`then`/`else` no lugar de `oneOf`, para o erro apontar o campo exato (`origem.commit`, `origem.material`).
+- Tarefa 4: a cópia de `casos/fontes/` ignora symlink e caminho que resolve fora da base (revisão de segurança).
+- Tarefa 6: o commit da v6.4.1 do superpowers é `5bf4e78011075bcfc0dc295f0724994cd123ee71`; `b92c4fa…` era o objeto da tag anotada (URL do `SKILL.md` dava 404).
+- Tarefa 6: `tests/test_bootstrap.py` mantém o dono `thisco/` para os componentes próprios, com as coleções externas por exceção explícita.
+
+(colar aqui as saídas do checkpoint 2 e da tarefa 21)
