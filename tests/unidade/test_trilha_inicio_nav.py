@@ -23,6 +23,7 @@ def test_inicio_mostra_o_ciclo_e_o_link():
     assert 'class="ciclo-trilha ciclo-compacto"' in html
     assert 'href="trilha.html"' in html
     assert "Ver a coluna na espinha" not in html
+    assert "Ver a espinha" not in html
 
 
 def test_inicio_em_markdown_lista_as_etapas():

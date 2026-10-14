@@ -112,4 +112,7 @@ def test_ciclo_compacto_substitui_a_lista_de_momentos():
     assert not html.todos("div", classe="passo")
     ciclo = html.todos("div", classe="ciclo-compacto")[0]
     assert not ciclo.todos("ul", classe="ciclo-marcos")
-    assert html.todos("a", href="espinha.html")
+    bloco = next(
+        x for x in html.todos("section") if x.attrs.get("aria-label") == "Para quem desenvolve"
+    )
+    assert [a.texto for a in bloco.todos("a", href="espinha.html")] == ["Ver a espinha →"]
