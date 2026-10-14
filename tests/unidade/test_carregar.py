@@ -174,7 +174,7 @@ def test_componentes_do_repositorio_real():
             "superpowers",
             "https://github.com/obra/superpowers",
             "6.4.1",
-            "b92c4fa87ea1252077a7f7d3bf420e52325dd25e",
+            "5bf4e78011075bcfc0dc295f0724994cd123ee71",
         ),
     }
 
