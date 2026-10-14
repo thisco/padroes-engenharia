@@ -1172,7 +1172,7 @@ Entrega: (R4)
     `id`, `titulo`, `origem`, `status`, `bom_quando`, `cuidado`, `casos` (href e título) e
     `itens` (`etapa`, `passo`, `ferramenta`, `href`).
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R8, R9 e a ordem de R7 da spec da trilha: os dados da página, sem template."""
@@ -1247,12 +1247,12 @@ def test_trilhas_ordenadas_por_status_caso_e_id():
     assert [x["id"] for x in trilha.trilhas(site)] == ["de-origem", "guiada", "enxuta"]
 ```
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_dados.py -v`
 Esperado: FAIL com `ImportError: cannot import name 'trilha'`.
 
-- [ ] **Passo 3: implementar `portal/gerador/trilha.py`**
+- [x] **Passo 3: implementar `portal/gerador/trilha.py`**
 
 ```python
 """A página da trilha (spec 2026-10-14-trilha-sdd, R7 a R9): o ciclo Especificar → Codar →
@@ -1422,13 +1422,13 @@ def trilhas(site: Site) -> list[dict[str, Any]]:
 
 Rode `ruff format portal/gerador/trilha.py` e corrija as linhas acima de 100 colunas.
 
-- [ ] **Passo 4: rodar e ver passar**
+- [x] **Passo 4: rodar e ver passar**
 
 Comando: `pytest tests/unidade/test_trilha_dados.py -v`
 Se `fabrica.site()` falhar porque `site.catalogo.praticas` exige prática válida, crie as
 práticas como no teste; não mude o catálogo.
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add portal/gerador/trilha.py tests/unidade/test_trilha_dados.py
@@ -1455,7 +1455,7 @@ Entrega: (R7 ordem, R8, R9 dados)
 - Produz: `html_trilha(site, pagina) -> str`; `md_trilha(site, pagina) -> str`; macro Jinja
   `ciclo(dados, raiz, compacto=False)`; `fabrica.pagina_trilha() -> Conteudo`.
 
-- [ ] **Passo 1: fábrica**
+- [x] **Passo 1: fábrica**
 
 ```python
 CORPO_TRILHA = """## Atritos
@@ -1472,7 +1472,7 @@ def pagina_trilha() -> Conteudo:
 Confira em `meta_pagina` quais campos ela já traz; se `referencias` não for aceito por ela,
 monte o dicionário à mão com `titulo`, `lead`, `referencias` e `revisado_em`.
 
-- [ ] **Passo 2: escrever os testes que falham**
+- [x] **Passo 2: escrever os testes que falham**
 
 ```python
 """R7 e R9 da spec da trilha: a página, a versão Markdown e o leitor sem JavaScript."""
@@ -1528,11 +1528,11 @@ def test_markdown_lista_etapas_passos_e_trilhas():
     assert "## Trilhas prontas" in md
 ```
 
-- [ ] **Passo 3: rodar e ver falhar**
+- [x] **Passo 3: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_pagina.py -v`. Esperado: FAIL com `ImportError`.
 
-- [ ] **Passo 4: macro `ciclo` em `componentes.html`**
+- [x] **Passo 4: macro `ciclo` em `componentes.html`**
 
 ```jinja
 {# O ciclo da trilha (spec da trilha, R8 e R11): três etapas em linha e o laço Aprender. #}
@@ -1560,7 +1560,7 @@ Comando: `pytest tests/unidade/test_trilha_pagina.py -v`. Esperado: FAIL com `Im
 {%- endmacro %}
 ```
 
-- [ ] **Passo 5: template `portal/templates/trilha.html`**
+- [x] **Passo 5: template `portal/templates/trilha.html`**
 
 ```jinja
 {% extends "base.html" %}
@@ -1634,7 +1634,7 @@ Comando: `pytest tests/unidade/test_trilha_pagina.py -v`. Esperado: FAIL com `Im
 {% endblock %}
 ```
 
-- [ ] **Passo 6: `html_trilha` e `md_trilha` em `trilha.py`**
+- [x] **Passo 6: `html_trilha` e `md_trilha` em `trilha.py`**
 
 ```python
 def html_trilha(site: Site, pagina: Conteudo) -> str:
@@ -1701,7 +1701,7 @@ com `from portal.gerador.trilha import html_trilha, md_trilha` no topo do `pagin
 gerar ciclo de import (o `trilha.py` importa de `paginas.py`), registre a entrada dentro de uma
 função de `saidas.py` que monta o dicionário, em vez de no topo.
 
-- [ ] **Passo 7: tema e filtro**
+- [x] **Passo 7: tema e filtro**
 
 `portal/tema/trilha.js`:
 
@@ -1760,11 +1760,11 @@ Use só os tokens existentes. Em `portal/tema/contraste.yml`, acrescente os pare
 no formato dos pares que já estão lá, e rode o teste de contraste
 (`pytest -q -k contraste`).
 
-- [ ] **Passo 8: rodar e ver passar, mais a suíte**
+- [x] **Passo 8: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_pagina.py -v` e `pytest -q`
 
-- [ ] **Passo 9: commit**
+- [x] **Passo 9: commit**
 
 ```bash
 git add portal/templates/trilha.html portal/templates/componentes.html portal/gerador/trilha.py portal/gerador/paginas.py portal/tema/tema.css portal/tema/trilha.js portal/tema/contraste.yml tests/fabrica.py tests/unidade/test_trilha_pagina.py
@@ -1784,7 +1784,7 @@ Entrega: (R7, R8, R9)
 **Interfaces:**
 - Consome: `trilha.ciclo(site)`, macro `ciclo(..., compacto=True)`.
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R10 e R11 da spec da trilha: Trilha no grupo Padrões e o ciclo na Início."""
@@ -1824,11 +1824,11 @@ def test_inicio_em_markdown_lista_as_etapas():
 Confira em `navegacao` (`renderizar.py:329`) as chaves que cada grupo devolve (`titulo`,
 `itens`, `href`) e ajuste os testes ao formato real antes de rodar.
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
 Comando: `pytest tests/unidade/test_trilha_inicio_nav.py -v`
 
-- [ ] **Passo 3: implementar**
+- [x] **Passo 3: implementar**
 
 `NAV`, grupo Padrões:
 
@@ -1873,13 +1873,13 @@ Em `html_inicio`, troque `momentos=_momentos_da_inicio(site)` por
         ciclo_md += "\n\n[Ver a trilha](trilha.md)"
 ```
 
-- [ ] **Passo 4: rodar e ver passar, mais a suíte**
+- [x] **Passo 4: rodar e ver passar, mais a suíte**
 
 Comandos: `pytest tests/unidade/test_trilha_inicio_nav.py -v` e `pytest -q`. Testes antigos da
 Início que esperavam a lista numerada dos momentos (`test_pagina_inicio.py`) mudam junto: troque
 a expectativa da lista pelo ciclo, sem afrouxar o resto.
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add portal/gerador/renderizar.py portal/templates/inicio.html portal/gerador/paginas.py tests/unidade/test_trilha_inicio_nav.py tests/unidade/test_pagina_inicio.py
@@ -1900,7 +1900,7 @@ Entrega: (R10, R11)
 - Produz: contexto `colecao: dict | None`, `caminhos: list[dict]` (`etapa`, `passo`, `papel`,
   `bom_quando`, `cuidado`), `casos: list[dict]` (`titulo`, `href`).
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R12 da spec da trilha: a página da ferramenta skill e o radar."""
@@ -1945,9 +1945,9 @@ def test_radar_mostra_a_categoria_skill():
 O teste usa o `componentes.yml` real, através de `site.raiz` (`fabrica.RAIZ`), que já tem
 `superpowers` desde a tarefa 6.
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
-- [ ] **Passo 3: implementar**
+- [x] **Passo 3: implementar**
 
 Em `paginas.py`, uma função de apoio perto de `html_ferramenta`:
 
@@ -2036,9 +2036,9 @@ e no `<aside>`, antes de "Referências":
 O ambiente Jinja usa `StrictUndefined`, por isso os três nomes vão sempre no contexto, mesmo
 vazios (`colecao=None`, listas vazias), o que `_da_skill` já garante.
 
-- [ ] **Passo 4: rodar e ver passar, mais a suíte**
+- [x] **Passo 4: rodar e ver passar, mais a suíte**
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add portal/gerador/paginas.py portal/templates/ferramenta.html tests/unidade/test_trilha_ferramenta_pagina.py
@@ -2061,7 +2061,7 @@ Entrega: (R12)
   e `trilha:<id>` (`file_type: "trilha"`); arestas `passo → momento` (`pertence`),
   `ferramenta:<id> → passo` (`caminho`) e `trilha:<id> → ferramenta:<id>` (`usa`).
 
-- [ ] **Passo 1: escrever os testes que falham**
+- [x] **Passo 1: escrever os testes que falham**
 
 ```python
 """R13 da spec da trilha: catálogo, llms.txt, busca, grafo e consulta."""
@@ -2111,9 +2111,9 @@ def test_grafo_liga_trilha_skill_e_passo():
 Confira em `grafo_catalogo.py` o nome das chaves do resultado (`nodes`/`links` ou
 `nodes`/`edges`, `relation`) e ajuste os testes ao formato real antes de rodar.
 
-- [ ] **Passo 2: rodar e ver falhar**
+- [x] **Passo 2: rodar e ver falhar**
 
-- [ ] **Passo 3: implementar**
+- [x] **Passo 3: implementar**
 
 `catalogo.schema.json`, em `properties`:
 
@@ -2159,13 +2159,13 @@ O `rationale` da ferramenta usa o `bom_quando` do primeiro caminho, se houver, p
 léxica do `consultar.py` lê o `rationale`. Troque `f.meta.get("limites", "")` por
 `" ".join(c["bom_quando"] for c in f.meta.get("caminhos") or [])`.
 
-- [ ] **Passo 4: rodar e ver passar, mais a suíte**
+- [x] **Passo 4: rodar e ver passar, mais a suíte**
 
 Rode também `pytest tests/integracao/test_tokens_catalogo.py -v`: o grafo cresce, e a meta de
 tokens do §9.3 precisa continuar atendida. Se estourar, **pare** e leve ao checkpoint; não
 afrouxe a meta.
 
-- [ ] **Passo 5: commit**
+- [x] **Passo 5: commit**
 
 ```bash
 git add esquemas/catalogo.schema.json portal/gerador/saidas.py portal/gerador/grafo_catalogo.py tests/unidade/test_trilha_saidas.py
@@ -2176,7 +2176,7 @@ Entrega: (R13; a consulta "planejar a mudança" é conferida na tarefa 21, com o
 
 ### Checkpoint humano 2
 
-- [ ] Gerar com o conteúdo de teste mínimo (`python scripts/gerar.py --previa`, se a opção
+- [x] Gerar com o conteúdo de teste mínimo (`python scripts/gerar.py --previa`, se a opção
   existir, ou o build dos testes de integração) e abrir `public/trilha.html` e
   `public/index.html` no navegador, em 1280 px e 400 px. Colar aqui a evidência (saída dos
   comandos e o que foi visto).
@@ -2577,4 +2577,28 @@ Decisões tomadas na execução:
 - Tarefa 6: o commit da v6.4.1 do superpowers é `5bf4e78011075bcfc0dc295f0724994cd123ee71`; `b92c4fa…` era o objeto da tag anotada (URL do `SKILL.md` dava 404).
 - Tarefa 6: `tests/test_bootstrap.py` mantém o dono `thisco/` para os componentes próprios, com as coleções externas por exceção explícita.
 
-(colar aqui as saídas do checkpoint 2 e da tarefa 21)
+### Checkpoint 2 (2026-10-14, fim da Fase 2)
+
+Commits `81664c9..613f70e` (tarefas 7 a 11; tarefas 8 e 9 com uma rodada de correção).
+
+```text
+$ .venv/bin/python -m pytest -q
+897 passed in 41.62s
+$ .venv/bin/ruff check .
+All checks passed!
+$ .venv/bin/python scripts/validar.py
+validação ok: nenhum erro.
+$ .venv/bin/python scripts/gerar.py   # saída 0
+```
+
+Prévia visual (catálogo real + página da trilha e 6 skills de exemplo, gerada fora do repositório e descartada):
+- 1280 px: caixa Revisar com CICD-01, DAD-01 e P1-09 em azul sólido; Codar com três práticas tracejadas e a nota; filtros por coleção visíveis; cartões nos passos certos.
+- 400 px: `scrollWidth` = 400 (sem rolagem horizontal); o ciclo vira coluna.
+- Início: ciclo compacto com o laço Aprender e o link para a trilha.
+
+Decisões tomadas na execução:
+- Tarefa 8: a raiz da macro é `ciclo-trilha`; `.ciclo` já existia no ícone da figura do produto.
+- Tarefa 9: o teste do recuo para a espinha ficou delimitado ao bloco da Início (antes passava sempre por causa da navegação).
+- Tarefa 11: o laço das skills roda antes do das práticas em `montar_grafo`, para o `rationale` da skill não se perder.
+
+(colar aqui as saídas da tarefa 21)
