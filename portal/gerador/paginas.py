@@ -13,6 +13,7 @@ from typing import Any
 
 from markupsafe import Markup
 
+from portal.gerador import trilha
 from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
@@ -36,7 +37,6 @@ from portal.gerador.renderizar import (
     vinculos_de,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
-from portal.gerador import trilha
 from portal.gerador.trilha import html_trilha, md_trilha
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
