@@ -48,19 +48,13 @@
 <div class="duas portas">
   <section aria-label="Para quem desenvolve">
     <h2>Para quem desenvolve</h2>
-    <p class="lead">Comece pelo momento em que você está.</p>
-    <div class="passos">
-{% for m in momentos %}
-      <div class="passo">
-        <span class="n">{{ loop.index }}</span>
-        <b>{{ m.titulo }}</b>
-        <p>{{ m.acao }}</p>
-        <p class="mono pequeno">{{ m.contagem }}</p>
-        <p class="mono pequeno">{{ m.fases_texto }}</p>
-        <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
-      </div>
-{% endfor %}
-    </div>
+    <p class="lead">O ciclo de toda mudança. Em cada etapa, o portal diz o que precisa ser verdade ao sair dela; como chegar lá fica com o time.</p>
+    {{ c.ciclo(ciclo, raiz, compacto=True) }}
+{% if tem_trilha %}
+    <p><a href="{{ raiz }}trilha.html">Ver a trilha: marcos e caminhos por etapa →</a></p>
+{% else %}
+    <p><a href="{{ raiz }}espinha.html">Ver a espinha →</a></p>
+{% endif %}
   </section>
   {{ c.bloco_escuro("Para o agente", bloco, chips) }}
 </div>

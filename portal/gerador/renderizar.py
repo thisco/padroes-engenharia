@@ -86,6 +86,7 @@ NAV = (
     (
         "Padrões",
         (
+            ("Trilha", "trilha.html"),
             ("Espinha", "espinha.html"),
             ("Domínios", "dominios/index.html"),
             ("IA no produto", "dominios/ia-no-produto.html"),

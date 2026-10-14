@@ -36,6 +36,7 @@ from portal.gerador.renderizar import (
     vinculos_de,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
+from portal.gerador import trilha
 from portal.gerador.trilha import html_trilha, md_trilha
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
@@ -214,23 +215,6 @@ def _fatos_datados(site: Site) -> str:
     return " · ".join(partes)
 
 
-def _momentos_da_inicio(site: Site) -> list[dict[str, Any]]:
-    resultado = []
-    for m in site.espinha.momentos:
-        n = sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
-        fases = ("fases " if len(m.fases) > 1 else "fase ") + ", ".join(map(str, m.fases))
-        resultado.append(
-            {
-                "slug": m.slug,
-                "titulo": m.titulo,
-                "acao": m.acao,
-                "fases_texto": f"{fases} do ciclo",
-                "contagem": plural(n, "prática", "práticas"),
-            }
-        )
-    return resultado
-
-
 def _atalhos(site: Site) -> list[tuple[str, str]]:
     existentes = site.caminhos()
     candidatos = (("Por que isto existe →", "o-problema.html"), ("Conceitos →", "conceitos.html"))
@@ -286,7 +270,8 @@ def html_inicio(site: Site) -> str:
         lead=citar(meta.get("lead") or DESCRICAO_INICIO, ids, "lead"),
         fatos_datados=_fatos_datados(site),
         atalhos=_atalhos(site),
-        momentos=_momentos_da_inicio(site),
+        ciclo=trilha.ciclo(site),
+        tem_trilha="trilha.html" in site.caminhos(),
         bloco=bloco_agents(site),
         chips=[(rotulo, caminho) for rotulo, caminho in _chips_do_agente(site)],
         caminhos=_caminhos_da_inicio(site, ids),
@@ -302,10 +287,11 @@ def html_inicio(site: Site) -> str:
 def md_inicio(site: Site) -> str:
     pagina = site.pagina("inicio")
     meta = _meta_da_inicio(site)
-    momentos = [
-        f"{i}. **{m['titulo']}** ({m['fases_texto']}): {m['acao']} {m['contagem']}."
-        for i, m in enumerate(_momentos_da_inicio(site), start=1)
-    ]
+    etapas = trilha.ciclo(site)
+    nomes = " → ".join(c["etapa"] for c in etapas["caixas"])
+    ciclo_md = f"## Para quem desenvolve\n\n{nomes}, e o laço {etapas['laco']['etapa']}."
+    if "trilha.html" in site.caminhos():
+        ciclo_md += "\n\n[Ver a trilha](trilha.md)"
     caminhos = [
         f"- [{c['titulo']}]({c['href'].removesuffix('.html')}.md): {c['texto']}"
         for c in _caminhos_da_inicio(site, [])
@@ -323,8 +309,7 @@ def md_inicio(site: Site) -> str:
         f"# {meta.get('titulo') or site.nome}",
         str(meta.get("lead") or DESCRICAO_INICIO),
         _fatos_datados(site),
-        "## Para quem desenvolve\n\nComece pelo momento em que você está.\n\n"
-        + "\n".join(momentos),
+        ciclo_md,
         "## Para o agente\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
         f"{bloco_agents(site)}```",
         ("## Comece aqui\n\n" + "\n".join(caminhos)) if caminhos else "",

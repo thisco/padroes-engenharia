@@ -41,7 +41,9 @@ def test_inicio_nas_sete_secoes_com_por_que_no_topo():
         "Por que confiar",
         "Estado",
     } <= rotulos
-    assert "Leia a constituição, classifique o tier, escreva a spec." in html.texto
+    ciclo = html.todos("div", classe="ciclo-trilha")[0]
+    assert [h.texto for h in ciclo.todos("h3")] == ["Especificar", "Codar", "Revisar"]
+    assert "Aprender" in ciclo.todos("p", classe="ciclo-laco")[0].texto
     assert "1 prática" in html.texto and "prática(s)" not in html.texto
     assert html.todos("dl", classe="legenda-forcas")
 
@@ -98,7 +100,7 @@ def test_primeira_dobra_responde_antes_de_explicar_o_ciclo():
     assert "pesquisa" not in topo
 
 
-def test_momentos_dizem_a_acao_e_deixam_a_fase_em_texto_pequeno_abaixo():
+def test_ciclo_compacto_substitui_a_lista_de_momentos():
     s = fabrica.site(INICIO, PROBLEMA, fabrica.pratica(), fabrica.starter(), fabrica.referencia())
     html = analisar(html_inicio(s))
     assert (
@@ -107,8 +109,7 @@ def test_momentos_dizem_a_acao_e_deixam_a_fase_em_texto_pequeno_abaixo():
         .split("Para quem desenvolve")[1]
         .split("Para o agente")[0]
     )
-    passo = html.todos("div", classe="passo")[0]
-    paragrafos = [p.texto for p in passo.todos("p")]
-    assert paragrafos[1].endswith("prática") or paragrafos[1].endswith("práticas")
-    assert "fase" not in paragrafos[1]
-    assert paragrafos[2].startswith("fase") and "do ciclo" in paragrafos[2]
+    assert not html.todos("div", classe="passo")
+    ciclo = html.todos("div", classe="ciclo-compacto")[0]
+    assert not ciclo.todos("ul", classe="ciclo-marcos")
+    assert html.todos("a", href="espinha.html")
