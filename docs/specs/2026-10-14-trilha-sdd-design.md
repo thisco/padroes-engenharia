@@ -203,8 +203,8 @@ para `docs/plans`. O comando de contagem e o commit de origem (`9117a57`) ficam 
 **R15** Ferramentas `skill` da primeira leva, cada uma com referência ao `SKILL.md` no commit
 fixado, registro em `verificacoes/` e "bom quando" e "cuidado" conferidos contra o texto da
 skill:
-- **superpowers** (prefixo `sp-`): as skills que o dono marcar no relato, até 13 (de
-  `brainstorming` a `writing-skills`). Status `adotar`, com `casos: [origem-do-modelo]`;
+- **superpowers** (prefixo `sp-`): as 13 skills listadas em Esclarecimentos. Status
+  `adotar`, com `casos: [origem-do-modelo]`;
 - **mattpocock-skills** (prefixo `mp-`): `grill-with-docs`, `grilling`, `domain-modeling`,
   `to-spec`, `tdd`, `implement`, `code-review` e `retro`. Status `avaliar`;
 - **`sdd-lifecycle`**: passa de `categoria: sdd` para `skill` e ganha `caminhos` nos passos
@@ -225,7 +225,8 @@ skill:
 
 **R17** ADRs:
 - **0010, "Trilha, não trilho":** TR-D1 a TR-D5, com as alternativas descartadas;
-- **0011, "O caso de origem volta, sanitizado":** substitui em parte a 0006.
+- **0011, "O caso de origem volta, sanitizado":** substitui em parte a 0006, que ganha a linha
+  "Substituída em parte pela ADR 0011" no cabeçalho (autorizada em Esclarecimentos).
 
 - Critério: **Dado** o merge, **Então** as duas ADRs existem com status `aceita` e citam esta
   spec.
@@ -235,16 +236,20 @@ R1 a R17 pelo efeito, e não pelo número.
 
 ## Esclarecimentos
 
-[ESCLARECER: o dono do repositório de origem autoriza a extração de trechos sanitizados para
-`casos/fontes/origem-do-modelo/`?]
-
-[ESCLARECER: quais das 13 skills do superpowers o dono usou no projeto de origem, e em que
-versão? O rascunho de `relato.md` traz a lista para ele marcar. Se `using-superpowers` estiver
-marcada, ela entra como `adotar`, embora a análise a tenha deixado fora do mapa por forçar o
-ciclo.]
-
-[ESCLARECER: a ADR 0006 pode ganhar uma única linha no cabeçalho, "Substituída em parte pela ADR
-0011"? Sem a autorização, a referência fica só na 0011.]
+- **O dono do repositório de origem autoriza a extração de trechos sanitizados para
+  `casos/fontes/origem-do-modelo/`?** Sim, autorizado pelo dono em 2026-10-14.
+- **Quais skills do superpowers o dono usou no projeto de origem, e em que versão?** Todas, na
+  série 6.x (dono, 2026-10-14). As 13 com passo no ciclo (`brainstorming`,
+  `dispatching-parallel-agents`, `executing-plans`, `finishing-a-development-branch`,
+  `receiving-code-review`, `requesting-code-review`, `subagent-driven-development`,
+  `systematic-debugging`, `test-driven-development`, `using-git-worktrees`,
+  `verification-before-completion`, `writing-plans` e `writing-skills`) viram ferramentas
+  `adotar`. `using-superpowers` (bootstrap do plugin) e `diagnosing-superpowers` (depuração do
+  próprio plugin) não têm passo no ciclo e por isso não viram ferramenta: entram no relato como
+  usadas, e a trilha `de-origem`, em `adotar`, diz no `cuidado` que o plugin traz o bootstrap.
+  O portal fixa a 6.4.1; o `limites` de cada ferramenta diz que o caso usou a série 6.x.
+- **A ADR 0006 pode ganhar uma linha no cabeçalho, "Substituída em parte pela ADR 0011"?** Sim,
+  autorizado pelo dono em 2026-10-14. É a única edição na 0006.
 
 ## Não-objetivos
 
