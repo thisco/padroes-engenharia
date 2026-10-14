@@ -92,10 +92,10 @@ com verificação `V`, a mesma barra que a curadoria já aplica às práticas.
   **Quando** o validador roda, **Então** reprova com `R-ADOTAR-SKILL`.
 
 **R4** `componentes.yml` ganha `superpowers` (`https://github.com/obra/superpowers`, versão
-`6.4.1`, commit `b92c4fa87ea1252077a7f7d3bf420e52325dd25e`) e `mattpocock-skills`
+`6.4.1`, commit `5bf4e78011075bcfc0dc295f0724994cd123ee71`) e `mattpocock-skills`
 (`https://github.com/mattpocock/skills`, versão `1.3.1`, commit
-`49dd158d1076134a641b33efb035946536778336`). O commit do superpowers vem do clone local e é
-reconferido na origem durante a curadoria.
+`49dd158d1076134a641b33efb035946536778336`). O commit do superpowers é o da tag `v6.4.1^{}`,
+reconferido na origem (ver Esclarecimentos).
 
 - Critério: **Dado** os dois componentes, **Quando** `scripts/checar_links.py` roda, **Então**
   o `SKILL.md` de cada ferramenta `skill` resolve no commit fixado.
@@ -252,6 +252,10 @@ R1 a R17 pelo efeito, e não pelo número.
   O portal fixa a 6.4.1; o `limites` de cada ferramenta diz que o caso usou a série 6.x.
 - **A ADR 0006 pode ganhar uma linha no cabeçalho, "Substituída em parte pela ADR 0011"?** Sim,
   autorizado pelo dono em 2026-10-14. É a única edição na 0006.
+- **Qual é o commit da v6.4.1 do superpowers?** `5bf4e78011075bcfc0dc295f0724994cd123ee71`
+  (`v6.4.1^{}` no `git ls-remote`). O valor da redação aprovada, `b92c4fa…`, era o objeto da tag
+  anotada, e a URL do `SKILL.md` com ele dava 404. Corrigido na tarefa 6, com autorização do dono
+  em 2026-10-14, no checkpoint 1.
 
 ## Não-objetivos
 
