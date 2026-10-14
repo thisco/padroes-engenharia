@@ -968,9 +968,15 @@ def copiar_apresentacoes(site: Site, saida: Path) -> None:
 
 def copiar_fontes_de_casos(site: Site, saida: Path, raiz: Path | None = None) -> None:
     """Publica `casos/fontes/**/*.md` com a mesma árvore, para a fonte do caso abrir no site
-    (spec da trilha, R14). `raiz` existe para os testes; o build usa a do site."""
+    (spec da trilha, R14). Symlinks e arquivos fora da pasta ficam de fora, como em
+    `copiar_apresentacoes`. `raiz` existe para os testes; o build usa a do site."""
     base = (raiz or site.raiz) / "casos" / "fontes"
+    base_real = base.resolve()
     for arquivo in sorted(base.rglob("*.md")):
+        if arquivo.is_symlink() or not arquivo.is_file():
+            continue
+        if not arquivo.resolve().is_relative_to(base_real):
+            continue
         copiar(arquivo, saida / "casos" / "fontes" / arquivo.relative_to(base))
 
 

@@ -47,3 +47,17 @@ def test_fontes_sao_publicadas_com_a_subpasta(tmp_path):
     saida = tmp_path / "public"
     copiar_fontes_de_casos(fabrica.site(), saida, raiz=raiz)
     assert (saida / MATERIAL / "relato.md").read_text(encoding="utf-8") == "# Relato\n"
+
+
+def test_fontes_nao_seguem_symlink(tmp_path):
+    raiz = tmp_path / "repo"
+    pasta = raiz / MATERIAL
+    pasta.mkdir(parents=True)
+    (pasta / "relato.md").write_text("# Relato\n", encoding="utf-8")
+    segredo = tmp_path / "segredo.md"
+    segredo.write_text("# Fora do repositório\n", encoding="utf-8")
+    (pasta / "fora.md").symlink_to(segredo)
+    saida = tmp_path / "public"
+    copiar_fontes_de_casos(fabrica.site(), saida, raiz=raiz)
+    assert (saida / MATERIAL / "relato.md").is_file()
+    assert not (saida / MATERIAL / "fora.md").exists()
