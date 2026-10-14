@@ -6,6 +6,7 @@
 # subtitulo: a linha da faixa na espinha (mockup aprovado espinha-sdd-v2.html).
 # scaffold: steering e skill do sdd-scaffold que já cobrem a faixa (tabela do §4.1 da spec).
 # acao: a frase de ação do momento na Início (mockup aprovado visual-portal.html).
+# etapa e passos: o ciclo da página da trilha (spec 2026-10-14-trilha-sdd, R1).
 faixas:
   - slug: construir-com-ia
     titulo: Construir com IA
@@ -86,15 +87,41 @@ momentos:
     titulo: Antes de escrever
     fases: [0, 1, 2, 3]
     acao: Leia a constituição, classifique o tier, escreva a spec.
+    etapa: Especificar
+    passos:
+      - {slug: entrevistar, titulo: Entrevistar, desc: "tirar da cabeça da pessoa o que ela quer"}
+      - {slug: escrever-spec, titulo: Escrever a spec, desc: "o documento que vai ser aprovado"}
+      - {slug: decidir, titulo: Decidir e registrar, desc: "glossário e ADR"}
+      - {slug: investigar, titulo: Investigar, desc: "responder antes de decidir"}
+      - {slug: seguranca, titulo: Segurança, desc: "superfície nova"}
   - slug: enquanto-escreve
     titulo: Enquanto escreve
     fases: [4, 5, 6]
     acao: Plano com checkboxes, branch isolada, teste antes do código.
+    etapa: Codar
+    passos:
+      - {slug: planejar, titulo: Planejar, desc: "tarefas com checkboxes"}
+      - {slug: isolar, titulo: Isolar, desc: "branch ou worktree"}
+      - {slug: executar, titulo: Executar, desc: "do plano ao código"}
+      - {slug: tdd, titulo: TDD, desc: "vermelho, verde"}
+      - {slug: bug, titulo: Bug, desc: "do sintoma ao teste de regressão"}
+      - {slug: dominio, titulo: Domínio, desc: "conforme a faixa"}
   - slug: antes-do-merge
     titulo: Antes do merge
     fases: [7]
     acao: Evidência no plano, revisão contra a spec, CI verde.
+    etapa: Revisar
+    passos:
+      - {slug: revisar, titulo: Revisar o diff, desc: "spec e padrões"}
+      - {slug: responder, titulo: Responder à revisão, desc: "sem concordar por educação"}
+      - {slug: evidencia, titulo: Evidência, desc: "antes de dizer que terminou"}
+      - {slug: pr-e-merge, titulo: PR e merge, desc: "fechar a branch"}
   - slug: depois-da-entrega
     titulo: Depois da entrega
     fases: [8]
     acao: Changelog, memória destilada, bug vira regra.
+    etapa: Aprender
+    passos:
+      - {slug: retro, titulo: Retro, desc: "melhorar o ambiente, não o código"}
+      - {slug: instrucoes, titulo: Cuidar das instruções, desc: "skills, AGENTS.md, steering"}
+      - {slug: continuar, titulo: Continuar depois, desc: "entre sessões"}

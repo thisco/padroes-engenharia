@@ -663,6 +663,20 @@ def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 
 
+@regra
+def regra_passos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-PASSO: o slug do passo é único dentro do momento (spec da trilha, R1)."""
+    erros: list[Erro] = []
+    for i, momento in enumerate(espinha.momentos):
+        vistos: set[str] = set()
+        for j, passo in enumerate(momento.passos):
+            if passo.slug in vistos:
+                campo = f"momentos.{i}.passos.{j}.slug"
+                erros.append(Erro("esquemas/espinha.yml", campo, codigos.R_PASSO, passo.slug))
+            vistos.add(passo.slug)
+    return erros
+
+
 # Seções obrigatórias da prática (spec §6.1; §12.1, bloqueio 1) --------------------------------
 
 SECOES_PRATICA = (

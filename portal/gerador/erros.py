@@ -43,6 +43,7 @@ R_PROMPT = "R-PROMPT"
 R_APRESENTACAO = "R-APRESENTACAO"
 R_LINK_INTERNO = "R-LINK-INTERNO"
 R_PACOTE = "R-PACOTE"
+R_PASSO = "R-PASSO"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -82,6 +83,7 @@ DESCRICOES: dict[str, str] = {
         "pacote de distribuição sem manifesto ou com arquivo fora dele, ausente "
         "ou com sha256 divergente"
     ),
+    R_PASSO: "passo repetido no mesmo momento de esquemas/espinha.yml",
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
 }
 
