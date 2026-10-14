@@ -322,7 +322,9 @@ def meta_ferramenta_skill(**alteracoes: Any) -> dict[str, Any]:
                     "passo": "planejar",
                     "papel": "caminho",
                     "bom_quando": "o plano precisa de passos pequenos por tarefa.",
-                    "cuidado": "grava em docs/superpowers/plans se o projeto não disser outro lugar.",
+                    "cuidado": (
+                        "grava em docs/superpowers/plans se o projeto não disser outro lugar."
+                    ),
                 }
             ],
             "como_instalar": "Instale o plugin da coleção.",
