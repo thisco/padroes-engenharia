@@ -22,6 +22,16 @@
 {{ alternativa }}
     </section>
 {% endif %}
+{% if caminhos %}
+    <section aria-label="Caminhos"><h2>Caminhos</h2>
+      <ul class="tr-marcos">
+{% for c in caminhos %}
+        <li><b>{{ c.etapa }} · {{ c.passo }}</b> <span class="mono pequeno">{{ c.papel }}</span><br>Bom quando {{ c.bom_quando }}{% if c.cuidado %}<br><span class="tr-cuidado">Cuidado: {{ c.cuidado }}</span>{% endif %}</li>
+{% endfor %}
+      </ul>
+      <p><a href="{{ raiz }}trilha.html">Ver na trilha →</a></p>
+    </section>
+{% endif %}
   </article>
   <aside class="lado" aria-label="Vínculos e referências">
 {% if vinculos.praticas %}
@@ -29,6 +39,12 @@
 {% endif %}
 {% if vinculos.receitas %}
     <section><h2>Receitas</h2><ul>{% for i in vinculos.receitas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+{% if colecao %}
+    <section><h2>Coleção</h2><p><a href="{{ colecao.repo }}">{{ colecao.rotulo }}</a> {{ colecao.versao }}<br><a class="mono" href="{{ colecao.url_commit }}">{{ colecao.commit[:7] }}</a></p></section>
+{% endif %}
+{% if casos %}
+    <section><h2>Casos</h2><ul>{% for c in casos %}<li><a href="{{ raiz }}{{ c.href }}">{{ c.titulo }}</a></li>{% endfor %}</ul></section>
 {% endif %}
     <section><h2>Referências</h2>{{ c.lista_referencias(referencias, raiz) }}</section>
   </aside>

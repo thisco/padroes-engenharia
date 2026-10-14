@@ -808,6 +808,49 @@ def _markdown_da_ferramenta(texto: Any, ids: list[str]) -> Markup:
     return Markup(para_html(MARCADOR.sub(trocar, str(texto))))
 
 
+def _da_skill(site: Site, meta: dict[str, Any]) -> dict[str, Any]:
+    """Coleção, caminhos e casos da ferramenta `skill` (spec da trilha, R12)."""
+    caminhos = []
+    for c in meta.get("caminhos") or []:
+        momento = site.espinha.momento(c["momento"])
+        passo = momento.passo(c["passo"]) if momento else None
+        caminhos.append(
+            {
+                "etapa": (momento.etapa or momento.titulo) if momento else c["momento"],
+                "passo": passo.titulo if passo else c["passo"],
+                "papel": c["papel"],
+                "bom_quando": c["bom_quando"],
+                "cuidado": c.get("cuidado", ""),
+            }
+        )
+    casos = {x.chave: x for x in site.repo.casos}
+    return {
+        "colecao": trilha.colecoes(site).get(meta.get("colecao", "")),
+        "caminhos": caminhos,
+        "casos": [
+            {"titulo": casos[s].meta["titulo"], "href": caminho_de(casos[s])}
+            for s in meta.get("casos") or []
+            if s in casos
+        ],
+    }
+
+
+def _md_skill(dados: dict[str, Any]) -> str:
+    if not dados["caminhos"]:
+        return ""
+    linhas = ["## Caminhos", ""]
+    linhas += [
+        f"- {c['etapa']} · {c['passo']} ({c['papel']}): {c['bom_quando']}"
+        + (f" Cuidado: {c['cuidado']}" if c["cuidado"] else "")
+        for c in dados["caminhos"]
+    ]
+    if dados["colecao"]:
+        col = dados["colecao"]
+        linhas += ["", f"Coleção: {col['rotulo']} {col['versao']}, commit {col['commit'][:7]}."]
+    linhas += [f"Caso: {c['titulo']}." for c in dados["casos"]]
+    return "\n".join(linhas)
+
+
 def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
     ids = ids_da_pagina(site, ferramenta)
     meta = ferramenta.meta
@@ -824,6 +867,7 @@ def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
         alternativa=_markdown_da_ferramenta(meta.get("alternativa", ""), ids),
         vinculos=_vinculos(site, ferramenta),
         referencias=site.catalogo.referencias_de(ferramenta),
+        **_da_skill(site, meta),
     )
 
 
@@ -848,6 +892,7 @@ def md_ferramenta(site: Site, ferramenta: Conteudo) -> str:
         ("## Receitas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["receitas"]))
         if vinculos["receitas"]
         else "",
+        _md_skill(_da_skill(site, meta)),
         md_lista_referencias(site, ferramenta),
     )
 
