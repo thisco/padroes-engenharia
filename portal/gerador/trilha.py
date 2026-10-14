@@ -2,8 +2,9 @@
 Revisar com o laço Aprender, os marcos de cada etapa (as práticas do momento), os passos da
 espinha e as ferramentas `skill` como caminhos, mais as trilhas prontas.
 
-Aqui ficam só os dados; o template e o HTML vêm em outro módulo. Este módulo não importa
-`paginas.py`, para evitar import circular."""
+Este módulo monta os dados e também o HTML (`html_trilha`) e o Markdown (`md_trilha`) da página.
+`paginas.py` importa este módulo no topo; por isso ele só importa `paginas.py` (e `texto_md`)
+dentro das funções, para evitar import circular."""
 
 from __future__ import annotations
 

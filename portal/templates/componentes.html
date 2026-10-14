@@ -253,7 +253,7 @@
 
 {# O ciclo da trilha (spec da trilha, R8 e R11): três etapas em linha e o laço Aprender. #}
 {% macro ciclo(dados, raiz="", compacto=False) -%}
-<div class="ciclo{% if compacto %} ciclo-compacto{% endif %}" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
+<div class="ciclo-trilha{% if compacto %} ciclo-compacto{% endif %}" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
   <ol class="ciclo-etapas">
 {% for c in dados.caixas %}
     <li class="ciclo-caixa">

@@ -483,11 +483,10 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 /* Trilha (spec 2026-10-14-trilha-sdd): azul sólido = marco com mecanismo; âmbar tracejado = caminho. */
 .tr-legenda { margin-top: 8px; font-size: 13px; }
 .tr-amostra { display: inline-block; width: 14px; height: 14px; margin: 0 6px 0 0; vertical-align: -2px; border-radius: 2px; }
-.tr-amostra.caminho { margin-left: 14px; }
 .tr-amostra.marco { background: var(--gov-claro); border: 2px solid var(--gov); }
-.tr-amostra.caminho { background: var(--ambar-claro); border: 1.5px dashed var(--ambar); }
+.tr-amostra.caminho { margin-left: 14px; background: var(--ambar-claro); border: 1.5px dashed var(--ambar); }
 
-.ciclo { margin: 24px 0; }
+.ciclo-trilha { margin: 24px 0; }
 .ciclo-etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 .ciclo-caixa { position: relative; min-width: 0; padding: 12px 14px; background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; }
 .ciclo-caixa:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--tinta-2); }

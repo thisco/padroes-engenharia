@@ -50,3 +50,17 @@ def test_markdown_lista_etapas_passos_e_trilhas():
     linha = "- writing-plans (superpowers, avaliar): o plano precisa de passos pequenos por tarefa."
     assert linha in md
     assert "## Trilhas prontas" in md
+
+
+def test_texto_do_caminho_e_escapado_no_html():
+    meta = fabrica.meta_ferramenta_skill()
+    meta["caminhos"][0]["bom_quando"] = "<script>alert(1)</script>"
+    site = fabrica.site(
+        fabrica.pagina_trilha(),
+        fabrica.referencia(),
+        fabrica.ferramenta(meta),
+        fabrica.trilha(),
+    )
+    html = html_trilha(site, site.pagina("trilha"))
+    assert "&lt;script&gt;" in html
+    assert "<script>alert(1)</script>" not in html
