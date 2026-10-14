@@ -2,7 +2,9 @@
 
 > **Tier:** 2 (schema de espinha, ferramenta, caso e catálogo; tipo de conteúdo novo; página e
 > navegação; `esquemas/`, `portal/` e `componentes.yml` são risco alto).
-> **Status:** rascunho
+> **Status:** aprovada
+> **Aprovado por:** thiago
+> **Aprovado em:** 2026-10-14
 > **Data:** 2026-10-14
 > **Altera:** §4 (espinha e navegação), §6 (modelo de conteúdo: ferramenta, caso e tipo novo
 > `trilha`), §7 (saídas) e §10 (casos, já alterado pela ADR 0006) da spec v1.0 na redação do
