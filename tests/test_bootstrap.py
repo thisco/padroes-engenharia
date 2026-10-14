@@ -38,7 +38,7 @@ def test_componentes_fixados_com_versao_e_commit():
     assert componentes["sdd-scaffold"]["versao"] == "1.7.1"
     assert componentes["sdd-lifecycle"]["versao"] == "3.0.0"
     for item in componentes.values():
-        assert item["repo"].startswith("https://github.com/thisco/")
+        assert item["repo"].startswith("https://github.com/")
         assert re.fullmatch(r"[0-9a-f]{40}", item["commit"])
 
 

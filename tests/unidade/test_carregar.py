@@ -152,6 +152,12 @@ def test_componentes_do_repositorio_real():
             "0.1.0",
             "571a091c8a8f9ff99aba89c064d69a36ff195bef",
         ),
+        "mattpocock-skills": Componente(
+            "mattpocock-skills",
+            "https://github.com/mattpocock/skills",
+            "1.3.1",
+            "49dd158d1076134a641b33efb035946536778336",
+        ),
         "sdd-lifecycle": Componente(
             "sdd-lifecycle",
             "https://github.com/thisco/sdd-lifecycle",
@@ -163,6 +169,12 @@ def test_componentes_do_repositorio_real():
             "https://github.com/thisco/sdd-scaffold",
             "1.7.1",
             "cd121cd973945c486e63029496ed7ec879a18e32",
+        ),
+        "superpowers": Componente(
+            "superpowers",
+            "https://github.com/obra/superpowers",
+            "6.4.1",
+            "b92c4fa87ea1252077a7f7d3bf420e52325dd25e",
         ),
     }
 
