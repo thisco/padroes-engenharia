@@ -26,6 +26,7 @@
     "receitas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
     "starters": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
     "ferramentas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
+    "trilhas": {"type": "array", "items": {"$ref": "#/$defs/pagina"}},
     "glossario": {
       "type": "array",
       "items": {"type": "object", "required": ["termo", "definicao"]}

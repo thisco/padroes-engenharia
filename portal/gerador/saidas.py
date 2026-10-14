@@ -703,6 +703,9 @@ def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
         "ferramentas": [
             _item(f.meta["id"], f.meta["titulo"], caminho_de(f), f.meta) for f in repo.ferramentas
         ],
+        "trilhas": [
+            _item(t.meta["id"], t.meta["titulo"], "trilha.html", t.meta) for t in repo.trilhas
+        ],
         "glossario": [
             t for g in repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
         ],
