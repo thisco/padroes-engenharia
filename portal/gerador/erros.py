@@ -26,6 +26,7 @@ R_GATILHO = "R-GATILHO"
 R_MENSAGEM = "R-MENSAGEM"
 R_NUCLEO = "R-NUCLEO"
 R_ADOTAR = "R-ADOTAR"
+R_ADOTAR_SKILL = "R-ADOTAR-SKILL"
 R_EVITAR = "R-EVITAR"
 R_VERIFICACAO = "R-VERIFICACAO"
 R_AGENTS = "R-AGENTS"
@@ -67,6 +68,7 @@ DESCRICOES: dict[str, str] = {
     R_MENSAGEM: "mensagem do mecanismo ausente, longa, sem ID no início ou sem URL no fim",
     R_NUCLEO: "núcleo composto com todas as faixas acima de 100 linhas ou 8 KB",
     R_ADOTAR: "status adotar sem referência forte nem caso interno",
+    R_ADOTAR_SKILL: "ferramenta skill em adotar sem caso interno nem referência forte",
     R_EVITAR: "status evitar sem indicar a prática que substitui",
     R_VERIFICACAO: "registro de verificação ausente, defasado, incompleto ou sem revisão",
     R_AGENTS: "AGENTS.md ausente, grande demais ou com constituição divergente",

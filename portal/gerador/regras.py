@@ -649,6 +649,28 @@ def regra_adotar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 
 @regra
+def regra_adotar_skill(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-ADOTAR-SKILL (spec da trilha, R3): ferramenta `skill` em `adotar` exige um caso
+    existente em `casos` ou uma referência forte com verificação V, como a prática."""
+    referencias = {r.chave: r.meta for r in repo.referencias}
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for f in repo.ferramentas:
+        if _texto(f.meta, "categoria") != "skill" or _texto(f.meta, "status") != "adotar":
+            continue
+        fortes = [
+            id_
+            for id_ in _lista(f.meta, "referencias")
+            if referencias.get(id_, {}).get("tipo") in TIPOS_FORTES
+            and referencias.get(id_, {}).get("verificacao") == "V"
+        ]
+        if not fortes and not [s for s in _lista(f.meta, "casos") if s in casos]:
+            valor = "adotar sem caso interno nem referência forte [V]"
+            erros.append(Erro(f.caminho_relativo, "status", codigos.R_ADOTAR_SKILL, valor))
+    return erros
+
+
+@regra
 def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
     """`evitar` descreve um anti-padrão e o corpo cita, pelo ID, a prática que o substitui."""
     erros: list[Erro] = []
