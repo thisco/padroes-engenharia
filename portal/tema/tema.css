@@ -343,7 +343,8 @@ section.lacuna ul { margin: 0; padding-left: 18px; font-size: 14px; color: var(-
 @media (max-width: 900px) {
   .elo { grid-template-columns: 60px minmax(0, 1fr); }
   .folha { padding: 24px 18px; }
-  .topo, .duas, .corpo { grid-template-columns: 1fr; gap: 20px; }
+  .topo, .duas, .corpo { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .barra .menu { flex: 1 1 100%; min-width: 0; }
   .topo h1 { font-size: 34px; }
   .passos { grid-template-columns: 1fr 1fr; }
   .fluxo { flex-direction: column; }

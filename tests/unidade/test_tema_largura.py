@@ -34,3 +34,18 @@ def test_rolagem_chips_caixa_alta_e_favicon():
 def test_texto_sem_quebra_nao_estoura_a_largura():
     assert re.search(r"\.campos dd[^{]*\{[^}]*overflow-wrap:\s*anywhere", CSS)
     assert re.search(r"(?<![\w-])code\b[^{]*\{[^}]*overflow-wrap:\s*anywhere", CSS)
+
+
+def _bloco_estreito(css):
+    return re.search(r"@media \(max-width: 900px\)\s*\{(.*?)\n\}", css, re.S).group(1)
+
+
+def test_grade_empilhada_deixa_o_item_encolher():
+    """Sem `minmax(0, 1fr)`, o `1fr` vale `minmax(auto, 1fr)` e a minimatriz estica a coluna."""
+    estreito = _bloco_estreito(CSS)
+    assert re.search(r"\.duas[^{]*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)", estreito)
+
+
+def test_barra_de_navegacao_quebra_linha_em_tela_estreita():
+    assert re.search(r"\.nav\s*\{[^}]*flex-wrap:\s*wrap", CSS)
+    assert re.search(r"\.barra\s+\.menu\s*\{[^}]*flex:\s*1 1 100%", _bloco_estreito(CSS))
