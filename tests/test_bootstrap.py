@@ -39,7 +39,13 @@ def test_componentes_fixados_com_versao_e_commit():
     assert componentes["sdd-lifecycle"]["versao"] == "3.0.0"
     # Coleções externas (R4 da trilha) vivem sob outros donos;
     # os demais componentes ficam sob thisco.
-    EXTERNOS = {"superpowers": "obra/superpowers", "mattpocock-skills": "mattpocock/skills"}
+    EXTERNOS = {
+        "superpowers": "obra/superpowers",
+        "mattpocock-skills": "mattpocock/skills",
+        "agent-skills": "addyosmani/agent-skills",
+        "claude-plugins-official": "anthropics/claude-plugins-official",
+        "playwright-mcp": "microsoft/playwright-mcp",
+    }
     for nome, item in componentes.items():
         if nome in EXTERNOS:
             assert item["repo"] == f"https://github.com/{EXTERNOS[nome]}"

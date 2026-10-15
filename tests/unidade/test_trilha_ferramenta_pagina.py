@@ -14,7 +14,7 @@ def test_pagina_mostra_colecao_caminho_e_caso():
     site, f = site_e_skill()
     html = html_ferramenta(site, f)
     assert "obra/superpowers" in html
-    assert "5bf4e78" in html
+    assert "bb92a77" in html
     assert "Codar · Planejar" in html
     assert "casos/origem-do-modelo.html" in html
 
