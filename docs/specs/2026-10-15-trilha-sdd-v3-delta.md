@@ -2,7 +2,9 @@
 
 > **Tier:** 2 (schema de prática, navegação, página, vocabulário gerado em várias páginas,
 > `componentes.yml`; `esquemas/`, `portal/` e `skills/` são risco alto).
-> **Status:** rascunho
+> **Status:** aprovada
+> **Aprovado por:** thiago
+> **Aprovado em:** 2026-10-15
 > **Data:** 2026-10-15
 > **Altera:** [`2026-10-14-trilha-sdd-design.md`](2026-10-14-trilha-sdd-design.md), aprovada em
 > 2026-10-14: decisões TR-D2, TR-D7 e TR-D8 e requisitos R2, R4, R7 a R11 e R14 a R17. O que este
