@@ -68,3 +68,24 @@ def test_trilhas_ordenadas_por_status_caso_e_id():
     ]
     site = fabrica.site(skill, fabrica.caso("origem-do-modelo"), *t)
     assert [x["id"] for x in trilha.trilhas(site)] == ["de-origem", "guiada", "enxuta"]
+
+
+def test_mapa_inclui_ferramenta_que_nao_e_skill():
+    caminho = {
+        "momento": "antes-do-merge",
+        "passo": "evidencia",
+        "papel": "caminho",
+        "bom_quando": "x",
+    }
+    pw = fabrica.ferramenta(
+        fabrica.meta_ferramenta(
+            id="pw",
+            titulo="Playwright MCP",
+            categoria="teste",
+            colecao="superpowers",
+            caminhos=[caminho],
+        )
+    )
+    revisar = next(e for e in trilha.mapa(fabrica.site(pw)) if e["slug"] == "antes-do-merge")
+    evid = next(p for p in revisar["passos"] if p["slug"] == "evidencia")
+    assert [c["ferramenta"] for c in evid["caminhos"]] == ["pw"]

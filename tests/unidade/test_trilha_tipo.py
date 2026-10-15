@@ -35,11 +35,11 @@ def test_carga_le_a_pasta_trilhas(tmp_path):
     assert [t.caminho_relativo for t in carregar(tmp_path).trilhas] == ["trilhas/x.yml"]
 
 
-def test_item_que_nao_e_skill(tmp_path):
+def test_item_sem_caminhos(tmp_path):
     item = {**ITEM, "ferramenta": "flyway"}
     t = fabrica.trilha(fabrica.meta_trilha(sequencia=[item]))
     assert rodar(t, fabrica.ferramenta(), raiz=tmp_path) == [
-        Erro(ARQ, "sequencia.0.ferramenta", "R-TRILHA", "flyway não é ferramenta skill")
+        Erro(ARQ, "sequencia.0.ferramenta", "R-TRILHA", "flyway não tem caminhos")
     ]
 
 

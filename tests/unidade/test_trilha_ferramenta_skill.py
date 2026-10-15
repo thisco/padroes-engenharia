@@ -80,3 +80,34 @@ def test_papel_fora_do_enum_reprova_no_schema():
 
 def test_radar_conhece_a_categoria_skill():
     assert CATEGORIAS_DA_FERRAMENTA["skill"] == "Skill"
+
+
+def test_ferramenta_teste_com_caminho_exige_colecao(tmp_path):
+    caminho = {
+        "momento": "antes-do-merge",
+        "passo": "evidencia",
+        "papel": "caminho",
+        "bom_quando": "x",
+    }
+    meta = fabrica.meta_ferramenta(id="pw", categoria="teste", caminhos=[caminho])
+    arq = "ferramentas/pw.yml"
+    assert rodar(fabrica.ferramenta(meta), raiz=tmp_path) == [
+        Erro(arq, "colecao", "R-COLECAO", "ausente")
+    ]
+    meta["colecao"] = "superpowers"
+    assert rodar(fabrica.ferramenta(meta), raiz=tmp_path) == []
+
+
+def test_ferramenta_teste_com_passo_inexistente(tmp_path):
+    caminho = {
+        "momento": "antes-do-merge",
+        "passo": "nao-existe",
+        "papel": "caminho",
+        "bom_quando": "x",
+    }
+    meta = fabrica.meta_ferramenta(
+        id="pw", categoria="teste", colecao="superpowers", caminhos=[caminho]
+    )
+    assert rodar(fabrica.ferramenta(meta), raiz=tmp_path) == [
+        Erro("ferramentas/pw.yml", "caminhos.0", "R-CAMINHO", "antes-do-merge/nao-existe")
+    ]

@@ -701,8 +701,9 @@ def regra_passos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 @regra
 def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """R-CAMINHO, R-COLECAO e R-CASO-REF (spec da trilha, R2): a ferramenta `skill` tem coleção
-    fixada e caminhos em passos da espinha; todo caso citado por ferramenta existe."""
+    """R-CAMINHO, R-COLECAO e R-CASO-REF (spec da trilha, R2): a ferramenta `skill`, e qualquer
+    outra que declare caminhos, tem coleção fixada e caminhos em passos da espinha; todo caso
+    citado por ferramenta existe."""
     casos = {c.chave for c in repo.casos}
     erros: list[Erro] = []
     for f in repo.ferramentas:
@@ -710,13 +711,14 @@ def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
         for slug in _lista(f.meta, "casos"):
             if slug not in casos:
                 erros.append(Erro(arquivo, "casos", codigos.R_CASO_REF, slug))
-        if _texto(f.meta, "categoria") != "skill":
+        eh_skill = _texto(f.meta, "categoria") == "skill"
+        caminhos = _itens(f, "caminhos")
+        if not eh_skill and not caminhos:
             continue
         colecao = _texto(f.meta, "colecao")
         if colecao not in contexto.componentes:
             erros.append(Erro(arquivo, "colecao", codigos.R_COLECAO, colecao or "ausente"))
-        caminhos = _itens(f, "caminhos")
-        if not caminhos:
+        if eh_skill and not caminhos:
             erros.append(Erro(arquivo, "caminhos", codigos.R_CAMINHO, "skill sem caminho"))
         for i, caminho in enumerate(caminhos):
             momento = espinha.momento(str(caminho.get("momento")))
@@ -742,8 +744,8 @@ def regra_caso_origem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
 
 @regra
 def regra_trilhas(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """R-TRILHA e R-CASO-REF (spec da trilha, R5): cada item é uma ferramenta `skill` que
-    declara aquele passo; uma skill por passo; trilha em adotar só com itens em adotar."""
+    """R-TRILHA e R-CASO-REF (spec da trilha, R5): cada item é uma ferramenta com caminhos
+    que declara aquele passo; uma skill por passo; trilha em adotar só com itens em adotar."""
     ferramentas = {(_texto(f.meta, "id") or _nome(f)): f.meta for f in repo.ferramentas}
     casos = {c.chave for c in repo.casos}
     erros: list[Erro] = []
@@ -755,8 +757,8 @@ def regra_trilhas(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> li
             fid = str(item.get("ferramenta"))
             chave = (str(item.get("momento")), str(item.get("passo")))
             meta = ferramentas.get(fid)
-            if meta is None or meta.get("categoria") != "skill":
-                valor = f"{fid} não é ferramenta skill"
+            if meta is None or not meta.get("caminhos"):
+                valor = f"{fid} não tem caminhos"
                 erros.append(Erro(arquivo, f"sequencia.{i}.ferramenta", codigos.R_TRILHA, valor))
                 continue
             declarados = {

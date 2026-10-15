@@ -86,13 +86,14 @@ def colecoes(site: Site) -> dict[str, dict[str, str]]:
     return resultado
 
 
-def _skills(site: Site) -> list[Conteudo]:
-    return [f for f in site.repo.ferramentas if f.meta.get("categoria") == "skill"]
+def _com_caminhos(site: Site) -> list[Conteudo]:
+    """Ferramentas com caminhos (skill ou não)."""
+    return [f for f in site.repo.ferramentas if f.meta.get("caminhos")]
 
 
 def mapa(site: Site) -> list[dict[str, Any]]:
-    """R9: por etapa, todos os marcos e, por passo, os caminhos (ferramentas `skill`)."""
-    skills = _skills(site)
+    """R9: por etapa, todos os marcos e, por passo, os caminhos (ferramentas com caminhos)."""
+    skills = _com_caminhos(site)
     etapas = []
     for m in site.espinha.momentos:
         passos = []
@@ -181,7 +182,7 @@ def html_trilha(site: Site, pagina: Conteudo) -> str:
     from portal.gerador.paginas import citar, corpo_da_pagina, ids_da_pagina
 
     ids = ids_da_pagina(site, pagina)
-    usadas = {f.meta.get("colecao") for f in _skills(site)}
+    usadas = {f.meta.get("colecao") for f in _com_caminhos(site)}
     return renderizar(
         site,
         "trilha.html",
