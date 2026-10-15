@@ -14,9 +14,9 @@
 {% if caminhos %}
 <section aria-label="Comece aqui">
   <h2>Comece aqui</h2>
-  <div class="grade">
+  <div class="tr-portas">
 {% for caminho in caminhos %}
-    <article class="cartao"><h3>{{ caminho.titulo }}</h3><p class="s">{{ caminho.texto }}</p><a class="lk" href="{{ raiz }}{{ caminho.href }}">Abrir →</a></article>
+    <a class="tr-porta" href="{{ raiz }}{{ caminho.href }}"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span><em>Abrir →</em></a>
 {% endfor %}
   </div>
 </section>
@@ -45,13 +45,13 @@
   </div>
 </section>
 {% endif %}
-<div class="duas portas">
-  <section aria-label="Para quem desenvolve">
-    <h2>Para quem desenvolve</h2>
-    <p class="lead">O ciclo de toda mudança. Em cada etapa, o portal diz o que precisa ser verdade ao sair dela; como chegar lá fica com o time.</p>
-    {{ c.ciclo(ciclo, raiz, compacto=True) }}
+<div class="duas">
+  <section aria-label="O ciclo de toda mudança">
+    <h2>O ciclo de toda mudança</h2>
+    <p class="lead">Em cada etapa, o portal diz o que precisa ser verdade ao sair dela; como chegar lá fica com o time.</p>
+    {{ c.ciclo_compacto(ciclo, raiz) }}
 {% if tem_trilha %}
-    <p><a href="{{ raiz }}trilha.html">Ver a trilha: marcos e caminhos por etapa →</a></p>
+    <p><a href="{{ raiz }}trilha.html">Ver a trilha: marcos e caminhos de cada etapa →</a></p>
 {% else %}
     <p><a href="{{ raiz }}espinha.html">Ver a espinha →</a></p>
 {% endif %}

@@ -85,22 +85,6 @@ def ciclo(site: Site) -> dict[str, Any]:
     return {"etapas": etapas, "laco": laco}
 
 
-def _ciclo_legado(site: Site) -> dict[str, Any]:
-    """Adaptador temporário (removido na V6): o formato antigo `caixas` que a Início ainda lê."""
-    dados = ciclo(site)
-
-    def caixa(e: dict[str, Any]) -> dict[str, Any]:
-        saida = marcos_da_etapa(site, e["slug"], limite=3)
-        return {
-            "etapa": e["etapa"],
-            "momento": e["slug"],
-            "marcos": saida["marcos"],
-            "sem_mecanismo": e["portao"]["forca"] is None,
-        }
-
-    return {"caixas": [caixa(e) for e in dados["etapas"]], "laco": dados["laco"]}
-
-
 def colecoes(site: Site) -> dict[str, dict[str, str]]:
     resultado = {}
     for nome, c in carregar_componentes(site.raiz).items():

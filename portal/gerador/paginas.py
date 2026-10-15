@@ -270,7 +270,7 @@ def html_inicio(site: Site) -> str:
         lead=citar(meta.get("lead") or DESCRICAO_INICIO, ids, "lead"),
         fatos_datados=_fatos_datados(site),
         atalhos=_atalhos(site),
-        ciclo=trilha._ciclo_legado(site),
+        ciclo=trilha.ciclo(site),
         tem_trilha="trilha.html" in site.caminhos(),
         bloco=bloco_agents(site),
         chips=[(rotulo, caminho) for rotulo, caminho in _chips_do_agente(site)],
@@ -287,9 +287,20 @@ def html_inicio(site: Site) -> str:
 def md_inicio(site: Site) -> str:
     pagina = site.pagina("inicio")
     meta = _meta_da_inicio(site)
-    etapas = trilha.ciclo(site)
-    nomes = " → ".join(c["etapa"] for c in etapas["etapas"])
-    ciclo_md = f"## Para quem desenvolve\n\n{nomes}, e o laço {etapas['laco']['etapa']}."
+    dados = trilha.ciclo(site)
+    linhas = []
+    for e in dados["etapas"]:
+        ids = ", ".join(f"{m['id']} ({m['forca_rotulo']})" for m in e["portao"]["marcos"])
+        linhas.append(
+            f"- {e['etapa']}: portão de {ids}"
+            if ids
+            else f"- {e['etapa']}: sem marco com mecanismo"
+        )
+    nomes = " → ".join(e["etapa"] for e in dados["etapas"])
+    ciclo_md = (
+        f"## O ciclo de toda mudança\n\n{nomes}, e o laço {dados['laco']['etapa']}.\n\n"
+        + "\n".join(linhas)
+    )
     if "trilha.html" in site.caminhos():
         ciclo_md += "\n\n[Ver a trilha](trilha.md)"
     caminhos = [

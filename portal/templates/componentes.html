@@ -269,9 +269,8 @@
 {# O ciclo da trilha (delta v3, R8'; mockup trilha-v3.html): etapas em coluna com o portão de
    saída na cor da força, o laço embaixo e a legenda. A escolha de trilha e a linha que atravessa
    os passos cobertos só aparecem com script. Com `{% call %}`, o conteúdo entra no fim da figura
-   (a tabela da página). `compacto=True` é a forma antiga da Início, até a V6. #}
-{% macro ciclo(dados, raiz="", compacto=False) -%}
-{% if compacto %}{{ _ciclo_legado(dados, raiz) }}{% else %}
+   (a tabela da página). #}
+{% macro ciclo(dados, raiz="") -%}
 {% set trilhas = dados.get("trilhas") or [] %}
 <figure class="ciclo-mapa" id="mapa">
 {% if trilhas %}
@@ -311,7 +310,7 @@
 {% endfor %}
 {% set laco = dados.laco %}
     <div class="ciclo-laco" data-etapa="{{ laco.slug }}">
-      <div class="ciclo-laco-cab"><h3>{{ laco.etapa }}</h3><p>Volta para {{ dados.etapas[0].etapa }}.{% if laco.marcos | rejectattr("mecanismo") | list | length == laco.marcos | length %} Sem portão: tudo aqui só orienta.{% else %} Sem portão.{% endif %}</p></div>
+      <div class="ciclo-laco-cab"><h3>{{ laco.etapa }}</h3><p>Volta para {{ dados.etapas[0].etapa }}.{% if laco.marcos and laco.marcos | rejectattr("mecanismo") | list | length == laco.marcos | length %} Sem portão: tudo aqui só orienta.{% else %} Sem portão.{% endif %}</p></div>
       {{ _passos_do_ciclo(laco, trilhas) }}
 {% if laco.marcos %}
       <div class="ciclo-linha-marcos">
@@ -331,7 +330,6 @@
   </figcaption>
 {% if caller is defined %}{{ caller() }}{% endif %}
 </figure>
-{% endif %}
 {%- endmacro %}
 
 {# O ciclo compacto (delta v3, R11'; o `.mini` do mockup): as etapas com os IDs dos portões e a
@@ -344,18 +342,4 @@
 {% endfor %}
 </div>
 <p class="ciclo-mini-laco">{{ dados.laco.etapa }} <span>volta para {{ dados.etapas[0].etapa }}: o que a entrega ensina vira regra</span></p>
-{%- endmacro %}
-
-{# Legado da Início (removido na V6): o ciclo compacto antigo, no formato `caixas`. #}
-{% macro _ciclo_legado(dados, raiz="") -%}
-<div class="ciclo-trilha ciclo-compacto" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
-  <ol class="ciclo-etapas">
-{% for c in dados.caixas %}
-    <li class="ciclo-caixa">
-      <h3 class="ciclo-etapa">{{ c.etapa }}</h3>
-    </li>
-{% endfor %}
-  </ol>
-  <p class="ciclo-laco"><b>{{ dados.laco.etapa }}</b> <span aria-hidden="true">↺</span></p>
-</div>
 {%- endmacro %}

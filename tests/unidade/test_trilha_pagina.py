@@ -84,3 +84,14 @@ def test_markdown_tem_portoes_e_trilhas_agrupadas():
     md = md_trilha(site, site.pagina("trilha"))
     assert "Para sair de Revisar: DAD-01 migration intocada (bloqueia)" in md
     assert "## Trilhas prontas" in md
+
+
+def test_laco_sem_praticas_nao_diz_que_tudo_so_orienta():
+    site = fabrica.site(
+        fabrica.pagina_trilha(),
+        fabrica.referencia(),
+        pratica("P1-05", "antes-de-escrever", "avisa", marco="ambiguidade resolvida"),
+    )
+    html = html_trilha(site, site.pagina("trilha"))
+    assert "Sem portão." in html
+    assert "tudo aqui só orienta" not in html

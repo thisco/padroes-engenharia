@@ -82,14 +82,13 @@ def paginas_publicadas(site: Site) -> list[str]:
 NAV = (
     ("Início", (("Início", "index.html"),)),
     ("Comece aqui", (("Comece aqui", "comece-aqui.html"),)),
+    ("Trilha", (("Trilha", "trilha.html"),)),
     ("Como fazer", (("Receitas", "como-fazer.html"), ("Prompts", "prompts.html"))),
     (
         "Padrões",
         (
-            ("Trilha", "trilha.html"),
             ("Espinha", "espinha.html"),
             ("Domínios", "dominios/index.html"),
-            ("IA no produto", "dominios/ia-no-produto.html"),
             ("Práticas", "praticas/index.html"),
         ),
     ),

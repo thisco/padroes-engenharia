@@ -649,16 +649,6 @@ a.tr-skill:hover { text-decoration: underline; }
 .tr-marcos { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .tr-cuidado { color: var(--tinta-2); }
 
-/* legado da Início até a V6: o ciclo compacto antigo (.ciclo-trilha .ciclo-compacto) */
-.ciclo-trilha { margin: 24px 0; }
-.ciclo-etapas { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-.ciclo-caixa { position: relative; min-width: 0; padding: 12px 14px; background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; }
-.ciclo-caixa:not(:last-child)::after { content: "→"; position: absolute; right: -22px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--tinta-2); }
-.ciclo-etapa { margin: 0 0 8px; font-size: 16px; }
-.ciclo-trilha .ciclo-laco { margin: 14px 0 0; padding-top: 8px; border-top: 2px dashed var(--ambar); color: var(--ambar-texto); font-size: 13px; }
-.ciclo-compacto .ciclo-caixa { padding: 8px 12px; }
-.ciclo-compacto .ciclo-etapa { margin: 0; font-size: 14px; }
-
 @media (prefers-reduced-motion: reduce) {
   .ciclo-passos li { transition: none; }
 }
@@ -673,6 +663,12 @@ a.tr-skill:hover { text-decoration: underline; }
   .tr-passo { grid-template-columns: minmax(0, 1fr); }
   .tr-lead { font-size: 16px; }
   .ciclo-mini .ef .ciclo-id { font-size: 10.5px; }
-  .ciclo-etapas { grid-template-columns: 1fr; gap: 24px; }
-  .ciclo-caixa:not(:last-child)::after { content: "↓"; right: auto; left: 50%; top: auto; bottom: -22px; transform: translateX(-50%); }
 }
+
+/* Início: as três portas (mockup trilha-v3.html, .porta) */
+.tr-portas { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.tr-porta { display: grid; gap: 8px; padding: 16px; background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; text-decoration: none; color: var(--tinta); }
+.tr-porta:hover { border-color: var(--tinta); }
+.tr-porta b { font-size: 17px; }
+.tr-porta span { font-size: 14px; color: var(--tinta-2); }
+.tr-porta em { font-style: normal; font-size: 13.5px; color: var(--gov); text-decoration: underline; }

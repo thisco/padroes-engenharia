@@ -33,7 +33,7 @@ def test_inicio_nas_sete_secoes_com_por_que_no_topo():
     assert topo.todos("a", href="o-problema.html")[0].texto == "Por que isto existe →"
     rotulos = {x.attrs.get("aria-label") for x in html.todos("section")}
     assert {
-        "Para quem desenvolve",
+        "O ciclo de toda mudança",
         "Para o agente",
         "Comece aqui",
         "Como ler o portal",
@@ -41,9 +41,9 @@ def test_inicio_nas_sete_secoes_com_por_que_no_topo():
         "Por que confiar",
         "Estado",
     } <= rotulos
-    ciclo = html.todos("div", classe="ciclo-trilha")[0]
-    assert [h.texto for h in ciclo.todos("h3")] == ["Especificar", "Codar", "Revisar"]
-    assert "Aprender" in ciclo.todos("p", classe="ciclo-laco")[0].texto
+    ciclo = html.todos("div", classe="ciclo-mini")[0]
+    assert [b.texto for b in ciclo.todos("b")] == ["Especificar", "Codar", "Revisar"]
+    assert "Aprender" in html.todos("p", classe="ciclo-mini-laco")[0].texto
     assert "1 prática" in html.texto and "prática(s)" not in html.texto
     assert html.todos("dl", classe="legenda-forcas")
 
@@ -94,8 +94,8 @@ def test_primeira_dobra_responde_antes_de_explicar_o_ciclo():
     html = analisar(html_inicio(s))
     rotulos = [x.attrs.get("aria-label") for x in html.todos("section")]
     assert rotulos.index("Comece aqui") < rotulos.index("Como ler a força e o status")
-    assert rotulos.index("Como ler a força e o status") < rotulos.index("Para quem desenvolve")
-    assert rotulos.index("Por que importa") < rotulos.index("Para quem desenvolve")
+    assert rotulos.index("Como ler a força e o status") < rotulos.index("O ciclo de toda mudança")
+    assert rotulos.index("Por que importa") < rotulos.index("O ciclo de toda mudança")
     topo = html.todos("div", classe="topo")[0].texto
     assert "pesquisa" not in topo
 
@@ -106,13 +106,13 @@ def test_ciclo_compacto_substitui_a_lista_de_momentos():
     assert (
         "sdd-lifecycle"
         not in html.texto.replace("ferramentas/sdd-lifecycle", "")
-        .split("Para quem desenvolve")[1]
+        .split("O ciclo de toda mudança")[1]
         .split("Para o agente")[0]
     )
     assert not html.todos("div", classe="passo")
-    ciclo = html.todos("div", classe="ciclo-compacto")[0]
+    ciclo = html.todos("div", classe="ciclo-mini")[0]
     assert not ciclo.todos("ul", classe="ciclo-marcos")
     bloco = next(
-        x for x in html.todos("section") if x.attrs.get("aria-label") == "Para quem desenvolve"
+        x for x in html.todos("section") if x.attrs.get("aria-label") == "O ciclo de toda mudança"
     )
     assert [a.texto for a in bloco.todos("a", href="espinha.html")] == ["Ver a espinha →"]
