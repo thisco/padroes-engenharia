@@ -92,7 +92,7 @@ Não se aplica (site estático): nenhum compose, IaC ou diagrama de arquitetura.
 - Alterar: `tests/unidade/test_trilha_componentes.py`, `tests/unidade/test_carregar.py` (o teste
   que compara o dicionário de componentes) e `tests/test_bootstrap.py` (`EXTERNOS`).
 
-- [ ] **Passo 1: reconferir na origem**, só com leitura:
+- [x] **Passo 1: reconferir na origem**, só com leitura:
 
 ```bash
 git ls-remote https://github.com/obra/superpowers 'refs/tags/v7.0.0*'
@@ -115,7 +115,7 @@ Esperado:
 Se algum ramo andou depois de 2026-10-15, use o valor da tabela, que é o curado, e registre a
 diferença no relatório. Se algum valor não existir, **pare** (princípio 4).
 
-- [ ] **Passo 2: teste que falha.** Substitua o corpo de `test_colecoes_fixadas` por:
+- [x] **Passo 2: teste que falha.** Substitua o corpo de `test_colecoes_fixadas` por:
 
 ```python
 ESPERADO = {
@@ -142,22 +142,22 @@ def test_colecoes_fixadas():
 Comando: `.venv/bin/python -m pytest tests/unidade/test_trilha_componentes.py -v`.
 Esperado: FAIL.
 
-- [ ] **Passo 3: `componentes.yml`.** Troque o bloco `superpowers` e acrescente os três novos, no
+- [x] **Passo 3: `componentes.yml`.** Troque o bloco `superpowers` e acrescente os três novos, no
   formato dos existentes, com os valores de `ESPERADO`. No comentário de cada um, diga de onde vem
   a versão:
   - agent-skills: "última tag; o commit está à frente dela";
   - claude-plugins-official: "o repositório não publica versão: a versão é a data do commit".
-- [ ] **Passo 4: testes antigos.**
+- [x] **Passo 4: testes antigos.**
   - Em `test_carregar.py`, acrescente os três componentes ao dicionário esperado e troque o commit
     do superpowers.
   - Em `tests/test_bootstrap.py`, acrescente ao `EXTERNOS`:
     `"agent-skills": "addyosmani/agent-skills"`,
     `"claude-plugins-official": "anthropics/claude-plugins-official"` e
     `"playwright-mcp": "microsoft/playwright-mcp"`.
-- [ ] **Passo 5:** rode `.venv/bin/python -m pytest -q`, `.venv/bin/ruff check .` e
+- [x] **Passo 5:** rode `.venv/bin/python -m pytest -q`, `.venv/bin/ruff check .` e
   `.venv/bin/python scripts/validar.py`. Esperado: todos verdes. As referências da tarefa 12 que
   apontam para o commit antigo continuam válidas até a C1.
-- [ ] **Passo 6:** faça o commit `feat(componentes): coleções na versão mais nova (superpowers 7.0.0, agent-skills, plugins oficiais, playwright-mcp)`.
+- [x] **Passo 6:** faça o commit `feat(componentes): coleções na versão mais nova (superpowers 7.0.0, agent-skills, plugins oficiais, playwright-mcp)`.
 
 Entrega: (R4')
 
@@ -171,7 +171,7 @@ Entrega: (R4')
 **Interfaces:** produz `trilha._com_caminhos(site) -> list[Conteudo]`, que devolve toda ferramenta
 com `caminhos`. Ele substitui `_skills` em `mapa`, `html_trilha` e no filtro de coleções.
 
-- [ ] **Passo 1: testes que falham**, acrescentados a `test_trilha_ferramenta_skill.py`:
+- [x] **Passo 1: testes que falham**, acrescentados a `test_trilha_ferramenta_skill.py`:
 
 ```python
 def test_ferramenta_teste_com_caminho_exige_colecao(tmp_path):
@@ -203,8 +203,8 @@ def test_mapa_inclui_ferramenta_que_nao_e_skill():
     assert [c["ferramenta"] for c in evid["caminhos"]] == ["pw"]
 ```
 
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar.**
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar.**
   - Em `regra_caminhos`, troque a condição `if _texto(f.meta, "categoria") != "skill": continue`
     por:
 
@@ -226,8 +226,8 @@ def test_mapa_inclui_ferramenta_que_nao_e_skill():
   - Em `trilha.py`, renomeie `_skills` para `_com_caminhos`, com
     `return [f for f in site.repo.ferramentas if f.meta.get("caminhos")]`, e atualize os usos.
     Atualize as docstrings ("ferramentas com caminhos").
-- [ ] **Passo 4:** rode os dois arquivos e a suíte.
-- [ ] **Passo 5:** faça o commit `feat(trilha): ferramenta que não é skill também pode ser caminho`.
+- [x] **Passo 4:** rode os dois arquivos e a suíte.
+- [x] **Passo 5:** faça o commit `feat(trilha): ferramenta que não é skill também pode ser caminho`.
 
 Entrega: (R2')
 
@@ -239,7 +239,7 @@ Entrega: (R2')
 **Interfaces:** `_marco(p)` passa a incluir `rotulo` (o `marco`, ou o `titulo` quando não há
 `marco`), `forca_rotulo` (`ROTULO_FORCA[forca]`, de `vocabulario.py`) e `status`.
 
-- [ ] **Passo 1: testes que falham.**
+- [x] **Passo 1: testes que falham.**
 
 ```python
 """R19 da delta v3: rótulo curto do marco."""
@@ -266,8 +266,8 @@ def test_rotulo_usa_marco_ou_titulo():
     assert trilha._marco(com)["forca_rotulo"] == "só orienta"
 ```
 
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar.**
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar.**
   - No schema, acrescente `"marco": {"type": "string", "minLength": 1, "maxLength": 40}` e cite a
     R19 na descrição.
   - Em `_marco`:
@@ -290,9 +290,9 @@ def _marco(p: Conteudo) -> dict[str, Any]:
     }
 ```
 
-- [ ] **Passo 4:** rode o arquivo e a suíte. Se um teste de "todos os campos da prática" listar o
+- [x] **Passo 4:** rode o arquivo e a suíte. Se um teste de "todos os campos da prática" listar o
   schema, acrescente `marco` a ele.
-- [ ] **Passo 5:** faça o commit `feat(praticas): campo marco com o rótulo curto do ciclo`.
+- [x] **Passo 5:** faça o commit `feat(praticas): campo marco com o rótulo curto do ciclo`.
 
 Entrega: (R19)
 
@@ -319,7 +319,7 @@ Entrega: (R19)
   "passos": [títulos]}]}]`, um grupo por etapa na ordem da espinha, juntando os passos da mesma
   ferramenta na etapa. `itens` continua, por compatibilidade com o Markdown.
 
-- [ ] **Passo 1: testes que falham.** Substitua os testes de `marcos_do_diagrama` e de `ciclo` por:
+- [x] **Passo 1: testes que falham.** Substitua os testes de `marcos_do_diagrama` e de `ciclo` por:
 
 ```python
 def test_portao_so_tem_mecanismo_e_a_forca_mais_alta():
@@ -379,8 +379,8 @@ def test_trilha_agrupada_por_etapa():
 
   Ajuste a função `pratica` do teste para aceitar `forca="bloqueia"`, com `mecanismo` preenchido
   como hoje.
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar** em `trilha.py`:
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar** em `trilha.py`:
 
 ```python
 from portal.gerador.vocabulario import ORDEM_FORCA, ROTULO_FORCA
@@ -440,11 +440,11 @@ def ciclo(site: Site) -> dict[str, Any]:
   - Em `trilhas`, monte `grupos` a partir de `itens`, na ordem dos momentos da espinha, juntando
     pelo título da ferramenta. Guarde o slug do momento em cada item (`"momento"`), para agrupar
     sem ambiguidade.
-- [ ] **Passo 4:** rode `tests/unidade/test_trilha_dados.py` e a suíte. Os testes de página da
+- [x] **Passo 4:** rode `tests/unidade/test_trilha_dados.py` e a suíte. Os testes de página da
   fase 2 que dependiam de `marcos` ou de `caixas` quebram aqui de propósito; eles são reescritos
   na V5 e na V6. Para a suíte ficar verde neste commit, marque esses testes com
   `@pytest.mark.skip(reason="reescrito na V5/V6")`, e a V5 e a V6 tiram a marca.
-- [ ] **Passo 5:** faça o commit `feat(trilha): dados do ciclo v3: portões, saída da etapa, caminhos compactos e trilhas agrupadas`.
+- [x] **Passo 5:** faça o commit `feat(trilha): dados do ciclo v3: portões, saída da etapa, caminhos compactos e trilhas agrupadas`.
 
 Entrega: (R8', R9', R7')
 
@@ -486,7 +486,7 @@ o template monta em Jinja a partir de `ciclo`, `trilhas`, `mapa` e `colecoes`.
   Nada faz requisição de rede, e o traço é desenhado só dentro de cada etapa, nunca no laço, como
   no mockup.
 
-- [ ] **Passo 1: testes que falham.** Reescreva `test_trilha_pagina.py`:
+- [x] **Passo 1: testes que falham.** Reescreva `test_trilha_pagina.py`:
 
 ```python
 """R7', R8' e R9' da delta v3: a página da trilha."""
@@ -575,8 +575,8 @@ def test_markdown_tem_portoes_e_trilhas_agrupadas():
 
   No caso de um site sem nenhuma prática com mecanismo em Codar, a classe `ciclo-portao sem`
   aparece porque `fabrica.site` usa a espinha real.
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar o template, a macro, o CSS e o script.**
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar o template, a macro, o CSS e o script.**
   - **Template, macro, CSS e JS:** porte do mockup conforme a tabela acima.
   - **`md_trilha`:** para cada etapa do ciclo, uma linha
     `Para sair de <etapa>: <ID> <rótulo> (<força>); …`, ou
@@ -585,10 +585,10 @@ def test_markdown_tem_portoes_e_trilhas_agrupadas():
   - **`contraste.yml`:** os pares de texto novos, se houver, por exemplo `tinta` sobre `branco`
     nos cartões.
   - **Testes de contraste:** rode com `-k contraste`.
-- [ ] **Passo 4:** rode o arquivo e a suíte. Tire a marca de `skip` que a V4 pôs nos testes de
+- [x] **Passo 4:** rode o arquivo e a suíte. Tire a marca de `skip` que a V4 pôs nos testes de
   página. Depois rode `.venv/bin/python scripts/gerar.py` e confira que `public/trilha.html`
   existe.
-- [ ] **Passo 5:** faça o commit `feat(portal): página da trilha v3 portada do mockup`.
+- [x] **Passo 5:** faça o commit `feat(portal): página da trilha v3 portada do mockup`.
 
 Entrega: (R7', R8', R9')
 
@@ -601,7 +601,7 @@ Entrega: (R7', R8', R9')
 - `paginas/inicio.md` (destinos de `caminhos`);
 - testes `tests/unidade/test_trilha_inicio_nav.py` e `tests/unidade/test_pagina_inicio.py`.
 
-- [ ] **Passo 1: testes que falham**, substituindo os de `test_trilha_inicio_nav.py`:
+- [x] **Passo 1: testes que falham**, substituindo os de `test_trilha_inicio_nav.py`:
 
 ```python
 def test_trilha_e_item_de_primeiro_nivel():
@@ -640,8 +640,8 @@ def test_portas_da_inicio():
   `carregar`; `meta_guia` pode exigir campos). Confira em `_caminhos_da_inicio` que um destino
   `trilha`, sem pasta, vira `trilha.html`; se não virar, ajuste a função para aceitar a página na
   raiz.
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar.**
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar.**
   - **`NAV`:** depois de "Comece aqui", entra `("Trilha", (("Trilha", "trilha.html"),))`. Em
     "Padrões", saem "Trilha" e "IA no produto".
   - **Macro `ciclo_compacto(dados, raiz)`:** porte de `.mini` do mockup, com as classes
@@ -656,8 +656,8 @@ def test_portas_da_inicio():
   - **`paginas/inicio.md`:** troque os `caminhos` pelos três destinos do teste. O texto das portas
     é o do mockup; a revisão de curadoria do texto fica na C8.
   - **`md_inicio`:** lista as portas, as etapas e os IDs dos portões.
-- [ ] **Passo 4:** rode os dois arquivos, `test_pagina_inicio.py` e a suíte.
-- [ ] **Passo 5:** faça o commit `feat(portal): Início com três portas, ciclo compacto e Trilha no primeiro nível`.
+- [x] **Passo 4:** rode os dois arquivos, `test_pagina_inicio.py` e a suíte.
+- [x] **Passo 5:** faça o commit `feat(portal): Início com três portas, ciclo compacto e Trilha no primeiro nível`.
 
 Entrega: (R10', R11')
 
@@ -674,7 +674,7 @@ Entrega: (R10', R11')
 
 **Interfaces:** `Momento.rotulo -> str` devolve `etapa or titulo`.
 
-- [ ] **Passo 1: testes que falham.**
+- [x] **Passo 1: testes que falham.**
 
 ```python
 """R20 da delta v3: o eixo se chama etapa nas páginas geradas."""
@@ -706,8 +706,8 @@ def test_minimatriz_da_inicio_usa_etapa():
 ```
 
   Confira o nome real de `html_espinha` (em `renderizar.py`, linha ~464) e ajuste o import.
-- [ ] **Passo 2:** rode e veja falhar.
-- [ ] **Passo 3: implementar.**
+- [x] **Passo 2:** rode e veja falhar.
+- [x] **Passo 3: implementar.**
   - **`Momento`:** a propriedade `rotulo`.
   - **Espinha:** o cabeçalho das colunas mostra `m.rotulo` com `<small>{{ m.titulo }}</small>`, o
     nome antigo, como descrição secundária, sem "fase". O texto "naquele momento" vira "naquela
@@ -721,12 +721,12 @@ def test_minimatriz_da_inicio_usa_etapa():
     (`roteamento.json`, linha ~778 de `saidas.py`, e os campos `momento` do catálogo) **não
     mudam**, porque são contrato. O bloco do agente (`renderizar.py:416`) não muda nesta entrega.
   - **`grafo_catalogo.py`:** o rótulo da célula passa a usar `.rotulo`.
-- [ ] **Passo 4:** rode o arquivo e a suíte. Os testes que esperavam "Antes de escrever" como
+- [x] **Passo 4:** rode o arquivo e a suíte. Os testes que esperavam "Antes de escrever" como
   rótulo, ou "fase", mudam a expectativa para a etapa, sem afrouxar o resto. Rode
   `.venv/bin/python scripts/gerar.py` e
   `grep -rn "fases\? [0-9]" public/*.html public/*/*.html | grep -v "para-agentes"`.
   Esperado: nenhuma linha, além do bloco do agente.
-- [ ] **Passo 5:** faça o commit `feat(portal): o eixo do ciclo se chama etapa nas páginas geradas`.
+- [x] **Passo 5:** faça o commit `feat(portal): o eixo do ciclo se chama etapa nas páginas geradas`.
 
 Entrega: (R20)
 
@@ -964,4 +964,21 @@ O aumento continua **minor**.
 
 ## Evidências
 
-(colar aqui as saídas do checkpoint 3 e da C13)
+### Checkpoint 3 (2026-10-15, fim da Fase 4)
+
+Commits `20babf0`/`0040e89`..`3cc6a02` (V1 a V7; V7 com duas rodadas de correção). Suíte: 919 passed; `ruff check .` limpo; `validar.py` e `gerar.py` com 0.
+
+Prévia (catálogo real + rótulos, caminhos e trilhas de exemplo tirados do mockup v3, gerada fora do repositório):
+
+```text
+index.html@400: 400   trilha.html@400: 400   espinha.html@400: 400
+index.html@1280: 1280 trilha.html@1280: 1280
+```
+
+Ciclo em 1280 px: portão de Especificar âmbar (P1-05, P1-06, P3-02 avisam), Codar tracejado com a nota de backlog, Revisar azul (DAD-01 bloqueia; CICD-01 e P1-09 avisam); trilha De origem liga 18 passos com a skill em cada um; laço Aprender e legenda como no mockup. Início: três portas com o título do destino, ciclo compacto, "Trilha" no primeiro nível.
+
+Achados no aceite e corrigidos: a Início rolava na lateral em 400 px (minimatriz mais larga com os nomes das etapas, e o menu encolhido); corrigido em `3cc6a02`. Oito cópias de conflito do iCloud apagadas com autorização do dono.
+
+Pendências que são da Fase 5: título da página e lead da Início (C1, C8), rótulos dos marcos (C8), trilhas e ferramentas reais (C3 a C9).
+
+(colar aqui as saídas da C13)
