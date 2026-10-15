@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "componentes.html" as c %}
 {% block conteudo %}
-<p class="trilha"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a> › <a href="{{ raiz }}espinha.html#momento-{{ momento.slug }}">{{ momento.titulo }}</a></p>
+<p class="trilha"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a> › <a href="{{ raiz }}espinha.html#momento-{{ momento.slug }}">{{ momento.rotulo }}</a></p>
 <div class="topo">
   <h1><span class="id">{{ p.chave }}</span>{{ p.meta.titulo }}</h1>
   <div>

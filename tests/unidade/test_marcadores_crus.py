@@ -128,4 +128,4 @@ def test_candidata_ja_publicada_como_pratica_nao_aparece():
         "",
     )
     s = fabrica.site(dominio, fabrica.pratica(), fabrica.referencia())
-    assert candidatas_do_dominio(s, dominio) == ["Plano com checkboxes (Enquanto escreve)"]
+    assert candidatas_do_dominio(s, dominio) == ["Plano com checkboxes (Codar)"]

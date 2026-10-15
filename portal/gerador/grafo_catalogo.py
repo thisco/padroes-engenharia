@@ -67,7 +67,7 @@ def montar_grafo(site: Site) -> dict[str, Any]:
         if not c.praticas:
             continue
         celula = f"celula:{c.dominio}|{c.momento}"
-        rotulo = f"{espinha.faixa(c.dominio).titulo} · {espinha.momento(c.momento).titulo}"
+        rotulo = f"{espinha.faixa(c.dominio).titulo} · {espinha.momento(c.momento).rotulo}"
         no(celula, rotulo, "celula", ESPINHA, "", c.dominio)
         liga(celula, f"dominio:{c.dominio}", "pertence", ESPINHA)
         liga(celula, f"momento:{c.momento}", "pertence", ESPINHA)

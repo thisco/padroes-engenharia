@@ -37,6 +37,11 @@ class Momento:
     etapa: str = ""
     passos: tuple[Passo, ...] = ()
 
+    @property
+    def rotulo(self) -> str:
+        """O nome do eixo nas páginas geradas: a etapa do ciclo ou, sem ela, o título."""
+        return self.etapa or self.titulo
+
     def passo(self, slug: str) -> Passo | None:
         return next((p for p in self.passos if p.slug == slug), None)
 

@@ -35,7 +35,7 @@
 {% for celula in celulas %}
       <tr>
         <td>{{ site.espinha.faixa(celula.dominio).titulo }}</td>
-        <td>{{ site.espinha.momento(celula.momento).titulo }}</td>
+        <td>{{ site.espinha.momento(celula.momento).rotulo }}</td>
         <td>{% for p in celula.praticas %}<a href="{{ raiz }}{{ para_md(caminho_de(p)) }}">{{ p.chave }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</td>
         <td>{{ c.chip_forca(celula.forca_max) }}</td>
         <td>{% for item in celula.aplica %}<code>{{ item }}</code> {% endfor %}</td>

@@ -70,7 +70,7 @@ def portao(site: Site, momento: str) -> dict[str, Any]:
 def _etapa_base(m: Any) -> dict[str, Any]:
     return {
         "slug": m.slug,
-        "etapa": m.etapa or m.titulo,  # a V7 troca por `m.rotulo`
+        "etapa": m.rotulo,
         "titulo": m.titulo,
         "passos": [{"slug": p.slug, "titulo": p.titulo} for p in m.passos],
     }
@@ -145,7 +145,7 @@ def mapa(site: Site) -> list[dict[str, Any]]:
             )
         etapas.append(
             {
-                "etapa": m.etapa or m.titulo,
+                "etapa": m.rotulo,
                 "slug": m.slug,
                 "titulo": m.titulo,
                 "saida": marcos_da_etapa(site, m.slug),
@@ -168,7 +168,7 @@ def _grupos(site: Site, itens: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 )
                 g["passos"].append(i["passo"])
         if por_ferramenta:
-            grupos.append({"etapa": m.etapa or m.titulo, "itens": list(por_ferramenta.values())})
+            grupos.append({"etapa": m.rotulo, "itens": list(por_ferramenta.values())})
     return grupos
 
 
@@ -187,7 +187,7 @@ def trilhas(site: Site) -> list[dict[str, Any]]:
             itens.append(
                 {
                     "momento": item["momento"],
-                    "etapa": (momento.etapa or momento.titulo) if momento else item["momento"],
+                    "etapa": momento.rotulo if momento else item["momento"],
                     "passo": passo.titulo if passo else item["passo"],
                     "passo_slug": item["passo"],
                     "ferramenta": f.meta["titulo"] if f else item["ferramenta"],

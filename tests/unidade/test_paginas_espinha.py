@@ -44,7 +44,7 @@ def test_espinha_tem_48_celulas_grupos_e_a_definir():
         "IA no produto",
     ]
     assert (
-        corpo.count('<span class="q vazia" role="img" aria-label="sem prática neste momento">')
+        corpo.count('<span class="q vazia" role="img" aria-label="sem prática nesta etapa">')
         == 46
     )
     assert '<a class="ef orienta" href="praticas/P1-01.html"' in corpo

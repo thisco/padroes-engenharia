@@ -16,7 +16,7 @@
   <h2>Comece aqui</h2>
   <div class="tr-portas">
 {% for caminho in caminhos %}
-    <a class="tr-porta" href="{{ raiz }}{{ caminho.href }}"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span><em>Abrir →</em></a>
+    <a class="tr-porta" href="{{ raiz }}{{ caminho.href }}"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span><em>{{ caminho.rotulo }}</em></a>
 {% endfor %}
   </div>
 </section>
@@ -62,11 +62,11 @@
   <h2>Como ler o portal</h2>
   <div class="duas">
     <div>
-      <p class="lead">Linha = domínio, coluna = momento, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
+      <p class="lead">Linha = domínio, coluna = etapa, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
       <div class="rola">
       <table class="matriz mini">
         <thead>
-          <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>
+          <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ m.rotulo }}</abbr></th>{% endfor %}</tr>
         </thead>
         <tbody>
 {% for faixa in site.espinha.faixas %}
@@ -74,7 +74,7 @@
             <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></th>
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
-            <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.titulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
+            <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.rotulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
 {% endfor %}
           </tr>
 {% endfor %}

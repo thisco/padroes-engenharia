@@ -43,8 +43,8 @@
 {% endif %}
 {% for m in site.espinha.momentos if tem_praticas %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
-    <section aria-label="{{ m.titulo }}">
-      <h2>{{ m.titulo }}</h2>
+    <section aria-label="{{ m.rotulo }}">
+      <h2>{{ m.rotulo }}</h2>
 {% if celula.praticas %}
       <ul class="praticas">
 {% for p in celula.praticas %}

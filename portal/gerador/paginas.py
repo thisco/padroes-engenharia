@@ -119,7 +119,7 @@ def _momentos(site: Site, pagina: Conteudo, ids: list[str]) -> list[dict[str, An
         momento = site.espinha.momento(str(item.get("momento", "")))
         resultado.append(
             {
-                "titulo": momento.titulo if momento else item.get("momento", ""),
+                "titulo": momento.rotulo if momento else item.get("momento", ""),
                 "disciplinas": [str(d) for d in item.get("disciplinas", [])],
             }
         )
@@ -230,6 +230,16 @@ def _chips_do_agente(site: Site) -> list[tuple[str, str]]:
     ]
 
 
+def _rotulo_da_porta(site: Site, destino: str, href: str) -> str:
+    """O texto da porta: "Abrir a trilha" para a trilha e, nos demais, o título do destino."""
+    if destino == "trilha":
+        return "Abrir a trilha"
+    alvo = next(
+        (c for c in site.repo.markdown() if c.tipo != "dominio" and caminho_de(c) == href), None
+    )
+    return str(alvo.meta.get("titulo") or "Abrir") if alvo else "Abrir"
+
+
 def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
     """Os caminhos de "Comece aqui" cujo destino existe: caminho sem conteúdo não aparece."""
     existentes = site.caminhos()
@@ -239,6 +249,7 @@ def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
         if href in existentes:
             item = citar(caminho, ids)
             item["href"] = href
+            item["rotulo"] = _rotulo_da_porta(site, str(caminho.get("destino", "")), href)
             resultado.append(item)
     return resultado
 
@@ -324,7 +335,7 @@ def md_inicio(site: Site) -> str:
         "## Para o agente\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
         f"{bloco_agents(site)}```",
         ("## Comece aqui\n\n" + "\n".join(caminhos)) if caminhos else "",
-        "## Como ler o portal\n\nLinha = domínio, coluna = momento, célula = práticas. "
+        "## Como ler o portal\n\nLinha = domínio, coluna = etapa, célula = práticas. "
         f"{a_definir_texto(site)} estão a definir. A matriz completa está em "
         "[espinha.md](espinha.md).\n\n### Força\n\n"
         + "\n".join(forcas)
@@ -565,7 +576,7 @@ def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
             {
                 **item,
                 "caminho": item["url"].removeprefix(site.url("")),
-                "momento_titulo": momento.titulo if momento else str(item["momento"]),
+                "momento_titulo": momento.rotulo if momento else str(item["momento"]),
             }
         )
     return list(grupos.values())
@@ -626,7 +637,7 @@ def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
         daqui = [r for r in site.repo.receitas if r.meta.get("momento") == momento.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Momento: {momento.titulo}", "itens": [item(r) for r in daqui]}
+                {"titulo": f"Etapa: {momento.rotulo}", "itens": [item(r) for r in daqui]}
             )
     return secoes_
 
@@ -661,7 +672,7 @@ def _ficha_da_receita(site: Site, receita: Conteudo) -> list[tuple[str, str]]:
     momento = site.espinha.momento(str(m.get("momento", "")))
     ficha = [
         ("Domínio", faixa.titulo if faixa else str(m.get("dominio", ""))),
-        ("Momento", momento.titulo if momento else str(m.get("momento", ""))),
+        ("Etapa", momento.rotulo if momento else str(m.get("momento", ""))),
         ("Tempo", f"{m['tempo']} min"),
         ("Pré-requisitos", "; ".join(m.get("pre_requisitos") or []) or "nenhum"),
         ("Resultado esperado", str(m["resultado_esperado"])),
@@ -827,7 +838,7 @@ def _da_skill(site: Site, meta: dict[str, Any]) -> dict[str, Any]:
         passo = momento.passo(c["passo"]) if momento else None
         caminhos.append(
             {
-                "etapa": (momento.etapa or momento.titulo) if momento else c["momento"],
+                "etapa": momento.rotulo if momento else c["momento"],
                 "passo": passo.titulo if passo else c["passo"],
                 "papel": c["papel"],
                 "bom_quando": c["bom_quando"],

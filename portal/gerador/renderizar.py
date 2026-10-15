@@ -512,7 +512,7 @@ def candidatas_do_dominio(site: Site, dominio: Conteudo | None) -> list[str]:
         if _titulo_comparavel(str(candidata.get("titulo", ""))) in publicadas:
             continue
         momento = site.espinha.momento(str(candidata.get("momento", "")))
-        resultado.append(f"{candidata.get('titulo', '')} ({momento.titulo if momento else ''})")
+        resultado.append(f"{candidata.get('titulo', '')} ({momento.rotulo if momento else ''})")
     return resultado
 
 
@@ -779,7 +779,7 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
         return (
             f"{ROTULO_FORCA[meta['forca']]} · {meta['status']} · "
             f"{faixa.titulo if faixa else meta['dominio']} · "
-            f"{momento.titulo if momento else meta['momento']}"
+            f"{momento.rotulo if momento else meta['momento']}"
         )
     if conteudo.tipo == "conceito":
         return sem_marcadores(str(meta["definicao"]))

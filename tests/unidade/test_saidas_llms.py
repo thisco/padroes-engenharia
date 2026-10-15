@@ -58,7 +58,7 @@ def test_item_traz_a_descricao():
     assert (
         "- [P1-01 · Classificar toda mudança em tier antes de codar]"
         "(https://portal.exemplo/praticas/P1-01.md): só orienta · experimentar · "
-        "Construir com IA · Antes de escrever"
+        "Construir com IA · Especificar"
     ) in llms_txt(s, paginas)
 
 
