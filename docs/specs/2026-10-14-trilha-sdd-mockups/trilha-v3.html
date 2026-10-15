@@ -386,7 +386,7 @@ const APRENDER = { slug: "aprender", nome: "Aprender", desc: "O laço: o que est
   passos: [["retro","Retro","melhorar o ambiente, não o código"],["instrucoes","Cuidar das instruções","skills, AGENTS.md, steering"],["continuar","Continuar depois","entre sessões"]],
   marcos: [["P1-11","spec arquivada e destilada","orienta"],["QLD-02","bug vira regra","orienta"],["CICD-03","changelog e tag","orienta"]] };
 const ORDEM = ["bloqueia","pede-aprovacao","avisa","orienta"];
-const COLECOES = { "superpowers": "obra/superpowers", "agent-skills": "addyosmani/agent-skills", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
+const COLECOES = { "superpowers": "obra/superpowers", "agent-skills": "addyosmani/agent-skills", "anthropic-plugins": "anthropics/claude-plugins-official", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
 
 const SKILLS = [
   ["sp-brainstorming","brainstorming","superpowers","adotar","caminho",[["especificar","entrevistar"],["especificar","escrever-spec"]],"você quer classificar o pedido antes (spike, limitado, arquitetural), perto dos nossos tiers.","conduz: no fim só aceita writing-plans como próximo passo."],
@@ -407,6 +407,7 @@ const SKILLS = [
   ["ao-debugging-and-error-recovery","debugging-and-error-recovery","agent-skills","adotar","caminho",[["especificar","investigar"],["codar","bug"]],"um teste falhou, o build quebrou ou algo que funcionava parou: causa raiz antes da correção.",""],
   ["ao-source-driven-development","source-driven-development","agent-skills","adotar","caminho",[["especificar","investigar"]],"a decisão depende de biblioteca ou API: fundamente na documentação oficial, com a fonte citada.",""],
   ["ao-security-and-hardening","security-and-hardening","agent-skills","adotar","caminho",[["especificar","seguranca"]],"a mudança mexe com entrada do usuário, autenticação, armazenamento de dado ou integração externa.","longa; use junto do threat-model da SEG-01."],
+  ["an-frontend-design","frontend-design","anthropic-plugins","adotar","caminho",[["codar","dominio"]],"a tela precisa de identidade visual própria: direção de design, tipografia, paleta e layout pensados para o assunto, antes ou depois de implementar (faixa Frontend e UX).","dê a ela o tema do projeto; sem isso, ela cria uma identidade nova."],
   ["ao-frontend-ui-engineering","frontend-ui-engineering","agent-skills","adotar","caminho",[["codar","dominio"]],"há tela nova ou alterada: componentes, layout, acessibilidade (faixa Frontend e UX).",""],
   ["ao-api-and-interface-design","api-and-interface-design","agent-skills","adotar","caminho",[["codar","dominio"]],"a mudança cria ou altera um contrato: endpoint, tipo entre módulos (faixa Contratos de API).",""],
   ["ao-deprecation-and-migration","deprecation-and-migration","agent-skills","adotar","caminho",[["codar","dominio"]],"algo vai ser removido ou migrado, inclusive schema em produção (faixa Dados e migrations).",""],
