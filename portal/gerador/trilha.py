@@ -12,6 +12,7 @@ from typing import Any
 
 from portal.gerador.carregar import Conteudo, carregar_componentes
 from portal.gerador.renderizar import Site, caminho_de, renderizar
+from portal.gerador.vocabulario import ROTULO_FORCA
 
 ORDEM_STATUS = {"adotar": 0, "experimentar": 1, "avaliar": 2, "evitar": 3}
 
@@ -21,7 +22,10 @@ def _marco(p: Conteudo) -> dict[str, Any]:
     return {
         "id": p.chave,
         "titulo": p.meta["titulo"],
+        "rotulo": p.meta.get("marco") or p.meta["titulo"],
         "forca": forca,
+        "forca_rotulo": ROTULO_FORCA[forca],
+        "status": p.meta.get("status", ""),
         "href": caminho_de(p),
         "mecanismo": forca != "orienta",
     }
