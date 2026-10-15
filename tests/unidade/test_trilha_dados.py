@@ -11,33 +11,85 @@ def pratica(id_, momento, forca="orienta", status="experimentar"):
     return fabrica.pratica(meta)
 
 
-def test_marcos_com_mecanismo_primeiro_e_completa_com_orienta():
+def test_portao_so_tem_mecanismo_e_a_forca_mais_alta():
     site = fabrica.site(
         pratica("P1-01", "antes-do-merge", "avisa"),
-        pratica("P1-02", "antes-do-merge", status="adotar"),
+        pratica("P1-02", "antes-do-merge", "bloqueia"),
         pratica("P1-03", "antes-do-merge"),
-        pratica("P1-04", "antes-do-merge"),
     )
-    dados = trilha.marcos_do_diagrama(site, "antes-do-merge")
-    assert [(m["id"], m["mecanismo"]) for m in dados["marcos"]] == [
-        ("P1-01", True),
-        ("P1-02", False),
-        ("P1-03", False),
-    ]
-    assert dados["sem_mecanismo"] is False
+    p = trilha.portao(site, "antes-do-merge")
+    assert [m["id"] for m in p["marcos"]] == ["P1-02", "P1-01"]
+    assert (p["forca"], p["total"], p["mais"]) == ("bloqueia", 3, 1)
 
 
-def test_etapa_sem_mecanismo_tem_a_nota_e_nao_fica_vazia():
-    site = fabrica.site(pratica("P1-01", "enquanto-escreve"))
-    dados = trilha.marcos_do_diagrama(site, "enquanto-escreve")
-    assert [m["id"] for m in dados["marcos"]] == ["P1-01"]
-    assert dados["sem_mecanismo"] is True
+def test_portao_vazio_sem_mecanismo():
+    p = trilha.portao(fabrica.site(pratica("P1-01", "enquanto-escreve")), "enquanto-escreve")
+    assert (p["forca"], p["marcos"], p["mais"]) == (None, [], 1)
 
 
-def test_ciclo_tem_tres_caixas_e_o_laco():
+def test_saida_ate_seis_com_adotar_primeiro_entre_as_que_orientam():
+    praticas = [pratica(f"P1-0{i}", "antes-de-escrever") for i in range(1, 8)]
+    praticas[6] = pratica("P1-07", "antes-de-escrever", status="adotar")
+    dados = trilha.marcos_da_etapa(fabrica.site(*praticas), "antes-de-escrever")
+    assert [m["id"] for m in dados["marcos"]][:2] == ["P1-07", "P1-01"]
+    assert (len(dados["marcos"]), dados["total"]) == (6, 7)
+
+
+def test_ciclo_tem_tres_etapas_com_portao_e_o_laco():
     dados = trilha.ciclo(fabrica.site())
-    assert [c["etapa"] for c in dados["caixas"]] == ["Especificar", "Codar", "Revisar"]
+    assert [e["etapa"] for e in dados["etapas"]] == ["Especificar", "Codar", "Revisar"]
+    assert all("portao" in e and e["passos"] for e in dados["etapas"])
     assert dados["laco"]["etapa"] == "Aprender"
+
+
+def test_caminho_repetido_vira_compacto():
+    caminhos = [
+        {
+            "momento": "antes-de-escrever",
+            "passo": "escrever-spec",
+            "papel": "caminho",
+            "bom_quando": "x",
+        },
+        {"momento": "enquanto-escreve", "passo": "planejar", "papel": "caminho", "bom_quando": "x"},
+    ]
+    site = fabrica.site(fabrica.ferramenta(fabrica.meta_ferramenta_skill(caminhos=caminhos)))
+    vistos = [c["compacto"] for e in trilha.mapa(site) for p in e["passos"] for c in p["caminhos"]]
+    assert vistos == [False, True]
+
+
+def test_trilha_agrupada_por_etapa():
+    caminhos = [
+        {
+            "momento": "antes-de-escrever",
+            "passo": "entrevistar",
+            "papel": "caminho",
+            "bom_quando": "x",
+        },
+        {
+            "momento": "antes-de-escrever",
+            "passo": "escrever-spec",
+            "papel": "caminho",
+            "bom_quando": "x",
+        },
+    ]
+    skill = fabrica.ferramenta(fabrica.meta_ferramenta_skill(caminhos=caminhos))
+    seq = [
+        {"ferramenta": "sp-writing-plans", "momento": "antes-de-escrever", "passo": p}
+        for p in ("entrevistar", "escrever-spec")
+    ]
+    t = trilha.trilhas(fabrica.site(skill, fabrica.trilha(fabrica.meta_trilha(sequencia=seq))))[0]
+    assert t["grupos"] == [
+        {
+            "etapa": "Especificar",
+            "itens": [
+                {
+                    "ferramenta": "writing-plans",
+                    "href": "ferramentas/sp-writing-plans.html",
+                    "passos": ["Entrevistar", "Escrever a spec"],
+                }
+            ],
+        }
+    ]
 
 
 def test_mapa_sem_skill_mostra_todos_os_passos_vazios():

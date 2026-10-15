@@ -270,7 +270,7 @@ def html_inicio(site: Site) -> str:
         lead=citar(meta.get("lead") or DESCRICAO_INICIO, ids, "lead"),
         fatos_datados=_fatos_datados(site),
         atalhos=_atalhos(site),
-        ciclo=trilha.ciclo(site),
+        ciclo=trilha._ciclo_legado(site),
         tem_trilha="trilha.html" in site.caminhos(),
         bloco=bloco_agents(site),
         chips=[(rotulo, caminho) for rotulo, caminho in _chips_do_agente(site)],
@@ -288,7 +288,7 @@ def md_inicio(site: Site) -> str:
     pagina = site.pagina("inicio")
     meta = _meta_da_inicio(site)
     etapas = trilha.ciclo(site)
-    nomes = " → ".join(c["etapa"] for c in etapas["caixas"])
+    nomes = " → ".join(c["etapa"] for c in etapas["etapas"])
     ciclo_md = f"## Para quem desenvolve\n\n{nomes}, e o laço {etapas['laco']['etapa']}."
     if "trilha.html" in site.caminhos():
         ciclo_md += "\n\n[Ver a trilha](trilha.md)"
