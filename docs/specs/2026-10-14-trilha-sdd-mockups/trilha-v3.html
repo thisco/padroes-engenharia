@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilha, versão 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: prancheta. O ciclo é a peça: etapas em coluna, portões entre elas (a figura),
+   trilhas como camada que se liga (o fundo). Tokens e gramática de cor = os do portal:
+   azul = bloqueia / pede aprovação; âmbar sólido = avisa; âmbar tracejado = só orienta.
+   Skills e trilhas ficam neutras (tinta), para não falar a língua da força. Um tema só, claro. */
+:root {
+  --papel: #E8EDF2;
+  --papel-2: #DDE4EC;
+  --folha: #F6F8FB;
+  --branco: #FFFFFF;
+  --tinta: #0A1A2F;
+  --tinta-2: #43556B;
+  --traco: #6B7B8E;
+  --regra: #C3CDD8;
+  --gov: #1351B4;
+  --gov-claro: #D3E0F5;
+  --ambar: #B06F12;
+  --ambar-claro: #F3E3C6;
+  --ambar-texto: #8A6220;
+  --erro: #B8452E;
+  --revisao: #7A3FB0;
+  --revisao-claro: #EFE6F8;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--papel); color: var(--tinta); }
+body { font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--gov); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--gov); outline-offset: 2px; }
+code, .mono { font-family: var(--mono); font-variant-ligatures: none; }
+h1, h2, h3, h4 { margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+p { margin: 0; }
+[hidden] { display: none !important; }
+
+.barra-revisao {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between;
+  padding: 10px 20px; background: var(--tinta); color: var(--papel); font-size: 13.5px;
+}
+.barra-revisao button { font: 600 13px var(--sans); color: var(--tinta); background: var(--revisao-claro); border: 0; border-radius: 2px; padding: 6px 10px; cursor: pointer; }
+
+.pagina { max-width: 1160px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 80px; }
+.secao { margin-top: 64px; display: grid; gap: 20px; }
+.secao > *, .etapa > *, .ciclo > * { min-width: 0; }
+.secao > h2 { font-size: 26px; font-weight: 800; }
+.intro { max-width: 68ch; color: var(--tinta-2); }
+
+.nota { border-left: 3px solid var(--revisao); background: var(--revisao-claro); padding: 12px 14px; font-size: 14px; max-width: 80ch; display: grid; gap: 6px; }
+.nota .n { font: 700 12px var(--mono); color: var(--revisao); }
+.nota ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+body.sem-notas .nota { display: none; }
+
+/* chips de força: os do portal (.ef) */
+.ef { display: inline-flex; align-items: baseline; gap: 7px; padding: 4px 9px; border-radius: 2px; font-size: 13px; line-height: 1.35; text-decoration: none; color: var(--tinta); }
+.ef .id { font: 600 11.5px var(--mono); white-space: nowrap; }
+.ef .f { font-size: 11.5px; color: var(--tinta-2); white-space: nowrap; }
+.ef.bloqueia { background: var(--gov); color: var(--branco); border: 1.5px solid var(--gov); }
+.ef.bloqueia .f { color: var(--gov-claro); }
+.ef.pede-aprovacao { background: var(--branco); border: 1.5px solid var(--gov); }
+.ef.pede-aprovacao .id { color: var(--gov); }
+.ef.avisa { background: var(--branco); border: 1.5px solid var(--ambar); }
+.ef.avisa .id { color: var(--ambar-texto); }
+.ef.orienta { background: transparent; border: 1.5px dashed var(--ambar); }
+.ef.orienta .id { color: var(--ambar-texto); }
+/* status: os do portal (.st) */
+.st { font: 600 11.5px var(--sans); padding: 1px 7px; border-radius: 2px; border: 1px solid var(--tinta); color: var(--tinta); white-space: nowrap; }
+.st.adotar { background: var(--branco); border: 2px solid var(--tinta); }
+.st.experimentar { background: var(--papel-2); border-style: dashed; }
+.st.avaliar { background: var(--ambar-claro); border-color: var(--ambar); }
+
+/* 1. cabeçalho */
+.topo { display: grid; gap: 14px; max-width: 74ch; }
+.topo h1 { font-size: clamp(34px, 5.4vw, 56px); font-weight: 800; line-height: 1.02; letter-spacing: -.035em; }
+.topo .lead { font-size: 18px; color: var(--tinta-2); }
+.como-usar { margin: 4px 0 0; padding-left: 20px; display: grid; gap: 4px; color: var(--tinta-2); }
+
+/* 2. o ciclo */
+.mapa { background: var(--folha); border: 1px solid var(--regra); border-radius: 2px; position: relative; }
+.mapa-cab { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--regra); }
+.mapa-cab .rot { font-size: 13.5px; color: var(--tinta-2); }
+.trilha-btn { font: 600 13.5px var(--sans); color: var(--tinta); background: transparent; border: 1.5px solid var(--regra); border-radius: 2px; padding: 5px 11px; cursor: pointer; min-height: 34px; }
+.trilha-btn[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.resumo { font-size: 13.5px; color: var(--tinta-2); min-height: 1.4em; }
+
+.ciclo { position: relative; display: grid; grid-template-columns: 1fr 190px 1fr 190px 1fr 190px; padding: 20px 18px 8px; }
+.et-col { background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; padding: 14px 14px 10px; display: grid; gap: 10px; align-content: start; position: relative; z-index: 1; }
+.et-col h3 { font-size: 19px; font-weight: 800; }
+.passos-mapa { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.passos-mapa li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; align-items: start; padding: 4px 0; transition: opacity .2s; }
+.passos-mapa .pt { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--traco); background: var(--branco); margin-top: 5px; }
+.passos-mapa .nm { font-size: 14px; font-weight: 500; }
+.passos-mapa .sk { display: block; font: 600 12px var(--mono); color: var(--tinta); margin-top: 1px; }
+.ciclo.com-trilha .passos-mapa li { opacity: .38; }
+.ciclo.com-trilha .passos-mapa li.coberto { opacity: 1; }
+.passos-mapa li.coberto .pt { background: var(--tinta); border-color: var(--tinta); }
+
+.portao { position: relative; z-index: 1; display: grid; grid-template-columns: 10px 1fr; gap: 10px; padding: 0 10px 0 12px; align-content: start; }
+.portao .barra { grid-row: 1 / span 3; width: 10px; min-height: 100%; border-radius: 1px; }
+.portao.bloqueia .barra { background: var(--gov); }
+.portao.avisa .barra { background: var(--ambar); }
+.portao.sem .barra { border: 2px dashed var(--traco); background: transparent; }
+.portao h4 { font-size: 13px; font-weight: 700; padding-top: 14px; }
+.portao .marcos { display: grid; gap: 6px; align-content: start; }
+.portao .ef { flex-wrap: wrap; row-gap: 1px; }
+.portao .vazio { font-size: 13px; color: var(--tinta-2); font-style: italic; }
+.portao .mais { font-size: 12.5px; }
+
+.laco { grid-column: 1 / -1; margin-top: 18px; border: 2px dashed var(--ambar); border-top: 0; border-radius: 0 0 10px 10px; padding: 14px 18px 14px; display: grid; gap: 10px; position: relative; z-index: 1; }
+.laco::before { content: "↑"; position: absolute; left: -10px; top: -18px; color: var(--ambar); font-weight: 700; }
+.laco-cab { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
+.laco-cab h3 { font-size: 17px; font-weight: 800; color: var(--ambar-texto); }
+.laco-cab p { font-size: 13.5px; color: var(--tinta-2); }
+.laco .passos-mapa { grid-auto-flow: column; justify-content: start; gap: 6px 26px; }
+.laco .linha-marcos { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.trilho-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+.trilho-svg polyline { fill: none; stroke: var(--tinta); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
+
+.mapa-pe { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 12px 18px 14px; border-top: 1px solid var(--regra); font-size: 13px; color: var(--tinta-2); }
+details.tabela { padding: 0 18px 16px; font-size: 14px; }
+details.tabela summary { cursor: pointer; color: var(--gov); width: fit-content; padding-top: 10px; }
+.rola { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; margin-top: 10px; }
+th, td { text-align: left; padding: 6px 9px; border-bottom: 1px solid var(--regra); vertical-align: top; }
+th { font-weight: 700; }
+td .mono, th .mono { font-size: 12.5px; }
+tr.cab-etapa th { background: var(--papel-2); }
+
+@media (prefers-reduced-motion: reduce) { .passos-mapa li { transition: none; } }
+
+/* 3. trilhas prontas */
+.trilhas { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; align-items: start; }
+.trilha { background: var(--folha); border: 1px solid var(--regra); border-radius: 2px; padding: 16px 18px; display: grid; gap: 12px; }
+.trilha.sua { background: transparent; border: 1.5px dashed var(--traco); }
+.trilha .origem { font-size: 13px; color: var(--tinta-2); }
+.trilha h3 { font-size: 19px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.paradas { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 13.5px; }
+.paradas b { display: block; font-size: 12.5px; color: var(--tinta-2); font-weight: 600; }
+.paradas .skill { font: 600 12.5px var(--mono); }
+.paradas .onde { color: var(--tinta-2); }
+.trilha dl { margin: 0; display: grid; gap: 4px; font-size: 14px; }
+.trilha dt { font-weight: 700; }
+.trilha dd { margin: 0 0 6px; color: var(--tinta-2); }
+.ver-mapa { justify-self: start; font: 600 13px var(--sans); color: var(--gov); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+
+/* 4. etapas */
+.filtro { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 44px); z-index: 10; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0; background: var(--papel); border-bottom: 1px solid var(--regra); font-size: 13.5px; color: var(--tinta-2); }
+.filtro button { font: 600 13px var(--sans); color: var(--tinta); background: transparent; border: 1.5px solid var(--traco); border-radius: 2px; padding: 4px 10px; cursor: pointer; min-height: 32px; }
+.filtro button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.filtro .q { font: 400 11.5px var(--mono); opacity: .8; margin-left: 5px; }
+.filtro .sep { width: 1px; height: 22px; background: var(--regra); }
+
+.etapa { display: grid; gap: 14px; padding-top: 26px; margin-top: 26px; border-top: 2px solid var(--tinta); scroll-margin-top: 110px; }
+.etapa-cab { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
+.etapa-cab h3 { font-size: 24px; font-weight: 800; }
+.etapa-cab p { color: var(--tinta-2); }
+.saida { display: grid; gap: 8px; }
+.saida h4 { font-size: 14px; }
+.saida .marcos { display: flex; flex-wrap: wrap; gap: 8px; }
+.saida .todas { font-size: 13.5px; }
+.passo { display: grid; grid-template-columns: minmax(150px, 200px) 1fr; gap: 14px; padding-block: 14px; border-top: 1px solid var(--regra); }
+.passo-nome b { display: block; font-size: 15px; }
+.passo-nome span { font-size: 13px; color: var(--tinta-2); }
+.caminhos { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; min-width: 0; }
+.caminho { background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; padding: 11px 13px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.caminho.complemento { background: transparent; border-style: dashed; }
+.caminho-cab { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; justify-content: space-between; }
+.caminho-cab a { font: 600 13.5px var(--mono); color: var(--tinta); text-decoration: none; overflow-wrap: anywhere; }
+.caminho-cab a:hover { text-decoration: underline; }
+.caminho .de { font-size: 12.5px; color: var(--tinta-2); }
+.caminho .bom { font-size: 14px; }
+.caminho .cuidado { font-size: 13px; color: var(--tinta-2); padding-left: 9px; border-left: 2px solid var(--erro); }
+.caminho.compacto { padding: 8px 12px; }
+.caminho.compacto p { font-size: 13px; color: var(--tinta-2); }
+.vazio-passo { font-size: 13.5px; color: var(--tinta-2); font-style: italic; padding-block: 4px; }
+
+/* 5. atritos */
+.atritos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px 28px; }
+.atrito { display: grid; gap: 8px; align-content: start; }
+.atrito h3 { font-size: 16.5px; }
+.atrito p { font-size: 14.5px; color: var(--tinta-2); }
+
+/* 6. Início */
+.inicio-demo { border: 1px dashed var(--traco); padding: 22px; display: grid; gap: 22px; }
+.inicio-cab h3 { font-size: 30px; font-weight: 800; line-height: 1.1; }
+.inicio-cab p { color: var(--tinta-2); max-width: 68ch; margin-top: 8px; }
+.portas { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.porta { background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; padding: 16px; display: grid; gap: 8px; text-decoration: none; color: var(--tinta); }
+.porta:hover { border-color: var(--tinta); }
+.porta b { font-size: 17px; }
+.porta span { font-size: 14px; color: var(--tinta-2); }
+.porta em { font-style: normal; font-size: 13.5px; color: var(--gov); text-decoration: underline; }
+.duas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+.compacto-box { display: grid; gap: 12px; }
+.compacto-box h4 { font-size: 20px; font-weight: 800; }
+.mini { display: grid; grid-template-columns: 1fr 8px 1fr 8px 1fr 8px; gap: 6px; align-items: stretch; }
+.mini .c { background: var(--branco); border: 1px solid var(--regra); border-radius: 2px; padding: 9px 9px 10px; display: grid; gap: 7px; align-content: start; }
+.mini .c b { font-size: 14.5px; }
+.mini .c .ids { display: flex; flex-wrap: wrap; gap: 4px; }
+.mini .c .ef { padding: 2px 6px; }
+.mini .c .nada { font-size: 12px; color: var(--tinta-2); font-style: italic; }
+.mini .g { border-radius: 1px; }
+.mini .g.bloqueia { background: var(--gov); }
+.mini .g.avisa { background: var(--ambar); }
+.mini .g.sem { border: 2px dashed var(--traco); }
+.mini-laco { border: 2px dashed var(--ambar); border-top: 0; border-radius: 0 0 8px 8px; padding: 6px 10px; font-size: 13px; color: var(--ambar-texto); font-weight: 700; }
+.mini-laco span { font-weight: 400; color: var(--tinta-2); }
+.agente { background: var(--tinta); color: var(--papel); border-radius: 2px; padding: 16px; font-size: 13.5px; display: grid; gap: 8px; align-content: start; }
+.agente b { font-size: 17px; }
+.agente code { color: #B8C6D6; }
+
+@media (max-width: 860px) {
+  .ciclo { grid-template-columns: 1fr; gap: 0; padding: 16px 14px 8px; }
+  .portao { grid-template-columns: 1fr; padding: 10px 0 14px 0; }
+  .portao .barra { grid-row: auto; width: 100%; height: 8px; min-height: 0; order: -1; }
+  .portao h4 { padding-top: 6px; }
+  .laco .passos-mapa { grid-auto-flow: row; }
+  .duas { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .passo { grid-template-columns: 1fr; }
+  .topo .lead { font-size: 16px; }
+  .mini .c .ef .id { font-size: 10.5px; }
+}
+</style>
+</head>
+<body>
+
+<div class="barra-revisao" role="region" aria-label="Revisão">
+  <span><b>Proposta para revisão:</b> página Trilha e Início, versão 3. Notas em roxo são a revisão e não vão para o portal.</span>
+  <button type="button" id="alternar-notas" aria-pressed="true">Esconder notas</button>
+</div>
+
+<main class="pagina">
+
+<header class="topo">
+  <h1>Uma trilha, não um trilho</h1>
+  <p class="lead">O portal diz o que precisa estar pronto para sair de cada etapa. Como chegar lá fica com o time: as skills são caminhos possíveis, nossas ou de terceiros, e nenhuma é a oficial.</p>
+  <ol class="como-usar">
+    <li>Veja no ciclo o que cada etapa exige na saída: são os portões.</li>
+    <li>Se quiser um ponto de partida, escolha uma <a href="#t-trilhas">trilha pronta</a>.</li>
+    <li>Ou monte a sua, passo a passo, <a href="#t-etapas">nas etapas</a>.</li>
+  </ol>
+</header>
+
+<aside class="nota" style="margin-top:18px">
+  <span class="n">Nota 1 · cabeçalho (v3)</span>
+  <ul>
+    <li>Ganhou "como usar" em três passos, com âncoras (análise de design, item 8).</li>
+    <li>"Etapa" é o nome do eixo em todo o portal; "momento" fica só no código (sua decisão).</li>
+  </ul>
+</aside>
+
+<section class="secao" aria-labelledby="t-ciclo">
+  <h2 id="t-ciclo">O ciclo</h2>
+  <p class="intro">Cada etapa termina num portão. O que está no portão precisa estar pronto, qualquer que seja o caminho. A cor diz a força: azul bloqueia, âmbar avisa, tracejado só orienta.</p>
+  <figure class="mapa" style="margin:0" id="mapa">
+    <div class="mapa-cab">
+      <span class="rot" id="rot-trilha">Ver uma trilha pronta no ciclo:</span>
+      <div role="group" aria-labelledby="rot-trilha" id="trilha-escolha" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      <span class="resumo" aria-live="polite" id="resumo"></span>
+    </div>
+    <div class="ciclo" id="ciclo"></div>
+    <figcaption class="mapa-pe">
+      <span>Força do marco:</span>
+      <span class="ef bloqueia"><span class="id">ID</span>bloqueia</span>
+      <span class="ef pede-aprovacao"><span class="id">ID</span>pede aprovação</span>
+      <span class="ef avisa"><span class="id">ID</span>avisa</span>
+      <span class="ef orienta"><span class="id">ID</span>só orienta</span>
+      <span>Portão tracejado: a etapa ainda não tem marco com mecanismo.</span>
+    </figcaption>
+    <details class="tabela">
+      <summary>Ver o ciclo como tabela</summary>
+      <div class="rola" id="tabela-ciclo"></div>
+    </details>
+  </figure>
+  <aside class="nota">
+    <span class="n">Nota 2 · o ciclo (v3)</span>
+    <ul>
+      <li>Figura e fundo invertidos: portões e marcos são a peça, com rótulo e força junto do portão. Os passos ficam neutros dentro de cada etapa (análise de design, item 1).</li>
+      <li>Trilhas viram camada opcional: escolha uma acima e a linha atravessa os passos cobertos e os portões, com o nome da skill em cada passo. Sem escolha, não há três trilhos paralelos.</li>
+      <li>Cores da legenda do portal: o portão de Especificar é âmbar (o mais forte lá é "avisa"); o de Revisar é azul (DAD-01 bloqueia); o de Codar é tracejado (sua decisão sobre cores; corrige a R8).</li>
+      <li>Abaixo de 860 px o ciclo vira coluna; teste estreitando a janela. Há uma versão em tabela para leitor de tela.</li>
+      <li>Rótulos curtos dos marcos: proposta minha para o campo <code>marco</code>; passam pela curadoria.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-trilhas">
+  <h2 id="t-trilhas">Trilhas prontas</h2>
+  <p class="intro">Três combinações que já funcionam, para quem quer começar por uma, e a montagem livre para quem já sabe o que quer.</p>
+  <div class="trilhas" id="trilhas"></div>
+  <aside class="nota">
+    <span class="n">Nota 3 · trilhas prontas (v3)</span>
+    <ul>
+      <li>Paradas agrupadas por etapa; a Guiada não repete <code>sdd-lifecycle</code> dez vezes. Cada cartão tem "Ver no ciclo", que liga a camada da trilha no mapa.</li>
+      <li>"Monte a sua" aponta para os atritos que a curadoria resolve (análise de design, item 10).</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-etapas">
+  <h2 id="t-etapas">Por etapa: o que exige e por onde chegar</h2>
+  <div class="filtro" role="group" aria-label="Filtrar caminhos" id="filtro"><span>Mostrar caminhos de</span></div>
+  <div id="etapas"></div>
+  <aside class="nota">
+    <span class="n">Nota 4 · etapas (v3)</span>
+    <ul>
+      <li>"Para sair desta etapa": até seis marcos, com a cor da força real; "ver todas" leva à coluna da etapa na espinha, sem repetir a espinha aqui (análise de coesão, item 4).</li>
+      <li>Cartões de skill neutros, com o selo de status do portal; complemento com borda tracejada em vez de transparência.</li>
+      <li><code>sdd-lifecycle</code> aparece completa uma vez; nos outros passos, uma linha compacta (análise de design, item 5).</li>
+      <li>Filtro fixo no topo durante a rolagem, com "Mostrar complementos" de volta.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-atritos" id="atritos">
+  <h2 id="t-atritos">O que a curadoria resolve antes de adotar</h2>
+  <div class="atritos">
+    <div class="atrito"><h3>Onde a spec é gravada</h3><p>A <code>to-spec</code> do mattpocock/skills publica a spec no tracker de issues; o setup aceita descrever outro fluxo. O superpowers grava em <code>docs/superpowers/</code> no caminho arquitetural, e a preferência do projeto vale mais. Cada trilha pronta diz onde a spec fica.</p></div>
+    <div class="atrito"><h3>Idioma</h3><p>As duas coleções escrevem em inglês, e o modelo da <code>to-spec</code> traz títulos como "Problem Statement". Se a spec sai em português só porque o AGENTS.md pede, o laboratório mede antes de qualquer skill subir para adotar.</p></div>
+    <div class="atrito"><h3>Instruções que se contradizem</h3><p>O TDD do mattpocock deixa a refatoração para a revisão; o do superpowers a tem como terceira fase e manda apagar o código escrito antes do teste. Cada trilha pronta é coerente por dentro, e a montagem livre avisa o conflito.</p></div>
+    <div class="atrito"><h3>Origem que muda</h3><p>As coleções mudam entre versões, então o portal fixa versão e commit e revalida. Skill nova não entra por PR na origem: o SCOPE.md do mattpocock/skills fecha propostas de skill nova.</p></div>
+  </div>
+</section>
+
+<section class="secao" aria-labelledby="t-inicio">
+  <h2 id="t-inicio">Na Início</h2>
+  <div class="inicio-demo">
+    <div class="inicio-cab">
+      <h3>Construir software com IA sem perder a arquitetura</h3>
+      <p>Práticas de engenharia para times que desenvolvem com agentes de código. Cada prática diz o que fazer, com que força e de onde vem a evidência.</p>
+    </div>
+    <div class="portas">
+      <a class="porta" href="#"><b>Projeto novo</b><span>Comece com o projeto já montado: regras, roteiro de trabalho e verificações.</span><em>Do zero à primeira MR com IA</em></a>
+      <a class="porta" href="#"><b>Projeto existente</b><span>Traga as regras e as verificações para um repositório que já existe.</span><em>Brownfield em 5 passos</em></a>
+      <a class="porta" href="#t-ciclo"><b>No meio de uma mudança</b><span>Veja o que a etapa em que você está exige para sair dela.</span><em>Abrir a trilha</em></a>
+    </div>
+    <div class="duas">
+      <div class="compacto-box">
+        <h4>O ciclo de toda mudança</h4>
+        <div class="mini" id="mini" role="img" aria-label="Ciclo: Especificar, com portão de P1-05, P1-06 e P3-02 que avisam; Codar, ainda sem marco com mecanismo; Revisar, com portão de DAD-01 que bloqueia e P1-09 e CICD-01 que avisam; e o laço Aprender."></div>
+        <div class="mini-laco">Aprender <span>volta para Especificar: o que a entrega ensina vira regra</span></div>
+        <p><a href="#t-ciclo">Ver a trilha: marcos e caminhos de cada etapa</a></p>
+      </div>
+      <div class="agente"><b>Para o agente</b><p>O bloco que o projeto cola no AGENTS.md continua aqui, sem mudança nesta entrega.</p><code>roteamento.json · catalogo.json · llms.txt</code></div>
+    </div>
+  </div>
+  <aside class="nota">
+    <span class="n">Nota 5 · Início (v3)</span>
+    <ul>
+      <li>Três portas: projeto novo e existente levam aos guias certos (antes, "existente" levava a uma receita de CI); "no meio de uma mudança" leva à trilha (análise de coesão, item 5).</li>
+      <li>Diagrama compacto que cabe na coluna real (~440 px): três etapas, portões coloridos pela força, IDs dos marcos e o laço. Sem passos nem trilhas (sua decisão; substitui o "mesmo mapa", que não cabia).</li>
+      <li>Navegação: "Trilha" sobe para o primeiro nível, entre "Comece aqui" e "Padrões"; "IA no produto" sai do menu e fica em Domínios.</li>
+    </ul>
+  </aside>
+</section>
+
+</main>
+
+<script>
+const FORCA = { "bloqueia": "bloqueia", "pede-aprovacao": "pede aprovação", "avisa": "avisa", "orienta": "só orienta" };
+const ETAPAS = [
+  { slug: "especificar", nome: "Especificar", desc: "Entender o pedido e fixar o que vai ser construído.", total: 17,
+    passos: [["entrevistar","Entrevistar","tirar da cabeça da pessoa o que ela quer"],["escrever-spec","Escrever a spec","o documento que vai ser aprovado"],["decidir","Decidir e registrar","glossário e ADR"],["investigar","Investigar","responder antes de decidir"],["seguranca","Segurança","superfície nova"]],
+    marcos: [["P1-05","ambiguidade resolvida","avisa"],["P1-06","aprovação registrada","avisa"],["P3-02","threat-model do agente","avisa"],["P1-04","spec como delta","orienta"],["P1-03","constituição curta","orienta"],["P1-01","tier classificado","orienta"]] },
+  { slug: "codar", nome: "Codar", desc: "Plano, branch e teste antes do código.", total: 13,
+    passos: [["planejar","Planejar","tarefas com checkboxes"],["isolar","Isolar","branch ou worktree"],["executar","Executar","do plano ao código"],["tdd","TDD","vermelho, verde"],["bug","Bug","do sintoma ao teste de regressão"],["dominio","Domínio","conforme a faixa"]],
+    marcos: [["P3-04","agente só lê por padrão","orienta"],["QLD-01","teste falhou antes","orienta"],["DAD-02","expandir e contrair","orienta"]] },
+  { slug: "revisar", nome: "Revisar", desc: "Conferir contra a spec e contra os padrões, com evidência.", total: 11,
+    passos: [["revisar","Revisar o diff","spec e padrões"],["responder","Responder à revisão","sem concordar por educação"],["evidencia","Evidência","antes de dizer que terminou"],["pr-e-merge","PR e merge","fechar a branch"]],
+    marcos: [["DAD-01","migration intocada","bloqueia"],["P1-09","veredito por requisito","avisa"],["CICD-01","pipeline com gates","avisa"],["P1-10","sem drift spec e código","orienta"],["QLD-03","CI roda antes do push","orienta"],["SEG-02","segredo fora do repo","orienta"]] },
+];
+const APRENDER = { slug: "aprender", nome: "Aprender", desc: "O laço: o que esta mudança ensina à próxima.", total: 6,
+  passos: [["retro","Retro","melhorar o ambiente, não o código"],["instrucoes","Cuidar das instruções","skills, AGENTS.md, steering"],["continuar","Continuar depois","entre sessões"]],
+  marcos: [["P1-11","spec arquivada e destilada","orienta"],["QLD-02","bug vira regra","orienta"],["CICD-03","changelog e tag","orienta"]] };
+const ORDEM = ["bloqueia","pede-aprovacao","avisa","orienta"];
+const COLECOES = { "superpowers": "obra/superpowers", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
+
+const SKILLS = [
+  ["sp-brainstorming","brainstorming","superpowers","adotar","caminho",[["especificar","entrevistar"],["especificar","escrever-spec"]],"você quer classificar o pedido antes (spike, limitado, arquitetural), perto dos nossos tiers.","conduz: no fim só aceita writing-plans como próximo passo."],
+  ["mp-grill-with-docs","grill-with-docs","mattpocock-skills","avaliar","caminho",[["especificar","entrevistar"]],"o repositório já existe e você quer sair com glossário e ADR.","só pergunta; a spec vem da to-spec."],
+  ["mp-grilling","grilling","mattpocock-skills","avaliar","complemento",[["especificar","entrevistar"]],"a grill-with-docs chama esta; instale as duas juntas.",""],
+  ["sdd-lifecycle","sdd-lifecycle","nossa","adotar","caminho",[["especificar","escrever-spec"],["especificar","decidir"],["codar","planejar"],["codar","isolar"],["codar","tdd"],["revisar","revisar"],["revisar","evidencia"],["revisar","pr-e-merge"],["aprender","retro"],["aprender","continuar"]],"você quer tier, gate destrutivo e aprovação no mesmo fluxo, conduzido do começo ao fim.","uma skill conduz todas as etapas."],
+  ["mp-to-spec","to-spec","mattpocock-skills","avaliar","caminho",[["especificar","escrever-spec"]],"a conversa já resolveu tudo e só falta sintetizar a spec.","publica no tracker de issues; aponte o tracker para docs/specs."],
+  ["mp-domain-modeling","domain-modeling","mattpocock-skills","avaliar","caminho",[["especificar","decidir"]],"há termos em disputa no domínio; ADR só quando é difícil de reverter, surpreendente e fruto de trade-off.",""],
+  ["sp-writing-plans","writing-plans","superpowers","adotar","caminho",[["codar","planejar"]],"o plano precisa de arquivos, testes e passos pequenos por tarefa, para outro agente executar.","grava em docs/superpowers/plans se o projeto não disser outro lugar."],
+  ["sp-using-git-worktrees","using-git-worktrees","superpowers","adotar","caminho",[["codar","isolar"]],"você quer trabalhar em paralelo sem sujar o diretório atual.",""],
+  ["sp-subagent-driven-development","subagent-driven-development","superpowers","adotar","caminho",[["codar","executar"]],"a mudança tem muitas tarefas: um subagente por tarefa, com revisão entre elas.","é a mais longa da coleção."],
+  ["sp-executing-plans","executing-plans","superpowers","adotar","caminho",[["codar","executar"]],"não há subagente disponível e o próprio agente executa o plano.",""],
+  ["mp-implement","implement","mattpocock-skills","avaliar","caminho",[["codar","executar"]],"a mudança cabe numa sessão; chama tdd e code-review.","busca o ticket no tracker; passe o caminho do plano."],
+  ["sp-dispatching-parallel-agents","dispatching-parallel-agents","superpowers","adotar","complemento",[["codar","executar"]],"há tarefas sem estado compartilhado para rodar em paralelo.",""],
+  ["sp-test-driven-development","test-driven-development","superpowers","adotar","caminho",[["codar","tdd"]],"o time precisa de rigidez: código escrito antes do teste é apagado.","não instale junto de outra skill de TDD."],
+  ["mp-tdd","tdd","mattpocock-skills","avaliar","caminho",[["codar","tdd"]],"você quer pouco texto e testes em seams combinadas, uma fatia vertical por vez.","refatorar fica fora do laço."],
+  ["sp-systematic-debugging","systematic-debugging","superpowers","adotar","caminho",[["codar","bug"]],"você quer a causa raiz antes de propor a correção.",""],
+  ["sp-requesting-code-review","requesting-code-review","superpowers","adotar","caminho",[["revisar","revisar"]],"você quer um revisor independente por tarefa ou antes do merge.","um eixo só."],
+  ["mp-code-review","code-review","mattpocock-skills","avaliar","caminho",[["revisar","revisar"]],"você quer dois eixos separados, padrões e spec, em paralelo.","o eixo de spec precisa sair com veredito por requisito (P1-09)."],
+  ["sp-receiving-code-review","receiving-code-review","superpowers","adotar","caminho",[["revisar","responder"]],"chegou feedback questionável: verificar antes de aceitar.",""],
+  ["sp-verification-before-completion","verification-before-completion","superpowers","adotar","caminho",[["revisar","evidencia"]],"sempre: rodar e colar a saída antes de dizer que está pronto.",""],
+  ["sp-finishing-a-development-branch","finishing-a-development-branch","superpowers","adotar","caminho",[["revisar","pr-e-merge"]],"é hora de decidir entre merge, PR ou descartar, e limpar a branch.",""],
+  ["mp-retro","retro","mattpocock-skills","avaliar","caminho",[["aprender","retro"]],"depois de qualquer entrega: erro mecânico vira checagem, julgamento vira padrão.",""],
+  ["sp-writing-skills","writing-skills","superpowers","adotar","caminho",[["aprender","instrucoes"]],"a skill nova precisa de teste por cenário antes de ser publicada.","a mais longa da coleção."],
+];
+const TRILHAS = [
+  { id: "de-origem", nome: "De origem", origem: "obra/superpowers com os marcos do portal", status: "adotar", caso: true,
+    seq: [["sp-brainstorming","especificar","entrevistar"],["sp-brainstorming","especificar","escrever-spec"],["sp-writing-plans","codar","planejar"],["sp-using-git-worktrees","codar","isolar"],["sp-subagent-driven-development","codar","executar"],["sp-test-driven-development","codar","tdd"],["sp-systematic-debugging","codar","bug"],["sp-requesting-code-review","revisar","revisar"],["sp-receiving-code-review","revisar","responder"],["sp-verification-before-completion","revisar","evidencia"],["sp-finishing-a-development-branch","revisar","pr-e-merge"],["sdd-lifecycle","aprender","retro"],["sp-writing-skills","aprender","instrucoes"]],
+    bom: "a mudança é grande, com subagentes e revisão por tarefa. É a combinação em que o modelo nasceu.",
+    cuidado: "o plugin traz um bootstrap que obriga a acionar skills, e o brainstorming só aceita writing-plans depois." },
+  { id: "guiada", nome: "Guiada", origem: "padroes-engenharia (sdd-lifecycle)", status: "adotar",
+    seq: [["sdd-lifecycle","especificar","escrever-spec"],["sdd-lifecycle","especificar","decidir"],["sdd-lifecycle","codar","planejar"],["sdd-lifecycle","codar","isolar"],["sdd-lifecycle","codar","tdd"],["sdd-lifecycle","revisar","revisar"],["sdd-lifecycle","revisar","evidencia"],["sdd-lifecycle","revisar","pr-e-merge"],["sdd-lifecycle","aprender","retro"],["sdd-lifecycle","aprender","continuar"]],
+    bom: "o time está começando no SDD ou precisa de trilha de auditoria completa.",
+    cuidado: "uma skill só conduz todas as etapas." },
+  { id: "enxuta", nome: "Enxuta", origem: "mattpocock/skills", status: "avaliar",
+    seq: [["mp-grill-with-docs","especificar","entrevistar"],["mp-to-spec","especificar","escrever-spec"],["mp-domain-modeling","especificar","decidir"],["mp-implement","codar","executar"],["mp-tdd","codar","tdd"],["mp-code-review","revisar","revisar"],["mp-retro","aprender","retro"]],
+    bom: "o time quer pouco texto no contexto e linguagem de domínio forte.",
+    cuidado: "o tracker precisa apontar para docs/specs, e refatorar fica fora do laço do TDD." },
+];
+const TODAS = [...ETAPAS, APRENDER];
+const skill = (id) => SKILLS.find((s) => s[0] === id);
+const etapa = (slug) => TODAS.find((e) => e.slug === slug);
+const passoNome = (e, p) => etapa(e).passos.find((x) => x[0] === p)[1];
+const maisForte = (ms) => ORDEM.find((f) => ms.some((m) => m[2] === f && f !== "orienta"));
+const chip = (m) => `<span class="ef ${m[2]}"><span class="id">${m[0]}</span>${m[1]}<span class="f">${FORCA[m[2]]}</span></span>`;
+
+/* o ciclo */
+function montarCiclo() {
+  const c = document.getElementById("ciclo");
+  let html = "";
+  ETAPAS.forEach((e) => {
+    html += `<div class="et-col" data-etapa="${e.slug}"><h3>${e.nome}</h3><ol class="passos-mapa">${e.passos.map((p) => `<li data-passo="${e.slug}/${p[0]}"><span class="pt"></span><span><span class="nm">${p[1]}</span><span class="sk"></span></span></li>`).join("")}</ol></div>`;
+    const fortes = e.marcos.filter((m) => m[2] !== "orienta");
+    const g = maisForte(e.marcos);
+    html += `<div class="portao ${g || "sem"}"><span class="barra" aria-hidden="true"></span><h4>Para sair de ${e.nome}</h4>
+      <div class="marcos">${fortes.length ? fortes.map(chip).join("") : `<p class="vazio">Ainda sem marco com mecanismo. É o backlog desta etapa.</p>`}</div>
+      <a class="mais" href="#etapa-${e.slug}">${fortes.length ? "e mais " + (e.total - fortes.length) + " práticas" : "ver as " + e.total + " práticas"}</a></div>`;
+  });
+  html += `<div class="laco" data-etapa="aprender"><div class="laco-cab"><h3>Aprender</h3><p>Volta para Especificar. Sem portão: tudo aqui só orienta.</p></div>
+    <ol class="passos-mapa">${APRENDER.passos.map((p) => `<li data-passo="aprender/${p[0]}"><span class="pt"></span><span><span class="nm">${p[1]}</span><span class="sk"></span></span></li>`).join("")}</ol>
+    <div class="linha-marcos">${APRENDER.marcos.map(chip).join("")}</div></div>`;
+  html += `<svg class="trilho-svg" aria-hidden="true"></svg>`;
+  c.innerHTML = html;
+}
+
+let trilhaAtual = null;
+function mostrarTrilha(id) {
+  trilhaAtual = id;
+  const c = document.getElementById("ciclo");
+  c.classList.toggle("com-trilha", !!id);
+  c.querySelectorAll("li[data-passo]").forEach((li) => { li.classList.remove("coberto"); li.querySelector(".sk").textContent = ""; });
+  document.querySelectorAll(".trilha-btn").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.trilha === id)));
+  const resumo = document.getElementById("resumo");
+  if (!id) { resumo.textContent = ""; desenharTrilho(); return; }
+  const t = TRILHAS.find((x) => x.id === id);
+  t.seq.forEach(([sid, e, p]) => {
+    const li = c.querySelector(`li[data-passo="${e}/${p}"]`);
+    if (li) { li.classList.add("coberto"); li.querySelector(".sk").textContent = skill(sid)[1]; }
+  });
+  const passos = new Set(t.seq.map((s) => s[1] + "/" + s[2]));
+  resumo.textContent = `${t.nome}: cobre ${passos.size} passos e atravessa os três portões.`;
+  desenharTrilho();
+}
+function desenharTrilho() {
+  const c = document.getElementById("ciclo");
+  const svg = c.querySelector(".trilho-svg");
+  svg.innerHTML = "";
+  if (!trilhaAtual) return;
+  const base = c.getBoundingClientRect();
+  svg.setAttribute("viewBox", `0 0 ${base.width} ${base.height}`);
+  const t = TRILHAS.find((x) => x.id === trilhaAtual);
+  // um traço por etapa, ligando os passos cobertos dentro dela; o portão fica entre os traços
+  const porEtapa = {};
+  t.seq.forEach(([, e, p]) => { (porEtapa[e] ||= new Set()).add(p); });
+  for (const [e, ps] of Object.entries(porEtapa)) {
+    if (e === "aprender") continue; // no laço os passos ficam em linha; os pontos preenchidos bastam
+    const pts = [...c.querySelectorAll(`li[data-passo^="${e}/"]`)]
+      .filter((li) => ps.has(li.dataset.passo.split("/")[1]))
+      .map((li) => { const r = li.querySelector(".pt").getBoundingClientRect(); return `${r.left - base.left + r.width / 2},${r.top - base.top + r.height / 2}`; });
+    if (pts.length > 1) { const pl = document.createElementNS("http://www.w3.org/2000/svg", "polyline"); pl.setAttribute("points", pts.join(" ")); svg.append(pl); }
+  }
+}
+window.addEventListener("resize", desenharTrilho);
+
+function montarEscolha() {
+  const box = document.getElementById("trilha-escolha");
+  [...TRILHAS, { id: null, nome: "Nenhuma" }].forEach((t) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "trilha-btn"; b.dataset.trilha = t.id ?? ""; b.setAttribute("aria-pressed", String(t.id === null));
+    b.textContent = t.nome;
+    b.addEventListener("click", () => mostrarTrilha(t.id));
+    box.append(b);
+  });
+}
+
+function montarTabela() {
+  let html = `<table><thead><tr><th scope="col">Passo</th>${TRILHAS.map((t) => `<th scope="col">${t.nome}</th>`).join("")}</tr></thead><tbody>`;
+  TODAS.forEach((e) => {
+    const fortes = e.marcos.filter((m) => m[2] !== "orienta");
+    html += `<tr class="cab-etapa"><th scope="rowgroup" colspan="${TRILHAS.length + 1}">${e.nome}${fortes.length ? ". Portão: " + fortes.map((m) => `${m[0]} ${m[1]} (${FORCA[m[2]]})`).join("; ") : ". Sem portão com mecanismo."}</th></tr>`;
+    e.passos.forEach((p) => {
+      html += `<tr><th scope="row">${p[1]}</th>${TRILHAS.map((t) => { const s = t.seq.find((x) => x[1] === e.slug && x[2] === p[0]); return `<td>${s ? `<span class="mono">${skill(s[0])[1]}</span>` : "—"}</td>`; }).join("")}</tr>`;
+    });
+  });
+  document.getElementById("tabela-ciclo").innerHTML = html + "</tbody></table>";
+}
+
+function montarTrilhas() {
+  const box = document.getElementById("trilhas");
+  TRILHAS.forEach((t) => {
+    const grupos = [];
+    t.seq.forEach(([sid, e, p]) => {
+      let g = grupos.find((x) => x.e === e);
+      if (!g) { g = { e, itens: [] }; grupos.push(g); }
+      let it = g.itens.find((x) => x.sid === sid);
+      if (!it) { it = { sid, passos: [] }; g.itens.push(it); }
+      it.passos.push(passoNome(e, p).toLowerCase());
+    });
+    const li = grupos.map((g) => `<li><b>${etapa(g.e).nome}</b>${g.itens.map((it) => `<span class="skill">${skill(it.sid)[1]}</span> <span class="onde">(${it.passos.join(", ")})</span>`).join("<br>")}</li>`).join("");
+    const a = document.createElement("article"); a.className = "trilha"; a.id = "trilha-" + t.id;
+    a.innerHTML = `<span class="origem">${t.origem}</span><h3>${t.nome} <span class="st ${t.status}">${t.status}</span></h3>
+      <ul class="paradas">${li}</ul>
+      <dl><dt>Bom quando</dt><dd>${t.bom}</dd><dt>Cuidado</dt><dd>${t.cuidado}</dd>${t.caso ? `<dt>Evidência</dt><dd><a href="#">Caso: origem do modelo</a></dd>` : ""}</dl>`;
+    const b = document.createElement("button"); b.type = "button"; b.className = "ver-mapa"; b.textContent = "Ver no ciclo";
+    b.addEventListener("click", () => { mostrarTrilha(t.id); document.getElementById("mapa").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); });
+    a.append(b); box.append(a);
+  });
+  const sua = document.createElement("article"); sua.className = "trilha sua";
+  sua.innerHTML = `<span class="origem">o time escolhe</span><h3>Monte a sua</h3>
+    <p>Escolha um caminho por passo nas etapas abaixo. Os portões continuam valendo: eles conferem o resultado, não a skill.</p>
+    <dl><dt>Uma regra</dt><dd>uma skill por passo no mesmo projeto. Antes de combinar coleções, veja <a href="#atritos">o que a curadoria resolve</a>.</dd></dl>`;
+  box.append(sua);
+}
+
+const ativas = new Set(Object.keys(COLECOES));
+let comComplementos = true;
+function montarEtapas() {
+  const filtro = document.getElementById("filtro");
+  for (const [col, rot] of Object.entries(COLECOES)) {
+    const n = SKILLS.filter((s) => s[2] === col).length;
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "true");
+    b.innerHTML = `${rot}<span class="q">${n}</span>`;
+    b.addEventListener("click", () => { ativas.has(col) ? ativas.delete(col) : ativas.add(col); b.setAttribute("aria-pressed", String(ativas.has(col))); filtrar(); });
+    filtro.append(b);
+  }
+  const sep = document.createElement("span"); sep.className = "sep"; sep.setAttribute("aria-hidden", "true"); filtro.append(sep);
+  const bc = document.createElement("button"); bc.type = "button"; bc.setAttribute("aria-pressed", "true"); bc.textContent = "Mostrar complementos";
+  bc.addEventListener("click", () => { comComplementos = !comComplementos; bc.setAttribute("aria-pressed", String(comComplementos)); filtrar(); });
+  filtro.append(bc);
+
+  const box = document.getElementById("etapas");
+  const jaMostrada = new Set();
+  TODAS.forEach((e) => {
+    const s = document.createElement("div"); s.className = "etapa"; s.id = "etapa-" + e.slug;
+    let html = `<div class="etapa-cab"><h3>${e.nome}</h3><p>${e.desc}</p></div>
+      <div class="saida"><h4>${e.slug === "aprender" ? "O que fica desta entrega" : "Para sair desta etapa"}</h4><div class="marcos">${e.marcos.map(chip).join("")}</div>
+      <a class="todas" href="#">Ver as ${e.total} práticas de ${e.nome} na espinha</a></div>`;
+    e.passos.forEach(([ps, pn, pd]) => {
+      const cs = SKILLS.filter((sk) => sk[5].some(([m, p]) => m === e.slug && p === ps));
+      const cards = cs.map((sk) => {
+        const compl = sk[4] === "complemento";
+        if (jaMostrada.has(sk[0])) {
+          return `<article class="caminho compacto" data-col="${sk[2]}" data-papel="${sk[4]}"><div class="caminho-cab"><a href="#">${sk[1]}</a><span class="st ${sk[3]}">${sk[3]}</span></div><p>Também conduz este passo. Detalhes no primeiro cartão.</p></article>`;
+        }
+        jaMostrada.add(sk[0]);
+        return `<article class="caminho${compl ? " complemento" : ""}" data-col="${sk[2]}" data-papel="${sk[4]}">
+          <div class="caminho-cab"><a href="#">${sk[1]}</a><span class="st ${sk[3]}">${sk[3]}</span></div>
+          <span class="de">${COLECOES[sk[2]]}${compl ? ", complemento" : ""}</span>
+          <p class="bom">Bom quando ${sk[6]}</p>${sk[7] ? `<p class="cuidado">${sk[7]}</p>` : ""}</article>`;
+      }).join("");
+      html += `<div class="passo"><div class="passo-nome"><b>${pn}</b><span>${pd}</span></div>
+        <div class="caminhos">${cards}<p class="vazio-passo" data-vazio="${cs.length ? "filtro" : "nada"}"${cs.length ? " hidden" : ""}>${cs.length ? "Os caminhos deste passo estão ocultos pelo filtro." : "Ainda não há caminho curado para este passo."}</p></div></div>`;
+    });
+    s.innerHTML = html; box.append(s);
+  });
+}
+function filtrar() {
+  document.querySelectorAll(".caminhos").forEach((box) => {
+    let vis = 0;
+    box.querySelectorAll(".caminho").forEach((c) => {
+      const ok = ativas.has(c.dataset.col) && (comComplementos || c.dataset.papel !== "complemento");
+      c.hidden = !ok; if (ok) vis++;
+    });
+    const v = box.querySelector(".vazio-passo");
+    if (v && v.dataset.vazio === "filtro") v.hidden = vis > 0;
+  });
+}
+
+function montarMini() {
+  const m = document.getElementById("mini");
+  m.innerHTML = ETAPAS.map((e) => {
+    const fortes = e.marcos.filter((x) => x[2] !== "orienta");
+    const g = maisForte(e.marcos) || "sem";
+    return `<div class="c"><b>${e.nome}</b><div class="ids">${fortes.length ? fortes.map((x) => `<span class="ef ${x[2]}" title="${x[1]} (${FORCA[x[2]]})"><span class="id">${x[0]}</span></span>`).join("") : `<span class="nada">sem marco com mecanismo</span>`}</div></div><div class="g ${g}" aria-hidden="true"></div>`;
+  }).join("");
+}
+
+montarCiclo(); montarEscolha(); montarTabela(); montarTrilhas(); montarEtapas(); montarMini();
+document.getElementById("alternar-notas").addEventListener("click", (ev) => {
+  const sem = document.body.classList.toggle("sem-notas");
+  ev.currentTarget.setAttribute("aria-pressed", String(!sem));
+  ev.currentTarget.textContent = sem ? "Mostrar notas" : "Esconder notas";
+  desenharTrilho();
+});
+</script>
+</body>
+</html>
