@@ -2186,12 +2186,14 @@ Entrega: (R13; a consulta "planejar a mudança" é conferida na tarefa 21, com o
 
 ## Fase 3 · Conteúdo da primeira leva (curadoria)
 
+> **Substituída a partir da tarefa 13** pelo plano [`2026-10-15-trilha-sdd-v3.md`](2026-10-15-trilha-sdd-v3.md) (Fases 4 e 5), depois do delta v3 da spec. A tarefa 12 está feita e vale.
+
 Toda tarefa desta fase segue a skill `curadoria-de-pratica`: afirmação com `[ref:]`, fonte
 conferida, registro em `verificacoes/`. Leia a skill inteira antes da tarefa 12. Os textos
 "bom quando" e "cuidado" partem do mockup aprovado e são **conferidos contra o `SKILL.md` no
 commit fixado**. O que o `SKILL.md` não sustentar sai ou é reescrito.
 
-### Tarefa 12: Página editorial `paginas/trilha.md`
+### Tarefa 12: Página editorial `paginas/trilha.md` (feita, commit ca07bb9)
 
 **Arquivos:** criar `paginas/trilha.md`; criar referências que ela citar; registro
 `verificacoes/trilha.yaml`.
