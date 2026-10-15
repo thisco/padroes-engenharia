@@ -30,3 +30,9 @@ def test_minimatriz_da_inicio_usa_etapa():
     assert "coluna = momento" not in html
     assert "coluna = etapa" in html
     assert '<abbr title="Antes de escrever">' in html
+
+
+def test_espinha_descreve_o_eixo_como_etapas():
+    html = html_espinha(fabrica.site(fabrica.pratica()))
+    assert "momentos do ciclo" not in html
+    assert "4 etapas do ciclo SDD" in html

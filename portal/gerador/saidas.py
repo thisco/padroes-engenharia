@@ -858,7 +858,7 @@ def readme_md(site: Site) -> str:
         f"{AVISO_GERADO} O validador reprova se este arquivo divergir do gerado.",
         "## O que há aqui\n\n"
         f"- {plural(total, 'prática', 'práticas')} na espinha de "
-        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} momentos; "
+        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} etapas; "
         f"{a_definir_texto(site)} a definir (`ROTEAMENTO.md`).\n"
         f"- {plural(len(site.repo.referencias), 'referência', 'referências')}, cada uma "
         f"conferida na fonte, e "

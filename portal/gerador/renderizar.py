@@ -431,10 +431,10 @@ def a_definir_texto(site: Site) -> str:
 
 
 def dimensoes(site: Site) -> str:
-    """`12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD`."""
+    """`12 faixas de domínio cruzadas com as 4 etapas do ciclo SDD`."""
     return (
-        f"{len(site.espinha.faixas)} faixas de domínio cruzadas com os "
-        f"{len(site.espinha.momentos)} momentos do ciclo SDD"
+        f"{len(site.espinha.faixas)} faixas de domínio cruzadas com as "
+        f"{len(site.espinha.momentos)} etapas do ciclo SDD"
     )
 
 
