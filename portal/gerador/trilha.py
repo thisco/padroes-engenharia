@@ -8,7 +8,10 @@ dentro das funções, para evitar import circular."""
 
 from __future__ import annotations
 
+import re
 from typing import Any
+
+from markupsafe import Markup
 
 from portal.gerador.carregar import Conteudo, carregar_componentes
 from portal.gerador.renderizar import Site, caminho_de, renderizar
@@ -83,8 +86,7 @@ def ciclo(site: Site) -> dict[str, Any]:
 
 
 def _ciclo_legado(site: Site) -> dict[str, Any]:
-    """Adaptador temporário (removido na V5/V6): o formato antigo `caixas` que os templates
-    atuais da página e da Início ainda leem."""
+    """Adaptador temporário (removido na V6): o formato antigo `caixas` que a Início ainda lê."""
     dados = ciclo(site)
 
     def caixa(e: dict[str, Any]) -> dict[str, Any]:
@@ -203,6 +205,7 @@ def trilhas(site: Site) -> list[dict[str, Any]]:
                     "momento": item["momento"],
                     "etapa": (momento.etapa or momento.titulo) if momento else item["momento"],
                     "passo": passo.titulo if passo else item["passo"],
+                    "passo_slug": item["passo"],
                     "ferramenta": f.meta["titulo"] if f else item["ferramenta"],
                     "href": caminho_de(f) if f else "",
                 }
@@ -228,12 +231,54 @@ def trilhas(site: Site) -> list[dict[str, Any]]:
     return resultado
 
 
+def _camada(site: Site, prontas: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """R8': a camada de cada trilha no ciclo, lida pelo `trilha.js` nos `data-*`: os passos
+    cobertos (`momento/passo`), a ferramenta de cada passo e o resumo já escrito."""
+    etapas = [m.slug for m in site.espinha.momentos[:-1]]
+    camada = []
+    for t in prontas:
+        skills: dict[str, str] = {}
+        for i in t["itens"]:
+            skills.setdefault(f"{i['momento']}/{i['passo_slug']}", i["ferramenta"])
+        cruzados = {i["momento"] for i in t["itens"]} & set(etapas)
+        n = len(skills)
+        resumo = f"{t['titulo']}: cobre {n} passo{'s' if n != 1 else ''}"
+        if len(cruzados) == len(etapas):
+            resumo += " e atravessa todos os portões."
+        else:
+            resumo += f" e atravessa {len(cruzados)} de {len(etapas)} portões."
+        camada.append(
+            {
+                "id": t["id"],
+                "titulo": t["titulo"],
+                "passos": " ".join(skills),
+                "skills": skills,
+                "resumo": resumo,
+            }
+        )
+    return camada
+
+
+def _atritos(corpo: Markup) -> dict[str, Any]:
+    """O corpo da página dividido para a grade de atritos: o que vem antes do primeiro `h3`
+    (o título e a introdução) e um bloco por `h3`."""
+    texto = str(corpo)
+    partes = re.split(r"(?=<h3[ >])", texto)
+    return {"cab": Markup(partes[0]), "itens": [Markup(x) for x in partes[1:]]}
+
+
 def html_trilha(site: Site, pagina: Conteudo) -> str:
     # Imports aqui dentro: `paginas.py` importa este módulo no topo (PAGINAS_ESTRUTURADAS).
     from portal.gerador.paginas import citar, corpo_da_pagina, ids_da_pagina
 
     ids = ids_da_pagina(site, pagina)
-    usadas = {f.meta.get("colecao") for f in _com_caminhos(site)}
+    prontas = trilhas(site)
+    dados_mapa = mapa(site)
+    todas = colecoes(site)
+    contagem: dict[str, set[str]] = {}
+    for f in _com_caminhos(site):
+        contagem.setdefault(f.meta.get("colecao") or "", set()).add(f.meta["id"])
+    filtro = [{**c, "n": len(contagem[nome])} for nome, c in todas.items() if nome in contagem]
     return renderizar(
         site,
         "trilha.html",
@@ -241,11 +286,12 @@ def html_trilha(site: Site, pagina: Conteudo) -> str:
         titulo=pagina.meta["titulo"],
         descricao=str(pagina.meta.get("descricao") or pagina.meta.get("lead") or ""),
         lead=citar(pagina.meta.get("lead", ""), ids, "lead"),
-        ciclo=_ciclo_legado(site),
-        trilhas=trilhas(site),
-        mapa=[{**e, "marcos": e["saida"]["marcos"]} for e in mapa(site)],  # legado até a V5
-        colecoes=[c for nome, c in colecoes(site).items() if nome in usadas],
-        corpo=corpo_da_pagina(pagina, ids),
+        ciclo={**ciclo(site), "trilhas": _camada(site, prontas)},
+        trilhas=prontas,
+        mapa=dados_mapa,
+        colecoes=filtro,
+        rotulos={nome: c["rotulo"] for nome, c in todas.items()},
+        atritos=_atritos(corpo_da_pagina(pagina, ids)),
         referencias=site.catalogo.referencias_de(pagina),
     )
 
@@ -254,21 +300,43 @@ def md_trilha(site: Site, pagina: Conteudo) -> str:
     from portal.gerador.texto_md import juntar, md_lista_referencias
 
     partes = [str(pagina.meta.get("lead", ""))]
+    dados = ciclo(site)
+    portoes = []
+    for e in dados["etapas"]:
+        marcos = e["portao"]["marcos"]
+        if marcos:
+            lista = "; ".join(f"{m['id']} {m['rotulo']} ({m['forca_rotulo']})" for m in marcos)
+            portoes.append(f"- Para sair de {e['etapa']}: {lista}.")
+        else:
+            portoes.append(f"- Para sair de {e['etapa']}: ainda sem marco com mecanismo.")
+    laco = dados["laco"]
+    portoes.append(
+        f"- {laco['etapa']}: o laço, sem portão; volta para {dados['etapas'][0]['etapa']}."
+    )
+    partes.append("## O ciclo\n\n" + "\n".join(portoes))
     for e in mapa(site):
         linhas = [f"## {e['etapa']}", ""]
-        linhas += [f"- Marco {m['id']} ({m['forca']}): {m['titulo']}" for m in e["saida"]["marcos"]]
+        saida = e["saida"]
+        linhas += [f"- {m['id']} {m['rotulo']} ({m['forca_rotulo']})" for m in saida["marcos"]]
+        if saida["total"] > len(saida["marcos"]):
+            linhas.append(f"- e mais {saida['total'] - len(saida['marcos'])} na espinha")
         for p in e["passos"]:
             linhas += ["", f"### {p['titulo']}", ""]
             linhas += [
-                f"- {c['titulo']} ({c['colecao']}, {c['status']}): {c['bom_quando']}"
+                f"- {c['titulo']} ({', '.join(x for x in (c['colecao'], c['status']) if x)}"
+                f"{', complemento' if c['papel'] == 'complemento' else ''}): {c['bom_quando']}"
                 for c in p["caminhos"]
-            ] or ["- Ainda não há caminho para este passo."]
+            ] or ["- Ainda não há caminho curado para este passo."]
         partes.append("\n".join(linhas))
     blocos = ["## Trilhas prontas"]
     for t in trilhas(site):
-        seq = " → ".join(f"{i['ferramenta']} ({i['etapa']} · {i['passo']})" for i in t["itens"])
+        grupos = "\n".join(
+            f"- {g['etapa']}: "
+            + "; ".join(f"{i['ferramenta']} ({', '.join(i['passos'])})" for i in g["itens"])
+            for g in t["grupos"]
+        )
         blocos.append(
-            f"### {t['titulo']} ({t['status']})\n\n{seq}\n\n"
+            f"### {t['titulo']} ({t['status']})\n\n{grupos}\n\n"
             f"Bom quando {t['bom_quando']}\n\nCuidado: {t['cuidado']}"
         )
     partes.append("\n\n".join(blocos))

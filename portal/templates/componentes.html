@@ -251,26 +251,111 @@
 {% endif %}
 {%- endmacro %}
 
-{# O ciclo da trilha (spec da trilha, R8 e R11): três etapas em linha e o laço Aprender. #}
+{# Um marco no chip de força do tema: ID, rótulo curto e a força por extenso. #}
+{% macro marco(m, raiz="") -%}
+<a class="ef {{ m.forca }}" href="{{ raiz }}{{ m.href }}" title="{{ m.titulo }}"><span class="ciclo-id">{{ m.id }}</span>{{ m.rotulo }}<span class="ciclo-f">{{ m.forca_rotulo }}</span></a>
+{%- endmacro %}
+
+{# Os passos de uma etapa no ciclo. Cada `li` traz o passo (`momento/passo`) e, por trilha que o
+   cobre, `data-skill-<trilha>` com o nome do caminho; o trilha.js liga a camada. #}
+{% macro _passos_do_ciclo(e, trilhas) -%}
+<ol class="ciclo-passos">
+{% for p in e.passos %}{% set chave = e.slug ~ "/" ~ p.slug %}
+  <li data-passo="{{ chave }}"{% for t in trilhas %}{% if chave in t.skills %} data-skill-{{ t.id }}="{{ t.skills[chave] }}"{% endif %}{% endfor %}><span class="ciclo-pt" aria-hidden="true"></span><span><span class="ciclo-nm">{{ p.titulo }}</span><span class="ciclo-sk"></span></span></li>
+{% endfor %}
+</ol>
+{%- endmacro %}
+
+{# O ciclo da trilha (delta v3, R8'; mockup trilha-v3.html): etapas em coluna com o portão de
+   saída na cor da força, o laço embaixo e a legenda. A escolha de trilha e a linha que atravessa
+   os passos cobertos só aparecem com script. Com `{% call %}`, o conteúdo entra no fim da figura
+   (a tabela da página). `compacto=True` é a forma antiga da Início, até a V6. #}
 {% macro ciclo(dados, raiz="", compacto=False) -%}
-<div class="ciclo-trilha{% if compacto %} ciclo-compacto{% endif %}" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
+{% if compacto %}{{ _ciclo_legado(dados, raiz) }}{% else %}
+{% set trilhas = dados.get("trilhas") or [] %}
+<figure class="ciclo-mapa" id="mapa">
+{% if trilhas %}
+  <div class="ciclo-cab" data-tr-js hidden>
+    <span class="ciclo-rot" id="ciclo-rot-trilha">Ver uma trilha pronta no ciclo:</span>
+    <div class="ciclo-escolha" role="group" aria-labelledby="ciclo-rot-trilha">
+{% for t in trilhas %}
+      <button type="button" data-trilha="{{ t.id }}" data-passos="{{ t.passos }}" data-resumo="{{ t.resumo }}" aria-pressed="false" hidden>{{ t.titulo }}</button>
+{% endfor %}
+      <button type="button" data-trilha="" aria-pressed="true" hidden>Nenhuma</button>
+    </div>
+    <span class="ciclo-resumo" aria-live="polite"></span>
+  </div>
+{% endif %}
+  <div class="ciclo-grade" id="ciclo" style="--etapas: {{ dados.etapas | length }}">
+{% for e in dados.etapas %}
+    <div class="ciclo-col" data-etapa="{{ e.slug }}">
+      <h3>{{ e.etapa }}</h3>
+      {{ _passos_do_ciclo(e, trilhas) }}
+    </div>
+    <div class="ciclo-portao {{ e.portao.forca or 'sem' }}">
+      <span class="ciclo-barra" aria-hidden="true"></span>
+      <h4>Para sair de {{ e.etapa }}</h4>
+      <div class="ciclo-marcos">
+{% for m in e.portao.marcos %}
+        {{ marco(m, raiz) }}
+{% else %}
+        <p class="ciclo-vazio">Ainda sem marco com mecanismo. É o backlog desta etapa.</p>
+{% endfor %}
+      </div>
+{% if e.portao.marcos and e.portao.mais %}
+      <a class="ciclo-mais" href="#etapa-{{ e.slug }}">e mais {{ e.portao.mais }} prática{{ "s" if e.portao.mais != 1 }}</a>
+{% elif not e.portao.marcos and e.portao.total %}
+      <a class="ciclo-mais" href="#etapa-{{ e.slug }}">ver as {{ e.portao.total }} prática{{ "s" if e.portao.total != 1 }}</a>
+{% endif %}
+    </div>
+{% endfor %}
+{% set laco = dados.laco %}
+    <div class="ciclo-laco" data-etapa="{{ laco.slug }}">
+      <div class="ciclo-laco-cab"><h3>{{ laco.etapa }}</h3><p>Volta para {{ dados.etapas[0].etapa }}.{% if laco.marcos | rejectattr("mecanismo") | list | length == laco.marcos | length %} Sem portão: tudo aqui só orienta.{% else %} Sem portão.{% endif %}</p></div>
+      {{ _passos_do_ciclo(laco, trilhas) }}
+{% if laco.marcos %}
+      <div class="ciclo-linha-marcos">
+{% for m in laco.marcos %}
+        {{ marco(m, raiz) }}
+{% endfor %}
+      </div>
+{% endif %}
+    </div>
+  </div>
+  <figcaption class="ciclo-pe">
+    <span>Força do marco:</span>
+{% for f in FORCAS %}
+    <span class="ef {{ f.slug }}"><span class="ciclo-id">ID</span>{{ f.rotulo }}</span>
+{% endfor %}
+    <span>Portão tracejado: a etapa ainda não tem marco com mecanismo.</span>
+  </figcaption>
+{% if caller is defined %}{{ caller() }}{% endif %}
+</figure>
+{% endif %}
+{%- endmacro %}
+
+{# O ciclo compacto (delta v3, R11'; o `.mini` do mockup): as etapas com os IDs dos portões e a
+   barra do portão na cor da força, mais o laço. Sem passos nem trilhas. #}
+{% macro ciclo_compacto(dados, raiz="") -%}
+<div class="ciclo-mini" style="--etapas: {{ dados.etapas | length }}" role="img" aria-label="Ciclo: {% for e in dados.etapas %}{{ e.etapa }}, {% if e.portao.marcos %}com portão de {% for m in e.portao.marcos %}{{ m.id }} ({{ m.forca_rotulo }}){% if not loop.last %}, {% endif %}{% endfor %}{% else %}ainda sem marco com mecanismo{% endif %}; {% endfor %}e o laço {{ dados.laco.etapa }}.">
+{% for e in dados.etapas %}
+  <div class="ciclo-mini-col"><b>{{ e.etapa }}</b><div class="ciclo-mini-ids">{% for m in e.portao.marcos %}<span class="ef {{ m.forca }}" title="{{ m.rotulo }} ({{ m.forca_rotulo }})"><span class="ciclo-id">{{ m.id }}</span></span>{% else %}<span class="ciclo-mini-nada">sem marco com mecanismo</span>{% endfor %}</div></div>
+  <div class="ciclo-mini-portao {{ e.portao.forca or 'sem' }}" aria-hidden="true"></div>
+{% endfor %}
+</div>
+<p class="ciclo-mini-laco">{{ dados.laco.etapa }} <span>volta para {{ dados.etapas[0].etapa }}: o que a entrega ensina vira regra</span></p>
+{%- endmacro %}
+
+{# Legado da Início (removido na V6): o ciclo compacto antigo, no formato `caixas`. #}
+{% macro _ciclo_legado(dados, raiz="") -%}
+<div class="ciclo-trilha ciclo-compacto" role="group" aria-label="Ciclo: {% for c in dados.caixas %}{{ c.etapa }}, {% endfor %}e o laço {{ dados.laco.etapa }}">
   <ol class="ciclo-etapas">
 {% for c in dados.caixas %}
     <li class="ciclo-caixa">
       <h3 class="ciclo-etapa">{{ c.etapa }}</h3>
-{% if not compacto %}
-      <ul class="ciclo-marcos">
-{% for m in c.marcos %}
-        <li class="ciclo-marco{% if not m.mecanismo %} orienta{% endif %}"><a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span> {{ m.titulo }}</a></li>
-{% endfor %}
-      </ul>
-{% if c.sem_mecanismo %}
-      <p class="ciclo-nota">Sem marco com mecanismo ainda. <a href="{{ raiz }}espinha.html#momento-{{ c.momento }}">Ver na espinha</a></p>
-{% endif %}
-{% endif %}
     </li>
 {% endfor %}
   </ol>
-  <p class="ciclo-laco"><b>{{ dados.laco.etapa }}</b>{% if not compacto %}: {% for m in dados.laco.marcos %}<a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span></a>{% if not loop.last %} · {% endif %}{% endfor %}{% endif %} <span aria-hidden="true">↺</span></p>
+  <p class="ciclo-laco"><b>{{ dados.laco.etapa }}</b> <span aria-hidden="true">↺</span></p>
 </div>
 {%- endmacro %}

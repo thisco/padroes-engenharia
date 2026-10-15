@@ -1,69 +1,161 @@
 {% extends "base.html" %}
 {% import "componentes.html" as c %}
+{# Página da trilha (delta v3, R7' a R9'), portada de docs/specs/2026-10-14-trilha-sdd-mockups/trilha-v3.html.
+   Sem script, tudo aparece: os cartões ficam visíveis, a camada de trilha fica desligada e os
+   botões nascem com `hidden`. #}
 {% block conteudo %}
-<div class="topo">
+<header class="tr-topo">
   <h1>{{ titulo }}</h1>
-  <div><p>{{ lead }}</p>
-    <p class="tr-legenda"><span class="tr-amostra marco"></span>marco: prática do portal; sólido quando tem mecanismo
-      <span class="tr-amostra caminho"></span>caminho: skill que ajuda a chegar ao marco</p></div>
-</div>
-{{ c.ciclo(ciclo, raiz) }}
+  <p class="tr-lead">{{ lead }}</p>
+  <ol class="tr-como-usar">
+    <li>Veja no ciclo o que cada etapa exige na saída: são os portões.</li>
 {% if trilhas %}
-<section aria-label="Trilhas prontas">
-  <h2>Trilhas prontas</h2>
-  <div class="tr-trilhas">
+    <li>Se quiser um ponto de partida, escolha uma <a href="#t-trilhas">trilha pronta</a>.</li>
+{% endif %}
+    <li>Ou monte a sua, passo a passo, <a href="#t-etapas">nas etapas</a>.</li>
+  </ol>
+</header>
+
+<section class="tr-secao" aria-labelledby="t-ciclo">
+  <h2 id="t-ciclo">O ciclo</h2>
+  <p class="tr-intro">Cada etapa termina num portão. O que está no portão precisa estar pronto, qualquer que seja o caminho. A cor diz a força: azul bloqueia, âmbar avisa, tracejado só orienta.</p>
+{% call c.ciclo(ciclo, raiz) %}
+  <details class="ciclo-tabela">
+    <summary>Ver o ciclo como tabela</summary>
+    <div class="rola">
+      <table>
+        <thead><tr><th scope="col">Passo</th>{% for t in ciclo.trilhas %}<th scope="col">{{ t.titulo }}</th>{% endfor %}</tr></thead>
+        <tbody>
+{% for e in ciclo.etapas + [ciclo.laco] %}
+{% set fortes = (e.portao.marcos if e.portao is defined else e.marcos | selectattr("mecanismo") | list) %}
+          <tr class="ciclo-cab-etapa"><th scope="rowgroup" colspan="{{ ciclo.trilhas | length + 1 }}">{{ e.etapa }}.{% if fortes %} Portão: {% for m in fortes %}{{ m.id }} {{ m.rotulo }} ({{ m.forca_rotulo }}){% if not loop.last %}; {% endif %}{% endfor %}{% else %} Sem portão com mecanismo.{% endif %}</th></tr>
+{% for p in e.passos %}{% set chave = e.slug ~ "/" ~ p.slug %}
+          <tr><th scope="row">{{ p.titulo }}</th>{% for t in ciclo.trilhas %}<td>{% if chave in t.skills %}<span class="mono">{{ t.skills[chave] }}</span>{% else %}—{% endif %}</td>{% endfor %}</tr>
+{% endfor %}
+{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+{% endcall %}
+</section>
+
+<section class="tr-secao" aria-labelledby="t-trilhas">
+  <h2 id="t-trilhas">Trilhas prontas</h2>
+{% if trilhas %}
+  <p class="tr-intro">Combinações que já funcionam, para quem quer começar por uma, e a montagem livre para quem já sabe o que quer.</p>
+{% else %}
+  <p class="tr-intro">Ainda não há trilha pronta curada. Monte a sua com os caminhos de cada etapa.</p>
+{% endif %}
+  <div class="tr-grade" id="trilhas">
 {% for t in trilhas %}
     <article class="tr-trilha" id="trilha-{{ t.id }}">
-      <p class="mono pequeno">{{ t.origem }} · <span class="st {{ t.status }}">{{ t.status }}</span></p>
-      <h3>{{ t.titulo }}</h3>
-      <ol class="tr-seq">{% for i in t.itens %}<li><span class="pequeno">{{ i.etapa }} · {{ i.passo }}</span> {% if i.href %}<a href="{{ raiz }}{{ i.href }}">{{ i.ferramenta }}</a>{% else %}{{ i.ferramenta }}{% endif %}</li>{% endfor %}</ol>
-      <p><b>Bom quando</b> {{ t.bom_quando }}</p>
-      <p><b>Cuidado</b> {{ t.cuidado }}</p>
-{% for caso in t.casos %}
-      <p><a href="{{ raiz }}{{ caso.href }}">Caso: {{ caso.titulo }}</a></p>
+      <span class="tr-origem">{{ t.origem }}</span>
+      <h3>{{ t.titulo }} <span class="st {{ t.status }}">{{ t.status }}</span></h3>
+      <ul class="tr-paradas">
+{% for g in t.grupos %}
+        <li><b>{{ g.etapa }}</b>{% for i in g.itens %}{% if not loop.first %}<br>{% endif %}{% if i.href %}<a class="tr-skill" href="{{ raiz }}{{ i.href }}">{{ i.ferramenta }}</a>{% else %}<span class="tr-skill">{{ i.ferramenta }}</span>{% endif %} <span class="tr-onde">({{ i.passos | map("lower") | join(", ") }})</span>{% endfor %}</li>
 {% endfor %}
+      </ul>
+      <dl>
+        <dt>Bom quando</dt><dd>{{ t.bom_quando }}</dd>
+        <dt>Cuidado</dt><dd>{{ t.cuidado }}</dd>
+{% if t.casos %}
+        <dt>Evidência</dt><dd>{% for caso in t.casos %}<a href="{{ raiz }}{{ caso.href }}">Caso: {{ caso.titulo }}</a>{% if not loop.last %}<br>{% endif %}{% endfor %}</dd>
+{% endif %}
+      </dl>
+      <button type="button" class="tr-ver-ciclo" data-trilha="{{ t.id }}" hidden>Ver no ciclo</button>
     </article>
 {% endfor %}
+    <article class="tr-trilha tr-sua">
+      <span class="tr-origem">o time escolhe</span>
+      <h3>Monte a sua</h3>
+      <p>Escolha um caminho por passo nas etapas abaixo. Os portões continuam valendo: eles conferem o resultado, não a skill.</p>
+      <dl><dt>Uma regra</dt><dd>uma skill por passo no mesmo projeto. Antes de combinar coleções, veja <a href="#atritos">o que a curadoria resolve</a>.</dd></dl>
+    </article>
   </div>
 </section>
-{% endif %}
-<section aria-label="Mapa por etapa">
-  <h2>Marcos e caminhos por etapa</h2>
+
+<section class="tr-secao" aria-labelledby="t-etapas">
+  <h2 id="t-etapas">Por etapa: o que exige e por onde chegar</h2>
 {% if colecoes %}
-  <div class="tr-filtros" role="group" aria-label="Filtrar por coleção">
+  <div class="tr-filtro" role="group" aria-label="Filtrar caminhos" data-tr-js hidden>
+    <span>Mostrar caminhos de</span>
 {% for col in colecoes %}
-    <button type="button" class="tr-chip" data-colecao-filtro="{{ col.nome }}" aria-pressed="true" hidden>{{ col.rotulo }}</button>
+    <button type="button" data-colecao-filtro="{{ col.nome }}" aria-pressed="true" hidden>{{ col.rotulo }}<span class="tr-q">{{ col.n }}</span></button>
 {% endfor %}
+    <span class="tr-sep" aria-hidden="true"></span>
+    <button type="button" data-complementos aria-pressed="true" hidden>Mostrar complementos</button>
   </div>
 {% endif %}
+  <div id="etapas">
 {% for e in mapa %}
-  <div class="tr-etapa" id="etapa-{{ e.slug }}">
-    <h3>{{ e.etapa }} <span class="pequeno">{{ e.titulo }}</span></h3>
-    <ul class="tr-marcos">{% for m in e.marcos %}<li class="tr-marco{% if not m.mecanismo %} orienta{% endif %}"><a href="{{ raiz }}{{ m.href }}"><span class="mono">{{ m.id }}</span> {{ m.titulo }}</a> <span class="mono pequeno">{{ m.forca }}</span></li>{% endfor %}</ul>
-{% for p in e.passos %}
-    <div class="tr-passo">
-      <div><b>{{ p.titulo }}</b><p class="pequeno">{{ p.desc }}</p></div>
-      <div class="tr-opcoes">
-{% for op in p.caminhos %}
-        <article class="tr-op{% if op.papel == 'complemento' %} complemento{% endif %}" data-colecao="{{ op.colecao }}">
-          <p><a href="{{ raiz }}{{ op.href }}" class="mono">{{ op.titulo }}</a> <span class="mono pequeno">{{ op.colecao }} · {{ op.status }}{% if op.papel == 'complemento' %} · complemento{% endif %}</span></p>
-          <p>Bom quando {{ op.bom_quando }}</p>
-{% if op.cuidado %}
-          <p class="tr-cuidado">Cuidado: {{ op.cuidado }}</p>
+    <div class="tr-etapa" id="etapa-{{ e.slug }}">
+      <div class="tr-etapa-cab"><h3>{{ e.etapa }}</h3><p>{{ e.titulo }}</p></div>
+      <div class="tr-saida">
+        <h4>{% if loop.last %}O que fica desta entrega{% else %}Para sair desta etapa{% endif %}</h4>
+{% if e.saida.marcos %}
+        <div class="tr-saida-marcos">{% for m in e.saida.marcos %}{{ c.marco(m, raiz) }}{% endfor %}</div>
+        <a class="tr-todas" href="{{ raiz }}espinha.html#momento-{{ e.slug }}">Ver as {{ e.saida.total }} prática{{ "s" if e.saida.total != 1 }} de {{ e.etapa }} na espinha</a>
+{% else %}
+        <p class="tr-vazio-passo">Ainda sem prática nesta etapa.</p>
 {% endif %}
-        </article>
-{% endfor %}
-        <p class="tr-vazio"{% if p.caminhos %} hidden{% endif %}>Ainda não há caminho para este passo.</p>
       </div>
+{% for p in e.passos %}
+      <div class="tr-passo">
+        <div class="tr-passo-nome"><b>{{ p.titulo }}</b><span>{{ p.desc }}</span></div>
+        <div class="tr-caminhos">
+{% for op in p.caminhos %}
+{% if op.compacto %}
+          <article class="tr-caminho tr-compacto" data-colecao="{{ op.colecao }}" data-papel="{{ op.papel }}">
+            <div class="tr-caminho-cab"><a href="{{ raiz }}{{ op.href }}">{{ op.titulo }}</a><span class="st {{ op.status }}">{{ op.status }}</span></div>
+            <p>Também conduz este passo. Detalhes no primeiro cartão.</p>
+          </article>
+{% else %}
+          <article class="tr-caminho{% if op.papel == 'complemento' %} tr-complemento{% endif %}" data-colecao="{{ op.colecao }}" data-papel="{{ op.papel }}">
+            <div class="tr-caminho-cab"><a href="{{ raiz }}{{ op.href }}">{{ op.titulo }}</a><span class="st {{ op.status }}">{{ op.status }}</span></div>
+{% set de = [rotulos.get(op.colecao, op.colecao)] if op.colecao else [] %}
+{% if op.papel == 'complemento' %}{% set de = de + ["complemento"] %}{% endif %}
+{% if de %}
+            <span class="tr-de">{{ de | join(", ") }}</span>
+{% endif %}
+            <p class="tr-bom">Bom quando {{ op.bom_quando }}</p>
+{% if op.cuidado %}
+            <p class="tr-cuidado">{{ op.cuidado }}</p>
+{% endif %}
+          </article>
+{% endif %}
+{% endfor %}
+{% if p.caminhos %}
+          <p class="tr-vazio-passo" data-vazio="filtro" hidden>Os caminhos deste passo estão ocultos pelo filtro.</p>
+{% else %}
+          <p class="tr-vazio-passo" data-vazio="nada">Ainda não há caminho curado para este passo.</p>
+{% endif %}
+        </div>
+      </div>
+{% endfor %}
     </div>
 {% endfor %}
   </div>
-{% endfor %}
 </section>
-{% if corpo %}
-<section aria-label="Atritos"><div class="texto">
-{{ corpo }}
-</div></section>
+
+<section class="tr-secao" id="atritos" aria-label="O que a curadoria resolve antes de adotar">
+  <div class="tr-atritos-cab">
+{{ atritos.cab }}
+  </div>
+{% if atritos.itens %}
+  <div class="tr-atritos">
+{% for a in atritos.itens %}
+    <div class="tr-atrito">{{ a }}</div>
+{% endfor %}
+  </div>
+{% endif %}
+</section>
+{% if referencias %}
+<section class="tr-secao" aria-labelledby="t-referencias">
+  <h2 id="t-referencias">Referências</h2>
+  {{ c.lista_referencias(referencias, raiz) }}
+</section>
 {% endif %}
 <script src="{{ raiz }}tema/trilha.js" defer></script>
 {% endblock %}
