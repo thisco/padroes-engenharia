@@ -386,7 +386,7 @@ const APRENDER = { slug: "aprender", nome: "Aprender", desc: "O laço: o que est
   passos: [["retro","Retro","melhorar o ambiente, não o código"],["instrucoes","Cuidar das instruções","skills, AGENTS.md, steering"],["continuar","Continuar depois","entre sessões"]],
   marcos: [["P1-11","spec arquivada e destilada","orienta"],["QLD-02","bug vira regra","orienta"],["CICD-03","changelog e tag","orienta"]] };
 const ORDEM = ["bloqueia","pede-aprovacao","avisa","orienta"];
-const COLECOES = { "superpowers": "obra/superpowers", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
+const COLECOES = { "superpowers": "obra/superpowers", "agent-skills": "addyosmani/agent-skills", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
 
 const SKILLS = [
   ["sp-brainstorming","brainstorming","superpowers","adotar","caminho",[["especificar","entrevistar"],["especificar","escrever-spec"]],"você quer classificar o pedido antes (spike, limitado, arquitetural), perto dos nossos tiers.","conduz: no fim só aceita writing-plans como próximo passo."],
@@ -403,7 +403,17 @@ const SKILLS = [
   ["sp-dispatching-parallel-agents","dispatching-parallel-agents","superpowers","adotar","complemento",[["codar","executar"]],"há tarefas sem estado compartilhado para rodar em paralelo.",""],
   ["sp-test-driven-development","test-driven-development","superpowers","adotar","caminho",[["codar","tdd"]],"o time precisa de rigidez: código escrito antes do teste é apagado.","não instale junto de outra skill de TDD."],
   ["mp-tdd","tdd","mattpocock-skills","avaliar","caminho",[["codar","tdd"]],"você quer pouco texto e testes em seams combinadas, uma fatia vertical por vez.","refatorar fica fora do laço."],
-  ["sp-systematic-debugging","systematic-debugging","superpowers","adotar","caminho",[["codar","bug"]],"você quer a causa raiz antes de propor a correção.",""],
+  ["sp-systematic-debugging","systematic-debugging","superpowers","adotar","caminho",[["especificar","investigar"],["codar","bug"]],"você quer a causa raiz antes de propor a correção ou de decidir.",""],
+  ["ao-debugging-and-error-recovery","debugging-and-error-recovery","agent-skills","adotar","caminho",[["especificar","investigar"],["codar","bug"]],"um teste falhou, o build quebrou ou algo que funcionava parou: causa raiz antes da correção.",""],
+  ["ao-source-driven-development","source-driven-development","agent-skills","adotar","caminho",[["especificar","investigar"]],"a decisão depende de biblioteca ou API: fundamente na documentação oficial, com a fonte citada.",""],
+  ["ao-security-and-hardening","security-and-hardening","agent-skills","adotar","caminho",[["especificar","seguranca"]],"a mudança mexe com entrada do usuário, autenticação, armazenamento de dado ou integração externa.","longa; use junto do threat-model da SEG-01."],
+  ["ao-frontend-ui-engineering","frontend-ui-engineering","agent-skills","adotar","caminho",[["codar","dominio"]],"há tela nova ou alterada: componentes, layout, acessibilidade (faixa Frontend e UX).",""],
+  ["ao-api-and-interface-design","api-and-interface-design","agent-skills","adotar","caminho",[["codar","dominio"]],"a mudança cria ou altera um contrato: endpoint, tipo entre módulos (faixa Contratos de API).",""],
+  ["ao-deprecation-and-migration","deprecation-and-migration","agent-skills","adotar","caminho",[["codar","dominio"]],"algo vai ser removido ou migrado, inclusive schema em produção (faixa Dados e migrations).",""],
+  ["ao-ci-cd-and-automation","ci-cd-and-automation","agent-skills","adotar","caminho",[["codar","dominio"]],"a pipeline de build e deploy vai mudar (faixa CI/CD).",""],
+  ["ao-performance-optimization","performance-optimization","agent-skills","adotar","complemento",[["codar","dominio"]],"existe requisito de desempenho ou suspeita de regressão.",""],
+  ["ao-observability-and-instrumentation","observability-and-instrumentation","agent-skills","avaliar","complemento",[["codar","dominio"]],"a entrega vai para produção e precisa de log, métrica e alerta (faixa Observabilidade).","só existe na versão nova; não foi usada no caso."],
+  ["ao-context-engineering","context-engineering","agent-skills","adotar","caminho",[["aprender","continuar"]],"você vai retomar ou trocar de tarefa e precisa montar o contexto do agente.",""],
   ["sp-requesting-code-review","requesting-code-review","superpowers","adotar","caminho",[["revisar","revisar"]],"você quer um revisor independente por tarefa ou antes do merge.","um eixo só."],
   ["mp-code-review","code-review","mattpocock-skills","avaliar","caminho",[["revisar","revisar"]],"você quer dois eixos separados, padrões e spec, em paralelo.","o eixo de spec precisa sair com veredito por requisito (P1-09)."],
   ["sp-receiving-code-review","receiving-code-review","superpowers","adotar","caminho",[["revisar","responder"]],"chegou feedback questionável: verificar antes de aceitar.",""],
