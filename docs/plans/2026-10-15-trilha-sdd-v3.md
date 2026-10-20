@@ -747,21 +747,23 @@ Toda tarefa desta fase segue a skill `curadoria-de-pratica`. As fontes são lida
 
 ### Tarefa C1: Reconferir a tarefa 12 na versão nova e ajustar a precisão
 
-- [ ] **Referências do superpowers:** troque as 4 referências `superpowers-*` da tarefa 12 para o
+- [x] **Referências do superpowers:** troque as 4 referências `superpowers-*` da tarefa 12 para o
   commit `bb92a77` (7.0.0), com `versao: "7.0.0"`, e reconfira cada afirmação na 7.0.0. O
   `brainstorming` foi reescrito: confira se ele ainda grava o desenho em `docs/superpowers/specs/`
   e em qual caminho. Ajuste o texto ao que a fonte sustenta.
-- [ ] **Precisão:** aplique os seis ajustes da revisão da tarefa 12:
+- [x] **Precisão:** aplique os seis ajustes da revisão da tarefa 12:
   - a `code-review` busca a spec em quatro origens;
   - o `brainstorming` só grava a spec no caminho arquitetural (reconferido na 7.0.0);
   - "PR para a origem" fica restrito a skill nova;
   - o idioma do superpowers ganha `[ref:]`;
   - as versões e o `revisar_ate` ganham `[ref:]`;
   - o registro diz que os ids de repositório com nome de pessoa são identificadores de fonte.
-- [ ] **Título da página:** o `titulo` de `paginas/trilha.md` passa a ser "Uma trilha, não um
+- [x] **Título da página:** o `titulo` de `paginas/trilha.md` passa a ser "Uma trilha, não um
   trilho", e o `lead` fica como está.
-- [ ] **Verificação:** atualize `verificacoes/trilha.yaml`. `validar.py` e `gerar.py` saem com 0.
+- [x] **Verificação:** atualize `verificacoes/trilha.yaml`. `validar.py` e `gerar.py` saem com 0.
   Faça o commit `docs(paginas): trilha reconferida no superpowers 7.0.0`.
+
+Evidência (2026-10-20): fontes lidas no raw dos commits fixados (`bb92a77` e `49dd158`); 17 afirmações, 16 confirmadas e 1 parcial com nota (a regra de revalidação é da curadoria, sem página publicada); `validar.py` e `gerar.py` com 0; 919 passed; ruff limpo.
 
 ### Tarefa C2: Caso de origem ampliado (R14, R14')
 

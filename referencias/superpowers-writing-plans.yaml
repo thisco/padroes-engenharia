@@ -1,11 +1,11 @@
 id: superpowers-writing-plans
 titulo: "superpowers: skill writing-plans"
 organizacao: obra/superpowers
-url: https://github.com/obra/superpowers/blob/5bf4e78011075bcfc0dc295f0724994cd123ee71/skills/writing-plans/SKILL.md
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/writing-plans/SKILL.md
 tipo: comunidade
-versao: "6.4.1"
-verificado_em: 2026-10-14
+versao: "7.0.0"
+verificado_em: 2026-10-20
 verificacao: V
-localizacao: "cabeçalho: local onde o plano é salvo"
+localizacao: "cabeçalho: 'Save plans to' e 'User preferences for plan location override this default'"
 dominios: [construir-com-ia]
-notas: null
+notas: "Lida no raw do commit fixado em 2026-10-20."

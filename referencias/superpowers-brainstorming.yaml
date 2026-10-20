@@ -1,11 +1,11 @@
 id: superpowers-brainstorming
 titulo: "superpowers: skill brainstorming"
 organizacao: obra/superpowers
-url: https://github.com/obra/superpowers/blob/5bf4e78011075bcfc0dc295f0724994cd123ee71/skills/brainstorming/SKILL.md
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/brainstorming/SKILL.md
 tipo: comunidade
-versao: "6.4.1"
-verificado_em: 2026-10-14
+versao: "7.0.0"
+verificado_em: 2026-10-20
 verificacao: V
-localizacao: "seções 'Three Paths' e 'After the Design' (onde o documento de design é gravado)"
+localizacao: "seções 'Sizing the Work' (quem decide o tamanho) e 'The Written Design', item 'Where it goes' (onde o desenho é gravado e a preferência do usuário)"
 dominios: [construir-com-ia]
-notas: null
+notas: "Reescrita na 7.0.0 (RELEASE-NOTES v7.0.0): o caminho docs/superpowers/specs/ continua, agora só para o tamanho 'projeto com desenho escrito'. Lida no raw do commit fixado em 2026-10-20."

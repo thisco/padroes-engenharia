@@ -4,8 +4,8 @@ organizacao: mattpocock/skills
 url: https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/code-review/SKILL.md
 tipo: comunidade
 versao: "1.3.1"
-verificado_em: 2026-10-14
+verificado_em: 2026-10-20
 verificacao: V
-localizacao: "seções 'Process', passo 2 (Identify the spec source)"
+localizacao: "seção 'Process', passo 2 (Identify the spec source): quatro origens em ordem"
 dominios: [construir-com-ia]
-notas: null
+notas: "Reconferida no raw do commit fixado em 2026-10-20."
