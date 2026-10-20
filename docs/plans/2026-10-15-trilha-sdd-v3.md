@@ -732,10 +732,10 @@ Entrega: (R20)
 
 ### Checkpoint humano 3
 
-- [ ] Gerar uma prévia como na fase 2: o catálogo real, mais skills de exemplo enquanto a Fase 5
+- [x] Gerar uma prévia como na fase 2: o catálogo real, mais skills de exemplo enquanto a Fase 5
   não traz as reais. Tirar capturas de `trilha.html` e `index.html` em 1280 px e em 400 px, lado a
-  lado com `trilha-v3.html`. Colar a evidência aqui.
-- [ ] **PAUSA.** O dono confere o aceite visual antes da Fase 5.
+  lado com `trilha-v3.html`. Colar a evidência aqui (ver "Evidências").
+- [x] **PAUSA.** O dono confere o aceite visual antes da Fase 5. Aprovado em 2026-10-20 11:19.
 
 ---
 
