@@ -28,6 +28,27 @@ retirado, minor para conteúdo novo, patch para texto e links.
   núcleo por domínio, skills, roteamento, grafo do catálogo (`grafo/graph.json`) e `consultar.py`, que
   responde por ponteiros dentro de um orçamento de tokens sem nenhuma dependência.
 - DAD-01 declara gatilhos de harness, pre-commit e CI.
+- Página Trilha ("Uma trilha, não um trilho"): o ciclo por portões (Especificar, Codar, Revisar e o
+  laço Aprender), com os marcos de cada etapa coloridos pela legenda de força do portal, os passos de
+  cada etapa com os caminhos (skills e ferramentas) e as trilhas prontas; a página também sai em
+  Markdown.
+- Ciclo compacto na Início, com as três portas (projeto novo, projeto existente e no meio de uma
+  mudança) e "Trilha" no primeiro nível da navegação.
+- Tipo trilha (`trilhas/<slug>.yml`) e as três trilhas prontas: De origem e Guiada em `adotar`,
+  Enxuta em `avaliar`.
+- 37 ferramentas novas com caminhos na trilha: 13 do superpowers 7.0.0, 14 do agent-skills 0.6.13,
+  a `frontend-design` e o Playwright MCP 0.0.83, e 8 do mattpocock/skills 1.3.1; a `sdd-lifecycle`
+  convertida em skill, com dez caminhos.
+- Campo `marco` na prática, o rótulo curto do ciclo, em 26 práticas.
+- Caso "Origem do modelo", sanitizado, com as doze fontes publicadas em
+  `casos/fontes/origem-do-modelo/` e o relato do dono.
+- Cinco coleções externas fixadas em `componentes.yml`: superpowers, mattpocock-skills,
+  agent-skills, claude-plugins-official e playwright-mcp.
+- Regras `R-PASSO`, `R-CAMINHO`, `R-COLECAO`, `R-CASO-REF`, `R-ADOTAR-SKILL`, `R-TRILHA` e
+  `R-CASO-ORIGEM`; a referência do tipo `portal` aceita fonte de caso em `casos/fontes/`.
+- Cinco termos no glossário: etapa, passo, marco, caminho e trilha pronta.
+- ADRs 0010 (trilha, não trilho; sempre a versão mais nova) e 0011 (o caso de origem volta,
+  sanitizado; substitui em parte a 0006).
 
 ### Alterado
 
@@ -43,6 +64,18 @@ retirado, minor para conteúdo novo, patch para texto e links.
 - Escopo do GEPA restrito a quatro alvos (ADR 0008): roteamento do MCP (`buscar_praticas`),
   descrições de skills e de ferramentas do MCP, detecção de perfil do CLI e mensagens das regras.
   Os prompts das práticas ficam só medidos a cada release, sem otimização por padrão.
+- Espinha: cada momento ganha a etapa (Especificar, Codar, Revisar, Aprender) e os passos; "etapa"
+  nomeia o eixo no portal inteiro, e a numeração "fase N" sai das páginas.
+- Ferramenta: categoria `skill`, `colecao`, `caminhos` e `casos`; qualquer categoria pode ter
+  caminhos, com a coleção fixada.
+- Caso: `origem` aceita material publicado no repositório (`{material: casos/fontes/<slug>/}`).
+- Catálogo, grafo e `llms.txt` incluem trilhas, passos e caminhos.
+- `sdd-lifecycle` deixa a categoria `sdd` e vira o caminho da trilha Guiada.
+- `componentes.yml`: o agent-skills fica registrado na 0.6.13, a tag do commit fixado.
+- Lead da Início reescrito a partir da tese; as portas levam aos dois guias e à trilha.
+- Skill `curadoria-de-pratica`: coleção externa é fixada na versão mais nova na data da curadoria,
+  e o `limites` da ferramenta diz a versão da evidência.
+- Referências do superpowers reconferidas na 7.0.0.
 
 ## [1.1.0] - 2026-10-07
 
