@@ -1,5 +1,5 @@
 conteudo: ferramenta-sdd-lifecycle
-verificado_em: 2026-10-04
+verificado_em: 2026-10-21
 verificador: agente-curadoria
 afirmacoes:
   - texto: "no projeto gerado pelo starter, a skill já vem em skills/sdd-lifecycle/"
@@ -34,6 +34,50 @@ afirmacoes:
     localizacao: árvore da tag v3.0.0 (commit 5f6e9ad879f7abd11267547fb3f527e876b60140)
     resultado: confirmada
     nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown.
+  - texto: "Fase 1: explorar o código antes, refinar uma pergunta por vez, marcar dúvida aberta com [ESCLARECER] e redigir a spec como delta com R<n> e critério"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 1 — Especificação (Tier 2)'"
+    resultado: confirmada
+  - texto: "Fase 3: a spec só vai ao checkpoint com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 3 — Checkpoint humano da spec (Tier 2)'"
+    resultado: confirmada
+  - texto: "Fase 2: mudança destrutiva bloqueia o fluxo, exige ADR e aprovação humana, e as três perguntas de impacto arquitetural são respondidas sobre a spec, antes de plano ou código"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 2 — Gate arquitetural (Tier 2) — GATEKEEPER'"
+    resultado: confirmada
+  - texto: "Fase 4: plano leve no Tier 1 e completo no Tier 2, com checkboxes como único rastreamento, (R<n>) por tarefa, checkpoints humanos, CHANGELOG como tarefa e seção Impacto Arquitetural"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 4 — Plano (Tier 1 e 2)'"
+    resultado: confirmada
+  - texto: "Fase 5: branch limpa a partir da main, feat/ ou fix/ com data, por worktree quando a plataforma suporta"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 5 — Isolamento (Tier 1 e 2)'"
+    resultado: confirmada
+  - texto: "Fase 6: vermelho visto falhar, verde mínimo, refatorar com a suíte verde; teste cita o R<n> no Tier 2; sem suíte, parar e avisar; bloqueio aborta e volta à Fase 1 sem contorno improvisado"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 6 — Implementação TDD (Tier 1 e 2)', ciclo e 'Strict fallback'"
+    resultado: confirmada
+  - texto: "Fase 7: suíte e linter rodados com a saída colada no plano; no Tier 2, sessão independente com modelo potente revisa contra a spec e registra uma linha por R<n> com veredito e evidência; crítico volta à Fase 6, arquitetural escala à Fase 1"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 7 — Verificação e revisão (Tier 1 e 2)'"
+    resultado: confirmada
+  - texto: "Fase 8: CHANGELOG e spec arquivada antes do merge, commits convencionais, PR em repositório compartilhado, destilação para steering, ADR ou memória, e limpeza da branch"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 8 — Encerramento e destilação (todos os tiers)', itens 1 a 5"
+    resultado: confirmada
+  - texto: "a retomada relê constituição e memória, acha a última tarefa marcada, confere o git log e o Status da spec, e retoma da primeira tarefa desmarcada; o gate da Fase 2 nunca se pula"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Retomada multi-sessão', passos 1 a 5"
+    resultado: confirmada
+  - texto: "a sequência de passos da trilha corresponde às fases 1, 2, 4, 5, 6, 7, 7, 8, 8 e à retomada"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, títulos das fases 1 a 8 e 'Retomada multi-sessão', conferidos na cópia local (PROCEDENCIA.md: commit 5f6e9ad, SHA-256 conferido pelo teste)"
+    resultado: confirmada
+  - texto: "os gates sobre a execução com outras coleções nasceram no projeto de origem e viraram depois o sdd-scaffold e a sdd-lifecycle"
+    ref: origem-do-modelo-relato
+    localizacao: "relato, último parágrafo"
+    resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente (2026-10-04) e conferente independente das transcrições (2026-10-05)
   data: 2026-10-05

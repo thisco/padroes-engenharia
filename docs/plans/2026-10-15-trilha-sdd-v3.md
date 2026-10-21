@@ -934,6 +934,19 @@ Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed; a página da 
 
 É a tarefa 16 do plano anterior, sem mudança.
 
+- [x] **Passo 1:** `categoria: skill`, `colecao: sdd-lifecycle`, `casos: [origem-do-modelo]` e dez
+  caminhos (`escrever-spec`, `decidir`, `planejar`, `isolar`, `tdd`, `revisar`, `evidencia`,
+  `pr-e-merge`, `retro`, `continuar`), cada "bom quando" citando a fase (1, 2, 4, 5, 6, 7, 7, 8, 8
+  e a retomada), lidos na cópia local `skills/sdd-lifecycle/SKILL.md` (PROCEDENCIA.md confere o
+  commit `5f6e9ad` e o SHA-256). O `limites` diz que os gates nasceram no projeto de origem
+  `[ref:origem-do-modelo-relato]`, o que sustenta o `adotar`.
+- [x] **Passo 2:** onze afirmações novas no registro (uma por fase, a correspondência fases → passos
+  e o relato); a referência `sdd-lifecycle` ganha as Fases 4 a 8 e a Retomada na `localizacao`.
+- [x] **Passo 3:** `validar.py` com 0; 920 passed; `grep -rn categoria portal/gerador | grep sdd` só
+  acha o rótulo "SDD" do mapa de categorias em `paginas.py`, que continua válido para outras
+  ferramentas; a página da trilha passa a citar a `sdd-lifecycle` nos dez passos.
+- [x] **Passo 4:** commit.
+
 ### Tarefa C8: Rótulos dos marcos, glossário e textos da Início
 
 - [ ] **Rótulos dos marcos:** campo `marco` nas práticas que aparecem nos portões e em "Para sair
