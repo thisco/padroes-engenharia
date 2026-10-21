@@ -895,6 +895,22 @@ marca de assistente nos 44 arquivos sem ocorrência.
     "cuidado" diz "é ferramenta, não skill".
 - **Commit:** `docs(ferramentas): frontend-design e Playwright MCP como caminhos`.
 
+- [x] Fontes lidas no raw dos commits fixados (só leitura, no scratchpad): o `SKILL.md` e o README do
+  plugin, o README do repositório da coleção (instalação por nome de plugin) e o README do Playwright
+  MCP (configuração padrão, requisitos, segurança e lista de ferramentas), mais o `package.json` do
+  mesmo commit, que confirma a 0.0.83.
+- [x] `an-frontend-design` (skill, caminho em Domínio, `adotar` com o caso, UX-01 e UX-02; o "cuidado"
+  diz que sem o tema do projeto ela cria identidade nova) e `pw-playwright-mcp` (teste, Evidência como
+  caminho e TDD como complemento, `adotar` com o caso, UX-01 e QLD-03; o `como_instalar` traz a
+  configuração do servidor com `@playwright/mcp@0.0.83` e o "cuidado" diz "é ferramenta, não skill").
+  Quatro referências e dois registros, `revisao_adversarial` `pendente-tarefa-C13`. O `limites` da
+  frontend-design registra que só os estados erro e vazio da UX-01 aparecem nela.
+- [x] `validar.py` e `gerar.py` com 0; 920 passed; `ruff check` limpo; varredura de marca de assistente
+  nos oito arquivos sem ocorrência fora do nome da coleção (`claude-plugins-official`, que é o id em
+  `componentes.yml`).
+
+Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed; a página da trilha cita as duas.
+
 ### Tarefa C6: Ferramentas do mattpocock
 
 É a tarefa 15 do plano anterior, sem mudança: 8 ferramentas `mp-*` em `avaliar`, no commit

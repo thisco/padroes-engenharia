@@ -1,0 +1,11 @@
+id: claude-plugins-official-readme
+titulo: "claude-plugins-official: README do repositório"
+organizacao: anthropics/claude-plugins-official
+url: https://github.com/anthropics/claude-plugins-official/blob/8f814f49002ff824e8a9ba43cf96112dc7f5948d/README.md
+tipo: comunidade
+versao: "2026.10.15"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Installation' e 'Plugin Structure'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A instalação é pelo sistema de plugins de um harness específico; o portal remete à página da ferramenta dele."

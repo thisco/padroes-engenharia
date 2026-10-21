@@ -1,0 +1,52 @@
+conteudo: ferramenta-an-frontend-design
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill planeja paleta, tipografia e layout em tokens a partir do assunto do produto"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seções 'Ground your designs in the subject matter' e 'Process: plan, review against the brief, build, critique' (plano de tokens: Color, Type, Layout, Principles)"
+    resultado: confirmada
+  - texto: "o plano é revisado contra o brief para fugir dos traços de página gerada antes de escrever o código"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seção 'Process', lista de cinco traços e parágrafo 'Then review that plan against the brief before building'"
+    resultado: confirmada
+  - texto: "o brief fixa a direção visual quando ela existe; sem ela, a skill escolhe por conta própria"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seção 'Process': 'Where the brief pins down a visual direction, follow it exactly' e 'Where it leaves an axis free'"
+    resultado: confirmada
+  - texto: "a ousadia vai num elemento só, com piso de qualidade: responsivo, foco visível, movimento reduzido respeitado"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seção 'Restraint and self-critique'"
+    resultado: confirmada
+  - texto: "a autocrítica usa screenshots quando o ambiente permite"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seção 'Restraint and self-critique': 'taking screenshots to review if your environment supports it'"
+    resultado: confirmada
+  - texto: "a skill é um texto de orientação, sem código nem verificador, e o plugin é um pacote de skill"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "o arquivo inteiro é prosa em Markdown; a pasta do plugin no commit fixado tem só a pasta do manifesto, LICENSE, README.md e skills/frontend-design/SKILL.md"
+    resultado: confirmada
+  - texto: "dos quatro estados de tela, só erro e vazio aparecem, na seção de escrita"
+    ref: claude-plugins-official-frontend-design
+    localizacao: "seção 'More on writing in design': 'Treat failure and emptiness as moments for direction'; carregando e sucesso não aparecem"
+    resultado: confirmada
+  - texto: "o README do plugin diz que a skill é acionada automaticamente em trabalho de frontend"
+    ref: claude-plugins-official-frontend-design-readme
+    localizacao: "seção 'What It Does', primeira frase"
+    resultado: confirmada
+  - texto: "o README do repositório traz o comando de instalação por nome de plugin"
+    ref: claude-plugins-official-readme
+    localizacao: "seção 'Installation'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou a frontend-design em 2026-06-10, commit a0b04d9"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha frontend-design"
+    resultado: confirmada
+  - texto: "o portal fixa o commit 8f814f4 com a versão igual à data dele"
+    ref: portal-referencias
+    localizacao: "lista de referências: as da coleção trazem a URL no commit 8f814f4 e a versão 2026.10.15"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []
