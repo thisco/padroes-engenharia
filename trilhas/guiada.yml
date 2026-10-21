@@ -1,0 +1,18 @@
+id: guiada
+titulo: Guiada
+origem: thisco/sdd-lifecycle
+status: adotar
+casos: [origem-do-modelo]
+sequencia:
+  - {ferramenta: sdd-lifecycle, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: sdd-lifecycle, momento: antes-de-escrever, passo: decidir}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: planejar}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: isolar}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: tdd}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: revisar}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: evidencia}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: pr-e-merge}
+  - {ferramenta: sdd-lifecycle, momento: depois-da-entrega, passo: retro}
+  - {ferramenta: sdd-lifecycle, momento: depois-da-entrega, passo: continuar}
+bom_quando: "o time está começando no SDD ou precisa de trilha de auditoria completa: spec aprovada no cabeçalho, gate arquitetural, plano com checkboxes, evidência colada e veredito por requisito, tudo numa skill só."
+cuidado: "uma skill conduz todas as fases, do escrever-spec ao continuar entre sessões; os passos que ela não cobre (entrevistar, investigar, executar, domínio, instruções) ficam para a montagem livre."

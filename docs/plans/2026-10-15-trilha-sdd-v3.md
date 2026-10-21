@@ -1022,6 +1022,13 @@ V2.
 
 Commit do conteúdo: `docs(trilhas): de origem, guiada e enxuta`.
 
+- [x] **Passo 1:** `trilhas/de-origem.yml` (18 itens, a sequência da R16'), `trilhas/guiada.yml`
+  (`sdd-lifecycle` nos dez passos da C7) e `trilhas/enxuta.yml` (sete `mp-*`, `avaliar`, sem caso),
+  com "bom quando" e "cuidado" como no plano anterior.
+- [x] **Passo 2:** `validar.py` com 0 (`R-TRILHA` aceita as três); `gerar.py` com 0; 920 passed; a
+  página mostra as trilhas na ordem de-origem, guiada, enxuta.
+- [x] **Passo 3:** commit.
+
 ### Tarefa C10: ADRs e a regra da versão mais nova
 
 É a tarefa 18 do plano anterior, ampliada pela R17':

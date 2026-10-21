@@ -1,0 +1,14 @@
+id: enxuta
+titulo: Enxuta
+origem: mattpocock/skills
+status: avaliar
+sequencia:
+  - {ferramenta: mp-grill-with-docs, momento: antes-de-escrever, passo: entrevistar}
+  - {ferramenta: mp-to-spec, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: mp-domain-modeling, momento: antes-de-escrever, passo: decidir}
+  - {ferramenta: mp-implement, momento: enquanto-escreve, passo: executar}
+  - {ferramenta: mp-tdd, momento: enquanto-escreve, passo: tdd}
+  - {ferramenta: mp-code-review, momento: antes-do-merge, passo: revisar}
+  - {ferramenta: mp-retro, momento: depois-da-entrega, passo: retro}
+bom_quando: "o time quer pouco texto no contexto e linguagem de domínio forte: skills curtas, glossário e ADR escritos durante a entrevista, spec sintetizada da conversa e revisão em dois eixos."
+cuidado: "o rastreador de issues precisa ser configurado para docs/specs e docs/plans pelo setup da coleção, e refatorar fica fora do laço do TDD, ao contrário da QLD-01. Está em avaliar: sem caso interno."
