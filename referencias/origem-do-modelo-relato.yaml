@@ -1,0 +1,10 @@
+id: origem-do-modelo-relato
+titulo: "Relato do dono sobre o projeto de origem"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/origem-do-modelo/relato.md
+tipo: portal
+verificado_em: 2026-10-20
+verificacao: V
+localizacao: "quatro parágrafos: superpowers, agent-skills, frontend-design e Playwright, nascimento do modelo"
+dominios: [construir-com-ia]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0006, decisão 3). O commit de origem fica no registro de verificação do caso."

@@ -167,6 +167,19 @@ def test_referencia_interna_do_tipo_portal_aponta_para_pagina_do_proprio_portal(
         ], url
 
 
+def test_referencia_do_tipo_portal_aceita_fonte_sanitizada_de_caso(tmp_path):
+    """R14 da trilha: a fonte publicada em `casos/fontes/<slug>/<arquivo>.md` é página do portal."""
+    ok = fabrica.referencia(
+        fabrica.meta_referencia(tipo="portal", url="casos/fontes/origem-do-modelo/relato.md")
+    )
+    assert rodar(regra_referencias, [ok], tmp_path) == []
+    for url in ("casos/fontes/relato.md", "casos/fontes/x/relato.txt", "casos/x/relato.md"):
+        r = fabrica.referencia(fabrica.meta_referencia(tipo="portal", url=url))
+        assert rodar(regra_referencias, [r], tmp_path) == [
+            Erro("referencias/ref-forte.yaml", "url", "R-REFERENCIA", url)
+        ], url
+
+
 def test_referencia_do_portal_vira_link_relativo_no_html_e_no_md():
     from portal.gerador.carregar import Conteudo
     from portal.gerador.paginas import html_glossario

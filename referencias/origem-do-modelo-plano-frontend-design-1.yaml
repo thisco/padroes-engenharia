@@ -1,0 +1,10 @@
+id: origem-do-modelo-plano-frontend-design-1
+titulo: "Plano com a passada de frontend-design (fase 2)"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/origem-do-modelo/plano-frontend-design-1.md
+tipo: portal
+verificado_em: 2026-10-20
+verificacao: V
+localizacao: "bloco 'Construir com a skill frontend-design' e o Step 5 com Playwright"
+dominios: [construir-com-ia]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0006, decisão 3). O commit de origem fica no registro de verificação do caso."

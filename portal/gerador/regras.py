@@ -474,6 +474,9 @@ def _itens(conteudo: Conteudo, campo: str) -> list[dict[str, Any]]:
 def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
     """URL `https://` válida e datas de calendário reais em cada referência.
 
+    O tipo `portal` aponta uma página gerada (`.html`) ou uma fonte sanitizada de caso
+    publicada em `casos/fontes/<slug>/<arquivo>.md` (R14 da trilha).
+
     A presença de `verificado_em` e `verificacao` é exigida pelo schema (R-ESQUEMA).
     """
     erros: list[Erro] = []
@@ -491,7 +494,10 @@ def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     return erros
 
 
-PAGINA_DO_PORTAL = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*\.html$")
+PAGINA_DO_PORTAL = re.compile(
+    r"^(?:[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*\.html"
+    r"|casos/fontes/[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*\.md)$"
+)
 
 
 def url_https_valida(url: str) -> bool:

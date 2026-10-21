@@ -1,0 +1,221 @@
+conteudo: origem-do-modelo
+verificado_em: '2026-10-20'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "112 planos, 56 specs, 1.057 commits, 54 planos que citam subagent-driven-development ou executing-plans, 14 planos e 4 specs com frontend-design, 17 planos e 8 specs com Playwright, período de 2026-04-30 a 2026-08-29, 10 arquivos movidos em 2026-05-25"
+  ref: origem-do-modelo-contagens
+  localizacao: "tabela de contagens"
+  resultado: confirmada
+  nota: "artefato. Recontagem de 2026-10-20 no commit 9117a57 (ver execucoes). Divergência da busca de 2026-10-15 (19 e 26) anotada na fonte."
+- texto: "54 planos exigem subagent-driven-development ou executing-plans no cabeçalho"
+  ref: origem-do-modelo-plano-cabecalho
+  localizacao: "linha 'For agentic workers'"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O fluxo por tarefa é brief, implementador, pacote de revisão e revisor em contexto novo, com achados tratados no plano"
+  ref: origem-do-modelo-plano-revisao-independente
+  localizacao: "seção 'Revisão adversarial' e parágrafo final"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "As chamadas de task-brief e review-package, tarefa por tarefa, e as versões 6.0.0 e 6.1.1 estão nas permissões"
+  ref: origem-do-modelo-permissoes
+  localizacao: "bloco dos scripts"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "A spec e o plano de 2026-06-10 criam o feedback loop (abortar e voltar à spec), a memória contínua e o gatekeeper com doubt-driven-development e documentation-and-adrs antes do plano"
+  ref: origem-do-modelo-spec-gatekeeper
+  localizacao: "seções 2.1, 2.2 e 3.1"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O plano de 2026-06-10 implementa as regras 5 e 6 do AGENTS.md e as fases 1.5 e 5 da sdd-lifecycle"
+  ref: origem-do-modelo-plano-gatekeeper
+  localizacao: "Task 2 e Task 3"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "agent-skills instalado em 2026-05-07 (742dca5) no primeiro harness e em 2026-06-10 (5e262b2) no segundo; frontend-design em 2026-06-10"
+  ref: origem-do-modelo-instalacoes
+  localizacao: "tabela"
+  resultado: confirmada
+  nota: "artefato. Registros locais de instalação dos harnesses do dono, lidos em 2026-10-20."
+- texto: "Os planos do caminho padrão do writing-plans foram movidos para docs/plans em 2026-05-25"
+  ref: origem-do-modelo-migracao
+  localizacao: "mensagem do commit"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "14 planos prescrevem a passada de frontend-design sobre o design system existente, com protótipo HTML como referência e teste Playwright ao fim"
+  ref: origem-do-modelo-plano-frontend-design-1
+  localizacao: "bloco 'Construir com a skill frontend-design' e Step 5"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O roteiro manda construir com frontend-design em worktree própria, com Playwright, iterando com o usuário"
+  ref: origem-do-modelo-plano-frontend-design-2
+  localizacao: "linha do roteiro de 2026-06-27"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "17 planos têm cenários E2E com Playwright ou checkpoint com captura de tela antes da aprovação"
+  ref: origem-do-modelo-plano-playwright
+  localizacao: "checkpoint da Fase 5 e Step 6.1"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "As cinco ferramentas do Playwright MCP estão nas permissões do agente"
+  ref: origem-do-modelo-permissoes
+  localizacao: "bloco do servidor MCP"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O dono usou as quinze skills do superpowers da série 6.x, as treze skills do agent-skills nas lacunas, a frontend-design em toda tela e o Playwright na evidência, e o modelo nasceu ali"
+  ref: origem-do-modelo-relato
+  localizacao: "quatro parágrafos"
+  resultado: confirmada
+  nota: "relato. Declaração do dono em 2026-10-14 e 2026-10-15, texto aprovado por ele antes do commit."
+- texto: "Ferramenta sp-brainstorming: usada no projeto de origem"
+  ref: origem-do-modelo-permissoes
+  localizacao: "Skill(superpowers:brainstorming) e o start-server.sh do companheiro visual"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-writing-plans: usada no projeto de origem"
+  ref: origem-do-modelo-migracao
+  localizacao: "commit que move os planos do caminho padrão da skill"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-using-git-worktrees: usada no projeto de origem"
+  ref: origem-do-modelo-permissoes
+  localizacao: "Skill(superpowers:using-git-worktrees)"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-subagent-driven-development: usada no projeto de origem"
+  ref: origem-do-modelo-plano-cabecalho
+  localizacao: "linha 'For agentic workers' e a contagem de 54 planos"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-executing-plans: usada no projeto de origem"
+  ref: origem-do-modelo-plano-cabecalho
+  localizacao: "linha 'For agentic workers' e a contagem de 54 planos"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-dispatching-parallel-agents: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta sp-test-driven-development: usada no projeto de origem"
+  ref: origem-do-modelo-plano-gatekeeper
+  localizacao: "Task 3, Fase 5: o subagente usa test-driven-development antes do código"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-systematic-debugging: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta sp-requesting-code-review: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta sp-receiving-code-review: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta sp-verification-before-completion: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta sp-finishing-a-development-branch: usada no projeto de origem"
+  ref: origem-do-modelo-permissoes
+  localizacao: "Skill(superpowers:finishing-a-development-branch)"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta sp-writing-skills: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "primeiro parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-doubt-driven-development: usada no projeto de origem"
+  ref: origem-do-modelo-spec-gatekeeper
+  localizacao: "seção 3.1"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta ao-documentation-and-adrs: usada no projeto de origem"
+  ref: origem-do-modelo-spec-gatekeeper
+  localizacao: "seção 3.1"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta ao-debugging-and-error-recovery: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-source-driven-development: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-security-and-hardening: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-test-driven-development: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-frontend-ui-engineering: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-api-and-interface-design: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-deprecation-and-migration: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-ci-cd-and-automation: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-performance-optimization: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta ao-code-review-and-quality: usada no projeto de origem"
+  ref: origem-do-modelo-permissoes
+  localizacao: "Skill(agent-skills:code-review-and-quality)"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta ao-context-engineering: usada no projeto de origem"
+  ref: origem-do-modelo-relato
+  localizacao: "segundo parágrafo"
+  resultado: confirmada
+  nota: "relato"
+- texto: "Ferramenta an-frontend-design: usada no projeto de origem"
+  ref: origem-do-modelo-plano-frontend-design-1
+  localizacao: "bloco 'Construir com a skill frontend-design'"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Ferramenta pw-playwright-mcp: usada no projeto de origem"
+  ref: origem-do-modelo-plano-playwright
+  localizacao: "Step 6.1 e checkpoint com screenshot"
+  resultado: confirmada
+  nota: "artefato"
+execucoes:
+- tipo: arquivo
+  arquivo: casos/fontes/origem-do-modelo/contagens.md
+  comando: "git rev-parse --short HEAD; ls docs/plans | wc -l; ls docs/specs | wc -l; git log --oneline | wc -l; grep -l 'subagent-driven-development\\|executing-plans' docs/plans/*.md | wc -l; grep -li frontend-design docs/plans/*.md | wc -l; grep -li playwright docs/plans/*.md | wc -l; git log --reverse --format=%ci | head -1; git log -1 --format=%ci; git show --stat df3fbbb | tail -1"
+  ambiente: "clone local do repositório de origem, commit 9117a57, 2026-10-20"
+  resultado: passou
+  evidencia: "9117a57; 112; 56; 1057; 54; 14; 17; 2026-04-30 09:06:48 -0300; 2026-08-29 22:15:15 -0300; 10 files changed, 15349 deletions(-)"
+  data: '2026-10-20'
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-20'
+  achados: []

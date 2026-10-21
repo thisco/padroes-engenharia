@@ -784,6 +784,20 @@ Os trechos sanitizados incluem:
 
 Commit: `docs(casos): caso de origem do modelo, sanitizado`.
 
+Andamento (2026-10-20): passos 1 a 3 e 5 a 8 da tarefa 13 feitos, mais os artefatos da R14'.
+Recontagem no commit `9117a57`: 112, 56, 1057, 54, 2026-04-30, 2026-08-29 e 10 arquivos na migração
+(iguais ao esperado); `frontend-design` em 14 planos e Playwright em 17 (a spec dizia 19 e 26; a
+divergência está em `contagens.md`). Doze fontes, doze referências e 41 afirmações (uma por
+ferramenta em `adotar`, marcada `artefato` ou `relato`). Varredura de sanitização com lista fora do
+repositório: nenhuma linha. `validar.py` e `gerar.py` com 0; 920 passed; ruff limpo.
+
+Desvio encontrado e resolvido: o validador só aceitava, no tipo `portal`, URL terminada em `.html`,
+e as fontes do caso são `.md` publicados em `casos/fontes/`. `PAGINA_DO_PORTAL` em
+`portal/gerador/regras.py` passou a aceitar `casos/fontes/<slug>/<arquivo>.md`, com teste em
+`test_regras_referencias.py` (R14 pede `[ref:]` para um arquivo da pasta).
+
+- [x] **PAUSA.** O dono revisa e aprova `casos/fontes/origem-do-modelo/relato.md` antes do commit. Aprovado em 2026-10-21 09:09.
+
 ### Tarefa C3: Ferramentas do superpowers 7.0.0
 
 É a tarefa 14 do plano anterior, com estas trocas:
