@@ -1,5 +1,5 @@
 conteudo: inicio
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: Em cerca de 400 mil sessões interativas do Claude Code, de outubro de 2025 a abril de 2026, as
@@ -8,6 +8,18 @@ afirmacoes:
     decide cerca de 70% do planejamento e 20% da execução.
   ref: anthropic-claude-code-expertise
   localizacao: Sucesso por nível de experiência e divisão de decisões entre pessoa e Claude
+  resultado: confirmada
+- texto: "porta 'Projeto novo': o guia entrega o projeto já montado, com regras, roteiro de trabalho e verificações"
+  ref: portal-guia-do-zero-a-primeira-mr
+  localizacao: "cabeçalho do guia: público (projeto novo com agente de código) e resultado esperado (projeto gerado pelo sdd-scaffold com o processo SDD funcionando)"
+  resultado: confirmada
+- texto: "porta 'Projeto existente': o guia traz as regras e as verificações para um repositório que já existe"
+  ref: portal-guia-brownfield-em-5-passos
+  localizacao: "cabeçalho do guia: público (repositório em andamento) e resultado esperado (governança do sdd-scaffold e as travas no .gitlab-ci.yml existente)"
+  resultado: confirmada
+- texto: "porta 'No meio de uma mudança': a trilha mostra o que a etapa exige para sair dela"
+  ref: portal-trilha
+  localizacao: "o ciclo, 'Para sair desta etapa' em cada etapa"
   resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente

@@ -1,6 +1,7 @@
 ---
 id: CICD-03
 titulo: "Entrega rastreável: tag semântica, changelog e artefato do commit"
+marco: "changelog e tag"
 resumo: "A release sai de uma tag vX.Y.Z com entrada no CHANGELOG.md e um artefato que registra a versão e o commit da tag, e o job de tag reprova o que faltar."
 dominio: ci-cd
 subdominio: null
@@ -22,7 +23,7 @@ referencias:
   - gitlab-ci-local-readme
 relacionadas: [CICD-01, CICD-02]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 ---
 

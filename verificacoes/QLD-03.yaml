@@ -1,5 +1,5 @@
 conteudo: QLD-03
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: antes de pedir revisão ou submeter o PR, a suíte completa passa, o linter e o formatador não apontam inconformidade e a cobertura mínima foi atingida, e os comandos exatos do projeto ficam registrados no steering
@@ -30,6 +30,10 @@ afirmacoes:
 - texto: a opção --cov-fail-under falha a execução se a cobertura total ficar abaixo do mínimo
   ref: pytest-cov-config
   localizacao: opção --cov-fail-under ('Fail if the total coverage is less than MIN')
+  resultado: confirmada
+- texto: "o rótulo do marco, 'CI roda antes do push', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
+  ref: portal-trilha
+  localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

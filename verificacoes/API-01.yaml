@@ -1,5 +1,5 @@
 conteudo: API-01
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: uma descrição OpenAPI formaliza a superfície de uma API e a semântica dela
@@ -37,6 +37,10 @@ afirmacoes:
 - texto: o oasdiff tem o subcomando breaking, que mostra só as mudanças que quebram clientes existentes
   ref: oasdiff
   localizacao: README, descrição da ferramenta e subcomando breaking
+  resultado: confirmada
+- texto: "o rótulo do marco, 'contrato OpenAPI versionado', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

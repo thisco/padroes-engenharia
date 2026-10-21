@@ -1,6 +1,7 @@
 ---
 id: API-01
 titulo: "Contrato de API versionado: mudança incompatível vira versão nova e ADR"
+marco: "contrato OpenAPI versionado"
 dominio: contratos-api
 subdominio: null
 momento: antes-de-escrever
@@ -11,7 +12,7 @@ aplica: []
 referencias: [openapi-spec, semver, sdd-lifecycle, oasdiff]
 relacionadas: [API-02]
 dono: engenharia
-revisado_em: 2026-10-06
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-06
 resumo: "O contrato OpenAPI é a fonte de verdade versionada; mudança incompatível sobe a versão major e só entra com uma ADR aprovada."
 ferramentas_aprovadas: []

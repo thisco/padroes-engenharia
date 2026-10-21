@@ -1,5 +1,5 @@
 conteudo: P1-10
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a spec arquivada é histórico, e não fonte de verdade viva
@@ -26,6 +26,10 @@ afirmacoes:
   localizacao: seção 'Não-objetivos', item 'Fica para a Release 2 (1.8.0)'
   resultado: confirmada
   nota: 'Também conferido no clone local: git grep ''Requisitos afetados'' na tag v1.7.0 só acha a menção nessa spec; o MODELO-plano.md da tag não tem a seção.'
+- texto: "o rótulo do marco, 'sem drift spec e código', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
+  ref: portal-trilha
+  localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-10/checar-requisitos-afetados.py

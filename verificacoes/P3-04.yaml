@@ -1,5 +1,5 @@
 conteudo: P3-04
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o guia do CISO recomenda conceder a menor capacidade que ainda completa a tarefa, retirar as ações destrutivas
@@ -62,6 +62,10 @@ afirmacoes:
   ref: sdd-scaffold-readme
   localizacao: seção 'Limite dos controles por ferramenta' (em 'O que impede e o que orienta'), primeiro, segundo
     e último itens
+  resultado: confirmada
+- texto: "o rótulo do marco, 'agente só lê por padrão', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

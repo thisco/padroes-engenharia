@@ -1,6 +1,7 @@
 ---
 id: QLD-01
 titulo: Lógica começa por um teste que falha, com as duas execuções no plano
+marco: "teste falhou antes"
 dominio: qualidade-bdd
 subdominio: null
 momento: enquanto-escreve
@@ -11,7 +12,7 @@ aplica: [steering:qualidade]
 referencias: [sdd-scaffold-steering-qualidade, anthropic-develop-tests, pytest-exit-codes, pytest-saida, pytest-boas-praticas]
 relacionadas: [QLD-02, QLD-03, P1-01]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "Escreva o teste antes da lógica, veja-o falhar pela ausência da implementação e cole no plano a saída das duas execuções, a que falha e a que passa."
 ferramentas_aprovadas: [sdd-scaffold, pytest]

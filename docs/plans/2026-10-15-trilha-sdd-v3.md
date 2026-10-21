@@ -949,7 +949,7 @@ Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed; a página da 
 
 ### Tarefa C8: Rótulos dos marcos, glossário e textos da Início
 
-- [ ] **Rótulos dos marcos:** campo `marco` nas práticas que aparecem nos portões e em "Para sair
+- [x] **Rótulos dos marcos:** campo `marco` nas práticas que aparecem nos portões e em "Para sair
   desta etapa" (até seis por etapa, pela regra da V4). Os valores de partida são os do mockup v3
   ("ambiguidade resolvida", "aprovação registrada", "threat-model do agente", "migration
   intocada", "veredito por requisito", "pipeline com gates", "spec como delta", "constituição
@@ -958,14 +958,31 @@ Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed; a página da 
   arquivada e destilada", "bug vira regra", "changelog e tag"), cada um conferido contra o corpo
   da prática. O `revisado_em` muda junto, e o registro de verificação da prática ganha a
   afirmação do rótulo.
-- [ ] **Glossário:** cinco termos em `glossario.yml` (etapa, passo, marco, caminho e trilha pronta),
+- [x] **Glossário:** cinco termos em `glossario.yml` (etapa, passo, marco, caminho e trilha pronta),
   com definição de até 200 caracteres e referência à página `trilha` (tipo `portal`).
-- [ ] **Início:** em `paginas/inicio.md`, o `lead` é reescrito a partir da tese ("Práticas de
+- [x] **Início:** em `paginas/inicio.md`, o `lead` é reescrito a partir da tese ("Práticas de
   engenharia para times que desenvolvem com agentes de código. Cada prática diz o que fazer, com
   que força e de onde vem a evidência."), e o texto das portas vem do mockup. A curadoria confere
   as afirmações.
-- [ ] **Validação e commit:** `validar.py` e `gerar.py` saem com 0. Commit:
+- [x] **Validação e commit:** `validar.py` e `gerar.py` saem com 0. Commit:
   `docs(praticas): rótulos dos marcos, glossário da trilha e textos da Início`.
+
+Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed. Os 18 rótulos do mockup entraram
+como `marco` nas 18 práticas, cada um conferido contra o "O que fazer"; `revisado_em` e o registro
+de verificação (afirmação com a referência `portal-trilha`, do tipo portal) mudaram junto. Cinco
+termos no glossário (etapa, passo, marco, caminho, trilha pronta), com `[ref:portal-trilha]` e
+afirmação em `verificacoes/glossario.yaml`. Lead da Início reescrito a partir da tese, com a frase
+das três portas; as portas ganharam afirmações com referências do tipo portal para os dois guias e
+para a trilha.
+
+Desvio encontrado e resolvido: a regra da V4 (até seis marcos por etapa, os com mecanismo pela força
+e depois os que orientam, `adotar` primeiro, ID como desempate) não lista cinco práticas do mockup
+(P1-01, QLD-01, P1-10, QLD-03 e SEG-02) e lista oito que o mockup não tinha (API-01, ARQ-03, CICD-02,
+LGPD-02, OBS-01, API-02, ARQ-02 e IAC-02). A regra aprovada vence o mockup: as oito ganharam rótulo
+("contrato OpenAPI versionado", "domínio sem framework", "MR pequena e verde", "dado pessoal
+mascarado", "log em JSON sem dado pessoal", "contrato conferido no CI", "arquitetura viva no mesmo
+PR", "plano de infra no PR"), e as cinco mantêm o rótulo do mockup, com a afirmação dizendo que a
+trilha hoje não as lista. Os 21 rótulos listados aparecem na página gerada.
 
 ### Tarefa C9: As três trilhas
 

@@ -1,5 +1,5 @@
 conteudo: ARQ-03
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a intenção da arquitetura hexagonal é permitir que a aplicação seja operada por usuários, programas,
@@ -31,6 +31,10 @@ afirmacoes:
     mais alta
   ref: import-linter-docs
   localizacao: contract_types/layers
+  resultado: confirmada
+- texto: "o rótulo do marco, 'domínio sem framework', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

@@ -151,3 +151,23 @@ termos:
     [ref:portal-o-problema].
   referencias:
   - portal-o-problema
+- termo: Etapa
+  definicao: Uma das quatro partes do ciclo de toda mudança (Especificar, Codar, Revisar, Aprender); cada etapa tem um portão com marcos para sair dela [ref:portal-trilha].
+  referencias:
+  - portal-trilha
+- termo: Passo
+  definicao: Tarefa dentro de uma etapa (entrevistar, planejar, TDD, revisar o diff); cada passo lista caminhos, as skills ou ferramentas que o percorrem [ref:portal-trilha].
+  referencias:
+  - portal-trilha
+- termo: Marco
+  definicao: Prática que precisa estar cumprida para sair de uma etapa; o rótulo curto resume o que ela exige, e a cor do chip é a força dela [ref:portal-trilha].
+  referencias:
+  - portal-trilha
+- termo: Caminho
+  definicao: Skill ou ferramenta que percorre um passo; a página diz quando ela é boa e o cuidado ao usá-la. Os portões conferem o resultado, não a skill [ref:portal-trilha].
+  referencias:
+  - portal-trilha
+- termo: Trilha pronta
+  definicao: Sequência curada com um caminho por passo e status no radar; quem não adota uma monta a sua escolhendo um caminho por passo [ref:portal-trilha].
+  referencias:
+  - portal-trilha

@@ -1,5 +1,5 @@
 conteudo: QLD-01
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a implementação de lógica começa por um teste que falha, escrito antes do código de produção, e ele falha pela ausência da implementação e não por erro de setup
@@ -29,6 +29,10 @@ afirmacoes:
 - texto: o pytest descobre arquivos test_*.py ou *_test.py, e argumentos de linha de comando podem nomear arquivos
   ref: pytest-boas-praticas
   localizacao: seção de test discovery e argumentos de linha de comando
+  resultado: confirmada
+- texto: "o rótulo do marco, 'teste falhou antes', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Codar"
+  ref: portal-trilha
+  localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Codar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

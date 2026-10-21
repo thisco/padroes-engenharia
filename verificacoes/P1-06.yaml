@@ -1,5 +1,5 @@
 conteudo: P1-06
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: no checkpoint da spec o agente pausa, pergunta se a spec é aprovada ou se há regras a ajustar, e não passa ao plano sem aprovação explícita
@@ -31,6 +31,10 @@ afirmacoes:
   localizacao: seção 'Implement', frase 'Your role isn't just to steer. It's to verify.'
   resultado: confirmada
   nota: A frase é paráfrase; a página fala em refletir e refinar em cada fase, não em campo de aprovação gravado.
+- texto: "o rótulo do marco, 'aprovação registrada', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-06/2026-10-05-exportar-pedidos-csv.md

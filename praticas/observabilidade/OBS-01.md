@@ -1,6 +1,7 @@
 ---
 id: OBS-01
 titulo: Log estruturado, correlacionado e sem dado pessoal
+marco: "log em JSON sem dado pessoal"
 dominio: observabilidade
 subdominio: null
 momento: enquanto-escreve
@@ -11,7 +12,7 @@ aplica: []
 referencias: [opentelemetry-logs-data-model, gateway-poc-evidencia-tc02-spend-log, gateway-poc-cenario-07-tooling, lgpd]
 relacionadas: [P2-04, OBS-02]
 dono: engenharia
-revisado_em: 2026-10-06
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-06
 resumo: "Cada linha de log é um JSON com timestamp, nível, serviço, id de correlação e evento, e nenhuma traz payload nem dado pessoal em claro."
 ferramentas_aprovadas: []

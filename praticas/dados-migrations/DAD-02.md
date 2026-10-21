@@ -1,6 +1,7 @@
 ---
 id: DAD-02
 titulo: "Expanda e contraia: a mudança de schema em duas etapas compatíveis"
+marco: "expandir e contrair"
 resumo: "Mudança de schema incompatível vai em etapas: expandir (o novo convive com o antigo), migrar os consumidores e, numa entrega posterior, contrair."
 dominio: dados-migrations
 subdominio: null
@@ -21,7 +22,7 @@ exemplos:
 referencias: [fowler-parallel-change, fowler-evodb, migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, alembic-tutorial]
 relacionadas: [DAD-01]
 dono: engenharia
-revisado_em: 2026-10-06
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-06
 ---
 

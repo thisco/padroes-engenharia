@@ -1,5 +1,5 @@
 conteudo: P1-09
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: no Tier 2, a revisão é de uma sessão ou agente independente (contexto novo, sem o histórico da implementação), que revisa contra a spec e não contra o diff, partindo de cada requisito e caçando requisito não atendido e desvio silencioso
@@ -46,6 +46,10 @@ afirmacoes:
 - texto: o estudo também mostra que o baseline não melhorou o recall (0,525 contra 0,518) e que a revisão com ele levou mais tempo (48,4 contra 26,7 minutos em média)
   ref: infoq-when-pays-off
   localizacao: Tabela 2 ('Baseline vs. Code-only drift review') e seção 'Recall Did Not Improve' (aberta em 2026-10-06)
+  resultado: confirmada
+- texto: "o rótulo do marco, 'veredito por requisito', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

@@ -1,5 +1,5 @@
 conteudo: glossario
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'Agente de código: Agentes são, em geral, modelos usando ferramentas em loop; o agente de código
@@ -168,6 +168,26 @@ afirmacoes:
   localizacao: SKILL.md na tag v3.0.0 (commit 5f6e9ad879f7abd11267547fb3f527e876b60140), trechos citados neste registro
   resultado: confirmada
   nota: A Fase 0 (passos 1 a 5), a Matriz tier → fases, a descrição e as definições de plano, spec e revisão adversarial seguem como na 2.0.0 (git diff 1726652 v3.0.0 só toca as Fases 1, 3, 4, 6, 7 e 8 e a retomada).
+- texto: "Etapa: Uma das quatro partes do ciclo de toda mudança (Especificar, Codar, Revisar, Aprender); cada etapa tem um portão com marcos para sair dela [ref:portal-trilha]."
+  ref: portal-trilha
+  localizacao: "cabeçalho do ciclo, as quatro etapas e os portões 'Para sair de'"
+  resultado: confirmada
+- texto: "Passo: Tarefa dentro de uma etapa (entrevistar, planejar, TDD, revisar o diff); cada passo lista caminhos, as skills ou ferramentas que o percorrem [ref:portal-trilha]."
+  ref: portal-trilha
+  localizacao: "seção 'Monte a sua': os passos de cada etapa com os caminhos"
+  resultado: confirmada
+- texto: "Marco: Prática que precisa estar cumprida para sair de uma etapa; o rótulo curto resume o que ela exige, e a cor do chip é a força dela [ref:portal-trilha]."
+  ref: portal-trilha
+  localizacao: "'Para sair desta etapa' e a legenda 'Força do marco'"
+  resultado: confirmada
+- texto: "Caminho: Skill ou ferramenta que percorre um passo; a página diz quando ela é boa e o cuidado ao usá-la. Os portões conferem o resultado, não a skill [ref:portal-trilha]."
+  ref: portal-trilha
+  localizacao: "seção 'Monte a sua' (uma regra: os portões conferem o resultado, não a skill) e os cartões de caminho com 'Bom quando' e 'Cuidado'"
+  resultado: confirmada
+- texto: "Trilha pronta: Sequência curada com um caminho por passo e status no radar; quem não adota uma monta a sua escolhendo um caminho por passo [ref:portal-trilha]."
+  ref: portal-trilha
+  localizacao: "seções 'Trilhas prontas' e 'Monte a sua'"
+  resultado: confirmada
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

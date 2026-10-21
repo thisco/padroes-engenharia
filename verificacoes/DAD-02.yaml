@@ -1,6 +1,6 @@
 # prompt alterado em 2026-10-06 após a conferência, sem reteste (decisão do dono)
 conteudo: DAD-02
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a estrutura passa a aceitar a versão antiga e a nova ao mesmo tempo (expand); os clientes migram
@@ -51,6 +51,10 @@ afirmacoes:
   localizacao: seções de criação do script e de downgrade
   resultado: confirmada
   nota: Mesma afirmação já registrada em DAD-01; reaberta a fonte em 2026-10-06.
+- texto: "o rótulo do marco, 'expandir e contrair', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-02/V1__cria_cliente.sql

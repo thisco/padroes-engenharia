@@ -1,6 +1,7 @@
 ---
 id: CICD-02
 titulo: "Lote pequeno: MR curta, frequente e verde"
+marco: "MR pequena e verde"
 resumo: "A merge request fica abaixo de um limite declarado de arquivos e linhas, e o job que mede o diff reprova a que passa dele."
 dominio: ci-cd
 subdominio: null
@@ -22,7 +23,7 @@ referencias:
   - gitlab-ci-local-readme
 relacionadas: [CICD-01, CICD-03]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 ---
 

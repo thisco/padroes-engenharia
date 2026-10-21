@@ -2,9 +2,9 @@
 titulo: Construir software com IA sem perder a arquitetura
 descricao: 'Portal de padrões de engenharia para times que usam agentes de código: o que fazer, com que força e
   com que evidência.'
-lead: Práticas de engenharia para times que desenvolvem software com agentes de código, mantidas pela equipe de engenharia. Cada
-  prática diz o que fazer, com que força e de onde vem a evidência. Quem está começando vai em 'Comece aqui'; quem
-  já está no meio de uma mudança escolhe o momento mais abaixo.
+lead: 'Práticas de engenharia para times que desenvolvem com agentes de código. Cada prática diz o
+  que fazer, com que força e de onde vem a evidência. Escolha a porta: projeto novo, projeto existente
+  ou no meio de uma mudança.'
 caminhos:
 - titulo: Projeto novo
   texto: 'Comece com o projeto já montado: regras, roteiro de trabalho e verificações.'
@@ -19,7 +19,7 @@ fatos:
 - Cada afirmação tem uma fonte, aberta e conferida na web por quem escreveu.
 - Cada lote de conteúdo passa por uma conferência de executabilidade feita por um agente independente, que segue os passos e abre uma fonte por conteúdo; a revisão com modelo forte vale quando há mudança de motor ou de schema, ou achado crítico.
 - Todo exemplo publicado foi executado, e a execução está registrada na página.
-revisado_em: '2026-10-04'
+revisado_em: '2026-10-21'
 referencias:
 - anthropic-claude-code-expertise
 ---

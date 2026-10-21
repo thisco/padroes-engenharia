@@ -1,6 +1,7 @@
 ---
 id: SEG-02
 titulo: Segredo não entra no repositório, com varredura no CI e antes do commit
+marco: "segredo fora do repo"
 dominio: seguranca
 subdominio: null
 momento: antes-do-merge
@@ -11,7 +12,7 @@ aplica: []
 referencias: [sdd-scaffold-threat-model, gitleaks-readme, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-ci-local-readme]
 relacionadas: [SEG-01, SEG-03]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "O segredo vive no ambiente, o gitleaks reprova a MR que o traz e um hook local o barra no commit; o que vazou é rotacionado antes de limpar o histórico."
 ferramentas_aprovadas: [gitleaks, gitlab-ci-local]

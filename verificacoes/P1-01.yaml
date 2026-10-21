@@ -1,6 +1,6 @@
 # 2026-10-05: reconferidas só as afirmações sobre o sdd-scaffold e a sdd-lifecycle (tags v1.7.0 e v3.0.0); as demais seguem como verificadas em 2026-10-04.
 conteudo: P1-01
-verificado_em: '2026-10-05'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'Tier 0: sem linha de código executável alterada ou sem efeito observável em runtime; Tier 1:
@@ -176,6 +176,10 @@ afirmacoes:
   localizacao: CHANGELOG.md, [1.7.0], 'Modificado'
   resultado: confirmada
   nota: 'Conferido também no arquivo: template/CLAUDE.md na tag v1.7.0 termina com @AGENTS.md. O README da mesma tag ainda chama os ponteiros de quatro linhas; vale o arquivo e o CHANGELOG.'
+- texto: "o rótulo do marco, 'tier classificado', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Especificar"
+  ref: portal-trilha
+  localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Especificar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-01/verificar-tier.sh

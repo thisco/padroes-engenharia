@@ -1,5 +1,5 @@
 conteudo: DAD-01
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: migration já aplicada não é editada; corrige-se com uma migration corretiva incremental
@@ -133,6 +133,10 @@ afirmacoes:
   resultado: confirmada
   nota: 'A documentação indica o sucesso por validationSuccessful: true; o texto ''Successfully validated
     N migrations'' vem da execução de 2026-10-06 com o Flyway 11.20.3.'
+- texto: "o rótulo do marco, 'migration intocada', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/DAD-01/gitlab-ci.yml

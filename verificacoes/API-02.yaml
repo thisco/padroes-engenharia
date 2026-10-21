@@ -1,5 +1,5 @@
 conteudo: API-02
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Schema Object da especificação usa palavras-chave de JSON Schema, como required
@@ -29,6 +29,10 @@ afirmacoes:
 - texto: o gitlab-ci-local executa pipelines como shell ou Docker
   ref: gitlab-ci-local-readme
   localizacao: README, instalação e executores (já registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: "o rótulo do marco, 'contrato conferido no CI', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

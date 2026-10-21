@@ -1,0 +1,10 @@
+id: portal-guia-brownfield-em-5-passos
+titulo: "Guia: Brownfield em 5 passos"
+organizacao: Portal de Padrões de Engenharia
+url: guias/brownfield-em-5-passos.html
+tipo: portal
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "cabeçalho (público: repositório em andamento com código, testes e CI; resultado esperado) e passos"
+dominios: [construir-com-ia]
+notas: "Página do próprio portal, lida no HTML gerado em 2026-10-21."

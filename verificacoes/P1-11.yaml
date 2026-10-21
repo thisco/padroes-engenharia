@@ -1,5 +1,5 @@
 conteudo: P1-11
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: no Tier 2, a Fase 8 muda o Status da spec para arquivada junto do changelog, antes do merge
@@ -31,6 +31,10 @@ afirmacoes:
 - texto: o aviso de destilação (C12) do scaffold está previsto para a 1.8.0 e não existe na 1.7.0
   ref: sdd-scaffold-spec-verificavel
   localizacao: 'seção ''Não-objetivos'', item ''Fica para a Release 2 (1.8.0)'': ''C12, o aviso de destilação'''
+  resultado: confirmada
+- texto: "o rótulo do marco, 'spec arquivada e destilada', resume o que a prática exige e aparece na etapa Aprender da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Aprender, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

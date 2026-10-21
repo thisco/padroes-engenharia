@@ -1,6 +1,7 @@
 ---
 id: ARQ-03
 titulo: "Portas e adaptadores: o domínio não importa framework, e o linter impõe"
+marco: "domínio sem framework"
 dominio: arquitetura
 subdominio: null
 momento: enquanto-escreve
@@ -11,7 +12,7 @@ aplica: []
 referencias: [cockburn-hexagonal, import-linter-docs]
 relacionadas: [ARQ-01, ARQ-04]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "O domínio não importa framework nem banco: portas dizem o que ele precisa, adaptadores implementam, e o import-linter reprova a violação."
 ferramentas_aprovadas: []

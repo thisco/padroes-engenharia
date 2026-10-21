@@ -1,6 +1,7 @@
 ---
 id: QLD-02
 titulo: Bug vira teste que reproduz o defeito, depois vira regra
+marco: "bug vira regra"
 dominio: qualidade-bdd
 subdominio: null
 momento: depois-da-entrega
@@ -11,7 +12,7 @@ aplica: [steering:qualidade, steering:troubleshooting]
 referencias: [sdd-scaffold-steering-troubleshooting, sdd-scaffold-steering-qualidade, sdd-scaffold-project-memory, pytest-exit-codes]
 relacionadas: [QLD-01, QLD-03]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "Todo bug corrigido deixa um teste que falha no código com o defeito e passa no corrigido, e um gotcha com sintoma, causa-raiz, correção e regra."
 ferramentas_aprovadas: [sdd-scaffold, pytest]
