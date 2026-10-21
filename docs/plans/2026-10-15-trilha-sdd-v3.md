@@ -1150,8 +1150,12 @@ O aumento continua **minor**.
 - [x] **Revisão adversarial contra a spec:** tabela abaixo, preenchida pelo implementador contra os
   requisitos; a revisão independente do lote (C11, ADR 0005) é a conferência de conteúdo que a
   constituição exige para a fatia.
-- [ ] **PAUSA.** Checkpoint humano final: o dono confere a página publicada localmente
+- [x] **PAUSA.** Checkpoint humano final: o dono confere a página publicada localmente
   (`http://localhost:8000/trilha.html` e `index.html`) e decide os pontos abertos listados em C11.
+  Aprovado em 2026-10-21 15:54. Os pontos abertos de C11 que são decisão do dono continuam
+  abertos, fora desta entrega. Antes do merge, os commits da branch que levavam linha de coautoria
+  foram reescritos sem ela (árvore idêntica), conforme a restrição global, e as duas specs
+  passaram a `arquivada`.
 
 ### Revisão adversarial (Tier 2)
 

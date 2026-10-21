@@ -2,7 +2,7 @@
 
 > **Tier:** 2 (schema de prática, navegação, página, vocabulário gerado em várias páginas,
 > `componentes.yml`; `esquemas/`, `portal/` e `skills/` são risco alto).
-> **Status:** aprovada
+> **Status:** arquivada (entregue e integrada à `main` em 2026-10-21; histórico do delta)
 > **Aprovado por:** thiago
 > **Aprovado em:** 2026-10-15
 > **Data:** 2026-10-15

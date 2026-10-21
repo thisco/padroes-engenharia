@@ -2,7 +2,7 @@
 
 > **Tier:** 2 (schema de espinha, ferramenta, caso e catálogo; tipo de conteúdo novo; página e
 > navegação; `esquemas/`, `portal/` e `componentes.yml` são risco alto).
-> **Status:** aprovada
+> **Status:** arquivada (entregue e integrada à `main` em 2026-10-21; histórico do delta)
 > **Aprovado por:** thiago
 > **Aprovado em:** 2026-10-14
 > **Data:** 2026-10-14
