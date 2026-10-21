@@ -1134,10 +1134,49 @@ O aumento continua **minor**.
 - a revisão adversarial cobrindo R1 a R18 da spec de 2026-10-14 e R2', R4', R7' a R11', R14' a
   R17', R19 e R20 do delta, numa tabela única.
 
+- [x] **Bateria final** rodada e colada em Evidências (tudo com 0; 920 passed; `ruff check` limpo).
+- [x] **Capturas** da página e da Início reais em 1280 px e 400 px, pelo Playwright MCP sobre o
+  servidor local, em `.playwright-mcp/capturas-c13/` (pasta ignorada pelo git): `trilha-1280.png`
+  (1280 × 13279), `trilha-400.png` (400 × 23576), `inicio-1280.png` (1280 × 3690) e
+  `inicio-400.png` (400 × 8099). Nenhuma rolagem lateral em 400 px. Conferido contra
+  `trilha-v3.html`: ciclo com os portões coloridos pela força (Especificar âmbar com P1-05, P1-06 e
+  P3-02; Codar tracejado com a nota de backlog; Revisar azul com DAD-01 e âmbar em CICD-01 e P1-09),
+  laço Aprender, três trilhas prontas na ordem de-origem, guiada, enxuta, "Monte a sua" com um
+  cartão por caminho; Início com as três portas, o ciclo compacto e "Trilha" no primeiro nível.
+- [x] **`grep` da V7:** `\bfases? \d` em `public/espinha.html` dá 0 (o teste
+  `test_espinha_usa_etapa_e_nao_fase` cobre). As ocorrências restantes em `trilha.html` e
+  `ferramentas/sdd-lifecycle.html` são os nomes das fases da própria `sdd-lifecycle` nos "bom
+  quando" da C7, e as de `para-agentes.html` são o bloco do `AGENTS.md` (TV3-D4).
+- [x] **Revisão adversarial contra a spec:** tabela abaixo, preenchida pelo implementador contra os
+  requisitos; a revisão independente do lote (C11, ADR 0005) é a conferência de conteúdo que a
+  constituição exige para a fatia.
+- [ ] **PAUSA.** Checkpoint humano final: o dono confere a página publicada localmente
+  (`http://localhost:8000/trilha.html` e `index.html`) e decide os pontos abertos listados em C11.
+
 ### Revisão adversarial (Tier 2)
 
 | R | veredito | evidência |
 |---|---|---|
+| R1 | atendido | `esquemas/espinha.yml` com `etapa` e `passos` por momento; `R-PASSO`; checkpoint 3 |
+| R2 / R2' | atendido | `esquemas/ferramenta.schema.json` (skill, colecao, caminhos, casos); `pw-playwright-mcp` (teste) tem caminhos e coleção; `R-CAMINHO`/`R-COLECAO` |
+| R3 | atendido | `R-ADOTAR-SKILL`: 29 ferramentas `skill` em `adotar` sustentadas por `casos: [origem-do-modelo]`; `mp-*` e `ao-observability` em `avaliar` |
+| R4 / R4' | atendido | `componentes.yml` com as cinco coleções nos commits da R4' (agent-skills com o rótulo corrigido para 0.6.13, desvio da C4); `test_trilha_componentes` |
+| R5 | atendido | `esquemas/trilha.schema.json`, `trilhas/{de-origem,guiada,enxuta}.yml`, `R-TRILHA` |
+| R6 | atendido | `origem: {material: casos/fontes/origem-do-modelo/}` no caso; `R-CASO-ORIGEM`; caso do gateway intacto |
+| R7 / R7' | atendido | `trilha.html` e `trilha.md` na ordem do delta (tese, ciclo, trilhas prontas, monte a sua, atritos, referências); capturas da C13 |
+| R8 / R8' | atendido | ciclo com três colunas e laço, portão com a força mais alta e tracejado sem mecanismo (TV3-D2); captura 1280 |
+| R9 / R9' | atendido | 'Para sair desta etapa' com até seis marcos pela ordem da regra; 21 rótulos `marco` na página (C8, com o desvio registrado) |
+| R10 / R10' | atendido | NAV: Início, Comece aqui, Trilha, Padrões, Ferramentas, Entender; captura da Início |
+| R11 / R11' | atendido | Início com as três portas (guia do zero, Brownfield, trilha), ciclo compacto e lead da tese (C8); `trilha.md` lista portas, etapas e marcos |
+| R12 | atendido | radar com a categoria Skill; página da ferramenta com os passos e os cartões; `public/ferramentas/sp-*.html` |
+| R13 | parcial | `catalogo.json` tem `trilhas` e `caminhos`; `trilha.md` no `llms.txt`; grafo com nós `trilha` e `passo` e as arestas. `consultar.py "planejar a mudança"` devolve só práticas: o script filtra `file_type == pratica` e não inclui os caminhos do passo Planejar. Código da Fase 2, fora desta fase; fica para o dono |
+| R14 / R14' | atendido | `casos/origem-do-modelo.md` com 12 fontes em `casos/fontes/`, uma afirmação por ferramenta em `adotar` marcada artefato ou relato; varredura de termos sem ocorrência no lote; relato aprovado pelo dono em 2026-10-21 |
+| R15 / R15' | atendido | 13 `sp-*` (7.0.0, systematic-debugging em Investigar), 14 `ao-*` (13 adotar, observability avaliar), `an-frontend-design`, `pw-playwright-mcp`, 8 `mp-*` (avaliar), `sdd-lifecycle` como skill; cada uma com referência no commit fixado, registro e revisão em lote (C11) |
+| R16 / R16' | atendido | `de-origem` com a sequência da R16' (18 itens), `guiada` (sdd-lifecycle nos dez passos), `enxuta` (mp-*); página na ordem de-origem, guiada, enxuta |
+| R17 / R17' | atendido | ADR 0010 (TR-D1 a D5, TV3-D1, D2, D4, D6, D7, sete alternativas) e ADR 0011 (caso ampliado); 0006 com a linha autorizada; parágrafo da versão mais nova na skill de curadoria |
+| R18 | atendido | `CHANGELOG.md`, `[Não publicado]`, Adicionado e Alterado pelo efeito; minor |
+| R19 | atendido | `marco` no schema da prática (1 a 40 caracteres); 26 práticas com rótulo (C8) |
+| R20 | atendido | eixo nomeado pela etapa nas páginas geradas; `grep` da V7 em `espinha.html` dá 0; teste `test_espinha_usa_etapa_e_nao_fase` |
 
 ---
 
@@ -1160,4 +1199,49 @@ Achados no aceite e corrigidos: a Início rolava na lateral em 400 px (minimatri
 
 Pendências que são da Fase 5: título da página e lead da Início (C1, C8), rótulos dos marcos (C8), trilhas e ferramentas reais (C3 a C9).
 
-(colar aqui as saídas da C13)
+### C13 (2026-10-21, fim da Fase 5)
+
+Commits `623bb43` (C2) a `080b42e` (C12). Saídas:
+
+```text
+$ pytest -q
+........................................................                 [100%]
+920 passed in 50.58s
+
+$ ruff check .
+All checks passed!
+
+$ python scripts/validar.py
+validação ok: nenhum erro.
+exit=0
+
+$ python scripts/gerar.py
+portal gerado em /Users/thiago/Documents/Workspace/repos/padroes-engenharia/public (versão 1.1.0, commit 080b42e, 2026-10-21).
+exit=0
+
+$ python scripts/checar_links.py  (rodado em 2026-10-21 10:08, log no scratchpad)
+Links com erro: 22
+Revisão vencida: 0
+Práticas experimentar apoiadas só em [S]: 0
+Mecanismos externos a conferir: 0
+Componentes com versão nova: 5
+Células a definir: 15
+Exemplo recomendado ausente: 0
+Isenções temporárias: 0
+relatório em relatorio-avisos.md
+
+$ python3 public/pacote/consultar.py "planejar a mudança"  (3 primeiras linhas)
+DAD-02 · Expanda e contraia: a mudança de schema em duas etapas compatíveis · orienta · dados-migrations × enquanto-escr
+  vizinhos: DAD-01, IAC-01, IAC-03, ferramenta:alembic, ferramenta:flyway, skill:migrations-reversiveis
+P1-01 · Classificar toda mudança em tier antes de codar · orienta · construir-com-ia × antes-de-escrever · http://localh
+(só práticas: o consultar.py devolve nós file_type == pratica; os nós passo:enquanto-escreve/planejar e ferramenta:sp-writing-plans existem no grafo, mas não entram na resposta)
+
+$ graphify update .
+[graphify watch] graph.json, graph.html and GRAPH_REPORT.md updated in graphify-out
+Code graph updated. For doc/paper/image changes run /graphify --update in your AI assistant.
+Tip: set GEMINI_API_KEY or GOOGLE_API_KEY to use Gemini for semantic extraction.
+exit=0
+```
+
+Os 22 "links com erro" do checador são 21 referências do tipo `portal` (caminho relativo, não https, que ele não busca) e uma queda de conexão no site do Planalto; as referências de `SKILL.md` nos commits fixados resolveram todas. "Componentes com versão nova" é o checador sem conseguir ler um CHANGELOG nas cinco coleções. Relatório completo em `relatorio-avisos.md` do scratchpad (artefato de CI, não versionado).
+
