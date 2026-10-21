@@ -1044,6 +1044,21 @@ Commit do conteúdo: `docs(trilhas): de origem, guiada e enxuta`.
 
 Commit: `docs(adr): 0010 trilha e versões, 0011 caso de origem; curadoria fixa a versão mais nova`.
 
+- [x] **Passo 1:** `docs/adr/0010-trilha-nao-trilho.md`: TR-D1 a TR-D5 e TV3-D1, D2, D4, D6 e D7 na
+  Decisão; sete alternativas descartadas (4.0 família de skills, 4.0 gates mais mapa, tipo
+  `caminhos/`, página editorial sem validação, v2 com linhas contínuas, portão azul para qualquer
+  mecanismo, versão do caso fixada no lugar da mais nova); cabeçalho com `Status: aceita` e as
+  duas specs.
+- [x] **Passo 2:** `docs/adr/0011-caso-de-origem-sanitizado.md`: os dois motivos da 0006 e o que
+  mudou; TR-D6, TV3-D8 e o formato `origem: {material}`; a 0006 continua valendo para o caso com o
+  nome e os números da organização.
+- [x] **Passo 3:** na 0006, só a linha `**Substituída em parte por:** [ADR 0011](...)`, abaixo do
+  cabeçalho (autorização do dono em 2026-10-14, spec, Esclarecimentos).
+- [x] **Passo 4:** o parágrafo da versão mais nova entrou no passo 1 da skill `curadoria-de-pratica`,
+  logo após o item do `mecanismo` que cita `componentes.yml` (área de risco alto: duas aprovações
+  na MR). `test_skill_curadoria.py` continua passando (passos na ordem, menos de 500 linhas).
+- [x] **Passo 5:** `validar.py` e `gerar.py` com 0; 920 passed; commit.
+
 ### Tarefa C11: Revisão independente do lote de conteúdo
 
 É a tarefa 19 do plano anterior, com mais duas perguntas:

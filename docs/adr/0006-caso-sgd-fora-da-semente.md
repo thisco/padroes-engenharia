@@ -4,6 +4,8 @@
 (§10, lista de casos) · **Origem:** decisão do dono em 2026-10-07, em
 `docs/plans/2026-10-07-portal-fase-b5-fecho.md` (Contexto e T5)
 
+**Substituída em parte por:** [ADR 0011](0011-caso-de-origem-sanitizado.md)
+
 ## Contexto
 
 A semente de conteúdo do §10 da spec lista dois casos: "SGD Catálogo de Nuvem: LLM em produção" e a
