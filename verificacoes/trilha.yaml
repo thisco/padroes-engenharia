@@ -73,6 +73,6 @@ afirmacoes:
   localizacao: seções The bar (parte 1, Observed failure) e By bucket (New skills)
   resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
-  data: '2026-10-20'
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
   achados: []

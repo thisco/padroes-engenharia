@@ -26,9 +26,9 @@ afirmacoes:
     ref: playwright-mcp-readme
     localizacao: "seção 'Playwright MCP vs Playwright CLI'"
     resultado: confirmada
-  - texto: "há ferramentas de navegar, redimensionar, clicar, capturar tela, snapshot de acessibilidade e fechar"
+  - texto: "há ferramentas de navegar, redimensionar, clicar, capturar tela, snapshot de acessibilidade e fechar, e o snapshot é o recomendado para agir sobre a página"
     ref: playwright-mcp-readme
-    localizacao: "seção 'Tools', 'Core automation': browser_navigate, browser_resize, browser_click, browser_take_screenshot, browser_snapshot, browser_close"
+    localizacao: "seção 'Tools', 'Core automation': browser_navigate, browser_resize, browser_click, browser_take_screenshot ('use browser_snapshot for actions'), browser_snapshot ('better than screenshot'), browser_close"
     resultado: confirmada
   - texto: "o caso de origem permitiu cinco ferramentas do servidor: navegar, redimensionar, clicar, capturar tela e fechar"
     ref: origem-do-modelo-permissoes
@@ -43,6 +43,9 @@ afirmacoes:
     localizacao: "lista de referências: a do Playwright MCP traz a URL no commit f183dad e a versão 0.0.83"
     resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
   data: '2026-10-21'
-  achados: []
+  achados:
+    - afirmacao: "bom quando de TDD: o agente percorre a tela pelo snapshot e escreve o cenário depois, como no plano de origem"
+      problema: "o plano de origem só escreve cenários E2E em código, e as permissões do caso não incluem o snapshot"
+      tratamento: "'como no plano de origem' saiu; o snapshot passa a ser citado como o que o servidor recomenda para agir, com afirmação própria"

@@ -2219,17 +2219,17 @@ Entrega: (R7)
 `casos/fontes/origem-do-modelo/<arquivo>.md`); criar `verificacoes/origem-do-modelo.yaml`.
 
 - [ ] **Passo 1: recontar no commit de origem.** No repositório de origem
-  (`~/Documents/Workspace/sgd-catalogo-nuvem`, commit `9117a57`), rode e guarde as saídas:
+  (`<repositório de origem>`, commit `9117a57`), rode e guarde as saídas:
 
 ```bash
-git -C ~/Documents/Workspace/sgd-catalogo-nuvem rev-parse --short HEAD
-ls ~/Documents/Workspace/sgd-catalogo-nuvem/docs/plans | wc -l
-ls ~/Documents/Workspace/sgd-catalogo-nuvem/docs/specs | wc -l
-git -C ~/Documents/Workspace/sgd-catalogo-nuvem log --oneline | wc -l
-grep -l 'subagent-driven-development\|executing-plans' ~/Documents/Workspace/sgd-catalogo-nuvem/docs/plans/*.md | wc -l
-git -C ~/Documents/Workspace/sgd-catalogo-nuvem log --reverse --format='%ci' | head -1
-git -C ~/Documents/Workspace/sgd-catalogo-nuvem log -1 --format='%ci'
-git -C ~/Documents/Workspace/sgd-catalogo-nuvem show --stat df3fbbb | head -5
+git -C <repositório de origem> rev-parse --short HEAD
+ls <repositório de origem>/docs/plans | wc -l
+ls <repositório de origem>/docs/specs | wc -l
+git -C <repositório de origem> log --oneline | wc -l
+grep -l 'subagent-driven-development\|executing-plans' <repositório de origem>/docs/plans/*.md | wc -l
+git -C <repositório de origem> log --reverse --format='%ci' | head -1
+git -C <repositório de origem> log -1 --format='%ci'
+git -C <repositório de origem> show --stat df3fbbb | head -5
 ```
 
 Esperado (da análise de 2026-10-14): `9117a57`, 112, 56, 1057, 54, 2026-04-30, 2026-08-29 e o
@@ -2456,7 +2456,7 @@ Entrega: (R16)
 ### Tarefa 18: ADRs 0010 e 0011 e a linha na 0006
 
 **Arquivos:** criar `docs/adr/0010-trilha-nao-trilho.md` e
-`docs/adr/0011-caso-de-origem-sanitizado.md`; alterar `docs/adr/0006-caso-sgd-fora-da-semente.md`
+`docs/adr/0011-caso-de-origem-sanitizado.md`; alterar a ADR 0006
 (uma linha só).
 
 - [ ] **Passo 1:** ADR 0010 no formato das existentes (Contexto, Decisão, Consequências, mais

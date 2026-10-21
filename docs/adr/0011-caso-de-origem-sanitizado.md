@@ -3,7 +3,7 @@
 **Data:** 2026-10-21 · **Status:** aceita · **Spec:** `docs/specs/2026-10-14-trilha-sdd-design.md`
 (TR-D6, R14) com o delta `docs/specs/2026-10-15-trilha-sdd-v3-delta.md` (TV3-D8, R14') · **Origem:**
 autorização do dono em 2026-10-14 (spec, Esclarecimentos) e relato do dono de 2026-10-14 e
-2026-10-15, revisado em 2026-10-20 · **Substitui em parte:** [ADR 0006](0006-caso-sgd-fora-da-semente.md)
+2026-10-15, revisado em 2026-10-20 · **Substitui em parte:** ADR 0006
 
 ## Contexto
 

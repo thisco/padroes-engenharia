@@ -13,15 +13,17 @@ caminhos:
     passo: isolar
     papel: caminho
     bom_quando: "você quer uma branch isolada sem sujar o diretório atual: a skill detecta isolamento já existente, prefere a ferramenta nativa do harness e só então cai no git worktree."
-    cuidado: "pede consentimento antes de criar o worktree, exige o diretório no .gitignore e roda a suíte como linha de base antes de implementar."
+    cuidado: "pede consentimento antes de criar o worktree, salvo preferência já declarada, exige o diretório no .gitignore e roda a suíte como linha de base antes de implementar."
 como_instalar: |
   Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
-  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/using-git-worktrees/
-  inteira do commit fixado para a pasta de skills do harness [ref:superpowers-using-git-worktrees];
-  o caminho de cada harness está na página da ferramenta dele.
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos; o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
 limites: |
   O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
   [ref:portal-referencias]. A skill prefere a ferramenta nativa de worktree do harness e só usa git
-  worktree add sem ela; pede consentimento antes de criar, e se o diretório do worktree não estiver
-  no .gitignore ela o adiciona e commita essa mudança [ref:superpowers-using-git-worktrees].
+  worktree add sem ela; pede consentimento antes de criar, salvo preferência já declarada nas
+  instruções, e se o diretório do worktree não estiver no .gitignore ela o adiciona e commita essa
+  mudança [ref:superpowers-using-git-worktrees].
 referencias: [superpowers-using-git-worktrees, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

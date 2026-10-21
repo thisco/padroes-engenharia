@@ -20,10 +20,12 @@ como_instalar: |
   references/ do repositório [ref:agent-skills-readme], que esta skill cita
   (references/hardening-patterns.md ao lado dela e a pasta references/ do repositório
   (security-checklist.md)). Sem instalador, copie skills/security-and-hardening/ e references/ do
-  commit fixado para a pasta de skills do harness [ref:agent-skills-security-and-hardening]; o
-  caminho de cada harness está na página da ferramenta dele.
+  commit fixado (aeac41d) para a pasta de skills do harness, com references/ dois níveis acima da
+  pasta da skill, como os links ../../references/ exigem [ref:agent-skills-security-and-hardening];
+  o README sugere, em vez disso, copiar o checklist para dentro da skill instalada
+  [ref:agent-skills-readme]. O caminho de cada harness está na página da ferramenta dele.
 limites: |
-  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
   [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
   [ref:portal-referencias]. A skill é orientada a aplicações web e cobre injeção, sessões,
   cabeçalhos, uploads, SSRF, limite de taxa, segredos, cadeia de suprimentos, dado pessoal e

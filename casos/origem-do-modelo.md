@@ -33,7 +33,7 @@ numeros:
     data: "2026-05-25"
     fonte: casos/fontes/origem-do-modelo/contagens.md
 referencias: [origem-do-modelo-contagens, origem-do-modelo-relato, origem-do-modelo-plano-cabecalho, origem-do-modelo-plano-gatekeeper, origem-do-modelo-spec-gatekeeper, origem-do-modelo-plano-revisao-independente, origem-do-modelo-migracao, origem-do-modelo-plano-frontend-design-1, origem-do-modelo-plano-frontend-design-2, origem-do-modelo-plano-playwright, origem-do-modelo-permissoes, origem-do-modelo-instalacoes]
-revisado_em: 2026-10-20
+revisado_em: 2026-10-21
 dono: engenharia
 ---
 
@@ -49,9 +49,9 @@ O lugar dos artefatos foi a primeira decisão de projeto sobre as skills: em 202
 
 ## O que cada skill sustenta, e com que evidência
 
-Cinco skills do superpowers deixaram artefato: `writing-plans` (os planos e a migração do caminho padrão), `subagent-driven-development` e `executing-plans` (o cabeçalho dos 54 planos e os scripts nas permissões), `brainstorming` (as specs e o servidor do companheiro visual nas permissões) e `test-driven-development` (a Fase 5 do plano do gatekeeper, que obriga o subagente a escrever o teste antes do código) [ref:origem-do-modelo-plano-cabecalho] [ref:origem-do-modelo-permissoes] [ref:origem-do-modelo-plano-gatekeeper]. As outras dez, entre elas `systematic-debugging` também antes de escrever, para investigar o problema, estão no relato do dono, e quatro delas (`using-git-worktrees`, `finishing-a-development-branch`, `using-superpowers` e as duas do agent-skills para revisão e teste) aparecem nas permissões [ref:origem-do-modelo-relato] [ref:origem-do-modelo-permissoes].
+Cinco skills do superpowers deixaram artefato: `writing-plans` (os planos e a migração do caminho padrão), `subagent-driven-development` e `executing-plans` (o cabeçalho dos 54 planos e os scripts nas permissões), `brainstorming` (o servidor do companheiro visual nas permissões; as specs, pelo relato do dono) e `test-driven-development` (a Fase 5 do plano do gatekeeper, que obriga o subagente a escrever o teste antes do código) [ref:origem-do-modelo-plano-cabecalho] [ref:origem-do-modelo-permissoes] [ref:origem-do-modelo-plano-gatekeeper]. As outras dez, entre elas `systematic-debugging` também antes de escrever, para investigar o problema, estão no relato do dono, e três delas (`using-git-worktrees`, `finishing-a-development-branch` e `using-superpowers`) aparecem nas permissões, junto com duas entradas do agent-skills, a de revisão e uma `test` [ref:origem-do-modelo-relato] [ref:origem-do-modelo-permissoes].
 
-A `frontend-design` tem artefato: 14 planos prescrevem a passada dela sobre o design system existente, 11 deles entre 2026-06-26 e 2026-06-29, sempre com um protótipo HTML como referência visual e um teste Playwright no fim [ref:origem-do-modelo-contagens] [ref:origem-do-modelo-plano-frontend-design-1] [ref:origem-do-modelo-plano-frontend-design-2]. O Playwright MCP também: 17 planos trazem cenários de ponta a ponta ou um checkpoint com captura de tela apresentada antes da aprovação, e as cinco ferramentas do servidor estão nas permissões [ref:origem-do-modelo-contagens] [ref:origem-do-modelo-plano-playwright] [ref:origem-do-modelo-permissoes]. O dono relata que usou a `frontend-design` em toda tela e o Playwright na evidência [ref:origem-do-modelo-relato].
+A `frontend-design` tem artefato: 14 planos prescrevem a passada dela sobre o design system existente, 11 deles entre 2026-06-26 e 2026-06-29, e os dois trechos publicados trazem um protótipo HTML como referência visual e o Playwright no roteiro [ref:origem-do-modelo-contagens] [ref:origem-do-modelo-plano-frontend-design-1] [ref:origem-do-modelo-plano-frontend-design-2]. O Playwright MCP também: 17 planos trazem cenários de ponta a ponta ou um checkpoint com captura de tela apresentada antes da aprovação, e as cinco ferramentas do servidor estão nas permissões [ref:origem-do-modelo-contagens] [ref:origem-do-modelo-plano-playwright] [ref:origem-do-modelo-permissoes]. O dono relata que usou a `frontend-design` em toda tela e o Playwright na evidência [ref:origem-do-modelo-relato].
 
 ## O que ficou fora
 

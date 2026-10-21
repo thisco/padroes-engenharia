@@ -16,10 +16,10 @@ caminhos:
     cuidado: "não serve quando as falhas estão relacionadas ou os agentes editariam os mesmos arquivos; depois, a suíte inteira roda e cada resumo é conferido."
 como_instalar: |
   Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
-  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta
-  skills/dispatching-parallel-agents/ inteira do commit fixado para a pasta de skills do harness
-  [ref:superpowers-dispatching-parallel-agents]; o caminho de cada harness está na página da
-  ferramenta dele.
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos; o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
 limites: |
   O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
   [ref:portal-referencias]. A skill é para falhas independentes: um agente por domínio de problema,

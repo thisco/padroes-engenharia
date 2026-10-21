@@ -10,9 +10,9 @@ afirmacoes:
     ref: superpowers-finishing-a-development-branch
     localizacao: "seção 'Step 3: Determine Base Branch'"
     resultado: confirmada
-  - texto: "o menu tem exatamente três opções: merge local, PR ou manter a branch"
+  - texto: "o menu tem três opções (merge local, PR ou manter a branch), e duas em HEAD destacado"
     ref: superpowers-finishing-a-development-branch
-    localizacao: "seção 'Step 4: Present Options', bloco 'Normal repo and named-branch worktree'"
+    localizacao: "seção 'Step 4: Present Options', blocos 'Normal repo and named-branch worktree' e 'Detached HEAD'"
     resultado: confirmada
   - texto: "a decisão de integrar é da pessoa"
     ref: superpowers-finishing-a-development-branch
@@ -22,13 +22,17 @@ afirmacoes:
     ref: superpowers-finishing-a-development-branch
     localizacao: "seção 'If your human partner asks to discard the work' e 'Common Rationalizations' ('Only the typed word discard')"
     resultado: confirmada
-  - texto: "a skill só remove worktrees em .worktrees/ ou worktrees/ e nunca usa --force por conta própria"
+  - texto: "a limpeza do worktree só roda no merge local e no descarte confirmado, só em .worktrees/ ou worktrees/, e nunca com --force por conta própria"
     ref: superpowers-finishing-a-development-branch
-    localizacao: "seção 'Step 6: Cleanup Workspace'"
+    localizacao: "seção 'Step 6: Cleanup Workspace': 'Runs for Option 1 and confirmed discards'"
     resultado: confirmada
   - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
     ref: superpowers-readme
     localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
     resultado: confirmada
   - texto: "o caso de origem usou o superpowers na série 6.x"
     ref: origem-do-modelo-instalacoes
@@ -39,6 +43,12 @@ afirmacoes:
     localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
     resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
   data: '2026-10-21'
-  achados: []
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"
+    - afirmacao: "limites: o menu tem exatamente três opções; bom quando: limpa o worktree que ela mesma criou"
+      problema: "em HEAD destacado são duas opções, e a limpeza só ocorre no merge local e no descarte confirmado"
+      tratamento: "textos e afirmações ajustados"

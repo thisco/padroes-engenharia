@@ -15,10 +15,11 @@ caminhos:
     cuidado: "só oferece ADR quando a decisão é difícil de reverter, surpreende sem contexto e vem de um trade-off real; o glossário fica sem detalhe de implementação, e o esquema de arquivos é o dela (GLOSSARY.md na raiz, docs/adr/)."
 como_instalar: |
   Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
-  instalador de skills, um dos dois por agente, e rode o setup dela uma vez por repositório
-  [ref:mattpocock-readme]. Sem instalador, copie skills/engineering/domain-modeling/ do commit
-  fixado para a pasta de skills do harness [ref:mattpocock-domain-modeling]; o caminho de cada
-  harness está na página da ferramenta dele.
+  instalador de skills, um dos dois por agente, e rode o setup dela (/setup-matt-pocock-skills) uma
+  vez por repositório, incluindo-o ao escolher as skills no instalador [ref:mattpocock-readme]. Sem
+  instalador, copie skills/engineering/domain-modeling/ do commit fixado (49dd158) para a pasta de
+  skills do harness [ref:mattpocock-domain-modeling]; o README só documenta plugin e instalador
+  [ref:mattpocock-readme]. O caminho de cada harness está na página da ferramenta dele.
 limites: |
   Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
   [ref:portal-referencias]. A skill é a disciplina ativa de mudar o modelo, não de só ler o

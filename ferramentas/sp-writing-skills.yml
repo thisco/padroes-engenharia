@@ -16,11 +16,13 @@ caminhos:
     cuidado: "a descrição diz só quando usar e nunca resume o fluxo; editar sem testar é a mesma violação que criar sem testar, e cada skill é testada antes da próxima."
 como_instalar: |
   Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
-  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/writing-skills/
-  inteira do commit fixado para a pasta de skills do harness (a skill cita
-  testing-skills-with-subagents.md, persuasion-principles.md, graphviz-conventions.dot,
-  render-graphs.js e o documento de boas práticas do fornecedor ao lado dela)
-  [ref:superpowers-writing-skills]; o caminho de cada harness está na página da ferramenta dele.
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos (esta cita testing-skills-with-subagents.md,
+  persuasion-principles.md, graphviz-conventions.dot, render-graphs.js e o documento de boas
+  práticas do fornecedor ao lado dela [ref:superpowers-writing-skills]); o README só documenta a
+  instalação por plugin [ref:superpowers-readme]. O caminho de cada harness está na página da
+  ferramenta dele.
 limites: |
   O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
   [ref:portal-referencias]. Exige entender a test-driven-development antes; a skill cita o diretório

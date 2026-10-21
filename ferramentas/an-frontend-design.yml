@@ -15,12 +15,12 @@ caminhos:
     bom_quando: "a tela precisa de identidade própria: a skill planeja paleta, tipografia e layout em tokens a partir do assunto do produto, revisa o plano contra o brief para fugir dos traços de página gerada e só então escreve o código."
     cuidado: "sem o tema do projeto no brief, ela cria uma identidade nova por conta própria: o brief precisa fixar a direção visual quando ela já existe; a ousadia vai num elemento só, com piso de qualidade (responsivo, foco visível, movimento reduzido respeitado)."
 como_instalar: |
-  Instale o plugin frontend-design pelo marketplace do harness que publica a coleção: o README do
-  repositório traz o comando de instalação por nome de plugin [ref:claude-plugins-official-readme].
-  Fora dele, copie plugins/frontend-design/skills/frontend-design/ do commit fixado para a pasta de
-  skills do seu harness: o plugin é um pacote de skill, sem código
-  [ref:claude-plugins-official-frontend-design]; o caminho de cada harness está na página da
-  ferramenta dele.
+  Instale o plugin frontend-design pelo sistema de plugins do harness que publica a coleção: o
+  README do repositório traz o comando de instalação por nome de plugin, `/plugin install
+  frontend-design@claude-plugins-official` [ref:claude-plugins-official-readme]. Fora dele, copie
+  plugins/frontend-design/skills/frontend-design/ do commit fixado para a pasta de skills do seu
+  harness: o plugin é um pacote de skill, sem código [ref:claude-plugins-official-frontend-design];
+  o caminho de cada harness está na página da ferramenta dele.
 limites: |
   O caso de origem instalou a skill em 2026-06-10, commit a0b04d9
   [ref:origem-do-modelo-instalacoes]; o portal fixa o commit 8f814f4, e a versão é a data dele,

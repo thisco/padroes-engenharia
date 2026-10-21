@@ -42,7 +42,7 @@ afirmacoes:
     ref: agent-skills-readme
     localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
     resultado: confirmada
-  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
     ref: agent-skills-readme
     localizacao: "seção Quick Start, nota 'Installing one skill?'"
     resultado: confirmada
@@ -52,9 +52,18 @@ afirmacoes:
     resultado: confirmada
   - texto: "a skill observability-and-instrumentation não está na árvore de skills do commit 5e262b2"
     ref: agent-skills-arvore-junho
-    localizacao: "lista de pastas em skills/ (23 pastas), sem observability-and-instrumentation nem constraint-driven-development"
+    localizacao: "lista de pastas em skills/ (23 pastas), sem observability-and-instrumentation nem constraint-driven-development; 742dca5 é ancestral de 5e262b2 (compare na API do repositório)"
     resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
   data: '2026-10-21'
-  achados: []
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "cuidado: nunca logar segredo nem dado pessoal"
+      problema: "a fonte proíbe PII completa, não todo dado pessoal"
+      tratamento: "texto passa a dizer 'dado pessoal completo'"
+    - afirmacao: "limites: não existe na versão de junho que o caso usou"
+      problema: "o caso instalou a coleção também em maio (742dca5), e a árvore só foi lida em 5e262b2"
+      tratamento: "conferido na API que 742dca5 é ancestral de 5e262b2: o texto diz que a ausência em junho vale para as duas"

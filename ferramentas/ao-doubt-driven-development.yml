@@ -19,14 +19,17 @@ como_instalar: |
   instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
   references/ do repositório [ref:agent-skills-readme], que esta skill cita (a pasta references/ do
   repositório (orchestration-patterns.md)). Sem instalador, copie skills/doubt-driven-development/ e
-  references/ do commit fixado para a pasta de skills do harness
-  [ref:agent-skills-doubt-driven-development]; o caminho de cada harness está na página da
-  ferramenta dele.
+  references/ do commit fixado (aeac41d) para a pasta de skills do harness, com references/ dois
+  níveis acima da pasta da skill, como os links ../../references/ exigem
+  [ref:agent-skills-doubt-driven-development]; o README sugere, em vez disso, copiar o checklist
+  para dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está na página
+  da ferramenta dele.
 limites: |
-  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
   [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
   [ref:portal-referencias]. Feita para a sessão principal, que pode abrir um revisor de contexto
-  limpo; dentro de um subagente ela degrada para autoquestionamento e diz isso. O ciclo é limitado a
-  três voltas, e a skill manda oferecer, a cada ciclo interativo, uma revisão por outro modelo, que
-  só roda com autorização explícita da pessoa [ref:agent-skills-doubt-driven-development].
+  limpo; dentro de um subagente, o caminho preferido é avisar a pessoa de que ela não roda aninhada,
+  e só em último caso degrada para autoquestionamento, dizendo isso. O ciclo é limitado a três
+  voltas, e a skill manda oferecer, a cada ciclo interativo, uma revisão por outro modelo, que só
+  roda com autorização explícita da pessoa [ref:agent-skills-doubt-driven-development].
 referencias: [agent-skills-doubt-driven-development, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

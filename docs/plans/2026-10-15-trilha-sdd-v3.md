@@ -1065,6 +1065,44 @@ Commit: `docs(adr): 0010 trilha e versões, 0011 caso de origem; curadoria fixa 
 4. alguma prática que avisa aparece em azul na página gerada?
 5. o `limites` de cada ferramenta cujo caso usou versão anterior diz qual versão?
 
+- [x] **Passo 1:** revisor independente despachado em 2026-10-21 (sessão nova, modelo econômico,
+  ADR 0005) sobre as ferramentas, registros, referências, caso e fontes, trilhas, páginas, glossário,
+  marcos e ADRs de C1 a C10, com as cinco perguntas e a de executabilidade. Leu inteiras onze skills do
+  superpowers, quatro do agent-skills, as oito do mattpocock, a frontend-design e a sdd-lifecycle; as
+  demais por busca dirigida. Devolveu 38 achados: 3 críticos, 5 médios, 30 menores; a pergunta 4
+  (prática que avisa em azul) ficou sem achado.
+- [x] **Passo 2:** achados tratados e registrados na `revisao_adversarial` de cada registro do lote
+  (o revisor e a data da conferência substituem `pendente-tarefa-C13`):
+  - críticos: o plano de 2026-10-14 publicava o caminho local do repositório de origem (sanitizado
+    para `<repositório de origem>`, nove ocorrências); a ADR 0011 linkava a ADR 0006 pelo nome do
+    arquivo, que traz a sigla do sistema (o link virou "ADR 0006"); `instalacoes.md` nomeava os
+    produtos dos harnesses, enquanto o caso diz "primeiro" e "segundo harness" (alinhado).
+  - médios, todos corrigidos no texto e na afirmação: brainstorming (exceções do gate), executing-plans
+    (sem subagente a revisão final é autorrevisão), frontend-ui-engineering (condição da fonte),
+    Playwright (o plano de origem não mostra o snapshot), `como_instalar` das três coleções (os READMEs
+    não documentam cópia manual; o texto passa a mandar copiar a pasta inteira, com o hash, e diz onde
+    a `references/` do agent-skills fica), `limites` das ao-* (o caso instalou a coleção em maio e em
+    junho; conferido na API que o commit de maio é ancestral do de junho).
+  - menores corrigidos: finishing-a-development-branch (duas opções em HEAD destacado; limpeza só no
+    merge e no descarte), using-git-worktrees (preferência declarada dispensa a pergunta),
+    observability (dado pessoal completo), doubt-driven (avisar a pessoa antes de degradar), to-spec
+    (exceção do protótipo), implement (sem passo de branch), sdd-lifecycle (aprovação a pedido de quem
+    aprova), três frases do caso (contagem das skills nas permissões, "sempre" nos planos de
+    frontend-design, specs atribuídas ao brainstorming), executabilidade (comando do plugin da
+    frontend-design, nome do setup do mattpocock).
+  - mantidos, com o motivo no registro: hashes de commit do repositório de origem (não identificam a
+    organização; a ADR 0011 prevê o commit fixado); "sistema de um órgão público" e o fato de
+    segurança no cabeçalho de plano, e os nomes funcionais de módulos nos trechos (aprovados com o
+    caso; **decisão do dono**); nomes de harness no `como_instalar` da sdd-lifecycle e na Início
+    (texto anterior a esta entrega, com páginas reais do portal); termos de provedor em citações de
+    documentação pública (**decisão do dono**).
+  - fora do lote, para o dono: termos da lista em arquivos anteriores (`tests/fabrica.py`,
+    `apresentacoes/harness-sdd/`, `verificacoes/avaliacao-gateway-de-ia.yaml`, specs e planos
+    antigos, `docs/research/`) e caminho local do usuário em cinco registros de verificação
+    (`ferramenta-sdd-lifecycle`, `DAD-01`, `P1-01`, `P2-02`, `do-zero-a-primeira-mr`). A ADR 0006
+    continua com a sigla no nome do arquivo e no título: renomear ADR é decisão do dono.
+- [x] **Passo 3:** `validar.py` e `gerar.py` com 0; 920 passed; commit.
+
 ### Tarefa C12: CHANGELOG
 
 É a tarefa 20 do plano anterior, com os itens da v3:
@@ -1080,6 +1118,13 @@ Commit: `docs(adr): 0010 trilha e versões, 0011 caso de origem; curadoria fixa 
 - ADRs.
 
 O aumento continua **minor**.
+
+- [x] Entrada em `## [Não publicado]`, em Adicionado (página Trilha, ciclo na Início com as três portas,
+  tipo trilha e as três trilhas, 37 ferramentas mais a `sdd-lifecycle`, campo `marco`, caso
+  sanitizado, cinco coleções, regras novas, glossário, ADRs) e em Alterado (espinha com etapa e passos,
+  ferramenta com skill, caso com material, catálogo e grafo, `sdd-lifecycle` como caminho,
+  agent-skills na 0.6.13, lead da Início, skill de curadoria, referências do superpowers na 7.0.0).
+  Commit `docs: changelog da trilha SDD`.
 
 ### Tarefa C13: Verificação final, aceite visual e revisão adversarial
 

@@ -47,6 +47,9 @@ afirmacoes:
     localizacao: "lista de referências: as da coleção trazem a URL no commit 8f814f4 e a versão 2026.10.15"
     resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
   data: '2026-10-21'
-  achados: []
+  achados:
+    - afirmacao: "como_instalar: o README traz o comando de instalação por nome de plugin"
+      problema: "conferência de executabilidade: o comando não estava transcrito"
+      tratamento: "o comando entra no texto"

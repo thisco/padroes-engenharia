@@ -12,12 +12,12 @@ caminhos:
   - momento: antes-do-merge
     passo: evidencia
     papel: caminho
-    bom_quando: "a evidência de uma tela é um screenshot ou um snapshot de acessibilidade tirado pelo próprio agente: navegar, redimensionar, clicar, capturar e fechar, as cinco ferramentas que o caso de origem permitiu."
+    bom_quando: "a evidência de uma tela é um screenshot tirado pelo próprio agente: navegar, redimensionar, clicar, capturar e fechar, as cinco ferramentas que o caso de origem permitiu; para agir sobre a página, o servidor recomenda o snapshot de acessibilidade."
     cuidado: "é ferramenta, não skill: dá ao agente mãos no navegador, não um procedimento; o servidor não é fronteira de segurança, e a configuração padrão do README usa @latest, que o portal troca pela versão fixada."
   - momento: enquanto-escreve
     passo: tdd
     papel: complemento
-    bom_quando: "o teste de ponta a ponta precisa ser explorado antes de ser escrito: o agente percorre a tela pelo snapshot de acessibilidade e escreve o cenário Playwright depois, como no plano de origem."
+    bom_quando: "o teste de ponta a ponta precisa ser explorado antes de ser escrito: o agente percorre a tela pelo snapshot de acessibilidade e escreve o cenário Playwright depois."
     cuidado: "o próprio README recomenda a CLI com skills para agentes de código, por gastar menos contexto, e reserva o MCP a laços com estado persistente."
 como_instalar: |
   No arquivo de configuração de servidores MCP do seu harness, registre o servidor playwright com o

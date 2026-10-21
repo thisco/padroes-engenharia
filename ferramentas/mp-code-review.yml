@@ -15,10 +15,11 @@ caminhos:
     cuidado: "o ponto fixo é obrigatório e é conferido antes; a spec é procurada nas issues citadas nos commits, num caminho dado, em docs/, specs/ ou .scratch/, e por fim perguntada; os dois relatórios não são fundidos nem reordenados."
 como_instalar: |
   Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
-  instalador de skills, um dos dois por agente, e rode o setup dela uma vez por repositório
-  [ref:mattpocock-readme]. Sem instalador, copie skills/engineering/code-review/ do commit fixado
-  para a pasta de skills do harness [ref:mattpocock-code-review]; o caminho de cada harness está na
-  página da ferramenta dele.
+  instalador de skills, um dos dois por agente, e rode o setup dela (/setup-matt-pocock-skills) uma
+  vez por repositório, incluindo-o ao escolher as skills no instalador [ref:mattpocock-readme]. Sem
+  instalador, copie skills/engineering/code-review/ do commit fixado (49dd158) para a pasta de
+  skills do harness [ref:mattpocock-code-review]; o README só documenta plugin e instalador
+  [ref:mattpocock-readme]. O caminho de cada harness está na página da ferramenta dele.
 limites: |
   Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
   [ref:portal-referencias]. A skill revisa o diff entre um ponto fixo e o HEAD em dois eixos,

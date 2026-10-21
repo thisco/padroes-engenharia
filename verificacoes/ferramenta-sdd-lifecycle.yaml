@@ -38,7 +38,7 @@ afirmacoes:
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Fase 1 — Especificação (Tier 2)'"
     resultado: confirmada
-  - texto: "Fase 3: a spec só vai ao checkpoint com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova"
+  - texto: "Fase 3: a spec só vai ao checkpoint com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova ou a pedido explícito dele"
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Fase 3 — Checkpoint humano da spec (Tier 2)'"
     resultado: confirmada
@@ -79,9 +79,12 @@ afirmacoes:
     localizacao: "relato, último parágrafo"
     resultado: confirmada
 revisao_adversarial:
-  revisor: sessao-independente (2026-10-04) e conferente independente das transcrições (2026-10-05)
-  data: 2026-10-05
+  revisor: "sessao-independente (2026-10-04), conferente independente das transcrições (2026-10-05) e conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: 2026-10-21
   achados:
+    - afirmacao: "cuidado de escrever-spec: a aprovação é gravada por quem aprova, não pelo agente"
+      problema: "a skill admite o agente gravar a pedido explícito de quem aprova"
+      tratamento: "texto e afirmação com a ressalva"
     - afirmacao: "execução do prompt na rodada 2 (id sdd-lifecycle-prompt-1)"
       problema: "o id sugeria um prompt publicado, mas a ferramenta não publica prompt; o schema exige o sufixo -prompt-<N>"
       tratamento: "id trocado para sdd-lifecycle-pedido-tier2-prompt-1, que nomeia o pedido de teste e não sugere prompt publicado; a transcrição bruta mantém o nome do arquivo"

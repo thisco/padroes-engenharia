@@ -13,17 +13,19 @@ caminhos:
     passo: dominio
     papel: caminho
     bom_quando: "a faixa é Frontend e UX: componente, tela ou layout com estados de carregamento, vazio, erro e sucesso, acessibilidade WCAG 2.1 AA e o sistema de design do projeto em vez do visual genérico de IA."
-    cuidado: "sem sistema de design do projeto, a skill manda documentar as premissas e conferir contra o que existe; referência externa é evidência, nunca modelo a copiar; os exemplos são de uma pilha só."
+    cuidado: "sem referências disponíveis, a skill manda documentar as premissas e conferir o resultado contra o sistema de design existente; referência externa é evidência, nunca modelo a copiar; os exemplos são de uma pilha só."
 como_instalar: |
   Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
   instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
   references/ do repositório [ref:agent-skills-readme], que esta skill cita (a pasta references/ do
   repositório (accessibility-checklist.md)). Sem instalador, copie skills/frontend-ui-engineering/ e
-  references/ do commit fixado para a pasta de skills do harness
-  [ref:agent-skills-frontend-ui-engineering]; o caminho de cada harness está na página da ferramenta
-  dele.
+  references/ do commit fixado (aeac41d) para a pasta de skills do harness, com references/ dois
+  níveis acima da pasta da skill, como os links ../../references/ exigem
+  [ref:agent-skills-frontend-ui-engineering]; o README sugere, em vez disso, copiar o checklist para
+  dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está na página da
+  ferramenta dele.
 limites: |
-  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
   [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
   [ref:portal-referencias]. A skill exige teclado, rótulos e foco em todo componente, estados vazios
   e de erro com conteúdo, layout mobile-first testado em quatro larguras, e lista os padrões do

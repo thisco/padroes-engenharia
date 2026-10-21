@@ -1,5 +1,5 @@
 conteudo: origem-do-modelo
-verificado_em: '2026-10-20'
+verificado_em: 2026-10-21
 verificador: agente-curadoria
 afirmacoes:
 - texto: "112 planos, 56 specs, 1.057 commits, 54 planos que citam subagent-driven-development ou executing-plans, 14 planos e 4 specs com frontend-design, 17 planos e 8 specs com Playwright, período de 2026-04-30 a 2026-08-29, 10 arquivos movidos em 2026-05-25"
@@ -42,7 +42,7 @@ afirmacoes:
   localizacao: "mensagem do commit"
   resultado: confirmada
   nota: "artefato"
-- texto: "14 planos prescrevem a passada de frontend-design sobre o design system existente, com protótipo HTML como referência e teste Playwright ao fim"
+- texto: "14 planos prescrevem a passada de frontend-design sobre o design system existente; os dois trechos publicados trazem protótipo HTML como referência e o Playwright no roteiro"
   ref: origem-do-modelo-plano-frontend-design-1
   localizacao: "bloco 'Construir com a skill frontend-design' e Step 5"
   resultado: confirmada
@@ -216,6 +216,27 @@ execucoes:
   evidencia: "9117a57; 112; 56; 1057; 54; 14; 17; 2026-04-30 09:06:48 -0300; 2026-08-29 22:15:15 -0300; 10 files changed, 15349 deletions(-)"
   data: '2026-10-20'
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
-  data: '2026-10-20'
-  achados: []
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "quatro delas (três do superpowers e as duas do agent-skills) aparecem nas permissões"
+      problema: "a lista tinha cinco itens, e as duas entradas do agent-skills não são das 'outras dez' do superpowers; a entrada agent-skills:test não é necessariamente a skill test-driven-development"
+      tratamento: "texto reescrito: três do superpowers mais duas entradas do agent-skills, uma delas 'test'"
+    - afirmacao: "14 planos, sempre com protótipo HTML e teste Playwright no fim"
+      problema: "só dois trechos estão publicados; 'sempre' não tem apoio"
+      tratamento: "texto e afirmação passam a falar dos dois trechos publicados"
+    - afirmacao: "brainstorming: as specs e o servidor do companheiro visual nas permissões"
+      problema: "as permissões só mostram o servidor; a atribuição das specs vem do relato"
+      tratamento: "texto diz que as specs vêm do relato do dono"
+    - afirmacao: "instalacoes.md nomeia os produtos dos harnesses"
+      problema: "a página do caso e o registro dizem 'primeiro' e 'segundo harness'"
+      tratamento: "a fonte publicada passa a usar os mesmos termos"
+    - afirmacao: "o registro publica os commits 9117a57 e df3fbbb do repositório de origem"
+      problema: "hashes de commit não identificam a organização; a ADR 0011 prevê o commit fixado para a recontagem"
+      tratamento: "mantido"
+    - afirmacao: "'um sistema de um órgão público' e o vazamento de chave em .env.example no cabeçalho de plano revelam setor e um fato de segurança"
+      problema: "texto aprovado pelo dono no relato e no commit do caso"
+      tratamento: "mantido; registrado para decisão do dono"
+    - afirmacao: "nomes funcionais do produto nos trechos de plano (módulos e telas)"
+      problema: "não estão na lista de termos, mas são dado do domínio de origem"
+      tratamento: "mantido; registrado para decisão do dono"

@@ -6,9 +6,9 @@ afirmacoes:
     ref: superpowers-executing-plans
     localizacao: "cabeçalho (description) e seção 'When to Use'"
     resultado: confirmada
-  - texto: "o próprio agente executa cada tarefa, com TDD, e um revisor novo revisa a branch inteira no fim"
+  - texto: "o próprio agente executa cada tarefa, com TDD; a branch inteira é revisada no fim por um revisor novo quando há subagente e, sem ele, por autorrevisão, que a skill diz ser mais fraca"
     ref: superpowers-executing-plans
-    localizacao: "abertura e seção 'Final Review'; 'Setup': REQUIRED SUB-SKILL test-driven-development"
+    localizacao: "abertura, seção 'Setup' (REQUIRED SUB-SKILL test-driven-development) e 'Final Review' ('With a subagent tool' e 'Without a subagent tool': 'a self-review by the author is weaker')"
     resultado: confirmada
   - texto: "a skill não para entre tarefas e decide conflitos registrando no ledger"
     ref: superpowers-executing-plans
@@ -30,6 +30,10 @@ afirmacoes:
     ref: superpowers-readme
     localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
     resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
   - texto: "o caso de origem usou o superpowers na série 6.x"
     ref: origem-do-modelo-instalacoes
     localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
@@ -39,6 +43,12 @@ afirmacoes:
     localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
     resultado: confirmada
 revisao_adversarial:
-  revisor: pendente-tarefa-C13
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
   data: '2026-10-21'
-  achados: []
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"
+    - afirmacao: "bom quando: um revisor novo só no fim"
+      problema: "sem subagente não há revisor novo: a skill manda o autor se autorrevisar e diz que isso é mais fraco"
+      tratamento: "bom quando, limites e afirmação distinguem os dois casos"

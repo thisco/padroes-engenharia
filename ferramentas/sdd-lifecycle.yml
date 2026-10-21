@@ -13,7 +13,7 @@ caminhos:
     passo: escrever-spec
     papel: caminho
     bom_quando: "a mudança é Tier 2: a Fase 1 explora o código antes, refina o pedido uma pergunta por vez, deixa a dúvida aberta marcada com [ESCLARECER] e redige a spec como delta, com requisitos R<n> e critério de aceite em cada um."
-    cuidado: "a spec só vai ao checkpoint humano (Fase 3) com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova, não pelo agente."
+    cuidado: "a spec só vai ao checkpoint humano (Fase 3) com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova, ou a pedido explícito dele; escrita pelo agente sem pedido não vale."
   - momento: antes-de-escrever
     passo: decidir
     papel: caminho
