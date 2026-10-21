@@ -1,0 +1,29 @@
+id: mp-grilling
+titulo: grilling
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [P1-05]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: entrevistar
+    papel: complemento
+    bom_quando: "a pessoa quer o próprio raciocínio testado: a skill monta uma árvore de decisões e pergunta, em rodadas, tudo o que já dá para perguntar, com a resposta recomendada em cada pergunta."
+    cuidado: "fatos são buscados por subagente, nunca perguntados; decisões são da pessoa; nada é feito antes de a pessoa confirmar o entendimento comum."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela uma vez por repositório
+  [ref:mattpocock-readme]. Sem instalador, copie skills/productivity/grilling/ do commit fixado para
+  a pasta de skills do harness [ref:mattpocock-grilling]; o caminho de cada harness está na página
+  da ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill pergunta em rodadas: cada rodada traz a fronteira inteira das
+  decisões já desbloqueadas, numerada, com a resposta recomendada redigida para um sim aceitar;
+  fatos do ambiente são buscados por subagente, as decisões ficam com a pessoa, e a sessão só
+  termina quando a fronteira esvazia e a pessoa confirma o entendimento comum
+  [ref:mattpocock-grilling].
+referencias: [mattpocock-grilling, mattpocock-readme, portal-referencias]

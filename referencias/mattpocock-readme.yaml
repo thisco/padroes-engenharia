@@ -1,0 +1,11 @@
+id: mattpocock-readme
+titulo: "mattpocock/skills: README"
+organizacao: mattpocock/skills
+url: https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/README.md
+tipo: comunidade
+versao: "1.3.1"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seção 'Installation (30-second setup)', passos 1 a 3"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. O passo 1 nomeia harnesses e marketplaces; o portal remete à página de cada harness."

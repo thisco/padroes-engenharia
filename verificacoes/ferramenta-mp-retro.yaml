@@ -1,0 +1,48 @@
+conteudo: ferramenta-mp-retro
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a retro melhora o ambiente do agente, não o código"
+    ref: mattpocock-retro
+    localizacao: "primeiro parágrafo"
+    resultado: confirmada
+  - texto: "a skill lê as fontes primárias da sessão, inclusive logs no disco"
+    ref: mattpocock-retro
+    localizacao: "seção 'Steps', passo 2"
+    resultado: confirmada
+  - texto: "as sete categorias: navegação, verificações automáticas, padrões, instruções globais, economia de ferramentas, instruções sem efeito e acesso a informação"
+    ref: mattpocock-retro
+    localizacao: "seção 'Steps', passo 3"
+    resultado: confirmada
+  - texto: "violação mecânica vira verificação determinística, e o arquivo de padrões fica para juízo"
+    ref: mattpocock-retro
+    localizacao: "passo 3, categoria 'Coding standards'"
+    resultado: confirmada
+  - texto: "o arquivo de regras carregado em todo turno deve ter quase só ponteiros de navegação"
+    ref: mattpocock-retro
+    localizacao: "seção 'Reference', 'Files', primeiro item"
+    resultado: confirmada
+  - texto: "a revisão, não a implementação, impõe os padrões"
+    ref: mattpocock-retro
+    localizacao: "seção 'Reference', 'Implementation vs Review'"
+    resultado: confirmada
+  - texto: "a skill chama a skill de escrita para agentes da coleção"
+    ref: mattpocock-retro
+    localizacao: "seção 'Steps', passo 1 (writing-for-agents)"
+    resultado: confirmada
+  - texto: "só a pessoa aciona a skill"
+    ref: mattpocock-retro
+    localizacao: "cabeçalho: disable-model-invocation: true"
+    resultado: confirmada
+  - texto: "a coleção se instala como plugin pelo marketplace do harness ou como arquivos copiados por um instalador, um dos dois por agente, e o setup roda uma vez por repositório"
+    ref: mattpocock-readme
+    localizacao: "seção 'Installation (30-second setup)': parágrafo de abertura ('Pick one per agent'), passo 1 e passo 2 ('run it once per repo')"
+    resultado: confirmada
+  - texto: "o portal fixa o mattpocock/skills na 1.3.1, commit 49dd158"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do mattpocock/skills trazem a URL no commit 49dd158 e a versão 1.3.1"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

@@ -1,0 +1,40 @@
+conteudo: ferramenta-mp-domain-modeling
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill é a disciplina ativa de mudar o modelo, não de só ler o glossário"
+    ref: mattpocock-domain-modeling
+    localizacao: "parágrafo de abertura"
+    resultado: confirmada
+  - texto: "GLOSSARY.md na raiz e ADRs em docs/adr/, criados só quando há o que escrever; GLOSSARY-MAP.md para vários contextos"
+    ref: mattpocock-domain-modeling
+    localizacao: "seção 'File structure'"
+    resultado: confirmada
+  - texto: "a skill contesta termos contra o glossário, propõe o termo canônico, testa cenários de borda e confere o código"
+    ref: mattpocock-domain-modeling
+    localizacao: "seção 'During the session', quatro primeiras subseções"
+    resultado: confirmada
+  - texto: "o glossário é atualizado na hora e fica sem detalhe de implementação"
+    ref: mattpocock-domain-modeling
+    localizacao: "subseção 'Update GLOSSARY.md inline'"
+    resultado: confirmada
+  - texto: "a ADR só é oferecida quando a decisão é difícil de reverter, surpreende sem contexto e vem de um trade-off real"
+    ref: mattpocock-domain-modeling
+    localizacao: "subseção 'Offer ADRs sparingly'"
+    resultado: confirmada
+  - texto: "os formatos de glossário e de ADR ficam em arquivos ao lado da skill"
+    ref: mattpocock-domain-modeling
+    localizacao: "links GLOSSARY-FORMAT.md e ADR-FORMAT.md"
+    resultado: confirmada
+  - texto: "a coleção se instala como plugin pelo marketplace do harness ou como arquivos copiados por um instalador, um dos dois por agente, e o setup roda uma vez por repositório"
+    ref: mattpocock-readme
+    localizacao: "seção 'Installation (30-second setup)': parágrafo de abertura ('Pick one per agent'), passo 1 e passo 2 ('run it once per repo')"
+    resultado: confirmada
+  - texto: "o portal fixa o mattpocock/skills na 1.3.1, commit 49dd158"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do mattpocock/skills trazem a URL no commit 49dd158 e a versão 1.3.1"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

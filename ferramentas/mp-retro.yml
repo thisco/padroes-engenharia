@@ -1,0 +1,30 @@
+id: mp-retro
+titulo: retro
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [P1-11]
+receitas: []
+caminhos:
+  - momento: depois-da-entrega
+    passo: retro
+    papel: caminho
+    bom_quando: "a sessão acabou e você quer melhorar o ambiente do agente, não o código: navegação, verificações automáticas, padrões, instruções globais, economia de ferramentas, instruções sem efeito e acesso a informação."
+    cuidado: "lê as fontes primárias da sessão (logs no disco); violação mecânica vira verificação determinística, não regra escrita; o arquivo de regras fica só com ponteiros de navegação; só a pessoa a aciona."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela uma vez por repositório
+  [ref:mattpocock-readme]. Sem instalador, copie skills/engineering/retro/ do commit fixado para a
+  pasta de skills do harness [ref:mattpocock-retro]; o caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill lê as fontes primárias da sessão e procura melhorias em sete
+  categorias; manda transformar violação mecânica em verificação determinística (linter, hook ou job
+  de CI) e reservar o arquivo de padrões para juízo; diz que o arquivo de regras carregado em todo
+  turno deve ter quase só ponteiros de navegação e que a revisão, não a implementação, impõe os
+  padrões; chama a skill de escrita para agentes da coleção [ref:mattpocock-retro]. Só a pessoa a
+  aciona [ref:mattpocock-retro].
+referencias: [mattpocock-retro, mattpocock-readme, portal-referencias]

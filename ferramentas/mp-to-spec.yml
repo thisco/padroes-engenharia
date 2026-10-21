@@ -1,0 +1,32 @@
+id: mp-to-spec
+titulo: to-spec
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [P1-04]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: escrever-spec
+    papel: caminho
+    bom_quando: "a conversa já esgotou o assunto e você quer a spec sintetizada dela, sem nova entrevista, com as costuras de teste combinadas antes."
+    cuidado: "ela publica a spec no rastreador de issues do projeto, com rótulo de triagem; o modelo dela (problema, solução, histórias de usuário, decisões, testes, fora de escopo) não traz os R<n> com critério que a P1-04 pede."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela uma vez por repositório
+  [ref:mattpocock-readme]. Sem instalador, copie skills/engineering/to-spec/ do commit fixado para a
+  pasta de skills do harness [ref:mattpocock-to-spec]; o caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill não entrevista: sintetiza a conversa e o código, combina com a
+  pessoa as costuras onde o comportamento vai ser testado (quanto menos, melhor) e publica a spec no
+  rastreador de issues com o rótulo ready-for-agent; o modelo tem Problem Statement, Solution, User
+  Stories, Implementation Decisions, Testing Decisions, Out of Scope e Further Notes, sem caminho de
+  arquivo nem trecho de código [ref:mattpocock-to-spec]. O rastreador de issues que ela espera é
+  definido uma vez por repositório pelo setup da coleção, que aceita a opção Other com o fluxo
+  descrito em um parágrafo [ref:mattpocock-setup-matt-pocock-skills]; neste portal, esse parágrafo
+  aponta docs/specs e docs/plans. Só a pessoa a aciona [ref:mattpocock-to-spec].
+referencias: [mattpocock-to-spec, mattpocock-readme, portal-referencias, mattpocock-setup-matt-pocock-skills]

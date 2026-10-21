@@ -916,6 +916,20 @@ Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed; a página da 
 É a tarefa 15 do plano anterior, sem mudança: 8 ferramentas `mp-*` em `avaliar`, no commit
 `49dd158`.
 
+- [x] **Passo 1:** os 8 `SKILL.md`, o `setup-matt-pocock-skills` e o README lidos no raw do commit
+  `49dd158` (só leitura, no scratchpad). `grill-with-docs` e `implement` têm uma e seis linhas: o
+  texto diz isso em vez de inventar procedimento.
+- [x] **Passo 2:** 8 ferramentas `mp-*` em `avaliar`, sem caso; 6 referências novas (5 skills e o README,
+  que sustenta a instalação por plugin ou por instalador, um dos dois por agente, e o setup por
+  repositório), 4 referências existentes com `localizacao` ampliada e 8 registros, com
+  `revisao_adversarial` `pendente-tarefa-C13`. Os `limites` dizem o que a tarefa 15 pedia: tracker de
+  issues apontado para `docs/specs` e `docs/plans` pelo modo Other do setup (`to-spec`, `implement`,
+  `code-review`); `grilling` e `domain-modeling` instaladas junto (`grill-with-docs`); refatorar fora do
+  laço, ao contrário da QLD-01 (`tdd`).
+- [x] **Passo 3:** `validar.py` e `gerar.py` com 0 (o iCloud travou o `public/` uma vez; a segunda
+  tentativa passou); 920 passed; `ruff check` limpo; varredura de marca de assistente sem ocorrência.
+- [x] **Passo 4:** commit.
+
 ### Tarefa C7: `sdd-lifecycle` como caminho
 
 É a tarefa 16 do plano anterior, sem mudança.
