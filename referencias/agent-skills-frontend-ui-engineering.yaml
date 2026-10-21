@@ -1,0 +1,11 @@
+id: agent-skills-frontend-ui-engineering
+titulo: "agent-skills: skill frontend-ui-engineering"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/frontend-ui-engineering/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'Component Architecture', 'Design System Adherence' ('Reference-led UI quality' e 'Avoid the AI Aesthetic'), 'Accessibility (WCAG 2.1 AA)', 'Responsive Design' e 'Verification'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

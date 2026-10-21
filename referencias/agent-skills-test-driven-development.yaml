@@ -1,0 +1,11 @@
+id: agent-skills-test-driven-development
+titulo: "agent-skills: skill test-driven-development"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/test-driven-development/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'Discover the Stack First', 'The TDD Cycle', 'The Prove-It Pattern (Bug Fixes)', 'The Test Pyramid', 'Writing Good Tests', 'Browser Testing with DevTools' e 'Verification'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

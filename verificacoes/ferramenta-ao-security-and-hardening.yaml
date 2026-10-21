@@ -1,0 +1,56 @@
+conteudo: ferramenta-ao-security-and-hardening
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill é para código que aceita dado externo, autentica, guarda dado sensível ou integra terceiros"
+    ref: agent-skills-security-and-hardening
+    localizacao: "seção 'When to Use'"
+    resultado: confirmada
+  - texto: "o threat-model vem antes dos controles: fronteiras de confiança, ativos, STRIDE e casos de abuso"
+    ref: agent-skills-security-and-hardening
+    localizacao: "seção 'Process: Threat Model First', passos 1 a 4"
+    resultado: confirmada
+  - texto: "há três camadas: sempre fazer, pedir aprovação humana e nunca fazer"
+    ref: agent-skills-security-and-hardening
+    localizacao: "seção 'The Three-Tier Boundary System'"
+    resultado: confirmada
+  - texto: "fluxo de autenticação novo, dado sensível novo, upload e CORS exigem aprovação humana"
+    ref: agent-skills-security-and-hardening
+    localizacao: "subseção 'Ask First (Requires Human Approval)'"
+    resultado: confirmada
+  - texto: "segredo que chegou a um remoto é rotacionado antes de limpar o histórico"
+    ref: agent-skills-security-and-hardening
+    localizacao: "subseção 'Secrets': 'rotate it first, then purge history'"
+    resultado: confirmada
+  - texto: "a skill é orientada a aplicações web"
+    ref: agent-skills-security-and-hardening
+    localizacao: "seção 'Overview', primeira frase"
+    resultado: confirmada
+  - texto: "a saída de modelo de linguagem é tratada como entrada não confiável"
+    ref: agent-skills-security-and-hardening
+    localizacao: "subseção 'AI / LLM features': 'Model output is untrusted input (LLM05)'"
+    resultado: confirmada
+  - texto: "os padrões de código ficam em arquivos ao lado da skill e na pasta references/ do repositório"
+    ref: agent-skills-security-and-hardening
+    localizacao: "seção 'Hardening Controls' (references/hardening-patterns.md) e 'Review Checklist' (../../references/security-checklist.md)"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

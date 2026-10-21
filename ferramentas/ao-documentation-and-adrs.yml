@@ -1,0 +1,31 @@
+id: ao-documentation-and-adrs
+titulo: documentation-and-adrs
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [ARQ-01]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: decidir
+    papel: caminho
+    bom_quando: "a decisão é cara de reverter (framework, modelo de dados, autenticação, arquitetura de API): a skill registra contexto, decisão, alternativas e consequências numa ADR, no formato que o projeto já usa."
+    cuidado: "ela procura a convenção existente antes de criar ADR e só usa o padrão dela (docs/decisions/) quando não há convenção; ADR antiga não se apaga, é substituída por outra."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme]. Sem instalador, copie
+  skills/documentation-and-adrs/ e references/ do commit fixado para a pasta de skills do harness
+  [ref:agent-skills-documentation-and-adrs]; o caminho de cada harness está na página da ferramenta
+  dele.
+limites: |
+  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill segue a convenção de ADR já existente no repositório (pasta,
+  numeração, títulos) e só cai no padrão dela, docs/decisions/, sem convenção; cobre também
+  comentário, documentação de API, README e changelog, e manda revisar a prosa sem mudar a decisão
+  [ref:agent-skills-documentation-and-adrs].
+referencias: [agent-skills-documentation-and-adrs, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

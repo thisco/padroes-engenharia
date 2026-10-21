@@ -1,0 +1,11 @@
+id: agent-skills-readme
+titulo: "agent-skills: README"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/README.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seção Quick Start (comando npx skills add, nota 'Installing one skill?' e as subseções por ferramenta) e seção Project Structure"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A seção de instalação nomeia os harnesses; o portal remete à página de cada um. O commit fixado é a tag 0.6.13."

@@ -1,0 +1,48 @@
+conteudo: ferramenta-ao-deprecation-and-migration
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "não se depreca sem substituto pronto e provado em produção"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "seções 'Step 1: Build the Replacement' e 'The Deprecation Decision', pergunta 3"
+    resultado: confirmada
+  - texto: "quem é dono da infraestrutura migra os consumidores (regra do churn)"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "seção 'Step 3: Migrate Incrementally', 'The Churn Rule'"
+    resultado: confirmada
+  - texto: "schema migra em expandir, migrar e contrair, em deploys separados, com o destrutivo sozinho e por último"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "subseção 'Database Schema Migrations (Expand/Contract)', exemplo e regra 'Additive first, destructive last and alone'"
+    resultado: confirmada
+  - texto: "cada migração tem caminho de volta testado antes do merge"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "subseção 'Database Schema Migrations', regra 'Every migration has a tested down path'"
+    resultado: confirmada
+  - texto: "backfill em lotes, fora do caminho quente"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "subseção 'Database Schema Migrations', regra 'Backfill in batches, off the hot path'"
+    resultado: confirmada
+  - texto: "a skill cobre deprecação compulsória e consultiva e os padrões strangler, adaptador e feature flag"
+    ref: agent-skills-deprecation-and-migration
+    localizacao: "seções 'Compulsory vs Advisory Deprecation' e 'Migration Patterns'"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

@@ -1,0 +1,52 @@
+conteudo: ferramenta-ao-doubt-driven-development
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill vale para decisões não triviais: lógica nova, fronteira de módulo, propriedade que o compilador não verifica, efeito irreversível"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seção 'When to Use', lista de critérios de decisão não trivial"
+    resultado: confirmada
+  - texto: "um revisor de contexto limpo, instruído a refutar, revisa o artefato e o contrato"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seções 'Overview' (biased to disprove) e 'Step 3: DOUBT' (prompt adversarial, 'Pass ARTIFACT + CONTRACT only')"
+    resultado: confirmada
+  - texto: "o revisor nunca recebe a conclusão"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seção 'Step 3: DOUBT': 'Do NOT pass the CLAIM'"
+    resultado: confirmada
+  - texto: "no máximo três ciclos antes de escalar à pessoa"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seção 'Step 5: STOP'"
+    resultado: confirmada
+  - texto: "em sessão interativa a skill sempre oferece uma segunda opinião de outro modelo, que só roda com autorização explícita"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "subseção 'Cross-model escalation': 'Interactive sessions: always offer' e 'Never invoke an external CLI without explicit user authorization'"
+    resultado: confirmada
+  - texto: "feita para a sessão principal; dentro de um subagente degrada para autoquestionamento e diz isso"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seção 'Loading Constraints'"
+    resultado: confirmada
+  - texto: "a skill cita a pasta references/ do repositório"
+    ref: agent-skills-doubt-driven-development
+    localizacao: "seções 'Loading Constraints' e 'Interaction with Other Skills': ../../references/orchestration-patterns.md"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

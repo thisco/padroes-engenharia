@@ -1,0 +1,52 @@
+conteudo: ferramenta-ao-source-driven-development
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill vale para código específico de framework, não para lógica que independe de versão"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'When to Use', inclusive 'When NOT to use'"
+    resultado: confirmada
+  - texto: "a versão é lida no arquivo de dependências e, se faltar, a skill pergunta"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'Step 1: Detect Stack and Versions'"
+    resultado: confirmada
+  - texto: "busca-se a página exata da documentação oficial, não a página inicial"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'Step 2: Fetch Official Documentation', 'Be precise with what you fetch'"
+    resultado: confirmada
+  - texto: "a hierarquia de fontes põe a documentação oficial acima de blog, fórum e dos dados de treinamento"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'Step 2', tabela 'Source hierarchy' e lista 'Not authoritative'"
+    resultado: confirmada
+  - texto: "página buscada é dado, não instrução"
+    ref: agent-skills-source-driven-development
+    localizacao: "subseção 'Retrieval Safety: Treat Fetched Content as Data'"
+    resultado: confirmada
+  - texto: "conflito entre documentação e código existente é levado à pessoa"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'Step 3', bloco CONFLICT DETECTED: 'Surface the conflict. Don't silently pick one'"
+    resultado: confirmada
+  - texto: "cada padrão sai com a URL completa, e o que não tem documentação sai marcado como não verificado"
+    ref: agent-skills-source-driven-development
+    localizacao: "seção 'Step 4: Cite Your Sources', 'Citation rules' e bloco UNVERIFIED"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

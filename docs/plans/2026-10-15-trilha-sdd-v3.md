@@ -856,6 +856,27 @@ as citações numeradas.
   `ao-documentation-and-adrs` → ARQ-01.
 - Commit: `docs(ferramentas): skills do agent-skills como caminhos da trilha`.
 
+- [x] **Passo 1:** os 14 `SKILL.md` e o `README.md` lidos no raw do commit `aeac41d` (só leitura,
+  no scratchpad); `bom_quando` e `cuidado` escritos a partir do texto de cada skill, sem nome de
+  assistente nem de harness (as skills nomeiam vários; as notas das referências registram isso).
+- [x] **Passo 2:** 14 ferramentas `ao-*` (13 em `adotar` com o caso; `observability-and-instrumentation`
+  em `avaliar`), 16 referências (14 skills, o README, que sustenta a instalação por harness e o aviso
+  de que instalar uma skill só não traz `references/`, e a árvore de `skills/` no commit `5e262b2`,
+  que prova que a observabilidade não existia em junho) e 14 registros, com `revisao_adversarial`
+  `pendente-tarefa-C13`. `praticas` liga cada uma à prática da faixa quando há.
+- [x] **Passo 3:** `validar.py` e `gerar.py` com 0; 920 passed; `ruff check` limpo.
+- [x] **Passo 4:** commit.
+
+Desvio encontrado e resolvido (2026-10-21): o commit fixado `aeac41d` **é** a tag `0.6.13`
+(2026-10-13), e não um commit à frente da `0.6.9` como dizem o delta v3 (§componentes) e esta tarefa.
+Conferido na API do repositório: `0.6.9` é `84ee506` (2026-09-05), e `compare/0.6.9...aeac41d` dá 222
+commits à frente. O commit não muda; só o rótulo: `componentes.yml` passa a `versao: "0.6.13"`, com os
+dois testes que fixam a versão ajustados antes (vermelho, depois verde), e as 14 ferramentas levam
+`versao_minima: "0.6.13"`. O delta v3 fica como está, e o dono decide se o texto dele é corrigido.
+
+Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed, `ruff check` limpo; varredura de
+marca de assistente nos 44 arquivos sem ocorrência.
+
 ### Tarefa C5: `frontend-design` e Playwright MCP
 
 - **`ferramentas/an-frontend-design.yml`:**

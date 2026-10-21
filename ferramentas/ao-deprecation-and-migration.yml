@@ -1,0 +1,31 @@
+id: ao-deprecation-and-migration
+titulo: deprecation-and-migration
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [DAD-02]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: dominio
+    papel: caminho
+    bom_quando: "a faixa é Dados e migrations ou a mudança remove algo que alguém usa: expandir, migrar e contrair em deploys separados, com o passo destrutivo sozinho e por último, e caminho de volta testado antes do merge."
+    cuidado: "não se depreca sem substituto pronto em produção, e quem é dono da infraestrutura migra os consumidores (regra do churn); backfill em lotes, fora do caminho quente."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme]. Sem instalador, copie
+  skills/deprecation-and-migration/ e references/ do commit fixado para a pasta de skills do harness
+  [ref:agent-skills-deprecation-and-migration]; o caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill cobre a decisão de deprecar, deprecação compulsória e
+  consultiva, os padrões strangler, adaptador e feature flag, e a migração de schema em expandir e
+  contrair; cada migração tem caminho de volta testado antes do merge, e o passo destrutivo vai num
+  deploy próprio [ref:agent-skills-deprecation-and-migration].
+referencias: [agent-skills-deprecation-and-migration, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

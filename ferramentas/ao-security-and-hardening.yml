@@ -1,0 +1,32 @@
+id: ao-security-and-hardening
+titulo: security-and-hardening
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [SEG-01, SEG-02, SEG-03, LGPD-01]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: seguranca
+    papel: caminho
+    bom_quando: "a mudança aceita dado externo, mexe em autenticação, guarda dado sensível ou chama serviço de terceiros: threat-model primeiro (fronteiras de confiança, ativos, STRIDE, casos de abuso) e só depois os controles."
+    cuidado: "três camadas de regra: o que sempre se faz, o que exige aprovação humana (fluxo de autenticação novo, dado sensível novo, upload, CORS) e o que nunca se faz; segredo que chegou a um remoto já está comprometido e é rotacionado antes de limpar o histórico."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme], que esta skill cita
+  (references/hardening-patterns.md ao lado dela e a pasta references/ do repositório
+  (security-checklist.md)). Sem instalador, copie skills/security-and-hardening/ e references/ do
+  commit fixado para a pasta de skills do harness [ref:agent-skills-security-and-hardening]; o
+  caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill é orientada a aplicações web e cobre injeção, sessões,
+  cabeçalhos, uploads, SSRF, limite de taxa, segredos, cadeia de suprimentos, dado pessoal e
+  funcionalidades com modelos de linguagem, cuja saída ela trata como entrada não confiável; os
+  padrões de código ficam em arquivos ao lado dela [ref:agent-skills-security-and-hardening].
+referencias: [agent-skills-security-and-hardening, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

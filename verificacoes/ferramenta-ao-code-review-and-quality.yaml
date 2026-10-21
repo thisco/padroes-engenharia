@@ -1,0 +1,52 @@
+conteudo: ferramenta-ao-code-review-and-quality
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "toda mudança é revisada antes do merge, em cinco eixos"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'Overview'"
+    resultado: confirmada
+  - texto: "aprova-se o que melhora a saúde do código, não o perfeito"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'Overview', 'The approval standard'"
+    resultado: confirmada
+  - texto: "os testes são lidos antes da implementação, e a cobertura é provada invertendo uma condição e rodando a suíte"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'Step 2: Review the Tests First'"
+    resultado: confirmada
+  - texto: "achados rotulados por severidade, com correção e segurança na frente"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'Step 4: Categorize Findings' e 'Lead with what matters'"
+    resultado: confirmada
+  - texto: "cerca de 100 linhas por mudança; 1000 é para dividir"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'Change Sizing'"
+    resultado: confirmada
+  - texto: "a skill cobre descrição da mudança, código morto, velocidade da revisão e revisão de dependências"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seções 'Change Descriptions', 'Dead Code Hygiene', 'Review Speed' e 'Dependency Discipline'"
+    resultado: confirmada
+  - texto: "a skill cita a pasta references/ do repositório"
+    ref: agent-skills-code-review-and-quality
+    localizacao: "seção 'See Also'"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

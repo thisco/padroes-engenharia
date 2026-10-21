@@ -1,0 +1,48 @@
+conteudo: ferramenta-ao-frontend-ui-engineering
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a meta é interface com o sistema de design do projeto, sem o visual genérico de IA"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seções 'Overview' e 'Avoid the AI Aesthetic'"
+    resultado: confirmada
+  - texto: "estados de carregamento, vazio, erro e sucesso tratados"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Component Architecture' (container com isLoading, error e vazio) e 'Verification': 'Loading, empty, error, success, and permission states handled'"
+    resultado: confirmada
+  - texto: "acessibilidade WCAG 2.1 AA: teclado, rótulos e foco em todo componente"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Accessibility (WCAG 2.1 AA)'"
+    resultado: confirmada
+  - texto: "mobile-first, testado em 320, 768, 1024 e 1440 px"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Responsive Design'"
+    resultado: confirmada
+  - texto: "referência externa é evidência, nunca modelo a copiar; sem referência, documentar premissas e conferir contra o sistema de design existente"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "subseção 'Reference-led UI quality'"
+    resultado: confirmada
+  - texto: "os exemplos são de uma pilha só, e a lista de acessibilidade fica na pasta references/"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "exemplos em TSX ao longo da skill; 'See Also' (../../references/accessibility-checklist.md)"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

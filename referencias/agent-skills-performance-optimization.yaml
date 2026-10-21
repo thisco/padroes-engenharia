@@ -1,0 +1,11 @@
+id: agent-skills-performance-optimization
+titulo: "agent-skills: skill performance-optimization"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/performance-optimization/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'When to Use', 'Core Web Vitals Targets', 'The Optimization Workflow' (passos 1 a 5) e 'See Also'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

@@ -1,0 +1,31 @@
+id: ao-observability-and-instrumentation
+titulo: observability-and-instrumentation
+categoria: skill
+colecao: agent-skills
+status: avaliar
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [OBS-01, OBS-02]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: dominio
+    papel: complemento
+    bom_quando: "a faixa é Observabilidade: antes de instrumentar, escrever as perguntas que o plantão vai fazer; log estruturado com ID de correlação, métricas RED com rótulos limitados, rastreamento com OpenTelemetry e alerta por sintoma com runbook."
+    cuidado: "está em avaliar: não existia na versão de junho que o caso de origem usou e ainda não tem caso interno; nunca logar segredo nem dado pessoal, e rótulo de métrica com ID de usuário derruba o backend."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme], que esta skill cita (a pasta references/ do
+  repositório (observability-checklist.md)). Sem instalador, copie
+  skills/observability-and-instrumentation/ e references/ do commit fixado para a pasta de skills do
+  harness [ref:agent-skills-observability-and-instrumentation]; o caminho de cada harness está na
+  página da ferramenta dele.
+limites: |
+  A skill não existe na versão de junho de 2026 que o caso de origem usou
+  [ref:agent-skills-arvore-junho]; o portal fixa a 0.6.13 (aeac41d) [ref:portal-referencias], onde
+  ela está. Sem caso interno nem referência forte, fica em avaliar. Ela cobre log estruturado,
+  métricas, rastreamento, alerta e runbook, manda verificar a própria telemetria e remete
+  diagnóstico ao vivo e profiling a outras skills da coleção
+  [ref:agent-skills-observability-and-instrumentation].
+referencias: [agent-skills-observability-and-instrumentation, agent-skills-readme, agent-skills-arvore-junho, portal-referencias]

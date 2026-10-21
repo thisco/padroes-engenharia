@@ -8,7 +8,7 @@ ESPERADO = {
                     "bb92a77741419a4ab5f06e711a283343f1ada0c3"),
     "mattpocock-skills": ("https://github.com/mattpocock/skills", "1.3.1",
                           "49dd158d1076134a641b33efb035946536778336"),
-    "agent-skills": ("https://github.com/addyosmani/agent-skills", "0.6.9",
+    "agent-skills": ("https://github.com/addyosmani/agent-skills", "0.6.13",
                      "aeac41d4d005999432bb7312f7ff06383a91d59d"),
     "claude-plugins-official": ("https://github.com/anthropics/claude-plugins-official",
                                 "2026.10.15", "8f814f49002ff824e8a9ba43cf96112dc7f5948d"),

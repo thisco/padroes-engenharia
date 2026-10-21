@@ -1,0 +1,48 @@
+conteudo: ferramenta-ao-documentation-and-adrs
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a ADR é para decisão cara de reverter: framework, modelo de dados, autenticação, arquitetura de API"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seção 'When to Write an ADR'"
+    resultado: confirmada
+  - texto: "a ADR registra contexto, decisão, alternativas consideradas e consequências"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seção 'ADR Template'"
+    resultado: confirmada
+  - texto: "a skill procura a convenção existente antes de criar ADR e só usa o padrão dela sem convenção"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seção 'Match the existing convention first'"
+    resultado: confirmada
+  - texto: "o padrão dela é docs/decisions/ com numeração sequencial"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seção 'ADR Template', primeira frase"
+    resultado: confirmada
+  - texto: "ADR antiga não se apaga: é substituída por uma nova"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seção 'ADR Lifecycle'"
+    resultado: confirmada
+  - texto: "cobre comentário, documentação de API, README e changelog, e manda revisar a prosa sem mudar a decisão"
+    ref: agent-skills-documentation-and-adrs
+    localizacao: "seções 'Inline Documentation', 'API Documentation', 'README Structure', 'Changelog Maintenance' e 'Prose Review'"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem usou o agent-skills na versão de junho de 2026 (commit 5e262b2)"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha addyosmani/agent-skills no segundo harness (2026-06-10, 5e262b2)"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

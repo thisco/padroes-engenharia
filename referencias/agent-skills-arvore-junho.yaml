@@ -1,0 +1,10 @@
+id: agent-skills-arvore-junho
+titulo: "agent-skills: árvore de skills em 2026-06-10"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/tree/5e262b20e0cd88dba39e558f42f5c0b6d766d4b4/skills
+tipo: comunidade
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "lista de pastas em skills/ no commit 5e262b2 (23 pastas)"
+dominios: [construir-com-ia]
+notas: "Lida pela API do repositório em 2026-10-21 (contents de skills/ em 5e262b2): sem observability-and-instrumentation nem constraint-driven-development, que estão no commit aeac41d. É o commit da instalação de 2026-06-10 no caso de origem."

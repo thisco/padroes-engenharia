@@ -1,0 +1,11 @@
+id: agent-skills-doubt-driven-development
+titulo: "agent-skills: skill doubt-driven-development"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/doubt-driven-development/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'When to Use', 'Loading Constraints', 'The Process' (passos 1 a 5, inclusive 'Cross-model escalation') e 'Interaction with Other Skills'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A skill nomeia ferramentas de linha de comando de outros modelos; o portal não reproduz os nomes."

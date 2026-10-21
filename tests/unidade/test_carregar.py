@@ -149,7 +149,7 @@ def test_componentes_do_repositorio_real():
         "agent-skills": Componente(
             "agent-skills",
             "https://github.com/addyosmani/agent-skills",
-            "0.6.9",
+            "0.6.13",
             "aeac41d4d005999432bb7312f7ff06383a91d59d",
         ),
         "claude-plugins-official": Componente(

@@ -1,0 +1,32 @@
+id: ao-api-and-interface-design
+titulo: api-and-interface-design
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [API-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: dominio
+    papel: caminho
+    bom_quando: "a faixa é Contratos de API: o contrato vem antes da implementação, com erros num formato só, validação só na fronteira, campos novos opcionais e chave de idempotência honrada de verdade."
+    cuidado: "pela lei de Hyrum todo comportamento observável vira contrato; a skill prefere extensão aditiva a versões paralelas, e a API-01 pede versão nova quando a mudança é incompatível: estender sempre que der, versionar quando não der."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme]. Sem instalador, copie
+  skills/api-and-interface-design/ e references/ do commit fixado para a pasta de skills do harness
+  [ref:agent-skills-api-and-interface-design]; o caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  O caso de origem usou a versão de junho de 2026, commit 5e262b2
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill cobre REST, GraphQL, fronteira de módulo e props de componente;
+  traz padrões de recurso, paginação, PATCH e uniões discriminadas, e uma seção inteira sobre honrar
+  a chave de idempotência (derivada da intenção, reivindicada de forma atômica, com retenção maior
+  que a cadeia de retentativas); os exemplos são de uma pilha só
+  [ref:agent-skills-api-and-interface-design].
+referencias: [agent-skills-api-and-interface-design, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

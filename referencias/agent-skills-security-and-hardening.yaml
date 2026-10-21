@@ -1,0 +1,11 @@
+id: agent-skills-security-and-hardening
+titulo: "agent-skills: skill security-and-hardening"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/security-and-hardening/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'When to Use', 'Process: Threat Model First', 'The Three-Tier Boundary System', 'Hardening Controls' (subseções) e 'Review Checklist'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."
