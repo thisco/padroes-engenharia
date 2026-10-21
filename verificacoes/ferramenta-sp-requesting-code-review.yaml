@@ -1,0 +1,44 @@
+conteudo: ferramenta-sp-requesting-code-review
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a revisão é obrigatória depois de cada tarefa, depois de uma feature grande e antes do merge"
+    ref: superpowers-requesting-code-review
+    localizacao: "seção 'When to Request Review', lista 'Mandatory'"
+    resultado: confirmada
+  - texto: "a skill despacha um subagente com o diff entre dois commits e um template"
+    ref: superpowers-requesting-code-review
+    localizacao: "seção 'How to Request', passos 1 (BASE_SHA e HEAD_SHA) e 2 (template code-reviewer.md)"
+    resultado: confirmada
+  - texto: "o revisor recebe só o contexto montado para ele, nunca o histórico da sessão"
+    ref: superpowers-requesting-code-review
+    localizacao: "abertura ('never your session's history') e 'Common Rationalizations', segunda linha"
+    resultado: confirmada
+  - texto: "revisar o diff na própria sessão é listado como racionalização a evitar"
+    ref: superpowers-requesting-code-review
+    localizacao: "seção 'Common Rationalizations', primeira linha"
+    resultado: confirmada
+  - texto: "achado crítico é corrigido na hora e achado importante antes de seguir; o revisor pode ser contestado com razão técnica"
+    ref: superpowers-requesting-code-review
+    localizacao: "seção 'How to Request', passo 3, e 'Red Flags', 'If reviewer wrong'"
+    resultado: confirmada
+  - texto: "a skill cita um arquivo ao lado dela (code-reviewer.md)"
+    ref: superpowers-requesting-code-review
+    localizacao: "seção 'How to Request', passo 2, e última linha do arquivo"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

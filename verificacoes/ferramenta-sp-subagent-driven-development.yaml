@@ -1,0 +1,48 @@
+conteudo: ferramenta-sp-subagent-driven-development
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "um subagente novo por tarefa, revisão de spec e qualidade depois de cada uma e revisão da branch no fim"
+    ref: superpowers-subagent-driven-development
+    localizacao: "primeiro parágrafo e 'Core principle'"
+    resultado: confirmada
+  - texto: "a skill não para entre tarefas e só quatro situações a fazem parar"
+    ref: superpowers-subagent-driven-development
+    localizacao: "abertura: 'Continuous execution' e 'Four things stop you, and only these'"
+    resultado: confirmada
+  - texto: "conflitos são decididos pelo agente e registrados num ledger"
+    ref: superpowers-subagent-driven-development
+    localizacao: "abertura: 'Rulings, not stalls'; 'Setup', ledger em <repo-root>/.superpowers/sdd/"
+    resultado: confirmada
+  - texto: "a skill nunca despacha dois implementadores em paralelo"
+    ref: superpowers-subagent-driven-development
+    localizacao: "seção 'The Task Loop', item 1: 'Never dispatch multiple implementation subagents in parallel'"
+    resultado: confirmada
+  - texto: "a skill não começa implementação na main sem consentimento"
+    ref: superpowers-subagent-driven-development
+    localizacao: "seção 'Setup', primeiro parágrafo"
+    resultado: confirmada
+  - texto: "é o maior SKILL.md das treze skills da trilha"
+    ref: superpowers-subagent-driven-development
+    localizacao: "tamanho do arquivo no commit fixado: 32.577 bytes, contra 26.623 da writing-skills, a segunda"
+    resultado: confirmada
+  - texto: "a skill cita arquivos ao lado dela (prompts e scripts)"
+    ref: superpowers-subagent-driven-development
+    localizacao: "seções 'Setup' (scripts/sdd-workspace), 'The Task Loop' (scripts/task-brief, scripts/review-package, implementer-prompt.md, task-reviewer-prompt.md, re-review-prompt.md)"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

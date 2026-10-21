@@ -1,0 +1,44 @@
+conteudo: ferramenta-sp-test-driven-development
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "código escrito antes do teste é apagado, sem guardar como referência"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'The Iron Law': 'Write code before the test? Delete it' e a lista 'No exceptions'"
+    resultado: confirmada
+  - texto: "o teste é visto falhando antes do código"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'Verify RED - Watch It Fail' (MANDATORY)"
+    resultado: confirmada
+  - texto: "as exceções (protótipo descartável, código gerado, configuração) dependem de permissão da pessoa"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'When to Use', 'Exceptions (ask your human partner)'"
+    resultado: confirmada
+  - texto: "o refatorar é o terceiro passo, depois do verde"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'Red-Green-Refactor', 'REFACTOR - Clean Up': 'After green only'"
+    resultado: confirmada
+  - texto: "a suíte inteira do projeto roda antes de dar a mudança por feita, e qualquer falha entra no relato"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'Verify GREEN', parágrafo que começa com 'Other tests means the project's suite, not just your file'"
+    resultado: confirmada
+  - texto: "a skill cita um arquivo ao lado dela (writing-good-tests.md)"
+    ref: superpowers-test-driven-development
+    localizacao: "seção 'Good Tests', frase 'read writing-good-tests.md'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

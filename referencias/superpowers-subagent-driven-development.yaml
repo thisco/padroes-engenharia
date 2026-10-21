@@ -1,0 +1,11 @@
+id: superpowers-subagent-driven-development
+titulo: "superpowers: skill subagent-driven-development"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/subagent-driven-development/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "abertura ('Continuous execution', 'Rulings, not stalls' e as quatro paradas), seções 'Setup', 'The Task Loop' (itens 1 a 5) e 'Final Review'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. É o maior SKILL.md das treze skills da trilha (32,6 KB)."

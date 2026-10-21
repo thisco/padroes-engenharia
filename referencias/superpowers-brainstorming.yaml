@@ -4,8 +4,8 @@ organizacao: obra/superpowers
 url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/brainstorming/SKILL.md
 tipo: comunidade
 versao: "7.0.0"
-verificado_em: 2026-10-20
+verificado_em: 2026-10-21
 verificacao: V
-localizacao: "seções 'Sizing the Work' (quem decide o tamanho) e 'The Written Design', item 'Where it goes' (onde o desenho é gravado e a preferência do usuário)"
+localizacao: "seções 'Your First Message', 'Play It Back', 'Size the Work', 'The Written Design' (item 'Where it goes' e 'Builder check') e o bloco HARD-GATE"
 dominios: [construir-com-ia]
-notas: "Reescrita na 7.0.0 (RELEASE-NOTES v7.0.0): o caminho docs/superpowers/specs/ continua, agora só para o tamanho 'projeto com desenho escrito'. Lida no raw do commit fixado em 2026-10-20."
+notas: "Reescrita na 7.0.0 (RELEASE-NOTES v7.0.0): o caminho docs/superpowers/specs/ continua, agora só para o tamanho 'projeto com desenho escrito'. Lida no raw do commit fixado em 2026-10-20 e relida em 2026-10-21."

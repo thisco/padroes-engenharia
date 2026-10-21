@@ -1,0 +1,40 @@
+conteudo: ferramenta-sp-using-git-worktrees
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill detecta isolamento já existente antes de criar qualquer coisa"
+    ref: superpowers-using-git-worktrees
+    localizacao: "seção 'Step 0: Detect Existing Isolation'"
+    resultado: confirmada
+  - texto: "a skill prefere a ferramenta nativa do harness e só então usa git worktree"
+    ref: superpowers-using-git-worktrees
+    localizacao: "seção 'Step 1', itens 1a (preferido) e 1b (fallback)"
+    resultado: confirmada
+  - texto: "a skill pede consentimento antes de criar o worktree"
+    ref: superpowers-using-git-worktrees
+    localizacao: "seção 'Step 0', pergunta 'Would you like me to set up an isolated worktree?'"
+    resultado: confirmada
+  - texto: "um diretório de worktree fora do .gitignore é adicionado e a mudança é commitada"
+    ref: superpowers-using-git-worktrees
+    localizacao: "seção 'Safety Verification': 'If NOT ignored: Add to .gitignore, commit the change, then proceed'"
+    resultado: confirmada
+  - texto: "a suíte roda como linha de base antes de implementar"
+    ref: superpowers-using-git-worktrees
+    localizacao: "seção 'Step 3: Verify Clean Baseline'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

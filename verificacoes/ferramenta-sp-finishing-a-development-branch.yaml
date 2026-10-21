@@ -1,0 +1,44 @@
+conteudo: ferramenta-sp-finishing-a-development-branch
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a suíte inteira roda antes do menu, e falha interrompe"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'Step 1: Verify Tests'"
+    resultado: confirmada
+  - texto: "a branch de base é confirmada antes de mesclar"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'Step 3: Determine Base Branch'"
+    resultado: confirmada
+  - texto: "o menu tem exatamente três opções: merge local, PR ou manter a branch"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'Step 4: Present Options', bloco 'Normal repo and named-branch worktree'"
+    resultado: confirmada
+  - texto: "a decisão de integrar é da pessoa"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'Step 4', último parágrafo: 'the integration decision is theirs'"
+    resultado: confirmada
+  - texto: "descartar só a pedido explícito, confirmado com a palavra 'discard'"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'If your human partner asks to discard the work' e 'Common Rationalizations' ('Only the typed word discard')"
+    resultado: confirmada
+  - texto: "a skill só remove worktrees em .worktrees/ ou worktrees/ e nunca usa --force por conta própria"
+    ref: superpowers-finishing-a-development-branch
+    localizacao: "seção 'Step 6: Cleanup Workspace'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

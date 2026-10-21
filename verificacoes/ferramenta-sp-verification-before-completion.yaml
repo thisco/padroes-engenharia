@@ -1,0 +1,44 @@
+conteudo: ferramenta-sp-verification-before-completion
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "nenhuma afirmação de conclusão sem evidência de verificação recente"
+    ref: superpowers-verification-before-completion
+    localizacao: "seção 'The Iron Law': 'NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE'"
+    resultado: confirmada
+  - texto: "o comando é identificado, rodado por completo e a saída lida antes da afirmação"
+    ref: superpowers-verification-before-completion
+    localizacao: "seção 'The Gate Function', passos 1 a 5"
+    resultado: confirmada
+  - texto: "'deve funcionar' e 'provavelmente' são sinais de parada"
+    ref: superpowers-verification-before-completion
+    localizacao: "seção 'Red Flags - STOP', primeiro item (should, probably, seems to)"
+    resultado: confirmada
+  - texto: "relato de sucesso de subagente não conta: confere-se o diff"
+    ref: superpowers-verification-before-completion
+    localizacao: "seções 'Common Failures' (linha 'Agent completed') e 'Key Patterns' ('Agent delegation')"
+    resultado: confirmada
+  - texto: "teste de regressão exige o ciclo vermelho-verde conferido"
+    ref: superpowers-verification-before-completion
+    localizacao: "seção 'Key Patterns', 'Regression tests (TDD Red-Green)'"
+    resultado: confirmada
+  - texto: "a regra vale antes de commit, PR, conclusão de tarefa e passagem para a próxima"
+    ref: superpowers-verification-before-completion
+    localizacao: "seção 'When To Apply'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

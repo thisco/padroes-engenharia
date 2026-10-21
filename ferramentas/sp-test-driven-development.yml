@@ -1,0 +1,29 @@
+id: sp-test-driven-development
+titulo: test-driven-development
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: tdd
+    papel: caminho
+    bom_quando: "o time precisa de rigidez: código escrito antes do teste é apagado, e o teste é visto falhando antes do código."
+    cuidado: "exceções (protótipo descartável, código gerado, configuração) só com permissão da pessoa; a suíte inteira do projeto roda antes de dar a tarefa por feita, não só o teste novo."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta
+  skills/test-driven-development/ inteira do commit fixado para a pasta de skills do harness (a
+  skill cita writing-good-tests.md ao lado dela) [ref:superpowers-test-driven-development]; o
+  caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. Código escrito antes do teste é apagado, sem guardar como referência; o
+  refatorar é o terceiro passo do ciclo, depois do verde. Rodar só o teste novo não basta: a skill
+  exige a suíte inteira do projeto antes de dar a mudança por feita, e qualquer falha, mesmo alheia,
+  entra no relato [ref:superpowers-test-driven-development].
+referencias: [superpowers-test-driven-development, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

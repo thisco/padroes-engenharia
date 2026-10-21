@@ -1,0 +1,11 @@
+id: superpowers-executing-plans
+titulo: "superpowers: skill executing-plans"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/executing-plans/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "abertura ('Why inline', 'Continuous execution', 'Rulings, not stalls'), seções 'When to Use', 'Setup', 'The Task Loop' e 'Final Review'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

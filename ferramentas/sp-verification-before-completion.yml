@@ -1,0 +1,29 @@
+id: sp-verification-before-completion
+titulo: verification-before-completion
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: evidencia
+    papel: caminho
+    bom_quando: "sempre que for dizer que está pronto, passou ou foi corrigido: rodar o comando inteiro, ler a saída e só então afirmar."
+    cuidado: "'deve funcionar' e relato de sucesso de subagente não contam como evidência; teste de regressão exige o ciclo vermelho-verde conferido."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta
+  skills/verification-before-completion/ inteira do commit fixado para a pasta de skills do harness
+  [ref:superpowers-verification-before-completion]; o caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. É uma regra de porta, sem comando próprio: identificar o comando que
+  prova a afirmação, rodá-lo por completo e ler a saída antes de qualquer frase de sucesso. Relato
+  de sucesso de subagente não conta: a skill manda conferir o diff; e um teste de regressão só vale
+  com o ciclo vermelho-verde conferido [ref:superpowers-verification-before-completion].
+referencias: [superpowers-verification-before-completion, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

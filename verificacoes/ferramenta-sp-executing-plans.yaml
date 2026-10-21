@@ -1,0 +1,44 @@
+conteudo: ferramenta-sp-executing-plans
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill é para quando a pessoa escolheu execução inline ou o harness não tem subagente"
+    ref: superpowers-executing-plans
+    localizacao: "cabeçalho (description) e seção 'When to Use'"
+    resultado: confirmada
+  - texto: "o próprio agente executa cada tarefa, com TDD, e um revisor novo revisa a branch inteira no fim"
+    ref: superpowers-executing-plans
+    localizacao: "abertura e seção 'Final Review'; 'Setup': REQUIRED SUB-SKILL test-driven-development"
+    resultado: confirmada
+  - texto: "a skill não para entre tarefas e decide conflitos registrando no ledger"
+    ref: superpowers-executing-plans
+    localizacao: "abertura: 'Continuous execution' e 'Rulings, not stalls'"
+    resultado: confirmada
+  - texto: "o workspace e o ledger são os mesmos da subagent-driven-development"
+    ref: superpowers-executing-plans
+    localizacao: "seção 'Setup': 'The workspace and ledger are shared with superpowers:subagent-driven-development'"
+    resultado: confirmada
+  - texto: "num plano longo as últimas tarefas recebem o contexto mais compactado"
+    ref: superpowers-executing-plans
+    localizacao: "seção 'When to Use', último parágrafo: 'the last tasks get the least of you'"
+    resultado: confirmada
+  - texto: "a skill cita scripts ao lado dela"
+    ref: superpowers-executing-plans
+    localizacao: "seção 'The Task Loop': scripts/task-start e scripts/task-done; 'Setup' e 'Final Review': scripts da subagent-driven-development"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: pendente-tarefa-C13
+  data: '2026-10-21'
+  achados: []

@@ -808,6 +808,21 @@ e as fontes do caso são `.md` publicados em `casos/fontes/`. `PAGINA_DO_PORTAL`
 As 13 ficam em `adotar` com `casos: [origem-do-modelo]`. Commit:
 `docs(ferramentas): skills do superpowers 7.0.0 como caminhos da trilha`.
 
+- [x] **Passo 1:** os 13 `SKILL.md` e o `README.md` lidos no raw do commit `bb92a77` (só leitura,
+  no scratchpad); `bom_quando` e `cuidado` partiram do mockup `trilha-v3.html` e foram ajustados ao
+  que o texto da 7.0.0 sustenta (o `cuidado` da `test-driven-development` e o da `writing-skills`
+  do mockup não tinham apoio na fonte e foram trocados). Nenhum nome de assistente nos arquivos.
+- [x] **Passo 2:** 13 ferramentas `sp-*`, 11 referências novas (10 skills e `superpowers-readme`,
+  que sustenta o `como_instalar`), 3 referências existentes com `localizacao` ampliada e 13
+  registros `ferramenta-sp-*`, com uma afirmação por frase e três comuns (instalação por harness,
+  série 6.x no caso, 7.0.0 fixada no portal). `revisao_adversarial` marcada `pendente-tarefa-C13`.
+- [x] **Passo 3:** `validar.py` e `gerar.py` com 0; 920 passed; `ruff check` limpo.
+- [x] **Passo 4:** commit.
+
+Evidência (2026-10-21): `validar.py` 0, `gerar.py` 0, 920 passed, `ruff check` limpo; varredura de
+marca de assistente nos 40 arquivos sem ocorrência; `public/ferramentas/sp-*.html` com os passos e
+as citações numeradas.
+
 ### Tarefa C4: Ferramentas do agent-skills
 
 **Arquivos:**

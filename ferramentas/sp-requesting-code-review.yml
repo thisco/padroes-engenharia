@@ -1,0 +1,30 @@
+id: sp-requesting-code-review
+titulo: requesting-code-review
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: revisar
+    papel: caminho
+    bom_quando: "você quer um revisor independente depois de cada tarefa, de uma feature grande ou antes do merge: a skill despacha um subagente com o diff entre dois commits e um template."
+    cuidado: "o revisor recebe só o contexto montado para ele, nunca o histórico da sessão; achado crítico é corrigido na hora e achado importante antes de seguir."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta
+  skills/requesting-code-review/ inteira do commit fixado para a pasta de skills do harness (a skill
+  cita code-reviewer.md ao lado dela) [ref:superpowers-requesting-code-review]; o caminho de cada
+  harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. Depende de um harness com subagente: o revisor é despachado com o
+  template code-reviewer.md e os SHAs de base e de topo, e revisar o diff na própria sessão é
+  listado como racionalização a evitar. Achado crítico é corrigido na hora, achado importante antes
+  de seguir, e a skill prevê contestar o revisor com razão técnica
+  [ref:superpowers-requesting-code-review].
+referencias: [superpowers-requesting-code-review, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

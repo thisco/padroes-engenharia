@@ -1,0 +1,11 @@
+id: superpowers-writing-skills
+titulo: "superpowers: skill writing-skills"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/writing-skills/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'TDD Mapping for Skills', 'SKILL.md Structure', 'Skill Discovery Optimization' (item 1), 'The Iron Law (Same as TDD)', 'Match the Form to the Failure', 'RED-GREEN-REFACTOR for Skills' e 'STOP: Before Moving to Next Skill'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A seção 'Overview' cita o diretório de skills de um harness pelo nome do produto e um documento de boas práticas do fornecedor; o portal não reproduz os nomes."
