@@ -52,6 +52,9 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Alterado
 
+- ADR 0006 renomeada para `0006-caso-de-origem-fora-da-semente.md`: o arquivo e o título deixam
+  de citar a sigla do sistema de origem; a decisão não muda.
+
 - Páginas de domínio: a seção "Práticas candidatas, ainda sem texto" deixa de listar práticas já
   publicadas. As candidatas cobertas saíram dos `_dominio.md` de onze domínios, e o gerador esconde a
   candidata cujo título coincide com o de uma prática do domínio, para a lista não voltar a envelhecer.
