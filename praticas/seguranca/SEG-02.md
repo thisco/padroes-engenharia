@@ -163,12 +163,13 @@ rotacionar a credencial a invalida, e limpar o histórico não basta
    estava no arquivo não barra a correção.
 8. Falso positivo, ou um arquivo que precisa de uma chave de teste (a chave privada de um teste de
    TLS, por exemplo), se trata numa MR própria, que a revisão veja. No verificador do portal, ponha o caminho
-   ou o padrão no `.seg02-ignorar`, na raiz, um por linha (`tests/fixtures/tls/**`; padrão sem `/`
-   vale em qualquer pasta; `#` é comentário; os caminhos são medidos a partir da raiz do repositório
+   ou o padrão no `.seg02-ignorar`, na raiz, um por linha (`tests/fixtures/tls/**`; o padrão começa por
+   uma pasta literal, sem curinga, e nomeia o arquivo ou a subpasta; `#` é comentário; os caminhos são medidos a partir da raiz do repositório
    Git). Ele é lido da base da comparação: no harness e no `pre-commit`, a isenção vale depois de
    commitada; no CI, depois que a MR que a cria entra na branch de destino. A mesma MR não isenta o
-   próprio segredo. Padrão sem nenhum nome, que isentaria tudo ou quase tudo (`**`, `*`, `**/*`,
-   `*.*`, `.`, `/`), é recusado quando entra, em qualquer evento: o harness que escreve o
+   próprio segredo. Padrão sem prefixo de pasta literal (`**`, `*`, `**/*`, `*.*`, `*.key`, `.`, `/`, `tests/`) ou que
+   isentaria uma pasta inteira (`tests/*`, `tests/**/*.log`: o verificador confere o efeito com
+   arquivos sintéticos soltos e aninhados) é recusado quando entra, em qualquer evento: o harness que escreve o
    `.seg02-ignorar` (direto ou pelo shell), o `pre-commit` do commit que o traz e o CI da MR que o
    traz saem 2 com "isenção ampla demais", haja segredo ou não. A correção de uma isenção ampla que já
    estava em vigor passa: quando só o lado da comparação tem o padrão amplo e o lado novo o tira ou o
@@ -379,8 +380,9 @@ trecho dele; no shell, `shell:0: <tipo> escrito pelo shell`. Sai com 0 quando n�
 repositório Git, falha do git num repositório (configuração corrompida, dono diferente) ou caminho
 absoluto sem `cwd`.
 
-O `.seg02-ignorar` é lido do lado da comparação: do `HEAD` no harness e no `pre-commit` (do disco, no
-harness fora de repositório Git) e da base no `ci`. A isenção vale no harness e no `pre-commit` depois
+O `.seg02-ignorar` é lido do lado da comparação: do `HEAD` no harness e no `pre-commit` (do disco só no
+harness, e só quando não há `.git` na raiz nem em ancestral; com o git quebrado, repositório sem
+commit ou isenção ampla no `HEAD`, nada é isento e a verificação segue) e da base no `ci`. A isenção vale no harness e no `pre-commit` depois
 de commitada, e no `ci` depois de entrar na branch de destino; o agente não se isenta gravando o arquivo e o
 segredo em seguida. A isenção acrescentada junto com o segredo não o libera no commit nem na MR; ela
 passa primeiro pela revisão, numa MR própria. O próprio `.seg02-ignorar` é varrido como qualquer

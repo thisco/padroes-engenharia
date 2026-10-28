@@ -5,7 +5,11 @@ montados em tempo de execução (último teste da seção "o próprio arquivo").
 
 from __future__ import annotations
 
+import json
+import os
 import struct
+import subprocess
+import sys
 from collections.abc import Callable
 from pathlib import Path
 
@@ -937,3 +941,68 @@ def test_usuario_git_de_ssh_nao_e_email_mas_outro_usuario_e():
     assert not casa("ssh git" + ARROBA + "gitlab.interno.corp")
     assert casa(email("ana.souza", "github.com"))
     assert casa(email("gitana", "cliente-ficticio-padroes.com.br"))
+
+
+# --- rodada 2, revisão de segurança: padrão por efeito e disco só fora de repositório ------------
+
+
+@pytest.mark.parametrize(
+    "padrao",
+    [
+        "tests/",
+        "tests/*",
+        "tests/**",
+        "logs/**/*.log",
+        "prompts/*/**",
+        "*/fixtures/a.csv",
+        "dados.csv",
+    ],
+)
+def test_isencao_que_cobre_pasta_vigiada_inteira_ou_sem_prefixo_literal_sai_2(
+    repo_git: RepoGit, padrao: str
+):
+    r = harness(".lgpd02-ignorar", padrao + "\n", cwd=str(repo_git.raiz))
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
+
+
+def test_isencao_de_um_arquivo_isenta_so_esse_arquivo(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "tests/fixtures/clientes.csv\n")
+    cwd = str(repo_git.raiz)
+    assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/outro.csv", cpf() + "\n", cwd=cwd).returncode == 1
+    assert harness("tests/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 1
+
+
+def test_git_quebrado_dentro_de_repositorio_ignora_a_isencao_do_disco(
+    repo_git: RepoGit, tmp_path: Path
+):
+    _repo_com_isencao(repo_git, "tests/fixtures/\n", commitar=False)  # só no disco
+    vazio = tmp_path / "git-vazio"
+    vazio.mkdir()
+    entrada = {
+        "ferramenta": "escrever",
+        "caminho": "tests/fixtures/a.json",
+        "conteudo": cpf(),
+        "cwd": str(repo_git.raiz),
+    }
+    r = subprocess.run(
+        [sys.executable, str(SCRIPT), "--evento", "antes-de-ferramenta"],
+        input=json.dumps(entrada),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env={**os.environ, "GIT_DIR": str(vazio)},
+        check=False,
+    )
+    assert r.returncode == 1 and "Traceback" not in r.stderr
+
+
+def test_isencao_ampla_no_head_e_padrao_bom_no_disco_nao_isenta_nada(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "**\n")
+    repo_git.escrever(".lgpd02-ignorar", "tests/fixtures/\n")  # o disco corrige, sem commit
+    r = harness("tests/fixtures/a.json", cpf() + "\n", cwd=str(repo_git.raiz))
+    assert r.returncode == 1
+
+
+def test_scp_com_usuario_diferente_de_git_e_inocente():
+    assert not casa("deploy" + ARROBA + "gitlab.com:grupo/projeto.git")

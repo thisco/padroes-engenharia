@@ -7,9 +7,13 @@ gerados por um gerador pseudoaleatório de semente fixa, sem conta nem credencia
 from __future__ import annotations
 
 import base64
+import json
+import os
 import random
 import string
 import struct
+import subprocess
+import sys
 from collections.abc import Callable
 from pathlib import Path
 
@@ -546,7 +550,7 @@ def test_extensao_de_binario_avisa_e_nao_casa():
 
 def test_isencao_em_disco_vale_no_harness(tmp_path: Path):
     (tmp_path / ".seg02-ignorar").write_text(
-        "# chaves de teste do TLS\ntests/fixtures/**\ndocs/exemplo.key\n*.sample\n",
+        "# chaves de teste do TLS\ntests/fixtures/**\ndocs/exemplo.key\nconfig/*.sample\n",
         encoding="utf-8",
     )
     cwd = str(tmp_path)
@@ -942,12 +946,12 @@ def test_arquivo_credentials_da_aws_e_configuracao():
 
 
 def test_renomear_arquivo_isento_para_fora_da_isencao_nao_acusa_o_antigo(repo_git: RepoGit):
-    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
-    repo_git.escrever("fixtures/a.key", pem() + "\n")
-    repo_git.adicionar(".seg02-ignorar", "fixtures/a.key")
+    repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")
+    repo_git.escrever("fixtures/dados/a.key", pem() + "\n")
+    repo_git.adicionar(".seg02-ignorar", "fixtures/dados/a.key")
     repo_git.commitar("chave de teste isenta")
     (repo_git.raiz / "outra").mkdir()
-    repo_git._git("mv", "fixtures/a.key", "outra/a.key")
+    repo_git._git("mv", "fixtures/dados/a.key", "outra/a.key")
     assert rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz).returncode == 0
     repo_git.escrever("outra/a.key", pem() + "\n" + pem(semente=3) + "\n")
     repo_git.adicionar("outra/a.key")
@@ -982,11 +986,11 @@ def test_ci_com_base_vazia_sai_2(repo_git: RepoGit):
 def test_isencao_no_harness_vem_do_head_quando_ha_repositorio(repo_git: RepoGit):
     # O agente não se isenta escrevendo o .seg02-ignorar no disco e o segredo em seguida.
     cwd = str(repo_git.raiz)
-    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
-    assert harness("fixtures/a.key", pem(), cwd=cwd).returncode == 1
+    repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")
+    assert harness("fixtures/dados/a.key", pem(), cwd=cwd).returncode == 1
     repo_git.adicionar(".seg02-ignorar")
     repo_git.commitar("isenção revisada")
-    assert harness("fixtures/a.key", pem(), cwd=cwd).returncode == 0
+    assert harness("fixtures/dados/a.key", pem(), cwd=cwd).returncode == 0
 
 
 @pytest.mark.parametrize("nome", [".netrc", "_netrc"])
@@ -1000,9 +1004,9 @@ def test_netrc_com_senha_pega(nome: str):
 
 
 def test_ci_com_base_de_zeros_respeita_a_isencao_do_head(repo_git: RepoGit):
-    repo_git.escrever(".seg02-ignorar", "fixtures/**\n")
-    repo_git.escrever("fixtures/a.key", pem() + "\n")
-    repo_git.adicionar(".seg02-ignorar", "fixtures/a.key")
+    repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")
+    repo_git.escrever("fixtures/dados/a.key", pem() + "\n")
+    repo_git.adicionar(".seg02-ignorar", "fixtures/dados/a.key")
     repo_git.commitar("chave de teste isenta")
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS).returncode == 0
     repo_git.escrever("app/a.py", f"A = '{GITHUB}'\n")
@@ -1099,10 +1103,26 @@ def test_exemplo_de_terceiros_continua_acusado():
 # --- rodada 2, revisão de segurança: isenção ampla demais ---------------------------------------
 
 
-@pytest.mark.parametrize("padrao", ["**", "*", "**/*", ".", "/", "./", "*/**", "*.*", "**/*.*"])
+@pytest.mark.parametrize(
+    "padrao",
+    [
+        "**",
+        "*",
+        "**/*",
+        ".",
+        "/",
+        "./",
+        "*/**",
+        "*.*",
+        "**/*.*",
+        "tests/",
+        "tests/*",
+        "tests/**/*.log",
+    ],
+)
 def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: str):
     base = repo_git._git("rev-parse", "HEAD")
-    repo_git.escrever(".seg02-ignorar", f"tests/**\n{padrao}\n")
+    repo_git.escrever(".seg02-ignorar", f"tests/fixtures/**\n{padrao}\n")
     repo_git.adicionar(".seg02-ignorar")
     repo_git.commitar("isenção ampla")
     repo_git.escrever("app/a.py", f"A = '{GITHUB}'\n")
@@ -1110,7 +1130,8 @@ def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: 
     pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
     assert pre.returncode == 2 and "isenção ampla demais" in pre.stderr
     hs = harness("app/b.py", f"A = '{GITHUB}'\n", cwd=str(repo_git.raiz))
-    assert hs.returncode == 2 and "isenção ampla demais" in hs.stderr
+    # No harness a ampla em vigor não isenta nada e a verificação segue (não cai para o disco).
+    assert hs.returncode == 1 and hs.stdout.splitlines() == ["app/b.py:1: token do GitHub em claro"]
     repo_git.commitar("segredo")
     ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=ZEROS)
     assert ci.returncode == 2 and "isenção ampla demais" in ci.stderr
@@ -1118,7 +1139,9 @@ def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: 
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 2
 
 
-@pytest.mark.parametrize("padrao", ["*.key", "tests/**", "fixtures/*.pem", "**/testdata/**"])
+@pytest.mark.parametrize(
+    "padrao", ["docs/*.key", "tests/fixtures/**", "fixtures/*.pem", "docs/testdata/**"]
+)
 def test_isencao_com_nome_ou_pasta_e_aceita(repo_git: RepoGit, padrao: str):
     repo_git.escrever(".seg02-ignorar", f"{padrao}\n")
     repo_git.adicionar(".seg02-ignorar")
@@ -1127,29 +1150,30 @@ def test_isencao_com_nome_ou_pasta_e_aceita(repo_git: RepoGit, padrao: str):
 
 
 @pytest.mark.parametrize("padrao", [".seg02-ignorar", ".seg02-*", "*ignorar"])
-def test_o_arquivo_de_isencao_nunca_se_isenta(repo_git: RepoGit, padrao: str):
+def test_isencao_que_casaria_o_proprio_arquivo_nao_tem_prefixo_de_pasta_e_sai_2(
+    repo_git: RepoGit, padrao: str
+):
     repo_git.escrever(".seg02-ignorar", f"{padrao}\n")
     repo_git.adicionar(".seg02-ignorar")
-    repo_git.commitar("isenção que casa o próprio arquivo")
-    repo_git.escrever(".seg02-ignorar", f"{padrao}\n# {GITHUB}\n")
-    repo_git.adicionar(".seg02-ignorar")
     r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
-    assert r.stdout.splitlines() == [".seg02-ignorar:2: token do GitHub em claro"]
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
 
 
 # --- rodada 3: a isenção ampla é recusada ao entrar, e corrigi-la não trava -----------------------
 
 
 def test_harness_que_escreve_isencao_ampla_sai_2(repo_git: RepoGit):
-    r = harness(".seg02-ignorar", "tests/**\n**\n", cwd=str(repo_git.raiz))
+    r = harness(".seg02-ignorar", "tests/fixtures/**\n**\n", cwd=str(repo_git.raiz))
     assert r.returncode == 2 and "isenção ampla demais" in r.stderr
-    assert harness(".seg02-ignorar", "tests/**\n", cwd=str(repo_git.raiz)).returncode == 0
+    assert harness(".seg02-ignorar", "tests/fixtures/**\n", cwd=str(repo_git.raiz)).returncode == 0
 
 
 def test_shell_que_escreve_isencao_ampla_sai_2(repo_git: RepoGit):
     r = shell("echo '**' >> .seg02-ignorar", cwd=str(repo_git.raiz))
     assert r.returncode == 2 and "isenção ampla demais" in r.stderr
-    assert shell("echo 'tests/**' >> .seg02-ignorar", cwd=str(repo_git.raiz)).returncode == 0
+    assert (
+        shell("echo 'tests/fixtures/**' >> .seg02-ignorar", cwd=str(repo_git.raiz)).returncode == 0
+    )
 
 
 def test_pre_commit_e_ci_que_introduzem_isencao_ampla_saem_2(repo_git: RepoGit):
@@ -1170,7 +1194,7 @@ def repo_com_isencao_ampla_em_vigor(repo_git: RepoGit) -> str:
     return repo_git.commitar("isenção ampla em vigor")
 
 
-@pytest.mark.parametrize("nova", ["tests/**\n", None])
+@pytest.mark.parametrize("nova", ["tests/fixtures/**\n", None])
 def test_corrigir_isencao_ampla_em_vigor_nao_trava(repo_git: RepoGit, nova: str | None):
     base = repo_com_isencao_ampla_em_vigor(repo_git)
     if nova is None:
@@ -1192,7 +1216,53 @@ def test_corrigir_isencao_ampla_em_vigor_nao_trava(repo_git: RepoGit, nova: str 
 
 def test_corrigir_isencao_ampla_sem_segredo_passa_no_ci(repo_git: RepoGit):
     base = repo_com_isencao_ampla_em_vigor(repo_git)
-    repo_git.escrever(".seg02-ignorar", "tests/**\n")
+    repo_git.escrever(".seg02-ignorar", "tests/fixtures/**\n")
     repo_git.adicionar(".seg02-ignorar")
     repo_git.commitar("estreita a isenção")
     assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
+
+
+# --- rodada 2, revisão de segurança: padrão por efeito e disco só fora de repositório ------------
+
+
+def test_isencao_nomeia_so_o_arquivo_ou_a_subpasta(repo_git: RepoGit):
+    repo_git.escrever(".seg02-ignorar", "tests/fixtures/clientes.key\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção de um arquivo")
+    cwd = str(repo_git.raiz)
+    assert harness("tests/fixtures/clientes.key", pem(), cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/outro.key", pem(), cwd=cwd).returncode == 1
+    assert harness("tests/a.key", pem(), cwd=cwd).returncode == 1
+
+
+def test_git_quebrado_dentro_de_repositorio_ignora_a_isencao_do_disco(
+    repo_git: RepoGit, tmp_path: Path
+):
+    repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")  # só no disco
+    vazio = tmp_path / "git-vazio"
+    vazio.mkdir()
+    entrada = {
+        "ferramenta": "escrever",
+        "caminho": "fixtures/dados/a.key",
+        "conteudo": pem(),
+        "cwd": str(repo_git.raiz),
+    }
+    env = {**os.environ, "GIT_DIR": str(vazio)}
+    r = subprocess.run(
+        [sys.executable, str(SCRIPT), "--evento", "antes-de-ferramenta"],
+        input=json.dumps(entrada),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        env=env,
+        check=False,
+    )
+    assert r.returncode == 1 and "Traceback" not in r.stderr
+
+
+def test_isencao_ampla_no_head_e_padrao_bom_no_disco_nao_isenta_nada(repo_git: RepoGit):
+    repo_git.escrever(".seg02-ignorar", "**\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenção ampla em vigor")
+    repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")  # o disco corrige, sem commit
+    assert harness("fixtures/dados/a.key", pem(), cwd=str(repo_git.raiz)).returncode == 1

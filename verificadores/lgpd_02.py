@@ -9,11 +9,12 @@ Dois cuidados contra falso positivo. Em `logs/`, o número de 11 dígitos colado
 rótulo "cpf" na mesma linha (sem distinguir caixa) ou na forma `000.000.000-00`: com o dígito
 verificador válido, cerca de 1% dos números de 11 dígitos (IDs, telefones) passam pela conta. Em
 `tests/` e `prompts/` a forma colada continua acusada. E o `.lgpd02-ignorar`, na raiz, isenta
-caminhos: um caminho ou padrão por linha (`*`, `**`, `?`; padrão sem `/` vale em qualquer pasta;
-`/` no fim é a pasta inteira; `#` é comentário), em todas as pastas. Ele é lido do lado da
-comparação (o `HEAD` no harness e no pre-commit, ou o disco fora de repositório Git; a `--base` no
-ci), então só vale depois de revisado e commitado. Padrão que isentaria tudo (`**`, `*`, `**/*`,
-`.`, `/`) sai 2 ("isenção ampla demais") quando entra.
+caminhos: um caminho ou padrão por linha (`*`, `**`, `?`; começa por uma pasta literal e nomeia o
+arquivo ou a subpasta; `#` é comentário), em todas as pastas. Ele é lido do lado da comparação (o
+`HEAD` no harness e no pre-commit, ou o disco só sem `.git` em `cwd` nem em ancestral; a `--base`
+no ci), então só vale depois de revisado e commitado; git quebrado ou isenção ampla no `HEAD`
+deixam sem isenção. Padrão sem prefixo de pasta literal ou que casa arquivos sintéticos de uma
+pasta vigiada inteira (`**`, `tests/*`, `logs/**/*.log`) sai 2 ("isenção ampla demais").
 
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso
 ou estado indeterminado (mensagem em stderr). O dado achado nunca é impresso: só o tipo e a posição.
@@ -268,9 +269,33 @@ class IsencaoAmpla(Indeterminado):
     """O `.lgpd02-ignorar` tem padrão que isentaria tudo ou quase tudo."""
 
 
+SONDAS = ("a.txt", "a/b.txt", "a.log", "a.md", "a.json")
+
+
+def cobre_pasta_inteira(padrao: re.Pattern[str], pastas: set[str]) -> bool:
+    """O padrão casa arquivos sintéticos soltos ou aninhados de uma pasta vigiada: isentaria a pasta
+    inteira (ou uma classe inteira de arquivos dela), e não um arquivo ou subpasta pelo nome."""
+    return any(padrao.fullmatch(f"{p}/{s}") for p in pastas for s in SONDAS)
+
+
+def dentro_de_repositorio(cwd: str | None) -> bool:
+    """Há `.git` em `cwd` ou num ancestral (ou `GIT_DIR` no ambiente): só fora disso o disco pode
+    ser a fonte da isenção, porque quem comita controla o disco."""
+    if os.environ.get("GIT_DIR"):
+        return True
+    atual = os.path.realpath(cwd or ".")
+    while True:
+        if os.path.lexists(os.path.join(atual, ".git")):
+            return True
+        pai = os.path.dirname(atual)
+        if pai == atual:
+            return False
+        atual = pai
+
+
 def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
-    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; padrão sem `/` vale em qualquer
-    pasta; `/` no fim é a pasta inteira; `#` começa comentário."""
+    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; o primeiro segmento é uma pasta
+    literal; `/` no fim é a pasta inteira; `#` começa comentário."""
     padroes = []
     for linha in linhas(texto or ""):
         linha = linha.strip()
@@ -280,6 +305,12 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
             raise IsencaoAmpla(
                 f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
                 "arquivos pelo nome"
+            )
+        segmentos = linha.strip("/").split("/")
+        if len(segmentos) < 2 or any(c in segmentos[0] for c in "*?"):
+            raise IsencaoAmpla(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; comece por uma pasta "
+                "literal e nomeie o arquivo ou a subpasta"
             )
         pasta = linha.endswith("/")
         linha = linha.strip("/")
@@ -304,7 +335,13 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
         if "/" not in linha:
             regex = "(?:.*/)?" + regex
         regex += "/.*" if pasta else "(?:/.*)?"
-        padroes.append(re.compile(regex))
+        compilado = re.compile(regex)
+        if cobre_pasta_inteira(compilado, {segmentos[0], *PASTAS}):
+            raise IsencaoAmpla(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r} isenta uma pasta "
+                "inteira; nomeie o arquivo ou a subpasta"
+            )
+        padroes.append(compilado)
     return padroes
 
 
@@ -412,24 +449,20 @@ def evento_harness(avisos: list[str]) -> list[str]:
 
 def isencao_do_harness(cwd: str | None) -> list[re.Pattern[str]]:
     """No harness, a isenção vem do `HEAD` do repositório (a que já passou pela revisão; o agente
-    não se isenta gravando o arquivo no disco); fora de repositório Git, do disco."""
+    não se isenta gravando o arquivo no disco). O disco só vale com a confirmação de que não há
+    repositório (nenhum `.git` em `cwd` nem em ancestral). Qualquer erro do git, repositório sem
+    commit ou isenção ampla no `HEAD` deixa sem isenção: a verificação segue sem isentar."""
     if not cwd or not os.path.isdir(cwd):
         return []
-    try:
-        raiz = git(cwd, "rev-parse", "--show-toplevel").decode("utf-8").strip()
-    except Indeterminado:
-        raiz = None  # fora de repositório (ou sem git): vale o disco
-    if raiz:
+    if dentro_de_repositorio(cwd):
         try:
+            raiz = git(cwd, "rev-parse", "--show-toplevel").decode("utf-8").strip()
             head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
-        except Indeterminado:
-            return []  # repositório sem commit: nenhuma isenção revisada
-        try:
             return isencao_no_git(raiz, head)
-        except IsencaoAmpla:
-            pass  # a ampla em vigor se corrige no disco: vale a do disco
+        except Indeterminado:
+            return []  # inclui IsencaoAmpla e o git quebrado: nunca o disco
     try:
-        return padroes_de_isencao(decodifica((Path(raiz or cwd) / ARQUIVO_DE_ISENCAO).read_bytes()))
+        return padroes_de_isencao(decodifica((Path(cwd) / ARQUIVO_DE_ISENCAO).read_bytes()))
     except OSError:
         return []
 

@@ -124,7 +124,7 @@ o registro `revisao_adversarial` é atualizado na rodada de correção que segue
 - [x] Evidências abaixo: contagem de forças do catálogo, trecho de `regras.json` com as sete práticas,
   árvore de `pacote/verificadores/`, linhas e bytes do núcleo do perfil de três domínios, dois builds
   com `diff -r` vazio, suíte, ruff e validador.
-- [x] Checkpoint: aceite do dono por prática; liberar a versão 1.2.0.
+- [ ] Checkpoint: aceite do dono por prática; liberar a versão 1.2.0.
 - [x] Commit `docs: changelog e evidências da curadoria de força dura`.
 
 ## Evidências

@@ -40,15 +40,15 @@ No harness, a raiz do projeto é o toplevel do Git a partir de `cwd` (`git rev-p
 --show-toplevel`; fora de repositório, o próprio `cwd`): o caminho, a isenção e o `.gitignore` são
 medidos a partir dela. Caminho absoluto sem `cwd` e falha do git num repositório saem 2.
 
-Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; padrão sem
-`/` vale em qualquer pasta; `#` é comentário). Ele é lido do lado da comparação (o `HEAD` no
-harness e no pre-commit, ou o disco no harness fora de repositório Git; a `--base` no ci): a
-isenção vale no harness e no pre-commit depois de commitada, e no ci depois de entrar na branch de
-destino (a autoridade é o ci da MR). Padrão sem nenhum nome (`**`, `*`, `**/*`, `.`, `/`) sai 2
-("isenção ampla demais") quando entra: no conteúdo que o harness escreve no `.seg02-ignorar`
-(direto ou pelo shell), no índice do pre-commit e no `HEAD` do ci. Se só o lado da comparação o
-tem e o lado novo o tira ou estreita, vale a isenção nova. O próprio `.seg02-ignorar` nunca é
-isento.
+Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; começa por
+uma pasta literal e nomeia o arquivo ou a subpasta; `#` é comentário). Ele é lido do lado da
+comparação (o `HEAD` no harness e no pre-commit, ou o disco no harness só sem `.git` na raiz nem em
+ancestral; a `--base` no ci): a isenção vale no harness e no pre-commit depois de commitada, e no
+ci depois de entrar na branch de destino (a autoridade é o ci da MR). Padrão sem pasta literal ou
+que isenta uma pasta inteira (`**`, `*`, `**/*`, `.`, `/`) sai 2 ("isenção ampla demais") quando
+entra: no conteúdo que o harness escreve no `.seg02-ignorar` (direto ou pelo shell), no índice do
+pre-commit e no `HEAD` do ci. Se só o lado da comparação o tem e o lado novo o tira ou estreita,
+vale a isenção nova. O próprio `.seg02-ignorar` nunca é isento.
 
 No ci, `--base` de zeros (o `CI_COMMIT_BEFORE_SHA` do primeiro push, de pipeline manual ou
 agendado) compara com a árvore vazia: tudo o que o `HEAD` tem é varrido, com a isenção do `HEAD`.
@@ -449,9 +449,34 @@ def motivo(tipo: str) -> str:
 # --- isenção --------------------------------------------------------------------------------------
 
 
+SONDAS = ("a.txt", "a/b.txt", "a.log", "a.md", "a.json")
+
+
+def cobre_pasta_inteira(padrao: re.Pattern[str], pastas: set[str]) -> bool:
+    """O padrão casa arquivos sintéticos soltos ou aninhados de uma pasta vigiada: isentaria a pasta
+    inteira (ou uma classe inteira de arquivos dela), e não um arquivo ou subpasta pelo nome."""
+    return any(padrao.fullmatch(f"{p}/{s}") for p in pastas for s in SONDAS)
+
+
+def dentro_de_repositorio(cwd: str | None) -> bool:
+    """Há `.git` em `cwd` ou num ancestral (ou `GIT_DIR` no ambiente): só fora disso o disco pode
+    ser a fonte da isenção, porque quem comita controla o disco."""
+    if os.environ.get("GIT_DIR"):
+        return True
+    atual = os.path.realpath(cwd or ".")
+    while True:
+        if os.path.lexists(os.path.join(atual, ".git")):
+            return True
+        pai = os.path.dirname(atual)
+        if pai == atual:
+            return False
+        atual = pai
+
+
 def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
-    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; padrão sem `/` vale em qualquer
-    pasta; `/` no fim é a pasta inteira; `#` começa comentário."""
+    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; o primeiro segmento é uma pasta
+    literal e o padrão não pode isentar uma pasta inteira (conferido com arquivos sintéticos);
+    `/` no fim é a subpasta inteira; `#` começa comentário."""
     padroes = []
     for linha in quebra_linhas(texto or ""):
         linha = linha.strip()
@@ -462,6 +487,12 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
             raise IsencaoAmpla(
                 f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
                 "arquivos pelo nome"
+            )
+        segmentos = linha.strip("/").split("/")
+        if len(segmentos) < 2 or any(c in segmentos[0] for c in "*?"):
+            raise IsencaoAmpla(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; comece por uma pasta "
+                "literal e nomeie o arquivo ou a subpasta"
             )
         pasta = linha.endswith("/")
         linha = linha.strip("/")
@@ -486,7 +517,13 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
         if "/" not in linha:
             regex = "(?:.*/)?" + regex
         regex += "(?:/.*)?" if not pasta else "/.*"
-        padroes.append(re.compile(regex))
+        compilado = re.compile(regex)
+        if cobre_pasta_inteira(compilado, {segmentos[0], *()}):
+            raise IsencaoAmpla(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r} isenta uma pasta "
+                "inteira; nomeie o arquivo ou a subpasta"
+            )
+        padroes.append(compilado)
     return padroes
 
 
@@ -717,16 +754,17 @@ def raiz_do_harness(cwd: str | None) -> tuple[str | None, bool]:
 
 def isencao_do_harness(raiz: str | None, em_git: bool) -> list[re.Pattern[str]]:
     """No harness, a isenção vem do `HEAD` do repositório (a que já passou pela revisão; o agente
-    não se isenta gravando o arquivo no disco); fora de repositório Git, do disco."""
+    não se isenta gravando o arquivo no disco). O disco só vale com a confirmação de que não há
+    repositório (nenhum `.git` na raiz nem em ancestral). Erro do git, repositório sem commit ou
+    isenção ampla no `HEAD` deixam sem isenção: a verificação segue sem isentar."""
     if em_git and raiz:
         try:
             head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
-        except Indeterminado:
-            return []  # repositório sem commit: nenhuma isenção revisada
-        try:
             return isencao_no_git(raiz, head)
-        except IsencaoAmpla:
-            pass  # a ampla em vigor se corrige no disco: vale a do disco, validada abaixo
+        except Indeterminado:
+            return []  # inclui IsencaoAmpla e o git quebrado: nunca o disco
+    if dentro_de_repositorio(raiz):
+        return []  # há repositório que o git não leu: não vale o disco
     try:
         return padroes_de_isencao(decodifica((Path(raiz or ".") / ARQUIVO_DE_ISENCAO).read_bytes()))
     except OSError:
