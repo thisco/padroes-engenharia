@@ -119,13 +119,13 @@ o registro `revisao_adversarial` é atualizado na rodada de correção que segue
 
 ## Tarefa 9: Fechamento
 
-- [ ] `CHANGELOG.md` em `[Não publicado]`: verificadores internos no pacote e as sete práticas com a
+- [x] `CHANGELOG.md` em `[Não publicado]`: verificadores internos no pacote e as sete práticas com a
   força nova.
-- [ ] Evidências abaixo: contagem de forças do catálogo, trecho de `regras.json` com as sete práticas,
+- [x] Evidências abaixo: contagem de forças do catálogo, trecho de `regras.json` com as sete práticas,
   árvore de `pacote/verificadores/`, linhas e bytes do núcleo do perfil de três domínios, dois builds
   com `diff -r` vazio, suíte, ruff e validador.
-- [ ] Checkpoint: aceite do dono por prática; liberar a versão 1.2.0.
-- [ ] Commit `docs: changelog e evidências da curadoria de força dura`.
+- [x] Checkpoint: aceite do dono por prática; liberar a versão 1.2.0.
+- [x] Commit `docs: changelog e evidências da curadoria de força dura`.
 
 ## Evidências
 
@@ -163,16 +163,41 @@ Integração com a `main` (trilha SDD v3) em 2026-10-28: a ADR da rodada passou 
 
 **Dois builds** (`scripts/gerar.py --saida` em duas pastas): `diff -r` vazio.
 
-**Verificação global depois da mesclagem:** `scripts/validar.py` com "validação ok: nenhum erro";
-`scripts/gerar.py` com saída 0; `pytest -q` com 2484 passed; `ruff check .` com "All checks passed!".
+**Verificação global** (depois da rodada de correção 1 da revisão, 2026-10-28), saídas literais:
+
+```
+$ .venv/bin/python scripts/validar.py
+validação ok: nenhum erro.
+$ .venv/bin/python scripts/gerar.py          # saída 0
+$ .venv/bin/python -m pytest -q              # última linha
+2498 passed in 224.87s (0:03:44)
+$ .venv/bin/ruff check .
+All checks passed!
+$ gerar.py --saida <pasta 1>; gerar.py --saida <pasta 2>; diff -r <pasta 1> <pasta 2>
+(sem saída; código 0)
+```
+
+Antes da correção a suíte tinha 2484 testes; a rodada de correção 1 acrescentou 14 (LGPD-02).
 
 **Auto-revisão da mesclagem:** as quatro práticas em conflito têm um `marco:` e um `mecanismo:` cada;
 nas quatro verificações nenhuma afirmação (`texto` e `ref`) se perdeu e nenhuma se duplicou, salvo a
 da `gitlab-git-depth` em CICD-02, que a rodada já tinha reescrito e que fica na versão reescrita;
 `grep -rn 'ADR 0010'` só devolve a ADR da trilha.
 
+**Revisão adversarial** contra a spec do motor (§5, §6 e `R-GATILHO`) e a ADR 0012, por revisor
+independente em 2026-10-28:
+
+| ID | veredito | evidência |
+|---|---|---|
+| SEG-02 | atendido | bloqueia; gatilhos harness (editar, escrever, shell), pre-commit e ci; saída só com tipo e linha; isenção .seg02-ignorar; 33 afirmações |
+| SEG-03 | atendido | pede-aprovacao no harness; só mudança no conjunto de dependências casa; uv run, go test, npm ci saem 0 |
+| P3-06 | atendido | pede-aprovacao no harness; central/** e shell documentados; ci e pre-commit saem 2 |
+| P2-01 | atendido | avisa; harness e ci; domínio em comentário ou log não acusa, URL do provedor acusa |
+| API-02 | atendido | avisa; ci; 11 afirmações na união |
+| CICD-02 | atendido | avisa; ci; união das afirmações com a de GIT_DEPTH reescrita pela branch |
+| LGPD-02 | parcial → atendido após a rodada 1 | bloqueia; falso positivo da forma colada tratado por contexto em logs e isenção .lgpd02-ignorar |
+
 ## Checkpoint humano
 
-Pendente. Aceite do dono por prática (as sete) e autorização para mesclar na `main`; a revisão
-adversarial contra a spec do motor e a ADR 0012 é feita por revisor independente antes disso. A versão
-1.2.0 só sai depois do aceite.
+Pendente de aceite do dono (2026-10-28). Aceite por prática (as sete) e autorização para mesclar na
+`main`. A versão 1.2.0 só sai depois do aceite.

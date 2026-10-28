@@ -3,8 +3,9 @@
 **Data:** 2026-10-08 · **Status:** aprovada pelo dono em 2026-10-08 (lista e forças); contrato do
 verificador decidido pelo controlador, sujeito ao aceite final do dono
 **Tier:** 2 (fixa a interface dos verificadores internos que a F2 e a F4 consomem)
-**Altera:** §5 (o pacote passa a levar `verificadores/`), §6.1 e §6.5 da
-[spec do motor](2026-10-06-motor-harness-cli-design.md) (contrato concreto do verificador). O resto vale.
+**Altera:** §5 (o pacote passa a levar `verificadores/`), §6.1, §6.3 e §6.5 da
+[spec do motor](2026-10-06-motor-harness-cli-design.md) (contrato concreto do verificador; e, pela
+CFD-D5, a linha `pede-aprovacao` da tabela força → resposta, que só vale no harness). O resto vale.
 **Origem:** checkpoint da F1 enxuta. O dono aprovou em 2026-10-08: versão 1.2.0, F4 antes da F2 e uma
 rodada curta de curadoria que promove práticas a força dura antes da F2.
 
@@ -71,10 +72,10 @@ O texto de cada prática mostra o job de CI com essa configuração e diz o que 
 
 | Prática | Força | Gatilhos | Verificador (origem) |
 |---|---|---|---|
-| SEG-02 segredo no repositório | `bloqueia` | `antes-de-ferramenta` (`editar`, `escrever`); `pre-commit`; `ci` | `seg_02.py`, novo: padrões de formato conhecido (chave privada PEM, chave AWS, token GitHub/GitLab, chave de provedor de modelo) e atribuição explícita a nome de segredo; sem entropia genérica |
+| SEG-02 segredo no repositório | `bloqueia` | `antes-de-ferramenta` (`editar`, `escrever`; e `shell` quando o comando escreve, por `>`, `tee`, `sed` ou `perl`); `pre-commit`; `ci` | `seg_02.py`, novo: padrões de formato conhecido (chave privada PEM, chave AWS, token GitHub/GitLab, chave de provedor de modelo) e atribuição explícita a nome de segredo; sem entropia genérica |
 | LGPD-02 dado pessoal em claro em teste, log ou prompt | `bloqueia` | `antes-de-ferramenta` (`editar`, `escrever`) em `tests/**`, `logs/**`, `prompts/**`; `pre-commit`; `ci` | `lgpd_02.py`, de `exemplos/LGPD-02/verificar-dado-em-claro.py` (CPF com dígito verificador, e-mail fora dos domínios de teste) |
-| SEG-03 dependência nova | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) nos arquivos de dependência (`pyproject.toml`, `requirements*.txt`, `package.json`, `go.mod`, `pom.xml`, `build.gradle*`, `Cargo.toml`) | `seg_03.py`: casa só quando o conjunto de dependências declaradas muda: nome novo, origem nova ou fonte alterada/removida, e não em qualquer edição do arquivo (remover só o nome de uma dependência comum, ou mudar a versão, não pede); também cobre os comandos de shell que instalam ou executam pacote e a edição da lista aprovada; o candidato de CI do Exemplo segue como opcional |
-| P3-06 MCP e conectores | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) na configuração de MCP (`.mcp.json`, `**/mcp.json`, `**/mcp_config.json`, `.codex/config.toml`, `.gemini/settings.json`, `.kiro/settings/mcp.json`) | `p3_06.py`, de `exemplos/P3-06/verificar-allowlist.py`: casa quando surge servidor fora da allowlist central do projeto, ou quando não há allowlist |
+| SEG-03 dependência nova | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) nos arquivos de dependência (`dependencias-aprovadas.txt`, `pyproject.toml`, `requirements*.txt`, `package.json`, `go.mod`, `pom.xml`, `build.gradle*`, `Cargo.toml`); `antes-de-ferramenta` (`shell`) quando o comando instala pacote ou toca esses arquivos | `seg_03.py`: casa só quando o conjunto de dependências declaradas muda: nome novo, origem nova ou fonte alterada/removida, e não em qualquer edição do arquivo (remover só o nome de uma dependência comum, ou mudar a versão, não pede); também cobre os comandos de shell que instalam ou executam pacote e a edição da lista aprovada; o candidato de CI do Exemplo segue como opcional |
+| P3-06 MCP e conectores | `pede-aprovacao` | `antes-de-ferramenta` (`editar`, `escrever`) na configuração de MCP (`.mcp.json`, `**/mcp.json`, `**/mcp_config.json`, `.codex/config.toml`, `.gemini/settings.json`, `.kiro/settings/mcp.json`, `central/**`); `antes-de-ferramenta` (`shell`) quando o comando é `mcp add` ou toca esses arquivos | `p3_06.py`, de `exemplos/P3-06/verificar-allowlist.py`: casa quando surge servidor fora da allowlist central do projeto, ou quando não há allowlist |
 | P2-01 chamada direta ao provedor | `avisa` | `antes-de-ferramenta` (`editar`, `escrever`) em código; `ci` | `p2_01.py`, porte para Python de `exemplos/P2-01/verificar-chamada-direta.sh` |
 | CICD-02 MR pequena | `avisa` | `ci` | `cicd_02.py`, de `exemplos/CICD-02/verificar-tamanho-mr.py` |
 | API-02 quebra de contrato | `avisa` | `ci` | `api_02.py`, a partir de `exemplos/API-01/comparar-contratos.py`: contrato de `--base` contra `HEAD`; casa com mudança incompatível sem versão maior nova e ADR no diff |
