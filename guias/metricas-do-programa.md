@@ -18,13 +18,13 @@ times piloto na tabela do Checkpoint do plano de cada onda. Não há script de c
 
 O primeiro objetivo olha o caminho inteiro, da aprovação do PRD ao deploy, e não só a escrita do
 código. O DORA, programa de pesquisa sobre desempenho de entrega de software, mede esse desempenho
-em duas dimensões, throughput e estabilidade [ref:dora-2024]. Os KR1.2 e KR1.3 usam as quatro
-métricas de uso corrente nessas dimensões: frequência de deploy e lead time (throughput), taxa de
-falha de mudança e tempo de restauração (estabilidade) [ref:dora-2024].
+em duas dimensões, throughput e estabilidade [ref:dora-2024]. Para medir essas duas dimensões, o
+programa escolheu quatro métricas, usadas nos KR1.2 e KR1.3: frequência de deploy e lead time, para
+o throughput; taxa de falha de mudança e tempo de restauração, para a estabilidade.
 
 | KR | Métrica | Unidade | Onde é medida |
 |---|---|---|---|
-| KR1.1 | Tempo do PRD aprovado ao primeiro deploy em produção | dias corridos, mediana por projeto | data de aprovação do PRD ou da spec e data do primeiro deploy, na tabela do Checkpoint |
+| KR1.1 | Tempo do PRD aprovado ao primeiro deploy em produção | dias corridos, mediana por projeto | data de aprovação do PRD ou da spec e data do primeiro deploy, na tabela do Checkpoint; onde o piloto não registra a data de aprovação, a série começa na Onda 3 |
 | KR1.2 | Frequência de deploy e lead time do commit ao deploy em produção | deploys por semana; horas, mediana | histórico de jobs de deploy do pipeline e git log do piloto, transcritos para a tabela |
 | KR1.3 | Taxa de falha de mudança e tempo de restauração | % dos deploys com rollback ou hotfix; horas | registro de incidentes e de rollbacks do piloto (IAC-03, OBS-02), na tabela |
 
@@ -58,7 +58,7 @@ O quarto objetivo mede se as práticas chegam ao agente e se os projetos usam o 
 | KR | Métrica | Unidade | Onde é medida |
 |---|---|---|---|
 | KR4.1 | Práticas instaladas por força em cada projeto piloto | práticas por força (`bloqueia`, `pede-aprovacao`, `avisa`, `orienta`), por projeto | `regras.json` do pacote instalado e saída do `padroes doctor` |
-| KR4.2 | Projetos que consultam o catálogo pelo MCP | projetos, contagem; catálogos por lockfile | lockfile dos projetos (`--catalogo`) e relato do time no Checkpoint |
+| KR4.2 | Projetos que consultam o catálogo pelo MCP | projetos, contagem; catálogos por lockfile | lockfile dos projetos (`--catalogo`) e relato do time no Checkpoint; telemetria com opt-in (P4) só na Onda 5 |
 | KR4.3 | Projetos com `padroes doctor` sem divergência | projetos, contagem | saída do `doctor` colada no Checkpoint |
 
 ## Como os objetivos se ligam aos KRs
@@ -88,5 +88,4 @@ flowchart TB
 
 Este guia ainda não publica número. A linha de base de cada KR é coletada pelos times piloto na
 Onda 0 e publicada aqui ao fim dela, junto com a meta de cada onda. Onde o piloto não registra o
-dado hoje, como a data de aprovação do PRD, a série começa mais tarde, e o guia diz isso na linha
-do KR. Os agregados saem sem nome de órgão, departamento, sistema ou pessoa.
+dado hoje, como a data de aprovação do PRD, a série começa mais tarde, como a linha do KR1.1 diz. Os agregados saem sem nome de órgão, departamento, sistema ou pessoa.
