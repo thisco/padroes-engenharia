@@ -550,19 +550,19 @@ def test_extensao_de_binario_avisa_e_nao_casa():
 
 def test_isencao_em_disco_vale_no_harness(tmp_path: Path):
     (tmp_path / ".seg02-ignorar").write_text(
-        "# chaves de teste do TLS\ntests/fixtures/**\ndocs/exemplo.key\nconfig/*.sample\n",
+        "# chaves de teste do TLS\ntests/fixtures/**\ndocs/exemplo.key\nconfig/local.sample\n",
         encoding="utf-8",
     )
     cwd = str(tmp_path)
     assert harness("tests/fixtures/tls/a.key", pem(), cwd=cwd).returncode == 0
     assert harness("docs/exemplo.key", pem(), cwd=cwd).returncode == 0
-    assert harness("config/app.sample", GITHUB, cwd=cwd).returncode == 0
+    assert harness("config/local.sample", GITHUB, cwd=cwd).returncode == 0
     assert harness("docs/outro.key", pem(), cwd=cwd).returncode == 1
     assert harness("tests/a.key", pem(), cwd=cwd).returncode == 1
 
 
 def test_o_proprio_arquivo_de_isencao_e_varrido(tmp_path: Path):
-    r = harness(".seg02-ignorar", f"app/*.py\n# {GITHUB}\n", cwd=str(tmp_path))
+    r = harness(".seg02-ignorar", f"app/main.py\n# {GITHUB}\n", cwd=str(tmp_path))
     assert r.stdout.splitlines() == [".seg02-ignorar:2: token do GitHub em claro"]
 
 
@@ -1118,6 +1118,14 @@ def test_exemplo_de_terceiros_continua_acusado():
         "tests/",
         "tests/*",
         "tests/**/*.log",
+        "tests/**",
+        "tests/**/*.csv",
+        "tests/fixtures/*.csv",
+        "src/**/*.py",
+        "tests/*e*",
+        "config/*.sample",
+        "tests/fixtures/[a]x.csv",
+        "tests/../x/y.csv",
     ],
 )
 def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: str):
@@ -1140,7 +1148,7 @@ def test_isencao_ampla_demais_sai_2_nos_tres_eventos(repo_git: RepoGit, padrao: 
 
 
 @pytest.mark.parametrize(
-    "padrao", ["docs/*.key", "tests/fixtures/**", "fixtures/*.pem", "docs/testdata/**"]
+    "padrao", ["docs/local.key", "tests/fixtures/**", "fixtures/chave.pem", "docs/testdata/**"]
 )
 def test_isencao_com_nome_ou_pasta_e_aceita(repo_git: RepoGit, padrao: str):
     repo_git.escrever(".seg02-ignorar", f"{padrao}\n")
@@ -1266,3 +1274,15 @@ def test_isencao_ampla_no_head_e_padrao_bom_no_disco_nao_isenta_nada(repo_git: R
     repo_git.commitar("isenção ampla em vigor")
     repo_git.escrever(".seg02-ignorar", "fixtures/dados/**\n")  # o disco corrige, sem commit
     assert harness("fixtures/dados/a.key", pem(), cwd=str(repo_git.raiz)).returncode == 1
+
+
+def test_isencao_literal_isenta_so_o_que_nomeia(repo_git: RepoGit):
+    repo_git.escrever(".seg02-ignorar", "tests/fixtures/tls/**\nconfig/local.sample\n")
+    repo_git.adicionar(".seg02-ignorar")
+    repo_git.commitar("isenções literais")
+    cwd = str(repo_git.raiz)
+    assert harness("tests/fixtures/tls/a.key", pem(), cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/tls/sub/b.key", pem(), cwd=cwd).returncode == 0
+    assert harness("config/local.sample", GITHUB, cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/outro.key", pem(), cwd=cwd).returncode == 1
+    assert harness("config/outro.sample", GITHUB, cwd=cwd).returncode == 1

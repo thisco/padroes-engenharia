@@ -897,9 +897,11 @@ def _repo_com_isencao(repo_git: RepoGit, padroes: str, commitar: bool = True) ->
 
 
 def test_isencao_commitada_vale_no_harness_em_todas_as_pastas(repo_git: RepoGit):
-    _repo_com_isencao(repo_git, "# fixtures revisadas\ntests/fixtures/\nprompts/*.exemplo.txt\n")
+    _repo_com_isencao(
+        repo_git, "# fixtures revisadas\ntests/fixtures/\nprompts/ficha.exemplo.txt\n"
+    )
     cwd = str(repo_git.raiz)
-    for caminho in ("tests/fixtures/a.json", "prompts/x.exemplo.txt"):
+    for caminho in ("tests/fixtures/a.json", "prompts/ficha.exemplo.txt"):
         r = harness(caminho, cpf() + "\n", cwd=cwd)
         assert r.returncode == 0 and r.stdout == ""
     assert harness("tests/outro.json", cpf() + "\n", cwd=cwd).returncode == 1
@@ -954,6 +956,13 @@ def test_usuario_git_de_ssh_nao_e_email_mas_outro_usuario_e():
         "tests/**",
         "logs/**/*.log",
         "prompts/*/**",
+        "tests/**/*.csv",
+        "tests/fixtures/*.csv",
+        "src/**/*.py",
+        "tests/*e*",
+        "config/*.sample",
+        "tests/fixtures/[a]x.csv",
+        "tests/../x/y.csv",
         "*/fixtures/a.csv",
         "dados.csv",
     ],
@@ -968,6 +977,7 @@ def test_isencao_que_cobre_pasta_vigiada_inteira_ou_sem_prefixo_literal_sai_2(
 def test_isencao_de_um_arquivo_isenta_so_esse_arquivo(repo_git: RepoGit):
     _repo_com_isencao(repo_git, "tests/fixtures/clientes.csv\n")
     cwd = str(repo_git.raiz)
+    assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
     assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
     assert harness("tests/fixtures/outro.csv", cpf() + "\n", cwd=cwd).returncode == 1
     assert harness("tests/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 1
@@ -1006,3 +1016,13 @@ def test_isencao_ampla_no_head_e_padrao_bom_no_disco_nao_isenta_nada(repo_git: R
 
 def test_scp_com_usuario_diferente_de_git_e_inocente():
     assert not casa("deploy" + ARROBA + "gitlab.com:grupo/projeto.git")
+
+
+def test_isencao_literal_isenta_so_o_que_nomeia(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "tests/fixtures/tls/**\ntests/fixtures/clientes.csv\n")
+    cwd = str(repo_git.raiz)
+    assert harness("tests/fixtures/tls/a.json", cpf() + "\n", cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/tls/sub/b.json", cpf() + "\n", cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
+    assert harness("tests/fixtures/outro.csv", cpf() + "\n", cwd=cwd).returncode == 1
+    assert harness("tests/fixtures/tls.json", cpf() + "\n", cwd=cwd).returncode == 1

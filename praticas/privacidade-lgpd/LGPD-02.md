@@ -112,8 +112,7 @@ amplia onde o dado existe e quem o alcança sem que a tarefa precise disso.
    `logs/` a forma colada só é acusada com o rótulo "cpf" na mesma linha (em qualquer caixa) ou na
    formatação `000.000.000-00`; em `tests/` e `prompts/` ela é acusada sempre. Quando um número
    válido por acaso continuar acusado, isente o arquivo: crie o `.lgpd02-ignorar` na raiz, com um
-   caminho ou padrão por linha (`*`, `**`, `?`; o padrão começa por uma pasta literal e nomeia o
-   arquivo ou a subpasta; `#` é comentário), e leve a linha para revisão de uma pessoa, porque a isenção vale em todas as
+   caminho ou padrão por linha (o padrão é o caminho exato de um arquivo (`tests/fixtures/clientes.csv`) ou uma subpasta inteira com `/**` ou `/` no fim (`tests/fixtures/tls/**`), sempre com ao menos dois segmentos literais; fora do `/**` final, nenhum segmento tem `*`, `?` nem `[`; `#` é comentário), e leve a linha para revisão de uma pessoa, porque a isenção vale em todas as
    pastas e só depois de commitada. O verificador do
    portal acusa só linhas novas ou alteradas, então ao corrigir você troca cada ocorrência acusada
    (arquivo e linha), e não o arquivo inteiro; o que já estava no arquivo antes não é acusado.
@@ -257,14 +256,11 @@ Os limites:
   11 dígitos que por acaso passe na conferência (cerca de 1% deles na forma colada, como ID ou
   telefone) é acusado em `tests/` e `prompts/`; em `logs/` só com o rótulo "cpf" na linha ou
   formatado.
-- Isenção: o `.lgpd02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; o
-  padrão começa por uma pasta literal, sem curinga, e nomeia o arquivo ou a subpasta, como
-  `tests/fixtures/clientes.csv`; `/` no fim é a subpasta inteira; `#` é comentário), vale em
+- Isenção: o `.lgpd02-ignorar`, na raiz, com um caminho ou padrão por linha (o padrão é o caminho exato de um arquivo (`tests/fixtures/clientes.csv`) ou uma subpasta inteira com `/**` ou `/` no fim (`tests/fixtures/tls/**`), sempre com ao menos dois segmentos literais; fora do `/**` final, nenhum segmento tem `*`, `?` nem `[`; `#` é comentário), vale em
   `tests/`, `logs/` e `prompts/`. Ele é lido do lado da comparação (o `HEAD` no harness e no
-  `pre-commit`, a `--base` no `ci`), então só vale depois de revisado e commitado; padrão que
-  isentaria uma pasta vigiada inteira (`**`, `*`, `tests/`, `tests/*`, `logs/**/*.log`: o verificador
-  confere o efeito com arquivos sintéticos soltos e aninhados) ou não tem prefixo de pasta literal
-  sai com 2. No harness, o disco só vale quando não há `.git` em `cwd` nem em ancestral; com o git
+  `pre-commit`, a `--base` no `ci`), então só vale depois de revisado e commitado; qualquer outra
+  forma (`**`, `*`, `tests/**`, `tests/*`, `tests/**/*.csv`, `tests/fixtures/*.csv`, `src/**/*.py`,
+  `config/*.sample`) sai com 2. No harness, o disco só vale quando não há `.git` em `cwd` nem em ancestral, nem `GIT_DIR` no ambiente; com o git
   quebrado, repositório sem commit ou isenção ampla no `HEAD`, nada é isento e a verificação segue.
   Cada linha é uma decisão de pessoa sobre
   um arquivo.

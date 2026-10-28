@@ -40,12 +40,13 @@ No harness, a raiz do projeto é o toplevel do Git a partir de `cwd` (`git rev-p
 --show-toplevel`; fora de repositório, o próprio `cwd`): o caminho, a isenção e o `.gitignore` são
 medidos a partir dela. Caminho absoluto sem `cwd` e falha do git num repositório saem 2.
 
-Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; começa por
-uma pasta literal e nomeia o arquivo ou a subpasta; `#` é comentário). Ele é lido do lado da
+Isenção: `.seg02-ignorar`, na raiz, com um caminho ou padrão por linha (o caminho exato de um
+arquivo ou uma subpasta com `/**` ou `/` no fim, sempre com ao menos dois segmentos literais e sem
+`*`, `?` nem `[` fora desse `/**` final; `#` é comentário). Ele é lido do lado da
 comparação (o `HEAD` no harness e no pre-commit, ou o disco no harness só sem `.git` na raiz nem em
 ancestral; a `--base` no ci): a isenção vale no harness e no pre-commit depois de commitada, e no
-ci depois de entrar na branch de destino (a autoridade é o ci da MR). Padrão sem pasta literal ou
-que isenta uma pasta inteira (`**`, `*`, `**/*`, `.`, `/`) sai 2 ("isenção ampla demais") quando
+ci depois de entrar na branch de destino (a autoridade é o ci da MR). Qualquer outra forma
+(`**`, `*`, `tests/**`, `tests/**/*.csv`, `.`, `/`) sai 2 ("isenção ampla demais") quando
 entra: no conteúdo que o harness escreve no `.seg02-ignorar` (direto ou pelo shell), no índice do
 pre-commit e no `HEAD` do ci. Se só o lado da comparação o tem e o lado novo o tira ou estreita,
 vale a isenção nova. O próprio `.seg02-ignorar` nunca é isento.
@@ -449,15 +450,6 @@ def motivo(tipo: str) -> str:
 # --- isenção --------------------------------------------------------------------------------------
 
 
-SONDAS = ("a.txt", "a/b.txt", "a.log", "a.md", "a.json")
-
-
-def cobre_pasta_inteira(padrao: re.Pattern[str], pastas: set[str]) -> bool:
-    """O padrão casa arquivos sintéticos soltos ou aninhados de uma pasta vigiada: isentaria a pasta
-    inteira (ou uma classe inteira de arquivos dela), e não um arquivo ou subpasta pelo nome."""
-    return any(padrao.fullmatch(f"{p}/{s}") for p in pastas for s in SONDAS)
-
-
 def dentro_de_repositorio(cwd: str | None) -> bool:
     """Há `.git` em `cwd` ou num ancestral (ou `GIT_DIR` no ambiente): só fora disso o disco pode
     ser a fonte da isenção, porque quem comita controla o disco."""
@@ -474,56 +466,28 @@ def dentro_de_repositorio(cwd: str | None) -> bool:
 
 
 def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
-    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; o primeiro segmento é uma pasta
-    literal e o padrão não pode isentar uma pasta inteira (conferido com arquivos sintéticos);
-    `/` no fim é a subpasta inteira; `#` começa comentário."""
+    """Um padrão por linha, sempre com prefixo de pasta literal: ou o caminho exato de um arquivo
+    (`tests/fixtures/clientes.csv`), ou uma subpasta inteira com `/**` ou `/` no fim, depois de ao
+    menos dois segmentos literais (`tests/fixtures/tls/**`). Nenhum `*`, `?` ou `[` fora desse
+    `/**` final; `#` começa comentário. Qualquer outra forma sai 2 ("isenção ampla demais")."""
     padroes = []
     for linha in quebra_linhas(texto or ""):
         linha = linha.strip()
         if not linha or linha.startswith("#"):
             continue
-        if AMPLA_DEMAIS.fullmatch(linha):
-            # `**`, `*`, `**/*`, `.`, `/`: isentaria tudo ou quase tudo.
+        pasta = linha.endswith("/") or linha.endswith("/**")
+        corpo = linha[:-3] if linha.endswith("/**") else linha
+        segmentos = corpo.strip("/").split("/")
+        if len(segmentos) < 2 or any(
+            not s or s in (".", "..") or any(c in s for c in "*?[") for s in segmentos
+        ):
             raise IsencaoAmpla(
-                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
-                "arquivos pelo nome"
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; use o caminho exato de "
+                "um arquivo ou uma subpasta com `/**` no fim, com pelo menos duas pastas ou "
+                "nomes literais, sem `*`, `?` nem `[`"
             )
-        segmentos = linha.strip("/").split("/")
-        if len(segmentos) < 2 or any(c in segmentos[0] for c in "*?"):
-            raise IsencaoAmpla(
-                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; comece por uma pasta "
-                "literal e nomeie o arquivo ou a subpasta"
-            )
-        pasta = linha.endswith("/")
-        linha = linha.strip("/")
-        regex = ""
-        i = 0
-        while i < len(linha):
-            if linha.startswith("**/", i):
-                regex += "(?:.*/)?"
-                i += 3
-            elif linha.startswith("**", i):
-                regex += ".*"
-                i += 2
-            elif linha[i] == "*":
-                regex += "[^/]*"
-                i += 1
-            elif linha[i] == "?":
-                regex += "[^/]"
-                i += 1
-            else:
-                regex += re.escape(linha[i])
-                i += 1
-        if "/" not in linha:
-            regex = "(?:.*/)?" + regex
-        regex += "(?:/.*)?" if not pasta else "/.*"
-        compilado = re.compile(regex)
-        if cobre_pasta_inteira(compilado, {segmentos[0], *()}):
-            raise IsencaoAmpla(
-                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r} isenta uma pasta "
-                "inteira; nomeie o arquivo ou a subpasta"
-            )
-        padroes.append(compilado)
+        regex = re.escape("/".join(segmentos))
+        padroes.append(re.compile(regex + "/.*" if pasta else regex))
     return padroes
 
 
