@@ -129,8 +129,50 @@ o registro `revisao_adversarial` é atualizado na rodada de correção que segue
 
 ## Evidências
 
-(preenchido na Tarefa 9)
+Integração com a `main` (trilha SDD v3) em 2026-10-28: a ADR da rodada passou de 0010 para 0012 (a
+0010 e a 0011 já eram da trilha) e os nove conflitos foram resolvidos mantendo os dois lados.
+
+**Forças do catálogo** (`grep -h '^forca:' praticas/*/*.md | sort | uniq -c`), 48 práticas, 13 acima de
+`orienta`:
+
+```
+   8 forca: avisa
+   3 forca: bloqueia
+  35 forca: orienta
+   2 forca: pede-aprovacao
+```
+
+**As sete práticas no `regras.json` do pacote** (`id`, `forca`, `verificador`, eventos dos gatilhos):
+
+| ID | força | verificador | eventos |
+|---|---|---|---|
+| SEG-02 | bloqueia | `verificadores/seg_02.py` | antes-de-ferramenta (editar e escrever; shell), pre-commit, ci |
+| LGPD-02 | bloqueia | `verificadores/lgpd_02.py` | antes-de-ferramenta (editar e escrever em `tests/**`, `logs/**`, `prompts/**`), pre-commit, ci |
+| P3-06 | pede-aprovacao | `verificadores/p3_06.py` | antes-de-ferramenta (editar e escrever; shell) |
+| SEG-03 | pede-aprovacao | `verificadores/seg_03.py` | antes-de-ferramenta (editar e escrever; shell) |
+| API-02 | avisa | `verificadores/api_02.py` | ci |
+| CICD-02 | avisa | `verificadores/cicd_02.py` | ci |
+| P2-01 | avisa | `verificadores/p2_01.py` | antes-de-ferramenta (editar e escrever), ci |
+
+**Árvore de `public/pacote/verificadores/`:** `api_02.py`, `cicd_02.py`, `lgpd_02.py`, `p2_01.py`,
+`p3_06.py`, `seg_02.py`, `seg_03.py`.
+
+**Núcleo do perfil de três domínios** (segurança, CI/CD e privacidade-lgpd): `cabecalho.md` 5 linhas e
+418 bytes, mais as células `seguranca.md` (3 linhas, 299 bytes), `ci-cd.md` (3 linhas, 221 bytes) e
+`privacidade-lgpd.md` (2 linhas, 178 bytes): 13 linhas e 1116 bytes no total.
+
+**Dois builds** (`scripts/gerar.py --saida` em duas pastas): `diff -r` vazio.
+
+**Verificação global depois da mesclagem:** `scripts/validar.py` com "validação ok: nenhum erro";
+`scripts/gerar.py` com saída 0; `pytest -q` com 2484 passed; `ruff check .` com "All checks passed!".
+
+**Auto-revisão da mesclagem:** as quatro práticas em conflito têm um `marco:` e um `mecanismo:` cada;
+nas quatro verificações nenhuma afirmação (`texto` e `ref`) se perdeu e nenhuma se duplicou, salvo a
+da `gitlab-git-depth` em CICD-02, que a rodada já tinha reescrito e que fica na versão reescrita;
+`grep -rn 'ADR 0010'` só devolve a ADR da trilha.
 
 ## Checkpoint humano
 
-(preenchido na Tarefa 9)
+Pendente. Aceite do dono por prática (as sete) e autorização para mesclar na `main`; a revisão
+adversarial contra a spec do motor e a ADR 0012 é feita por revisor independente antes disso. A versão
+1.2.0 só sai depois do aceite.
