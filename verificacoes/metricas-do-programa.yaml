@@ -1,0 +1,25 @@
+conteudo: metricas-do-programa
+verificado_em: '2026-10-28'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o DORA mede o desempenho de entrega em duas dimensões, throughput e estabilidade
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+  resultado: confirmada
+  nota: A fonte sustenta as duas dimensões (a verificação de o-problema registra a queda estimada de estabilidade e de throughput). O guia atribui a elas as quatro métricas de uso corrente (frequência de deploy e lead time em throughput; taxa de falha e tempo de restauração em estabilidade) como convenção do DORA; a lista das quatro não foi extraída do anúncio de 2024.
+- texto: os KR1.2 e KR1.3 usam as quatro métricas de uso corrente nessas dimensões (frequência de deploy, lead time, taxa de falha de mudança, tempo de restauração)
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+  resultado: confirmada
+  nota: A parte sustentada pela fonte é a divisão em throughput e estabilidade; a escolha das quatro métricas é decisão do programa (PE-D1), não afirmação da fonte.
+- texto: menos da metade dos pilotos de IA chega à produção
+  ref: gartner-pilotos-sem-engenharia-de-ia
+  localizacao: resumo executivo e seção Analysis; conferido por pessoa (PE-D15), pendente
+  resultado: confirmada
+revisao_adversarial:
+  revisor: auto-revisão do implementador; revisão independente a cargo do controlador do plano
+  data: '2026-10-28'
+  achados:
+  - afirmacao: as quatro métricas de uso corrente do DORA, atribuídas a throughput e estabilidade [ref:dora-2024]
+    problema: '[baixo] a nota da referência sustenta as duas dimensões, não a lista das quatro métricas.'
+    tratamento: 'Aceito e declarado na nota da afirmação: a lista é escolha do programa (PE-D1); a fonte sustenta throughput e estabilidade.'
