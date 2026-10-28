@@ -1286,3 +1286,13 @@ def test_isencao_literal_isenta_so_o_que_nomeia(repo_git: RepoGit):
     assert harness("config/local.sample", GITHUB, cwd=cwd).returncode == 0
     assert harness("tests/fixtures/outro.key", pem(), cwd=cwd).returncode == 1
     assert harness("config/outro.sample", GITHUB, cwd=cwd).returncode == 1
+
+
+def test_linha_de_isencao_recusada_nao_ecoa_o_conteudo_no_stderr(repo_git: RepoGit):
+    r = harness(
+        ".seg02-ignorar",
+        f"# comentário\nconfig/{GITHUB}*\n",
+        cwd=str(repo_git.raiz),
+    )
+    assert r.returncode == 2 and "linha 2" in r.stderr
+    assert GITHUB not in r.stderr

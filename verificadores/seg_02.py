@@ -471,7 +471,7 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
     menos dois segmentos literais (`tests/fixtures/tls/**`). Nenhum `*`, `?` ou `[` fora desse
     `/**` final; `#` começa comentário. Qualquer outra forma sai 2 ("isenção ampla demais")."""
     padroes = []
-    for linha in quebra_linhas(texto or ""):
+    for numero, linha in enumerate(quebra_linhas(texto or ""), start=1):
         linha = linha.strip()
         if not linha or linha.startswith("#"):
             continue
@@ -482,7 +482,8 @@ def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
             not s or s in (".", "..") or any(c in s for c in "*?[") for s in segmentos
         ):
             raise IsencaoAmpla(
-                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; use o caminho exato de "
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}, linha {numero}: "
+                "use o caminho exato de "
                 "um arquivo ou uma subpasta com `/**` no fim, com pelo menos duas pastas ou "
                 "nomes literais, sem `*`, `?` nem `[`"
             )

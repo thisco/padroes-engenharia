@@ -978,7 +978,6 @@ def test_isencao_de_um_arquivo_isenta_so_esse_arquivo(repo_git: RepoGit):
     _repo_com_isencao(repo_git, "tests/fixtures/clientes.csv\n")
     cwd = str(repo_git.raiz)
     assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
-    assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
     assert harness("tests/fixtures/outro.csv", cpf() + "\n", cwd=cwd).returncode == 1
     assert harness("tests/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 1
 
@@ -1026,3 +1025,14 @@ def test_isencao_literal_isenta_so_o_que_nomeia(repo_git: RepoGit):
     assert harness("tests/fixtures/clientes.csv", cpf() + "\n", cwd=cwd).returncode == 0
     assert harness("tests/fixtures/outro.csv", cpf() + "\n", cwd=cwd).returncode == 1
     assert harness("tests/fixtures/tls.json", cpf() + "\n", cwd=cwd).returncode == 1
+
+
+def test_linha_de_isencao_recusada_nao_ecoa_o_conteudo_no_stderr(repo_git: RepoGit):
+    c = cpf()
+    r = harness(
+        ".lgpd02-ignorar",
+        f"# comentário\ntests/fixtures/{c}*\ntests/fixtures/{com_pontuacao(c)}*\n",
+        cwd=str(repo_git.raiz),
+    )
+    assert r.returncode == 2 and "linha 2" in r.stderr
+    assert c not in r.stderr and com_pontuacao(c) not in r.stderr
