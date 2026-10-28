@@ -1,0 +1,69 @@
+conteudo: ferramenta-sp-brainstorming
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill faz uma pergunta por mensagem e devolve o entendimento em trechos curtos"
+    ref: superpowers-brainstorming
+    localizacao: "seções 'Your First Message' (uma pergunta aberta) e 'The Conversation' (cada mensagem termina com uma pergunta); 'Play It Back' (trechos de 200 a 300 palavras)"
+    resultado: confirmada
+  - texto: "a skill classifica o trabalho em tarefa rápida, mudança pequena ou projeto com desenho escrito"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'Size the Work', tabela de três tamanhos"
+    resultado: confirmada
+  - texto: "nada é construído antes da aprovação da pessoa, salvo quando ela dispensa as perguntas ou pede um spike descartável"
+    ref: superpowers-brainstorming
+    localizacao: "bloco HARD-GATE: 'Nothing gets built until your human partner approves the full description' e 'Two exceptions' (opt-out das perguntas e spike)"
+    resultado: confirmada
+  - texto: "o desenho escrito é para um construtor planejar sem voltar à pessoa"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', primeiro parágrafo"
+    resultado: confirmada
+  - texto: "o desenho vai para docs/superpowers/specs/ num repositório de software; fora dele a skill pergunta, e a preferência da pessoa vale sobre os dois"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Where it goes': 'Otherwise, ask. Your human partner's preferences override both'"
+    resultado: confirmada
+  - texto: "um subagente confere o desenho antes da entrega"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Builder check'"
+    resultado: confirmada
+  - texto: "aprovado o desenho de um projeto, o único passo seguinte aceito é a writing-plans"
+    ref: superpowers-brainstorming
+    localizacao: "bloco HARD-GATE, último parágrafo: 'invoke superpowers:writing-plans and no other skill'"
+    resultado: confirmada
+  - texto: "a skill cita arquivos ao lado dela (builder-check-prompt.md e visual-companion.md)"
+    ref: superpowers-brainstorming
+    localizacao: "itens 'Builder check' e 'Visual Companion' (último parágrafo)"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+  - texto: "o brainstorming foi reescrito na 7.0.0"
+    ref: superpowers-release-notes
+    localizacao: "v7.0.0 (2026-10-09), parágrafo de abertura e seção Brainstorming"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"
+    - afirmacao: "cuidado de entrevistar: nada é construído antes da aprovação"
+      problema: "a fonte tem duas exceções: a pessoa dispensa as perguntas, ou pede um spike"
+      tratamento: "texto e afirmação passam a citar as exceções"
+    - afirmacao: "cuidado de escrever-spec: grava em docs/superpowers/specs/ se o projeto não disser outro lugar"
+      problema: "fora de repositório de software a skill pergunta, e a preferência da pessoa vale sobre os dois"
+      tratamento: "texto e afirmação reescritos"

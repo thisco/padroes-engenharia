@@ -1,0 +1,11 @@
+id: agent-skills-context-engineering
+titulo: "agent-skills: skill context-engineering"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/context-engineering/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'The Context Hierarchy' (níveis 1 a 5, 'Trust levels for loaded files'), 'Restartable Session Boundaries', 'Context Budget Management' e 'Confusion Management'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A seção dos arquivos de regras nomeia os de cada ferramenta; o portal não reproduz os nomes."

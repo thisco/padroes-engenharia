@@ -1,0 +1,11 @@
+id: agent-skills-documentation-and-adrs
+titulo: "agent-skills: skill documentation-and-adrs"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/documentation-and-adrs/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'When to Write an ADR', 'Match the existing convention first', 'ADR Template', 'ADR Lifecycle', 'Changelog Maintenance' e 'Prose Review'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

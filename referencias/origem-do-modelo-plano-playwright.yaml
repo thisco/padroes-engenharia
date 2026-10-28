@@ -1,0 +1,10 @@
+id: origem-do-modelo-plano-playwright
+titulo: "Planos com cenários E2E e captura de tela com Playwright"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/origem-do-modelo/plano-playwright.md
+tipo: portal
+verificado_em: 2026-10-20
+verificacao: V
+localizacao: "checkpoint com screenshot, Step 6.1 e o item de testes integrados"
+dominios: [construir-com-ia]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0006, decisão 3). O commit de origem fica no registro de verificação do caso."

@@ -1,0 +1,29 @@
+id: sp-receiving-code-review
+titulo: receiving-code-review
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: responder
+    papel: caminho
+    bom_quando: "chegou feedback de revisão, inclusive questionável: ler tudo, verificar contra o código e responder com razão técnica, sem concordar por educação."
+    cuidado: "um item pouco claro trava a implementação de todos os outros até ser esclarecido; feedback de revisor externo é verificado antes de ser aplicado."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos; o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. A skill distingue a pessoa dona do trabalho, cujo feedback é
+  implementado depois de entendido, de revisores externos, cujo feedback é verificado antes; proíbe
+  concordância performática e agradecimento, e um item pouco claro trava a implementação dos demais
+  até ser esclarecido [ref:superpowers-receiving-code-review].
+referencias: [superpowers-receiving-code-review, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

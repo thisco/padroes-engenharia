@@ -1,7 +1,7 @@
 # verificado_em 2026-10-08 (rodada de correção 1 da curadoria de força dura): as afirmações externas não mudaram nesta rodada e foram verificadas em 2026-10-06
 # prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão do dono)
 conteudo: LGPD-02
-verificado_em: '2026-10-08'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: tratamento é toda operação com dado pessoal, incluindo armazenamento, arquivamento e transmissão (art. 5º,
@@ -46,6 +46,10 @@ afirmacoes:
   localizacao: caso VS-05
   resultado: parcial
   nota: Leitura do portal, dita no texto; o corpus da avaliação não tinha dado pessoal.
+- texto: "o rótulo do marco, 'dado pessoal mascarado', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/verificar-dado-em-claro.py

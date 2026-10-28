@@ -13,6 +13,7 @@ from typing import Any
 
 from markupsafe import Markup
 
+from portal.gerador import trilha
 from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
@@ -36,6 +37,7 @@ from portal.gerador.renderizar import (
     vinculos_de,
 )
 from portal.gerador.texto_md import celula, juntar, md_lista_referencias
+from portal.gerador.trilha import html_trilha, md_trilha
 from portal.gerador.vocabulario import FORCAS, STATUS, plural
 
 # Campos que são identificadores ou rótulos de máquina: não passam pelo Markdown.
@@ -117,7 +119,7 @@ def _momentos(site: Site, pagina: Conteudo, ids: list[str]) -> list[dict[str, An
         momento = site.espinha.momento(str(item.get("momento", "")))
         resultado.append(
             {
-                "titulo": momento.titulo if momento else item.get("momento", ""),
+                "titulo": momento.rotulo if momento else item.get("momento", ""),
                 "disciplinas": [str(d) for d in item.get("disciplinas", [])],
             }
         )
@@ -213,23 +215,6 @@ def _fatos_datados(site: Site) -> str:
     return " · ".join(partes)
 
 
-def _momentos_da_inicio(site: Site) -> list[dict[str, Any]]:
-    resultado = []
-    for m in site.espinha.momentos:
-        n = sum(len(c.praticas) for c in site.catalogo.celulas if c.momento == m.slug)
-        fases = ("fases " if len(m.fases) > 1 else "fase ") + ", ".join(map(str, m.fases))
-        resultado.append(
-            {
-                "slug": m.slug,
-                "titulo": m.titulo,
-                "acao": m.acao,
-                "fases_texto": f"{fases} do ciclo",
-                "contagem": plural(n, "prática", "práticas"),
-            }
-        )
-    return resultado
-
-
 def _atalhos(site: Site) -> list[tuple[str, str]]:
     existentes = site.caminhos()
     candidatos = (("Por que isto existe →", "o-problema.html"), ("Conceitos →", "conceitos.html"))
@@ -245,6 +230,16 @@ def _chips_do_agente(site: Site) -> list[tuple[str, str]]:
     ]
 
 
+def _rotulo_da_porta(site: Site, destino: str, href: str) -> str:
+    """O texto da porta: "Abrir a trilha" para a trilha e, nos demais, o título do destino."""
+    if destino == "trilha":
+        return "Abrir a trilha"
+    alvo = next(
+        (c for c in site.repo.markdown() if c.tipo != "dominio" and caminho_de(c) == href), None
+    )
+    return str(alvo.meta.get("titulo") or "Abrir") if alvo else "Abrir"
+
+
 def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
     """Os caminhos de "Comece aqui" cujo destino existe: caminho sem conteúdo não aparece."""
     existentes = site.caminhos()
@@ -254,6 +249,7 @@ def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
         if href in existentes:
             item = citar(caminho, ids)
             item["href"] = href
+            item["rotulo"] = _rotulo_da_porta(site, str(caminho.get("destino", "")), href)
             resultado.append(item)
     return resultado
 
@@ -285,7 +281,8 @@ def html_inicio(site: Site) -> str:
         lead=citar(meta.get("lead") or DESCRICAO_INICIO, ids, "lead"),
         fatos_datados=_fatos_datados(site),
         atalhos=_atalhos(site),
-        momentos=_momentos_da_inicio(site),
+        ciclo=trilha.ciclo(site),
+        tem_trilha="trilha.html" in site.caminhos(),
         bloco=bloco_agents(site),
         chips=[(rotulo, caminho) for rotulo, caminho in _chips_do_agente(site)],
         caminhos=_caminhos_da_inicio(site, ids),
@@ -301,10 +298,22 @@ def html_inicio(site: Site) -> str:
 def md_inicio(site: Site) -> str:
     pagina = site.pagina("inicio")
     meta = _meta_da_inicio(site)
-    momentos = [
-        f"{i}. **{m['titulo']}** ({m['fases_texto']}): {m['acao']} {m['contagem']}."
-        for i, m in enumerate(_momentos_da_inicio(site), start=1)
-    ]
+    dados = trilha.ciclo(site)
+    linhas = []
+    for e in dados["etapas"]:
+        ids = ", ".join(f"{m['id']} ({m['forca_rotulo']})" for m in e["portao"]["marcos"])
+        linhas.append(
+            f"- {e['etapa']}: portão de {ids}"
+            if ids
+            else f"- {e['etapa']}: sem marco com mecanismo"
+        )
+    nomes = " → ".join(e["etapa"] for e in dados["etapas"])
+    ciclo_md = (
+        f"## O ciclo de toda mudança\n\n{nomes}, e o laço {dados['laco']['etapa']}.\n\n"
+        + "\n".join(linhas)
+    )
+    if "trilha.html" in site.caminhos():
+        ciclo_md += "\n\n[Ver a trilha](trilha.md)"
     caminhos = [
         f"- [{c['titulo']}]({c['href'].removesuffix('.html')}.md): {c['texto']}"
         for c in _caminhos_da_inicio(site, [])
@@ -322,12 +331,11 @@ def md_inicio(site: Site) -> str:
         f"# {meta.get('titulo') or site.nome}",
         str(meta.get("lead") or DESCRICAO_INICIO),
         _fatos_datados(site),
-        "## Para quem desenvolve\n\nComece pelo momento em que você está.\n\n"
-        + "\n".join(momentos),
+        ciclo_md,
         "## Para o agente\n\nCole no AGENTS.md do seu projeto:\n\n```markdown\n"
         f"{bloco_agents(site)}```",
         ("## Comece aqui\n\n" + "\n".join(caminhos)) if caminhos else "",
-        "## Como ler o portal\n\nLinha = domínio, coluna = momento, célula = práticas. "
+        "## Como ler o portal\n\nLinha = domínio, coluna = etapa, célula = práticas. "
         f"{a_definir_texto(site)} estão a definir. A matriz completa está em "
         "[espinha.md](espinha.md).\n\n### Força\n\n"
         + "\n".join(forcas)
@@ -568,7 +576,7 @@ def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
             {
                 **item,
                 "caminho": item["url"].removeprefix(site.url("")),
-                "momento_titulo": momento.titulo if momento else str(item["momento"]),
+                "momento_titulo": momento.rotulo if momento else str(item["momento"]),
             }
         )
     return list(grupos.values())
@@ -629,7 +637,7 @@ def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
         daqui = [r for r in site.repo.receitas if r.meta.get("momento") == momento.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Momento: {momento.titulo}", "itens": [item(r) for r in daqui]}
+                {"titulo": f"Etapa: {momento.rotulo}", "itens": [item(r) for r in daqui]}
             )
     return secoes_
 
@@ -664,7 +672,7 @@ def _ficha_da_receita(site: Site, receita: Conteudo) -> list[tuple[str, str]]:
     momento = site.espinha.momento(str(m.get("momento", "")))
     ficha = [
         ("Domínio", faixa.titulo if faixa else str(m.get("dominio", ""))),
-        ("Momento", momento.titulo if momento else str(m.get("momento", ""))),
+        ("Etapa", momento.rotulo if momento else str(m.get("momento", ""))),
         ("Tempo", f"{m['tempo']} min"),
         ("Pré-requisitos", "; ".join(m.get("pre_requisitos") or []) or "nenhum"),
         ("Resultado esperado", str(m["resultado_esperado"])),
@@ -724,6 +732,7 @@ CATEGORIAS_DA_FERRAMENTA = {
     "seguranca": "Segurança",
     "sdd": "SDD",
     "ci": "CI",
+    "skill": "Skill",
 }
 
 
@@ -821,6 +830,49 @@ def _markdown_da_ferramenta(texto: Any, ids: list[str]) -> Markup:
     return Markup(para_html(MARCADOR.sub(trocar, str(texto))))
 
 
+def _da_skill(site: Site, meta: dict[str, Any]) -> dict[str, Any]:
+    """Coleção, caminhos e casos da ferramenta `skill` (spec da trilha, R12)."""
+    caminhos = []
+    for c in meta.get("caminhos") or []:
+        momento = site.espinha.momento(c["momento"])
+        passo = momento.passo(c["passo"]) if momento else None
+        caminhos.append(
+            {
+                "etapa": momento.rotulo if momento else c["momento"],
+                "passo": passo.titulo if passo else c["passo"],
+                "papel": c["papel"],
+                "bom_quando": c["bom_quando"],
+                "cuidado": c.get("cuidado", ""),
+            }
+        )
+    casos = {x.chave: x for x in site.repo.casos}
+    return {
+        "colecao": trilha.colecoes(site).get(meta.get("colecao", "")),
+        "caminhos": caminhos,
+        "casos": [
+            {"titulo": casos[s].meta["titulo"], "href": caminho_de(casos[s])}
+            for s in meta.get("casos") or []
+            if s in casos
+        ],
+    }
+
+
+def _md_skill(dados: dict[str, Any]) -> str:
+    if not dados["caminhos"]:
+        return ""
+    linhas = ["## Caminhos", ""]
+    linhas += [
+        f"- {c['etapa']} · {c['passo']} ({c['papel']}): {c['bom_quando']}"
+        + (f" Cuidado: {c['cuidado']}" if c["cuidado"] else "")
+        for c in dados["caminhos"]
+    ]
+    if dados["colecao"]:
+        col = dados["colecao"]
+        linhas += ["", f"Coleção: {col['rotulo']} {col['versao']}, commit {col['commit'][:7]}."]
+    linhas += [f"Caso: {c['titulo']}." for c in dados["casos"]]
+    return "\n".join(linhas)
+
+
 def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
     ids = ids_da_pagina(site, ferramenta)
     meta = ferramenta.meta
@@ -837,6 +889,7 @@ def html_ferramenta(site: Site, ferramenta: Conteudo) -> str:
         alternativa=_markdown_da_ferramenta(meta.get("alternativa", ""), ids),
         vinculos=_vinculos(site, ferramenta),
         referencias=site.catalogo.referencias_de(ferramenta),
+        **_da_skill(site, meta),
     )
 
 
@@ -861,6 +914,7 @@ def md_ferramenta(site: Site, ferramenta: Conteudo) -> str:
         ("## Receitas\n\n" + "\n".join(f"- {i['titulo']}" for i in vinculos["receitas"]))
         if vinculos["receitas"]
         else "",
+        _md_skill(_da_skill(site, meta)),
         md_lista_referencias(site, ferramenta),
     )
 
@@ -971,6 +1025,7 @@ PAGINAS_ESTRUTURADAS: dict[
 ] = {
     "o-problema": (html_o_problema, md_o_problema),
     "pessoas-e-normas": (html_pessoas_e_normas, md_pessoas_e_normas),
+    "trilha": (html_trilha, md_trilha),
 }
 
 

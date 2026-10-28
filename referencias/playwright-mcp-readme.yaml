@@ -1,0 +1,11 @@
+id: playwright-mcp-readme
+titulo: "Playwright MCP: README"
+organizacao: microsoft/playwright-mcp
+url: https://github.com/microsoft/playwright-mcp/blob/f183dad4a52965583e3cc1d59b88cdc279e2e57d/README.md
+tipo: comunidade
+versao: "0.0.83"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Playwright MCP vs Playwright CLI', 'Key Features', 'Requirements', 'Getting started' (Standard config), 'Configuration', 'Security' e 'Tools' (Core automation)"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. O package.json do mesmo commit traz a versão 0.0.83."

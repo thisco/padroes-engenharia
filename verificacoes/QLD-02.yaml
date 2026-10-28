@@ -1,5 +1,5 @@
 conteudo: QLD-02
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o protocolo segue reproduzir, hipótese, evidência (log ou teste) e correção, e a correção vem com um teste que falha antes e passa depois; sem ele, o bug não está fechado
@@ -26,6 +26,10 @@ afirmacoes:
 - texto: o pytest sai com 1 quando testes são coletados e rodados e alguns falham, e com 0 quando todos passam
   ref: pytest-exit-codes
   localizacao: lista de exit codes, códigos 0 e 1
+  resultado: confirmada
+- texto: "o rótulo do marco, 'bug vira regra', resume o que a prática exige e aparece na etapa Aprender da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Aprender, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

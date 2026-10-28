@@ -1,6 +1,7 @@
 ---
 id: IAC-02
 titulo: Infra declarada em código, com o plano de mudança revisado no PR
+marco: "plano de infra no PR"
 dominio: infra-iac
 subdominio: null
 momento: antes-do-merge
@@ -11,7 +12,7 @@ aplica: []
 referencias: [sdd-scaffold-infra-devops, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock]
 relacionadas: [IAC-01, IAC-03]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "A infra vive em código versionado, e todo PR que a muda traz o plano gerado, com a destruição de recurso decidida por uma pessoa."
 ferramentas_aprovadas: [opentofu]

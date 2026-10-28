@@ -1,0 +1,10 @@
+id: origem-do-modelo-migracao
+titulo: "Migração de docs/superpowers/plans para docs/plans"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/origem-do-modelo/migracao.md
+tipo: portal
+verificado_em: 2026-10-20
+verificacao: V
+localizacao: "mensagem do commit e o resumo de 10 arquivos"
+dominios: [construir-com-ia]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0006, decisão 3). O commit de origem fica no registro de verificação do caso."

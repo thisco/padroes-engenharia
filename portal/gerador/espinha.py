@@ -1,4 +1,6 @@
-"""A espinha (spec §4.1): faixas, momentos e prefixos de ID, lidos de esquemas/espinha.yml."""
+"""A espinha (spec §4.1): faixas, momentos (com etapa e passos) e prefixos de ID.
+
+Lidos de esquemas/espinha.yml."""
 
 from __future__ import annotations
 
@@ -20,11 +22,28 @@ class Faixa:
 
 
 @dataclass(frozen=True)
+class Passo:
+    slug: str
+    titulo: str
+    desc: str = ""
+
+
+@dataclass(frozen=True)
 class Momento:
     slug: str
     titulo: str
     fases: tuple[int, ...]
     acao: str = ""
+    etapa: str = ""
+    passos: tuple[Passo, ...] = ()
+
+    @property
+    def rotulo(self) -> str:
+        """O nome do eixo nas páginas geradas: a etapa do ciclo ou, sem ela, o título."""
+        return self.etapa or self.titulo
+
+    def passo(self, slug: str) -> Passo | None:
+        return next((p for p in self.passos if p.slug == slug), None)
 
 
 @dataclass(frozen=True)
@@ -77,6 +96,11 @@ def carregar_espinha(caminho: Path) -> Espinha:
             titulo=m["titulo"],
             fases=tuple(m["fases"]),
             acao=str(m.get("acao", "")),
+            etapa=str(m.get("etapa", "")),
+            passos=tuple(
+                Passo(slug=str(p["slug"]), titulo=str(p["titulo"]), desc=str(p.get("desc", "")))
+                for p in m.get("passos") or ()
+            ),
         )
         for m in dados["momentos"]
     )

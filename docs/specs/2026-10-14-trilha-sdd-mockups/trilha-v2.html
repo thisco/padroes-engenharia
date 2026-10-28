@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trilha, versão 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: prancheta. O mapa de trilhas é a peça; o resto é coluna de leitura e grade discreta.
+   Tokens = os do portal (portal/tema/tema.css). Um tema só, como o portal: claro, explícito. */
+:root {
+  --papel: #E8EDF2;
+  --papel-2: #DDE4EC;
+  --folha: #F6F8FB;
+  --tinta: #0A1A2F;
+  --tinta-2: #43556B;
+  --traco: #6B7B8E;
+  --regra: #C3CDD8;
+  --gov: #1351B4;
+  --gov-claro: #D3E0F5;
+  --ambar: #B06F12;
+  --ambar-claro: #F3E3C6;
+  --ambar-texto: #8A6220;
+  --erro: #B8452E;
+  --revisao: #7A3FB0;
+  --revisao-claro: #EFE6F8;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--papel); color: var(--tinta); }
+body { font: 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--gov); }
+a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--gov); outline-offset: 2px; }
+code, .mono { font-family: var(--mono); font-variant-ligatures: none; }
+h1, h2, h3 { margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+p { margin: 0; }
+
+.barra-revisao {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5;
+  display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between;
+  padding: 10px 20px; background: var(--tinta); color: var(--papel); font-size: 13.5px;
+}
+.barra-revisao b { font-weight: 600; }
+.barra-revisao button {
+  font: 600 13px var(--sans); color: var(--tinta); background: var(--revisao-claro);
+  border: 0; border-radius: 2px; padding: 6px 10px; cursor: pointer;
+}
+
+.pagina { max-width: 1160px; margin: 0 auto; padding-inline: 20px; padding-block: 36px 80px; }
+.secao { margin-top: 64px; display: grid; gap: 20px; position: relative; }
+.secao > h2 { font-size: 26px; font-weight: 800; }
+.secao > *, .inicio-demo > *, .etapa > *, .saida > * { min-width: 0; }
+.secao > .intro { max-width: 68ch; color: var(--tinta-2); }
+
+/* notas de revisão: camada de anotação, em roxo, fora da paleta do portal de propósito */
+.nota {
+  border-left: 3px solid var(--revisao); background: var(--revisao-claro);
+  padding: 12px 14px; font-size: 14px; max-width: 78ch; display: grid; gap: 6px;
+}
+.nota .n { font: 700 12px var(--mono); color: var(--revisao); }
+.nota ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.nota .decidir { font-weight: 600; }
+body.sem-notas .nota { display: none; }
+
+/* 1. cabeçalho */
+.topo { display: grid; gap: 14px; max-width: 72ch; }
+.topo h1 { font-size: clamp(34px, 5.4vw, 56px); font-weight: 800; line-height: 1.02; letter-spacing: -.035em; }
+.topo .lead { font-size: 18px; color: var(--tinta-2); }
+
+/* 2. o mapa */
+.mapa { background: var(--folha); border: 1px solid var(--regra); border-radius: 2px; }
+.mapa-cab { display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--regra); }
+.linhas-escolha { display: flex; flex-wrap: wrap; gap: 8px; }
+.linha-btn {
+  display: inline-flex; gap: 8px; align-items: center; font: 600 13.5px var(--sans); color: var(--tinta);
+  background: transparent; border: 1.5px solid var(--regra); border-radius: 2px; padding: 5px 10px; cursor: pointer;
+}
+.linha-btn svg { display: block; }
+.linha-btn[aria-pressed="true"] { border-color: var(--ambar); background: var(--ambar-claro); }
+.legenda { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--tinta-2); }
+.legenda span { display: inline-flex; gap: 7px; align-items: center; }
+.mapa-svg { overflow-x: auto; }
+.mapa-svg svg { display: block; width: 100%; min-width: 900px; height: auto; }
+.mapa-pe { padding: 10px 18px 14px; font-size: 13px; color: var(--tinta-2); border-top: 1px solid var(--regra); }
+
+svg .etapa-fundo { fill: #fff; stroke: var(--regra); }
+svg .etapa-nome { font: 800 17px var(--sans); fill: var(--tinta); letter-spacing: -.01em; }
+svg .estacao-nome { font: 500 11.5px var(--sans); fill: var(--tinta-2); }
+svg .estacao { fill: #fff; stroke: var(--traco); stroke-width: 1.5; }
+svg .estacao.visitada { stroke: var(--ambar); stroke-width: 2.5; }
+svg .linha { fill: none; stroke: var(--ambar); stroke-width: 3; stroke-linecap: round; transition: opacity .2s; }
+svg .linha.apagada { opacity: .14; }
+svg .linha-rotulo { font: 600 11.5px var(--sans); fill: var(--ambar-texto); transition: opacity .2s; }
+svg .linha-rotulo.apagada { opacity: .2; }
+svg .portao { fill: var(--gov); }
+svg .portao.sem { fill: none; stroke: var(--traco); stroke-width: 2; stroke-dasharray: 5 4; }
+svg .marco-id { font: 600 11px var(--mono); fill: var(--gov); }
+svg .marco-txt { font: 500 11.5px var(--sans); fill: var(--tinta); }
+svg .marco-vazio { font: 500 11.5px var(--sans); fill: var(--tinta-2); font-style: italic; }
+svg .laco { fill: none; stroke: var(--ambar); stroke-width: 2; stroke-dasharray: 8 6; }
+svg .laco-nome { font: 800 15px var(--sans); fill: var(--ambar-texto); }
+svg .laco-txt { font: 500 11.5px var(--sans); fill: var(--tinta-2); }
+@media (prefers-reduced-motion: reduce) { svg .linha, svg .linha-rotulo { transition: none; } }
+
+/* 3. trilhas prontas */
+.trilhas { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; align-items: start; }
+.trilha { background: var(--folha); border: 1px solid var(--regra); border-radius: 2px; padding: 16px 18px; display: grid; gap: 12px; align-content: start; }
+.trilha.sua { background: transparent; border: 1.5px dashed var(--ambar); }
+.trilha-cab { display: grid; gap: 4px; }
+.trilha-cab .origem { font-size: 13px; color: var(--tinta-2); }
+.trilha h3 { font-size: 19px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.st { font: 600 11.5px var(--sans); padding: 2px 7px; border-radius: 2px; border: 1.5px solid currentColor; }
+.st.adotar { color: var(--gov); }
+.st.avaliar { color: var(--ambar-texto); border-style: dashed; }
+.paradas { margin: 0; padding: 0; list-style: none; counter-reset: p; display: grid; gap: 3px; }
+.paradas li { counter-increment: p; display: grid; grid-template-columns: 22px 1fr; gap: 6px; font-size: 13.5px; }
+.paradas li::before { content: counter(p); font: 600 11px var(--mono); color: var(--ambar-texto); padding-top: 2px; }
+.paradas .skill { font: 600 12.5px var(--mono); color: var(--tinta); }
+.paradas .onde { color: var(--tinta-2); }
+.trilha dl { margin: 0; display: grid; gap: 6px; font-size: 14px; }
+.trilha dt { font-weight: 700; }
+.trilha dd { margin: 0; color: var(--tinta-2); }
+
+/* 4. marcos e caminhos por etapa */
+.filtro { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13.5px; color: var(--tinta-2); }
+.filtro button {
+  font: 600 13px var(--sans); color: var(--tinta); background: transparent; border: 1.5px solid var(--traco);
+  border-radius: 2px; padding: 4px 10px; cursor: pointer;
+}
+.filtro button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.filtro .q { font: 400 11.5px var(--mono); opacity: .8; margin-left: 4px; }
+
+.etapa { display: grid; gap: 14px; padding-top: 26px; border-top: 2px solid var(--tinta); }
+.etapa-cab { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
+.etapa-cab h3 { font-size: 24px; font-weight: 800; }
+.etapa-cab p { color: var(--tinta-2); }
+.saida { display: grid; gap: 8px; }
+.saida-titulo { font-size: 14px; font-weight: 700; }
+.marcos { display: flex; flex-wrap: wrap; gap: 8px; }
+.marco { display: inline-flex; gap: 8px; align-items: baseline; padding: 6px 10px; border-radius: 2px; font-size: 13.5px; text-decoration: none; color: var(--tinta); }
+.marco.forte { background: var(--gov-claro); border: 2px solid var(--gov); }
+.marco.fraco { border: 1.5px dashed var(--traco); }
+.marco .id { font: 600 12px var(--mono); color: var(--gov); }
+.marco.fraco .id { color: var(--tinta-2); }
+.marco .forca { font-size: 12px; color: var(--tinta-2); }
+details.todas { font-size: 13.5px; color: var(--tinta-2); }
+details.todas summary { cursor: pointer; color: var(--gov); width: fit-content; }
+details.todas ul { margin: 8px 0 0; padding-left: 18px; columns: 2 280px; column-gap: 28px; }
+details.todas li { break-inside: avoid; margin-bottom: 4px; }
+
+.passo { display: grid; grid-template-columns: minmax(150px, 200px) 1fr; gap: 14px; padding-block: 14px; border-top: 1px solid var(--regra); }
+.passo-nome b { display: block; font-size: 15px; }
+.passo-nome span { font-size: 13px; color: var(--tinta-2); }
+.caminhos { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; min-width: 0; }
+.caminho { background: var(--folha); border: 1px solid var(--regra); border-radius: 2px; padding: 11px 13px; display: grid; gap: 7px; align-content: start; min-width: 0; }
+.caminho.nosso { border-left: 4px solid var(--gov); }
+.caminho.externo { border-left: 4px dashed var(--ambar); }
+.caminho.complemento { opacity: .82; }
+.caminho-cab { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; justify-content: space-between; }
+.caminho-cab a { font: 600 13.5px var(--mono); color: var(--tinta); text-decoration: none; overflow-wrap: anywhere; }
+.caminho-cab a:hover { text-decoration: underline; }
+.caminho .de { font-size: 12.5px; color: var(--tinta-2); }
+.caminho .bom { font-size: 14px; }
+.caminho .cuidado { font-size: 13px; color: var(--tinta-2); padding-left: 9px; border-left: 2px solid var(--erro); }
+.caminho[hidden] { display: none; }
+.vazio { font-size: 13.5px; color: var(--tinta-2); font-style: italic; padding-block: 4px; }
+.vazio[hidden] { display: none; }
+
+/* 5. atritos */
+.atritos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px 28px; }
+.atrito { display: grid; gap: 8px; align-content: start; }
+.atrito h3 { font-size: 16.5px; }
+.atrito p { font-size: 14.5px; color: var(--tinta-2); }
+
+/* 6. a Início */
+.inicio-demo { background: var(--papel); border: 1px dashed var(--traco); padding: 22px; display: grid; gap: 14px; }
+.inicio-demo h3 { font-size: 22px; font-weight: 800; }
+.inicio-demo .lead { color: var(--tinta-2); max-width: 70ch; }
+
+@media (max-width: 640px) {
+  .passo { grid-template-columns: 1fr; }
+  .topo .lead { font-size: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="barra-revisao" role="region" aria-label="Revisão">
+  <span><b>Proposta para revisão:</b> página Trilha e bloco da Início, versão 2. As notas em roxo são a revisão; não vão para o portal.</span>
+  <button type="button" id="alternar-notas" aria-pressed="true">Esconder notas</button>
+</div>
+
+<main class="pagina">
+
+<header class="topo">
+  <h1>Uma trilha, não um trilho</h1>
+  <p class="lead">O portal diz o que precisa estar pronto ao sair de cada etapa. Como chegar lá fica com o time: as skills são caminhos possíveis, nossas ou de terceiros, e nenhuma é a oficial.</p>
+</header>
+<aside class="nota" style="margin-top:16px">
+  <span class="n">Nota 1 · cabeçalho</span>
+  <ul>
+    <li>Volta o título do mockup, sem palavra destacada em cor: a tese aparece no mapa logo abaixo, onde o trilho único vira três trilhas.</li>
+    <li>O "lead" é o texto que a tarefa 12 já escreveu e conferiu em <code>paginas/trilha.md</code>.</li>
+  </ul>
+</aside>
+
+<section class="secao" aria-labelledby="t-mapa">
+  <h2 id="t-mapa" class="vh-off">O mapa</h2>
+  <p class="intro">Cada linha é uma trilha pronta e passa só pelos passos que cobre. Toda linha atravessa o portão de saída de cada etapa: o marco vale qualquer que seja o caminho.</p>
+  <figure class="mapa" style="margin:0">
+    <div class="mapa-cab">
+      <div class="linhas-escolha" role="group" aria-label="Destacar uma trilha" id="linhas-escolha"></div>
+      <div class="legenda" aria-label="Legenda">
+        <span><svg width="10" height="22" aria-hidden="true"><rect width="10" height="22" fill="#1351B4"/></svg>portão com mecanismo</span>
+        <span><svg width="12" height="22" aria-hidden="true"><rect x="1" y="1" width="10" height="20" fill="none" stroke="#6B7B8E" stroke-width="2" stroke-dasharray="5 4"/></svg>portão sem mecanismo ainda</span>
+        <span><svg width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="5.5" fill="#fff" stroke="#B06F12" stroke-width="2.5"/></svg>passo que a trilha cobre</span>
+      </div>
+    </div>
+    <div class="mapa-svg"><svg id="svg-mapa" viewBox="0 0 1180 500" role="img" aria-labelledby="svg-mapa-t"><title id="svg-mapa-t">Mapa de trilhas: Especificar, Codar e Revisar com os portões de saída, as três trilhas prontas e o laço Aprender</title></svg></div>
+    <figcaption class="mapa-pe">Marcos dos portões: as práticas com mecanismo do momento. Codar ainda não tem nenhuma: o portão tracejado é o backlog, à vista.</figcaption>
+  </figure>
+  <aside class="nota">
+    <span class="n">Nota 2 · o mapa (a peça principal)</span>
+    <ul>
+      <li>Substitui o diagrama de três caixas. Os passos viram estações; cada trilha pronta é uma linha; os marcos viram portões na saída de cada etapa.</li>
+      <li>Clique numa trilha acima do mapa para destacar o caminho dela.</li>
+      <li>Os rótulos curtos dos marcos ("aprovação registrada") vêm do campo novo <code>marco</code> da prática, como você escolheu. Os textos abaixo são a minha proposta de rótulo; eles passam pela curadoria.</li>
+      <li class="decidir">Para decidir: o portão mostra só as práticas com mecanismo (P1-05, P1-06, P3-02 e DAD-01, P1-09, CICD-01). As práticas que só orientam ficam no detalhe de cada etapa, mais abaixo. Assim o mapa não volta a ficar denso.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-trilhas">
+  <h2 id="t-trilhas">Trilhas prontas</h2>
+  <p class="intro">Três combinações que já funcionam, para quem quer começar por uma, e a montagem livre para quem já sabe o que quer.</p>
+  <div class="trilhas" id="trilhas"></div>
+  <aside class="nota">
+    <span class="n">Nota 3 · trilhas prontas</span>
+    <ul>
+      <li>Volta o quarto cartão, "Monte a sua", tracejado, que o implementado perdeu.</li>
+      <li>Cada trilha lista as paradas em ordem, com o passo de cada uma. É a mesma informação da linha no mapa, em texto.</li>
+      <li>De origem é a única em adotar, sustentada pelo caso de origem. A ordem é a da spec: adotar com caso, adotar, avaliar.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-etapas">
+  <h2 id="t-etapas">O que precisa estar pronto, e por onde chegar</h2>
+  <div class="filtro" role="group" aria-label="Mostrar caminhos por coleção" id="filtro"><span>Mostrar caminhos de</span></div>
+  <div id="etapas"></div>
+  <aside class="nota">
+    <span class="n">Nota 4 · etapas</span>
+    <ul>
+      <li>Cada etapa abre com "Para sair desta etapa": os marcos com mecanismo em azul sólido e os que só orientam em tracejado, até seis. As demais ficam em "ver todas as N práticas", fechado por padrão. Resolve a densidade (17 marcos em Especificar).</li>
+      <li>Cartões com a coleção por escrito e uma borda à esquerda: sólida azul para skill nossa, tracejada âmbar para skill de terceiros. Sem selo colorido por coleção, para não criar cores fora da paleta do portal.</li>
+      <li>"Cuidado" com fio vermelho à esquerda, como no mockup. Complemento fica um pouco mais claro.</li>
+      <li class="decidir">Para decidir: o mockup tinha o tamanho do <code>SKILL.md</code> em linhas. O portal não tem esse dado; daria para incluir como campo da ferramenta, conferido na curadoria. Deixei de fora nesta versão.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-atritos">
+  <h2 id="t-atritos">O que a curadoria resolve antes de adotar</h2>
+  <div class="atritos">
+    <div class="atrito"><h3>Onde a spec é gravada</h3><p>A <code>to-spec</code> do mattpocock/skills publica a spec no tracker de issues; o setup aceita descrever outro fluxo. O superpowers grava em <code>docs/superpowers/</code>, mas a preferência do projeto vale mais. Cada trilha pronta diz onde a spec fica.</p></div>
+    <div class="atrito"><h3>Idioma</h3><p>As duas coleções escrevem em inglês, e o modelo da <code>to-spec</code> traz títulos como "Problem Statement". Se a spec sai em português só porque o AGENTS.md pede, o laboratório mede antes de qualquer skill subir para adotar.</p></div>
+    <div class="atrito"><h3>Instruções que se contradizem</h3><p>O TDD do mattpocock deixa a refatoração para a revisão; o do superpowers a tem como terceira fase e manda apagar o código escrito antes do teste. Cada trilha pronta é coerente por dentro, e a montagem livre avisa o conflito.</p></div>
+    <div class="atrito"><h3>Origem que muda</h3><p>As coleções mudam entre versões, então o portal fixa versão e commit e revalida. Mandar PR para a origem não é o caminho: o SCOPE.md do mattpocock/skills fecha propostas de skill nova.</p></div>
+  </div>
+  <aside class="nota">
+    <span class="n">Nota 5 · atritos</span>
+    <ul>
+      <li>Resumo do texto conferido da tarefa 12 (com as citações no portal). Título de cada atrito virou uma afirmação curta em vez de rótulo.</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="secao" aria-labelledby="t-inicio">
+  <h2 id="t-inicio">Na Início</h2>
+  <div class="inicio-demo">
+    <h3>Para quem desenvolve</h3>
+    <p class="lead">Toda mudança passa por estas etapas. Em cada uma, o portal diz o que precisa estar pronto; o caminho até lá fica com o time.</p>
+    <div class="mapa" style="background:var(--folha)"><div class="mapa-svg"><svg id="svg-inicio" viewBox="0 0 1180 500" role="img" aria-label="O mesmo mapa de trilhas da página Trilha"></svg></div></div>
+    <p><a href="#t-mapa">Ver a trilha completa, com os caminhos de cada passo</a></p>
+  </div>
+  <aside class="nota">
+    <span class="n">Nota 6 · Início</span>
+    <ul>
+      <li>O mesmo mapa da página Trilha, como você escolheu, no lugar das três caixas vazias.</li>
+      <li>Sem os botões de destaque: na Início o mapa é estático e o link leva à trilha.</li>
+      <li class="decidir">Para decidir: a Início antiga mostrava a contagem de práticas por momento. Dá para pôr "17 práticas" sob o nome de cada etapa no mapa. Deixei de fora para não carregar o desenho.</li>
+    </ul>
+  </aside>
+</section>
+
+</main>
+
+<script>
+const ETAPAS = [
+  { slug: "antes-de-escrever", nome: "Especificar", desc: "Entender o pedido e fixar o que vai ser construído.",
+    passos: [["entrevistar","Entrevistar","tirar da cabeça da pessoa o que ela quer"],["escrever-spec","Escrever a spec","o documento que vai ser aprovado"],["decidir","Decidir e registrar","glossário e ADR"],["investigar","Investigar","responder antes de decidir"],["seguranca","Segurança","superfície nova"]],
+    portao: [["P1-05","ambiguidade resolvida"],["P1-06","aprovação registrada"],["P3-02","threat-model do agente"]],
+    orienta: [["P1-04","spec como delta"],["P1-03","constituição curta"],["P1-01","tier classificado"]],
+    total: 17 },
+  { slug: "enquanto-escreve", nome: "Codar", desc: "Plano, branch e teste antes do código.",
+    passos: [["planejar","Planejar","tarefas com checkboxes"],["isolar","Isolar","branch ou worktree"],["executar","Executar","do plano ao código"],["tdd","TDD","vermelho, verde"],["bug","Bug","do sintoma ao teste de regressão"],["dominio","Domínio","conforme a faixa"]],
+    portao: [],
+    orienta: [["P3-04","agente só lê por padrão"],["QLD-01","teste falhou antes"],["DAD-02","expandir e contrair"]],
+    total: 13 },
+  { slug: "antes-do-merge", nome: "Revisar", desc: "Conferir contra a spec e contra os padrões, com evidência.",
+    passos: [["revisar","Revisar o diff","spec e padrões"],["responder","Responder à revisão","sem concordar por educação"],["evidencia","Evidência","antes de dizer que terminou"],["pr-e-merge","PR e merge","fechar a branch"]],
+    portao: [["DAD-01","migration intocada"],["P1-09","veredito por requisito"],["CICD-01","pipeline com gates"]],
+    orienta: [["P1-10","sem drift spec e código"],["QLD-03","CI roda antes do push"],["SEG-02","segredo fora do repo"]],
+    total: 11 },
+];
+const APRENDER = { nome: "Aprender", passos: [["retro","Retro"],["instrucoes","Cuidar das instruções"],["continuar","Continuar depois"]], orienta: [["P1-11","spec arquivada e destilada"],["CICD-03","changelog e tag"],["QLD-02","bug vira regra"]], total: 6 };
+
+const COLECOES = { "superpowers": "obra/superpowers", "mattpocock-skills": "mattpocock/skills", "nossa": "padroes-engenharia" };
+
+const SKILLS = [
+  // [id, nome, coleção, status, papel, [[etapa, passo]], bom quando, cuidado]
+  ["sp-brainstorming","brainstorming","superpowers","adotar","caminho",[["antes-de-escrever","entrevistar"],["antes-de-escrever","escrever-spec"]],"você quer classificar o pedido antes (spike, limitado, arquitetural), perto dos nossos tiers.","conduz: no fim só aceita writing-plans como próximo passo."],
+  ["mp-grill-with-docs","grill-with-docs","mattpocock-skills","avaliar","caminho",[["antes-de-escrever","entrevistar"]],"o repositório já existe e você quer sair com glossário e ADR; rodadas de perguntas com resposta recomendada.","só pergunta; a spec vem da to-spec."],
+  ["mp-grilling","grilling","mattpocock-skills","avaliar","complemento",[["antes-de-escrever","entrevistar"]],"a grill-with-docs chama esta; instale as duas juntas.",""],
+  ["mp-to-spec","to-spec","mattpocock-skills","avaliar","caminho",[["antes-de-escrever","escrever-spec"]],"a conversa já resolveu tudo e só falta sintetizar a spec.","publica no tracker de issues; aponte o tracker para docs/specs."],
+  ["sdd-lifecycle","sdd-lifecycle","nossa","adotar","caminho",[["antes-de-escrever","escrever-spec"],["antes-de-escrever","decidir"],["enquanto-escreve","planejar"],["enquanto-escreve","isolar"],["enquanto-escreve","tdd"],["antes-do-merge","revisar"],["antes-do-merge","evidencia"],["antes-do-merge","pr-e-merge"],["depois-da-entrega","retro"],["depois-da-entrega","continuar"]],"você quer tier, gate destrutivo e aprovação no mesmo fluxo, conduzido fase a fase.","uma skill conduz todas as fases."],
+  ["mp-domain-modeling","domain-modeling","mattpocock-skills","avaliar","caminho",[["antes-de-escrever","decidir"]],"há termos em disputa no domínio; ADR só quando é difícil de reverter, surpreendente e fruto de trade-off.",""],
+  ["sp-writing-plans","writing-plans","superpowers","adotar","caminho",[["enquanto-escreve","planejar"]],"o plano precisa de arquivos, testes e passos pequenos por tarefa, para outro agente executar.","grava em docs/superpowers/plans se o projeto não disser outro lugar."],
+  ["sp-using-git-worktrees","using-git-worktrees","superpowers","adotar","caminho",[["enquanto-escreve","isolar"]],"você quer trabalhar em paralelo sem sujar o diretório atual.",""],
+  ["sp-subagent-driven-development","subagent-driven-development","superpowers","adotar","caminho",[["enquanto-escreve","executar"]],"a mudança tem muitas tarefas: um subagente por tarefa, com revisão entre elas.","é a mais longa do mapa."],
+  ["sp-executing-plans","executing-plans","superpowers","adotar","caminho",[["enquanto-escreve","executar"]],"não há subagente disponível e o próprio agente executa o plano.",""],
+  ["mp-implement","implement","mattpocock-skills","avaliar","caminho",[["enquanto-escreve","executar"]],"a mudança cabe numa sessão; chama tdd e code-review.","busca o ticket no tracker; passe o caminho do plano."],
+  ["sp-dispatching-parallel-agents","dispatching-parallel-agents","superpowers","adotar","complemento",[["enquanto-escreve","executar"]],"há tarefas sem estado compartilhado para rodar em paralelo.",""],
+  ["sp-test-driven-development","test-driven-development","superpowers","adotar","caminho",[["enquanto-escreve","tdd"]],"o time precisa de rigidez: código escrito antes do teste é apagado.","não instale junto de outra skill de TDD."],
+  ["mp-tdd","tdd","mattpocock-skills","avaliar","caminho",[["enquanto-escreve","tdd"]],"você quer pouco texto e testes em seams combinadas, uma fatia vertical por vez.","refatorar fica fora do laço."],
+  ["sp-systematic-debugging","systematic-debugging","superpowers","adotar","caminho",[["enquanto-escreve","bug"]],"você quer a causa raiz antes de propor a correção.",""],
+  ["sp-requesting-code-review","requesting-code-review","superpowers","adotar","caminho",[["antes-do-merge","revisar"]],"você quer um revisor independente por tarefa ou antes do merge.","um eixo só."],
+  ["mp-code-review","code-review","mattpocock-skills","avaliar","caminho",[["antes-do-merge","revisar"]],"você quer dois eixos separados, padrões e spec, em paralelo.","o eixo de spec precisa sair com veredito por requisito (P1-09)."],
+  ["sp-receiving-code-review","receiving-code-review","superpowers","adotar","caminho",[["antes-do-merge","responder"]],"chegou feedback questionável: verificar antes de aceitar.",""],
+  ["sp-verification-before-completion","verification-before-completion","superpowers","adotar","caminho",[["antes-do-merge","evidencia"]],"sempre: rodar e colar a saída antes de dizer que está pronto.",""],
+  ["sp-finishing-a-development-branch","finishing-a-development-branch","superpowers","adotar","caminho",[["antes-do-merge","pr-e-merge"]],"é hora de decidir entre merge, PR ou descartar, e limpar a branch.",""],
+  ["mp-retro","retro","mattpocock-skills","avaliar","caminho",[["depois-da-entrega","retro"]],"depois de qualquer entrega: erro mecânico vira checagem, julgamento vira padrão.",""],
+  ["sp-writing-skills","writing-skills","superpowers","adotar","caminho",[["depois-da-entrega","instrucoes"]],"a skill nova precisa de teste por cenário antes de ser publicada.","a mais longa da coleção."],
+];
+
+const TRILHAS = [
+  { id: "de-origem", nome: "De origem", origem: "obra/superpowers com os marcos do portal", status: "adotar", traco: "", caso: true,
+    seq: [["sp-brainstorming","entrevistar"],["sp-brainstorming","escrever-spec"],["sp-writing-plans","planejar"],["sp-using-git-worktrees","isolar"],["sp-subagent-driven-development","executar"],["sp-test-driven-development","tdd"],["sp-systematic-debugging","bug"],["sp-requesting-code-review","revisar"],["sp-receiving-code-review","responder"],["sp-verification-before-completion","evidencia"],["sp-finishing-a-development-branch","pr-e-merge"],["sdd-lifecycle","retro"],["sp-writing-skills","instrucoes"]],
+    bom: "a mudança é grande, com subagentes e revisão por tarefa. É a combinação em que o modelo nasceu.",
+    cuidado: "o plugin traz um bootstrap que obriga a acionar skills, e o brainstorming só aceita writing-plans depois." },
+  { id: "guiada", nome: "Guiada", origem: "thisco/sdd-lifecycle", status: "adotar", traco: "2 6",
+    seq: [["sdd-lifecycle","escrever-spec"],["sdd-lifecycle","decidir"],["sdd-lifecycle","planejar"],["sdd-lifecycle","isolar"],["sdd-lifecycle","tdd"],["sdd-lifecycle","revisar"],["sdd-lifecycle","evidencia"],["sdd-lifecycle","pr-e-merge"],["sdd-lifecycle","retro"],["sdd-lifecycle","continuar"]],
+    bom: "o time está começando no SDD ou precisa de trilha de auditoria completa.",
+    cuidado: "uma skill só conduz todas as fases." },
+  { id: "enxuta", nome: "Enxuta", origem: "mattpocock/skills", status: "avaliar", traco: "10 5",
+    seq: [["mp-grill-with-docs","entrevistar"],["mp-to-spec","escrever-spec"],["mp-domain-modeling","decidir"],["mp-implement","executar"],["mp-tdd","tdd"],["mp-code-review","revisar"],["mp-retro","retro"]],
+    bom: "o time quer pouco texto no contexto e linguagem de domínio forte.",
+    cuidado: "o tracker precisa apontar para docs/specs, e refatorar fica fora do laço do TDD." },
+];
+
+const skill = (id) => SKILLS.find((s) => s[0] === id);
+const passoNome = (slug) => {
+  for (const e of [...ETAPAS, APRENDER]) for (const p of e.passos) if (p[0] === slug) return [e.nome, p[1]];
+  return ["", slug];
+};
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs = {}, texto) {
+  const n = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (texto != null) n.textContent = texto;
+  return n;
+}
+
+/* geometria do mapa: três etapas lado a lado; estações em fileira; uma linha por trilha */
+function desenharMapa(svg, interativo) {
+  const X0 = 46, LARG = 318, VAO = 56, YT = 70, YLINHAS = [168, 208, 248];
+  const est = {}; // slug -> x
+  ETAPAS.forEach((e, i) => {
+    const x = X0 + i * (LARG + VAO);
+    svg.append(el("rect", { class: "etapa-fundo", x, y: 24, width: LARG, height: 262, rx: 2 }));
+    svg.append(el("text", { class: "etapa-nome", x: x + 16, y: 52 }, e.nome));
+    const passo = (LARG - 40) / (e.passos.length - 1 || 1);
+    e.passos.forEach((p, j) => {
+      const px = x + 20 + j * passo;
+      est[p[0]] = px;
+      const t = el("text", { class: "estacao-nome", x: px, y: YT + 34, transform: `rotate(-32 ${px} ${YT + 34})` }, p[1]);
+      svg.append(t);
+      svg.append(el("line", { x1: px, y1: YT + 44, x2: px, y2: 272, stroke: "#DDE4EC", "stroke-width": 1 }));
+    });
+    // portão de saída
+    const gx = x + LARG + VAO / 2 - 5;
+    if (e.portao.length) {
+      svg.append(el("rect", { class: "portao", x: gx, y: 140, width: 10, height: 136, rx: 1 }));
+      e.portao.forEach((m, k) => {
+        svg.append(el("text", { class: "marco-id", x: x + 16, y: 316 + k * 18 }, m[0]));
+        svg.append(el("text", { class: "marco-txt", x: x + 16 + m[0].length * 7.4 + 6, y: 316 + k * 18 }, m[1]));
+      });
+    } else {
+      svg.append(el("rect", { class: "portao sem", x: gx, y: 140, width: 10, height: 136, rx: 1 }));
+      svg.append(el("text", { class: "marco-vazio", x: x + 16, y: 316 }, "Ainda sem marco com mecanismo."));
+      svg.append(el("text", { class: "marco-vazio", x: x + 16, y: 334 }, "É o backlog desta etapa."));
+    }
+  });
+  svg.append(el("text", { class: "marco-txt", x: X0, y: 302, style: "font-weight:700" }, "Para sair da etapa"));
+  // estações do laço
+  const yl = 448;
+  const lx = [X0 + 360, X0 + 580, X0 + 800];
+  APRENDER.passos.forEach((p, j) => { est[p[0]] = lx[j]; });
+  // laço
+  const fim = X0 + 3 * LARG + 2 * VAO;
+  const gfim = fim + VAO / 2;
+  const xr = 18;
+  svg.append(el("path", { class: "laco", d: `M ${gfim} 282 L ${gfim} ${yl - 24} Q ${gfim} ${yl}, ${gfim - 24} ${yl} L ${xr + 24} ${yl} Q ${xr} ${yl}, ${xr} ${yl - 24} L ${xr} 232 Q ${xr} 208, ${xr + 14} 208` }));
+  svg.append(el("path", { d: `M ${xr + 12} 201 L ${xr + 24} 208 L ${xr + 12} 215 Z`, fill: "#B06F12" }));
+  svg.append(el("text", { class: "laco-nome", x: X0 + 16, y: yl - 12 }, "Aprender"));
+  svg.append(el("text", { class: "laco-txt", x: X0 + 16, y: yl + 26 }, "Sem portão: P1-11 spec arquivada e destilada, QLD-02 bug vira regra, CICD-03 changelog e tag."));
+  APRENDER.passos.forEach((p, j) => {
+    svg.append(el("circle", { class: "estacao", "data-passo": p[0], cx: lx[j], cy: yl, r: 6 }));
+    svg.append(el("text", { class: "estacao-nome", x: lx[j] + 10, y: yl - 10 }, p[1]));
+  });
+
+  // linhas das trilhas
+  TRILHAS.forEach((t, i) => {
+    const y = YLINHAS[i];
+    const visitados = new Set(t.seq.map((s) => s[1]));
+    const g = el("g", { "data-trilha": t.id });
+    const pts = Object.entries(est).filter(([slug]) => !APRENDER.passos.some((p) => p[0] === slug));
+    const xIni = X0 + 8, xFim = fim - 8;
+    const linha = el("path", { class: "linha", d: `M ${xIni} ${y} L ${xFim} ${y}`, "stroke-dasharray": t.traco || "none" });
+    g.append(linha);
+    pts.forEach(([slug, x]) => {
+      if (visitados.has(slug)) g.append(el("circle", { class: "estacao visitada", cx: x, cy: y, r: 6 }));
+    });
+    g.append(el("text", { class: "linha-rotulo", x: xIni, y: y - 9 }, t.nome));
+    svg.append(g);
+  });
+  // estações do laço marcadas pela trilha (anel âmbar) — destaque por trilha só no modo interativo
+  svg.querySelectorAll('circle[data-passo]').forEach((c) => {
+    const cobre = TRILHAS.some((t) => t.seq.some((s) => s[1] === c.dataset.passo));
+    if (cobre) c.classList.add("visitada");
+  });
+}
+
+function destacar(id) {
+  document.querySelectorAll("#svg-mapa g[data-trilha]").forEach((g) => {
+    const apagar = id && g.dataset.trilha !== id;
+    g.querySelectorAll(".linha, .linha-rotulo, .estacao").forEach((n) => n.classList.toggle("apagada", apagar));
+    g.style.opacity = apagar ? ".25" : "1";
+  });
+  document.querySelectorAll(".linha-btn").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.trilha === id)));
+}
+
+function montarEscolha() {
+  const box = document.getElementById("linhas-escolha");
+  let atual = null;
+  TRILHAS.forEach((t) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "linha-btn"; b.dataset.trilha = t.id; b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<svg width="30" height="8" aria-hidden="true"><line x1="2" y1="4" x2="28" y2="4" stroke="#B06F12" stroke-width="3" stroke-linecap="round" ${t.traco ? `stroke-dasharray="${t.traco}"` : ""}/></svg>`;
+    b.append(t.nome);
+    b.addEventListener("click", () => { atual = atual === t.id ? null : t.id; destacar(atual); });
+    box.append(b);
+  });
+}
+
+function montarTrilhas() {
+  const box = document.getElementById("trilhas");
+  TRILHAS.forEach((t) => {
+    const a = document.createElement("article"); a.className = "trilha"; a.id = "trilha-" + t.id;
+    const itens = t.seq.map(([sid, p]) => {
+      const [et, pn] = passoNome(p);
+      return `<li><span><span class="skill">${skill(sid)[1]}</span> <span class="onde">${et}, ${pn.toLowerCase()}</span></span></li>`;
+    }).join("");
+    a.innerHTML = `<div class="trilha-cab"><span class="origem">${t.origem}</span><h3>${t.nome} <span class="st ${t.status}">${t.status}</span></h3></div>
+      <ol class="paradas">${itens}</ol>
+      <dl><dt>Bom quando</dt><dd>${t.bom}</dd><dt>Cuidado</dt><dd>${t.cuidado}</dd>${t.caso ? `<dt>Evidência</dt><dd><a href="#">Caso: origem do modelo</a></dd>` : ""}</dl>`;
+    box.append(a);
+  });
+  const sua = document.createElement("article"); sua.className = "trilha sua";
+  sua.innerHTML = `<div class="trilha-cab"><span class="origem">o time escolhe</span><h3>Monte a sua</h3></div>
+    <p>Escolha um caminho por passo no detalhe das etapas. Os portões continuam valendo: eles conferem o resultado, não a skill.</p>
+    <dl><dt>Uma regra</dt><dd>uma skill por passo no mesmo projeto. Duas skills de TDD juntas dão ordens contraditórias.</dd></dl>`;
+  box.append(sua);
+}
+
+const ativas = new Set(Object.keys(COLECOES));
+function montarEtapas() {
+  const filtro = document.getElementById("filtro");
+  for (const [col, rot] of Object.entries(COLECOES)) {
+    const n = SKILLS.filter((s) => s[2] === col).length;
+    const b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-pressed", "true"); b.dataset.col = col;
+    b.innerHTML = `${rot}<span class="q">${n}</span>`;
+    b.addEventListener("click", () => { ativas.has(col) ? ativas.delete(col) : ativas.add(col); b.setAttribute("aria-pressed", String(ativas.has(col))); filtrar(); });
+    filtro.append(b);
+  }
+  const box = document.getElementById("etapas");
+  for (const e of [...ETAPAS, { ...APRENDER, slug: "depois-da-entrega", desc: "O laço: o que esta mudança ensina à próxima.", portao: [] }]) {
+    const s = document.createElement("div"); s.className = "etapa"; s.style.marginTop = "26px";
+    const marcos = [
+      ...e.portao.map((m) => `<span class="marco forte"><span class="id">${m[0]}</span>${m[1]}<span class="forca">${m[0] === "DAD-01" ? "bloqueia" : "avisa"}</span></span>`),
+      ...(e.orienta || []).map((m) => `<span class="marco fraco"><span class="id">${m[0]}</span>${m[1]}<span class="forca">orienta</span></span>`),
+    ].join("");
+    const resto = e.total - e.portao.length - (e.orienta || []).length;
+    let html = `<div class="etapa-cab"><h3>${e.nome}</h3><p>${e.desc}</p></div>
+      <div class="saida"><span class="saida-titulo">Para sair desta etapa</span><div class="marcos">${marcos}</div>
+      <details class="todas"><summary>Ver todas as ${e.total} práticas desta etapa</summary><ul><li>mais ${resto} práticas que orientam, de todas as faixas (lista gerada pelo portal)</li></ul></details></div>`;
+    for (const [ps, pn, pd] of e.passos) {
+      const cs = SKILLS.filter((sk) => sk[5].some(([m, p]) => m === e.slug && p === ps));
+      const cards = cs.map((sk) => {
+        const nossa = sk[2] === "nossa";
+        return `<article class="caminho ${nossa ? "nosso" : "externo"} ${sk[4] === "complemento" ? "complemento" : ""}" data-col="${sk[2]}">
+          <div class="caminho-cab"><a href="#">${sk[1]}</a><span class="st ${sk[3]}">${sk[3]}</span></div>
+          <span class="de">${COLECOES[sk[2]]}${sk[4] === "complemento" ? ", complemento" : ""}</span>
+          <p class="bom">Bom quando ${sk[6]}</p>${sk[7] ? `<p class="cuidado">${sk[7]}</p>` : ""}</article>`;
+      }).join("");
+      html += `<div class="passo"><div class="passo-nome"><b>${pn}</b><span>${pd || ""}</span></div>
+        <div class="caminhos">${cards}<p class="vazio"${cs.length ? " hidden" : ""}>${cs.length ? "Os caminhos deste passo estão ocultos pelo filtro." : "Ainda não há caminho curado para este passo."}</p></div></div>`;
+    }
+    s.innerHTML = html; box.append(s);
+  }
+}
+function filtrar() {
+  document.querySelectorAll(".caminhos").forEach((box) => {
+    let vis = 0, total = 0;
+    box.querySelectorAll(".caminho").forEach((c) => { total++; const ok = ativas.has(c.dataset.col); c.hidden = !ok; if (ok) vis++; });
+    const v = box.querySelector(".vazio"); if (v) v.hidden = vis > 0 || (total === 0 ? false : false) ? true : !(vis === 0);
+    if (total === 0 && v) v.hidden = false;
+  });
+}
+
+desenharMapa(document.getElementById("svg-mapa"), true);
+desenharMapa(document.getElementById("svg-inicio"), false);
+montarEscolha(); montarTrilhas(); montarEtapas();
+document.getElementById("alternar-notas").addEventListener("click", (ev) => {
+  const sem = document.body.classList.toggle("sem-notas");
+  ev.currentTarget.setAttribute("aria-pressed", String(!sem));
+  ev.currentTarget.textContent = sem ? "Mostrar notas" : "Esconder notas";
+});
+</script>
+</body>
+</html>

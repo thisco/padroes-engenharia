@@ -1,6 +1,7 @@
 ---
 id: API-02
 titulo: "Teste de contrato no CI: quebra de contrato reprova o merge"
+marco: "contrato conferido no CI"
 dominio: contratos-api
 subdominio: null
 momento: antes-do-merge
@@ -15,8 +16,8 @@ aplica: []
 referencias: [openapi-spec, oasdiff, gitlab-mr-pipelines, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-pipeline-obrigatorio, gitlab-allow-failure, gitlab-ci-local-readme]
 relacionadas: [API-01]
 dono: engenharia
-revisado_em: 2026-10-08
-revisar_ate: 2027-04-08
+revisado_em: 2026-10-21
+revisar_ate: 2027-04-06
 resumo: "O CI compara o contrato da branch com o da base e reprova a mudança incompatível sem versão nova, e testa a resposta real contra o schema do contrato."
 ferramentas_aprovadas: [gitlab-ci-local]
 exemplos:

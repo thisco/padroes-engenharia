@@ -31,6 +31,7 @@ VALIDOS = {
     "receita": fabrica.meta_receita,
     "starter": fabrica.meta_starter,
     "ferramenta": fabrica.meta_ferramenta,
+    "trilha": fabrica.meta_trilha,
     "glossario": fabrica.meta_glossario,
     "apresentacao": fabrica.meta_apresentacao,
 }

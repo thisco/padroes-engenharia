@@ -1,0 +1,32 @@
+id: sp-executing-plans
+titulo: executing-plans
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: executar
+    papel: caminho
+    bom_quando: "a pessoa escolheu execução inline ou o harness não tem subagente: o próprio agente executa o plano, com TDD por tarefa e uma revisão da branch inteira só no fim, por revisor novo quando há subagente e por autorrevisão, que a skill diz ser mais fraca, quando não há."
+    cuidado: "também não para entre tarefas e usa o mesmo ledger da subagent-driven-development; num plano longo, as últimas tarefas recebem o contexto mais compactado."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos (esta cita scripts/task-start e
+  scripts/task-done, mais os scripts da subagent-driven-development ao lado dela
+  [ref:superpowers-executing-plans]); o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. A skill executa o plano na própria sessão, sem pausar entre tarefas, com
+  a test-driven-development em cada passo e uma revisão da branch inteira no fim (por revisor novo,
+  ou autorrevisão mais fraca sem subagente); compartilha o workspace e o ledger da
+  subagent-driven-development, e a própria skill diz que num plano longo as últimas tarefas recebem
+  menos do agente [ref:superpowers-executing-plans].
+referencias: [superpowers-executing-plans, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

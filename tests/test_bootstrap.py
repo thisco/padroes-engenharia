@@ -37,8 +37,20 @@ def test_componentes_fixados_com_versao_e_commit():
     componentes = dados["componentes"]
     assert componentes["sdd-scaffold"]["versao"] == "1.7.1"
     assert componentes["sdd-lifecycle"]["versao"] == "3.0.0"
-    for item in componentes.values():
-        assert item["repo"].startswith("https://github.com/thisco/")
+    # Coleções externas (R4 da trilha) vivem sob outros donos;
+    # os demais componentes ficam sob thisco.
+    EXTERNOS = {
+        "superpowers": "obra/superpowers",
+        "mattpocock-skills": "mattpocock/skills",
+        "agent-skills": "addyosmani/agent-skills",
+        "claude-plugins-official": "anthropics/claude-plugins-official",
+        "playwright-mcp": "microsoft/playwright-mcp",
+    }
+    for nome, item in componentes.items():
+        if nome in EXTERNOS:
+            assert item["repo"] == f"https://github.com/{EXTERNOS[nome]}"
+        else:
+            assert item["repo"].startswith("https://github.com/thisco/")
         assert re.fullmatch(r"[0-9a-f]{40}", item["commit"])
 
 

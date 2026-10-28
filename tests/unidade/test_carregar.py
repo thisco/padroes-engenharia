@@ -146,11 +146,35 @@ def test_repositorio_de_distribui_e_ordena():
 
 def test_componentes_do_repositorio_real():
     assert carregar_componentes(RAIZ) == {
+        "agent-skills": Componente(
+            "agent-skills",
+            "https://github.com/addyosmani/agent-skills",
+            "0.6.13",
+            "aeac41d4d005999432bb7312f7ff06383a91d59d",
+        ),
+        "claude-plugins-official": Componente(
+            "claude-plugins-official",
+            "https://github.com/anthropics/claude-plugins-official",
+            "2026.10.15",
+            "8f814f49002ff824e8a9ba43cf96112dc7f5948d",
+        ),
         "gateway-poc": Componente(
             "gateway-poc",
             "https://github.com/thisco/gateway-poc",
             "0.1.0",
             "571a091c8a8f9ff99aba89c064d69a36ff195bef",
+        ),
+        "mattpocock-skills": Componente(
+            "mattpocock-skills",
+            "https://github.com/mattpocock/skills",
+            "1.3.1",
+            "49dd158d1076134a641b33efb035946536778336",
+        ),
+        "playwright-mcp": Componente(
+            "playwright-mcp",
+            "https://github.com/microsoft/playwright-mcp",
+            "0.0.83",
+            "f183dad4a52965583e3cc1d59b88cdc279e2e57d",
         ),
         "sdd-lifecycle": Componente(
             "sdd-lifecycle",
@@ -163,6 +187,12 @@ def test_componentes_do_repositorio_real():
             "https://github.com/thisco/sdd-scaffold",
             "1.7.1",
             "cd121cd973945c486e63029496ed7ec879a18e32",
+        ),
+        "superpowers": Componente(
+            "superpowers",
+            "https://github.com/obra/superpowers",
+            "7.0.0",
+            "bb92a77741419a4ab5f06e711a283343f1ada0c3",
         ),
     }
 

@@ -288,7 +288,7 @@ def md_pratica(site: Site, p: Conteudo) -> str:
     relacionadas = [r.chave for r in site.catalogo.relacionadas(p.chave)]
     ficha = [
         dominio,
-        f"- Momento: {momento.titulo} (`{m['momento']}`)",
+        f"- Etapa: {momento.rotulo} (`{m['momento']}`)",
         f"- Força: {m['forca']}",
         f"- Mecanismo: `{texto_mecanismo(m)}`" if m.get("mecanismo") else "- Mecanismo: nenhum",
         f"- Status: {m['status']}",
@@ -353,7 +353,7 @@ def md_conteudo(site: Site, c: Conteudo) -> str:
 def md_espinha(site: Site) -> str:
     momentos = site.espinha.momentos
     linhas = [
-        "| Domínio | " + " | ".join(m.titulo for m in momentos) + " |",
+        "| Domínio | " + " | ".join(m.rotulo for m in momentos) + " |",
         "|---" * (len(momentos) + 1) + "|",
     ]
     for faixa in site.espinha.faixas:
@@ -368,7 +368,7 @@ def md_espinha(site: Site) -> str:
         return sum(1 for m in momentos if site.catalogo.celula(slug, m.slug).praticas)
 
     cobertura = [
-        f"- {f.titulo}: {cobertos(f.slug)} de {len(momentos)} momentos cobertos"
+        f"- {f.titulo}: {cobertos(f.slug)} de {len(momentos)} etapas cobertas"
         for f in site.espinha.faixas
     ]
     return _juntar(
@@ -390,7 +390,7 @@ def md_dominio(site: Site, slug: str) -> str:
             f"{ROTULO_FORCA[p.meta['forca']]} · {p.meta['status']}"
             for p in praticas
         ]
-        secoes.append(f"## {m.titulo}\n\n" + ("\n".join(itens) or "a definir"))
+        secoes.append(f"## {m.rotulo}\n\n" + ("\n".join(itens) or "a definir"))
     prefixos = ", ".join(f"`{p}`" for p in faixa.prefixos)
     lacuna = ""
     if not site.catalogo.praticas_do_dominio(slug):
@@ -474,7 +474,7 @@ def md_para_agentes(site: Site) -> str:
         aplica = ", ".join(f"`{a}`" for a in celula.aplica)
         linhas.append(
             f"| {site.espinha.faixa(celula.dominio).titulo} | "
-            f"{site.espinha.momento(celula.momento).titulo} | {praticas} | "
+            f"{site.espinha.momento(celula.momento).rotulo} | {praticas} | "
             f"{ROTULO_FORCA[celula.forca_max]} | {aplica} |"
         )
     roteamento = "\n".join(linhas) if len(linhas) > 2 else "Ainda não há prática publicada."
@@ -703,6 +703,9 @@ def dados_catalogo(site: Site, paginas: list[Pagina]) -> dict[str, Any]:
         "ferramentas": [
             _item(f.meta["id"], f.meta["titulo"], caminho_de(f), f.meta) for f in repo.ferramentas
         ],
+        "trilhas": [
+            _item(t.meta["id"], t.meta["titulo"], "trilha.html", t.meta) for t in repo.trilhas
+        ],
         "glossario": [
             t for g in repo.glossarios for t in g.meta.get("termos", []) if isinstance(t, dict)
         ],
@@ -809,7 +812,7 @@ def dados_roteamento(site: Site) -> dict[str, Any]:
 def roteamento_md(site: Site) -> str:
     momentos = site.espinha.momentos
     matriz = [
-        "| Domínio | " + " | ".join(m.titulo for m in momentos) + " |",
+        "| Domínio | " + " | ".join(m.rotulo for m in momentos) + " |",
         "|---" * (len(momentos) + 1) + "|",
     ]
     for faixa in site.espinha.faixas:
@@ -834,7 +837,7 @@ def roteamento_md(site: Site) -> str:
         "# Roteamento das práticas",
         f"> {AVISO_GERADO} {site.nome} v{site.versao}: {plural(total, 'prática', 'práticas')}; "
         f"{a_definir_texto(site)} a definir.",
-        "Ache a linha do domínio da mudança e a coluna do momento e leia as práticas da célula. "
+        "Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. "
         "No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal "
         "publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.",
         "## Matriz\n\n" + "\n".join(matriz),
@@ -855,7 +858,7 @@ def readme_md(site: Site) -> str:
         f"{AVISO_GERADO} O validador reprova se este arquivo divergir do gerado.",
         "## O que há aqui\n\n"
         f"- {plural(total, 'prática', 'práticas')} na espinha de "
-        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} momentos; "
+        f"{len(site.espinha.faixas)} domínios × {len(site.espinha.momentos)} etapas; "
         f"{a_definir_texto(site)} a definir (`ROTEAMENTO.md`).\n"
         f"- {plural(len(site.repo.referencias), 'referência', 'referências')}, cada uma "
         f"conferida na fonte, e "
@@ -966,6 +969,20 @@ def copiar_apresentacoes(site: Site, saida: Path) -> None:
                     copiar(arquivo, destino)
 
 
+def copiar_fontes_de_casos(site: Site, saida: Path, raiz: Path | None = None) -> None:
+    """Publica `casos/fontes/**/*.md` com a mesma árvore, para a fonte do caso abrir no site
+    (spec da trilha, R14). Symlinks e arquivos fora da pasta ficam de fora, como em
+    `copiar_apresentacoes`. `raiz` existe para os testes; o build usa a do site."""
+    base = (raiz or site.raiz) / "casos" / "fontes"
+    base_real = base.resolve()
+    for arquivo in sorted(base.rglob("*.md")):
+        if arquivo.is_symlink() or not arquivo.is_file():
+            continue
+        if not arquivo.resolve().is_relative_to(base_real):
+            continue
+        copiar(arquivo, saida / "casos" / "fontes" / arquivo.relative_to(base))
+
+
 def emitir(site: Site, saida: Path) -> list[Pagina]:
     """Grava em `saida` todas as saídas do §7.2 e do §7.3 e devolve as páginas."""
     paginas = montar_paginas(site)
@@ -998,6 +1015,7 @@ def emitir(site: Site, saida: Path) -> list[Pagina]:
         if arquivo.is_file() and not arquivo.is_symlink():
             copiar(arquivo, saida / arquivo.relative_to(site.raiz))
     copiar_apresentacoes(site, saida)
+    copiar_fontes_de_casos(site, saida)
     for origem, destino, padroes in ESTATICOS:
         for padrao in padroes:
             for arquivo in sorted((site.raiz / origem).glob(padrao)):

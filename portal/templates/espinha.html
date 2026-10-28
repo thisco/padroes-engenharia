@@ -3,7 +3,7 @@
 {% block conteudo %}
 <div class="topo">
   <h1>{{ titulo }}</h1>
-  <p>{{ descricao }} Cada célula lista as práticas daquele domínio naquele momento; a célula vazia está a definir e entra no backlog.</p>
+  <p>{{ descricao }} Cada célula lista as práticas daquele domínio naquela etapa; a célula vazia está a definir e entra no backlog.</p>
 </div>
 <section aria-label="Legenda das forças">
   {{ c.legenda_forcas() }}
@@ -11,12 +11,12 @@
 <section aria-label="Matriz da espinha">
   <div class="rola">
   <table class="matriz">
-    <caption class="vh">Práticas por domínio e momento</caption>
+    <caption class="vh">Práticas por domínio e etapa</caption>
     <thead>
       <tr>
         <th scope="col">Domínio</th>
 {% for m in site.espinha.momentos %}
-        <th scope="col" id="momento-{{ m.slug }}">{{ m.titulo }}<small>fase{{ "s" if m.fases | length > 1 else "" }} {{ m.fases | join(", ") }}</small></th>
+        <th scope="col" id="momento-{{ m.slug }}">{{ m.rotulo }}{% if m.etapa %}<small>{{ m.titulo }}</small>{% endif %}</th>
 {% endfor %}
       </tr>
     </thead>
@@ -26,14 +26,14 @@
       <tr class="grupo"><th colspan="5" scope="rowgroup">{{ faixa.grupo }}</th></tr>
 {% endif %}
       <tr>
-        <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a><small>{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} momentos cobertos</small></th>
+        <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a><small>{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} etapas cobertas</small></th>
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
         <td>
 {% for p in celula.praticas %}
           <a class="ef {{ p.meta.forca }}" href="{{ raiz }}{{ caminho_de(p) }}" title="{{ p.meta.titulo }}">{{ p.chave }}<span class="vh"> · {{ ROTULO_FORCA[p.meta.forca] }}</span></a>
 {% else %}
-          <span class="q vazia" role="img" aria-label="sem prática neste momento"></span>
+          <span class="q vazia" role="img" aria-label="sem prática nesta etapa"></span>
 {% endfor %}
         </td>
 {% endfor %}
@@ -48,12 +48,12 @@
 {% for faixa in site.espinha.faixas %}
   <section aria-label="{{ faixa.titulo }}">
     <h2><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></h2>
-    <p class="ref-meta">{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} momentos cobertos</p>
+    <p class="ref-meta">{{ cobertura[faixa.slug] }} de {{ site.espinha.momentos | length }} etapas cobertas</p>
     <ul class="praticas">
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
 {% if celula.praticas %}
-      <li><b>{{ m.titulo }}</b>: {% for p in celula.praticas %}<a class="ef {{ p.meta.forca }}" href="{{ raiz }}{{ caminho_de(p) }}" title="{{ p.meta.titulo }}">{{ p.chave }}</a> {% endfor %}</li>
+      <li><b>{{ m.rotulo }}</b>: {% for p in celula.praticas %}<a class="ef {{ p.meta.forca }}" href="{{ raiz }}{{ caminho_de(p) }}" title="{{ p.meta.titulo }}">{{ p.chave }}</a> {% endfor %}</li>
 {% endif %}
 {% endfor %}
     </ul>

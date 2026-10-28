@@ -1,0 +1,11 @@
+id: mattpocock-retro
+titulo: "mattpocock/skills: skill retro"
+organizacao: mattpocock/skills
+url: https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/retro/SKILL.md
+tipo: comunidade
+versao: "1.3.1"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "cabeçalho (disable-model-invocation), seção 'Steps' (passos 1 a 4, sete categorias) e 'Reference' ('Implementation vs Review' e 'Files')"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A seção 'Files' nomeia o arquivo de regras de um harness; o portal não reproduz o nome."

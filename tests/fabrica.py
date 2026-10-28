@@ -304,6 +304,37 @@ def meta_ferramenta(**alteracoes: Any) -> dict[str, Any]:
     )
 
 
+def meta_ferramenta_skill(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "id": "sp-writing-plans",
+            "titulo": "writing-plans",
+            "categoria": "skill",
+            "colecao": "superpowers",
+            "status": "avaliar",
+            "versao_minima": "6.4.1",
+            "dono": "engenharia",
+            "praticas": [],
+            "receitas": [],
+            "caminhos": [
+                {
+                    "momento": "enquanto-escreve",
+                    "passo": "planejar",
+                    "papel": "caminho",
+                    "bom_quando": "o plano precisa de passos pequenos por tarefa.",
+                    "cuidado": (
+                        "grava em docs/superpowers/plans se o projeto não disser outro lugar."
+                    ),
+                }
+            ],
+            "como_instalar": "Instale o plugin da coleção.",
+            "limites": "Conduz a execução do plano.",
+            "referencias": ["ref-forte"],
+        },
+        alteracoes,
+    )
+
+
 def meta_glossario(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
@@ -551,3 +582,42 @@ def site(*conteudos: Conteudo, apresentacoes: tuple[Apresentacao, ...] = (), **b
     return montar_site(
         RAIZ, repo=Repositorio.de(conteudos), apresentacoes=apresentacoes, **parametros
     )
+
+
+def meta_trilha(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "id": "de-origem",
+            "titulo": "De origem",
+            "origem": "obra/superpowers",
+            "status": "avaliar",
+            "sequencia": [
+                {
+                    "ferramenta": "sp-writing-plans",
+                    "momento": "enquanto-escreve",
+                    "passo": "planejar",
+                }
+            ],
+            "bom_quando": "a mudança é grande e pede subagentes.",
+            "cuidado": "o plugin traz o bootstrap que obriga a acionar skills.",
+        },
+        alteracoes,
+    )
+
+
+def trilha(meta: dict[str, Any] | None = None) -> Conteudo:
+    meta = meta_trilha() if meta is None else meta
+    return Conteudo("trilha", f"trilhas/{meta['id']}.yml", meta, "")
+
+
+CORPO_TRILHA = """## Atritos
+
+Cada coleção resolve o laço do TDD de um jeito [ref:ref-forte].
+"""
+
+
+def pagina_trilha() -> Conteudo:
+    meta = meta_pagina(
+        titulo="Trilha", lead="Uma trilha, não um trilho.", referencias=["ref-forte"]
+    )
+    return Conteudo("pagina", "paginas/trilha.md", meta, CORPO_TRILHA)

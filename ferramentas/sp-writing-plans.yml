@@ -1,0 +1,29 @@
+id: sp-writing-plans
+titulo: writing-plans
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: planejar
+    papel: caminho
+    bom_quando: "o plano precisa de arquivos, assinaturas, testes e passos pequenos por tarefa, para um engenheiro que nunca viu o código executar."
+    cuidado: "grava em docs/superpowers/plans/ se o projeto não disser outro lugar, e o cabeçalho dela é outro: a seção Impacto Arquitetural que o fluxo mínimo pede entra por conta do projeto."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos; o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. A skill grava o plano em docs/superpowers/plans/, e a preferência do
+  projeto vale sobre esse padrão; cada tarefa traz arquivos, interfaces e passos de teste, código,
+  verificação e commit, e no fim ela pede à pessoa que escolha entre execução por subagentes ou
+  inline [ref:superpowers-writing-plans].
+referencias: [superpowers-writing-plans, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

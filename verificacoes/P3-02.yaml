@@ -1,5 +1,5 @@
 conteudo: P3-02
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'as quatro perguntas do guia do CISO: que conteúdo não confiável o agente ingere (o que um atacante poderia
@@ -39,6 +39,10 @@ afirmacoes:
   localizacao: secao_preenchida() (o corpo termina no próximo título de qualquer nível)
   resultado: confirmada
   nota: Comportamento também reproduzido na execução (spec sem parágrafo de abertura gerou o aviso).
+- texto: "o rótulo do marco, 'threat-model do agente', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P3-02/spec-triagem-de-chamados.md

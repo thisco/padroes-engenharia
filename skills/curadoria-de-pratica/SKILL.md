@@ -61,6 +61,10 @@ número. Esta skill é o procedimento; a regra está no `AGENTS.md` e o validado
 4. A força é `orienta`, a menos que exista código que dê a força declarada. Nesse caso,
    `mecanismo` aponta o código: um caminho do repositório ou
    `<componente>:<caminho>@<versao>`, com componente e versão de `componentes.yml`.
+
+   Coleção externa de skills ou ferramentas: fixe em `componentes.yml` a versão mais nova na data
+   da curadoria e revalide a cada `revisar_ate`. Se a evidência de uso veio de uma versão anterior,
+   o `limites` da ferramenta diz qual.
 5. O status do rascunho é `experimentar` ou `avaliar`. `adotar` exige uma referência forte
    (tipo `normativo`, `vendor` ou `padrao-aberto`, com `verificacao: V`) ou um caso interno
    citado em `casos:`; `evitar` exige citar no corpo o ID da prática que substitui.

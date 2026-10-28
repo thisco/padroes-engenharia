@@ -1,0 +1,62 @@
+conteudo: ferramenta-ao-test-driven-development
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "teste que falha antes do código, para toda lógica nova e todo bug"
+    ref: agent-skills-test-driven-development
+    localizacao: "seções 'Overview' e 'When to Use'"
+    resultado: confirmada
+  - texto: "o bug é reproduzido por um teste antes de qualquer correção"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'The Prove-It Pattern (Bug Fixes)'"
+    resultado: confirmada
+  - texto: "a skill manda descobrir como o repositório testa em vez de assumir um comando padrão"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'Discover the Stack First': 'Never assume a default like npm test'"
+    resultado: confirmada
+  - texto: "o ciclo é vermelho, verde, refatorar, com o refatorar dentro do laço"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'The TDD Cycle', passos 1 a 3"
+    resultado: confirmada
+  - texto: "preferir implementação real a mock; testar estado, não interação; DAMP; uma asserção por conceito"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'Writing Good Tests', subseções"
+    resultado: confirmada
+  - texto: "não repetir a suíte sem mudança no código"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'Common Rationalizations', última linha, e nota final de 'Verification'"
+    resultado: confirmada
+  - texto: "a verificação no navegador é remetida a outra skill da coleção"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'Browser Testing with DevTools', última frase (browser-testing-with-devtools)"
+    resultado: confirmada
+  - texto: "os exemplos são de um ecossistema só, e a skill cita a pasta references/ do repositório"
+    ref: agent-skills-test-driven-development
+    localizacao: "seção 'Discover the Stack First' (exemplos em TypeScript) e 'See Also' (../../references/testing-patterns.md)"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou o agent-skills duas vezes: 742dca5 em 2026-05-07, no primeiro harness, e 5e262b2 em 2026-06-10, no segundo"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, as duas linhas addyosmani/agent-skills"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "limites: o caso de origem usou a versão de junho de 2026 (commit 5e262b2)"
+      problema: "o caso instalou a coleção duas vezes, 742dca5 em 2026-05-07 e 5e262b2 em 2026-06-10, e o texto não dizia qual"
+      tratamento: "o limites e a afirmação citam as duas instalações"

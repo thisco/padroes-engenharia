@@ -1,6 +1,7 @@
 ---
 id: QLD-03
 titulo: "Validação local rígida: o que o CI roda, roda antes do push"
+marco: "CI roda antes do push"
 dominio: qualidade-bdd
 subdominio: null
 momento: antes-do-merge
@@ -12,7 +13,7 @@ referencias: [sdd-scaffold-steering-qualidade, gitlab-ci-local-readme, gitlab-pi
 relacionadas: [QLD-01, QLD-02, P1-03]
 receitas: [ligar-ci-gitlab-travas]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "Um único script roda suíte, linter, formatador e cobertura mínima; o job do CI chama esse script, e quem desenvolve o roda antes de pedir revisão."
 ferramentas_aprovadas: [gitlab-ci-local, pytest]

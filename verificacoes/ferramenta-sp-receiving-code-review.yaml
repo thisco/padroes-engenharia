@@ -1,0 +1,47 @@
+conteudo: ferramenta-sp-receiving-code-review
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "o padrão é ler tudo, entender, verificar contra o código, avaliar e responder com razão técnica"
+    ref: superpowers-receiving-code-review
+    localizacao: "seção 'The Response Pattern', passos 1 a 6"
+    resultado: confirmada
+  - texto: "concordância performática e agradecimento são proibidos"
+    ref: superpowers-receiving-code-review
+    localizacao: "seções 'Forbidden Responses' e 'Acknowledging Correct Feedback' ('ANY gratitude expression')"
+    resultado: confirmada
+  - texto: "um item pouco claro trava a implementação de todos os outros até ser esclarecido"
+    ref: superpowers-receiving-code-review
+    localizacao: "seção 'Handling Unclear Feedback': 'STOP - do not implement anything yet'"
+    resultado: confirmada
+  - texto: "o feedback da pessoa dona do trabalho é implementado depois de entendido; o de revisores externos é verificado antes"
+    ref: superpowers-receiving-code-review
+    localizacao: "seção 'Source-Specific Handling', subseções 'From your human partner' e 'From External Reviewers'"
+    resultado: confirmada
+  - texto: "a skill prevê contestar com razão técnica quando a sugestão está errada"
+    ref: superpowers-receiving-code-review
+    localizacao: "seção 'When To Push Back'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"

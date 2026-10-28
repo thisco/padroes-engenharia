@@ -1,5 +1,5 @@
 conteudo: CICD-01
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o CI do scaffold tem jobs de testes (suíte completa), de lint e formato (ruff check e ruff format --check) e de normas do PR (verificar_pr.py contra a base), com os scripts rodados em python3 -I
@@ -33,6 +33,10 @@ afirmacoes:
 - texto: o job roda o script da própria MR, então quem o altera na MR altera o que o avalia (mitigação por CODEOWNERS)
   ref: sdd-scaffold-readme
   localizacao: seção 'O que impede e o que orienta' (limite da trava de PR)
+  resultado: confirmada
+- texto: "o rótulo do marco, 'pipeline com gates', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

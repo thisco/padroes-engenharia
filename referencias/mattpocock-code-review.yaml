@@ -1,0 +1,11 @@
+id: mattpocock-code-review
+titulo: "mattpocock/skills: skill code-review"
+organizacao: mattpocock/skills
+url: https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/code-review/SKILL.md
+tipo: comunidade
+versao: "1.3.1"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "abertura (dois eixos em subagentes paralelos), seção 'Process' (passos 1 a 5) e 'Why two axes'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-20 e relida em 2026-10-21."

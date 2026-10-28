@@ -1,0 +1,37 @@
+id: sp-brainstorming
+titulo: brainstorming
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: entrevistar
+    papel: caminho
+    bom_quando: "a pessoa ainda não terminou de pensar o que quer: uma pergunta por mensagem, e o entendimento devolvido em trechos curtos para ela corrigir."
+    cuidado: "no fim a skill diz o tamanho do trabalho (tarefa rápida, mudança pequena ou projeto com desenho escrito) e nada é construído antes da aprovação, salvo quando a pessoa dispensa as perguntas ou pede um spike descartável."
+  - momento: antes-de-escrever
+    passo: escrever-spec
+    papel: caminho
+    bom_quando: "o trabalho é do tamanho de projeto e precisa de um desenho escrito que outro construtor consiga planejar sem voltar à pessoa."
+    cuidado: "grava em docs/superpowers/specs/ num repositório de software e pergunta fora dele, com a preferência da pessoa valendo sobre os dois; um subagente confere o desenho antes da entrega e, aprovado o desenho, o único passo seguinte aceito é a writing-plans."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos (esta cita builder-check-prompt.md e
+  visual-companion.md ao lado dela [ref:superpowers-brainstorming]); o README só documenta a
+  instalação por plugin [ref:superpowers-readme]. O caminho de cada harness está na página da
+  ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. Reescrita na 7.0.0 [ref:superpowers-release-notes]. A skill decide o
+  tamanho do trabalho em três níveis e só escreve o desenho para o nível de projeto; o desenho vai
+  para docs/superpowers/specs/, a preferência da pessoa vale sobre esse lugar, e depois da aprovação
+  ela só aceita a writing-plans como próximo passo [ref:superpowers-brainstorming]. Os tiers e a
+  spec com R<n> da constituição entram por conta do projeto.
+referencias: [superpowers-brainstorming, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias, superpowers-release-notes]

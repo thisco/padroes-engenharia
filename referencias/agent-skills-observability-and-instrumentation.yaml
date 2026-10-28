@@ -1,0 +1,11 @@
+id: agent-skills-observability-and-instrumentation
+titulo: "agent-skills: skill observability-and-instrumentation"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/observability-and-instrumentation/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'When to Use', 'Process' (passos 1 a 7, inclusive 'Writing Runbooks') e a nota final"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. Não existe na árvore do commit 5e262b2 (junho de 2026)."

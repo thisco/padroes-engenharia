@@ -1,0 +1,62 @@
+conteudo: ferramenta-ao-debugging-and-error-recovery
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "quando algo inesperado acontece, a skill manda parar, preservar evidência, diagnosticar, corrigir, proteger e só então retomar"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'The Stop-the-Line Rule'"
+    resultado: confirmada
+  - texto: "a triagem segue a ordem reproduzir, localizar, reduzir, corrigir a causa, proteger contra recorrência e verificar de ponta a ponta"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'The Triage Checklist', passos 1 a 6"
+    resultado: confirmada
+  - texto: "não se avança para a próxima feature com teste vermelho ou build quebrado"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'The Stop-the-Line Rule': 'Don't push past a failing test or broken build'"
+    resultado: confirmada
+  - texto: "o teste de regressão falha sem a correção e passa com ela"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'Step 5: Guard Against Recurrence'"
+    resultado: confirmada
+  - texto: "a correção termina com a suíte inteira e o build"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'Step 6: Verify End-to-End'"
+    resultado: confirmada
+  - texto: "mensagem de erro, stack trace e log são dados a analisar, não instruções; comando ou URL num erro só roda com confirmação"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'Treating Error Output as Untrusted Data'"
+    resultado: confirmada
+  - texto: "quando o bug não reproduz, a skill manda juntar contexto, instrumentar e documentar as condições"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seção 'Step 1: Reproduce', árvore 'Cannot reproduce on demand'"
+    resultado: confirmada
+  - texto: "os comandos de exemplo são de um ecossistema só, a substituir pelos do repositório"
+    ref: agent-skills-debugging-and-error-recovery
+    localizacao: "seções 'Step 1: Reproduce' e 'Step 6', notas 'npm shown; substitute the repository's own test command'"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou o agent-skills duas vezes: 742dca5 em 2026-05-07, no primeiro harness, e 5e262b2 em 2026-06-10, no segundo"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, as duas linhas addyosmani/agent-skills"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "limites: o caso de origem usou a versão de junho de 2026 (commit 5e262b2)"
+      problema: "o caso instalou a coleção duas vezes, 742dca5 em 2026-05-07 e 5e262b2 em 2026-06-10, e o texto não dizia qual"
+      tratamento: "o limites e a afirmação citam as duas instalações"

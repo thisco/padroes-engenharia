@@ -4,7 +4,7 @@ Cada `verificadores/<id>.py` decide, para uma prática, se um evento é `casa` (
 `nao-casa`. O ID é minúsculo com `_` (`seg_02.py`) e o teste mora em `tests/verificadores/test_<id>.py`.
 O contrato completo está no §3 de
 [`docs/specs/2026-10-08-curadoria-forca-dura-delta.md`](../docs/specs/2026-10-08-curadoria-forca-dura-delta.md);
-a decisão está na [ADR 0010](../docs/adr/0010-verificadores-internos-e-forca-dura.md).
+a decisão está na [ADR 0012](../docs/adr/0012-verificadores-internos-e-forca-dura.md).
 
 ## Regras do script
 

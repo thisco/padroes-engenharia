@@ -12,7 +12,7 @@ se comportam igual. O pacote leva a pasta. Cada prática passa pelo ciclo da ski
 **Stack:** Python 3.12 no repositório (verificadores compatíveis com 3.9+), pytest, ruff, o gerador do
 portal.
 
-**Spec:** `docs/specs/2026-10-08-curadoria-forca-dura-delta.md` (delta), ADR 0010, e a spec do motor
+**Spec:** `docs/specs/2026-10-08-curadoria-forca-dura-delta.md` (delta), ADR 0012, e a spec do motor
 `docs/specs/2026-10-06-motor-harness-cli-design.md` §5 e §6.
 
 ## Restrições globais
@@ -52,7 +52,7 @@ portal.
 **Arquivos:** `portal/gerador/pacote.py`, `tests/unidade/test_pacote.py`, `tests/verificadores/conftest.py`
 (novo), `tests/verificadores/test_contrato_dos_verificadores.py` (novo), `verificadores/README.md`
 (novo), `docs/specs/2026-10-06-motor-harness-cli-design.md` (§5 e §6.5: remissão ao delta),
-`docs/specs/2026-10-08-curadoria-forca-dura-delta.md` e `docs/adr/0010-...md` (já escritos; só commitar).
+`docs/specs/2026-10-08-curadoria-forca-dura-delta.md` e `docs/adr/0012-...md` (já escritos; só commitar).
 
 **Produz:**
 - `pacote.py`: `montar_pacote` inclui cada `verificadores/*.py` em `verificadores/<nome>` (ordenado,

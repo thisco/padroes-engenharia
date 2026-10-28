@@ -1,0 +1,37 @@
+id: sp-systematic-debugging
+titulo: systematic-debugging
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: investigar
+    papel: caminho
+    bom_quando: "você precisa entender uma causa antes de decidir: a skill exige ler o erro, reproduzir, conferir o que mudou e juntar evidência antes de qualquer correção."
+    cuidado: "uma hipótese por vez, testada com a menor mudança possível; quando a pessoa diz 'pare de chutar', a skill manda voltar à primeira fase."
+  - momento: enquanto-escreve
+    passo: bug
+    papel: caminho
+    bom_quando: "um teste quebrou ou o comportamento está errado: quatro fases, da causa raiz ao teste que falha antes da correção."
+    cuidado: "depois de três correções que falharam, a skill manda parar e questionar a arquitetura com a pessoa, em vez de tentar a quarta."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos (esta cita root-cause-tracing.md,
+  defense-in-depth.md e condition-based-waiting.md ao lado dela
+  [ref:superpowers-systematic-debugging]); o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. As quatro fases valem para qualquer problema técnico, inclusive de
+  desempenho e de build; a correção vem com um teste que falha antes, pela test-driven-development,
+  e a conclusão passa pela verification-before-completion. Depois de três correções que falharam, a
+  skill manda discutir a arquitetura com a pessoa antes de tentar outra
+  [ref:superpowers-systematic-debugging].
+referencias: [superpowers-systematic-debugging, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

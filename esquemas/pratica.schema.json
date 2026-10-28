@@ -11,6 +11,7 @@
   "properties": {
     "id": {"type": "string", "minLength": 1},
     "titulo": {"type": "string", "minLength": 1},
+    "marco": {"type": "string", "minLength": 1, "maxLength": 40, "description": "Rótulo curto do ciclo (R19)."},
     "dominio": {"type": "string", "minLength": 1},
     "subdominio": {"type": ["string", "null"], "minLength": 1},
     "momento": {"type": "string", "minLength": 1},

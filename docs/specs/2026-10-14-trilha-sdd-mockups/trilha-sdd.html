@@ -1,0 +1,502 @@
+<title>Trilha SDD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: prancheta técnica. Faixa do ciclo no topo; abaixo, uma coluna de leitura (≤ 72ch)
+   para a recomendação e uma grade larga para o mapa. Azul sólido = marco com mecanismo
+   (trava); âmbar tracejado = caminho que orienta. Mesma tese de cores do tema do portal. */
+:root {
+  --papel: #E8EDF2;
+  --papel-2: #DDE4EC;
+  --folha: #F6F8FB;
+  --tinta: #0A1A2F;
+  --tinta-2: #43556B;
+  --regra: #C3CDD8;
+  --traco: #6B7B8E;
+  --gov: #1351B4;
+  --gov-claro: #D3E0F5;
+  --ambar: #B06F12;
+  --ambar-claro: #F3E3C6;
+  --ambar-texto: #8A6220;
+  --erro: #B8452E;
+  --erro-claro: #F2DCD5;
+  --ok: #2F6B3A;
+  --ok-claro: #DCEBDD;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #0D1520; --papel-2: #142030; --folha: #111B28;
+    --tinta: #E3EAF2; --tinta-2: #A9B8C9; --regra: #2A3A4E; --traco: #7F91A6;
+    --gov: #7FA8F0; --gov-claro: #18294A;
+    --ambar: #E0A44A; --ambar-claro: #3A2A12; --ambar-texto: #E9B868;
+    --erro: #EE8F78; --erro-claro: #3C1E17; --ok: #8CCB96; --ok-claro: #18301C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #0D1520; --papel-2: #142030; --folha: #111B28;
+  --tinta: #E3EAF2; --tinta-2: #A9B8C9; --regra: #2A3A4E; --traco: #7F91A6;
+  --gov: #7FA8F0; --gov-claro: #18294A;
+  --ambar: #E0A44A; --ambar-claro: #3A2A12; --ambar-texto: #E9B868;
+  --erro: #EE8F78; --erro-claro: #3C1E17; --ok: #8CCB96; --ok-claro: #18301C;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--papel); color: var(--tinta);
+  font-family: var(--sans); font-size: 15px; line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.pagina { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; }
+h1, h2, h3 { letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--gov); }
+code, .mono { font-family: var(--mono); font-variant-ligatures: none; }
+code { font-size: 12.5px; background: var(--papel-2); padding: 1px 5px; border-radius: 2px; overflow-wrap: anywhere; }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--gov); outline-offset: 2px; }
+
+.rotulo { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--tinta-2); }
+
+/* cabeçalho */
+.topo { display: grid; gap: 14px; border-bottom: 2px solid var(--tinta); padding-bottom: 22px; }
+.topo h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; line-height: 1.05; }
+.topo h1 em { font-style: normal; color: var(--ambar-texto); }
+.tese { font-size: 18px; color: var(--tinta-2); max-width: 64ch; }
+
+/* legenda */
+.legenda { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 13px; color: var(--tinta-2); }
+.legenda span { display: inline-flex; gap: 8px; align-items: center; }
+.amostra { width: 26px; height: 14px; border-radius: 2px; }
+.amostra.marco { background: var(--gov-claro); border: 2px solid var(--gov); }
+.amostra.caminho { background: var(--ambar-claro); border: 2px dashed var(--ambar); }
+
+/* diagrama */
+.ciclo { margin-top: 26px; background: var(--folha); border: 1px solid var(--regra); padding: 18px 12px 8px; overflow-x: auto; }
+.ciclo svg { display: block; width: 100%; min-width: 640px; height: auto; }
+.ciclo .caixa { fill: var(--gov-claro); stroke: var(--gov); stroke-width: 2; }
+.ciclo .t-etapa { fill: var(--tinta); font: 700 19px var(--sans); }
+.ciclo .t-marco { fill: var(--tinta-2); font: 400 11.5px var(--mono); }
+.ciclo .seta { stroke: var(--tinta); stroke-width: 2; fill: none; }
+.ciclo .laco { stroke: var(--ambar); stroke-width: 2; stroke-dasharray: 7 5; fill: none; }
+.ciclo .t-laco { fill: var(--ambar-texto); font: 700 15px var(--sans); }
+.ciclo .t-sub { fill: var(--tinta-2); font: 400 11.5px var(--mono); }
+.ciclo .ponta { fill: var(--tinta); }
+.ciclo .ponta-laco { fill: var(--ambar); }
+.ciclo .trilho { stroke: var(--ambar); stroke-width: 1.5; stroke-dasharray: 3 4; }
+
+/* recomendação */
+.secao { margin-top: 48px; display: grid; gap: 18px; }
+.secao > header { display: grid; gap: 6px; }
+.secao h2 { font-size: 26px; font-weight: 800; }
+.leitura { max-width: 72ch; display: grid; gap: 14px; }
+.recs { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; counter-reset: r; }
+.recs li { counter-increment: r; display: grid; grid-template-columns: 34px 1fr; gap: 4px 12px; }
+.recs li::before { content: counter(r); grid-row: span 2; font: 700 15px var(--mono); color: var(--gov);
+  border: 2px solid var(--gov); width: 30px; height: 30px; display: grid; place-items: center; border-radius: 2px; }
+.recs strong { font-size: 16px; }
+.recs p { color: var(--tinta-2); min-width: 0; }
+.mudanca { border-left: 4px solid var(--erro); background: var(--erro-claro); padding: 12px 14px; }
+.mudanca strong { color: var(--erro); }
+
+/* trilhas prontas */
+.trilhas { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.trilha { background: var(--folha); border: 1px solid var(--regra); padding: 16px; display: grid; gap: 10px; align-content: start; }
+.trilha h3 { font-size: 17px; }
+.trilha .seq { font: 12px/1.7 var(--mono); color: var(--tinta); }
+.trilha .seq b { color: var(--ambar-texto); font-weight: 600; }
+.trilha dl { margin: 0; display: grid; gap: 4px; font-size: 13.5px; }
+.trilha dt { font-weight: 600; }
+.trilha dd { margin: 0 0 6px; color: var(--tinta-2); }
+.trilha.sua { border: 2px dashed var(--ambar); background: transparent; }
+
+/* filtros */
+.filtros { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; position: sticky; top: env(safe-area-inset-top, 0px);
+  background: var(--papel); padding-block: 10px; z-index: 2; border-bottom: 1px solid var(--regra); }
+.chip { font: 600 12.5px var(--sans); border: 1.5px solid var(--traco); background: transparent; color: var(--tinta);
+  padding: 5px 10px; border-radius: 2px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.chip[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.chip .n { font-family: var(--mono); font-weight: 400; opacity: .75; }
+.filtros .sep { width: 1px; height: 22px; background: var(--regra); margin-inline: 4px; }
+
+/* mapa */
+.etapa { margin-top: 30px; display: grid; gap: 14px; }
+.etapa-cab { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; border-bottom: 2px solid var(--tinta); padding-bottom: 8px; }
+.etapa-cab h3 { font-size: 22px; font-weight: 800; }
+.etapa-cab p { color: var(--tinta-2); font-size: 14px; }
+.marcos { display: flex; flex-wrap: wrap; gap: 8px; }
+.marco { background: var(--gov-claro); border: 2px solid var(--gov); padding: 6px 10px; font-size: 13px; display: inline-flex; gap: 8px; align-items: baseline; border-radius: 2px; }
+.marco .id { font: 600 12px var(--mono); color: var(--gov); }
+.marco .forca { font: 11px var(--mono); color: var(--tinta-2); text-transform: uppercase; letter-spacing: .05em; }
+.marco.orienta { background: transparent; border: 1.5px dashed var(--traco); }
+.marco.orienta .id { color: var(--tinta-2); }
+
+.passo { display: grid; grid-template-columns: minmax(150px, 210px) 1fr; gap: 12px; padding-block: 12px; border-bottom: 1px solid var(--regra); }
+.passo-nome { display: grid; gap: 4px; align-content: start; }
+.passo-nome strong { font-size: 15px; }
+.passo-nome span { color: var(--tinta-2); font-size: 13px; }
+.opcoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; min-width: 0; }
+.op { background: var(--ambar-claro); border: 1.5px dashed var(--ambar); padding: 10px 12px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.op.complemento { background: var(--folha); border-color: var(--traco); }
+.op.nossa { background: var(--gov-claro); border: 1.5px solid var(--gov); }
+.op-cab { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.op-nome { font: 600 13.5px var(--mono); overflow-wrap: anywhere; }
+.fonte { font: 600 10.5px var(--mono); padding: 1px 6px; border-radius: 2px; color: var(--folha); white-space: nowrap; }
+.fonte.MP { background: #7A4FB0; } .fonte.SP { background: #1F7A72; } .fonte.AO { background: #A4442E; } .fonte.NOS { background: var(--gov); }
+:root[data-theme="dark"] .fonte { color: #0D1520; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .fonte { color: #0D1520; } }
+.op .bom { font-size: 13px; }
+.op .cuidado { font-size: 12.5px; color: var(--tinta-2); }
+.op .cuidado::before { content: "cuidado: "; font-weight: 600; color: var(--erro); }
+.op .tam { font: 11px var(--mono); color: var(--tinta-2); }
+.op[hidden] { display: none !important; }
+.vazio { color: var(--tinta-2); font-size: 13px; font-style: italic; }
+
+/* fora e atritos */
+.tabela { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--regra); vertical-align: top; }
+th { font: 600 11.5px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--tinta-2); }
+td:first-child { font-family: var(--mono); font-size: 13px; white-space: nowrap; }
+
+.atritos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.atrito { border-top: 3px solid var(--tinta); padding-top: 10px; display: grid; gap: 6px; }
+.atrito h3 { font-size: 15px; }
+.atrito p { font-size: 14px; color: var(--tinta-2); }
+
+.rodape { margin-top: 56px; border-top: 1px solid var(--regra); padding-top: 14px; font-size: 12.5px; color: var(--tinta-2); display: grid; gap: 4px; }
+
+@media (max-width: 640px) {
+  .passo { grid-template-columns: 1fr; }
+  .tese { font-size: 16px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .op { transition: transform .12s ease; }
+  .op:hover { transform: translateY(-1px); }
+}
+</style>
+
+<div class="pagina">
+
+<header class="topo">
+  <span class="rotulo">padroes-engenharia · proposta para avaliação · 14/10/2026</span>
+  <h1>Uma trilha, <em>não um trilho</em></h1>
+  <p class="tese">O portal diz onde o time precisa chegar em cada etapa. Como chegar lá fica com o time: as skills são caminhos possíveis, nossas ou de terceiros, e nenhuma é a oficial.</p>
+  <div class="legenda" aria-label="Legenda">
+    <span><i class="amostra marco"></i>Marco: prática com mecanismo, vale em qualquer caminho</span>
+    <span><i class="amostra caminho"></i>Caminho: skill que ajuda a chegar ao marco</span>
+  </div>
+</header>
+
+<figure class="ciclo" aria-label="Ciclo básico: Especificar, Codar e Revisar, com o laço Aprender voltando ao início">
+  <svg viewBox="0 0 1000 300" role="img">
+    <title>Especificar, Codar, Revisar e o laço Aprender</title>
+    <defs>
+      <marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="ponta" d="M0,0 L10,5 L0,10 z"/></marker>
+      <marker id="pl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path class="ponta-laco" d="M0,0 L10,5 L0,10 z"/></marker>
+    </defs>
+    <!-- trilhas tracejadas soltas entre as caixas: os caminhos -->
+    <path class="trilho" d="M290 48 C 320 20, 360 20, 390 48"/>
+    <path class="trilho" d="M610 48 C 640 20, 680 20, 710 48"/>
+
+    <rect class="caixa" x="40" y="60" width="250" height="120" rx="2"/>
+    <text class="t-etapa" x="60" y="94">Especificar</text>
+    <text class="t-marco" x="60" y="122">P1-01 tier classificado</text>
+    <text class="t-marco" x="60" y="141">P1-05 sem ambiguidade aberta</text>
+    <text class="t-marco" x="60" y="160">P1-06 aprovação registrada</text>
+
+    <rect class="caixa" x="390" y="60" width="220" height="120" rx="2"/>
+    <text class="t-etapa" x="410" y="94">Codar</text>
+    <text class="t-marco" x="410" y="122">QLD-01 teste falhou antes</text>
+    <text class="t-marco" x="410" y="141">ARQ-02 arquitetura viva</text>
+    <text class="t-marco" x="410" y="160">DAD-01 migration intocada</text>
+
+    <rect class="caixa" x="710" y="60" width="250" height="120" rx="2"/>
+    <text class="t-etapa" x="730" y="94">Revisar</text>
+    <text class="t-marco" x="730" y="122">P1-09 veredito por requisito</text>
+    <text class="t-marco" x="730" y="141">CICD-01 pipeline verde</text>
+    <text class="t-marco" x="730" y="160">P1-10 sem drift spec ↔ código</text>
+
+    <line class="seta" x1="290" y1="120" x2="386" y2="120" marker-end="url(#p)"/>
+    <line class="seta" x1="610" y1="120" x2="706" y2="120" marker-end="url(#p)"/>
+
+    <path class="laco" d="M835 180 C 835 270, 165 270, 165 184" marker-end="url(#pl)"/>
+    <text class="t-laco" x="500" y="252" text-anchor="middle">Aprender</text>
+    <text class="t-sub" x="500" y="272" text-anchor="middle">P1-11 spec arquivada e destilada · CICD-03 changelog · erro mecânico vira checagem</text>
+  </svg>
+</figure>
+
+<section class="secao" id="recomendacao">
+  <header>
+    <span class="rotulo">Minha recomendação</span>
+    <h2>O portal mapeia marcos; as skills são caminhos</h2>
+  </header>
+  <div class="leitura">
+    <ol class="recs">
+      <li><strong>Cada etapa se define pelo que precisa ser verdade ao sair dela.</strong>
+        <p>São as práticas que já temos (P1-01, QLD-01, P1-09…). O mapa lista os marcos de cada etapa e, para cada passo, as skills que ajudam a chegar lá, com "bom quando" e "cuidado". Nenhuma leva selo de oficial. É o mesmo formato das práticas: o que fazer, como aparece quando falta, como verificar.</p></li>
+      <li><strong>O que é inegociável fica no mecanismo, não na skill.</strong>
+        <p>Tier classificado, aprovação registrada, veredito por requisito, segredo fora do repositório e migration intocada viram hook ou verificador pelo motor de harness. Assim valem com qualquer caminho, e é isso que deixa a trilha livre: o time escolhe a skill, e o marco confere o resultado.</p></li>
+      <li><strong>Ofereça trilhas prontas como exemplo, não como receita.</strong>
+        <p>Três combinações completas que já funcionam (guiada, enxuta e disciplinada), mais "monte a sua". Quem está começando escolhe uma pronta; quem já sabe o que quer combina por passo.</p></li>
+      <li><strong>No projeto, uma skill por passo.</strong>
+        <p>O portal mostra várias; o projeto instala uma. Duas skills de TDD instaladas juntas disputam o acionamento e dão instruções que se contradizem. O scaffold pergunta qual trilha usar e instala só ela.</p></li>
+      <li><strong>Cada skill externa passa pela curadoria como ferramenta.</strong>
+        <p>Entrada em <code>ferramentas/</code> com o campo <code>etapa</code>, versão fixada em <code>componentes.yml</code> e status <code>avaliar</code>. Ela só sobe para <code>adotar</code> com caso interno ou cenário do laboratório (<code>otimizacao/</code>) provando que funciona em PT-BR com os nossos marcos.</p></li>
+    </ol>
+    <div class="mudanca">
+      <strong>Isto muda uma decisão anterior.</strong> Tínhamos fechado a <code>sdd-lifecycle</code> 4.0 como "gates mais mapa". Com a ideia de trilha, eu faria diferente:
+      <ul>
+        <li>o mapa passa a ser o portal;</li>
+        <li>os gates vão para o mecanismo;</li>
+        <li>a <code>sdd-lifecycle</code> 3.x continua como está e vira a <em>trilha guiada</em>, uma opção entre outras.</li>
+      </ul>
+      Assim, nenhuma versão major é necessária agora. Essa mudança depende de você confirmar.
+    </div>
+  </div>
+</section>
+
+<section class="secao" id="trilhas">
+  <header>
+    <span class="rotulo">Trilhas prontas</span>
+    <h2>Quatro jeitos de percorrer o mesmo ciclo</h2>
+  </header>
+  <div class="trilhas">
+    <article class="trilha">
+      <span class="rotulo">nós · sdd-lifecycle 3.0</span>
+      <h3>Guiada</h3>
+      <p class="seq">uma skill conduz as fases 0 a 8: <b>tier → spec → gate → aprovação → plano → branch → TDD → revisão → destilação</b></p>
+      <dl><dt>Bom quando</dt><dd>o time está começando no SDD ou precisa de trilha de auditoria completa.</dd>
+          <dt>Cuidado</dt><dd>são 302 linhas, e ela conduz tudo; é o modelo que você quer deixar de impor.</dd></dl>
+    </article>
+    <article class="trilha">
+      <span class="rotulo">Matt Pocock · mattpocock/skills</span>
+      <h3>Enxuta</h3>
+      <p class="seq"><b>grill-with-docs → to-spec → tdd/implement → code-review → retro</b></p>
+      <dl><dt>Bom quando</dt><dd>o time já tem disciplina e quer pouco texto no contexto (≈ 400 linhas no total) e linguagem de domínio forte.</dd>
+          <dt>Cuidado</dt><dd>o tracker precisa ser configurado para <code>docs/specs</code>; refatorar fica fora do laço do TDD.</dd></dl>
+    </article>
+    <article class="trilha">
+      <span class="rotulo">Jesse Vincent · obra/superpowers</span>
+      <h3>Disciplinada</h3>
+      <p class="seq"><b>brainstorming → writing-plans → subagent-driven-development → requesting/receiving-code-review → verification → finishing</b></p>
+      <dl><dt>Bom quando</dt><dd>a mudança é grande, com subagentes e revisão por tarefa.</dd>
+          <dt>Cuidado</dt><dd>é pesada (≈ 2.000 linhas) e conduz por conta própria: o bootstrap obriga a acionar skills e o <code>brainstorming</code> trava a próxima etapa.</dd></dl>
+    </article>
+    <article class="trilha sua">
+      <span class="rotulo">time</span>
+      <h3>Monte a sua</h3>
+      <p class="seq">escolha um caminho por passo no mapa abaixo</p>
+      <dl><dt>Regra única</dt><dd>os marcos azuis continuam valendo, porque são conferidos por mecanismo e não pela skill.</dd>
+          <dt>Exemplo</dt><dd><code>grill-with-docs</code> → <code>writing-plans</code> → <code>tdd</code> → <code>code-review</code> + <code>verification-before-completion</code> → <code>retro</code>.</dd></dl>
+    </article>
+  </div>
+</section>
+
+<section class="secao" id="mapa">
+  <header>
+    <span class="rotulo">O mapa</span>
+    <h2>Marcos e caminhos por etapa</h2>
+    <p class="vazio" style="font-style:normal">Filtre pela fonte para ver o que cada coleção cobre. O tamanho é o número de linhas do <code>SKILL.md</code>, que o agente lê inteiro quando aciona a skill.</p>
+  </header>
+  <div class="filtros" role="group" aria-label="Filtrar por fonte">
+    <button class="chip" type="button" data-f="NOS" aria-pressed="true" id="f-nos"><span class="fonte NOS">nós</span>Nossas <span class="n"></span></button>
+    <button class="chip" type="button" data-f="MP" aria-pressed="true" id="f-mp"><span class="fonte MP">MP</span>Matt Pocock <span class="n"></span></button>
+    <button class="chip" type="button" data-f="SP" aria-pressed="true" id="f-sp"><span class="fonte SP">SP</span>superpowers <span class="n"></span></button>
+    <button class="chip" type="button" data-f="AO" aria-pressed="true" id="f-ao"><span class="fonte AO">AO</span>Addy Osmani <span class="n"></span></button>
+    <i class="sep" aria-hidden="true"></i>
+    <button class="chip" type="button" id="f-comp" aria-pressed="true">Mostrar complementos</button>
+  </div>
+  <div id="etapas"></div>
+</section>
+
+<section class="secao" id="fora">
+  <header>
+    <span class="rotulo">Fora do mapa</span>
+    <h2>O que eu deixaria de fora, e por quê</h2>
+  </header>
+  <div class="tabela">
+    <table>
+      <thead><tr><th>Skill</th><th>Motivo</th></tr></thead>
+      <tbody>
+        <tr><td>SP using-superpowers<br>AO using-agent-skills<br>MP ask-matt</td><td>São roteadores e condutores. O <code>using-superpowers</code> entra por hook no início da sessão e obriga a acionar uma skill antes de qualquer resposta, o que vai contra a P1-03 (constituição curta) e contra a ideia de trilha. O mapa do portal ocupa esse lugar.</td></tr>
+        <tr><td>MP to-tickets, implement-spec, wayfinder, triage</td><td>Pressupõem um tracker real, com um ticket por arquivo. O nosso rastreio fica nos checkboxes do plano.</td></tr>
+        <tr><td>SP diagnosing-superpowers</td><td>Serve só para depurar o próprio superpowers.</td></tr>
+        <tr><td>Plugins da Anthropic (feature-dev, pr-review-toolkit, code-review, security-review)</td><td>São comandos e agentes de um único harness, não skills portáveis. Podem entrar em "Por ferramenta" dentro das práticas.</td></tr>
+        <tr><td>antigravity-awesome-skills</td><td>Agregador com 4.844 skills, inclusive cópias das do superpowers. Citamos a origem, não a cópia.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="secao" id="atritos">
+  <header>
+    <span class="rotulo">Para decidir</span>
+    <h2>Atritos que a curadoria precisa resolver</h2>
+  </header>
+  <div class="atritos">
+    <div class="atrito"><h3>Onde a spec é gravada</h3><p>O <code>to-spec</code> e o <code>code-review</code> do Matt publicam num tracker; o setup aceita a opção "Other", e o scaffold pode entregar um <code>docs/agents/issue-tracker.md</code> apontando para <code>docs/specs</code> e <code>docs/plans</code>. O superpowers grava em <code>docs/superpowers/</code>, mas respeita a preferência do projeto.</p></div>
+    <div class="atrito"><h3>Idioma</h3><p>As três coleções são em inglês, e o template do <code>to-spec</code> traz títulos como "Problem Statement". O laboratório mede se o <code>AGENTS.md</code> basta para a spec sair em PT-BR, antes de qualquer skill subir para <code>adotar</code>.</p></div>
+    <div class="atrito"><h3>Instruções que se contradizem</h3><p>Refatorar fica fora do laço (MP), o código escrito antes do teste é apagado (SP), refatorar é a 3ª fase do laço (QLD-01). Cada trilha pronta precisa ser coerente por dentro, e a "monte a sua" mostra esses avisos.</p></div>
+    <div class="atrito"><h3>Origem que muda</h3><p>As três coleções mudam toda semana. Versão fixada, revalidação pelo <code>revisar_ate</code> e nada de PR para a origem: o <code>SCOPE.md</code> do Matt fecha propostas de skill nova.</p></div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <span>Fontes lidas nesta sessão: <span class="mono">mattpocock/skills@49dd158</span> (09/10/2026) · <span class="mono">obra/superpowers 6.4.1</span> · <span class="mono">addyosmani/agent-skills@aeac41d</span> (13/10/2026) · <span class="mono">thisco/sdd-lifecycle 3.0.0</span>. Todas sob licença MIT.</span>
+  <span>Força dos marcos tirada do frontmatter das práticas em <span class="mono">praticas/</span>. O "bom quando" e o "cuidado" são a minha leitura de cada SKILL.md e ainda não passaram pela curadoria.</span>
+</footer>
+
+</div>
+
+<script>
+const ETAPAS = [
+  { id: "especificar", nome: "Especificar", desc: "Entender o pedido e fixar o que vai ser construído.",
+    marcos: [["P1-01","Tier classificado antes de codar","orienta"],["P1-05","Ambiguidade marcada e resolvida","avisa"],["P1-06","Aprovação registrada na spec","avisa"],["P1-04","Spec como delta","orienta"],["SEG-01","Threat-model em 5 perguntas","orienta"],["ARQ-01","Decisão de arquitetura vira ADR","orienta"]],
+    passos: [
+      { nome: "Entrevistar", desc: "tirar da cabeça da pessoa o que ela quer", ops: [
+        ["MP","grill-with-docs",111,"caminho","o repositório já existe e você quer sair com glossário e ADR. Rodadas por fronteira, cada pergunta com resposta recomendada.","só pergunta, não escreve spec; combine com to-spec."],
+        ["SP","brainstorming",285,"caminho","você quer classificar o pedido antes (spike, limitado, arquitetural), perto dos nossos tiers.","conduz: no fim, só aceita writing-plans como próximo passo; uma pergunta por mensagem é mais lento."],
+        ["AO","interview-me",235,"caminho","o pedido está confuso e é preciso descobrir a intenção de verdade.","uma pergunta por vez até ~95% de confiança; pode ficar longa."],
+        ["AO","idea-refine",193,"complemento","a ideia ainda é vaga, antes mesmo de ser um pedido.","é etapa de produto, anterior ao SDD."]]},
+      { nome: "Escrever a spec", desc: "o documento que vai ser aprovado", ops: [
+        ["MP","to-spec",75,"caminho","a conversa já resolveu tudo e só falta sintetizar; ele combina as seams de teste.","template com histórias de usuário, em inglês; o R<n> e o cabeçalho de aprovação precisam vir da prática."],
+        ["AO","spec-driven-development",259,"caminho","a mudança parte de um PRD ou de objetivos de produto.","sobrepõe à nossa sdd-lifecycle; confira o formato do R<n>."],
+        ["NOS","sdd-lifecycle (fases 0–3)",302,"caminho","você quer tier, gate destrutivo e aprovação já embutidos no mesmo fluxo.","é a trilha guiada inteira, não um passo avulso."]]},
+      { nome: "Decidir e registrar", desc: "glossário e ADR", ops: [
+        ["MP","domain-modeling",74,"caminho","há termos em disputa no domínio; ADR só quando é difícil de reverter, surpreendente e fruto de trade-off.","o GLOSSARY.md fica sem detalhe de implementação, por regra."],
+        ["AO","documentation-and-adrs",297,"caminho","a decisão muda API pública ou precisa de documentação junto.","não tem o filtro de três condições; tende a gerar ADR demais."]]},
+      { nome: "Investigar", desc: "responder antes de decidir", ops: [
+        ["MP","research",12,"caminho","a pergunta exige fonte primária; sai um arquivo com citações.","roda em segundo plano; confira onde ele salva."],
+        ["MP","prototype",26,"caminho","a dúvida é de estado ou de tela, e precisa de algo rodando para ser respondida (UX-02).","o código é descartável; a resposta vai para a spec."],
+        ["AO","source-driven-development",216,"complemento","a decisão depende de documentação oficial de biblioteca ou de API.",""],
+        ["AO","api-and-interface-design",367,"complemento","a spec muda um contrato (faixa API).","longa; use só quando houver contrato."]]},
+      { nome: "Segurança", desc: "superfície nova", ops: [
+        ["NOS","threat-model",67,"caminho","a mudança toca entrada externa, auth, upload ou segredo.",""],
+        ["AO","security-and-hardening",216,"complemento","é preciso auditar um handler ou um fluxo de login.",""]]}
+    ]},
+  { id: "codar", nome: "Codar", desc: "Plano, branch e teste antes do código.",
+    marcos: [["QLD-01","Teste que falha, com as duas execuções no plano","orienta"],["QLD-02","Bug vira teste que reproduz","orienta"],["ARQ-02","Arquitetura Viva no mesmo PR","orienta"],["DAD-01","Migration aplicada não se edita","bloqueia"],["SEG-02","Segredo fora do repositório","orienta"],["UX-01","Tela com os quatro estados","orienta"]],
+    passos: [
+      { nome: "Planejar", desc: "tarefas com checkboxes", ops: [
+        ["SP","writing-plans",192,"caminho","o plano precisa de arquivos, testes e passos pequenos por tarefa, para outro agente executar.","grava em docs/superpowers/plans se o projeto não disser outro lugar; o (R<n>) e o Impacto Arquitetural vêm da prática."],
+        ["AO","planning-and-task-breakdown",257,"caminho","é preciso estimar e ordenar antes de detalhar.",""],
+        ["NOS","sdd-lifecycle (fase 4)",302,"caminho","você está na trilha guiada.","parte da trilha inteira."]]},
+      { nome: "Isolar", desc: "branch ou worktree", ops: [
+        ["SP","using-git-worktrees",167,"caminho","você quer trabalhar em paralelo sem sujar o diretório atual.",""]]},
+      { nome: "Executar", desc: "do plano ao código", ops: [
+        ["MP","implement",17,"caminho","Tier 1: a mudança cabe numa sessão; chama tdd e code-review.","depende de tracker para buscar o ticket; passe o caminho do plano."],
+        ["SP","subagent-driven-development",568,"caminho","Tier 2 com muitas tarefas independentes; um subagente por tarefa, com revisão.","a mais pesada do mapa."],
+        ["SP","executing-plans",373,"caminho","não há subagente disponível; o próprio agente executa.",""],
+        ["AO","incremental-implementation",249,"complemento","a mudança toca muitos arquivos e precisa sair em fatias finas.",""],
+        ["SP","dispatching-parallel-agents",167,"complemento","há duas ou mais tarefas sem estado compartilhado.",""]]},
+      { nome: "TDD", desc: "vermelho, verde", ops: [
+        ["MP","tdd",38,"caminho","você quer pouco texto e testes em seams combinadas com a pessoa, uma fatia vertical por vez.","refatorar fica fora do laço, diferente da QLD-01."],
+        ["SP","test-driven-development",330,"caminho","o time precisa de rigidez: código escrito antes do teste é apagado.","longa e dura; não instale junto de outra skill de TDD."],
+        ["AO","test-driven-development",398,"caminho","você quer mais exemplos e orientação por tipo de teste.","a mais longa das três."]]},
+      { nome: "Bug", desc: "do sintoma ao teste de regressão", ops: [
+        ["MP","diagnosing-bugs",138,"caminho","o bug resiste: primeiro um laço curto que fica vermelho nele, depois a correção com teste (QLD-02).",""],
+        ["SP","systematic-debugging",283,"caminho","você quer investigar a causa raiz em quatro fases antes de propor correção.",""],
+        ["AO","debugging-and-error-recovery",300,"caminho","o build quebrou ou algo que funcionava parou.",""]]},
+      { nome: "Domínio", desc: "conforme a faixa", ops: [
+        ["NOS","arquitetura-viva",101,"caminho","a mudança altera compose, IaC ou diagrama (ARQ-02).",""],
+        ["NOS","migrations-reversiveis",57,"caminho","há mudança de schema (DAD-01, DAD-02).",""],
+        ["NOS","estados-de-interface",60,"caminho","há tela nova (UX-01).",""],
+        ["AO","observability-and-instrumentation",238,"complemento","a feature vai para produção e precisa de log, métrica e alerta (OBS).",""],
+        ["MP","wizard",44,"complemento","há um passo que só a pessoa faz: segredo, provisionamento, painel de terceiro.",""]]}
+    ]},
+  { id: "revisar", nome: "Revisar", desc: "Conferir contra a spec e contra os padrões, com evidência.",
+    marcos: [["P1-09","Veredito por requisito","avisa"],["P1-10","Drift spec ↔ código reconciliado","orienta"],["CICD-01","Pipeline com gates","avisa"],["CICD-02","MR curta e verde","orienta"],["QLD-03","O que o CI roda, roda antes do push","orienta"]],
+    passos: [
+      { nome: "Revisar o diff", desc: "spec e padrões", ops: [
+        ["MP","code-review",89,"caminho","você quer dois eixos separados (padrões e spec) em subagentes paralelos, com 12 smells de base.","o eixo de spec precisa gerar a tabela de veredito por R<n> (P1-09)."],
+        ["SP","requesting-code-review",95,"caminho","você quer um subagente revisor por tarefa ou antes do merge.","um eixo só."],
+        ["AO","code-review-and-quality",398,"caminho","você quer revisão em muitos eixos, inclusive desempenho e segurança.","longa; pode diluir o eixo de spec."],
+        ["AO","doubt-driven-development",243,"complemento","decisões não triviais precisam de exame adversarial com contexto limpo.",""]]},
+      { nome: "Responder à revisão", desc: "sem concordar por educação", ops: [
+        ["SP","receiving-code-review",205,"caminho","chegou feedback questionável: ele exige verificar antes de aceitar.","não há equivalente nas outras coleções."]]},
+      { nome: "Evidência", desc: "antes de dizer que terminou", ops: [
+        ["SP","verification-before-completion",120,"caminho","sempre: rodar e colar a saída antes de afirmar que está pronto.","não há equivalente nas outras coleções."]]},
+      { nome: "PR e merge", desc: "fechar a branch", ops: [
+        ["MP","pr",170,"caminho","o corpo do PR precisa mostrar a mudança no menor visual possível, com antes e depois e o risco de reversão.",""],
+        ["SP","finishing-a-development-branch",225,"caminho","é hora de decidir entre merge, PR ou descartar, e limpar a branch.",""],
+        ["AO","shipping-and-launch",336,"complemento","há deploy em produção com checklist de lançamento.",""],
+        ["AO","code-simplification",331,"complemento","o código funciona mas ficou difícil de ler.",""]]}
+    ]},
+  { id: "aprender", nome: "Aprender", desc: "O laço: o que esta mudança ensina à próxima.",
+    marcos: [["P1-11","Spec arquivada e o permanente destilado","orienta"],["CICD-03","Tag, changelog e artefato","orienta"]],
+    passos: [
+      { nome: "Retro", desc: "melhorar o ambiente, não o código", ops: [
+        ["MP","retro",44,"caminho","depois de qualquer entrega, e principalmente das que deram errado: erro mecânico vira checagem, julgamento vira padrão. Alimenta o motor de harness.",""],
+        ["NOS","sdd-lifecycle (fase 8)",302,"caminho","você está na trilha guiada: changelog, spec arquivada, memória destilada.",""]]},
+      { nome: "Cuidar das instruções", desc: "skills, AGENTS.md, steering", ops: [
+        ["MP","writing-for-agents",81,"caminho","você vai escrever ou podar uma skill ou o AGENTS.md: leading words, no-ops, negação.",""],
+        ["SP","writing-skills",681,"caminho","a skill nova precisa de teste por cenário antes de ser publicada.","a mais longa de todas."],
+        ["AO","context-engineering",353,"complemento","a qualidade caiu no meio da sessão ou é hora de reorganizar os arquivos de regra.",""]]},
+      { nome: "Continuar depois", desc: "entre sessões", ops: [
+        ["MP","handoff",16,"complemento","a próxima sessão é noutro diretório, noutro harness ou com outra pessoa.","o plano com checkboxes já cobre a retomada no mesmo repositório."]]}
+    ]}
+];
+
+const ativo = { NOS: true, MP: true, SP: true, AO: true, comp: true };
+const NOMES = { NOS: "nós", MP: "MP", SP: "SP", AO: "AO" };
+
+function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+function montar() {
+  const raiz = document.getElementById("etapas");
+  const cont = { NOS: 0, MP: 0, SP: 0, AO: 0 };
+  ETAPAS.forEach(et => {
+    const s = el("div", "etapa"); s.id = et.id;
+    const cab = el("div", "etapa-cab"); cab.append(el("h3", null, et.nome), el("p", null, et.desc)); s.append(cab);
+    const ms = el("div", "marcos");
+    et.marcos.forEach(([id, t, f]) => {
+      const m = el("span", "marco" + (f === "orienta" ? " orienta" : ""));
+      m.append(el("span", "id", id), el("span", null, t), el("span", "forca", f)); ms.append(m);
+    });
+    s.append(ms);
+    et.passos.forEach(p => {
+      const linha = el("div", "passo");
+      const pn = el("div", "passo-nome"); pn.append(el("strong", null, p.nome), el("span", null, p.desc));
+      const ops = el("div", "opcoes");
+      p.ops.forEach(([fonte, nome, linhas, papel, bom, cuidado]) => {
+        cont[fonte]++;
+        const c = el("article", "op" + (fonte === "NOS" ? " nossa" : papel === "complemento" ? " complemento" : ""));
+        c.dataset.fonte = fonte; c.dataset.papel = papel;
+        const h = el("div", "op-cab"); h.append(el("span", "op-nome", nome), el("span", "fonte " + fonte, NOMES[fonte]));
+        c.append(h, el("p", "bom", "Bom quando " + bom));
+        if (cuidado) c.append(el("p", "cuidado", cuidado));
+        c.append(el("span", "tam", linhas + " linhas" + (papel === "complemento" ? " · complemento" : "")));
+        ops.append(c);
+      });
+      const v = el("p", "vazio", "Nenhum caminho desta fonte para este passo."); v.hidden = true;
+      ops.append(v);
+      linha.append(pn, ops); s.append(linha);
+    });
+    raiz.append(s);
+  });
+  document.querySelectorAll(".chip[data-f]").forEach(b => { b.querySelector(".n").textContent = cont[b.dataset.f]; });
+}
+
+function filtrar() {
+  document.querySelectorAll(".opcoes").forEach(box => {
+    let vis = 0;
+    box.querySelectorAll(".op").forEach(c => {
+      const ok = ativo[c.dataset.fonte] && (ativo.comp || c.dataset.papel !== "complemento");
+      c.hidden = !ok; if (ok) vis++;
+    });
+    box.querySelector(".vazio").hidden = vis > 0;
+  });
+}
+
+montar();
+document.querySelectorAll(".chip[data-f]").forEach(b => b.addEventListener("click", () => {
+  ativo[b.dataset.f] = !ativo[b.dataset.f]; b.setAttribute("aria-pressed", ativo[b.dataset.f]); filtrar();
+}));
+document.getElementById("f-comp").addEventListener("click", e => {
+  ativo.comp = !ativo.comp; e.currentTarget.setAttribute("aria-pressed", ativo.comp); filtrar();
+});
+</script>

@@ -1,5 +1,5 @@
 conteudo: ARQ-02
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a skill amarra diagrama, IaC e ambiente local com um manifesto e um script; quando divergem,
@@ -36,6 +36,10 @@ afirmacoes:
 - texto: o steering do projeto guarda a tabela de equivalências local para nuvem
   ref: sdd-scaffold-steering-arquitetura
   localizacao: seção Tabela de equivalências local para nuvem
+  resultado: confirmada
+- texto: "o rótulo do marco, 'arquitetura viva no mesmo PR', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

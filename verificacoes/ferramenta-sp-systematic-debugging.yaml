@@ -1,0 +1,63 @@
+conteudo: ferramenta-sp-systematic-debugging
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "nenhuma correção antes da investigação da causa raiz"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'The Iron Law': 'NO FIXES WITHOUT ROOT CAUSE INVESTIGATION FIRST'"
+    resultado: confirmada
+  - texto: "a primeira fase lê o erro, reproduz, confere o que mudou e junta evidência"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Phase 1: Root Cause Investigation', itens 1 a 4"
+    resultado: confirmada
+  - texto: "as quatro fases valem para qualquer problema técnico, inclusive desempenho e build"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'When to Use': test failures, bugs, performance problems, build failures"
+    resultado: confirmada
+  - texto: "uma hipótese por vez, testada com a menor mudança possível"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Phase 3: Hypothesis and Testing', itens 1 e 2"
+    resultado: confirmada
+  - texto: "a correção vem com um teste que falha antes, pela test-driven-development"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Phase 4: Implementation', item 1 ('Use the superpowers:test-driven-development skill')"
+    resultado: confirmada
+  - texto: "a conclusão passa pela verification-before-completion"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Phase 4', item 3 ('Use the superpowers:verification-before-completion skill before claiming success')"
+    resultado: confirmada
+  - texto: "depois de três correções que falharam a skill manda questionar a arquitetura com a pessoa"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Phase 4', itens 4 e 5: 'If ≥ 3: STOP and question the architecture' e 'Discuss with your human partner'"
+    resultado: confirmada
+  - texto: "quando a pessoa diz 'pare de chutar', a skill manda voltar à primeira fase"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'your human partner's Signals You're Doing It Wrong': 'Stop guessing' e 'STOP. Return to Phase 1'"
+    resultado: confirmada
+  - texto: "a skill cita arquivos ao lado dela (três técnicas de apoio)"
+    ref: superpowers-systematic-debugging
+    localizacao: "seção 'Supporting Techniques'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"

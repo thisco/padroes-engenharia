@@ -1,0 +1,34 @@
+id: mp-code-review
+titulo: code-review
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [P1-09]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: revisar
+    papel: caminho
+    bom_quando: "você quer o diff desde um ponto fixo revisado em dois eixos separados, padrões do repositório e aderência à spec, por dois subagentes em paralelo, sem que um mascare o outro."
+    cuidado: "o ponto fixo é obrigatório e é conferido antes; a spec é procurada nas issues citadas nos commits, num caminho dado, em docs/, specs/ ou .scratch/, e por fim perguntada; os dois relatórios não são fundidos nem reordenados."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela (/setup-matt-pocock-skills) uma
+  vez por repositório, incluindo-o ao escolher as skills no instalador [ref:mattpocock-readme]. Sem
+  instalador, copie skills/engineering/code-review/ do commit fixado (49dd158) para a pasta de
+  skills do harness [ref:mattpocock-code-review]; o README só documenta plugin e instalador
+  [ref:mattpocock-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill revisa o diff entre um ponto fixo e o HEAD em dois eixos,
+  padrões do repositório (com uma linha de base fixa de maus cheiros de código, sempre como juízo, e
+  o padrão documentado vencendo) e spec de origem, cada um num subagente, e apresenta os dois
+  relatórios sem fundir nem reordenar; a spec é procurada nas issues citadas nos commits, num
+  caminho dado, em docs/, specs/ ou .scratch/, e por fim perguntada [ref:mattpocock-code-review]. O
+  rastreador de issues que ela espera é definido uma vez por repositório pelo setup da coleção, que
+  aceita a opção Other com o fluxo descrito em um parágrafo
+  [ref:mattpocock-setup-matt-pocock-skills]; neste portal, esse parágrafo aponta docs/specs e
+  docs/plans. O veredito por requisito da P1-09 é o eixo Spec dela.
+referencias: [mattpocock-code-review, mattpocock-readme, portal-referencias, mattpocock-setup-matt-pocock-skills]

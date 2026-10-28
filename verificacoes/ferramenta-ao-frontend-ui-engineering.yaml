@@ -1,0 +1,57 @@
+conteudo: ferramenta-ao-frontend-ui-engineering
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a meta é interface com o sistema de design do projeto, sem o visual genérico de IA"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seções 'Overview' e 'Avoid the AI Aesthetic'"
+    resultado: confirmada
+  - texto: "estados de carregamento, vazio, erro e sucesso tratados"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Component Architecture' (container com isLoading, error e vazio) e 'Verification': 'Loading, empty, error, success, and permission states handled'"
+    resultado: confirmada
+  - texto: "acessibilidade WCAG 2.1 AA: teclado, rótulos e foco em todo componente"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Accessibility (WCAG 2.1 AA)'"
+    resultado: confirmada
+  - texto: "mobile-first, testado em 320, 768, 1024 e 1440 px"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "seção 'Responsive Design'"
+    resultado: confirmada
+  - texto: "referência externa é evidência, nunca modelo a copiar; sem referência, documentar premissas e conferir contra o sistema de design existente"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "subseção 'Reference-led UI quality'"
+    resultado: confirmada
+  - texto: "os exemplos são de uma pilha só, e a lista de acessibilidade fica na pasta references/"
+    ref: agent-skills-frontend-ui-engineering
+    localizacao: "exemplos em TSX ao longo da skill; 'See Also' (../../references/accessibility-checklist.md)"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou o agent-skills duas vezes: 742dca5 em 2026-05-07, no primeiro harness, e 5e262b2 em 2026-06-10, no segundo"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, as duas linhas addyosmani/agent-skills"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "limites: o caso de origem usou a versão de junho de 2026 (commit 5e262b2)"
+      problema: "o caso instalou a coleção duas vezes, 742dca5 em 2026-05-07 e 5e262b2 em 2026-06-10, e o texto não dizia qual"
+      tratamento: "o limites e a afirmação citam as duas instalações"
+    - afirmacao: "cuidado: sem sistema de design do projeto, documentar as premissas e conferir contra o que existe"
+      problema: "a condição da fonte é 'referências indisponíveis', e a conferência é contra o sistema de design existente"
+      tratamento: "texto reescrito com a condição da fonte"

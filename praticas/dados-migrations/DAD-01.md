@@ -1,6 +1,7 @@
 ---
 id: DAD-01
 titulo: Migration já aplicada não se edita
+marco: "migration intocada"
 resumo: "Migration que já está na branch de destino não muda; a correção é uma migration nova."
 dominio: dados-migrations
 subdominio: null
@@ -31,7 +32,7 @@ exemplos:
 referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, flyway-undo, fowler-evodb, sdd-scaffold-verificar-pr, sdd-scaffold-readme, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
 dono: engenharia
-revisado_em: 2026-10-06
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-06
 ---
 

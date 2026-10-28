@@ -1,5 +1,5 @@
 conteudo: P1-03
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a constituição fica inline no AGENTS.md porque a premissa precisa valer em todo turno, e o detalhe vai para docs/steering/, lido sob demanda pelas skills
@@ -51,6 +51,10 @@ afirmacoes:
   localizacao: seção sobre o mecanismo de enforcement da constituição e estrutura dos gates
   resultado: confirmada
   nota: A página foi lida por resumo do WebFetch; a frase é paráfrase.
+- texto: "o rótulo do marco, 'constituição curta', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-03/gitlab-ci.yml

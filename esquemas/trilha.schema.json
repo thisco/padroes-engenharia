@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Trilha",
+  "description": "trilhas/<slug>.yml (spec da trilha, R5): sequência de ferramentas skill, uma por passo. É exemplo, não receita.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "titulo", "origem", "status", "sequencia", "bom_quando", "cuidado"],
+  "properties": {
+    "id": {"$ref": "#/$defs/slug"},
+    "titulo": {"type": "string", "minLength": 1},
+    "origem": {"type": "string", "minLength": 1},
+    "status": {"enum": ["adotar", "experimentar", "avaliar", "evitar"]},
+    "sequencia": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ferramenta", "momento", "passo"],
+        "properties": {
+          "ferramenta": {"$ref": "#/$defs/slug"},
+          "momento": {"$ref": "#/$defs/slug"},
+          "passo": {"$ref": "#/$defs/slug"}
+        }
+      }
+    },
+    "bom_quando": {"type": "string", "minLength": 1},
+    "cuidado": {"type": "string", "minLength": 1},
+    "casos": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/slug"}}
+  },
+  "$defs": {"slug": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$"}}
+}

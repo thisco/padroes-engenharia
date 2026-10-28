@@ -1,5 +1,5 @@
 conteudo: IAC-02
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o modelo de steering pede registrar a proibição de operações manuais fora do CI/CD por perda de rastreabilidade
@@ -30,6 +30,10 @@ afirmacoes:
 - texto: a documentação recomenda versionar o .terraform.lock.hcl para discutir mudanças de dependência em revisão de código
   ref: opentofu-dependency-lock
   localizacao: nome do arquivo e recomendação de versionamento
+  resultado: confirmada
+- texto: "o rótulo do marco, 'plano de infra no PR', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

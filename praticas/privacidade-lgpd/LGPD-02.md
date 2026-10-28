@@ -1,6 +1,7 @@
 ---
 id: LGPD-02
 titulo: Dado pessoal não entra em prompt, log nem teste sem máscara
+marco: "dado pessoal mascarado"
 dominio: privacidade-lgpd
 subdominio: null
 momento: enquanto-escreve
@@ -19,8 +20,8 @@ aplica: []
 referencias: [lgpd, gateway-poc-cenario-02-policies, gateway-poc-cenario-04-vector-stores]
 relacionadas: [LGPD-01, P2-04, P3-05]
 dono: engenharia
-revisado_em: 2026-10-08
-revisar_ate: 2027-04-08
+revisado_em: 2026-10-21
+revisar_ate: 2027-04-06
 resumo: "CPF e e-mail em claro não vão para fixture de teste, log nem prompt: o dado é mascarado antes do modelo e do log, e o teste usa dado sintético."
 ferramentas_aprovadas: []
 mapeia: [lgpd:art-6]

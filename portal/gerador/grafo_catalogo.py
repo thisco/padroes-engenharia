@@ -67,10 +67,34 @@ def montar_grafo(site: Site) -> dict[str, Any]:
         if not c.praticas:
             continue
         celula = f"celula:{c.dominio}|{c.momento}"
-        rotulo = f"{espinha.faixa(c.dominio).titulo} · {espinha.momento(c.momento).titulo}"
+        rotulo = f"{espinha.faixa(c.dominio).titulo} · {espinha.momento(c.momento).rotulo}"
         no(celula, rotulo, "celula", ESPINHA, "", c.dominio)
         liga(celula, f"dominio:{c.dominio}", "pertence", ESPINHA)
         liga(celula, f"momento:{c.momento}", "pertence", ESPINHA)
+    for m in espinha.momentos:
+        for passo in m.passos:
+            no(
+                f"passo:{m.slug}/{passo.slug}",
+                passo.titulo,
+                "passo",
+                ESPINHA,
+                passo.desc,
+                "espinha",
+            )
+            liga(f"passo:{m.slug}/{passo.slug}", f"momento:{m.slug}", "pertence", ESPINHA)
+
+    # As skills entram antes das práticas: `no()` guarda o primeiro registro, e o `rationale`
+    # da skill (os `bom_quando` dos caminhos, que a busca léxica lê) não pode se perder para o
+    # nó vazio que `ferramentas_aprovadas` cria.
+    for f in site.repo.ferramentas:
+        if f.meta.get("categoria") != "skill":
+            continue
+        fid = f"ferramenta:{f.meta['id']}"
+        caminhos = f.meta.get("caminhos") or []
+        bom_quando = " ".join(c["bom_quando"] for c in caminhos)
+        no(fid, f.meta["titulo"], "ferramenta", f.caminho_relativo, bom_quando, "ferramentas")
+        for c in caminhos:
+            liga(fid, f"passo:{c['momento']}/{c['passo']}", "caminho", f.caminho_relativo)
 
     referencias = {r.chave: r for r in site.repo.referencias}
     for p in site.catalogo.praticas.values():
@@ -139,6 +163,19 @@ def montar_grafo(site: Site) -> dict[str, Any]:
         for pid in r.meta.get("praticas") or []:
             if pid in site.catalogo.praticas:
                 liga(rid, pid, "ensina", r.caminho_relativo)
+
+    for t in site.repo.trilhas:
+        tid = f"trilha:{t.meta['id']}"
+        no(
+            tid,
+            t.meta["titulo"],
+            "trilha",
+            t.caminho_relativo,
+            t.meta.get("bom_quando", ""),
+            "trilhas",
+        )
+        for item in t.meta.get("sequencia") or []:
+            liga(tid, f"ferramenta:{item['ferramenta']}", "usa", t.caminho_relativo)
 
     links = [
         {

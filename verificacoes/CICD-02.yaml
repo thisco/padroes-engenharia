@@ -1,6 +1,6 @@
 # afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-07); novas: CI_MERGE_REQUEST_DIFF_BASE_SHA, GIT_DEPTH (reescrita) e allow_failure
 conteudo: CICD-02
-verificado_em: '2026-10-08'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a capacidade trabalhar em lotes pequenos é quebrar o trabalho em unidades curtas e independentes, o que reduz o tempo para ter retorno sobre as mudanças e facilita achar e corrigir problemas
@@ -47,6 +47,10 @@ afirmacoes:
 - texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
   ref: gitlab-variaveis-predefinidas
   localizacao: 'tabela de variáveis de pipelines de merge request (aberta na web em 2026-10-08, de novo na rodada de correção; linha "CI_MERGE_REQUEST_DIFF_BASE_SHA", "The base SHA of the merge request diff")'
+  resultado: confirmada
+- texto: "o rótulo do marco, 'MR pequena e verde', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

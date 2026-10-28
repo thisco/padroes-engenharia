@@ -1,0 +1,11 @@
+id: superpowers-using-git-worktrees
+titulo: "superpowers: skill using-git-worktrees"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/using-git-worktrees/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Step 0: Detect Existing Isolation', 'Step 1: Create Isolated Workspace' (1a e 1b, 'Safety Verification') e 'Step 3: Verify Clean Baseline'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

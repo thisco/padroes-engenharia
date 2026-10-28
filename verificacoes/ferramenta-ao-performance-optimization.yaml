@@ -1,0 +1,58 @@
+conteudo: ferramenta-ao-performance-optimization
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "medir antes de otimizar; sem evidência de problema, não otimizar"
+    ref: agent-skills-performance-optimization
+    localizacao: "seções 'Overview' e 'When to Use' ('When NOT to use')"
+    resultado: confirmada
+  - texto: "o fluxo é medir, identificar, corrigir, verificar e proteger"
+    ref: agent-skills-performance-optimization
+    localizacao: "seção 'The Optimization Workflow'"
+    resultado: confirmada
+  - texto: "corrigir uma coisa por vez e medir de novo do mesmo jeito que a linha de base"
+    ref: agent-skills-performance-optimization
+    localizacao: "seção 'Step 4: Verify (Keep or Revert)': 'Change one thing at a time' e 'Re-measure the way you measured the baseline'"
+    resultado: confirmada
+  - texto: "resultado neutro é reversão"
+    ref: agent-skills-performance-optimization
+    localizacao: "seção 'Step 4', tabela e frase 'Neutral is a revert, not a keep'"
+    resultado: confirmada
+  - texto: "cada tentativa, inclusive a revertida, fica registrada"
+    ref: agent-skills-performance-optimization
+    localizacao: "subseção 'Log every attempt, including the reverted ones'"
+    resultado: confirmada
+  - texto: "metas de Core Web Vitals e árvore de onde medir pelo sintoma"
+    ref: agent-skills-performance-optimization
+    localizacao: "seções 'Core Web Vitals Targets' e 'Where to Start Measuring'"
+    resultado: confirmada
+  - texto: "as correções dos gargalos ficam em arquivo ao lado da skill, e a lista na pasta references/ do repositório"
+    ref: agent-skills-performance-optimization
+    localizacao: "seção 'Step 3: Fix the Bottleneck' (references/optimization-patterns.md) e 'See Also' (../../references/performance-checklist.md)"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou o agent-skills duas vezes: 742dca5 em 2026-05-07, no primeiro harness, e 5e262b2 em 2026-06-10, no segundo"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, as duas linhas addyosmani/agent-skills"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "limites: o caso de origem usou a versão de junho de 2026 (commit 5e262b2)"
+      problema: "o caso instalou a coleção duas vezes, 742dca5 em 2026-05-07 e 5e262b2 em 2026-06-10, e o texto não dizia qual"
+      tratamento: "o limites e a afirmação citam as duas instalações"

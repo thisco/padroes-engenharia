@@ -14,9 +14,9 @@
 {% if caminhos %}
 <section aria-label="Comece aqui">
   <h2>Comece aqui</h2>
-  <div class="grade">
+  <div class="tr-portas">
 {% for caminho in caminhos %}
-    <article class="cartao"><h3>{{ caminho.titulo }}</h3><p class="s">{{ caminho.texto }}</p><a class="lk" href="{{ raiz }}{{ caminho.href }}">Abrir →</a></article>
+    <a class="tr-porta" href="{{ raiz }}{{ caminho.href }}"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span><em>{{ caminho.rotulo }}</em></a>
 {% endfor %}
   </div>
 </section>
@@ -45,22 +45,16 @@
   </div>
 </section>
 {% endif %}
-<div class="duas portas">
-  <section aria-label="Para quem desenvolve">
-    <h2>Para quem desenvolve</h2>
-    <p class="lead">Comece pelo momento em que você está.</p>
-    <div class="passos">
-{% for m in momentos %}
-      <div class="passo">
-        <span class="n">{{ loop.index }}</span>
-        <b>{{ m.titulo }}</b>
-        <p>{{ m.acao }}</p>
-        <p class="mono pequeno">{{ m.contagem }}</p>
-        <p class="mono pequeno">{{ m.fases_texto }}</p>
-        <a href="{{ raiz }}espinha.html#momento-{{ m.slug }}">Ver a coluna na espinha →</a>
-      </div>
-{% endfor %}
-    </div>
+<div class="duas">
+  <section aria-label="O ciclo de toda mudança">
+    <h2>O ciclo de toda mudança</h2>
+    <p class="lead">Em cada etapa, o portal diz o que precisa ser verdade ao sair dela; como chegar lá fica com o time.</p>
+    {{ c.ciclo_compacto(ciclo, raiz) }}
+{% if tem_trilha %}
+    <p><a href="{{ raiz }}trilha.html">Ver a trilha: marcos e caminhos de cada etapa →</a></p>
+{% else %}
+    <p><a href="{{ raiz }}espinha.html">Ver a espinha →</a></p>
+{% endif %}
   </section>
   {{ c.bloco_escuro("Para o agente", bloco, chips) }}
 </div>
@@ -68,11 +62,11 @@
   <h2>Como ler o portal</h2>
   <div class="duas">
     <div>
-      <p class="lead">Linha = domínio, coluna = momento, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
+      <p class="lead">Linha = domínio, coluna = etapa, célula = práticas. A cor de cada quadrado é a força da prática mais forte da célula: {{ a_definir_texto(site) }} ainda estão a definir.</p>
       <div class="rola">
       <table class="matriz mini">
         <thead>
-          <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ loop.index }}</abbr></th>{% endfor %}</tr>
+          <tr><th scope="col">Domínio</th>{% for m in site.espinha.momentos %}<th scope="col"><abbr title="{{ m.titulo }}">{{ m.rotulo }}</abbr></th>{% endfor %}</tr>
         </thead>
         <tbody>
 {% for faixa in site.espinha.faixas %}
@@ -80,7 +74,7 @@
             <th scope="row"><a href="{{ raiz }}dominios/{{ faixa.slug }}.html">{{ faixa.titulo }}</a></th>
 {% for m in site.espinha.momentos %}
 {% set celula = site.catalogo.celula(faixa.slug, m.slug) %}
-            <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.titulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
+            <td><span class="q {{ celula.forca_max or 'vazia' }}"></span><span class="vh">{{ m.rotulo }}: {{ ROTULO_FORCA[celula.forca_max] if celula.forca_max else "a definir" }}</span></td>
 {% endfor %}
           </tr>
 {% endfor %}

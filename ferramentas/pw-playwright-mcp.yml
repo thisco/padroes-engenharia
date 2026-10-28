@@ -1,0 +1,35 @@
+id: pw-playwright-mcp
+titulo: Playwright MCP
+categoria: teste
+colecao: playwright-mcp
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.0.83"
+dono: engenharia
+praticas: [UX-01, QLD-03]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: evidencia
+    papel: caminho
+    bom_quando: "a evidência de uma tela é um screenshot tirado pelo próprio agente: navegar, redimensionar, clicar, capturar e fechar, as cinco ferramentas que o caso de origem permitiu; para agir sobre a página, o servidor recomenda o snapshot de acessibilidade."
+    cuidado: "é ferramenta, não skill: dá ao agente mãos no navegador, não um procedimento; o servidor não é fronteira de segurança, e a configuração padrão do README usa @latest, que o portal troca pela versão fixada."
+  - momento: enquanto-escreve
+    passo: tdd
+    papel: complemento
+    bom_quando: "o teste de ponta a ponta precisa ser explorado antes de ser escrito: o agente percorre a tela pelo snapshot de acessibilidade e escreve o cenário Playwright depois."
+    cuidado: "o próprio README recomenda a CLI com skills para agentes de código, por gastar menos contexto, e reserva o MCP a laços com estado persistente."
+como_instalar: |
+  No arquivo de configuração de servidores MCP do seu harness, registre o servidor playwright com o
+  comando npx e o argumento @playwright/mcp@0.0.83; o README mostra a forma padrão, com @latest no
+  lugar da versão, e exige Node.js 18 ou mais novo [ref:playwright-mcp-readme]. Os argumentos de
+  linha de comando (navegador, headless, viewport, hosts permitidos) entram na lista args
+  [ref:playwright-mcp-readme].
+limites: |
+  O caso de origem permitiu cinco ferramentas do servidor (navegar, redimensionar, clicar, capturar
+  tela e fechar) [ref:origem-do-modelo-permissoes] e usou Playwright nos planos para cenários de
+  ponta a ponta e checkpoint com screenshot [ref:origem-do-modelo-plano-playwright]; o portal fixa a
+  0.0.83 [ref:portal-referencias]. O servidor opera sobre a árvore de acessibilidade, sem modelo de
+  visão; o README diz que ele não é fronteira de segurança, e recomenda a CLI com skills para
+  agentes de código, reservando o MCP a laços com estado persistente [ref:playwright-mcp-readme].
+referencias: [playwright-mcp-readme, origem-do-modelo-permissoes, origem-do-modelo-plano-playwright, portal-referencias]

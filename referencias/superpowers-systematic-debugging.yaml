@@ -1,0 +1,11 @@
+id: superpowers-systematic-debugging
+titulo: "superpowers: skill systematic-debugging"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/systematic-debugging/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'The Iron Law', 'When to Use', 'The Four Phases' (fases 1 a 4), 'your human partner's Signals You're Doing It Wrong' e 'Supporting Techniques'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A 7.0.0 ganha o passo Investigar no portal (delta v3, R15')."

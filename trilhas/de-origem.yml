@@ -1,0 +1,26 @@
+id: de-origem
+titulo: De origem
+origem: superpowers, agent-skills, frontend-design e Playwright, com os gates do portal
+status: adotar
+casos: [origem-do-modelo]
+sequencia:
+  - {ferramenta: sp-brainstorming, momento: antes-de-escrever, passo: entrevistar}
+  - {ferramenta: sp-brainstorming, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: ao-doubt-driven-development, momento: antes-de-escrever, passo: decidir}
+  - {ferramenta: sp-systematic-debugging, momento: antes-de-escrever, passo: investigar}
+  - {ferramenta: ao-security-and-hardening, momento: antes-de-escrever, passo: seguranca}
+  - {ferramenta: sp-writing-plans, momento: enquanto-escreve, passo: planejar}
+  - {ferramenta: sp-using-git-worktrees, momento: enquanto-escreve, passo: isolar}
+  - {ferramenta: sp-subagent-driven-development, momento: enquanto-escreve, passo: executar}
+  - {ferramenta: sp-test-driven-development, momento: enquanto-escreve, passo: tdd}
+  - {ferramenta: sp-systematic-debugging, momento: enquanto-escreve, passo: bug}
+  - {ferramenta: an-frontend-design, momento: enquanto-escreve, passo: dominio}
+  - {ferramenta: sp-requesting-code-review, momento: antes-do-merge, passo: revisar}
+  - {ferramenta: sp-receiving-code-review, momento: antes-do-merge, passo: responder}
+  - {ferramenta: pw-playwright-mcp, momento: antes-do-merge, passo: evidencia}
+  - {ferramenta: sp-finishing-a-development-branch, momento: antes-do-merge, passo: pr-e-merge}
+  - {ferramenta: sdd-lifecycle, momento: depois-da-entrega, passo: retro}
+  - {ferramenta: sp-writing-skills, momento: depois-da-entrega, passo: instrucoes}
+  - {ferramenta: ao-context-engineering, momento: depois-da-entrega, passo: continuar}
+bom_quando: "a mudança é grande, com subagentes, revisão por tarefa e tela para conferir. É a combinação em que o modelo nasceu: o gate destrutivo era o doubt-driven-development."
+cuidado: "o plugin do superpowers traz um bootstrap que obriga a acionar skills, e o brainstorming só aceita writing-plans depois. Sem subagente, troque subagent-driven-development por executing-plans."

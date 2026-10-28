@@ -1,5 +1,5 @@
 conteudo: OBS-01
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o modelo de dados de log do OpenTelemetry tem Timestamp (hora do evento na origem), SeverityText (nível como a origem o escreveu), TraceId e SpanId, Body, Attributes, Resource (origem do log) e EventName (tipo do evento)
@@ -31,6 +31,10 @@ afirmacoes:
   localizacao: art. 5º, I, e art. 6º, III
   resultado: confirmada
   nota: A página do Planalto recusou a conexão (ECONNRESET) nesta sessão; as duas passagens foram conferidas na releitura de 2026-10-06 registrada na referência lgpd (outra sessão, mesmo dia).
+- texto: "o rótulo do marco, 'log em JSON sem dado pessoal', resume o que a prática exige e aparece na etapa Codar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Codar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/OBS-01/verificar-log.py

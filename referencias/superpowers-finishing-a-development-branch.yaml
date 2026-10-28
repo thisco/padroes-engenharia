@@ -1,0 +1,11 @@
+id: superpowers-finishing-a-development-branch
+titulo: "superpowers: skill finishing-a-development-branch"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/finishing-a-development-branch/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Step 1: Verify Tests', 'Step 3: Determine Base Branch', 'Step 4: Present Options', 'If your human partner asks to discard the work', 'Step 6: Cleanup Workspace' e 'Common Rationalizations'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

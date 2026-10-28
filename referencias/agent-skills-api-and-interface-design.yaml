@@ -1,0 +1,11 @@
+id: agent-skills-api-and-interface-design
+titulo: "agent-skills: skill api-and-interface-design"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/api-and-interface-design/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Overview', 'Core Principles' (lei de Hyrum, regra de uma versão, itens 1 a 6), 'REST API Patterns' e 'TypeScript Interface Patterns'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

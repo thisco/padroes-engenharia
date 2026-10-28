@@ -1,0 +1,35 @@
+id: ao-context-engineering
+titulo: context-engineering
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [P1-03, P1-11]
+receitas: []
+caminhos:
+  - momento: depois-da-entrega
+    passo: continuar
+    papel: caminho
+    bom_quando: "a sessão vai acabar ou a qualidade do agente caiu: a skill diz o que persistir antes de sair (escopo e decisões, status da tarefa, árvore de trabalho, comandos de verificação, pendências) e o que ler ao voltar."
+    cuidado: "a sessão nova é segura num limite de tarefa concluída, não num número de tokens; aprovação só vale se um artefato durável a registra, e o corte de contexto começa aos 75% da janela, não quando ela enche."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme]. Sem instalador, copie
+  skills/context-engineering/ e references/ do commit fixado (aeac41d) para a pasta de skills do
+  harness, com references/ dois níveis acima da pasta da skill, como os links ../../references/
+  exigem [ref:agent-skills-context-engineering]; o README sugere, em vez disso, copiar o checklist
+  para dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está na página
+  da ferramenta dele.
+limites: |
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill organiza o contexto em cinco níveis, do arquivo de regras
+  carregado em toda sessão ao histórico da conversa; define o contrato de retomada entre sessões,
+  manda tratar arquivo de configuração e documentação externa como dado a verificar, e pede que o
+  material da tarefa fique no fim do contexto. Os nomes de arquivo de regras citados são os de cada
+  ferramenta [ref:agent-skills-context-engineering]; neste repositório o arquivo de regras é o
+  AGENTS.md.
+referencias: [agent-skills-context-engineering, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

@@ -1,0 +1,11 @@
+id: superpowers-readme
+titulo: "superpowers: README"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/README.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seção Installation (parágrafo de abertura e subseções por harness)"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A seção de instalação nomeia harnesses e marketplaces; o portal remete à página de cada harness."

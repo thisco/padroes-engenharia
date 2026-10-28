@@ -25,7 +25,7 @@
         "properties": {
           "titulo": {"$ref": "#/$defs/texto"},
           "texto": {"$ref": "#/$defs/texto"},
-          "destino": {"type": "string", "pattern": "^(guias|receitas|starters)/[a-z0-9][a-z0-9-]*$"}
+          "destino": {"type": "string", "pattern": "^(trilha|(guias|receitas|starters)/[a-z0-9][a-z0-9-]*)$"}
         }
       }
     },

@@ -26,6 +26,7 @@ R_GATILHO = "R-GATILHO"
 R_MENSAGEM = "R-MENSAGEM"
 R_NUCLEO = "R-NUCLEO"
 R_ADOTAR = "R-ADOTAR"
+R_ADOTAR_SKILL = "R-ADOTAR-SKILL"
 R_EVITAR = "R-EVITAR"
 R_VERIFICACAO = "R-VERIFICACAO"
 R_AGENTS = "R-AGENTS"
@@ -43,6 +44,12 @@ R_PROMPT = "R-PROMPT"
 R_APRESENTACAO = "R-APRESENTACAO"
 R_LINK_INTERNO = "R-LINK-INTERNO"
 R_PACOTE = "R-PACOTE"
+R_PASSO = "R-PASSO"
+R_CAMINHO = "R-CAMINHO"
+R_COLECAO = "R-COLECAO"
+R_CASO_REF = "R-CASO-REF"
+R_CASO_ORIGEM = "R-CASO-ORIGEM"
+R_TRILHA = "R-TRILHA"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -63,6 +70,7 @@ DESCRICOES: dict[str, str] = {
     R_MENSAGEM: "mensagem do mecanismo ausente, longa, sem ID no início ou sem URL no fim",
     R_NUCLEO: "núcleo composto com todas as faixas acima de 100 linhas ou 8 KB",
     R_ADOTAR: "status adotar sem referência forte nem caso interno",
+    R_ADOTAR_SKILL: "ferramenta skill em adotar sem caso interno nem referência forte",
     R_EVITAR: "status evitar sem indicar a prática que substitui",
     R_VERIFICACAO: "registro de verificação ausente, defasado, incompleto ou sem revisão",
     R_AGENTS: "AGENTS.md ausente, grande demais ou com constituição divergente",
@@ -82,7 +90,15 @@ DESCRICOES: dict[str, str] = {
         "pacote de distribuição sem manifesto ou com arquivo fora dele, ausente "
         "ou com sha256 divergente"
     ),
+    R_PASSO: "passo repetido no mesmo momento de esquemas/espinha.yml",
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",
+    R_CAMINHO: "ferramenta skill sem caminho, ou com caminho fora dos passos da espinha",
+    R_COLECAO: "ferramenta skill sem coleção, ou com coleção fora de componentes.yml",
+    R_CASO_REF: "caso citado que não existe em casos/",
+    R_CASO_ORIGEM: "origem do caso aponta material que não existe em casos/fontes/",
+    R_TRILHA: (
+        "trilha com item que não é skill, passo não declarado, passo repetido ou status incoerente"
+    ),
 }
 
 

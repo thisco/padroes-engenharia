@@ -1,0 +1,11 @@
+id: superpowers-dispatching-parallel-agents
+titulo: "superpowers: skill dispatching-parallel-agents"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/dispatching-parallel-agents/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'When to Use', 'The Pattern' (itens 1 a 4), 'Agent Prompt Structure', 'When NOT to Use' e 'Verification'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

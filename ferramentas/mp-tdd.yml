@@ -1,0 +1,29 @@
+id: mp-tdd
+titulo: tdd
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [QLD-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: tdd
+    papel: caminho
+    bom_quando: "você quer o laço vermelho-verde em fatias verticais, com as costuras de teste combinadas antes e teste só na interface pública."
+    cuidado: "o refatorar fica fora do laço, na etapa de revisão, ao contrário da QLD-01; teste em costura não combinada não é escrito."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela (/setup-matt-pocock-skills) uma
+  vez por repositório, incluindo-o ao escolher as skills no instalador [ref:mattpocock-readme]. Sem
+  instalador, copie skills/engineering/tdd/ do commit fixado (49dd158) para a pasta de skills do
+  harness [ref:mattpocock-tdd]; o README só documenta plugin e instalador [ref:mattpocock-readme]. O
+  caminho de cada harness está na página da ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill testa só em costuras combinadas com a pessoa antes, pela
+  interface pública, uma fatia por ciclo (um teste, uma implementação mínima), e deixa o refatorar
+  fora do laço, para a etapa de revisão da code-review; a QLD-01 deste portal mantém o refatorar no
+  ciclo. Os exemplos de teste e de mock ficam em arquivos ao lado dela [ref:mattpocock-tdd].
+referencias: [mattpocock-tdd, mattpocock-readme, portal-referencias]

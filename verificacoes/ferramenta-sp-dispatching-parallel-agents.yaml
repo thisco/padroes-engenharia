@@ -1,0 +1,51 @@
+conteudo: ferramenta-sp-dispatching-parallel-agents
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a skill é para dois ou mais problemas independentes, sem estado compartilhado"
+    ref: superpowers-dispatching-parallel-agents
+    localizacao: "cabeçalho (description) e seção 'When to Use'"
+    resultado: confirmada
+  - texto: "um agente por domínio de problema, despachados na mesma resposta"
+    ref: superpowers-dispatching-parallel-agents
+    localizacao: "seção 'The Pattern', itens 1 e 3: 'Multiple dispatch calls in one response = parallel execution'"
+    resultado: confirmada
+  - texto: "cada pedido traz escopo, objetivo, restrições e saída esperada"
+    ref: superpowers-dispatching-parallel-agents
+    localizacao: "seção 'The Pattern', item 2, e 'Agent Prompt Structure'"
+    resultado: confirmada
+  - texto: "não serve para falhas relacionadas nem para agentes que editariam os mesmos arquivos"
+    ref: superpowers-dispatching-parallel-agents
+    localizacao: "seção 'When NOT to Use'"
+    resultado: confirmada
+  - texto: "no fim a suíte inteira roda e cada resumo é conferido"
+    ref: superpowers-dispatching-parallel-agents
+    localizacao: "seções 'The Pattern', item 4, e 'Verification'"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+  - texto: "a subagent-driven-development nunca despacha dois implementadores em paralelo"
+    ref: superpowers-subagent-driven-development
+    localizacao: "seção 'The Task Loop', item 1: 'Never dispatch multiple implementation subagents in parallel'"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"

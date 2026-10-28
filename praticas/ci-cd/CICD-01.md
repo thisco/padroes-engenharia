@@ -1,6 +1,7 @@
 ---
 id: CICD-01
 titulo: "Pipeline obrigatória com gates: lint, suíte e verificador de PR"
+marco: "pipeline com gates"
 resumo: "A merge request só entra com três gates verdes (lint, suíte e verificador de PR), e o verificador é baixado do portal com o SHA-256 conferido."
 dominio: ci-cd
 subdominio: null
@@ -22,7 +23,7 @@ referencias:
   - sdd-scaffold-readme
 relacionadas: [P1-03, DAD-01, CICD-02, CICD-03]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 ---
 

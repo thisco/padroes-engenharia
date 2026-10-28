@@ -1,0 +1,10 @@
+id: portal-trilha
+titulo: "Trilha: uma trilha, não um trilho"
+organizacao: Portal de Padrões de Engenharia
+url: trilha.html
+tipo: portal
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "o ciclo (etapas, portões e 'Para sair desta etapa'), 'Trilhas prontas', 'Monte a sua' e os passos com os caminhos"
+dominios: [construir-com-ia]
+notas: "Página do próprio portal, lida no HTML gerado em 2026-10-21."

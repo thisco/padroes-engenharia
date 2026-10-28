@@ -1,0 +1,51 @@
+conteudo: ferramenta-pw-playwright-mcp
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "a forma padrão de configuração registra o servidor com npx e @playwright/mcp@latest"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Getting started', bloco 'Standard config'"
+    resultado: confirmada
+  - texto: "exige Node.js 18 ou mais novo"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Requirements'"
+    resultado: confirmada
+  - texto: "os argumentos de linha de comando entram na lista args"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Configuration', primeira frase e tabela de opções (--browser, --headless, --viewport-size, --allowed-hosts)"
+    resultado: confirmada
+  - texto: "o servidor opera sobre a árvore de acessibilidade, sem modelo de visão"
+    ref: playwright-mcp-readme
+    localizacao: "abertura e seção 'Key Features'"
+    resultado: confirmada
+  - texto: "o servidor não é fronteira de segurança"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Security', primeira frase"
+    resultado: confirmada
+  - texto: "o README recomenda a CLI com skills para agentes de código e reserva o MCP a laços com estado persistente"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Playwright MCP vs Playwright CLI'"
+    resultado: confirmada
+  - texto: "há ferramentas de navegar, redimensionar, clicar, capturar tela, snapshot de acessibilidade e fechar, e o snapshot é o recomendado para agir sobre a página"
+    ref: playwright-mcp-readme
+    localizacao: "seção 'Tools', 'Core automation': browser_navigate, browser_resize, browser_click, browser_take_screenshot ('use browser_snapshot for actions'), browser_snapshot ('better than screenshot'), browser_close"
+    resultado: confirmada
+  - texto: "o caso de origem permitiu cinco ferramentas do servidor: navegar, redimensionar, clicar, capturar tela e fechar"
+    ref: origem-do-modelo-permissoes
+    localizacao: "bloco 'Servidor MCP permitido'"
+    resultado: confirmada
+  - texto: "o caso de origem usou Playwright nos planos para cenários de ponta a ponta e checkpoint com screenshot"
+    ref: origem-do-modelo-plano-playwright
+    localizacao: "Step 6.1 e checkpoint da Fase 5"
+    resultado: confirmada
+  - texto: "o portal fixa o Playwright MCP na 0.0.83, commit f183dad"
+    ref: portal-referencias
+    localizacao: "lista de referências: a do Playwright MCP traz a URL no commit f183dad e a versão 0.0.83"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "bom quando de TDD: o agente percorre a tela pelo snapshot e escreve o cenário depois, como no plano de origem"
+      problema: "o plano de origem só escreve cenários E2E em código, e as permissões do caso não incluem o snapshot"
+      tratamento: "'como no plano de origem' saiu; o snapshot passa a ser citado como o que o servidor recomenda para agir, com afirmação própria"

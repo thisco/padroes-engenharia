@@ -55,6 +55,7 @@ FONTES = (
     ("receita", "receitas/*.md"),
     ("starter", "starters/*.yml"),
     ("ferramenta", "ferramentas/*.yml"),
+    ("trilha", "trilhas/*.yml"),
     ("glossario", "glossario.yml"),
     ("referencia", "referencias/*.yaml"),
     ("verificacao", "verificacoes/*.yaml"),
@@ -71,6 +72,7 @@ _CAMPO_POR_TIPO = {
     "receita": "receitas",
     "starter": "starters",
     "ferramenta": "ferramentas",
+    "trilha": "trilhas",
     "glossario": "glossarios",
     "referencia": "referencias",
     "verificacao": "verificacoes",
@@ -146,6 +148,7 @@ class Repositorio:
     receitas: tuple[Conteudo, ...] = ()
     starters: tuple[Conteudo, ...] = ()
     ferramentas: tuple[Conteudo, ...] = ()
+    trilhas: tuple[Conteudo, ...] = ()
     glossarios: tuple[Conteudo, ...] = ()
     referencias: tuple[Conteudo, ...] = ()
     verificacoes: tuple[Conteudo, ...] = ()

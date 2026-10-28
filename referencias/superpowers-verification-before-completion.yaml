@@ -1,0 +1,11 @@
+id: superpowers-verification-before-completion
+titulo: "superpowers: skill verification-before-completion"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/verification-before-completion/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'The Iron Law', 'The Gate Function', 'Common Failures', 'Red Flags - STOP', 'Key Patterns' e 'When To Apply'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

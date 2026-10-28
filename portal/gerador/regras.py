@@ -474,6 +474,9 @@ def _itens(conteudo: Conteudo, campo: str) -> list[dict[str, Any]]:
 def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
     """URL `https://` válida e datas de calendário reais em cada referência.
 
+    O tipo `portal` aponta uma página gerada (`.html`) ou uma fonte sanitizada de caso
+    publicada em `casos/fontes/<slug>/<arquivo>.md` (R14 da trilha).
+
     A presença de `verificado_em` e `verificacao` é exigida pelo schema (R-ESQUEMA).
     """
     erros: list[Erro] = []
@@ -491,7 +494,10 @@ def regra_referencias(repo: Repositorio, espinha: Espinha, contexto: Contexto) -
     return erros
 
 
-PAGINA_DO_PORTAL = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*\.html$")
+PAGINA_DO_PORTAL = re.compile(
+    r"^(?:[a-z0-9]+(?:-[a-z0-9]+)*(?:/[a-z0-9]+(?:-[a-z0-9]+)*)*\.html"
+    r"|casos/fontes/[a-z0-9][a-z0-9-]*/[a-z0-9][a-z0-9-]*\.md)$"
+)
 
 
 def url_https_valida(url: str) -> bool:
@@ -649,6 +655,28 @@ def regra_adotar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
 
 @regra
+def regra_adotar_skill(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-ADOTAR-SKILL (spec da trilha, R3): ferramenta `skill` em `adotar` exige um caso
+    existente em `casos` ou uma referência forte com verificação V, como a prática."""
+    referencias = {r.chave: r.meta for r in repo.referencias}
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for f in repo.ferramentas:
+        if _texto(f.meta, "categoria") != "skill" or _texto(f.meta, "status") != "adotar":
+            continue
+        fortes = [
+            id_
+            for id_ in _lista(f.meta, "referencias")
+            if referencias.get(id_, {}).get("tipo") in TIPOS_FORTES
+            and referencias.get(id_, {}).get("verificacao") == "V"
+        ]
+        if not fortes and not [s for s in _lista(f.meta, "casos") if s in casos]:
+            valor = "adotar sem caso interno nem referência forte [V]"
+            erros.append(Erro(f.caminho_relativo, "status", codigos.R_ADOTAR_SKILL, valor))
+    return erros
+
+
+@regra
 def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
     """`evitar` descreve um anti-padrão e o corpo cita, pelo ID, a prática que o substitui."""
     erros: list[Erro] = []
@@ -660,6 +688,103 @@ def regra_evitar(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
         if not substitutas:
             valor = "o corpo não cita o ID de uma prática existente que substitui esta"
             erros.append(Erro(p.caminho_relativo, "status", codigos.R_EVITAR, valor))
+    return erros
+
+
+@regra
+def regra_passos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-PASSO: o slug do passo é único dentro do momento (spec da trilha, R1)."""
+    erros: list[Erro] = []
+    for i, momento in enumerate(espinha.momentos):
+        vistos: set[str] = set()
+        for j, passo in enumerate(momento.passos):
+            if passo.slug in vistos:
+                campo = f"momentos.{i}.passos.{j}.slug"
+                erros.append(Erro("esquemas/espinha.yml", campo, codigos.R_PASSO, passo.slug))
+            vistos.add(passo.slug)
+    return erros
+
+
+@regra
+def regra_caminhos(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-CAMINHO, R-COLECAO e R-CASO-REF (spec da trilha, R2): a ferramenta `skill`, e qualquer
+    outra que declare caminhos, tem coleção fixada e caminhos em passos da espinha; todo caso
+    citado por ferramenta existe."""
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for f in repo.ferramentas:
+        arquivo = f.caminho_relativo
+        for slug in _lista(f.meta, "casos"):
+            if slug not in casos:
+                erros.append(Erro(arquivo, "casos", codigos.R_CASO_REF, slug))
+        eh_skill = _texto(f.meta, "categoria") == "skill"
+        caminhos = _itens(f, "caminhos")
+        if not eh_skill and not caminhos:
+            continue
+        colecao = _texto(f.meta, "colecao")
+        if colecao not in contexto.componentes:
+            erros.append(Erro(arquivo, "colecao", codigos.R_COLECAO, colecao or "ausente"))
+        if eh_skill and not caminhos:
+            erros.append(Erro(arquivo, "caminhos", codigos.R_CAMINHO, "skill sem caminho"))
+        for i, caminho in enumerate(caminhos):
+            momento = espinha.momento(str(caminho.get("momento")))
+            if momento is None or momento.passo(str(caminho.get("passo"))) is None:
+                valor = f"{caminho.get('momento')}/{caminho.get('passo')}"
+                erros.append(Erro(arquivo, f"caminhos.{i}", codigos.R_CAMINHO, valor))
+    return erros
+
+
+@regra
+def regra_caso_origem(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-CASO-ORIGEM (spec da trilha, R6): o material sanitizado citado na origem existe."""
+    erros: list[Erro] = []
+    for c in repo.casos:
+        origem = c.meta.get("origem")
+        material = origem.get("material") if isinstance(origem, dict) else None
+        if isinstance(material, str) and not (contexto.raiz / material).is_dir():
+            erros.append(
+                Erro(c.caminho_relativo, "origem.material", codigos.R_CASO_ORIGEM, material)
+            )
+    return erros
+
+
+@regra
+def regra_trilhas(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """R-TRILHA e R-CASO-REF (spec da trilha, R5): cada item é uma ferramenta com caminhos
+    que declara aquele passo; uma skill por passo; trilha em adotar só com itens em adotar."""
+    ferramentas = {(_texto(f.meta, "id") or _nome(f)): f.meta for f in repo.ferramentas}
+    casos = {c.chave for c in repo.casos}
+    erros: list[Erro] = []
+    for t in repo.trilhas:
+        arquivo = t.caminho_relativo
+        adotar = _texto(t.meta, "status") == "adotar"
+        vistos: set[tuple[str, str]] = set()
+        for i, item in enumerate(_itens(t, "sequencia")):
+            fid = str(item.get("ferramenta"))
+            chave = (str(item.get("momento")), str(item.get("passo")))
+            meta = ferramentas.get(fid)
+            if meta is None or not meta.get("caminhos"):
+                valor = f"{fid} não tem caminhos"
+                erros.append(Erro(arquivo, f"sequencia.{i}.ferramenta", codigos.R_TRILHA, valor))
+                continue
+            declarados = {
+                (str(c.get("momento")), str(c.get("passo")))
+                for c in meta.get("caminhos") or []
+                if isinstance(c, dict)
+            }
+            if chave not in declarados:
+                valor = f"{fid} não declara {chave[0]}/{chave[1]}"
+                erros.append(Erro(arquivo, f"sequencia.{i}", codigos.R_TRILHA, valor))
+            if chave in vistos:
+                valor = f"passo repetido: {chave[0]}/{chave[1]}"
+                erros.append(Erro(arquivo, f"sequencia.{i}", codigos.R_TRILHA, valor))
+            vistos.add(chave)
+            if adotar and meta.get("status") != "adotar":
+                valor = f"{fid} não está em adotar"
+                erros.append(Erro(arquivo, f"sequencia.{i}.ferramenta", codigos.R_TRILHA, valor))
+        for slug in _lista(t.meta, "casos"):
+            if slug not in casos:
+                erros.append(Erro(arquivo, "casos", codigos.R_CASO_REF, slug))
     return erros
 
 

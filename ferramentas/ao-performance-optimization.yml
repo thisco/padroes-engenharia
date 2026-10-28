@@ -1,0 +1,35 @@
+id: ao-performance-optimization
+titulo: performance-optimization
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: []
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: dominio
+    papel: complemento
+    bom_quando: "há requisito de desempenho na spec, regressão suspeita ou métrica de usuário fora da meta: medir antes, achar o gargalo real, corrigir uma coisa, medir de novo e manter ou reverter."
+    cuidado: "resultado neutro é reversão, não manutenção; cada tentativa, inclusive a revertida, fica registrada para não ser repetida; sem evidência de problema a skill manda não otimizar."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme], que esta skill cita
+  (references/optimization-patterns.md ao lado dela e a pasta references/ do repositório
+  (performance-checklist.md)). Sem instalador, copie skills/performance-optimization/ e references/
+  do commit fixado (aeac41d) para a pasta de skills do harness, com references/ dois níveis acima da
+  pasta da skill, como os links ../../references/ exigem
+  [ref:agent-skills-performance-optimization]; o README sugere, em vez disso, copiar o checklist
+  para dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está na página
+  da ferramenta dele.
+limites: |
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill é para quando há evidência de problema, e não antes; traz metas
+  de Core Web Vitals, uma árvore de onde medir pelo sintoma, os gargalos comuns de backend e
+  frontend com as correções em arquivo ao lado, e a regra de manter ou reverter pelo número medido
+  contra a variância [ref:agent-skills-performance-optimization].
+referencias: [agent-skills-performance-optimization, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

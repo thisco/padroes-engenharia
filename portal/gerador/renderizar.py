@@ -82,13 +82,13 @@ def paginas_publicadas(site: Site) -> list[str]:
 NAV = (
     ("Início", (("Início", "index.html"),)),
     ("Comece aqui", (("Comece aqui", "comece-aqui.html"),)),
+    ("Trilha", (("Trilha", "trilha.html"),)),
     ("Como fazer", (("Receitas", "como-fazer.html"), ("Prompts", "prompts.html"))),
     (
         "Padrões",
         (
             ("Espinha", "espinha.html"),
             ("Domínios", "dominios/index.html"),
-            ("IA no produto", "dominios/ia-no-produto.html"),
             ("Práticas", "praticas/index.html"),
         ),
     ),
@@ -431,10 +431,10 @@ def a_definir_texto(site: Site) -> str:
 
 
 def dimensoes(site: Site) -> str:
-    """`12 faixas de domínio cruzadas com os 4 momentos do ciclo SDD`."""
+    """`12 faixas de domínio cruzadas com as 4 etapas do ciclo SDD`."""
     return (
-        f"{len(site.espinha.faixas)} faixas de domínio cruzadas com os "
-        f"{len(site.espinha.momentos)} momentos do ciclo SDD"
+        f"{len(site.espinha.faixas)} faixas de domínio cruzadas com as "
+        f"{len(site.espinha.momentos)} etapas do ciclo SDD"
     )
 
 
@@ -512,7 +512,7 @@ def candidatas_do_dominio(site: Site, dominio: Conteudo | None) -> list[str]:
         if _titulo_comparavel(str(candidata.get("titulo", ""))) in publicadas:
             continue
         momento = site.espinha.momento(str(candidata.get("momento", "")))
-        resultado.append(f"{candidata.get('titulo', '')} ({momento.titulo if momento else ''})")
+        resultado.append(f"{candidata.get('titulo', '')} ({momento.rotulo if momento else ''})")
     return resultado
 
 
@@ -763,6 +763,13 @@ def constituicoes(site: Site) -> list[str]:
     ]
 
 
+def texto_origem(origem: dict[str, Any]) -> str:
+    """A origem do caso em uma linha: repositório e commit, ou o material sanitizado."""
+    if "material" in origem:
+        return "material sanitizado neste portal"
+    return f"{origem['repo']} @ {origem['commit']}"
+
+
 def descricao_de(site: Site, conteudo: Conteudo) -> str:
     """Resumo de uma linha do conteúdo, usado no topo da página, no llms.txt e na busca."""
     meta = conteudo.meta
@@ -772,14 +779,14 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
         return (
             f"{ROTULO_FORCA[meta['forca']]} · {meta['status']} · "
             f"{faixa.titulo if faixa else meta['dominio']} · "
-            f"{momento.titulo if momento else meta['momento']}"
+            f"{momento.rotulo if momento else meta['momento']}"
         )
     if conteudo.tipo == "conceito":
         return sem_marcadores(str(meta["definicao"]))
     if conteudo.tipo == "guia":
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
-        return f"Caso de {meta['origem']['repo']}, {meta['periodo']}."
+        return f"Caso: {texto_origem(meta['origem'])}, {meta['periodo']}."
     if conteudo.tipo == "receita":
         return str(meta["objetivo"])
     return sem_marcadores(str(meta.get("descricao") or ""))
@@ -803,7 +810,7 @@ def campos_de(conteudo: Conteudo) -> list[tuple[str, str]]:
     elif conteudo.tipo == "caso":
         origem = meta["origem"]
         campos = [
-            ("Origem", f"{origem['repo']} @ {origem['commit']}"),
+            ("Origem", texto_origem(origem)),
             ("Período", meta["periodo"]),
         ]
     if meta.get("revisado_em"):

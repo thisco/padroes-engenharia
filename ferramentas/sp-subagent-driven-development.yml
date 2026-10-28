@@ -1,0 +1,32 @@
+id: sp-subagent-driven-development
+titulo: subagent-driven-development
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: enquanto-escreve
+    passo: executar
+    papel: caminho
+    bom_quando: "a mudança tem muitas tarefas independentes: um subagente novo por tarefa, revisão de spec e de qualidade depois de cada uma e revisão da branch inteira no fim."
+    cuidado: "é a mais longa das treze skills da trilha e não para entre tarefas: decide conflitos por conta própria e registra cada decisão num ledger; só quatro situações a fazem parar."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos (esta cita implementer-prompt.md,
+  task-reviewer-prompt.md, re-review-prompt.md e os scripts em scripts/ ao lado dela
+  [ref:superpowers-subagent-driven-development]); o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. A skill executa sem pausar entre tarefas e decide conflitos por conta
+  própria, registrando cada decisão num ledger em .superpowers/sdd/; só uma operação destrutiva, uma
+  ação sensível à segurança, um efeito fora do worktree ou um plano inviável a fazem parar. Nunca
+  despacha dois implementadores em paralelo e não começa na main sem consentimento
+  [ref:superpowers-subagent-driven-development].
+referencias: [superpowers-subagent-driven-development, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

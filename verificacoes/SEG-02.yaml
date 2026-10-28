@@ -1,5 +1,5 @@
 conteudo: SEG-02
-verificado_em: '2026-10-08'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: segredo nunca é commitado, vive em variável de ambiente em runtime e o scanner roda bloqueante
@@ -139,6 +139,10 @@ afirmacoes:
 - texto: o job só impede o merge com o merge check que exige pipeline bem-sucedido
   ref: gitlab-pipeline-obrigatorio
   localizacao: "'You can configure your project to require a complete and successful pipeline before merge', aberta em 2026-10-08"
+  resultado: confirmada
+- texto: "o rótulo do marco, 'segredo fora do repo', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
+  ref: portal-trilha
+  localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

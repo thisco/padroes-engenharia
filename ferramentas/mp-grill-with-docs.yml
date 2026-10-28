@@ -1,0 +1,28 @@
+id: mp-grill-with-docs
+titulo: grill-with-docs
+categoria: skill
+colecao: mattpocock-skills
+status: avaliar
+versao_minima: "1.3.1"
+dono: engenharia
+praticas: [P1-05, ARQ-01]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: entrevistar
+    papel: caminho
+    bom_quando: "você quer a entrevista implacável e, no mesmo passo, o glossário e as ADRs escritos conforme as decisões se firmam."
+    cuidado: "é uma skill de uma linha: chama a grilling e a domain-modeling, que precisam estar instaladas junto; só a pessoa a aciona."
+como_instalar: |
+  Instale a coleção como plugin pelo marketplace do seu harness ou como arquivos copiados pelo
+  instalador de skills, um dos dois por agente, e rode o setup dela (/setup-matt-pocock-skills) uma
+  vez por repositório, incluindo-o ao escolher as skills no instalador [ref:mattpocock-readme]. Sem
+  instalador, copie skills/engineering/grill-with-docs/ do commit fixado (49dd158) para a pasta de
+  skills do harness [ref:mattpocock-grill-with-docs]; o README só documenta plugin e instalador
+  [ref:mattpocock-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  Sem caso interno nem referência forte, fica em avaliar; o portal fixa a 1.3.1
+  [ref:portal-referencias]. A skill é uma única instrução: acionar a grilling e a domain-modeling,
+  que por isso precisam estar instaladas junto; ela não é acionada pelo modelo por conta própria
+  [ref:mattpocock-grill-with-docs].
+referencias: [mattpocock-grill-with-docs, mattpocock-readme, portal-referencias]

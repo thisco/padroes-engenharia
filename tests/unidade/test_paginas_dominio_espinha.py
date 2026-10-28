@@ -15,5 +15,5 @@ def test_dominio_vazio_nomeia_a_lacuna_e_some_a_barra():
 def test_espinha_sem_texto_na_vazia_e_cobertura_por_linha():
     html = analisar(html_espinha(fabrica.site(fabrica.pratica())))
     assert "a definir" not in " ".join(td.texto for td in html.todos("td"))
-    assert "1 de 4 momentos cobertos" in html.texto and "0 de 4 momentos cobertos" in html.texto
+    assert "1 de 4 etapas cobertas" in html.texto and "0 de 4 etapas cobertas" in html.texto
     assert html.todos(classe="espinha-lista") and html.todos("dl", classe="legenda-forcas")

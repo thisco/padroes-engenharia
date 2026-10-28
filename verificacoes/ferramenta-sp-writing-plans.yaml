@@ -1,0 +1,47 @@
+conteudo: ferramenta-sp-writing-plans
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "o plano é escrito para um engenheiro que não viu o código nem a spec"
+    ref: superpowers-writing-plans
+    localizacao: "seção 'Overview', primeira frase"
+    resultado: confirmada
+  - texto: "o plano traz arquivos, assinaturas e testes por tarefa, em passos pequenos"
+    ref: superpowers-writing-plans
+    localizacao: "seções 'Task Structure' (Files, Interfaces, passos 1 a 5) e 'Step Granularity'"
+    resultado: confirmada
+  - texto: "o plano é gravado em docs/superpowers/plans/ e a preferência do projeto vale sobre esse padrão"
+    ref: superpowers-writing-plans
+    localizacao: "cabeçalho: 'Save plans to' e 'User preferences for plan location override this default'"
+    resultado: confirmada
+  - texto: "o cabeçalho obrigatório do plano não tem seção Impacto Arquitetural"
+    ref: superpowers-writing-plans
+    localizacao: "seção 'Plan Document Header': Goal, Architecture, Tech Stack, Spec, Global Constraints e Review Focus"
+    resultado: confirmada
+  - texto: "no fim a skill pede à pessoa que escolha entre execução por subagentes ou inline"
+    ref: superpowers-writing-plans
+    localizacao: "seção 'Execution Handoff', opções Subagent-driven e Native"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"

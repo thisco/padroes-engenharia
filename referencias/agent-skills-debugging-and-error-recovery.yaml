@@ -1,0 +1,11 @@
+id: agent-skills-debugging-and-error-recovery
+titulo: "agent-skills: skill debugging-and-error-recovery"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/debugging-and-error-recovery/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'The Stop-the-Line Rule', 'The Triage Checklist' (passos 1 a 6), 'Error-Specific Patterns' e 'Treating Error Output as Untrusted Data'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

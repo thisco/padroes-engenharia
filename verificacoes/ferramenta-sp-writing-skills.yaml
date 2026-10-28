@@ -1,0 +1,63 @@
+conteudo: ferramenta-sp-writing-skills
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "escrever skill é TDD aplicado a documentação de processo"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'Overview', primeira frase, e 'TDD Mapping for Skills'"
+    resultado: confirmada
+  - texto: "o cenário de pressão roda sem a skill antes de escrevê-la e com ela depois"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'RED-GREEN-REFACTOR for Skills' (RED: baseline sem a skill; GREEN: mesmos cenários com a skill)"
+    resultado: confirmada
+  - texto: "exige entender a test-driven-development antes"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'Overview': 'REQUIRED BACKGROUND: You MUST understand superpowers:test-driven-development'"
+    resultado: confirmada
+  - texto: "a descrição diz só quando usar e nunca resume o fluxo"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'SKILL.md Structure' (frontmatter) e 'Skill Discovery Optimization', item 1"
+    resultado: confirmada
+  - texto: "editar sem testar é a mesma violação que criar sem testar"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'The Iron Law (Same as TDD)': 'This applies to NEW skills AND EDITS to existing skills'"
+    resultado: confirmada
+  - texto: "cada skill é testada antes da próxima"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'STOP: Before Moving to Next Skill'"
+    resultado: confirmada
+  - texto: "a forma da orientação segue o tipo de falha: proibição para quem pula regra, receita para saída com a forma errada"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'Match the Form to the Failure', tabela"
+    resultado: confirmada
+  - texto: "a skill cita o diretório de skills pessoais de cada harness e um documento de boas práticas de fornecedor"
+    ref: superpowers-writing-skills
+    localizacao: "seção 'Overview', parágrafos 'Personal skills live in' e 'Official guidance'"
+    resultado: confirmada
+  - texto: "a skill cita arquivos ao lado dela"
+    ref: superpowers-writing-skills
+    localizacao: "seções 'Overview' (documento de boas práticas do fornecedor), 'Flowchart Usage' (graphviz-conventions.dot, render-graphs.js), 'Bulletproofing' (persuasion-principles.md) e 'Micro-Test Wording' (testing-skills-with-subagents.md)"
+    resultado: confirmada
+  - texto: "a instalação do plugin superpowers é por harness, e quem usa mais de um instala em cada um"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation, parágrafo de abertura e subseções por harness"
+    resultado: confirmada
+  - texto: "o README só documenta a instalação por plugin, não a cópia manual"
+    ref: superpowers-readme
+    localizacao: "README, seção Installation: só comandos de instalação de plugin, por harness"
+    resultado: confirmada
+  - texto: "o caso de origem usou o superpowers na série 6.x"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, linha obra/superpowers (2026-05-07, série 6.x no período)"
+    resultado: confirmada
+  - texto: "o portal fixa o superpowers na 7.0.0, no commit bb92a77"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do superpowers trazem a URL no commit bb92a77 e a versão 7.0.0"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
+      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
+      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"

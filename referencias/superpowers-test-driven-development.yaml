@@ -1,0 +1,11 @@
+id: superpowers-test-driven-development
+titulo: "superpowers: skill test-driven-development"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/test-driven-development/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'When to Use', 'The Iron Law', 'Red-Green-Refactor' (inclusive 'Verify GREEN', parágrafo sobre a suíte do projeto) e 'Good Tests'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-20 e relida em 2026-10-21."

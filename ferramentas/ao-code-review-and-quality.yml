@@ -1,0 +1,35 @@
+id: ao-code-review-and-quality
+titulo: code-review-and-quality
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [P1-09, CICD-02]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: revisar
+    papel: caminho
+    bom_quando: "toda mudança antes do merge, venha de você, de outro agente ou de uma pessoa: cinco eixos (correção, legibilidade, arquitetura, segurança, desempenho), testes lidos primeiro e achados rotulados por severidade."
+    cuidado: "aprova-se o que melhora a saúde do código, não o perfeito; a cobertura é provada por experimento (inverter uma condição e rodar a suíte), e o tamanho de referência é cerca de 100 linhas por mudança."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme], que esta skill cita (a pasta references/ do
+  repositório (security-checklist.md e performance-checklist.md)). Sem instalador, copie
+  skills/code-review-and-quality/ e references/ do commit fixado (aeac41d) para a pasta de skills do
+  harness, com references/ dois níveis acima da pasta da skill, como os links ../../references/
+  exigem [ref:agent-skills-code-review-and-quality]; o README sugere, em vez disso, copiar o
+  checklist para dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está
+  na página da ferramenta dele.
+limites: |
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. A skill revisa em cinco eixos, manda ler os testes antes do código e
+  provar a cobertura invertendo uma condição, rotula achados por severidade e põe correção e
+  segurança na frente; cobre também tamanho da mudança, descrição do commit, código morto,
+  velocidade da revisão e revisão de dependências [ref:agent-skills-code-review-and-quality]. O
+  veredito por requisito contra a spec fica com a P1-09.
+referencias: [agent-skills-code-review-and-quality, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

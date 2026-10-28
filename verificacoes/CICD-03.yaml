@@ -1,5 +1,5 @@
 conteudo: CICD-03
-verificado_em: '2026-10-07'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a versão do SemVer é X.Y.Z de inteiros não negativos, sem zero à esquerda; a major sobe para mudança incompatível, a minor para funcionalidade nova compatível, a correção para conserto compatível
@@ -29,6 +29,10 @@ afirmacoes:
 - texto: o gitlab-ci-local executa pipelines como shell ou Docker e aceita a opção --variable
   ref: gitlab-ci-local-readme
   localizacao: README, instalação, executores e opção --variable (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: "o rótulo do marco, 'changelog e tag', resume o que a prática exige e aparece na etapa Aprender da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Aprender, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

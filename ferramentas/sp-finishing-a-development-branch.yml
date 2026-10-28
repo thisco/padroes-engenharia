@@ -1,0 +1,30 @@
+id: sp-finishing-a-development-branch
+titulo: finishing-a-development-branch
+categoria: skill
+colecao: superpowers
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "7.0.0"
+dono: engenharia
+praticas: [P1-01]
+receitas: []
+caminhos:
+  - momento: antes-do-merge
+    passo: pr-e-merge
+    papel: caminho
+    bom_quando: "a implementação acabou e a suíte está verde: a skill confirma a branch de base, apresenta três opções (merge local, PR ou manter a branch; duas em HEAD destacado) e, no merge local ou no descarte, limpa o worktree que ela mesma criou."
+    cuidado: "descartar o trabalho só a pedido explícito, confirmado com a palavra 'discard'; a decisão de integrar é da pessoa, não do agente."
+como_instalar: |
+  Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
+  instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
+  fixado (bb92a77) para a pasta de skills do harness, porque as skills da coleção citam umas às
+  outras pelo nome com prefixo e arquivos vizinhos; o README só documenta a instalação por plugin
+  [ref:superpowers-readme]. O caminho de cada harness está na página da ferramenta dele.
+limites: |
+  O caso de origem usou a série 6.x [ref:origem-do-modelo-instalacoes]; o portal fixa a 7.0.0
+  [ref:portal-referencias]. O menu tem três opções (duas em HEAD destacado), e a decisão de integrar
+  é da pessoa; descarte só a pedido explícito, confirmado com a palavra 'discard'. A skill roda a
+  suíte antes do menu, confirma a branch de base antes de mesclar e só remove, no merge local ou no
+  descarte, worktrees em .worktrees/ ou worktrees/, nunca com --force por conta própria
+  [ref:superpowers-finishing-a-development-branch].
+referencias: [superpowers-finishing-a-development-branch, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias]

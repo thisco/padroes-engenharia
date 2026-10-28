@@ -1,0 +1,11 @@
+id: claude-plugins-official-frontend-design-readme
+titulo: "claude-plugins-official: README do plugin frontend-design"
+organizacao: anthropics/claude-plugins-official
+url: https://github.com/anthropics/claude-plugins-official/blob/8f814f49002ff824e8a9ba43cf96112dc7f5948d/plugins/frontend-design/README.md
+tipo: comunidade
+versao: "2026.10.15"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'What It Does' e 'Usage'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

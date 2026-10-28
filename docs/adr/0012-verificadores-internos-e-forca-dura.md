@@ -1,4 +1,4 @@
-# ADR 0010: Verificadores internos no pacote e sete práticas com força dura
+# ADR 0012: Verificadores internos no pacote e sete práticas com força dura
 
 **Data:** 2026-10-08 · **Status:** aceita · **Spec:** `docs/specs/2026-10-06-motor-harness-cli-design.md`
 (§5, §6) com o delta `docs/specs/2026-10-08-curadoria-forca-dura-delta.md` · **Origem:** decisão do dono

@@ -83,7 +83,7 @@ def test_caso_com_tabela_de_numeros_e_pagina_na_raiz():
 def test_descricao_da_pratica_resume_forca_status_e_celula():
     s = fabrica.site(fabrica.pratica())
     assert descricao_de(s, fabrica.pratica()) == (
-        "só orienta · experimentar · Construir com IA · Antes de escrever"
+        "só orienta · experimentar · Construir com IA · Especificar"
     )
 
 

@@ -1,0 +1,11 @@
+id: mattpocock-domain-modeling
+titulo: "mattpocock/skills: skill domain-modeling"
+organizacao: mattpocock/skills
+url: https://github.com/mattpocock/skills/blob/49dd158d1076134a641b33efb035946536778336/skills/engineering/domain-modeling/SKILL.md
+tipo: comunidade
+versao: "1.3.1"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'File structure', 'During the session' ('Challenge against the glossary', 'Sharpen fuzzy language', 'Discuss concrete scenarios', 'Cross-reference with code', 'Update GLOSSARY.md inline') e 'Offer ADRs sparingly'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21. A skill cita GLOSSARY-FORMAT.md e ADR-FORMAT.md ao lado dela."

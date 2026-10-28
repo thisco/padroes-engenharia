@@ -44,7 +44,7 @@ def test_espinha_tem_48_celulas_grupos_e_a_definir():
         "IA no produto",
     ]
     assert (
-        corpo.count('<span class="q vazia" role="img" aria-label="sem prática neste momento">')
+        corpo.count('<span class="q vazia" role="img" aria-label="sem prática nesta etapa">')
         == 46
     )
     assert '<a class="ef orienta" href="praticas/P1-01.html"' in corpo
@@ -85,7 +85,7 @@ def test_dominio_usa_o_dominio_md_quando_existe():
 
 def test_listagem_de_dominios_por_grupo():
     html = html_dominios(fabrica.site(fabrica.pratica()))
-    assert len(re.findall(r'<a href="../dominios/[a-z-]+\.html">', html)) == 12 + 1
+    assert len(re.findall(r'<a href="../dominios/[a-z-]+\.html">', html)) == 12
     assert re.findall(r'<section aria-label="([^"]+)">\n  <h2>', html) == [
         "Guia",
         "Desenho",

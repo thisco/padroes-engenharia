@@ -1,6 +1,6 @@
 # afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-06); novas: allow_failure, CI_MERGE_REQUEST_DIFF_BASE_SHA e info.version (páginas abertas em 2026-10-08)
 conteudo: API-02
-verificado_em: '2026-10-08'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Schema Object da especificação usa palavras-chave de JSON Schema, como required
@@ -42,6 +42,10 @@ afirmacoes:
 - texto: o campo info.version da especificação é a versão do documento OpenAPI, distinta da versão da especificação e da versão da API descrita
   ref: openapi-spec
   localizacao: "seção do Info Object, campo version (versão 3.2.1; aberta na web em 2026-10-08; 'The version of the OpenAPI document (which is distinct from the OpenAPI Specification version or the version of the API being described or the version of the OpenAPI Description)')"
+  resultado: confirmada
+- texto: "o rótulo do marco, 'contrato conferido no CI', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

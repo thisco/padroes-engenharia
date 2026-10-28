@@ -1,0 +1,11 @@
+id: superpowers-requesting-code-review
+titulo: "superpowers: skill requesting-code-review"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/requesting-code-review/SKILL.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "abertura, seções 'When to Request Review', 'How to Request' (passos 1 a 3), 'Common Rationalizations' e 'Red Flags'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

@@ -1,11 +1,64 @@
 id: sdd-lifecycle
 titulo: sdd-lifecycle
-categoria: sdd
+categoria: skill
+colecao: sdd-lifecycle
 status: adotar
+casos: [origem-do-modelo]
 versao_minima: "3.0.0"
 dono: engenharia
 praticas: [P1-01]
 receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: escrever-spec
+    papel: caminho
+    bom_quando: "a mudança é Tier 2: a Fase 1 explora o código antes, refina o pedido uma pergunta por vez, deixa a dúvida aberta marcada com [ESCLARECER] e redige a spec como delta, com requisitos R<n> e critério de aceite em cada um."
+    cuidado: "a spec só vai ao checkpoint humano (Fase 3) com zero marcadores abertos, e a aprovação é gravada no cabeçalho por quem aprova, ou a pedido explícito dele; escrita pelo agente sem pedido não vale."
+  - momento: antes-de-escrever
+    passo: decidir
+    papel: caminho
+    bom_quando: "a spec pode conter mudança destrutiva (contrato de API, schema, interface pública): o gate da Fase 2 bloqueia o fluxo, exige ADR e aprovação humana antes do checkpoint, e responde as três perguntas de impacto arquitetural."
+    cuidado: "o gate roda sobre a spec, antes de existir plano ou código, e nunca se pula; qualquer sim no impacto arquitetural obriga a atualizar os artefatos na mesma branch."
+  - momento: enquanto-escreve
+    passo: planejar
+    papel: caminho
+    bom_quando: "você quer o plano da Fase 4: leve no Tier 1 (contexto, arquivos e o teste que prova o fix) ou completo no Tier 2 (arquivos com assinaturas, testes por tarefa, checkboxes, checkpoints humanos e o CHANGELOG como tarefa), sempre com a seção Impacto Arquitetural."
+    cuidado: "cada tarefa termina com os (R<n>) que entrega, e requisito sem tarefa é lacuna do plano; os checkboxes são o único rastreamento de progresso."
+  - momento: enquanto-escreve
+    passo: isolar
+    papel: caminho
+    bom_quando: "a Fase 5 pede branch limpa a partir da main atualizada, feat/ ou fix/ com a data no nome, por worktree quando a plataforma suporta."
+    cuidado: "a branch é conferida limpa antes de implementar."
+  - momento: enquanto-escreve
+    passo: tdd
+    papel: caminho
+    bom_quando: "a Fase 6: vermelho visto falhar pelo motivo certo, verde mínimo e refatorar com a suíte verde, por tarefa do plano, com o teste citando o R<n> no Tier 2 e o checkbox marcado ao fim de cada tarefa."
+    cuidado: "sem suíte configurada, parar e avisar, nunca pular testes em silêncio; bloqueio que prova a spec inviável aborta a implementação e volta à Fase 1, sem contorno improvisado."
+  - momento: antes-do-merge
+    passo: revisar
+    papel: caminho
+    bom_quando: "a Fase 7 no Tier 2: uma sessão independente, com modelo de raciocínio potente, revisa contra a spec, não contra o diff, e registra no plano uma linha por R<n> com veredito e evidência."
+    cuidado: "problema crítico volta à Fase 6; problema arquitetural escala à Fase 1 e a spec volta a rascunho; feedback questionável se discute com evidência."
+  - momento: antes-do-merge
+    passo: evidencia
+    papel: caminho
+    bom_quando: "a Fase 7 pede a suíte completa e o linter rodados e a saída colada no plano, na seção Evidências."
+    cuidado: "alegação de sucesso sem evidência não encerra tarefa."
+  - momento: antes-do-merge
+    passo: pr-e-merge
+    papel: caminho
+    bom_quando: "a Fase 8: CHANGELOG no formato Keep a Changelog e spec arquivada antes do merge, commits convencionais, PR quando o repositório é compartilhado e limpeza da branch depois."
+    cuidado: "a entrada do changelog nasce na branch, nunca depois do merge; merge direto na main só em projeto solo com verificação local completa."
+  - momento: depois-da-entrega
+    passo: retro
+    papel: caminho
+    bom_quando: "a destilação da Fase 8, o passo que a maioria pula: o que virou permanente vai para o steering ou uma ADR, o aprendizado operacional para a memória do projeto, e a spec fica arquivada como histórico do delta."
+    cuidado: "a spec arquivada não é fonte de verdade viva."
+  - momento: depois-da-entrega
+    passo: continuar
+    papel: caminho
+    bom_quando: "a feature atravessa sessões: a retomada relê constituição e memória, acha a última tarefa marcada no plano, confere os commits no git log e o Status da spec, e retoma da primeira tarefa desmarcada."
+    cuidado: "spec em rascunho ou com [ESCLARECER] aberto devolve à Fase 1, 2 ou 3, e o gate da Fase 2 nunca se pula."
 como_instalar: |
   No projeto gerado pelo starter `sdd-scaffold`, a skill já vem em `skills/sdd-lifecycle/`
   [ref:sdd-scaffold-readme]. Fora dele, copie o `SKILL.md` do commit
@@ -15,5 +68,9 @@ como_instalar: |
 limites: |
   É um procedimento em Markdown que o agente lê e segue [ref:sdd-lifecycle]. O repositório da
   skill traz o `SKILL.md` e documentação, sem código nem verificador próprio
-  [ref:sdd-lifecycle-repo]; o rigor depende de o agente seguir cada fase.
-referencias: [sdd-lifecycle, sdd-lifecycle-repo, sdd-scaffold-readme]
+  [ref:sdd-lifecycle-repo]; o rigor depende de o agente seguir cada fase. Os passos da trilha
+  seguem as fases dela: spec na Fase 1, gate na 2, plano na 4, isolamento na 5, TDD na 6, revisão e
+  evidência na 7, encerramento e destilação na 8, e a retomada multi-sessão para continuar
+  [ref:sdd-lifecycle]. Os gates dessa sequência nasceram no projeto de origem, sobre a execução com
+  outras coleções, e é isso que sustenta o `adotar` [ref:origem-do-modelo-relato].
+referencias: [sdd-lifecycle, sdd-lifecycle-repo, sdd-scaffold-readme, origem-do-modelo-relato]

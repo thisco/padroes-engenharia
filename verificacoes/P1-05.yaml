@@ -1,5 +1,5 @@
 conteudo: P1-05
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'toda dúvida sem resposta fica no arquivo marcada com [ESCLARECER: pergunta]; ao receber a resposta, apaga-se o marcador e registra-se a pergunta e a resposta em Esclarecimentos'
@@ -28,6 +28,10 @@ afirmacoes:
   localizacao: seção 'Template-Driven Quality', subseção 'Forcing Explicit Uncertainty Markers'
   resultado: confirmada
   nota: A página foi lida por resumo do WebFetch; a frase é paráfrase.
+- texto: "o rótulo do marco, 'ambiguidade resolvida', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/P1-05/2026-10-05-aviso-de-cancelamento.md

@@ -1,6 +1,7 @@
 # Componentes externos com versão fixada (spec §6.6 e R20).
 # Um mecanismo externo de prática usa a forma <componente>:<caminho>@<versao>,
 # e a versão precisa ser igual à fixada aqui. Atualizar = mudar aqui e conferir os mecanismos.
+# Coleções de skills externas (spec da trilha, R4): a ferramenta `skill` aponta a coleção pelo nome.
 componentes:
   sdd-scaffold:
     repo: https://github.com/thisco/sdd-scaffold
@@ -14,3 +15,25 @@ componentes:
     repo: https://github.com/thisco/gateway-poc
     versao: "0.1.0"
     commit: 571a091c8a8f9ff99aba89c064d69a36ff195bef
+  superpowers:
+    repo: https://github.com/obra/superpowers
+    versao: "7.0.0"
+    commit: bb92a77741419a4ab5f06e711a283343f1ada0c3
+  mattpocock-skills:
+    repo: https://github.com/mattpocock/skills
+    versao: "1.3.1"
+    commit: 49dd158d1076134a641b33efb035946536778336
+  agent-skills:
+    repo: https://github.com/addyosmani/agent-skills
+    versao: "0.6.13"
+    # tag 0.6.13 (2026-10-13), o próprio commit fixado
+    commit: aeac41d4d005999432bb7312f7ff06383a91d59d
+  claude-plugins-official:
+    repo: https://github.com/anthropics/claude-plugins-official
+    versao: "2026.10.15"
+    # o repositório não publica versão: a versão é a data do commit
+    commit: 8f814f49002ff824e8a9ba43cf96112dc7f5948d
+  playwright-mcp:
+    repo: https://github.com/microsoft/playwright-mcp
+    versao: "0.0.83"
+    commit: f183dad4a52965583e3cc1d59b88cdc279e2e57d

@@ -1,5 +1,5 @@
 conteudo: P1-04
-verificado_em: '2026-10-06'
+verificado_em: '2026-10-21'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a skill manda redigir a spec como um delta, que descreve a mudança e não o sistema inteiro
@@ -47,6 +47,10 @@ afirmacoes:
 - texto: a Thoughtworks distingue spec-first (escrita antes e usada no fluxo) de spec-anchored (mantida depois da tarefa)
   ref: bockeler-sdd-3-tools
   localizacao: seção sobre os três níveis de SDD
+  resultado: confirmada
+- texto: "o rótulo do marco, 'spec como delta', resume o que a prática exige e aparece na etapa Especificar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha, etapa Especificar, portão e 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

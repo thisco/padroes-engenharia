@@ -1,6 +1,7 @@
 ---
 id: ARQ-02
 titulo: "Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR"
+marco: "arquitetura viva no mesmo PR"
 dominio: arquitetura
 subdominio: null
 momento: antes-do-merge
@@ -11,7 +12,7 @@ aplica: []
 referencias: [sdd-scaffold-arquitetura-viva, sdd-scaffold-drift-arquitetura, sdd-scaffold-steering-arquitetura]
 relacionadas: [ARQ-01, ARQ-04]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-10-21
 revisar_ate: 2027-04-07
 resumo: "O PR que cria, remove ou renomeia um componente atualiza compose, módulo de IaC, diagrama e mapa.yml juntos, e um verificador que reprova confere os quatro."
 ferramentas_aprovadas: []

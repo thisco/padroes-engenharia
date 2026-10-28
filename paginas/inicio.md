@@ -2,21 +2,24 @@
 titulo: Construir software com IA sem perder a arquitetura
 descricao: 'Portal de padrões de engenharia para times que usam agentes de código: o que fazer, com que força e
   com que evidência.'
-lead: Práticas de engenharia para times que desenvolvem software com agentes de código, mantidas pela equipe de engenharia. Cada
-  prática diz o que fazer, com que força e de onde vem a evidência. Quem está começando vai em 'Comece aqui'; quem
-  já está no meio de uma mudança escolhe o momento mais abaixo.
+lead: 'Práticas de engenharia para times que desenvolvem com agentes de código. Cada prática diz o
+  que fazer, com que força e de onde vem a evidência. Escolha a porta: projeto novo, projeto existente
+  ou no meio de uma mudança.'
 caminhos:
 - titulo: Projeto novo
-  texto: Gere o projeto já com as regras, o roteiro de trabalho e as verificações automáticas.
-  destino: starters/sdd-scaffold
+  texto: 'Comece com o projeto já montado: regras, roteiro de trabalho e verificações.'
+  destino: guias/do-zero-a-primeira-mr
 - titulo: Projeto existente
-  texto: Ligue as verificações automáticas ao pipeline do GitLab.
-  destino: receitas/ligar-ci-gitlab-travas
+  texto: Traga as regras e as verificações para um repositório que já existe.
+  destino: guias/brownfield-em-5-passos
+- titulo: No meio de uma mudança
+  texto: Veja o que a etapa em que você está exige para sair dela.
+  destino: trilha
 fatos:
 - Cada afirmação tem uma fonte, aberta e conferida na web por quem escreveu.
 - Cada lote de conteúdo passa por uma conferência de executabilidade feita por um agente independente, que segue os passos e abre uma fonte por conteúdo; a revisão com modelo forte vale quando há mudança de motor ou de schema, ou achado crítico.
 - Todo exemplo publicado foi executado, e a execução está registrada na página.
-revisado_em: '2026-10-04'
+revisado_em: '2026-10-21'
 referencias:
 - anthropic-claude-code-expertise
 ---

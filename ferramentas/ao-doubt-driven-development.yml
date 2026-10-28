@@ -1,0 +1,35 @@
+id: ao-doubt-driven-development
+titulo: doubt-driven-development
+categoria: skill
+colecao: agent-skills
+status: adotar
+casos: [origem-do-modelo]
+versao_minima: "0.6.13"
+dono: engenharia
+praticas: [P1-09]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: decidir
+    papel: caminho
+    bom_quando: "a decisão não é trivial (lógica nova, fronteira de módulo, propriedade que o compilador não verifica, efeito irreversível): um revisor de contexto limpo, instruído a refutar, cruza o artefato e o contrato antes de a decisão valer."
+    cuidado: "o revisor recebe artefato e contrato, nunca a conclusão; no máximo três ciclos antes de escalar à pessoa, e em sessão interativa a skill sempre oferece uma segunda opinião de outro modelo."
+como_instalar: |
+  Instale a coleção inteira no seu harness: o README traz a instalação por harness e um comando que
+  instala as 25 skills de uma vez [ref:agent-skills-readme]. Instalar só uma skill não traz a pasta
+  references/ do repositório [ref:agent-skills-readme], que esta skill cita (a pasta references/ do
+  repositório (orchestration-patterns.md)). Sem instalador, copie skills/doubt-driven-development/ e
+  references/ do commit fixado (aeac41d) para a pasta de skills do harness, com references/ dois
+  níveis acima da pasta da skill, como os links ../../references/ exigem
+  [ref:agent-skills-doubt-driven-development]; o README sugere, em vez disso, copiar o checklist
+  para dentro da skill instalada [ref:agent-skills-readme]. O caminho de cada harness está na página
+  da ferramenta dele.
+limites: |
+  O caso de origem instalou a coleção em 2026-05-07 (742dca5) e em 2026-06-10 (5e262b2)
+  [ref:origem-do-modelo-instalacoes]; o portal fixa a 0.6.13, commit aeac41d de outubro
+  [ref:portal-referencias]. Feita para a sessão principal, que pode abrir um revisor de contexto
+  limpo; dentro de um subagente, o caminho preferido é avisar a pessoa de que ela não roda aninhada,
+  e só em último caso degrada para autoquestionamento, dizendo isso. O ciclo é limitado a três
+  voltas, e a skill manda oferecer, a cada ciclo interativo, uma revisão por outro modelo, que só
+  roda com autorização explícita da pessoa [ref:agent-skills-doubt-driven-development].
+referencias: [agent-skills-doubt-driven-development, agent-skills-readme, origem-do-modelo-instalacoes, portal-referencias]

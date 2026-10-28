@@ -1,0 +1,11 @@
+id: agent-skills-deprecation-and-migration
+titulo: "agent-skills: skill deprecation-and-migration"
+organizacao: addyosmani/agent-skills
+url: https://github.com/addyosmani/agent-skills/blob/aeac41d4d005999432bb7312f7ff06383a91d59d/skills/deprecation-and-migration/SKILL.md
+tipo: comunidade
+versao: "0.6.13"
+verificado_em: 2026-10-21
+verificacao: V
+localizacao: "seções 'Core Principles', 'The Deprecation Decision', 'Compulsory vs Advisory Deprecation', 'The Migration Process' (passos 1 a 4), 'Migration Patterns' e 'Database Schema Migrations (Expand/Contract)'"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-10-21."

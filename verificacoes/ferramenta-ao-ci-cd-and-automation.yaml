@@ -1,0 +1,54 @@
+conteudo: ferramenta-ao-ci-cd-and-automation
+verificado_em: 2026-10-21
+verificador: agente-curadoria
+afirmacoes:
+  - texto: "gates de lint, tipos, testes, build, integração e auditoria antes do merge, nenhum pulável"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "seção 'The Quality Gate Pipeline': 'No gate can be skipped'"
+    resultado: confirmada
+  - texto: "lotes menores e releases frequentes reduzem risco"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "seção 'Overview', 'Faster is Safer'"
+    resultado: confirmada
+  - texto: "a falha do CI é devolvida ao agente como entrada"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "seção 'Feeding CI Failures Back to Agents'"
+    resultado: confirmada
+  - texto: "flag de feature nasce com data de remoção"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "subseção 'Feature Flags', 'Flag lifecycle': 'set a cleanup date when you create them'"
+    resultado: confirmada
+  - texto: "o CI nunca recebe segredo de produção"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "seção 'Environment Management': 'CI should never have production secrets'"
+    resultado: confirmada
+  - texto: "os exemplos são de uma plataforma de CI só, e a otimização entra quando a pipeline passa de dez minutos"
+    ref: agent-skills-ci-cd-and-automation
+    localizacao: "seções 'GitHub Actions Configuration' e 'CI Optimization'"
+    resultado: confirmada
+  - texto: "a instalação é por harness, e um comando instala as 25 skills de uma vez"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start: comando npx skills add addyosmani/agent-skills (install all 25 skills) e as subseções por ferramenta"
+    resultado: confirmada
+  - texto: "instalar só uma skill não traz a pasta references/ do repositório, e o README sugere copiar o checklist para dentro da skill instalada"
+    ref: agent-skills-readme
+    localizacao: "seção Quick Start, nota 'Installing one skill?'"
+    resultado: confirmada
+  - texto: "o caso de origem instalou o agent-skills duas vezes: 742dca5 em 2026-05-07, no primeiro harness, e 5e262b2 em 2026-06-10, no segundo"
+    ref: origem-do-modelo-instalacoes
+    localizacao: "tabela de instalações, as duas linhas addyosmani/agent-skills"
+    resultado: confirmada
+  - texto: "o portal fixa o agent-skills na 0.6.13, commit aeac41d"
+    ref: portal-referencias
+    localizacao: "lista de referências: as do agent-skills trazem a URL no commit aeac41d e a versão 0.6.13"
+    resultado: confirmada
+revisao_adversarial:
+  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
+  data: '2026-10-21'
+  achados:
+    - afirmacao: "como_instalar: copie skills/<x>/ e references/ para a pasta de skills do harness"
+      problema: "os links são ../../references/, dois níveis acima da skill, e o README sugere copiar o checklist para dentro da skill"
+      tratamento: "o texto diz onde a references/ fica, traz o hash do commit e cita a sugestão do README"
+    - afirmacao: "limites: o caso de origem usou a versão de junho de 2026 (commit 5e262b2)"
+      problema: "o caso instalou a coleção duas vezes, 742dca5 em 2026-05-07 e 5e262b2 em 2026-06-10, e o texto não dizia qual"
+      tratamento: "o limites e a afirmação citam as duas instalações"
