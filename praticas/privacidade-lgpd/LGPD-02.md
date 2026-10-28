@@ -107,7 +107,14 @@ amplia onde o dado existe e quem o alcança sem que a tarefa precise disso.
    O evento `antes-de-ferramenta` é ligado pelo harness do agente a partir do pacote, e barra a
    edição em `tests/`, `logs/` e `prompts/` antes de ela acontecer.
 8. Um número de 11 dígitos não é CPF por si só: o verificador só acusa o que passa na conferência
-   dos dígitos, e um protocolo ou um ID de pedido pode ter 11 dígitos sem ser CPF. O verificador do
+   dos dígitos, e um protocolo, um ID de pedido ou um telefone pode ter 11 dígitos sem ser CPF; na
+   forma colada, cerca de 1% dos números de 11 dígitos passa na conferência por acaso. Por isso, em
+   `logs/` a forma colada só é acusada com o rótulo "cpf" na mesma linha (em qualquer caixa) ou na
+   formatação `000.000.000-00`; em `tests/` e `prompts/` ela é acusada sempre. Quando um número
+   válido por acaso continuar acusado, isente o arquivo: crie o `.lgpd02-ignorar` na raiz, com um
+   caminho ou padrão por linha (`*`, `**`, `?`; padrão sem `/` vale em qualquer pasta; `#` é
+   comentário), e leve a linha para revisão de uma pessoa, porque a isenção vale em todas as
+   pastas e só depois de commitada. O verificador do
    portal acusa só linhas novas ou alteradas, então ao corrigir você troca cada ocorrência acusada
    (arquivo e linha), e não o arquivo inteiro; o que já estava no arquivo antes não é acusado.
 
@@ -222,7 +229,7 @@ sem hífen, em qualquer caixa), e e-mail de domínio que não seja reservado par
 `example.net`, `example.org` e subdomínios, e os TLDs `.test`, `.example`, `.invalid` e `.localhost`).
 Antes de buscar, a linha é normalizada (NFKC, de modo que dígitos, `＠`, `．` e `－` largos viram
 ASCII), perde o NUL, os caracteres invisíveis (como U+200B), as marcas combinantes e os seletores de
-variação, e `%40` vira `@`, para nada disso contornar a busca. Não é e-mail a credencial em URL (`https://usuario:senha@host`, mesmo com `%40` na senha) nem a
+variação, e `%40` vira `@`, para nada disso contornar a busca. Não é e-mail o usuário `git` de SSH (`git@github.com`), a credencial em URL (`https://usuario:senha@host`, mesmo com `%40` na senha) nem a
 forma `usuario@host:caminho/repositorio.git` do Git; e-mail numa URL sem credencial, como em
 `https://site?email=...`, é acusado. A linha é a do editor e do Git (quebra só em `\n`). A saída tem
 uma linha por achado, `<caminho>:<linha>: CPF em claro` ou `<caminho>:<linha>: e-mail em claro`, e
@@ -246,9 +253,16 @@ Os limites:
   hífen (trecho de hash, hex ou UUID) também ficam de fora, salvo o rótulo `cpf`, `nº`, `no` ou `n°`: o
   identificador com hífen (`cliente-<11 dígitos>`) e `<11 dígitos>x` não são acusados, nem o número com
   casas decimais (`<11 dígitos>.00`). Ele não distingue CPF real de CPF sintético
-  com dígitos válidos, e por isso o teste gera o CPF na hora e não o escreve no arquivo; um número de
-  11 dígitos que por acaso passe na conferência é acusado, como um celular de 11 dígitos (que também
-  é dado pessoal).
+  com dígitos válidos, e por isso o teste gera o CPF na hora e não o escreve no arquivo. Um número de
+  11 dígitos que por acaso passe na conferência (cerca de 1% deles na forma colada, como ID ou
+  telefone) é acusado em `tests/` e `prompts/`; em `logs/` só com o rótulo "cpf" na linha ou
+  formatado.
+- Isenção: o `.lgpd02-ignorar`, na raiz, com um caminho ou padrão por linha (`*`, `**`, `?`; padrão
+  sem `/` vale em qualquer pasta; `/` no fim é a pasta inteira; `#` é comentário), vale em
+  `tests/`, `logs/` e `prompts/`. Ele é lido do lado da comparação (o `HEAD` no harness e no
+  `pre-commit`, a `--base` no `ci`), então só vale depois de revisado e commitado; padrão que
+  isentaria tudo (`**`, `*`, `**/*`, `.`, `/`) sai com 2. Cada linha é uma decisão de pessoa sobre
+  um arquivo.
 - E-mail: os domínios aceitos são os reservados para teste, acima. Um `x@obj.attr` em código Python
   conta como e-mail (limite conhecido; use domínio reservado para teste). E-mail na senha de uma URL com
   credencial não é acusado; como usuário da URL (`https://<e-mail com %40>:token@host`), é. Um e-mail

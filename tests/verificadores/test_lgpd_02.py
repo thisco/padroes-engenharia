@@ -573,7 +573,7 @@ def test_email_seguido_de_dois_pontos_que_nao_e_caminho_pega(sufixo: str):
 def test_forma_scp_so_com_caminho_de_repositorio_e_inocente():
     assert not casa("git" + ARROBA + "gitlab.com:grupo/projeto.git")
     assert not casa("git" + ARROBA + "gitlab.com:projeto.git")
-    assert casa("git" + ARROBA + "gitlab.com:Senha123")
+    assert casa("deploy" + ARROBA + "gitlab.com:Senha123")
 
 
 def test_pre_commit_renomear_fixture_antiga_nao_acusa(repo_git: RepoGit):
@@ -862,3 +862,78 @@ def test_email_codificado_como_usuario_da_url_pega():
 )
 def test_credencial_em_url_continua_inocente_com_userinfo_estrito(texto: str):
     assert not casa(texto)
+
+
+# --- rodada de correção 1: forma colada em logs, isenção e git@host ------------------------------
+
+
+def test_log_com_numero_de_11_digitos_valido_sem_rotulo_nao_pega():
+    c = cpf()
+    assert not casa(f"pedido {c} aceito", "logs/app.log")
+    assert not casa(f"1,{c},Jo", "logs/app.log")
+
+
+def test_log_com_rotulo_de_cpf_ou_com_formatacao_pega():
+    c = cpf()
+    assert casa(f"cliente CPF {c} aceito", "logs/app.log")
+    assert casa(f"cpf={c}", "logs/app.log")
+    assert casa(f"pedido {com_pontuacao(c)} aceito", "logs/app.log")
+
+
+@pytest.mark.parametrize("caminho", ["tests/a.txt", "prompts/p.txt"])
+def test_forma_colada_sem_rotulo_continua_pegando_em_tests_e_prompts(caminho: str):
+    assert casa(f"pedido {cpf()} aceito", caminho)
+
+
+def _repo_com_isencao(repo_git: RepoGit, padroes: str, commitar: bool = True) -> None:
+    repo_git.escrever(".lgpd02-ignorar", padroes)
+    if commitar:
+        repo_git.adicionar(".lgpd02-ignorar")
+        repo_git.commitar("chore: isenção")
+
+
+def test_isencao_commitada_vale_no_harness_em_todas_as_pastas(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "# fixtures revisadas\ntests/fixtures/\nprompts/*.exemplo.txt\n")
+    cwd = str(repo_git.raiz)
+    for caminho in ("tests/fixtures/a.json", "prompts/x.exemplo.txt"):
+        r = harness(caminho, cpf() + "\n", cwd=cwd)
+        assert r.returncode == 0 and r.stdout == ""
+    assert harness("tests/outro.json", cpf() + "\n", cwd=cwd).returncode == 1
+
+
+def test_isencao_so_no_disco_nao_vale_no_harness(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "tests/fixtures/\n", commitar=False)
+    assert harness("tests/fixtures/a.json", cpf() + "\n", cwd=str(repo_git.raiz)).returncode == 1
+
+
+def test_isencao_vale_no_pre_commit_e_no_ci(repo_git: RepoGit):
+    _repo_com_isencao(repo_git, "tests/fixtures/\n")
+    base = repo_git._git("rev-parse", "HEAD")
+    repo_git.escrever("tests/fixtures/a.json", cpf() + "\n")
+    repo_git.escrever("tests/b.json", cpf() + "\n")
+    repo_git.adicionar("tests/fixtures/a.json", "tests/b.json")
+    pre = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert pre.returncode == 1 and pre.stdout.splitlines() == ["tests/b.json:1: CPF em claro"]
+    repo_git.commitar("feat: fixtures")
+    ci = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert ci.returncode == 1 and ci.stdout.splitlines() == ["tests/b.json:1: CPF em claro"]
+
+
+@pytest.mark.parametrize("padrao", ["**", "*", "**/*", ".", "/"])
+def test_isencao_ampla_demais_sai_2_quando_entra(padrao: str):
+    r = harness(".lgpd02-ignorar", padrao + "\n")
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
+
+
+def test_isencao_ampla_no_indice_sai_2_no_pre_commit(repo_git: RepoGit):
+    repo_git.escrever(".lgpd02-ignorar", "**\n")
+    repo_git.adicionar(".lgpd02-ignorar")
+    r = rodar(SCRIPT, "pre-commit", cwd=repo_git.raiz)
+    assert r.returncode == 2 and "isenção ampla demais" in r.stderr
+
+
+def test_usuario_git_de_ssh_nao_e_email_mas_outro_usuario_e():
+    assert not casa("ssh -T git" + ARROBA + "github.com")
+    assert not casa("ssh git" + ARROBA + "gitlab.interno.corp")
+    assert casa(email("ana.souza", "github.com"))
+    assert casa(email("gitana", "cliente-ficticio-padroes.com.br"))

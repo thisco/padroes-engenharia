@@ -4,6 +4,17 @@ Contrato: `python3 verificadores/lgpd_02.py --evento <evento> [--base <ref>]`.
 Atende `antes-de-ferramenta` (JSON no stdin), `pre-commit` (lê o índice) e `ci` (`--base` e `HEAD`).
 Só acusa linha nova ou alterada: no harness, em relação ao arquivo em disco; no pre-commit, em
 relação ao `HEAD`; no ci, em relação à `--base`.
+
+Dois cuidados contra falso positivo. Em `logs/`, o número de 11 dígitos colados só é acusado com o
+rótulo "cpf" na mesma linha (sem distinguir caixa) ou na forma `000.000.000-00`: com o dígito
+verificador válido, cerca de 1% dos números de 11 dígitos (IDs, telefones) passam pela conta. Em
+`tests/` e `prompts/` a forma colada continua acusada. E o `.lgpd02-ignorar`, na raiz, isenta
+caminhos: um caminho ou padrão por linha (`*`, `**`, `?`; padrão sem `/` vale em qualquer pasta;
+`/` no fim é a pasta inteira; `#` é comentário), em todas as pastas. Ele é lido do lado da
+comparação (o `HEAD` no harness e no pre-commit, ou o disco fora de repositório Git; a `--base` no
+ci), então só vale depois de revisado e commitado. Padrão que isentaria tudo (`**`, `*`, `**/*`,
+`.`, `/`) sai 2 ("isenção ampla demais") quando entra.
+
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso
 ou estado indeterminado (mensagem em stderr). O dado achado nunca é impresso: só o tipo e a posição.
 """
@@ -28,13 +39,17 @@ PASTAS = ("tests", "logs", "prompts")
 # (trecho de hash, hex ou UUID) e o ponto decimal também (`3.<11 dígitos>`, `<11 dígitos>.50`). A
 # exceção é o rótulo colado, em qualquer caixa: `cpf`, `nº`, `no` ou `n°`, com ou sem hífen (o `º`
 # já virou `o` no NFKC).
-CPF = re.compile(
-    r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)"
-    r"|(?<![A-Za-z0-9-])\d{9}-\d{2}(?![A-Za-z0-9-])"
-    r"|(?:(?<![A-Za-z0-9-])|(?<![A-Za-z0-9])(?i:cpf|n[o°])-?)(?<!\d\.)\d{11}(?![A-Za-z0-9-])(?!\.\d)"
+CPF_FORMATADO = re.compile(
+    r"(?<!\d)\d{3}\.\d{3}\.\d{3}-\d{2}(?!\d)|(?<![A-Za-z0-9-])\d{9}-\d{2}(?![A-Za-z0-9-])"
 )
+CPF_COLADO = re.compile(
+    r"(?:(?<![A-Za-z0-9-])|(?<![A-Za-z0-9])(?i:cpf|n[o°])-?)(?<!\d\.)\d{11}(?![A-Za-z0-9-])(?!\.\d)"
+)
+ROTULO_CPF = re.compile(r"cpf", re.IGNORECASE)
+ARQUIVO_DE_ISENCAO = ".lgpd02-ignorar"
+AMPLA_DEMAIS = re.compile(r"[*?./]+")
 # O domínio termina em letras (2 ou mais): `a@b.T` de multiplicação de matrizes não é e-mail.
-EMAIL = re.compile(r"[\w.+-]+@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
+EMAIL = re.compile(r"([\w.+-]+)@((?:[\w-]+\.)+[A-Za-z]{2,})(?![\w-])")
 # Forma SCP do Git (`usuario@host:grupo/projeto.git`): depois do ":" vem caminho de repositório.
 SCP = re.compile(r":(?=[^\s:]*(?:/|\.git(?![\w-])))[^\s:]+")
 # Credencial em URL (`esquema://usuario:senha@host`): sai da linha antes da busca de e-mail. O
@@ -97,14 +112,31 @@ def e_dominio_de_teste(dominio: str) -> bool:
     return any(dominio == d or dominio.endswith("." + d) for d in DOMINIOS_DE_TESTE)
 
 
-def achados_da_linha(linha: str) -> list[str]:
+def cpf_na_linha(linha: str, caminho: str) -> bool:
+    """Há CPF válido na linha. Em `logs/` a forma colada exige o rótulo "cpf" na linha."""
+    formas = [CPF_FORMATADO]
+    if not caminho.startswith("logs/") or ROTULO_CPF.search(linha):
+        formas.append(CPF_COLADO)
+    return any(
+        cpf_valido(re.sub(r"\D", "", m.group())) for forma in formas for m in forma.finditer(linha)
+    )
+
+
+def e_usuario_git(local: str) -> bool:
+    """`git@host` é o usuário padrão de SSH dos servidores Git, não um e-mail."""
+    return local.lower() == "git"
+
+
+def achados_da_linha(linha: str, caminho: str = "tests/x") -> list[str]:
     linha = normaliza(linha)
     achados = []
-    if any(cpf_valido(re.sub(r"\D", "", m.group())) for m in CPF.finditer(linha)):
+    if cpf_na_linha(linha, caminho):
         achados.append("CPF em claro")
     sem_credencial = CREDENCIAL_EM_URL.sub("", linha)
     if any(
-        not e_dominio_de_teste(m.group(1)) and not SCP.match(sem_credencial, m.end())
+        not e_dominio_de_teste(m.group(2))
+        and not e_usuario_git(m.group(1))
+        and not SCP.match(sem_credencial, m.end())
         for m in EMAIL.finditer(sem_credencial)
     ):
         achados.append("e-mail em claro")
@@ -213,7 +245,7 @@ def achados_do_arquivo(caminho: str, novo: str, antigo: str | None) -> list[str]
             existentes[linha] -= 1
             continue
         # Nunca imprime o dado achado: o relatório do verificador também vai para o CI.
-        achados += [f"{caminho}:{n}: {a}" for a in achados_da_linha(linha)]
+        achados += [f"{caminho}:{n}: {a}" for a in achados_da_linha(linha, caminho)]
     return achados
 
 
@@ -232,8 +264,89 @@ def git(raiz: str | None, *args: str) -> bytes:
     return r.stdout
 
 
+class IsencaoAmpla(Indeterminado):
+    """O `.lgpd02-ignorar` tem padrão que isentaria tudo ou quase tudo."""
+
+
+def padroes_de_isencao(texto: str | None) -> list[re.Pattern[str]]:
+    """Um padrão por linha: `**` cruza pastas, `*` e `?` não; padrão sem `/` vale em qualquer
+    pasta; `/` no fim é a pasta inteira; `#` começa comentário."""
+    padroes = []
+    for linha in linhas(texto or ""):
+        linha = linha.strip()
+        if not linha or linha.startswith("#"):
+            continue
+        if AMPLA_DEMAIS.fullmatch(linha):
+            raise IsencaoAmpla(
+                f"isenção ampla demais em {ARQUIVO_DE_ISENCAO}: {linha!r}; isente pastas ou "
+                "arquivos pelo nome"
+            )
+        pasta = linha.endswith("/")
+        linha = linha.strip("/")
+        regex = ""
+        i = 0
+        while i < len(linha):
+            if linha.startswith("**/", i):
+                regex += "(?:.*/)?"
+                i += 3
+            elif linha.startswith("**", i):
+                regex += ".*"
+                i += 2
+            elif linha[i] == "*":
+                regex += "[^/]*"
+                i += 1
+            elif linha[i] == "?":
+                regex += "[^/]"
+                i += 1
+            else:
+                regex += re.escape(linha[i])
+                i += 1
+        if "/" not in linha:
+            regex = "(?:.*/)?" + regex
+        regex += "/.*" if pasta else "(?:/.*)?"
+        padroes.append(re.compile(regex))
+    return padroes
+
+
+def isento(caminho: str, padroes: list[re.Pattern[str]]) -> bool:
+    """O próprio `.lgpd02-ignorar` nunca é isento."""
+    return caminho != ARQUIVO_DE_ISENCAO and any(p.fullmatch(caminho) for p in padroes)
+
+
+def isencao_no_git(raiz: str, revisao: str | None) -> list[re.Pattern[str]]:
+    """O `.lgpd02-ignorar` de uma revisão (ou do índice, com `:`); sem revisão ou sem o arquivo
+    nela, não há isenção."""
+    if revisao is None:
+        return []
+    if revisao == ":":
+        listado = git(raiz, "ls-files", "--cached", "--", ARQUIVO_DE_ISENCAO)
+        objeto = f":{ARQUIVO_DE_ISENCAO}"
+    else:
+        listado = git(raiz, "ls-tree", "--name-only", revisao, "--", ARQUIVO_DE_ISENCAO)
+        objeto = f"{revisao}:{ARQUIVO_DE_ISENCAO}"
+    if not listado.strip():
+        return []
+    return padroes_de_isencao(decodifica(git(raiz, "show", objeto)))
+
+
+def isencao_da_comparacao(raiz: str, antes: str | None, depois: str) -> list[re.Pattern[str]]:
+    """A isenção do lado da comparação (`antes`), com o lado novo (`depois`) validado: padrão amplo
+    que entra sai 2. Se só o lado da comparação tem o padrão amplo, o lado novo o corrigiu e vale a
+    isenção nova."""
+    nova = isencao_no_git(raiz, depois)
+    try:
+        return isencao_no_git(raiz, antes)
+    except IsencaoAmpla:
+        return nova
+
+
 def varre_diferenca(
-    raiz: str, comparacao: list[str], antes: str, depois: str, avisos: list[str]
+    raiz: str,
+    comparacao: list[str],
+    antes: str,
+    depois: str,
+    isencao: list[re.Pattern[str]],
+    avisos: list[str],
 ) -> list[str]:
     """Varre as linhas novas dos arquivos adicionados, modificados, renomeados ou com tipo trocado.
 
@@ -252,7 +365,9 @@ def varre_diferenca(
         caminhos = [p.decode("utf-8", "replace") for p in pedacos[i + 1 : i + 1 + n]]
         i += 1 + n
         velho, caminho = caminhos[0], caminhos[-1]
-        if campos[1] in MODOS_PULADOS or not varre_caminho(caminho, avisos):
+        if campos[1] in MODOS_PULADOS or isento(caminho, isencao):
+            continue
+        if not varre_caminho(caminho, avisos):
             continue
         novo = decodifica(git(raiz, "show", f"{depois}{caminho}"))
         if novo is None:
@@ -276,17 +391,47 @@ def evento_harness(avisos: list[str]) -> list[str]:
     cwd = entrada.get("cwd")
     if caminho is not None:
         caminho = relativo_a_raiz(caminho, cwd if isinstance(cwd, str) else None)
+    if caminho == ARQUIVO_DE_ISENCAO and isinstance(conteudo, str):
+        padroes_de_isencao(conteudo)  # a isenção ampla é recusada quando entra
     if caminho is None or not varre_caminho(caminho, avisos):
         return []
     if conteudo is None:
         if entrada.get("ferramenta") in ("editar", "escrever"):
             raise Indeterminado(f"{caminho}: sem `conteudo` para uma escrita; não dá para avaliar")
         return []
+    raiz_cwd = cwd if isinstance(cwd, str) else None
     try:
-        antigo = decodifica((Path(cwd if isinstance(cwd, str) else ".") / caminho).read_bytes())
+        antigo = decodifica((Path(raiz_cwd or ".") / caminho).read_bytes())
     except OSError:
         antigo = None
-    return achados_do_arquivo(caminho, conteudo, antigo)
+    achados = achados_do_arquivo(caminho, conteudo, antigo)
+    if achados and isento(caminho, isencao_do_harness(raiz_cwd)):
+        return []
+    return achados
+
+
+def isencao_do_harness(cwd: str | None) -> list[re.Pattern[str]]:
+    """No harness, a isenção vem do `HEAD` do repositório (a que já passou pela revisão; o agente
+    não se isenta gravando o arquivo no disco); fora de repositório Git, do disco."""
+    if not cwd or not os.path.isdir(cwd):
+        return []
+    try:
+        raiz = git(cwd, "rev-parse", "--show-toplevel").decode("utf-8").strip()
+    except Indeterminado:
+        raiz = None  # fora de repositório (ou sem git): vale o disco
+    if raiz:
+        try:
+            head = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
+        except Indeterminado:
+            return []  # repositório sem commit: nenhuma isenção revisada
+        try:
+            return isencao_no_git(raiz, head)
+        except IsencaoAmpla:
+            pass  # a ampla em vigor se corrige no disco: vale a do disco
+    try:
+        return padroes_de_isencao(decodifica((Path(raiz or cwd) / ARQUIVO_DE_ISENCAO).read_bytes()))
+    except OSError:
+        return []
 
 
 def raiz_do_projeto() -> str:
@@ -295,13 +440,21 @@ def raiz_do_projeto() -> str:
 
 def evento_pre_commit(avisos: list[str]) -> list[str]:
     # `diff --cached` sem revisão compara com o HEAD, ou com a árvore vazia se ainda não há commit.
-    return varre_diferenca(raiz_do_projeto(), ["--cached"], "HEAD:", ":", avisos)
+    raiz = raiz_do_projeto()
+    try:
+        head: str | None = git(raiz, "rev-parse", "--verify", "--quiet", "HEAD").decode().strip()
+    except Indeterminado:
+        head = None  # repositório sem commit: tudo no índice é novo
+    isencao = isencao_da_comparacao(raiz, head, ":")
+    return varre_diferenca(raiz, ["--cached"], "HEAD:", ":", isencao, avisos)
 
 
 def evento_ci(base: str | None, avisos: list[str]) -> list[str]:
     if not base:
         raise Indeterminado("o evento ci exige --base <ref>")
-    return varre_diferenca(raiz_do_projeto(), [base, "HEAD"], f"{base}:", "HEAD:", avisos)
+    raiz = raiz_do_projeto()
+    isencao = isencao_da_comparacao(raiz, base, "HEAD")
+    return varre_diferenca(raiz, [base, "HEAD"], f"{base}:", "HEAD:", isencao, avisos)
 
 
 def decide(evento: str, base: str | None, avisos: list[str]) -> list[str]:
