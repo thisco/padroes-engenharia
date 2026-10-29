@@ -1,0 +1,10 @@
+id: anthropic-admin-api
+titulo: "Admin API"
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/manage-claude/admin-api
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "quadro inicial: 'An Admin API key (starting with sk-ant-admin...)'"
+dominios: [seguranca]
+notas: "docs.anthropic.com/en/api/administration-api redireciona (301) para esta página."

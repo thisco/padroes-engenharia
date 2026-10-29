@@ -1,0 +1,11 @@
+id: go-mod-reference
+titulo: "Go Modules Reference"
+organizacao: Go Project
+url: https://go.dev/ref/mod
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção 'go.mod files': diretivas require, replace, tool, exclude e retract, e o comentário // indirect"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

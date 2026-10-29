@@ -1,0 +1,11 @@
+id: codex-mcp
+titulo: Model Context Protocol - Codex
+organizacao: OpenAI
+url: https://learn.chatgpt.com/docs/extend/mcp
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção de configuração do config.toml: tabela [mcp_servers.<nome>], command, args, env, url, http_headers e a configuração por projeto em .codex/config.toml"
+dominios:
+- ia-no-produto
+notas: null

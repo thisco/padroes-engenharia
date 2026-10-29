@@ -1,0 +1,11 @@
+id: claude-code-mcp
+titulo: Connect Claude Code to tools via MCP
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/mcp
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção do escopo de projeto (.mcp.json na raiz, objeto mcpServers) e a lista de valores de type (stdio, http, sse, streamable-http como alias de http)"
+dominios:
+- ia-no-produto
+notas: null

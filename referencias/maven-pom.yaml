@@ -1,0 +1,11 @@
+id: maven-pom
+titulo: "POM Reference"
+organizacao: Apache Maven
+url: https://maven.apache.org/pom.html
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções Dependencies (groupId, artifactId, scope, systemPath), Parent, Build plugins, Repositories e Plugin Repositories"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

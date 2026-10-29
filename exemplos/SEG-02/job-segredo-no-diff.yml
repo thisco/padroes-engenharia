@@ -1,0 +1,32 @@
+# Job `segredo-no-diff` (SEG-02): roda o verificador do portal na MR e no push da branch padrão.
+# Não roda o verificador da própria MR: baixa-o do portal publicado, confere a versão fixada e o
+# sha256 do manifesto.json do pacote, e só então o roda. Saída 1 ou 2 falha o job (força bloqueia).
+stages:
+  - travas
+
+segredo-no-diff:
+  stage: travas
+  image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
+    PADROES_URL: "<URL do portal>"
+    PADROES_VERSAO: "1.1.0"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - git config --global --add safe.directory "$PWD"
+    - |
+      python3 -I - <<'PY'
+      import hashlib, json, os, sys, urllib.request
+      pacote = os.environ["PADROES_URL"].rstrip("/") + "/pacote/"
+      manifesto = json.load(urllib.request.urlopen(pacote + "manifesto.json"))
+      if manifesto["versao"] != os.environ["PADROES_VERSAO"]:
+          sys.exit("SEG-02: o portal publicado não está na versão fixada em PADROES_VERSAO")
+      dados = urllib.request.urlopen(pacote + "verificadores/seg_02.py").read()
+      if hashlib.sha256(dados).hexdigest() != manifesto["arquivos"]["verificadores/seg_02.py"]:
+          sys.exit("SEG-02: o verificador baixado não bate com o manifesto do pacote")
+      open("/tmp/padroes-seg_02.py", "wb").write(dados)
+      PY
+    - BASE="${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}"
+    - python3 -I /tmp/padroes-seg_02.py --evento ci --base "$BASE"

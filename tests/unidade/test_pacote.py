@@ -132,3 +132,26 @@ def test_verificar_sem_manifesto(tmp_path):
     assert verificar_pacote(tmp_path / "vazio") == [
         Erro("pacote/manifesto.json", "arquivo", "R-PACOTE", "manifesto ausente")
     ]
+
+
+def test_pacote_leva_verificadores_ordenados_sem_ocultos_nem_readme(repo_minimo):
+    site = _site(repo_minimo)
+    pasta = repo_minimo / "verificadores"
+    pasta.mkdir()
+    (pasta / "x_01.py").write_text("print('x')\n", encoding="utf-8")
+    (pasta / "a_01.py").write_text("print('a')\n", encoding="utf-8")
+    (pasta / "README.md").write_text("# Contrato\n", encoding="utf-8")
+    (pasta / ".oculto.py").write_text("x", encoding="utf-8")
+    (pasta / "_auxiliar.py").write_text("x", encoding="utf-8")
+    (pasta / "__init__.py").write_text("", encoding="utf-8")
+    (pasta / "__pycache__").mkdir()
+    (pasta / "__pycache__" / "x_01.cpython-312.pyc").write_bytes(b"x")
+    arquivos = montar_pacote(site)
+    verificadores = [c for c in arquivos if c.startswith("verificadores/")]
+    assert verificadores == ["verificadores/a_01.py", "verificadores/x_01.py"]
+    sha = hashlib.sha256(b"print('x')\n").hexdigest()
+    assert manifesto(site, arquivos)["arquivos"]["verificadores/x_01.py"] == sha
+
+
+def test_pacote_sem_pasta_de_verificadores_nao_tem_entrada_deles(repo_minimo):
+    assert not [c for c in montar_pacote(_site(repo_minimo)) if c.startswith("verificadores/")]

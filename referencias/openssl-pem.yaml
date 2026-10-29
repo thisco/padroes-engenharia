@@ -1,0 +1,10 @@
+id: openssl-pem
+titulo: "PEM_read_bio_PrivateKey (OpenSSL 3.0 manual)"
+organizacao: OpenSSL
+url: https://docs.openssl.org/3.0/man3/PEM_read_bio_PrivateKey/
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'PEM ENCRYPTION FORMAT': '-----BEGIN RSA PRIVATE KEY-----' com as linhas Proc-Type e DEK-Info do formato tradicional"
+dominios: [seguranca]
+notas: null

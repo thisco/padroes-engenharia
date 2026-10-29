@@ -1,5 +1,6 @@
+# afirmações externas anteriores a 2026-10-08 (LiteLLM, Azure, Anthropic) não mudaram nesta rodada; as de GitLab foram abertas na web em 2026-10-08, menos Pipelines must succeed (da CICD-02)
 conteudo: P2-01
-verificado_em: '2026-10-04'
+verificado_em: '2026-10-08'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'a chave virtual é a identidade da aplicação no gateway: o gasto é acompanhado por chave, usuário
@@ -27,6 +28,22 @@ afirmacoes:
     acontece sob alguma identidade e a segurança precisa saber de quem
   ref: anthropic-ciso-agentic-ai
   localizacao: seções sobre adoção paralela e identidade do agente (publicado em 2026-07-17)
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: 'tabela de variáveis de pipelines de merge request (aberta na web em 2026-10-08; linha "CI_MERGE_REQUEST_DIFF_BASE_SHA", "The base SHA of the merge request diff")'
+  resultado: confirmada
+- texto: o merge check Pipelines must succeed é o que faz o pipeline vermelho impedir o merge
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: seção do merge check (confirmada na curadoria da CICD-02 em 2026-10-07; não reaberta nesta rodada, e o texto só a usa para a marca do projeto)
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-10-08; 'To disable shallow clone and make GitLab CI/CD fetch all branches and tags each time, keep the value empty or set to 0'). A parte 'o git diff com --base precisa do commit da base no clone' é do portal, sem referência."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-10-08; 'an orange warning indicates that a job failed. However, the pipeline is successful and the associated commit is marked as passed with no warnings'). Que a MR possa entrar é consequência e não foi exercitada num GitLab real."
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -96,6 +113,20 @@ execucoes:
   evidencia: 'ruim/app.py:1:URL = "https://api.openai.com/v1" e P2-01: chamada direta a provedor ou chave
     de provedor encontrada (acima). saida=1'
   data: '2026-10-04'
+- tipo: arquivo
+  arquivo: verificadores/p2_01.py
+  comando: python3 -I verificadores/p2_01.py --evento ci --base <sha> (e com base inexistente, evento pre-commit e fora de repositório), num repositório Git temporário; pytest -q tests/verificadores/test_p2_01.py
+  ambiente: repositório Git novo em /tmp/cfd-t4-p201 com um commit-base e uma MR com src/app.py (cliente com o domínio do provedor e uma chave de formato sk-ant), tests/test_app.py (com o domínio) e src/ok.py (cliente do gateway); Python 3.14; macOS (T4 da curadoria de força dura). Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'src/app.py:3: chamada direta ao provedor (api.openai.com) e src/app.py:3: chave de provedor de modelo em claro, saída 1; o teste em tests/ e o cliente do gateway não foram acusados, e o valor da chave não aparece. Base inexistente: "P2-01: git diff --raw falhou: fatal: ambiguous argument ''nao-existe''..." em stderr, saída 2. Evento pre-commit: "evento não atendido: pre-commit (atende antes-de-ferramenta e ci)", saída 2. Fora de repositório: "not a git repository", saída 2. pytest: 135 passed em tests/verificadores/test_p2_01.py na primeira rodada; 139 na rodada de correção 1, com o caminho com barra invertida e absoluto no harness.'
+  data: '2026-10-08'
+- tipo: arquivo
+  arquivo: verificadores/p2_01.py
+  comando: JSON no stdin de python3 -I verificadores/p2_01.py --evento antes-de-ferramenta, com caminho "src\\app.py" e com caminho absoluto sob o cwd, num diretório temporário
+  ambiente: diretório temporário vazio; Python 3.14; macOS (rodada de correção 1 da T4)
+  resultado: passou
+  evidencia: 'caminho com barra invertida: "src/app.py:1: chamada direta ao provedor (api.openai.com)", saída 1; caminho absoluto em tests/ sob o cwd: nada em stdout, saída 0. pytest: 139 passed em test_p2_01.py.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: P2-01-prompt-1
   harness: claude-code
@@ -109,7 +140,7 @@ execucoes:
   data: '2026-10-04'
 revisao_adversarial:
   revisor: sessao-independente
-  data: '2026-10-04'
+  data: '2026-10-08'
   achados:
   - afirmacao: pedir um modelo fora da lista da chave é recusado [ref:litellm-virtual-keys]
     problema: a fonte só diz que a chave controla o acesso a modelos; a recusa vem da execução da curadoria
@@ -143,3 +174,18 @@ revisao_adversarial:
   - afirmacao: 'não executável sem inventar: não há time do gateway num repositório vazio'
     problema: só o gateway de teste existe
     tratamento: o passo 1 fala do time do gateway e o Exemplo traz o gateway de teste
+  - afirmacao: 'P2-01.md, passo 5: "GIT_DEPTH 0 traz o histórico de que o diff precisa"'
+    problema: '[ref] a fonte só diz que GIT_DEPTH 0 desliga o clone raso; a afirmação foi copiada da CICD-02 sem reabrir a página.'
+    tratamento: 'Tratado: texto reescrito para "desliga o clone raso [ref:gitlab-git-depth]" e, sem referência, "o git diff com --base precisa do commit da base"; página aberta em 2026-10-08.'
+  - afirmacao: 'P2-01.md, passo 5: o job laranja não impede o merge'
+    problema: '[ref] nenhuma referência sustentava; o corpo não dizia que não foi exercitado num GitLab real.'
+    tratamento: 'Tratado: nova referência gitlab-allow-failure (página aberta em 2026-10-08: o pipeline é bem-sucedido com o job em aviso laranja); o corpo diz que o allow_failure não foi exercitado num GitLab real.'
+  - afirmacao: 'P2-01.md, passo 5: CI_MERGE_REQUEST_DIFF_BASE_SHA'
+    problema: '[ref] a fonte sustenta, mas a referência não fora atualizada e a afirmação foi copiada sem reabrir.'
+    tratamento: 'Tratado: página aberta em 2026-10-08; localizacao e verificado_em da referência atualizados.'
+  - afirmacao: 'P2-01.md, Como verificar: "o candidato varre a pasta inteira"'
+    problema: '[ref] sobre o próprio .sh do repositório.'
+    tratamento: 'Aceito: confere com o grep -r do candidato; não precisa de referência externa.'
+  - afirmacao: 'P2-01.md, passos 1 a 6 e Exemplo'
+    problema: '[executabilidade] passo 1 (gateway de teste sem dizer onde estão os arquivos), passo 2 (sem .env.example num repositório vazio), passos 3 e 4 (exigem aplicação e catálogo), passo 5 (pacote inexistente localmente, gatilho de harness sem como registrar, stage gates, {URL do portal} sem valor), passo 6 (depende do time do gateway), Exemplo (Docker e pip install).'
+    tratamento: 'Tratado no texto: passo 1 aponta exemplos/P2-01/; passo 2 manda criar o .env.example; passos 3 e 4 dizem o que pedem e o que o Exemplo oferece sem eles; passo 5 manda baixar de <URL do portal>/pacote/verificadores/p2_01.py, diz que o gatilho de harness só liga com o runtime (F2) e o instalador (F4) e que hoje só o CI liga o verificador, e usa "o stage que o projeto usar"; passo 6 diz quem bloqueia a chave sem o time. O Exemplo continua pedindo Docker e pip install: é o gateway de teste, e o texto diz isso.'

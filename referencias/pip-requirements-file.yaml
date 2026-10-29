@@ -1,0 +1,11 @@
+id: pip-requirements-file
+titulo: "Requirements File Format (documentação do pip)"
+organizacao: Python Packaging Authority
+url: https://pip.pypa.io/en/stable/reference/requirements-file-format/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções de estrutura, comentários, continuação de linha, formas de requisito (nome, URL com @, caminho) e opções -r, -c, -e, -i, --extra-index-url, -f, --hash"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

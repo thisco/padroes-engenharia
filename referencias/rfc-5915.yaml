@@ -1,0 +1,11 @@
+id: rfc-5915
+titulo: "RFC 5915: Elliptic Curve Private Key Structure"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc5915
+tipo: padrao-aberto
+publicado_em: 2010-06-01
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 4: a codificação PEM entre '-----BEGIN EC PRIVATE KEY-----' e '-----END EC PRIVATE KEY-----'"
+dominios: [seguranca]
+notas: null

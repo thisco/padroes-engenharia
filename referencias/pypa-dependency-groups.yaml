@@ -1,0 +1,11 @@
+id: pypa-dependency-groups
+titulo: "Especificação dos grupos de dependências (Dependency Groups)"
+organizacao: Python Packaging Authority
+url: https://packaging.python.org/en/latest/specifications/dependency-groups/
+tipo: padrao-aberto
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "tabela [dependency-groups] (lista de requisitos por grupo) e 'Dependency Group Include'"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

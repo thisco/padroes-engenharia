@@ -49,6 +49,13 @@ retirado, minor para conteúdo novo, patch para texto e links.
 - Cinco termos no glossário: etapa, passo, marco, caminho e trilha pronta.
 - ADRs 0010 (trilha, não trilho; sempre a versão mais nova) e 0011 (o caso de origem volta,
   sanitizado; substitui em parte a 0006).
+- Verificadores internos em `verificadores/` (ADR 0012), cada um com teste em `tests/verificadores/`
+  e copiado para `public/pacote/verificadores/`: `api_02.py`, `cicd_02.py`, `lgpd_02.py`, `p2_01.py`,
+  `p3_06.py`, `seg_02.py` e `seg_03.py`. Só usam a biblioteca padrão.
+- Sete práticas passam a ter força acima de `orienta`, com `mecanismo` estruturado, gatilhos de
+  harness, Git ou CI e mensagem que diz o que fazer: SEG-02 e LGPD-02 `bloqueia`; P3-06 e SEG-03
+  `pede-aprovacao`; API-02, CICD-02 e P2-01 `avisa`. O catálogo passa a ter 13 práticas acima de
+  `orienta`.
 
 ### Alterado
 

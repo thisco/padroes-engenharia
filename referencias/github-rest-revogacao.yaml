@@ -1,0 +1,10 @@
+id: github-rest-revogacao
+titulo: "REST API endpoints for revocation"
+organizacao: GitHub
+url: https://docs.github.com/en/rest/credentials/revoke
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'Revoke a list of credentials', exemplo do corpo da requisição: array credentials com um token de cada tipo (ghp_, github_pat_, gho_, ghu_ e ghr_ seguidos de 1234567890abcdef…)"
+dominios: [seguranca]
+notas: "Os cinco valores completos estão em EXEMPLOS_DOCUMENTADOS de verificadores/seg_02.py (montados em partes)."

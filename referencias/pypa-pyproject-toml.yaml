@@ -1,0 +1,11 @@
+id: pypa-pyproject-toml
+titulo: "Especificação do pyproject.toml"
+organizacao: Python Packaging Authority
+url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+tipo: padrao-aberto
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções 'dependencies', 'optional-dependencies' e 'Declaring build system dependencies: the [build-system] table'"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

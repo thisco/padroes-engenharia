@@ -1,3 +1,4 @@
+# verificado_em 2026-10-08 (rodada de correção 1 da curadoria de força dura): as afirmações externas não mudaram nesta rodada e foram verificadas em 2026-10-06
 # prompt alterado em 2026-10-07 após a conferência, sem reteste (decisão do dono)
 conteudo: LGPD-02
 verificado_em: '2026-10-21'
@@ -59,25 +60,25 @@ execucoes:
   data: '2026-10-06'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/tests/fixtures/cliente.json
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'tests/fixtures/cliente.json:1: CPF em claro e e-mail em claro; saída 1, sem imprimir o dado.'
-  data: '2026-10-06'
+  evidencia: 'dado sintético (CPF 123.456.789-09, e-mail em cliente-ficticio-padroes.com.br): tests/fixtures/cliente.json:1: CPF em claro e e-mail em claro nos dois verificadores; saída 1, sem imprimir o dado.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/logs/atendimento.log
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'logs/atendimento.log:1: CPF em claro e e-mail em claro (a linha 2, com protocolo de 11 dígitos de verificador inválido, não é acusada); saída 1.'
-  data: '2026-10-06'
+  evidencia: 'logs/atendimento.log:1: CPF em claro e e-mail em claro nos dois verificadores (a linha 2, com protocolo de 11 dígitos de verificador inválido, não é acusada); saída 1.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/antes/prompts/segunda-via.txt
-  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado antes)
-  ambiente: cópia de projeto-teste-17 em /tmp/lgpd-exec (db/migration/, docs/steering/ e scripts/ acrescentados); Python 3.14.8; macOS
+  comando: python3 scripts/verificar-dado-em-claro.py --raiz . (candidato) e python3 -I verificadores/lgpd_02.py --evento pre-commit (hospedado), estado antes
+  ambiente: repositório Git novo em /tmp/cfd-t2c-lgpd com os arquivos de exemplos/LGPD-02/antes (dados sintéticos); Python 3.14.8; macOS (rodada de correção 2)
   resultado: falhou-como-esperado
-  evidencia: 'prompts/segunda-via.txt:1: CPF em claro (com espaços) e e-mail em claro; saída 1.'
-  data: '2026-10-06'
+  evidencia: 'prompts/segunda-via.txt:1: CPF em claro (agora na forma ddd.ddd.ddd-dd, que o hospedado acusa) e e-mail em claro nos dois verificadores; saída 1.'
+  data: '2026-10-08'
 - tipo: arquivo
   arquivo: exemplos/LGPD-02/depois/tests/fixtures/cliente.json
   comando: python3 scripts/verificar-dado-em-claro.py --raiz . (estado depois)
@@ -106,6 +107,13 @@ execucoes:
   resultado: passou
   evidencia: 'prompt com [CPF] e [EMAIL]: sem achado; saída 0.'
   data: '2026-10-06'
+- tipo: arquivo
+  arquivo: verificadores/lgpd_02.py
+  comando: python3 -I verificadores/lgpd_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre exemplos/LGPD-02/antes e depois num repositório Git temporário; pytest -q tests/verificadores/test_lgpd_02.py
+  ambiente: repositórios Git novos em /tmp/cfd-t2-lgpd, /tmp/cfd-t2c-lgpd, /tmp/cfd-t2d-lgpd, /tmp/cfd-t2e-lgpd e /tmp/cfd-t2f-lgpd com os arquivos de exemplos/LGPD-02/antes e depois; Python 3.14.8; macOS (rodadas de correção 1 a 5)
+  resultado: passou
+  evidencia: 'depois, no índice: saída 0 e nada em stdout. antes, no índice e no ci contra o commit de depois: seis linhas (logs/atendimento.log:1, prompts/segunda-via.txt:1 e tests/fixtures/cliente.json:1, cada uma com "CPF em claro" e "e-mail em claro"), saída 1, sem o dado; a linha 2 do log, com protocolo de 11 dígitos de verificador inválido, não é acusada. ci com --base HEAD: saída 0 (nada mudou). pre-commit com uma linha limpa acrescentada ao log que já tinha CPF no HEAD: saída 0 (só a linha nova conta). Linha com URL SSH do Git, URL com credencial e e-mail em example.com: saída 0. antes-de-ferramenta com o log que só traz linhas já existentes em disco: saída 0. Dados do antes sintéticos (CPF 123.456.789-09; e-mail em cliente-ficticio-padroes.com.br, domínio sem registro: dig +short ... ANY sem saída e host dá NXDOMAIN). Rodadas 2 e 3, pelos testes de tests/verificadores/test_lgpd_02.py (127 passed): CPF em CSV, texto com NUL, renomeação, CSV em cp1252 nos três eventos, %40 em log de acesso, decimal com 11 casas, caminho absoluto no harness e tipo trocado (link simbólico para arquivo). Em /tmp/cfd-t2d-lgpd, o antes (dados sintéticos) segue com seis linhas e saída 1. Rodada 4, pelos mesmos testes (164 passed): senha com %40 em URL (https, amqp, redis) não é e-mail; CSV em UTF-16 sem BOM (LE e BE) com acento acusado nos três eventos; linha antiga em cp1252 com €, aspas curvas e travessão não é nova no harness; caminho com //, ./ e a/../b normalizado, ../ e link simbólico da raiz tratados; CPF colado a cpf, nº, no e n° acusado. Em /tmp/cfd-t2e-lgpd, o antes (pre-commit e ci contra o commit do depois) segue com seis linhas e saída 1; o depois, no índice de um repositório novo, sai 0. Rodada 5, pelos mesmos testes (176 passed): UTF-16 sem BOM só é lido com a densidade de NUL de texto latino (NUL antes de texto cp1252, UTF-8 com byte inválido e NUL e tabela de inteiros de 32 bits são binários, com aviso e saída 0; o CSV com acento em UTF-16-LE e BE sem BOM segue acusado); o usuário da URL para no primeiro @ ou :, e https://host,<e-mail>,<e-mail> e o e-mail com %40 como usuário da URL são acusados, enquanto as senhas com %40 (https, amqp, redis, mongodb+srv), postgresql://app:senha@ e ssh://git@ seguem inocentes. Em /tmp/cfd-t2f-lgpd, o antes (pre-commit e ci contra o commit do depois) segue com seis linhas e saída 1; o depois, no índice de um repositório novo, sai 0.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: LGPD-02-prompt-1
   harness: claude-code
@@ -131,26 +139,51 @@ execucoes:
     claro'', saída 1; arquivo que não é UTF-8 nem UTF-16: ''não varrido'', saída 1.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-06'
+  revisor: sessao-independente
+  data: '2026-10-08'
   achados:
-  - afirmacao: 'exemplos/LGPD-02/verificar-dado-em-claro.py: pasta vazia e arquivo que não decodifica'
-    problema: '[médio] com tests/ vazia imprimia ''0 arquivos varridos'' e saía 0, e o arquivo que não decodifica
-      em UTF-8 era pulado em silêncio (UTF-16 com CPF válido saía 0).'
-    tratamento: 'Tratado: nenhum arquivo varrido sai 1 com mensagem; o arquivo é lido em UTF-8 e, se falhar, em
-      UTF-16; se nenhuma serve, é listado como ''não varrido'' e o verificador sai 1.'
-  - afirmacao: LGPD-02.md, limites do verificador
-    problema: '[médio] escape unicode, base64, CPF partido em linhas e dígito verificador inválido passam, e o texto
-      não os declarava.'
-    tratamento: 'Tratado só no texto, sem mudar o verificador: o Como verificar diz que ele cobre CPF em texto claro
-      (com ou sem pontuação, UTF-8 ou UTF-16) e não cobre esses casos, que a revisão humana e a P2-04 (gateway)
-      complementam.'
-  - afirmacao: LGPD-02.md, saída do estado depois ('8 arquivos varridos')
-    problema: '[baixo] a pasta depois/ do Exemplo tem 4 arquivos; o 8 vinha do projeto-teste.'
-    tratamento: 'Tratado: a saída registrada passou a ''4 arquivos varridos'', com a frase de que o número varia
-      com o projeto.'
-  - afirmacao: LGPD-02, achado herdado (11 dígitos tratado como CPF)
-    problema: '[baixo] o verificador confere os dígitos e não acusa o protocolo de 11 dígitos; a troca indevida
-      foi do agente do teste de prompt, que trocou por arquivo e não por ocorrência.'
-    tratamento: 'Tratado no Como aplicar (passo 8): número de 11 dígitos não é CPF por si só e a troca é por ocorrência,
-      não por arquivo. O prompt não foi alterado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 7 (Rode/Deixe o verificador do portal ligado)'
+    problema: '[médio] não dizia de onde vem o verificador hospedado nem como ligar cada evento.'
+    tratamento: 'Tratado: o passo 7 diz que ele vem em pacote/verificadores/lgpd_02.py, que até o instalador (F4) se copia para o projeto, e mostra as duas linhas de comando (pre-commit e ci com --base).'
+  - afirmacao: 'LGPD-02.md, Exemplo: saídas mostradas'
+    problema: '[médio] a saída do Exemplo é do script candidato, não do verificador hospedado, e o texto não dizia.'
+    tratamento: 'Tratado: o Exemplo diz que as saídas são do script candidato (exemplos/LGPD-02/verificar-dado-em-claro.py), que o mecanismo hospedado é verificadores/lgpd_02.py e qual é o critério mais estrito dele.'
+  - afirmacao: 'LGPD-02.md, Para o agente: prompt manda rodar o candidato'
+    problema: '[médio] o prompt usa o candidato enquanto o passo 7 manda o hospedado, sem dizer qual vale onde.'
+    tratamento: 'Tratado só no texto: uma frase antes do bloco diz que o prompt usa o candidato do Exemplo. O prompt não foi alterado e não foi reexecutado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 4 (domínio reservado para teste)'
+    problema: '[baixo] não dizia quais domínios de teste o verificador aceita.'
+    tratamento: 'Tratado: o passo 4 nomeia example.com, example.net, example.org (e subdomínios) e os TLDs .test, .example, .invalid e .localhost, e diz que exemplo.com e cliente-ficticio-padroes.com.br são acusados; a mensagem do mecanismo nomeia example.com, example.org, example.net e .test.'
+  - afirmacao: 'LGPD-02.md, passo 8 (troque cada ocorrência acusada)'
+    problema: '[médio] com o arquivo inteiro varrido, corrigir só a ocorrência acusada era impossível.'
+    tratamento: 'Tratado no verificador e no texto: ele passou a acusar só linhas novas ou alteradas (harness contra o disco, pre-commit contra o HEAD, ci contra a base); o passo 8 e Os limites dizem isso.'
+  - afirmacao: 'LGPD-02.md, Como verificar: Não acusa ... nem texto de documentação'
+    problema: '[baixo] exagero: documentação dentro de tests/, logs/ e prompts/ também é varrida.'
+    tratamento: 'Tratado: a frase saiu; o Como verificar diz que a documentação dentro das três pastas também é varrida e lista o que não é acusado.'
+  - afirmacao: 'LGPD-02.md, Como aplicar, passo 6 (índice vetorial)'
+    problema: '[baixo] o passo não é executável num repositório vazio; é leitura, e já era assim.'
+    tratamento: 'Sem mudança: passo de leitura, que cita fonte e uma leitura do portal já marcada como tal.'
+  - afirmacao: 'verificadores/lgpd_02.py: CPF em CSV (re-revisão da rodada 1, N1)'
+    problema: '[importante] a rodada 1 tirou a vírgula das fronteiras e o CPF em CSV (1,<cpf>,Jo) deixou de ser acusado; o mesmo vale para ponto.'
+    tratamento: 'Tratado: a fronteira do CPF é só "não é dígito"; nos 11 dígitos colados, letra e hífen colados excluem (hash, hex, UUID). Testes em CSV, JSON, chave=valor, YAML e URL; Os limites documenta.'
+  - afirmacao: 'verificadores/lgpd_02.py: arquivo UTF-8 com NUL (re-revisão da rodada 1, N2)'
+    problema: '[importante] o NUL tornava o arquivo binário no pre-commit e no ci (saída 0), enquanto o harness barrava o mesmo conteúdo.'
+    tratamento: 'Tratado: binário é só o que não decodifica; o NUL sai na normalização. Teste passa o mesmo conteúdo com NUL pelos três eventos e espera 1 nos três.'
+  - afirmacao: 'verificadores/lgpd_02.py: normalização, número de linha, URL sem barra, SCP, renomeação, aviso por extensão (re-revisão, Minor)'
+    problema: '[baixo] NFKC e invisíveis incompletos; splitlines divergia do editor; userinfo atravessava ?, # e aspas; SCP aceitava qualquer coisa após ":"; renomeação acusava a fixture antiga; extensão ignorada não avisava.'
+    tratamento: 'Tratado: NFKC, invisíveis (Cf, U+034F, U+115F, U+1160, U+3164, U+FE00-FE0F, U+FFA0) e acento combinante colado a dígito; quebra só em \n; userinfo sem / ? # aspas nem espaço; SCP só com / ou .git depois do ":"; git diff -M com AMRT e comparação com o caminho antigo; aviso em stderr por extensão. Um teste para cada.'
+  - afirmacao: 'verificadores/lgpd_02.py: texto em cp1252 (re-revisão da rodada 2)'
+    problema: '[importante] o CSV do Excel no Windows (cp1252) não decodifica em UTF-8 e saía 0 como binário (fail-open).'
+    tratamento: 'Tratado: sem NUL, o que não é UTF-8 é lido como Latin-1 e varrido; binário é só extensão conhecida ou NUL fora do UTF-8. Teste nos três eventos.'
+  - afirmacao: 'verificadores/lgpd_02.py: e-mail com %40 em URL (re-revisão da rodada 2)'
+    problema: '[importante] GET /api?email=<local>%40<dominio> em log de acesso passava.'
+    tratamento: 'Tratado: %40 (qualquer caixa) vira @ na normalização. Teste.'
+  - afirmacao: 'verificadores/lgpd_02.py: decimal, forma ddddddddd-dd, caminho absoluto, marcas e seletores, tipo trocado (re-revisão da rodada 2, Minor)'
+    problema: '[baixo] 3.<11 dígitos> acusado; ddddddddd-dd não; caminho absoluto ou com barra invertida ignorado no harness; marca combinante e seletores de variação contornavam o e-mail; status T sem teste.'
+    tratamento: 'Tratado: ponto decimal fora da fronteira dos 11 colados; forma ddddddddd-dd aceita; caminho relativizado contra cwd (fora dele, saída 2) e com / no lugar de barra invertida; Mn e seletores U+E0100-E01EF, U+180B-180D, U+17B4/17B5 removidos; teste do status T em pre-commit e ci. Os limites ganharam ofuscação deliberada, celular de 11 dígitos, decimal e pastas sensíveis a maiúsculas.'
+  - afirmacao: 'verificadores/lgpd_02.py: senha com %40 em URL, UTF-16 sem BOM, cp1252, caminho e rótulo colado (re-revisão da rodada 3)'
+    problema: '[importante] a rodada 3 trocou %40 por @ antes de tirar a credencial, e a senha codificada (https://user:p%40ss@host, amqp, redis) virou e-mail acusado. [baixo] UTF-16 sem BOM com acento saía como binário; linha antiga em cp1252 com €, aspas curvas ou travessão era lida em Latin-1 e acusada como nova no harness; //, ./, a/../b e link simbólico da raiz no caminho do harness tiravam o arquivo do escopo ou saíam 2; CPF colado ao rótulo (cpf, nº) não era acusado.'
+    tratamento: 'Tratado: o userinfo vai até o último @ da autoridade; com NUL e fora do UTF-8, a paridade dominante dos NUL escolhe utf-16-le ou utf-16-be antes de declarar binário; cp1252 antes de Latin-1; o caminho é normalizado (posixpath.normpath), ../ sai 2 e, se o prefixo de cwd não bate, compara-se o caminho real; o rótulo cpf, nº, no ou n° (com ou sem hífen, qualquer caixa) não exclui os 11 colados. Um teste para cada. Os limites ganharam binário com NUL fora do UTF-8 e do UTF-16, Git LFS só no harness, identificador com hífen, <11 dígitos>x, <11 dígitos>.00, domínio não latino e outra codificação (entidade HTML, % duplo).'
+  - afirmacao: 'verificadores/lgpd_02.py: UTF-16 sem BOM e credencial em URL (re-revisão da rodada 4)'
+    problema: '[importante] a paridade dominante dos NUL bastava para ler como UTF-16 sem BOM: um NUL antes de texto cp1252, ou UTF-8 com byte inválido e um NUL, virava texto ilegível em UTF-16 e saía 0 sem aviso (fail-open silencioso), e o teste de binário usava 3 bytes que não representavam arquivo real. [regressão] o userinfo até o último @ da autoridade engolia o e-mail que vinha depois de uma URL sem / (https://host,<e-mail>,<e-mail>), e o e-mail com %40 como usuário da URL.'
+    tratamento: 'Tratado: UTF-16 sem BOM só quando os NUL de uma paridade cobrem ao menos metade das unidades de 16 bits e os da outra não passam de um décimo deles; fora disso é binário, com aviso em stderr. O usuário da URL para no primeiro @ ou :, e só a senha, depois do :, vai até o último @. Testes: NUL antes de cp1252 e UTF-8 inválido com NUL são binários com aviso; o teste de binário voltou a afirmar o aviso com uma tabela de inteiros de 32 bits; os dois e-mails depois de URL sem / e o e-mail como usuário da URL pegam; as senhas com %40, postgresql://app:senha@ e ssh://git@ seguem inocentes. Os limites ganharam o e-mail único colado a uma URL sem /, espaço ou aspas, o link simbólico fora das três pastas (só visto no pre-commit e no ci) e o UTF-16 sem BOM majoritariamente não latino (binário); a frase da credencial em URL passou a dizer que o e-mail na senha não é acusado e o e-mail como usuário é.'

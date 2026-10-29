@@ -3,8 +3,8 @@ titulo: "Predefined CI/CD variables reference"
 organizacao: GitLab
 url: https://docs.gitlab.com/ci/variables/predefined_variables/
 tipo: vendor
-verificado_em: 2026-10-07
+verificado_em: 2026-10-08
 verificacao: V
-localizacao: "tabela, variáveis CI_MERGE_REQUEST_TARGET_BRANCH_NAME (pipelines de merge request) e CI_COMMIT_TAG (somente em pipelines de tag)"
+localizacao: "tabela, variáveis CI_MERGE_REQUEST_TARGET_BRANCH_NAME e CI_MERGE_REQUEST_DIFF_BASE_SHA ('The base SHA of the merge request diff', pipelines de merge request) e CI_COMMIT_TAG (somente em pipelines de tag)"
 dominios: [ci-cd]
 notas: null

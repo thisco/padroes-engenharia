@@ -1,2 +1,2 @@
-Responda ao cliente com CPF 111 444 777 35 e e-mail ana.souza@empresa.com.br, explicando como
+Responda ao cliente com CPF 123.456.789-09 e e-mail cliente.ficticio@cliente-ficticio-padroes.com.br, explicando como
 pedir a segunda via do boleto.

@@ -131,7 +131,8 @@ pacote/
 ├── grafo/graph.json          grafo do catálogo (§9)
 ├── grafo/roteamento.json     o mesmo das 48 células do v0, mantido por compatibilidade
 ├── hooks/padroes_hook.py     [F2] runtime de hook
-├── verificadores/*.py        [F2] verificadores internos citados em regras.json
+├── verificadores/*.py        verificadores internos citados em regras.json; entram no pacote desde a
+│                             curadoria de força dura (delta 2026-10-08), contrato no §3 do delta
 ├── git/pre-commit.py · commit-msg.py · ci-job.yml   [F2; ci-job.yml na F4]
 └── harness/                  [F2: claude, codex; F3: kiro, antigravity, gemini]
     ├── claude/    settings.fragmento.json (hooks), .claude-plugin/plugin.json, rules/*.md
@@ -251,6 +252,9 @@ ignorada e registrada em `.padroes/log/ferramentas-desconhecidas.txt` para o `do
 - **Avaliação:** regra casa quando evento, categoria de ferramenta e caminho ou comando batem;
   se há `verificador`, ele é chamado com a entrada normalizada e devolve `casa` ou `nao-casa`
   com motivo. Mais restritivo vence.
+  O contrato concreto de chamada, entrada e saída do verificador (argumentos, JSON normalizado,
+  códigos 0, 1 e 2) está no §3 do [delta da curadoria de força dura](2026-10-08-curadoria-forca-dura-delta.md);
+  o texto abaixo vale como contrato genérico.
   **O gatilho só diz QUANDO o verificador roda; quem decide negar é o verificador**, nunca o
   casamento do glob. Ex.: `verificar_pr.py` decide "migration já aplicada" contra a branch de
   destino; se o glob de `caminhos` bastasse para negar, o hook barraria a criação da próxima

@@ -1,0 +1,10 @@
+id: gitlab-allow-failure
+titulo: "CI/CD YAML syntax reference: allow_failure"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/yaml/#allow_failure
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'allow_failure': com allow_failure: true, a falha do job mostra um aviso laranja, e o pipeline é bem-sucedido, com o commit marcado como passou, sem avisos"
+dominios: [ci-cd]
+notas: "A página descreve o comportamento do pipeline; que a MR continue podendo entrar com 'Pipelines must succeed' marcado é consequência dele e não foi exercitado num GitLab real."

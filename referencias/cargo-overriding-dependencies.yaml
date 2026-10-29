@@ -1,0 +1,11 @@
+id: cargo-overriding-dependencies
+titulo: "Overriding Dependencies (The Cargo Book)"
+organizacao: Rust Project
+url: https://doc.rust-lang.org/cargo/reference/overriding-dependencies.html
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção 'The [patch] section'"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

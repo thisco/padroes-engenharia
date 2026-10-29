@@ -1,0 +1,10 @@
+id: github-formatos-de-token
+titulo: "About authentication to GitHub"
+organizacao: GitHub
+url: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/about-authentication-to-github
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção \"GitHub's token formats\": ghp_, github_pat_, gho_, ghu_, ghs_ e ghr_"
+dominios: [seguranca]
+notas: null

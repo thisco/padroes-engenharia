@@ -1,0 +1,10 @@
+id: anthropic-autenticacao-api
+titulo: "Authentication"
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/manage-claude/authentication
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "tabela inicial ('Static sk-ant-api... secret') e exemplos de Go e da CLI (sk-ant-api03-...)"
+dominios: [seguranca]
+notas: null

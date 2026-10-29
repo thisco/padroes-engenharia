@@ -51,16 +51,25 @@ def test_gatilhos_inocentes_para_bloqueia():
 
 
 @pytest.mark.parametrize("forca", ["bloqueia", "pede-aprovacao"])
-def test_forca_dura_exige_harness_e_git(forca):
+def test_forca_dura_exige_harness(forca):
     so_git = _m(gatilhos=[fabrica.GATILHO_GIT])
     assert problemas_dos_gatilhos(forca, so_git) == [
         f"força {forca} exige gatilho de harness (antes-de-ferramenta, depois-de-ferramenta, "
         "ao-enviar-prompt ou ao-parar)"
     ]
+
+
+def test_bloqueia_exige_tambem_git_ou_ci():
     so_harness = _m(gatilhos=[fabrica.GATILHO_HARNESS])
-    assert problemas_dos_gatilhos(forca, so_harness) == [
-        f"força {forca} exige gatilho de Git ou CI (pre-commit, commit-msg ou ci)"
+    assert problemas_dos_gatilhos("bloqueia", so_harness) == [
+        "força bloqueia exige gatilho de Git ou CI (pre-commit, commit-msg ou ci)"
     ]
+
+
+def test_pede_aprovacao_so_com_harness_e_valida():
+    """CFD-D5: Git e CI não têm "perguntar"; `pede-aprovacao` só tem gatilho de harness."""
+    so_harness = _m(gatilhos=[fabrica.GATILHO_HARNESS])
+    assert problemas_dos_gatilhos("pede-aprovacao", so_harness) == []
 
 
 def test_forma_antiga_nao_basta_para_bloqueia():

@@ -1,0 +1,11 @@
+id: cargo-specifying-dependencies
+titulo: "Specifying Dependencies (The Cargo Book)"
+organizacao: Rust Project
+url: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções [dependencies], git, path, registry, 'Renaming dependencies' (package), [dev-dependencies], [build-dependencies] e dependências por plataforma"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

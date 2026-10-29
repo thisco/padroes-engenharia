@@ -1,0 +1,11 @@
+id: uv-project-dependencies
+titulo: "Managing dependencies (documentação do uv)"
+organizacao: Astral
+url: https://docs.astral.sh/uv/concepts/projects/dependencies/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções [tool.uv.sources] (index, git, url, path, workspace), [[tool.uv.index]] e dev-dependencies legado"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

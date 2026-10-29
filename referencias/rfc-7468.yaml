@@ -1,0 +1,11 @@
+id: rfc-7468
+titulo: "RFC 7468: Textual Encodings of PKIX, PKCS, and CMS Structures"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc7468
+tipo: padrao-aberto
+publicado_em: 2015-04-01
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 10 (rótulo PRIVATE KEY) e seção 11 (rótulo ENCRYPTED PRIVATE KEY); seção 13 (PUBLIC KEY, Subject Public Key Info)"
+dominios: [seguranca]
+notas: null
