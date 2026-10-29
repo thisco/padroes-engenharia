@@ -392,19 +392,99 @@ Esperado: `ok` para cada bloco, sem erro de parse.
 
 ## Evidências
 
-(preenchido pelas tarefas)
+Saídas geradas em 2026-10-29, na branch `feat/2026-10-28-programa-engenharia-de-ia`.
+
+```text
+$ .venv/bin/python scripts/validar.py   (última linha)
+validação ok: nenhum erro.
+
+$ .venv/bin/python scripts/gerar.py   (código de saída)
+0
+
+$ .venv/bin/python -m pytest -q -p no:cacheprovider   (última linha)
+2534 passed in 230.48s (0:03:50)
+
+$ .venv/bin/ruff check .
+All checks passed!
+
+$ grep -h '^forca:' praticas/*/*.md | sort | uniq -c
+   8 forca: avisa
+   3 forca: bloqueia
+  35 forca: orienta
+   2 forca: pede-aprovacao
+```
+
+Treze práticas acima de `orienta` (8 + 3 + 2).
+
+Renderização dos blocos Mermaid (`@mermaid-js/mermaid-cli@11.4.2`, R25), sem erro de parse:
+
+```text
+ok 0013-modelops-fora-modelo-proprio-pelo-catalogo-1.mmd   (docs/adr/0013-...)
+ok 2026-10-28-programa-onda-0-1.mmd                        (este plano)
+ok metricas-do-programa-1.mmd                              (guias/metricas-do-programa.md)
+```
+
+Commits de `71cfe13..HEAD` (39):
+
+```text
+ac7fca3 chore: trazer a main com a força dura para a branch do programa
+e9c32fb feat(conteudo): sete práticas com força dura e verificadores internos (ADR 0012)
+0c7df35 fix(conteudo): a recusa de linha de isenção cita o número da linha, não o conteúdo
+3c9ba78 fix(conteudo): isenção de LGPD-02 e SEG-02 aceita só caminho literal ou subpasta com /** no fim
+92f424f fix(conteudo): isenção de LGPD-02 e SEG-02 exige prefixo de pasta literal e não cai para o disco dentro de repositório
+96ab8d3 docs: delta da curadoria com os gatilhos extras, vereditos e evidências da rodada de correção 1
+b620d74 fix(conteudo): LGPD-02 acusa a forma colada em logs só com rótulo, ganha .lgpd02-ignorar e não acusa git@host; globs de P2-01 com a forma da raiz
+b22f86e docs: changelog e evidências da curadoria de força dura
+2f98390 fix(conteudo): guia de métricas diz só o que a fonte do DORA sustenta
+8757134 feat(conteudo): guia das métricas do programa Engenharia de IA
+482a909 chore: mesclar main na curadoria de força dura e renumerar a ADR para 0012
+b65f8fb docs(adr): 0013 ModelOps fora do escopo; modelo próprio entra pelo catálogo
+bde3a06 feat(conteudo): O problema ganha o elo do piloto que não vira produção, com fonte de analista
+ad1b070 fix(conteudo): SEG-02 recusa isenção ampla ao entrar e o job de CI confere o verificador pelo manifesto
+9e29aba feat(conteudo): API-02 passa a avisa com verificador interno
+dbc778d fix(conteudo): SEG-02 respeita a isenção na varredura completa e mede o projeto pela raiz do Git
+c33104b fix(conteudo): P3-06 e SEG-03 veem escrita pelo shell com redirecionamento depois do destino
+c0379d8 fix(conteudo): SEG-02 libera arquivo ignorado e fora do projeto, vê notebook e senha em URL
+1dfafd3 fix(conteudo): P3-06 vê jq com arquivo temporário em cadeia, servidor desligado ligado e variáveis de registro
+f7ce022 feat(conteudo): SEG-02 passa a bloqueia com verificador interno
+02fb72a fix(conteudo): P3-06 conta env que muda a execução, ignora vazios gravados pelas ferramentas e vê escrita pelo shell
+de7e682 fix(conteudo): SEG-03 pede aprovação também ao remover fonte, em overrides e nos comandos que executam pacote
+77831a0 fix(conteudo): P3-06 com identidade pelo objeto inteiro e allowlist presa a central/
+83e56ff fix(conteudo): LGPD-02 só lê UTF-16 sem BOM com densidade de NUL de texto e não engole e-mail depois de URL
+c8e0a82 feat(conteudo): SEG-03 passa a pede-aprovacao com verificador interno
+3321c88 fix(conteudo): P3-06 com identidade completa do servidor, VS Code, JSONC, allowlist protegida e mcp add
+4be1ea1 fix(conteudo): LGPD-02 sem falso positivo em senha codificada e com caminho, UTF-16 e rótulo colado tratados
+2980b94 feat(conteudo): P3-06 passa a pede-aprovacao com verificador interno
+3718621 fix(conteudo): LGPD-02 lê CSV em cp1252 e e-mail codificado em URL, com os limites escritos
+23791c2 fix(conteudo): P2-01 com limites escritos e fontes do GitLab conferidas, inclusive na CICD-02
+93d816e fix(conteudo): LGPD-02 volta a pegar CPF em CSV e trata texto com NUL como texto
+64a6d73 feat(conteudo): P2-01 passa a avisa com verificador interno
+3120fbe fix(conteudo): CICD-02 avisa no CI sem barrar o merge, com lockfiles e teto inválido tratados
+fa65b97 fix(conteudo): LGPD-02 acusa só o que mudou, em forma canônica, sem falso positivo em URL e domínio de teste
+c3d35a5 feat(conteudo): CICD-02 passa a avisa com verificador interno
+09c53fb fix(testes): repositório Git de teste isolado da configuração global e verificador lido do pacote
+69d8088 feat(conteudo): LGPD-02 passa a bloqueia com verificador interno
+3928555 docs(plano): curadoria de força dura em nove tarefas
+2d5a004 feat(gerador): pacote leva verificadores internos e contrato único de chamada
+```
+
+Pendentes do dono, sem evidência aqui: T2 (URL do pipeline da tag e release 1.2.0) e T6.
+
+Vereditos da revisão adversarial da T1:
 
 | ID | veredito | evidência |
 |---|---|---|
-| SEG-02 | | |
-| SEG-03 | | |
-| P3-06 | | |
-| P2-01 | | |
-| API-02 | | |
-| CICD-02 | | |
-| LGPD-02 | | |
+| SEG-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| SEG-03 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| P3-06 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| P2-01 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| API-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| CICD-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
+| LGPD-02 | atendido após 4 rodadas (falso positivo em logs por contexto; isenção só literal; sem fail-open para o disco; stderr sem eco da linha) | revisão adversarial de 2026-10-28, worktree curadoria |
 
 ## Checkpoint humano
+
+Pendências para o dono: T2 (URL do GitLab, release 1.2.0) e T6 (projetos piloto e linha de base). T1, T3, T4, T5 e T7 concluídas em 2026-10-29.
 
 **Pilotos** (sem nome): Piloto A: departamento 1, CI ___, harness ___, ambientes ___. Piloto B:
 departamento 2, CI ___, harness ___, ambientes ___. Quem entrega os números: papel, não nome.

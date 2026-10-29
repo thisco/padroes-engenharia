@@ -56,6 +56,13 @@ retirado, minor para conteúdo novo, patch para texto e links.
   harness, Git ou CI e mensagem que diz o que fazer: SEG-02 e LGPD-02 `bloqueia`; P3-06 e SEG-03
   `pede-aprovacao`; API-02, CICD-02 e P2-01 `avisa`. O catálogo passa a ter 13 práticas acima de
   `orienta`.
+- "O problema" ganha o elo do piloto de IA que não vira produção e o número correspondente, com a
+  referência de analista `gartner-pilotos-sem-engenharia-de-ia`.
+- Guia "Métricas do programa" (`guias/metricas-do-programa.md`): os resultados-chave do programa
+  Engenharia de IA, com a fonte de cada métrica, a linha de base e as metas.
+- ADR 0013: ModelOps fica fora do escopo e o modelo próprio entra pelo catálogo.
+- Spec do programa Engenharia de IA (delta sobre a spec v1.0), plano da Onda 0 e as duas notas de
+  pesquisa de 2026-10-28 (analista e catálogo; formato visual e agentes).
 
 ### Alterado
 
