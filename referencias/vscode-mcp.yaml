@@ -1,0 +1,11 @@
+id: vscode-mcp
+titulo: Add and manage MCP servers in VS Code
+organizacao: Microsoft
+url: https://code.visualstudio.com/docs/copilot/customization/mcp-servers
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seção da configuração do workspace: .vscode/mcp.json com o objeto servers no topo"
+dominios:
+- ia-no-produto
+notas: null

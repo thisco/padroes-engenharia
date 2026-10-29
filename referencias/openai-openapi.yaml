@@ -1,0 +1,10 @@
+id: openai-openapi
+titulo: "OpenAPI specification for the OpenAI API"
+organizacao: OpenAI
+url: https://github.com/openai/openai-openapi
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "openapi.yaml, exemplos de Admin API Keys: 'value: sk-admin-1234abcd' e 'redacted_value: sk-admin...xyz'"
+dominios: [seguranca]
+notas: "A especificação mostra só o prefixo sk-admin-; os prefixos sk-proj- e sk-svcacct- não estão em página aberta da OpenAI (help.openai.com e platform.openai.com responderam 403 nesta rodada) e vêm de gitleaks-config."

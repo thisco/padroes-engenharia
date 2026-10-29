@@ -1,0 +1,10 @@
+id: github-oauth-apps
+titulo: "Authorizing OAuth apps"
+organizacao: GitHub
+url: https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção '2. Users are redirected back to your site by GitHub', exemplos de resposta: access_token gho_16C7e42F… e refresh_token ghr_1B4a2e77…"
+dominios: [seguranca]
+notas: "Os dois valores completos estão em EXEMPLOS_DOCUMENTADOS de verificadores/seg_02.py (montados em partes)."

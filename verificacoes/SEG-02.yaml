@@ -44,6 +44,102 @@ afirmacoes:
   ref: gitlab-ci-local-readme
   localizacao: README, instalação e executores (já registrada em API-02)
   resultado: confirmada
+- texto: o rótulo PEM PRIVATE KEY (PKCS 8) e o ENCRYPTED PRIVATE KEY são as codificações textuais de chave privada; PUBLIC KEY é a da chave pública
+  ref: rfc-7468
+  localizacao: seções 10, 11 e 13 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave privada de curva elíptica em PEM fica entre -----BEGIN EC PRIVATE KEY----- e -----END EC PRIVATE KEY-----
+  ref: rfc-5915
+  localizacao: seção 4 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o OpenSSL grava a chave RSA no formato tradicional com -----BEGIN RSA PRIVATE KEY-----, que no PEM cifrado traz as linhas Proc-Type e DEK-Info
+  ref: openssl-pem
+  localizacao: seção 'PEM ENCRYPTION FORMAT' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o OpenSSH grava a chave privada no formato próprio com o cabeçalho -----BEGIN OPENSSH PRIVATE KEY-----
+  ref: openssh-sshkey
+  localizacao: sshkey.c, '#define MARK_BEGIN' (aberto em 2026-10-08)
+  resultado: confirmada
+- texto: a armadura OpenPGP usa BEGIN PGP PRIVATE KEY BLOCK para chave privada
+  ref: rfc-9580
+  localizacao: seção 6.2.1, tabela 16 (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: na IAM, o prefixo AKIA é de chave de acesso e ASIA de chave de acesso temporária (STS)
+  ref: aws-iam-identificadores
+  localizacao: seção 'Understanding unique ID prefixes' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de exemplo da documentação da AWS é AKIAIOSFODNN7EXAMPLE (20 caracteres, AKIA e mais 16), e a secreta de exemplo é wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+  ref: aws-chaves-de-acesso
+  localizacao: parágrafo de abertura (aberto em 2026-10-08)
+  resultado: confirmada
+  nota: a página não fixa o tamanho; os 16 caracteres depois do prefixo são o tamanho do exemplo documentado.
+- texto: o GitHub emite tokens com os prefixos ghp_ (pessoal clássico), github_pat_ (pessoal de granularidade fina), gho_ (OAuth), ghu_, ghs_ e ghr_ (GitHub App)
+  ref: github-formatos-de-token
+  localizacao: seção "GitHub's token formats" (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: o token no formato atual tem 30 caracteres aleatórios de [a-zA-Z0-9] e uma soma CRC32 de 6 caracteres em base62 depois do prefixo
+  ref: github-blog-formato-de-token
+  localizacao: seções sobre entropia e soma de verificação (aberta em 2026-10-08)
+  resultado: confirmada
+  nota: o post não fala de github_pat_; o mínimo de 50 caracteres para ele é escolha do verificador (o gitleaks usa 82).
+- texto: a tabela de prefixos do GitLab traz glpat-, gloas-, gldt-, glrt- e glrtr-, glcbt-, glptt-, glft-, glimt-, glagent-, glwt-, glsoat- e glffct-
+  ref: gitlab-prefixos-de-token
+  localizacao: seção 'Token prefixes' (aberta em 2026-10-08)
+  resultado: confirmada
+  nota: o mínimo de 20 caracteres depois do prefixo é escolha do verificador, igual ao da regra gitlab-pat do gitleaks.
+- texto: a chave de API da Anthropic é um segredo sk-ant-api...
+  ref: anthropic-autenticacao-api
+  localizacao: tabela inicial e exemplos da seção 'Create and use a key' (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de Admin da Anthropic começa com sk-ant-admin
+  ref: anthropic-admin-api
+  localizacao: quadro inicial (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: a chave de Admin da OpenAI começa com sk-admin-
+  ref: openai-openapi
+  localizacao: openapi.yaml, exemplos de Admin API Keys (baixado em 2026-10-08)
+  resultado: confirmada
+- texto: a regra openai-api-key do gitleaks cobre os prefixos sk-proj-, sk-svcacct- e sk-admin-
+  ref: gitleaks-config
+  localizacao: config/gitleaks.toml, regra openai-api-key (baixado em 2026-10-08)
+  resultado: confirmada
+  nota: fonte secundária, declarada como tal no texto; help.openai.com e platform.openai.com responderam 403 nesta rodada.
+- texto: os tokens do Slack começam com xoxb- (bot), xoxp- (usuário), xapp- (nível de app) e xwfp- (workflow)
+  ref: slack-tipos-de-token
+  localizacao: seções de cada tipo de token (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: com a rotação, o access token ganha o prefixo xoxe. e o refresh token começa com xoxe-
+  ref: slack-rotacao-de-token
+  localizacao: exemplos de resposta (aberta em 2026-10-08)
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: tabela de variáveis, linha CI_MERGE_REQUEST_DIFF_BASE_SHA ('The base SHA of the merge request diff'), aberta em 2026-10-08
+  resultado: confirmada
+- texto: CI_COMMIT_BEFORE_SHA é o último commit da branch antes do push e é de zeros em pipeline de MR, agendado, manual e no primeiro commit de uma branch; CI_COMMIT_BRANCH e CI_DEFAULT_BRANCH dão a branch do pipeline e a padrão
+  ref: gitlab-variaveis-predefinidas
+  localizacao: tabela de variáveis, linhas CI_COMMIT_BEFORE_SHA, CI_COMMIT_BRANCH e CI_DEFAULT_BRANCH (aberta em 2026-10-08, rodada de correção 1)
+  resultado: confirmada
+- texto: a página de autorização de apps OAuth do GitHub publica tokens de exemplo (gho_ e ghr_)
+  ref: github-oauth-apps
+  localizacao: seção '2. Users are redirected back to your site by GitHub' (aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
+- texto: o exemplo de revogação de credenciais da API REST do GitHub publica um token de exemplo de cada tipo (ghp_, github_pat_, gho_, ghu_, ghr_)
+  ref: github-rest-revogacao
+  localizacao: seção 'Revoke a list of credentials', corpo de exemplo (aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
+- texto: a API de runners do GitLab publica um token de runner de exemplo com o prefixo glrt-
+  ref: gitlab-api-runners
+  localizacao: seção 'Verify authentication for a registered runner' (página publicada aberta em 2026-10-08, rodada de correção 2)
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso (job do verificador do portal)
+  ref: gitlab-git-depth
+  localizacao: seção 'Limit the number of changes fetched during clone', aberta em 2026-10-08
+  resultado: confirmada
+- texto: o job só impede o merge com o merge check que exige pipeline bem-sucedido
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: "'You can configure your project to require a complete and successful pipeline before merge', aberta em 2026-10-08"
+  resultado: confirmada
 - texto: "o rótulo do marco, 'segredo fora do repo', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
   ref: portal-trilha
   localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
@@ -106,6 +202,20 @@ execucoes:
   resultado: passou
   evidencia: 'gitleaks: no leaks found; compile do arquivo sem erro.'
   data: '2026-10-07'
+- tipo: arquivo
+  arquivo: verificadores/seg_02.py
+  comando: python3 -I verificadores/seg_02.py --evento pre-commit | ci --base <sha> | antes-de-ferramenta (JSON no stdin), sobre o estado antes (app/config.py de plantar-segredo.sh) e depois (config-depois.py) do Exemplo; job segredo-no-diff do Como aplicar com npx --yes gitlab-ci-local@4.76.0 --force-shell-executor (MR com CI_MERGE_REQUEST_DIFF_BASE_SHA; branch padrão com CI_COMMIT_BEFORE_SHA de zeros e do commit anterior; MR sem a variável); .venv/bin/python -m pytest -q tests/verificadores/test_seg_02.py
+  ambiente: repositórios Git novos em /tmp/cfd-t7-seg02 e /tmp/cfd-t7b-ci com o script copiado; Python 3.14.8; gitlab-ci-local 4.76.0 sem Docker (shell da máquina, HOME isolado); macOS (T7 e rodadas de correção 1 e 2). O job não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'antes, no índice e no ci contra o commit-base: "app/config.py:1: chave de acesso da AWS em claro", saída 1, sem o valor. depois (config-depois.py, commit reescrito com --amend): saída 0. antes-de-ferramenta com AKIAIOSFODNN7EXAMPLE: saída 0. gitlab-ci-local: MR limpa PASS; branch padrão com base de zeros e HEAD limpo PASS; push direto com a chave na branch padrão FAIL 1 ("app/segredo.py:1: chave de acesso da AWS em claro"); MR com a chave FAIL 1; MR sem a variável de base FAIL 2 ("o evento ci exige --base <ref>"). O hook do Como aplicar recusou o git commit com a chave (saída 1). Rodada 1, pelos testes (272 passed): .env no .gitignore inocente no harness e no shell, acusado com git add -f no pre-commit; escrita fora da raiz sai 0; notebook com aspas escapadas e senha em URL acusados; django-insecure-, exemplo do Slack e JWT inocentes; credentials da AWS e .netrc como configuração; base de zeros varre tudo; isenção do harness lida do HEAD. Rodada 2 (304 passed, com o acréscimo de segurança): base de zeros com a isenção do HEAD; raiz do harness pelo toplevel do Git (monorepo); caminho absoluto sem cwd e falha do git saem 2; exemplos documentados pelos emissores inocentes. gitlab-ci-local na branch padrão com base de zeros: fixture isenta PASS e chave fora da isenção FAIL 1 ("app/outra.key:1: chave privada em claro"). Rodada 3 (310 passed): a isenção ampla é recusada quando entra (harness direto e pelo shell, pre-commit, ci) e a correção de uma ampla em vigor passa. Varredura de falso positivo depois das rodadas: repositório e site gerado sem achado; sistema e repositórios locais com 1 achado real (repo_token num .coveralls.yml de pacote npm).'
+  data: '2026-10-08'
+- tipo: arquivo
+  arquivo: exemplos/SEG-02/job-segredo-no-diff.yml
+  comando: npx --yes gitlab-ci-local@4.76.0 --force-shell-executor --variable PADROES_URL=http://127.0.0.1:<porta> --variable CI_PIPELINE_SOURCE=merge_request_event --variable CI_MERGE_REQUEST_DIFF_BASE_SHA=<sha> --ignore-predefined-vars CI_PIPELINE_SOURCE,CI_MERGE_REQUEST_DIFF_BASE_SHA segredo-no-diff (o arquivo copiado como .gitlab-ci.yml; pacote emitido por portal.gerador.pacote.emitir_pacote, o mesmo de scripts/gerar.py, servido com python3 -m http.server)
+  ambiente: repositório Git novo em /tmp/cfd-t7d-ci; gitlab-ci-local 4.76.0 sem Docker (shell da máquina, HOME isolado); Python 3.14.8; macOS (rodada de correção 3). Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'MR limpa: PASS. MR que introduz ** no .seg02-ignorar: FAIL 2 ("isenção ampla demais"). MR que estreita a ** já em vigor, sem segredo: PASS. MR com a chave sintética e um verificadores/seg_02.py da MR trocado por sys.exit(0): FAIL 1 ("app/config.py:1: chave de acesso da AWS em claro"), porque o job roda o verificador baixado. Verificador servido adulterado (uma linha a mais): FAIL 1 ("o verificador baixado não bate com o manifesto do pacote"). PADROES_VERSAO=9.9.9: FAIL 1 ("o portal publicado não está na versão fixada").'
+  data: '2026-10-09'
 - tipo: prompt
   prompt: SEG-02-prompt-1
   harness: claude-code
@@ -116,9 +226,63 @@ execucoes:
     ("no leaks found"). O diretório .gitlab-ci-local/ ficou untracked no preparo.
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-07'
+  revisor: revisão da T7 e re-revisão da rodada 1 (sessão independente, modelo forte) e revisão de segurança automática do commit f7ce022; antes, conferência em lote (ADR 0005)
+  data: '2026-10-08'
   achados:
+  - afirmacao: 'Isenção ampla (re-revisão da rodada 2)'
+    problema: '[important] a isenção ampla só era recusada quando lida do lado da comparação: o ** entrava pelo harness, pelo pre-commit e pela MR e depois travava todo commit e toda MR, inclusive a que o corrigia.'
+    tratamento: 'Tratado: o lado novo é validado (conteúdo escrito pelo harness ou pelo shell no .seg02-ignorar, índice no pre-commit, HEAD no ci) e o padrão amplo sai 2 ao entrar; se só o lado da comparação o tem e o lado novo o tira ou estreita, vale a isenção nova. Testes e gitlab-ci-local (FAIL 2 ao introduzir, PASS ao corrigir).'
+  - afirmacao: 'Job segredo-no-diff do texto (revisão de segurança de dbc778d: ci-trust-self-verification)'
+    problema: '[important] o job rodava o verificadores/seg_02.py da árvore da MR, que a própria MR podia alterar para sair 0.'
+    tratamento: 'Tratado (lição 25): o job, agora em exemplos/SEG-02/job-segredo-no-diff.yml, baixa o verificador do portal publicado, confere a versão fixada (PADROES_VERSAO) e o sha256 contra o manifesto.json do pacote, com python3 -I e só a biblioteca padrão, e só então roda; exercitado no gitlab-ci-local com o verificador da MR adulterado (FAIL 1), o servido adulterado (falha) e a versão errada (falha). Quem copia o arquivo para o projeto o põe no CODEOWNERS.'
+  - afirmacao: 'Job segredo-no-diff do texto (revisão de segurança de dbc778d: ci-gate-fail-open)'
+    problema: '[important] caminhos em que o job passaria sem varrer.'
+    tratamento: 'Investigado: base vazia sai 2; não há when: manual, allow_failure, || true nem exit 0; o push na branch padrão compara com o commit anterior e lê a isenção dele. Ficam como limite escrito: push em outra branch sem MR não roda o job; projeto sem pipeline de MR só confere a branch padrão; primeiro push (base de zeros) que traga isenção e segredo juntos passa, com a recomendação de proteger a branch padrão contra push direto.'
+  - afirmacao: 'Job segredo-no-diff com base de zeros (re-revisão, A)'
+    problema: '[important] a varredura completa ignorava o .seg02-ignorar e falhava pipeline agendado, manual e primeiro push com fixture isenta (FAIL 1 reproduzido).'
+    tratamento: 'Tratado: com base de zeros, a isenção é a do HEAD; teste com fixture isenta (0) e segredo fora da isenção (1); o texto diz que a varredura completa acusa segredo legado não isento e o que fazer, e que force-push pode tirar a base do clone (saída 2).'
+  - afirmacao: 'Raiz do projeto no harness (re-revisão, B)'
+    problema: '[important] em monorepo o harness media "fora do projeto" e a isenção a partir do cwd; escrita com segredo em outra pasta do mesmo repositório saía 0.'
+    tratamento: 'Tratado (lição 24): a raiz é o toplevel do Git a partir do cwd; fora de repositório, o cwd. Testes com cwd em svc/: ../other/app.py e o absoluto saem 1, echo >> ../other/app.env sai 1, a isenção svc/tests/** casa tests/x.py e o .gitignore da raiz vale.'
+  - afirmacao: 'Caminho absoluto sem cwd (re-revisão, C)'
+    problema: '[minor] saía 0.'
+    tratamento: 'Tratado: sai 2, com teste. Falha do git num repositório real (configuração corrompida, dono diferente) também sai 2, em vez de cair na isenção do disco.'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança de c0379d8: exemption-bypass)'
+    problema: '[important] um commit da própria branch com um padrão no .seg02-ignorar libera o harness e o pre-commit, e um padrão sem nome (**, *, **/*, ., /) isentaria tudo; um padrão podia casar o próprio .seg02-ignorar.'
+    tratamento: 'Tratado: padrão sem nenhum nome sai 2 ("isenção ampla demais") sempre que a isenção é lida; o .seg02-ignorar nunca é isento; testes nos três eventos. A isenção commitada na branch seguir valendo localmente fica como limite escrito (a autoridade é o CI da MR, que lê a base do destino; .seg02-ignorar no CODEOWNERS).'
+  - afirmacao: 'Exemplos documentados pelos emissores'
+    problema: '[minor] os tokens de exemplo das páginas do GitHub e do GitLab eram acusados.'
+    tratamento: 'Tratado: lista fechada EXEMPLOS_DOCUMENTADOS, comparada pelo casamento inteiro, com fonte aberta (github-oauth-apps, github-rest-revogacao, gitlab-api-runners); o exemplo que só aparece em terceiros (ghp_16C7…) segue acusado; teste de cada valor e do valor com um caractere a mais.'
+  - afirmacao: 'Como verificar: tamanhos mínimos de github_pat_ (50), GitLab (20) e provedores de modelo (32)'
+    problema: '[minor] os tamanhos vinham colados à referência, como se a fonte os desse.'
+    tratamento: 'Tratado: cada tamanho que a fonte não dá traz "(mínimo escolhido pelo verificador)", separado da referência.'
+  - afirmacao: 'Exemplo óbvio não é acusado'
+    problema: '[important] o exemplo de token da documentação do Slack (xoxp-111-222-333-...) era acusado.'
+    tratamento: 'Tratado: 111-222-333 e 1234-5678 entram nos marcadores de exemplo, com teste.'
+  - afirmacao: 'Escrita fora do projeto não é acusada'
+    problema: '[important] só valia no shell; escrever com caminho fora de cwd saía 2 (negar).'
+    tratamento: 'Tratado (lição 23): escrita fora da raiz sai 0 nos dois caminhos, com teste (inclusive ~/.npmrc e /tmp).'
+  - afirmacao: 'Como aplicar, passo 1 (.env no .gitignore)'
+    problema: '[critical] o harness barrava a escrita do segredo no .env ignorado, o caminho que a prática manda seguir.'
+    tratamento: 'Tratado: arquivo que o Git ignora (git check-ignore) é inocente no harness e no destino do shell; o git add -f é acusado no pre-commit e no ci, com testes.'
+  - afirmacao: 'Os limites'
+    problema: '[important] omitiam senha em URL, notebook com aspas duplas escapadas e o credentials da AWS.'
+    tratamento: 'Tratado: senha em URL acusada (com as exceções de exemplo); .json e .ipynb lidos também desescapados; credentials e .netrc como configuração; os limites ganham CSV, XML, connection string do .NET, token= em .log, JWT, chave DSA, fixture com prefixo real, renomeação para fora da isenção e o token usado no comando com redirecionamento.'
+  - afirmacao: 'django-insecure- e JWT de documentação'
+    problema: '[important] eram acusados como senha atribuída.'
+    tratamento: 'Tratado: os dois ficam fora da regra de atribuição, com teste, e o texto diz para trocar a chave do Django por variável de ambiente antes de publicar.'
+  - afirmacao: 'Como aplicar, passos 2 e 5 (executabilidade)'
+    problema: '[important] URL do pacote não dita, stage travas não declarado, safe.directory ausente e gitlab-ci-local sem a variável da base para o job novo.'
+    tratamento: 'Tratado: o passo 2 diz o que é <URL do portal> e como copiar o arquivo do repositório; o job tem safe.directory e o texto pede stages:; o passo 5 mostra o comando com CI_MERGE_REQUEST_DIFF_BASE_SHA; o job foi rodado no gitlab-ci-local (shell, sem Docker).'
+  - afirmacao: 'Job segredo-no-diff (revisão de segurança: ci-gate-bypass)'
+    problema: '[important] o job só rodava em pipeline de MR: push direto na branch padrão passava sem varredura.'
+    tratamento: 'Tratado: regra para a branch padrão com base CI_COMMIT_BEFORE_SHA; base de zeros varre todo o HEAD (verificador); base vazia sai 2; sem allow_failure nem || true. Push em outra branch sem MR fica como limite escrito.'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança: fail-open)'
+    problema: '[important] no harness, a isenção vinha do disco: gravar o .seg02-ignorar e depois o segredo passava.'
+    tratamento: 'Tratado: no harness, a isenção vem do HEAD quando há repositório Git (do disco só fora dele), com teste. Os demais caminhos de saída 0 sem varrer são binário por extensão (avisa em stderr), arquivo ignorado e fora da raiz (lição 23); não há limite de tamanho nem exceção engolida (erro do git sai 2).'
+  - afirmacao: 'verificadores/seg_02.py (revisão de segurança: incomplete-scan)'
+    problema: '[minor] arquivos sem extensão de configuração (credentials, .netrc) não tinham a regra sem aspas; submódulo, link simbólico e arquivo apagado não são lidos.'
+    tratamento: 'Tratado: credentials e .netrc entram; os formatos com prefixo e a chave PEM valem em qualquer arquivo (id_rsa, Dockerfile, .npmrc, .tfvars, .env.local já eram lidos). Submódulo, link simbólico e arquivo apagado ficam em Os limites.'
   - afirmacao: exemplos/SEG-02/plantar-segredo.sh escreve app/config.py
     problema: '[baixo] sobrescrevia o arquivo sem aviso se o diretório fosse um projeto real.'
     tratamento: 'Tratado: aviso no cabeçalho e o script se recusa (saída 1) se app/config.py já existir;

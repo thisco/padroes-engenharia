@@ -1,3 +1,4 @@
+# afirmações externas anteriores a 2026-10-08 não mudaram (conferidas em 2026-10-07); novas: CI_MERGE_REQUEST_DIFF_BASE_SHA, GIT_DEPTH (reescrita) e allow_failure
 conteudo: CICD-02
 verificado_em: '2026-10-21'
 verificador: agente-curadoria
@@ -31,13 +32,21 @@ afirmacoes:
   ref: gitlab-pipeline-obrigatorio
   localizacao: seção do merge check (aberta na web em 2026-10-07)
   resultado: confirmada
-- texto: GIT_DEPTH 0 desliga o clone raso, e o diff precisa do histórico e da branch de destino
+- texto: GIT_DEPTH 0 desliga o clone raso
   ref: gitlab-git-depth
-  localizacao: seção 'Limit the number of changes fetched during clone' (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-10-08; frase 'To disable shallow clone and make GitLab CI/CD fetch all branches and tags each time, keep the value empty or set to 0'). A parte 'o diff precisa do commit da base no clone' é do portal, sem referência."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-10-08; 'an orange warning indicates that a job failed. However, the pipeline is successful and the associated commit is marked as passed with no warnings'). Que a MR possa entrar é consequência e não foi exercitada num GitLab real."
   resultado: confirmada
 - texto: o gitlab-ci-local executa pipelines como shell ou Docker
   ref: gitlab-ci-local-readme
   localizacao: README, instalação e executores (registrada em receita-ligar-ci-gitlab-travas, referência aberta em 2026-10-04)
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: 'tabela de variáveis de pipelines de merge request (aberta na web em 2026-10-08, de novo na rodada de correção; linha "CI_MERGE_REQUEST_DIFF_BASE_SHA", "The base SHA of the merge request diff")'
   resultado: confirmada
 - texto: "o rótulo do marco, 'MR pequena e verde', resume o que a prática exige e aparece na etapa Codar da trilha"
   ref: portal-trilha
@@ -58,6 +67,13 @@ execucoes:
   resultado: falhou-como-esperado
   evidencia: 'base inexistente: "ERRO: base origin/nao-existe não encontrada", saída 1; diff vazio: "ERRO: nenhuma mudança medida contra origin/main", saída 1; limite 0: "ERRO: os limites precisam ser inteiros positivos", saída 1; yarn.lock de 5000 linhas com --ignorar ''*.lock'': "1 arquivo(s), 1 linha(s) ... 1 ignorado(s): dentro do limite", saída 0; sem --ignorar: "2 arquivo(s), 5001 linha(s) ... MR grande demais", saída 1.'
   data: '2026-10-07'
+- tipo: arquivo
+  arquivo: verificadores/cicd_02.py
+  comando: PADROES_MR_MAX_LINHAS=400 PADROES_MR_MAX_ARQUIVOS=15 python3 -I verificadores/cicd_02.py --evento ci --base <sha> (e sem as variáveis, base inexistente e pre-commit), num repositório Git temporário; pytest -q tests/verificadores/test_cicd_02.py
+  ambiente: repositório Git novo em /tmp/cfd-t3-cicd com um commit-base e uma MR de três módulos de cinco arquivos de 25 linhas cada, mais um yarn.lock de 5000 linhas; Python 3.14.8; macOS (T3 da curadoria de força dura). Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'sem variáveis: cinco linhas "app/clientes/<arquivo>.py:0: MR com 15 arquivo(s) e 375 linha(s) mudadas (limite de 10 arquivos e 200 linhas); este arquivo muda 25 linha(s)", saída 1, com o yarn.lock de 5000 linhas fora da conta. Com PADROES_MR_MAX_ARQUIVOS=15 e PADROES_MR_MAX_LINHAS=400: nada em stdout, saída 0. Base inexistente: "CICD-02: base nao-existe não encontrada (clone raso? use GIT_DEPTH 0)" em stderr, saída 2. Evento pre-commit: "evento não atendido: pre-commit (atende só ci)", saída 2. Rodada de correção 1 (2026-10-08), repositório novo em /tmp/cfd-t3b-cicd com três módulos de cinco arquivos de 25 linhas, mais pnpm-lock.yaml e go.sum de 5000 linhas cada: os dois lockfiles ficam fora da conta, "15 arquivo(s) e 375 linha(s)", saída 1; teto de 5000 dígitos: mensagem de configuração, saída 2 e sem traceback; --base igual a HEAD: "nenhuma mudança entre HEAD e HEAD: confira a base", saída 2; fora de repositório: o erro do git ("not a git repository"), saída 2. pytest: 146 passed em tests/verificadores, 42 deles em test_cicd_02.py.'
+  data: '2026-10-08'
 - tipo: prompt
   prompt: CICD-02-prompt-1
   harness: claude-code
@@ -66,10 +82,49 @@ execucoes:
   evidencia: 'job tamanho-da-mr FAIL com "15 arquivo(s), 372 linha(s)"; criou as branches mr/clientes (6891c8d), mr/pedidos (25494d5) e mr/faturas (963063f) por git cherry-pick, cada uma com 5 arquivos e 124 linhas e PASS; feat/tres-modulos intocada, sem push, sem coautoria nem trailer'
   data: '2026-10-07'
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-07'
+  revisor: conferência em lote (ADR 0005), sessão independente; revisão da tarefa 3 em sessão independente (2026-10-08)
+  data: '2026-10-08'
   achados:
   - afirmacao: exemplos/CICD-02/verificar-tamanho-mr.py:73-75 reprova a MR em que todos os arquivos casam
       com --ignorar
     problema: '[baixo] a MR só de lockfile reprova com ''nenhuma mudança medida''.'
     tratamento: 'Tratado: o Limites diz que MR só de lockfile pede outro job ou exceção declarada.'
+  - afirmacao: 'CICD-02.md, Como verificar: "A força avisa não impede o merge: quem impede é o merge check Pipelines must succeed [ref:gitlab-pipeline-obrigatorio]"'
+    problema: '[ref] a fonte sustenta só a metade do check; a primeira metade é inferência e conflita com o job falhando.'
+    tratamento: 'Tratado: o texto passou a dizer que o job do mecanismo leva allow_failure: true (lição 9, delta §3 "Força no Git e no CI"), fica laranja e não impede o merge; quem quer barrar troca a força no projeto. A referência só ampara o passo 5 (marcar Pipelines must succeed). O allow_failure é configuração do pipeline, não exercitado num GitLab real, e o texto diz isso.'
+  - afirmacao: 'CICD-02.md: "O DORA trata o lote pequeno em horas e dias de trabalho"'
+    problema: '[ref] já `parcial`, com nota no registro.'
+    tratamento: 'Sem mudança: a afirmação e a nota (a página fala em horas a poucos dias e até uma semana para uma funcionalidade; o teto de MR é aproximação do portal) continuam como estavam.'
+  - afirmacao: 'CICD-02.md: uso de $CI_MERGE_REQUEST_DIFF_BASE_SHA'
+    problema: '[ref] a variável não tinha referência.'
+    tratamento: 'Tratado: afirmação nova confirmada na documentação de variáveis predefinidas do GitLab (aberta em 2026-10-08), com [ref:gitlab-variaveis-predefinidas] no passo 2 e a referência no frontmatter.'
+  - afirmacao: 'CICD-02.md, Como aplicar, passo 1: tetos "olhando as MRs recentes"'
+    problema: '[executabilidade] num repositório sem MRs não há o que olhar.'
+    tratamento: 'Tratado: o passo diz que, sem MRs recentes, os padrões 10 e 200 servem para começar.'
+  - afirmacao: 'CICD-02.md, Como aplicar, passos 1 e 2: MR_MAX_* e --ignorar'
+    problema: '[executabilidade] descreviam só o Exemplo, sem dizer de onde vem o hospedado.'
+    tratamento: 'Tratado: passam a descrever o mecanismo (PADROES_MR_*, sem --ignorar, lockfiles por nome) e dizem que o verificador vem em pacote/verificadores/cicd_02.py, copiado até o instalador (F4).'
+  - afirmacao: 'CICD-02.md: falta o job que chama o hospedado'
+    problema: '[executabilidade] sem --base, GIT_DEPTH, rules: nem o tratamento do exit 2.'
+    tratamento: 'Tratado: o passo 2 mostra o job com GIT_DEPTH "0", rules de merge request, allow_failure: true e a linha com --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA", e diz o que cada saída (0, 1, 2) significa.'
+  - afirmacao: 'CICD-02.md, Como aplicar, passo 4: exige origin, Docker e npx'
+    problema: '[executabilidade] os requisitos só estavam avisados no Exemplo.'
+    tratamento: 'Tratado: o passo 4 dá primeiro o verificador direto (sem Docker) e diz que o gitlab-ci-local, que roda o job do Exemplo, exige Docker, npx e origin/<alvo>.'
+  - afirmacao: 'CICD-02.md, Como aplicar, passo 5: marcar Pipelines must succeed'
+    problema: '[executabilidade] é configuração do GitLab, sem como conferir localmente.'
+    tratamento: 'Tratado: o texto diz que a marca é configuração do GitLab sem conferência local e que ela só entra se o projeto tirar o allow_failure.'
+  - afirmacao: 'CICD-02.md, Como aplicar, passo 6: cherry-pick por módulo'
+    problema: '[executabilidade] só vale com commits independentes.'
+    tratamento: 'Tratado: o passo diz isso e manda reorganizar o trabalho em fatias entregáveis quando os commits não são independentes.'
+  - afirmacao: 'CICD-02.md, Exemplo: "Antes e depois" sem os arquivos de cada módulo'
+    problema: '[executabilidade] não traz o conteúdo para reproduzir 15 arquivos e 372 linhas.'
+    tratamento: 'Tratado só no texto: o Exemplo diz que cada módulo tem cinco arquivos de 25 a 31 linhas e que os números ilustram a execução de 2026-10-07; reproduzir o total exato depende do conteúdo. Não se acrescentaram os arquivos (fixture grande sem ganho para a decisão da prática).'
+  - afirmacao: 'CICD-02.md, Para o agente: prompt com {branch de destino} e {branch da MR}, executado em 2026-10-07'
+    problema: '[executabilidade] marcadores sem explicação.'
+    tratamento: 'Tratado só no texto: uma frase antes da regra diz que o prompt usa o candidato do Exemplo e o gitlab-ci-local, que os marcadores são a trocar pelo nome das branches do projeto, e que foi executado em 2026-10-07 sem alteração. O prompt não foi reexecutado.'
+  - afirmacao: 'verificadores/cicd_02.py: teto com mais de 4300 dígitos'
+    problema: '[alto] int() levantava ValueError, saída 1 com traceback.'
+    tratamento: 'Tratado: teto de até 9 dígitos ASCII; o resto sai 2 com mensagem. Testes com 10 dígitos, 5000 dígitos e dígitos Unicode.'
+  - afirmacao: 'CICD-02.md, passos 2 e 3: "GIT_DEPTH 0 traz o histórico de que o diff precisa" e o job laranja que não impede o merge'
+    problema: '[ref] a fonte do GIT_DEPTH só diz que desliga o clone raso; nenhuma referência sustentava o allow_failure; as duas afirmações foram copiadas sem reabrir a página (rodada de correção 1, T4).'
+    tratamento: 'Tratado: o passo 3 diz só que GIT_DEPTH 0 desliga o clone raso [ref:gitlab-git-depth] e, sem referência, que o git diff com --base precisa do commit da base; o job laranja cita a nova gitlab-allow-failure (página aberta em 2026-10-08); o texto continua dizendo que o allow_failure não foi exercitado num GitLab real.'

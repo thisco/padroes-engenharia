@@ -1,0 +1,10 @@
+id: gitlab-prefixos-de-token
+titulo: "GitLab token overview"
+organizacao: GitLab
+url: https://docs.gitlab.com/security/tokens/
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'Token prefixes', tabela: glpat-, gloas-, gldt-, glrt- (glrtr-), glcbt-, glptt-, glft-, glimt-, glagent-, glwt-, glsoat- e glffct-"
+dominios: [seguranca]
+notas: "A tabela diz que só o prefixo do token de acesso pessoal pode ser configurado pela instância."

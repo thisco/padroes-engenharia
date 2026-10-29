@@ -1,0 +1,10 @@
+id: slack-tipos-de-token
+titulo: "Tokens"
+organizacao: Slack
+url: https://docs.slack.dev/authentication/tokens
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seções de cada tipo: bot (xoxb-), user (xoxp-), workflow (xwfp-), app-level (xapp-) e rotating app-level (xoxe.xapp-)"
+dominios: [seguranca]
+notas: null

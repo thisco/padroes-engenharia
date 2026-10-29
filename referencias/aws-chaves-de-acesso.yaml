@@ -1,0 +1,10 @@
+id: aws-chaves-de-acesso
+titulo: "Manage access keys for IAM users"
+organizacao: Amazon Web Services
+url: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "parágrafo de abertura: 'an access key ID (for example, AKIAIOSFODNN7EXAMPLE) and a secret access key (for example, wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY)'"
+dominios: [seguranca]
+notas: null

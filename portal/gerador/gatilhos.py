@@ -112,7 +112,8 @@ def problemas_dos_gatilhos(forca: str | None, m: MecanismoDaPratica) -> list[str
                 f"força {forca} exige gatilho de harness (antes-de-ferramenta, "
                 "depois-de-ferramenta, ao-enviar-prompt ou ao-parar)"
             )
-        if not any(e in EVENTOS_GIT for e in eventos):
+        # `pede-aprovacao` só existe no harness (CFD-D5): Git e CI não têm "perguntar".
+        if forca == "bloqueia" and not any(e in EVENTOS_GIT for e in eventos):
             problemas.append(
                 f"força {forca} exige gatilho de Git ou CI (pre-commit, commit-msg ou ci)"
             )

@@ -1,0 +1,11 @@
+id: npm-package-json
+titulo: "package.json (documentação do npm)"
+organizacao: npm
+url: https://docs.npmjs.com/cli/v11/configuring-npm/package-json
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "campos dependencies, devDependencies, peerDependencies, optionalDependencies e as formas de especificação (intervalo, URL, git, user/repo, file:)"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

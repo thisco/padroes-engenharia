@@ -1,0 +1,11 @@
+id: gitlab-codeowners
+titulo: "Code Owners (documentação do GitLab)"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/project/codeowners/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções do local do arquivo CODEOWNERS (raiz, docs/ ou .gitlab/), da aprovação exigida pelo branch protegido e do plano (Premium e Ultimate)"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

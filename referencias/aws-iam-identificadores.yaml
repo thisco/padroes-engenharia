@@ -1,0 +1,10 @@
+id: aws-iam-identificadores
+titulo: "IAM identifiers"
+organizacao: Amazon Web Services
+url: https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'Understanding unique ID prefixes', tabela de prefixos: AKIA (Access key) e ASIA (Temporary (AWS STS) access key IDs)"
+dominios: [seguranca]
+notas: null

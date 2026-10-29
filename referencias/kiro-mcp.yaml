@@ -1,0 +1,11 @@
+id: kiro-mcp
+titulo: MCP configuration - Kiro
+organizacao: Kiro
+url: https://kiro.dev/docs/mcp/configuration/
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "seções de localização (.kiro/settings/mcp.json no workspace) e de propriedades: chave mcpServers, command, args, env, url, disabled, autoApprove"
+dominios:
+- ia-no-produto
+notas: null

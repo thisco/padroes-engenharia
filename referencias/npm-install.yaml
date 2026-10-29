@@ -1,0 +1,11 @@
+id: npm-install
+titulo: "npm install (documentação do npm)"
+organizacao: npm
+url: https://docs.npmjs.com/cli/v11/commands/npm-install
+tipo: vendor
+verificado_em: '2026-10-08'
+verificacao: V
+localizacao: "lista de aliases do comando (add, i) e a seção de alias de pacote (<alias>@npm:<nome>)"
+dominios:
+- seguranca
+notas: "Aberta na web em 2026-10-08."

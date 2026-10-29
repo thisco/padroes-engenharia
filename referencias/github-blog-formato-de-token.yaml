@@ -1,0 +1,11 @@
+id: github-blog-formato-de-token
+titulo: "Behind GitHub's new authentication token formats"
+organizacao: GitHub
+url: https://github.blog/engineering/platform-security/behind-githubs-new-authentication-token-formats/
+tipo: vendor
+publicado_em: 2021-04-05
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seções sobre o prefixo e sobre a soma de verificação: 30 caracteres de [a-zA-Z0-9] e uma soma CRC32 nos 6 últimos, em base62"
+dominios: [seguranca]
+notas: "Atualizado em 2023-05-10 segundo a própria página."

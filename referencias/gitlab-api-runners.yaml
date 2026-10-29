@@ -1,0 +1,10 @@
+id: gitlab-api-runners
+titulo: "Runners API"
+organizacao: GitLab
+url: https://docs.gitlab.com/api/runners/
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "seção 'Verify authentication for a registered runner', exemplo de resposta com token glrt-6337ff46…"
+dominios: [seguranca]
+notas: "O valor completo está em EXEMPLOS_DOCUMENTADOS de verificadores/seg_02.py (montado em partes). Nas outras seções a página usa o mesmo número sem o prefixo glrt-."

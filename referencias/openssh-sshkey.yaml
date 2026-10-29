@@ -1,0 +1,10 @@
+id: openssh-sshkey
+titulo: "openssh-portable: sshkey.c"
+organizacao: OpenSSH
+url: https://github.com/openssh/openssh-portable/blob/master/sshkey.c
+tipo: vendor
+verificado_em: 2026-10-08
+verificacao: V
+localizacao: "#define MARK_BEGIN \"-----BEGIN OPENSSH PRIVATE KEY-----\", usado ao gravar a chave privada no formato próprio (descrito em PROTOCOL.key)"
+dominios: [seguranca]
+notas: "O PROTOCOL.key descreve o conteúdo binário e não o cabeçalho; o cabeçalho está no código que grava a chave."
