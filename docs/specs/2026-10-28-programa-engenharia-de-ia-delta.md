@@ -15,7 +15,7 @@ sources:
   - 2026-10-01-portal-padroes-engenharia-design.md
   - 2026-10-06-motor-harness-cli-design.md
   - 2026-10-06-plataforma-padroes-produto-design.md
-relacionados: [adr-0007, adr-0009, adr-0010, adr-0011]
+relacionados: [adr-0007, adr-0009, adr-0010, adr-0011, adr-0013]
 ---
 
 # Spec delta: programa Engenharia de IA de ponta a ponta (do PRD à produção, harness corporativo e base única)
@@ -153,7 +153,7 @@ flowchart TB
     O3 --> KR32["KR3.2 integrações entre departamentos<br/>com eval de integração e traço correlacionado"]
     O4 --> KR41["KR4.1 práticas instaladas por força<br/>em cada projeto piloto"]
     O4 --> KR42["KR4.2 projetos que consultam o catálogo pelo MCP"]
-    O4 --> KR43["KR4.3 projetos com doctor sem divergência<br/>e catálogos resolvidos pelo lockfile"]
+    O4 --> KR43["KR4.3 projetos com doctor sem divergência"]
 ```
 
 *Figura 2. Os quatro objetivos do dono e os resultados-chave que os medem; a linha de base e as
@@ -465,7 +465,7 @@ flowchart LR
     subgraph TA["Trilha A · conteúdo"]
         CAT["Catálogo<br/>práticas com força e bloco mecanismo"]
     end
-    subgraph TB["Trilha B · mecanismo"]
+    subgraph trilhaB["Trilha B · mecanismo"]
         COMP["Compilador do motor<br/>hooks · templates de CI nos dois moldes<br/>núcleo gerenciado · grafo"]
         PKG["Pacote por release<br/>regras.json, hooks, templates, manifesto"]
         CLI["CLI padroes<br/>instalar · doctor · consultar"]

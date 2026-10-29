@@ -9,7 +9,8 @@ afirmacoes:
 - texto: menos da metade dos pilotos de IA chega à produção
   ref: gartner-pilotos-sem-engenharia-de-ia
   localizacao: resumo executivo e seção Analysis; conferido por pessoa (PE-D15), pendente
-  resultado: confirmada
+  resultado: parcial
+  nota: "Pendente de conferência na fonte pelo dono (PE-D15); a referência está com verificacao S até lá."
 revisao_adversarial:
   revisor: revisão do controlador do plano, sessão independente
   data: '2026-10-28'

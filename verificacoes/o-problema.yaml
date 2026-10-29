@@ -220,11 +220,13 @@ afirmacoes:
 - texto: Menos da metade dos pilotos de IA chega à produção, em geral por falta de operacionalização estruturada e de frameworks de DevOps.
   ref: gartner-pilotos-sem-engenharia-de-ia
   localizacao: resumo executivo e seção Analysis; conferido por pessoa (PE-D15), pendente
-  resultado: confirmada
+  resultado: parcial
+  nota: "Pendente de conferência na fonte pelo dono (PE-D15); a referência está com verificacao S até lá."
 - texto: 'Pilotos de IA que chegam à produção, pela pesquisa de analista de 2025: menos de 50%.'
   ref: gartner-pilotos-sem-engenharia-de-ia
   localizacao: resumo executivo e seção Analysis; conferido por pessoa (PE-D15), pendente
-  resultado: confirmada
+  resultado: parcial
+  nota: "Pendente de conferência na fonte pelo dono (PE-D15); a referência está com verificacao S até lá."
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-07'

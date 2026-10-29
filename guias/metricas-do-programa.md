@@ -79,7 +79,7 @@ flowchart TB
     O3 --> KR32["KR3.2 integrações entre departamentos<br/>com eval de integração e traço correlacionado"]
     O4 --> KR41["KR4.1 práticas instaladas por força<br/>em cada projeto piloto"]
     O4 --> KR42["KR4.2 projetos que consultam o catálogo pelo MCP"]
-    O4 --> KR43["KR4.3 projetos com doctor sem divergência<br/>e catálogos resolvidos pelo lockfile"]
+    O4 --> KR43["KR4.3 projetos com doctor sem divergência"]
 ```
 
 *Figura 1. Os quatro objetivos e os resultados-chave que os medem.*

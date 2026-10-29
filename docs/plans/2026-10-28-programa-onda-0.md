@@ -2,7 +2,7 @@
 id: 2026-10-28-programa-onda-0
 titulo: "Programa Engenharia de IA, Onda 0: enquadrar e medir"
 type: plano
-status: rascunho
+status: em-execucao
 tier: 2
 onda: 0
 dono: engenharia
@@ -101,7 +101,7 @@ fazem.*
 ### Tarefa 1: Integrar a rodada de força dura (R5)
 
 **Arquivos:**
-- Worktree: `/Users/thiago/Documents/Workspace/repos/padroes-engenharia-curadoria`
+- Worktree: `../padroes-engenharia-curadoria`
 - Renomear: `docs/adr/0010-verificadores-internos-e-forca-dura.md` → `docs/adr/0012-verificadores-internos-e-forca-dura.md`
 - Resolver: `README.md` (regenerar), `praticas/ci-cd/CICD-02.md`, `praticas/contratos-api/API-02.md`,
   `praticas/privacidade-lgpd/LGPD-02.md`, `praticas/seguranca/SEG-02.md`, `verificacoes/{API-02,CICD-02,LGPD-02,SEG-02}.yaml`
@@ -111,19 +111,19 @@ fazem.*
 - Consome: a branch `feat/2026-10-08-curadoria-forca-dura` (tarefas 1 a 8 feitas; base 3e37b8c).
 - Produz: `main` com 13 práticas acima de `orienta` e `verificadores/` com teste, que a T2 publica.
 
-- [ ] **Passo 1: Mesclar a `main` na branch, na worktree**
+- [x] **Passo 1: Mesclar a `main` na branch, na worktree**
 
 ```bash
-cd /Users/thiago/Documents/Workspace/repos/padroes-engenharia-curadoria
+cd ../padroes-engenharia-curadoria
 git merge main
 ```
 Esperado: 9 conflitos (`README.md`, 4 práticas, 4 verificações). Conferir com `git status`.
 
-- [ ] **Passo 2: Resolver as 4 práticas** mantendo o frontmatter inteiro: `marco` (vem da main) e
+- [x] **Passo 2: Resolver as 4 práticas** mantendo o frontmatter inteiro: `marco` (vem da main) e
   `forca`, `mecanismo`, `referencias`, `exemplos` (vêm da branch); corpo com as duas alterações.
   Resolver as 4 verificações com a união das afirmações, sem duplicar `texto`+`ref`.
 
-- [ ] **Passo 3: Regenerar o que é gerado e renumerar a ADR**
+- [x] **Passo 3: Regenerar o que é gerado e renumerar a ADR**
 
 ```bash
 git mv docs/adr/0010-verificadores-internos-e-forca-dura.md docs/adr/0012-verificadores-internos-e-forca-dura.md
@@ -131,40 +131,40 @@ sed -i '' 's/^# ADR 0010:/# ADR 0012:/' docs/adr/0012-verificadores-internos-e-f
 .venv/bin/python scripts/gerar.py
 ```
 
-- [ ] **Passo 4: Rodar a validação inteira**
+- [x] **Passo 4: Rodar a validação inteira**
 
 ```bash
 .venv/bin/python scripts/validar.py && .venv/bin/python scripts/gerar.py && .venv/bin/python -m pytest -q && .venv/bin/ruff check .
 ```
 Esperado: `validação ok`, suíte verde (contagem registrada nas Evidências), ruff sem erro.
 
-- [ ] **Passo 5: Conferir o foco 1**
+- [x] **Passo 5: Conferir o foco 1**
 
 ```bash
 for p in praticas/ci-cd/CICD-02.md praticas/contratos-api/API-02.md praticas/privacidade-lgpd/LGPD-02.md praticas/seguranca/SEG-02.md; do grep -c '^marco:' $p; grep -c '^mecanismo:' $p; done
 ```
 Esperado: `1` e `1` para cada arquivo.
 
-- [ ] **Passo 6: Commit da integração**
+- [x] **Passo 6: Commit da integração**
 
 ```bash
 git add -A && git commit -m "chore: mesclar main na curadoria de força dura e renumerar a ADR para 0012"
 ```
 
-- [ ] **Passo 7: Conferir o foco 2**
+- [x] **Passo 7: Conferir o foco 2**
 
 ```bash
 grep -rn 'ADR 0010' --include='*.md' --include='*.yaml' --include='*.yml' . | grep -v 'trilha' ; echo "exit=$?"
 ```
 Esperado: nenhuma linha fora das que falam da ADR 0010 "trilha, não trilho" (saída vazia, `exit=1`).
 
-- [ ] **Passo 8: Revisão adversarial contra a spec do motor (§5, §6 e `R-GATILHO`) e a ADR 0012**
+- [x] **Passo 8: Revisão adversarial contra a spec do motor (§5, §6 e `R-GATILHO`) e a ADR 0012**
   por subagente em contexto novo: parte dos sete IDs, confere para cada um força declarada,
   gatilhos de harness e de Git ou CI, mensagem, verificador com teste e registro de verificação.
   Veredito por prática na tabela `| ID | veredito | evidência |` da seção Evidências deste plano.
   Achado `nao-atendido` volta para a branch antes do passo 9.
 
-- [ ] **Passo 9: Fechar a Tarefa 9 do plano da branch**: `CHANGELOG.md` em `[Não publicado]`
+- [x] **Passo 9: Fechar a Tarefa 9 do plano da branch**: `CHANGELOG.md` em `[Não publicado]`
   (verificadores internos no pacote e as sete práticas com força nova), Evidências com a contagem
   de forças (`grep -h '^forca:' praticas/*/*.md | sort | uniq -c`), trecho de `regras.json` com as
   sete práticas, árvore de `public/pacote/verificadores/`, dois builds com `diff -r` vazio, suíte,
@@ -174,11 +174,11 @@ Esperado: nenhuma linha fora das que falam da ADR 0010 "trilha, não trilho" (sa
 git add -A && git commit -m "docs: changelog e evidências da curadoria de força dura"
 ```
 
-- [ ] **Passo 10: Checkpoint do dono** (risco alto, duas aprovações): aceite por prática e
+- [x] **Passo 10: Checkpoint do dono** (risco alto, duas aprovações): aceite por prática e
   autorização para mesclar na `main`. Só depois:
 
 ```bash
-cd /Users/thiago/Documents/Workspace/repos/padroes-engenharia
+cd ../padroes-engenharia
 git merge --no-ff feat/2026-10-08-curadoria-forca-dura -m "feat(conteudo): sete práticas com força dura e verificadores internos (ADR 0012)"
 .venv/bin/python scripts/validar.py && .venv/bin/python -m pytest -q
 ```
@@ -233,14 +233,14 @@ Esperado: pipeline da tag verde e o job `pacote` com os dois `.tar.gz` em artefa
 **Interfaces:**
 - Produz: o id `gartner-pilotos-sem-engenharia-de-ia`, citado pela T5.
 
-- [ ] **Passo 1: Criar a referência** com `tipo: analista`, `organizacao: Gartner`,
+- [x] **Passo 1: Criar a referência** com `tipo: analista`, `organizacao: Gartner`,
   `titulo: "Without AI Engineering, AI Pilots Stall and Fail to Deliver Value (ID G00840942)"`,
   `publicado_em: '2025-12-19'`, `dominios: [construir-com-ia, ia-no-produto]`, `url` com o endereço
   do documento no site do analista (o dono fornece), `verificado_em` e `verificacao: V` só depois do
   passo 5, e `notas` com: licenciado, uso pessoal, não reproduzido; verificação manual pelo dono;
   versão nova de 2026-07-14 ("You Can't Scale AI Without AI Engineering") conferida.
 
-- [ ] **Passo 2: Acrescentar o elo** em `paginas/o-problema.md`, depois de `regressao`:
+- [x] **Passo 2: Acrescentar o elo** em `paginas/o-problema.md`, depois de `regressao`:
   `figura: x`, `titulo: Piloto que não vira produção`, `definicao: O protótipo funciona e nunca
   atravessa para a operação.`, `como_aparece: Menos da metade dos pilotos de IA chega à produção,
   em geral por falta de operacionalização estruturada e de frameworks de DevOps
@@ -249,12 +249,12 @@ Esperado: pipeline da tag verde e o job `pacote` com os dois `.tar.gz` em artefa
   de 2025 [ref:gartner-pilotos-sem-engenharia-de-ia].`, `data: 2025-12`. Incluir o id em
   `referencias` da página.
 
-- [ ] **Passo 3: Registrar as duas afirmações** em `verificacoes/o-problema.yaml` com
+- [x] **Passo 3: Registrar as duas afirmações** em `verificacoes/o-problema.yaml` com
   `ref: gartner-pilotos-sem-engenharia-de-ia`, `localizacao: resumo executivo e seção Analysis`,
   `resultado: confirmada`. O `verificador` do arquivo continua `agente-curadoria` (é um por
   arquivo); a `localizacao` dessas duas afirmações termina com `; conferido por pessoa (PE-D15)`.
 
-- [ ] **Passo 4: Validar e gerar**
+- [x] **Passo 4: Validar e gerar**
 
 ```bash
 .venv/bin/python scripts/validar.py && .venv/bin/python scripts/gerar.py && grep -c 'gartner-pilotos-sem-engenharia-de-ia' public/o-problema.html
@@ -264,10 +264,10 @@ Esperado: `validação ok`, gerador 0, contagem ≥ 2.
 - [ ] **Passo 5 (dono): conferir na fonte** as duas afirmações, nas versões de 2025-12 e 2026-07, e
   preencher `url`, `verificado_em` e `verificacao: V`.
 
-- [ ] **Passo 6: Conferir o foco 4**: as duas frases do passo 2 são paráfrase de uma frase cada,
+- [x] **Passo 6: Conferir o foco 4**: as duas frases do passo 2 são paráfrase de uma frase cada,
   sem trecho entre aspas da fonte. `grep -c '"' ` nas linhas novas de `o-problema.md` retorna 0.
 
-- [ ] **Passo 7: Commit**
+- [x] **Passo 7: Commit**
 
 ```bash
 git add referencias/gartner-pilotos-sem-engenharia-de-ia.yaml paginas/o-problema.md verificacoes/o-problema.yaml README.md ROTEAMENTO.md
@@ -280,7 +280,7 @@ git commit -m "feat(conteudo): O problema ganha o elo do piloto que não vira pr
 - Criar: `docs/adr/0013-modelops-fora-modelo-proprio-pelo-catalogo.md`
 - Modificar: `docs/specs/2026-10-01-portal-padroes-engenharia-design.md` (§19, linha 647 em diante: um item novo)
 
-- [ ] **Passo 1: Escrever a ADR** no formato das ADRs 0007 a 0011 (cabeçalho com Data 2026-10-28,
+- [x] **Passo 1: Escrever a ADR** no formato das ADRs 0007 a 0011 (cabeçalho com Data 2026-10-28,
   Status aceita, Spec `2026-10-28-programa-engenharia-de-ia-delta.md` (PE-D3, R2), Origem: decisão
   do dono em 2026-10-28; seções Contexto, Decisão, Consequências). Decisão: treino, fine-tuning e
   ciclo de vida de ML tradicional ficam fora do portal; modelo próprio de qualquer departamento só
@@ -289,10 +289,10 @@ git commit -m "feat(conteudo): O problema ganha o elo do piloto que não vira pr
   (`flowchart LR`: modelo de fornecedor e modelo próprio → catálogo do gateway (P2-03) → aplicação
   com chave virtual (P2-01); ModelOps fora, tracejado).
 
-- [ ] **Passo 2: Acrescentar ao §19 da spec v1.0** o item: `- Treino, fine-tuning e ciclo de vida de
+- [x] **Passo 2: Acrescentar ao §19 da spec v1.0** o item: `- Treino, fine-tuning e ciclo de vida de
   ML tradicional (ADR 0013); modelo próprio entra pelo catálogo do gateway.`
 
-- [ ] **Passo 3: Validar e commit**
+- [x] **Passo 3: Validar e commit**
 
 ```bash
 .venv/bin/python scripts/validar.py
@@ -310,7 +310,7 @@ git commit -m "docs(adr): 0013 ModelOps fora do escopo; modelo próprio entra pe
   `gartner-pilotos-sem-engenharia-de-ia`.
 - Produz: a página que a T6 e as ondas seguintes atualizam com linha de base e meta.
 
-- [ ] **Passo 1: Escrever o guia** com frontmatter do schema de guia: `titulo: Métricas do programa
+- [x] **Passo 1: Escrever o guia** com frontmatter do schema de guia: `titulo: Métricas do programa
   Engenharia de IA`, `tipo: explicacao`, `publico: Quem acompanha o programa: gestão, arquitetos,
   PMs e os times piloto`, `tempo_leitura: 5`, `referencias: [dora-2024,
   gartner-pilotos-sem-engenharia-de-ia]`, `relacionados: [P1-01, P2-05, CICD-01]`,
@@ -321,25 +321,25 @@ git commit -m "docs(adr): 0013 ModelOps fora do escopo; modelo próprio entra pe
   coletadas pelos times piloto e publicadas aqui ao fim da Onda 0 (sem número). Um diagrama Mermaid
   (`flowchart TB`, O1 a O4 → KRs) em bloco cercado.
 
-- [ ] **Passo 2: Registrar a verificação** em `verificacoes/metricas-do-programa.yaml`: as afirmações
+- [x] **Passo 2: Registrar a verificação** em `verificacoes/metricas-do-programa.yaml`: as afirmações
   sobre as quatro métricas DORA (`ref: dora-2024`, `localizacao: definição das quatro métricas de
   desempenho de entrega`) e sobre pilotos (`ref: gartner-pilotos-sem-engenharia-de-ia`).
 
-- [ ] **Passo 3: Validar e gerar**
+- [x] **Passo 3: Validar e gerar**
 
 ```bash
 .venv/bin/python scripts/validar.py && .venv/bin/python scripts/gerar.py && ls public/guias/metricas-do-programa.html && grep -c 'metricas-do-programa' public/llms.txt
 ```
 Esperado: `validação ok`, arquivo existe, contagem ≥ 1.
 
-- [ ] **Passo 4: Conferir o foco 5**
+- [x] **Passo 4: Conferir o foco 5**
 
 ```bash
 grep -nE '[0-9]+ ?(%|dias|horas)' guias/metricas-do-programa.md
 ```
 Esperado: nenhuma linha (nenhum número de linha de base ou meta antes da T6).
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add guias/metricas-do-programa.md verificacoes/metricas-do-programa.yaml README.md ROTEAMENTO.md
@@ -374,20 +374,27 @@ git commit -m "docs(plans): linha de base dos pilotos e inventário da Onda 0"
 
 ### Tarefa 7: Fechamento da Onda 0
 
-- [ ] **Passo 1: `CHANGELOG.md` em `[Não publicado]`** (depois da 1.2.0): elo e número novos em
+- [x] **Passo 1: `CHANGELOG.md` em `[Não publicado]`** (depois da 1.2.0): elo e número novos em
   "O problema", guia de métricas, ADR 0013, spec e notas do programa.
-- [ ] **Passo 2: Evidências** abaixo: saída de `validar.py`, `gerar.py`, `pytest -q`, `ruff check .`,
+- [x] **Passo 2: Evidências** abaixo: saída de `validar.py`, `gerar.py`, `pytest -q`, `ruff check .`,
   contagem de forças, URL do pipeline da tag, tabela de vereditos da T1 (passo 8), e a renderização
   dos blocos Mermaid deste plano, da ADR 0013 e do guia (R25):
 
 ```bash
-for f in docs/plans/2026-10-28-programa-onda-0.md docs/adr/0013-modelops-fora-modelo-proprio-pelo-catalogo.md guias/metricas-do-programa.md; do
-  awk '/^```mermaid/{f=1;n++;next} /^```/{f=0} f{print > ("/tmp/mmd-" n ".mmd")}' "$f"
+D="${TMPDIR:-/tmp}/mermaid-final"; mkdir -p "$D"
+for f in docs/plans/2026-10-28-programa-onda-0.md docs/adr/0013-modelops-fora-modelo-proprio-pelo-catalogo.md \
+  guias/metricas-do-programa.md docs/specs/2026-10-28-programa-engenharia-de-ia-delta.md \
+  docs/research/2026-10-28-engenharia-de-ia-analista-e-catalogo.md docs/research/2026-10-28-formato-visual-e-agentes.md; do
+  b=$(basename "$f" .md)
+  awk -v b="$b" -v d="$D" '/^```mermaid/{f=1;n++;next} /^```/{f=0} f{print > (d "/mmd-" b "-" n ".mmd")}' "$f"
 done
-for m in /tmp/mmd-*.mmd; do npx -y @mermaid-js/mermaid-cli@11.4.2 -i "$m" -o "${m%.mmd}.svg" -q && echo "ok $m"; done
+for m in "$D"/mmd-*.mmd; do
+  npx -y @mermaid-js/mermaid-cli@11.4.2 -p "$PUPPETEER_CONFIG" -i "$m" -o "${m%.mmd}.svg" -q && echo "ok $(basename "$m")"
+done
 ```
-Esperado: `ok` para cada bloco, sem erro de parse.
-- [ ] **Passo 3: `graphify update .`** e commit `docs(plans): evidências e checkpoint da Onda 0`.
+Esperado: `ok` para cada bloco (o contador é por arquivo e a saída leva o nome dele), sem erro de parse.
+`PUPPETEER_CONFIG` aponta para um JSON com `args: ["--no-sandbox"]`.
+- [x] **Passo 3: `graphify update .`** e commit `docs(plans): evidências e checkpoint da Onda 0`.
 - [ ] **Passo 4: Checkpoint humano**: o dono aprova a onda; a spec da Onda 1 (plano) só começa depois.
 
 ## Evidências
@@ -416,12 +423,23 @@ $ grep -h '^forca:' praticas/*/*.md | sort | uniq -c
 
 Treze práticas acima de `orienta` (8 + 3 + 2).
 
-Renderização dos blocos Mermaid (`@mermaid-js/mermaid-cli@11.4.2`, R25), sem erro de parse:
+Renderização dos blocos Mermaid dos seis documentos (`@mermaid-js/mermaid-cli@11.4.2`, R25), saída literal do script do passo 2 da T7, sem erro de parse:
 
 ```text
-ok 0013-modelops-fora-modelo-proprio-pelo-catalogo-1.mmd   (docs/adr/0013-...)
-ok 2026-10-28-programa-onda-0-1.mmd                        (este plano)
-ok metricas-do-programa-1.mmd                              (guias/metricas-do-programa.md)
+ok mmd-0013-modelops-fora-modelo-proprio-pelo-catalogo-1.mmd
+ok mmd-2026-10-28-engenharia-de-ia-analista-e-catalogo-1.mmd
+ok mmd-2026-10-28-engenharia-de-ia-analista-e-catalogo-2.mmd
+ok mmd-2026-10-28-engenharia-de-ia-analista-e-catalogo-3.mmd
+ok mmd-2026-10-28-formato-visual-e-agentes-1.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-1.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-2.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-3.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-4.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-5.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-6.mmd
+ok mmd-2026-10-28-programa-engenharia-de-ia-delta-7.mmd
+ok mmd-2026-10-28-programa-onda-0-1.mmd
+ok mmd-metricas-do-programa-1.mmd
 ```
 
 Commits de `71cfe13..HEAD` (39):
@@ -474,17 +492,17 @@ Vereditos da revisão adversarial da T1:
 
 | ID | veredito | evidência |
 |---|---|---|
-| SEG-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| SEG-03 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| P3-06 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| P2-01 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| API-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| CICD-02 | atendido | revisão adversarial de 2026-10-28, worktree curadoria |
-| LGPD-02 | atendido após 4 rodadas (falso positivo em logs por contexto; isenção só literal; sem fail-open para o disco; stderr sem eco da linha) | revisão adversarial de 2026-10-28, worktree curadoria |
+| SEG-02 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| SEG-03 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| P3-06 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| P2-01 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| API-02 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| CICD-02 | atendido | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
+| LGPD-02 | atendido após 4 rodadas (falso positivo em logs por contexto; isenção só literal; sem fail-open para o disco; stderr sem eco da linha) | merge e9c32fb na main; plano docs/plans/2026-10-08-curadoria-forca-dura.md |
 
 ## Checkpoint humano
 
-Pendências para o dono: T2 (URL do GitLab, release 1.2.0) e T6 (projetos piloto e linha de base). T1, T3, T4, T5 e T7 concluídas em 2026-10-29.
+Pendências para o dono: T2 (URL do GitLab e release 1.2.0), T3 passo 5 (conferir na fonte as duas afirmações da referência de analista e trocar para V), T6 (projetos piloto e linha de base), T7 passo 4 (aprovação da onda) e a confirmação da oração final das Consequências da ADR 0013. T1, T3 (exceto o passo 5), T4, T5 e T7 (passos 1 a 3) concluídas em 2026-10-29.
 
 **Pilotos** (sem nome): Piloto A: departamento 1, CI ___, harness ___, ambientes ___. Piloto B:
 departamento 2, CI ___, harness ___, ambientes ___. Quem entrega os números: papel, não nome.
@@ -494,7 +512,7 @@ departamento 2, CI ___, harness ___, ambientes ___. Quem entrega os números: pa
 | KR | Métrica | Piloto A | Piloto B | Observação |
 |---|---|---|---|---|
 | KR1.1 | Tempo do PRD aprovado ao primeiro deploy em produção (dias) | | | ou "série começa na Onda 3" |
-| KR1.2 | Frequência de deploy (deploys/semana) e lead time (dias) | | | |
+| KR1.2 | Frequência de deploy (deploys/semana) e lead time (horas, mediana) | | | |
 | KR1.3 | Taxa de falha de mudança (%) e tempo de restauração (horas) | | | |
 | KR2.1 | Pilotos de IA promovidos ou encerrados por critério (%) | | | |
 | KR2.2 | MRs abandonadas (por mês) | | | |
