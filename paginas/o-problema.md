@@ -28,6 +28,12 @@ elos:
   definicao: Refazer a mesma coisa de outro jeito e perder o caso de borda que o jeito antigo tratava.
   como_aparece: O agente marca a funcionalidade como pronta sem teste de ponta a ponta, e a falha só aparece depois
     [ref:anthropic-effective-harnesses].
+  conector: e, antes disso tudo,
+- figura: x
+  titulo: Piloto que não vira produção
+  definicao: O protótipo funciona e nunca atravessa para a operação.
+  como_aparece: Menos da metade dos pilotos de IA chega à produção, em geral por falta de operacionalização
+    estruturada e de frameworks de DevOps [ref:gartner-pilotos-sem-engenharia-de-ia].
   conector: e chega em cada disciplina
 falhas:
 - titulo: Tudo de uma vez
@@ -110,6 +116,9 @@ numeros:
   descricao: Tempo que uma equipe de agentes gastava, às sextas-feiras, limpando resíduos de IA antes de codificar
     princípios no repositório [ref:openai-harness-engineering].
   data: 2026-02
+- valor: < 50%
+  descricao: Pilotos de IA que chegam à produção, pela pesquisa de analista de 2025 [ref:gartner-pilotos-sem-engenharia-de-ia].
+  data: 2025-12
 disciplinas:
 - rotulo: engenharia de software
   titulo: Padrões de projeto
@@ -218,6 +227,7 @@ referencias:
 - cockburn-hexagonal
 - dora-2024
 - estados-de-interface
+- gartner-pilotos-sem-engenharia-de-ia
 - gitleaks-readme
 - lgpd
 - nygard-adr

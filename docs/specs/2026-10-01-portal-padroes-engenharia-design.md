@@ -653,6 +653,8 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
 - Servidor MCP do portal, RAG dos padrões e busca semântica.
 - Automação de contribuição no estilo do submission-gate do awesome-copilot.
 - Tema escuro, versão em outros idiomas e telemetria de uso.
+- Treino, fine-tuning e ciclo de vida de ML tradicional (ADR 0013); modelo próprio entra pelo
+  catálogo do gateway.
 
 ## 20. Roteiro depois da v0
 

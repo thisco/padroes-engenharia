@@ -1,0 +1,20 @@
+conteudo: metricas-do-programa
+verificado_em: '2026-10-28'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o DORA mede o desempenho de entrega em duas dimensões, throughput e estabilidade
+  ref: dora-2024
+  localizacao: parágrafo sobre o impacto da adoção de IA no desempenho de entrega
+  resultado: confirmada
+- texto: menos da metade dos pilotos de IA chega à produção
+  ref: gartner-pilotos-sem-engenharia-de-ia
+  localizacao: resumo executivo e seção Analysis; conferido por pessoa (PE-D15), pendente
+  resultado: parcial
+  nota: "Pendente de conferência na fonte pelo dono (PE-D15); a referência está com verificacao S até lá."
+revisao_adversarial:
+  revisor: revisão do controlador do plano, sessão independente
+  data: '2026-10-28'
+  achados:
+  - afirmacao: as quatro métricas de uso corrente do DORA, atribuídas a throughput e estabilidade [ref:dora-2024]
+    problema: '[importante] a referência sustenta as duas dimensões, não a lista das quatro métricas.'
+    tratamento: 'Tratado em 2026-10-28: a citação ficou só na frase das duas dimensões; as quatro métricas viraram frase separada, apresentada como escolha do programa, sem ref.'
