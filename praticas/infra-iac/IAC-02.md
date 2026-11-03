@@ -5,14 +5,22 @@ marco: "plano de infra no PR"
 dominio: infra-iac
 subdominio: null
 momento: antes-do-merge
-forca: orienta
-mecanismo: null
+forca: avisa
+mecanismo:
+  verificador: verificadores/iac_02.py
+  gatilhos:
+    - evento: depois-de-ferramenta
+      ferramenta: [editar, escrever]
+      caminhos: ["*.tf", "**/*.tf", "*.tf.json", "**/*.tf.json", "*.tofu", "**/*.tofu", "*.tofu.json", "**/*.tofu.json"]
+    - evento: pre-commit
+    - evento: ci
+  mensagem: "IAC-02: a IaC mudou e o resumo do tofu plan não veio junto; cole a linha 'Plan: ...' no PR.md da raiz ou na descrição da MR, e leia o que ele destrói. Como aplicar: {URL do portal}/praticas/IAC-02.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [sdd-scaffold-infra-devops, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock]
+referencias: [sdd-scaffold-infra-devops, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-allow-failure]
 relacionadas: [IAC-01, IAC-03]
 dono: engenharia
-revisado_em: 2026-10-21
+revisado_em: 2026-11-03
 revisar_ate: 2027-04-07
 resumo: "A infra vive em código versionado, e todo PR que a muda traz o plano gerado, com a destruição de recurso decidida por uma pessoa."
 ferramentas_aprovadas: [opentofu]
@@ -66,7 +74,8 @@ recriado. Quem aprova o PR só pelo diff do código não vê isso; quem lê o pl
 2. A cada mudança, rode `tofu fmt -check`, `tofu validate` e
    `tofu plan -out=plano.bin` [ref:opentofu-plan].
 3. Gere o texto (`tofu show -no-color plano.bin`) e o JSON (`tofu show -json plano.bin`)
-   [ref:opentofu-show]. Cole o resumo do texto na descrição do PR e passe o JSON ao verificador.
+   [ref:opentofu-show]. Cole o resumo do texto na descrição do PR (ou num `PR.md` na raiz, como
+   no prompt do Exemplo), com a linha `Plan: ...`, e passe o JSON ao verificador.
 4. Se o verificador reprovar por destruição, primeiro tente uma mudança que não destrua (acrescente
    um recurso novo em vez de renomear). Se a destruição é mesmo o desejado, a pessoa que revisa
    registra a aprovação no PR, listando o endereço do recurso, e o verificador lê essa lista.
@@ -74,6 +83,30 @@ recriado. Quem aprova o PR só pelo diff do código não vê isso; quem lê o pl
    Se a infra mudou entre o plano e a aplicação, gere o plano de novo e revise de novo.
 6. Os recursos que o plano destrói e que guardam dado têm rollback declarado antes da aplicação
    (IAC-03).
+7. Ligue o verificador que o portal hospeda, `verificadores/iac_02.py`, que aponta a IaC alterada
+   sem o resumo do plano junto. Ele vem no pacote gerado (`pacote/verificadores/iac_02.py`); até o
+   instalador (F4), copie-o para `verificadores/` do projeto, sem alterá-lo. No CI, use o job
+   abaixo no stage que o projeto usar; como a força é `avisa`, ele leva `allow_failure: true`:
+
+   ```yaml
+   plano-no-pr:
+     stage: gates
+     image: python:3.11
+     allow_failure: true
+     variables:
+       GIT_DEPTH: "0"
+     rules:
+       - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+     script:
+       - PADROES_DESCRICAO_DA_MR="$CI_MERGE_REQUEST_DESCRIPTION" python3 -I verificadores/iac_02.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+   ```
+
+   `$CI_MERGE_REQUEST_DESCRIPTION` é a descrição da MR, e só os primeiros 2700 caracteres entram
+   na variável quando ela é mais longa; `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da
+   MR [ref:gitlab-variaveis-predefinidas]. `GIT_DEPTH: "0"` desliga o clone raso
+   [ref:gitlab-git-depth], porque o verificador precisa do commit da base. Saída 1: o job fica
+   laranja e o pipeline continua bem-sucedido [ref:gitlab-allow-failure]. O `allow_failure` é
+   configuração do pipeline e não foi exercitado num GitLab real.
 
 ## Exemplo
 
@@ -175,13 +208,40 @@ Antes de rodar, o repositório precisa ter o `tofu` instalado, o módulo em `inf
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O verificador candidato é o
-`verificar-plano.py` do Exemplo, que roda no CI sobre o JSON do plano. Ele reprova (saída 1) o
+O portal hospeda o verificador `verificadores/iac_02.py`, e a força é `avisa`. Ele confere a parte
+2 do "O que fazer": a IaC mudou e o resumo do plano veio junto. Roda em três eventos: depois de o
+agente editar ou escrever um arquivo de IaC, no `pre-commit` (sobre o índice) e no `ci` (sobre o
+diff `--base...HEAD`, a partir do ancestral comum). Outro evento sai com 2.
+
+"IaC" é o arquivo `*.tf`, `*.tf.json`, `*.tofu` ou `*.tofu.json`, fora da pasta `.terraform` e de
+`node_modules`, `vendor`, `.venv`, `venv` e `site-packages`; o `.terraform.lock.hcl`, o `*.tfvars` e
+o estado não contam. "Resumo do plano" é uma linha que começa, depois de espaços, por
+`Plan: ... N to destroy.` (como no Exemplo), `No changes.` (o plano sem mudança, observado no
+OpenTofu v1.13.2) ou `Changes to Outputs:`. No `ci`, vale o `PR.md` da raiz criado ou alterado na
+MR, ou a descrição da MR que o job passa em `PADROES_DESCRICAO_DA_MR`; no `pre-commit`, o `PR.md`
+do índice, se entrou no mesmo commit; no harness, o `PR.md` no disco. Sem resumo, cada arquivo de
+IaC mudado vira um achado, `<arquivo>:0: IaC alterada sem o resumo do plano ...`. O
+`.iac02-ignorar`, na raiz, isenta o arquivo de IaC que não é infra do projeto (um exemplo, uma
+fixture): um caminho literal por linha, o arquivo exato ou uma pasta com `/` no fim, com ao menos
+dois segmentos e sem `*`, `?`, `[`, `..` nem `/` no início. Ele é lido do `HEAD` (harness e
+`pre-commit`) ou do ancestral comum (`ci`), então a isenção criada na própria MR não vale; a linha
+fora dessa forma sai com 2. Sai com 0 sem achado, 1 com achado e 2 quando não consegue decidir:
+evento que não atende, entrada inválida, `ci` sem `--base` ou com base inexistente, fora de um
+repositório Git no `pre-commit` e no `ci`.
+
+Para rodar à mão na MR: `python3 verificadores/iac_02.py --evento ci --base origin/main`.
+
+Os limites do `iac_02.py`: ele vê que há um resumo, e não que o resumo é do plano desta mudança nem
+que alguém o leu. No harness, um `PR.md` velho com resumo passa. A descrição da MR vale só no `ci`,
+e só o trecho que o job recebeu.
+
+O verificador do Exemplo, `verificar-plano.py`, confere a parte 3 e roda no CI sobre o JSON do
+plano. Ele reprova (saída 1) o
 arquivo ausente, vazio ou que não é um plano em JSON e o recurso com ação `delete` (a substituição
 inclusa) que não esteja na lista de aprovações; o arquivo de aprovações informado e ausente também
 reprova.
 
-Os limites: o verificador aceita como plano o JSON que traz `format_version`, `planned_values` e
+Os limites do Exemplo: ele aceita como plano o JSON que traz `format_version`, `planned_values` e
 `configuration` (um módulo sem recurso não traz `resource_changes`, observado no OpenTofu 1.13, e
 vale como "nenhuma mudança"); um JSON sem essas três chaves reprova. Ele não lê o significado da
 mudança. Ele não sabe se um `update` no lugar
