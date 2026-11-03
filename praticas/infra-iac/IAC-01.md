@@ -4,14 +4,22 @@ titulo: Ambiente local reproduzível por compose, com ordem de rebuild escrita
 dominio: infra-iac
 subdominio: null
 momento: antes-de-escrever
-forca: orienta
-mecanismo: null
+forca: avisa
+mecanismo:
+  verificador: verificadores/iac_01.py
+  gatilhos:
+    - evento: depois-de-ferramenta
+      ferramenta: [editar, escrever]
+      caminhos: ["docker-compose*.yml", "**/docker-compose*.yml", "docker-compose*.yaml", "**/docker-compose*.yaml", "compose*.yml", "**/compose*.yml", "compose*.yaml", "**/compose*.yaml"]
+    - evento: pre-commit
+    - evento: ci
+  mensagem: "IAC-01: o compose mudou e docs/ambiente-local.md (ou docs/steering/infra-devops.md) não mudou junto; atualize os serviços e a ordem de rebuild no mesmo PR. Como aplicar: {URL do portal}/praticas/IAC-01.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, docker-compose-up, docker-dockerfile-healthcheck, gateway-poc-compose]
+referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, docker-compose-up, docker-dockerfile-healthcheck, gateway-poc-compose, gitlab-allow-failure, gitlab-git-depth, gitlab-variaveis-predefinidas]
 relacionadas: [IAC-03, DAD-02]
 dono: engenharia
-revisado_em: 2026-10-07
+revisado_em: 2026-11-03
 revisar_ate: 2027-04-07
 resumo: "O ambiente local sobe com um comando de compose, cada serviço declara quando está saudável e a ordem de rebuild fica escrita no repositório."
 ferramentas_aprovadas: []
@@ -78,8 +86,31 @@ conflitava com outro projeto local e que por isso o serviço usa a 8002 no host
 4. Na ordem, use `docker compose up -d --wait` com `--wait-timeout`: a opção `--wait` espera os
    serviços ficarem em execução ou saudáveis, e `--wait-timeout` limita a espera em segundos
    [ref:docker-compose-up]. Verifique a versão no ar depois de recriar, não só o status.
-5. Rode o verificador no CI ou antes do push. Ao mudar o compose, atualize o documento no mesmo
-   pull request.
+5. Rode o verificador do Exemplo no CI ou antes do push. Ao mudar o compose, atualize o
+   documento no mesmo pull request.
+6. Ligue o verificador que o portal hospeda, `verificadores/iac_01.py`, que aponta o compose
+   alterado sem o documento. Ele vem no pacote gerado (`pacote/verificadores/iac_01.py`); até o
+   instalador (F4), copie-o para `verificadores/` do projeto, sem alterá-lo. No CI, use o job
+   abaixo no stage que o projeto usar; como a força é `avisa`, ele leva `allow_failure: true`:
+
+   ```yaml
+   compose-com-documento:
+     stage: gates
+     image: python:3.11
+     allow_failure: true
+     variables:
+       GIT_DEPTH: "0"
+     rules:
+       - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+     script:
+       - python3 -I verificadores/iac_01.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+   ```
+
+   `$CI_MERGE_REQUEST_DIFF_BASE_SHA` é o SHA base do diff da MR [ref:gitlab-variaveis-predefinidas],
+   e `GIT_DEPTH: "0"` desliga o clone raso [ref:gitlab-git-depth], porque o verificador precisa do
+   commit da base. Saída 1: o job fica laranja e o pipeline continua bem-sucedido
+   [ref:gitlab-allow-failure]. O `allow_failure` é configuração do pipeline e não foi exercitado
+   num GitLab real.
 
 ## Exemplo
 
@@ -196,8 +227,34 @@ e o `scripts/verificar-ambiente.py` do portal, todos já commitados na `main`.
 
 ## Como verificar
 
-Não há mecanismo hospedado pelo portal, e por isso a força é `orienta`. O verificador candidato é o
-`verificar-ambiente.py` do Exemplo, que roda no CI ou antes do push. Ele lê o compose já
+O portal hospeda o verificador `verificadores/iac_01.py`, e a força é `avisa`. Ele confere a parte
+que dá para conferir sem o Docker: o compose mudou e o documento do ambiente mudou junto. Roda em
+três eventos: depois de o agente editar ou escrever um compose, no `pre-commit` (sobre o índice) e
+no `ci` (sobre o diff `--base...HEAD`, a partir do ancestral comum). Outro evento sai com 2.
+
+"Compose" é o arquivo `docker-compose.yml`, `compose.yml` (ou `.yaml`) e as variantes com sufixo
+antes da extensão (`docker-compose.override.yml`, `compose.prod.yaml`), em qualquer pasta, fora de
+`node_modules`, `vendor`, `.venv`, `venv` e `site-packages`. "Documento" é o
+`docs/ambiente-local.md` do passo 3 ou o `docs/steering/infra-devops.md` do modelo de steering do
+scaffold [ref:sdd-scaffold-infra-devops]; um dos dois basta, e o documento removido não conta. No
+`ci` e no `pre-commit`, cada compose mudado (criado, alterado ou removido) sem documento mudado na
+mesma MR ou no mesmo commit vira um achado, `<compose>:0: compose alterado sem atualizar ...`. No
+harness, o achado sai quando o documento está igual ao `HEAD` no disco. O `.iac01-ignorar`, na
+raiz, isenta o compose que não é o ambiente local (uma fixture de teste, um exemplo): um caminho
+literal por linha, o arquivo exato ou uma pasta com `/` no fim, com ao menos dois segmentos e sem
+`*`, `?`, `[`, `..` nem `/` no início. Ele é lido do `HEAD` (harness e `pre-commit`) ou do
+ancestral comum (`ci`), então a isenção criada na própria MR não vale; a linha fora dessa forma sai
+com 2. Sai com 0 sem achado, 1 com achado e 2 quando não consegue decidir: evento que não atende,
+entrada inválida, `ci` sem `--base` ou com base inexistente, fora de um repositório Git.
+
+Para rodar à mão na MR: `python3 verificadores/iac_01.py --evento ci --base origin/main`.
+
+Os limites do `iac_01.py`: ele vê que o documento mudou, e não que a mudança descreve o serviço
+novo. No harness, o documento já atualizado num commit anterior da mesma branch não conta, e o
+aviso sai até a próxima edição do documento. Compose com outro nome (`stack.yml`) não é visto.
+
+O verificador do Exemplo, `verificar-ambiente.py`, confere o conteúdo e roda no CI ou antes do
+push, com o Docker. Ele lê o compose já
 normalizado por `docker compose config` e reprova (saída 1) o arquivo ausente ou vazio, o Docker
 indisponível, o compose inválido, o serviço sem `healthcheck`, a dependência sem
 `condition: service_healthy`, o `healthcheck` desligado (`disable: true` ou `test: ["NONE"]`) ou
@@ -208,7 +265,7 @@ A herança vale só para serviço com `build` e Dockerfile local: o verificador 
 registro, e esse serviço declara o healthcheck no compose. Se houver mais de uma `HEALTHCHECK` no
 Dockerfile, vale a última, como no Docker [ref:docker-dockerfile-healthcheck].
 
-Os limites: o verificador confere a forma, e não que o healthcheck testa a coisa certa nem que o
+Os limites do Exemplo: ele confere a forma, e não que o healthcheck testa a coisa certa nem que o
 comando escrito no passo funciona; para isso serve o `executar.sh`, que roda a ordem de verdade.
 Ele não detecta serviço cujo código está dentro da imagem e cujo passo de rebuild foi omitido do
 `up`, e também não vê dependência entre serviços que não está no compose (um banco fora dele). Ele

@@ -1,5 +1,5 @@
 conteudo: IAC-01
-verificado_em: '2026-10-07'
+verificado_em: '2026-11-03'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o modelo de steering diz que o ambiente de dev roda no Docker Compose e que, com o código dentro das imagens e sem live-reload, toda alteração exige rebuild antes de recriar os serviços
@@ -36,7 +36,30 @@ afirmacoes:
   ref: docker-dockerfile-healthcheck
   localizacao: seção HEALTHCHECK da referência do Dockerfile
   resultado: confirmada
+- texto: o modelo de steering de infra e DevOps do scaffold é o docs/steering/infra-devops.md, onde a ordem de rebuild é registrada
+  ref: sdd-scaffold-infra-devops
+  localizacao: "caminho template/docs/steering/infra-devops.md e seção 'Ambiente de dev local (ordem de rebuild)' (lidos em 2026-11-03 no clone da tag v1.7.1, commit cd121cd, o mesmo fixado na URL da referência)"
+  resultado: confirmada
+- texto: $CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da MR
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis de merge request (aberta na web em 2026-11-03; 'The base SHA of the merge request diff')"
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-11-03; 'To disable shallow clone and make GitLab CI/CD fetch all branches and tags each time, keep the value empty or set to 0'). A parte 'o verificador precisa do commit da base' é do portal, sem referência."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-11-03; 'an orange warning ... indicates that a job failed. However, the pipeline is successful and the associated commit is marked as passed with no warnings'). Não exercitado num GitLab real."
+  resultado: confirmada
 execucoes:
+- tipo: arquivo
+  arquivo: verificadores/iac_01.py
+  comando: python3 -I verificadores/iac_01.py --evento ci --base <sha> e --evento depois-de-ferramenta (JSON no stdin), num repositório Git temporário; pytest -q tests/verificadores/test_iac_01.py
+  ambiente: repositório Git novo no scratchpad com infra/local/docker-compose.yml (serviço db) e docs/ambiente-local.md no commit-base; Python 3.15.2; macOS. Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'MR que acrescenta o serviço api só no compose: "infra/local/docker-compose.yml:0: compose alterado sem atualizar docs/ambiente-local.md nem docs/steering/infra-devops.md no mesmo PR", saída 1; com o documento atualizado num commit seguinte da MR, saída 0. Harness com o compose editado no disco e o documento igual ao HEAD: saída 1, em 0,11 s. pytest: 47 passed em tests/verificadores/test_iac_01.py.'
+  data: '2026-11-03'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/verificar-ambiente.py
   comando: sh executar.sh (partes A e B), verificar-ambiente.py nos dois estados

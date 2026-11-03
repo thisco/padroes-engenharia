@@ -15,7 +15,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
 | Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
-| Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
+| Infra e IaC (`infra-iac`) | IAC-01 (avisa) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
@@ -36,7 +36,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | CICD-03 | Entrega rastreável: tag semântica, changelog e artefato do commit | só orienta | experimentar | nada |
 | DAD-01 | Migration já aplicada não se edita | bloqueia | adotar | `skill:migrations-reversiveis` |
 | DAD-02 | Expanda e contraia: a mudança de schema em duas etapas compatíveis | só orienta | experimentar | `skill:migrations-reversiveis` |
-| IAC-01 | Ambiente local reproduzível por compose, com ordem de rebuild escrita | só orienta | experimentar | nada |
+| IAC-01 | Ambiente local reproduzível por compose, com ordem de rebuild escrita | avisa | experimentar | nada |
 | IAC-02 | Infra declarada em código, com o plano de mudança revisado no PR | só orienta | experimentar | nada |
 | IAC-03 | Rollback declarado e testado antes do deploy | só orienta | experimentar | `skill:migrations-reversiveis` |
 | LGPD-01 | Classifique o dado pessoal antes de escrever | só orienta | experimentar | nada |
