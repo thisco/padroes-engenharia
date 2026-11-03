@@ -35,6 +35,9 @@ ROTULO_TIPO_REFERENCIA = {
     "interno": "Interno",
     "portal": "Portal",
 }
+# Marca do bloco `mermaid` já renderizado; só a página que a tem carrega a biblioteca (R26).
+MARCA_MERMAID = '<pre class="mermaid">'
+
 ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Agentes próprios"}
 
 # Páginas geradas (não vêm de um único conteúdo): o caminho e a condição para existirem. A que
@@ -70,9 +73,6 @@ def todos_os_prompts(site: Site) -> list[Prompt]:
     """Os prompts de exemplo de todas as práticas e receitas, na ordem dos caminhos."""
     conteudos = sorted((*site.repo.praticas, *site.repo.receitas), key=lambda c: c.caminho_relativo)
     return [p for c in conteudos for p in prompts_de(c)]
-
-
-MARCA_MERMAID = '<pre class="mermaid">'
 
 
 def paginas_publicadas(site: Site) -> list[str]:

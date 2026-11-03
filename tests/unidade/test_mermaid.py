@@ -44,6 +44,8 @@ def test_pagina_com_mermaid_carrega_a_biblioteca_local_e_a_inicializacao():
     assert f'<script src="{raiz}{SCRIPT}" defer></script>' in html
     assert f'<script src="{raiz}tema/mermaid-init.js" defer></script>' in html
     assert html.index(SCRIPT) < html.index("mermaid-init.js")
+    assert html.index("<head>") < html.index(SCRIPT) < html.index("mermaid-init.js")
+    assert html.index("mermaid-init.js") < html.index("</head>")
     assert "http" not in re.findall(r"<script[^>]*src=\"([^\"]*)\"", html)[-1]
 
 
@@ -92,3 +94,18 @@ def test_emitir_copia_biblioteca_e_inicializacao(tmp_path):
 def test_css_do_mermaid_tem_margem_e_rolagem():
     css = (fabrica.RAIZ / "portal/tema/tema.css").read_text(encoding="utf-8")
     assert re.search(r"\.mermaid\s*\{[^}]*overflow-x:\s*auto", css)
+
+
+def test_saida_com_diagrama_e_deterministica(tmp_path):
+    for nome in ("a", "b"):
+        emitir(_site(), tmp_path / nome)
+    arquivos = sorted(
+        p.relative_to(tmp_path / "a") for p in (tmp_path / "a").rglob("*") if p.is_file()
+    )
+    assert arquivos == sorted(
+        p.relative_to(tmp_path / "b") for p in (tmp_path / "b").rglob("*") if p.is_file()
+    )
+    for rel in arquivos:
+        assert (tmp_path / "a" / rel).read_bytes() == (tmp_path / "b" / rel).read_bytes(), rel
+    paginas = [(p.html, p.md) for p in montar_paginas(_site())]
+    assert paginas == [(p.html, p.md) for p in montar_paginas(_site())]
