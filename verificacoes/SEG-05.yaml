@@ -1,0 +1,84 @@
+conteudo: SEG-05
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a OWASP manda negar o acesso por padrão, validar a permissão em toda requisição, no nível da aplicação e não método a método, e lembra que basta ao atacante achar um caminho"
+  ref: owasp-authorization-cheat-sheet
+  localizacao: "seções 'Deny by Default' e 'Validate the Permissions on Every Request' ('Remember an attacker only needs to find one way in')"
+  resultado: confirmada
+- texto: "a OWASP pede teste de unidade e de integração que confira que o acesso é negado por padrão"
+  ref: owasp-authorization-cheat-sheet
+  localizacao: "seção 'Create Unit and Integration Test Cases for Authorization Logic'"
+  resultado: confirmada
+- texto: "a checagem feita método a método deixa um caminho de fora, e é esse que o atacante acha"
+  ref: owasp-authorization-cheat-sheet
+  localizacao: "seção 'Validate the Permissions on Every Request'"
+  resultado: confirmada
+- texto: "FastAPI(dependencies=[...]) aplica as dependências a todas as rotas da aplicação"
+  ref: fastapi-dependencias-globais
+  localizacao: "página 'Global Dependencies', parágrafo 'they will be applied to all the path operations in the application'"
+  resultado: confirmada
+- texto: "APIRouter(dependencies=[...]) executa as dependências em cada requisição de toda rota do roteador, e a documentação cita o uso para exigir autenticação de um grupo inteiro de rotas"
+  ref: fastapi-aplicacoes-maiores
+  localizacao: "seção do APIRouter ('added to all the path operations in the router and will be executed/solved for each request'; 'to require authentication for a whole group of path operations')"
+  resultado: confirmada
+- texto: "a OWASP recomenda limitar quantas vezes um cliente chama a API num período, com política mais estrita em endpoints sensíveis e teto para a mesma operação repetida, como conferir um código de uso único"
+  ref: owasp-api4-2023
+  localizacao: "seção 'How To Prevent', itens de rate limiting e de limite por operação (OTP, recuperação de senha)"
+  resultado: confirmada
+- texto: "acima do limite, a resposta é 429 Too Many Requests, com Retry-After opcional"
+  ref: rfc-6585
+  localizacao: "seção 4 ('MAY include a Retry-After header')"
+  resultado: confirmada
+- texto: "o 401 exige o cabeçalho WWW-Authenticate"
+  ref: rfc-9110
+  localizacao: "seção 15.5.2 ('The server generating a 401 response MUST send a WWW-Authenticate header field')"
+  resultado: confirmada
+- texto: "a OWASP manda responder com erro genérico, sem revelar se a conta existe, lembra que um código HTTP diferente também revela, e pede o mesmo caminho de código nos dois casos para o tempo de resposta não denunciar"
+  ref: owasp-authentication-cheat-sheet
+  localizacao: "seção 'Authentication and Error Messages', subseções 'Authentication Responses' e 'Error Codes and URLs'"
+  resultado: confirmada
+- texto: "o login que responde de um jeito para e-mail inexistente e de outro para senha errada deixa descobrir quais contas existem"
+  ref: owasp-authentication-cheat-sheet
+  localizacao: "seção 'Authentication Responses' (enumeração de usuários)"
+  resultado: confirmada
+- texto: "por padrão o Spring Security exige autenticação em toda requisição; com HttpSecurity, declarar ao menos anyRequest().authenticated(); anyRequest().denyAll() nega o que nenhuma regra casou, e negar por padrão transforma as regras em lista de permissões"
+  ref: spring-security-authorize-http-requests
+  localizacao: "introdução da página, seção 'Matching By Http Method' e o item 6 do exemplo de 'Authorizing Requests'"
+  resultado: confirmada
+- texto: "a SlowApi é biblioteca de limite de taxa para Starlette e FastAPI adaptada do flask-limiter, em qualidade alfa, e acima do limite responde 429 sem rodar a view"
+  ref: slowapi-docs
+  localizacao: "página inicial (descrição, aviso de qualidade alfa e exemplo com @limiter.limit('5/minute'))"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-05/app.py
+  comando: "uv run -q --no-project --with fastapi==0.162.0 --with httpx==0.28.1 --with pytest==9.0.2 python -m pytest -q -p no:cacheprovider test_rotas.py (o test_rotas.py importa o app.py)"
+  ambiente: "macOS; uv; Python 3.14 do uv; FastAPI 0.162.0; Starlette 1.10.0; httpx 0.28.1; pytest 9.0.2"
+  resultado: passou
+  evidencia: "7 passed, 1 skipped (GET /saude é pública e é pulada); /pedidos/1 e POST /pedidos sem credencial: 401 com WWW-Authenticate: Bearer; credencial ausente, errada, Basic e Bearer vazio: mesmo corpo; limite 2: [200, 200, 429]."
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/SEG-05/test_rotas.py
+  comando: "o mesmo pytest sobre duas cópias alteradas do app.py: uma com app.add_route('/interno/metricas', ...) e outra com docs_url='/docs' e openapi_url='/openapi.json'"
+  ambiente: "o mesmo da linha acima, em diretório temporário"
+  resultado: falhou-como-esperado
+  evidencia: "com add_route: '2 failed, 7 passed, 1 skipped' (GET e HEAD de /interno/metricas); com a documentação ligada: '6 failed' (GET e HEAD de /docs, /docs/oauth2-redirect e /openapi.json)."
+  data: '2026-11-03'
+- tipo: prompt
+  prompt: SEG-05-prompt-1
+  harness: "execução manual pelo curador, seguindo o prompt passo a passo (não foi sessão nova de agente)"
+  ambiente: "repositório Git temporário com o app.py do enunciado (autenticação rota a rota, /pedidos/exportar aberta)"
+  resultado: passou
+  evidencia: "antes, GET /pedidos/exportar respondia sem credencial; depois, credencial e limite em FastAPI(dependencies=[...]), ROTAS_PUBLICAS só com GET /saude, documentação desligada; test_rotas.py: '8 passed, 1 skipped'."
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: "autorrevisão do curador; a revisão independente fica com o controlador da Onda 1"
+  data: '2026-11-03'
+  achados:
+  - afirmacao: "O teste percorre só APIRoute"
+    problema: "A documentação gerada e a rota de add_route não são APIRoute e não passam pelas dependências; o teste não as via."
+    tratamento: "O teste passou a percorrer todas as rotas de app.routes, e a execução registra as duas quebras."
+  - afirmacao: "SlowApi: default_limits e middleware"
+    problema: "A página inicial não mostra a configuração de limite padrão nem o middleware."
+    tratamento: "O texto diz só o que a página sustenta (biblioteca, alfa, 429 sem rodar a view)."

@@ -10,7 +10,7 @@ mecanismo: null
 status: experimentar
 aplica: []
 referencias: [owasp-top10-2025-a02, twelve-factor-config, pydantic-settings, pydantic-config, django-deployment-checklist, spring-boot-external-config]
-relacionadas: [SEG-02]
+relacionadas: [SEG-02, SEG-05]
 dono: engenharia
 revisado_em: 2026-11-03
 revisar_ate: 2027-05-03

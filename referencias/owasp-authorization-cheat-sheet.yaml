@@ -1,0 +1,10 @@
+id: owasp-authorization-cheat-sheet
+titulo: "Authorization Cheat Sheet"
+organizacao: OWASP Cheat Sheet Series
+url: https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html
+tipo: padrao-aberto
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seções 'Deny by Default', 'Validate the Permissions on Every Request' e 'Create Unit and Integration Test Cases for Authorization Logic'"
+dominios: [seguranca]
+notas: null

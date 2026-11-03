@@ -1,0 +1,10 @@
+id: slowapi-docs
+titulo: "SlowApi"
+organizacao: SlowApi (projeto de código aberto)
+url: https://slowapi.readthedocs.io/en/latest/
+tipo: comunidade
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "página inicial: biblioteca de rate limit para Starlette e FastAPI adaptada do flask-limiter, em qualidade alfa; a requisição acima do limite recebe HTTP 429 e o corpo da view não roda"
+dominios: [seguranca]
+notas: null

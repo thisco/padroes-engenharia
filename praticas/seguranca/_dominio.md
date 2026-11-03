@@ -13,7 +13,7 @@ numa spec: responder por escrito a cinco perguntas, com um parágrafo de mitiga�
 manter a policy no menor privilégio, e nunca commitar segredo, com o scanner bloqueante no CI
 [ref:sdd-scaffold-threat-model]. As práticas desta faixa seguem essa divisão: a SEG-01 é o
 threat-model, a SEG-02 é o segredo, e a SEG-03 estende a mesma lógica à dependência que um modelo
-propõe. A SEG-04 leva a segurança ao boot: a configuração insegura não deixa a aplicação subir em
-produção. O que é específico de cada projeto, como o mecanismo de autenticação e a classificação do
+propõe. A SEG-04 e a SEG-05 levam a segurança ao código que roda: a configuração insegura não deixa a
+aplicação subir em produção, e a rota nasce exigindo credencial e sob limite de taxa. O que é específico de cada projeto, como o mecanismo de autenticação e a classificação do
 dado, fica no steering `seguranca` do projeto, e não aqui [ref:sdd-scaffold-threat-model]. Dado
 pessoal tem faixa própria, a de privacidade e LGPD.

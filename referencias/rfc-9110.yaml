@@ -1,0 +1,10 @@
+id: rfc-9110
+titulo: "RFC 9110: HTTP Semantics"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc9110
+tipo: normativo
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seção 15.5.2 (401 Unauthorized: falta credencial válida; o servidor MUST enviar WWW-Authenticate) e 15.5.4 (403 Forbidden)"
+dominios: [seguranca]
+notas: null
