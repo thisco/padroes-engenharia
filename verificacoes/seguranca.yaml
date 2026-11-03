@@ -1,11 +1,11 @@
 conteudo: seguranca
-verificado_em: '2026-10-07'
+verificado_em: '2026-11-03'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a skill threat-model reúne as cinco perguntas com parágrafo de mitigação por sim, o menor privilégio
     e a regra do segredo; parâmetros do projeto ficam no steering de segurança
   ref: sdd-scaffold-threat-model
-  localizacao: seções 'As perguntas', 'Menor privilégio', 'Segredo' e 'Parâmetros deste projeto'
+  localizacao: seções 'As perguntas', 'Menor privilégio', 'Segredo' e 'Parâmetros deste projeto'; reconferidas em 2026-11-03 na cópia skills/threat-model/SKILL.md, igual ao commit fixado
   resultado: confirmada
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente

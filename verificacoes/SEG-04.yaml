@@ -1,0 +1,66 @@
+conteudo: SEG-04
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a OWASP lista contas padrão ativas, recurso desnecessário habilitado, erro que mostra stack trace e configuração de segurança do framework fora de valor seguro entre as falhas de configuração"
+  ref: owasp-top10-2025-a02
+  localizacao: "seção 'Description', lista de condições que tornam a aplicação vulnerável"
+  resultado: confirmada
+- texto: "a OWASP recomenda um processo automatizado que verifique a configuração em todos os ambientes"
+  ref: owasp-top10-2025-a02
+  localizacao: "seção 'How to prevent', item do processo automatizado de verificação"
+  resultado: confirmada
+- texto: "a página de erro que mostra o stack trace ao usuário é uma das formas da falha"
+  ref: owasp-top10-2025-a02
+  localizacao: "seção 'Description', item 'Error handling reveals stack traces or other overly informative error messages to users'"
+  resultado: confirmada
+- texto: "configuração é o que varia entre deploys, fica em variável de ambiente, separada do código"
+  ref: twelve-factor-config
+  localizacao: "fator III, parágrafos de abertura e 'Store config in the environment'"
+  resultado: confirmada
+- texto: "no pydantic-settings, cada campo de BaseSettings é lido da variável de ambiente de mesmo nome, sem distinção de maiúsculas por padrão, com o prefixo de env_prefix, e o campo obrigatório ausente vira erro de validação"
+  ref: pydantic-settings
+  localizacao: "seções 'Usage' (exemplo com o erro 'Field required [type=missing') e 'Environment variable names' (case-insensitive por padrão; env_prefix)"
+  resultado: confirmada
+  nota: "A página mostra o erro 'Field required' no exemplo, sem frase que generalize; o Exemplo do portal reproduziu o comportamento com pydantic-settings 2.16.2."
+- texto: "hide_input_in_errors esconde o valor recebido na mensagem de erro, e o padrão é mostrá-lo"
+  ref: pydantic-config
+  localizacao: "ConfigDict, atributo hide_input_in_errors (padrão False)"
+  resultado: confirmada
+- texto: "o Django manda nunca ligar a depuração em produção"
+  ref: django-deployment-checklist
+  localizacao: "seção 'DEBUG': 'You must never enable debug in production.'"
+  resultado: confirmada
+- texto: "manage.py check --deploy confere parte das regras e deve rodar contra o settings de produção; a chave sai do ambiente com SECRET_KEY = os.environ['SECRET_KEY']"
+  ref: django-deployment-checklist
+  localizacao: "introdução da página ('Some of the checks described below can be automated using the check --deploy option') e seção 'SECRET_KEY'"
+  resultado: confirmada
+- texto: "a classe @ConfigurationProperties anotada com @Validated é validada, com as anotações de restrição do jakarta.validation nos campos"
+  ref: spring-boot-external-config
+  localizacao: "'Type-safe Configuration Properties' › '@ConfigurationProperties Validation'"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-04/config.py
+  comando: "uv run -q --no-project --with pydantic-settings==2.16.2 python config.py, em quatro ambientes: produção com APP_DEBUG=true, chave curta e APP_ORIGENS_CORS='[\"*\"]'; produção sem APP_CHAVE_DE_SESSAO; produção com chave de 40 caracteres e uma origem explícita; local com debug ligado e chave curta"
+  ambiente: "macOS; uv; Python 3.14 do uv; pydantic-settings 2.16.2; pydantic 2.14.2"
+  resultado: passou
+  evidencia: "saída 1 com 'boot abortado: config: Value error, configuração insegura em produção: APP_DEBUG ligado; APP_CHAVE_DE_SESSAO com menos de 32 caracteres; APP_ORIGENS_CORS aceita qualquer origem', sem o valor da chave; saída 1 com 'boot abortado: chave_de_sessao: Field required'; saída 0 'configuração ok para producao'; saída 0 'configuração ok para local'. Sem hide_input_in_errors, o mesmo erro trazia a chave em input_value."
+  data: '2026-11-03'
+- tipo: prompt
+  prompt: SEG-04-prompt-1
+  harness: "execução manual pelo curador, seguindo o prompt passo a passo (não foi sessão nova de agente)"
+  ambiente: "repositório Git temporário com o app/config.py do Antes; uv com pydantic-settings 2.16.2 e pytest"
+  resultado: passou
+  evidencia: "app/config.py reescrito com Config(BaseSettings), model_validator e carregar(); tests/test_config.py com os três casos: '3 passed in 0.73s'; o teste confere que o stderr não contém a chave usada."
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: "autorrevisão do curador; a revisão independente fica com o controlador da Onda 1"
+  data: '2026-11-03'
+  achados:
+  - afirmacao: "Spring Boot: invalid configuration fails at startup"
+    problema: "A subseção de validação não diz que a falha impede a aplicação de subir."
+    tratamento: "O texto afirma só que a classe é validada; a falha no boot não é atribuída à fonte."
+  - afirmacao: "O erro diz o quê, nunca o valor"
+    problema: "Na execução, o erro do pydantic repetiu a chave em input_value."
+    tratamento: "hide_input_in_errors entrou no Exemplo e no Como aplicar, com fonte."

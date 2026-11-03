@@ -1,0 +1,11 @@
+id: owasp-top10-2025-a02
+titulo: "A02:2025 Security Misconfiguration"
+organizacao: OWASP Foundation
+url: https://top10.owasp.org/2025/A02_2025-Security_Misconfiguration
+tipo: padrao-aberto
+versao: '2025'
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seções 'Description' (contas padrão ativas, recurso desnecessário habilitado, erro que mostra stack trace, configuração de segurança de framework fora de valor seguro) e 'How to prevent' (processo de hardening repetível, ambientes com a mesma configuração e credenciais diferentes, processo automatizado que verifica a configuração em todos os ambientes)"
+dominios: [seguranca]
+notas: "O endereço owasp.org/Top10/2025/... redireciona (308) para top10.owasp.org."

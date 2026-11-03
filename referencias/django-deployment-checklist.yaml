@@ -1,0 +1,11 @@
+id: django-deployment-checklist
+titulo: "Deployment checklist"
+organizacao: Django Software Foundation
+url: https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+tipo: vendor
+versao: '5.2'
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "introdução (manage.py check --deploy contra o settings de produção) e seções 'DEBUG' (nunca ligado em produção), 'SECRET_KEY' (valor aleatório grande, lido do ambiente) e 'ALLOWED_HOSTS'"
+dominios: [seguranca]
+notas: null
