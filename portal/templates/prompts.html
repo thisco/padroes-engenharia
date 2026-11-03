@@ -10,7 +10,7 @@
   <h2>{{ grupo.titulo }}</h2>
 {% for p in grupo.itens %}
   <figure class="prompt" id="{{ p.id }}">
-    <figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar hidden>Copiar</button> <a href="{{ raiz }}{{ p.caminho }}#{{ p.id }}">{{ p.origem }}</a> <span class="ref-meta">{{ p.momento_titulo }}</span></figcaption>
+    <figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar>Copiar</button> <a href="{{ raiz }}{{ p.caminho }}#{{ p.id }}">{{ p.origem }}</a> <span class="ref-meta">{{ p.momento_titulo }}</span></figcaption>
     <pre>{{ p.texto }}</pre>
   </figure>
 {% endfor %}

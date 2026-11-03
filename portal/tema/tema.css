@@ -673,3 +673,7 @@ a.tr-skill:hover { text-decoration: underline; }
 .tr-porta b { font-size: 17px; }
 .tr-porta span { font-size: 14px; color: var(--tinta-2); }
 .tr-porta em { font-style: normal; font-size: 13.5px; color: var(--gov); text-decoration: underline; }
+
+/* PD-D7: rótulo da linguagem no bloco de código; Copiar sempre visível */
+.bloco .lang { position: absolute; top: 8px; left: 10px; font-size: 11px; color: var(--tinta-2); letter-spacing: .04em; }
+.bloco pre { padding-top: 28px; }
