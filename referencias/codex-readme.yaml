@@ -1,0 +1,10 @@
+id: codex-readme
+titulo: "README do Codex CLI (openai/codex)"
+organizacao: OpenAI
+url: https://github.com/openai/codex
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'Quickstart' (instalação e 'run codex to get started')"
+dominios: [construir-com-ia]
+notas: "A página de quickstart da documentação (learn.chatgpt.com/docs/quickstart) cobre só o app e a web, sem o CLI; por isso a fonte do comando é o README do repositório."
