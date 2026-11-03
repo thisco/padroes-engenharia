@@ -890,6 +890,7 @@ def readme_md(site: Site) -> str:
 ESTATICOS = (
     ("portal/tema", "tema", ("*.css", "*.js", "*.svg")),
     ("portal/vendor/fonts", "vendor/fonts", ("*.ttf", "*.css", "*.md", "*.txt")),
+    ("portal/vendor/mermaid", "vendor/mermaid", ("*.js", "*.md", "*.txt")),
     ("portal/vendor/reveal", "vendor/reveal", ("*.css", "*.js", "*.md")),
 )
 

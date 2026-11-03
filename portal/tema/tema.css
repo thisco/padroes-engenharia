@@ -673,3 +673,6 @@ a.tr-skill:hover { text-decoration: underline; }
 .tr-porta b { font-size: 17px; }
 .tr-porta span { font-size: 14px; color: var(--tinta-2); }
 .tr-porta em { font-style: normal; font-size: 13.5px; color: var(--gov); text-decoration: underline; }
+
+/* Diagrama Mermaid desenhado no navegador (R26); antes do desenho é só o texto do diagrama. */
+.mermaid { margin: 16px 0; overflow-x: auto; text-align: center; background: transparent; }
