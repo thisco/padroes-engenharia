@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{% block conteudo %}
+<p class="trilha"><a href="{{ raiz }}index.html">Início</a> · Roteiros</p>
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+  <p>{{ objetivo }}</p>
+</div>
+<div class="corpo">
+  <article class="texto" aria-label="Roteiro">
+    <div class="disco">
+      <h2>Cole isto no agente</h2>
+      <p>Troque <code>{URL do portal}</code> pelo endereço do portal. O agente segue o roteiro pelo <code>.md</code> e para nos passos marcados "você decide".</p>
+      {{ roteiro.prompt_inicial_html|safe }}
+    </div>
+    <div class="roteiro">
+{% for p in roteiro.passos %}
+      <section class="passo" id="passo-{{ p.n }}" data-quem="{{ p.quem }}" aria-label="Passo {{ p.n }}">
+        <div class="n">{{ p.n }}</div>
+        <div class="corpo">
+          <h2>{{ p.titulo }} <span class="quem">{{ p.rotulo_quem }}</span></h2>
+{{ p.html|safe }}
+{% if p.harnesses %}
+          <div class="abas" role="tablist" data-abas>{% for h in p.harnesses %}<button type="button" role="tab" data-harness="{{ h.id }}">{{ h.titulo }}</button>{% endfor %}</div>
+{% for h in p.harnesses %}
+          <div class="painel" role="tabpanel" data-harness="{{ h.id }}">
+            <h3>{{ h.titulo }}</h3>
+{{ h.html|safe }}
+          </div>
+{% endfor %}
+{% endif %}
+        </div>
+      </section>
+{% endfor %}
+    </div>
+  </article>
+  <aside class="lado" aria-label="Ficha e referências">
+    <section><h2>Ficha</h2>
+      <dl class="campos">{% for rotulo, valor in campos %}<dt>{{ rotulo }}</dt><dd>{{ valor }}</dd>{% endfor %}</dl>
+    </section>
+{% if vinculos.praticas %}
+    <section><h2>Práticas</h2><ul>{% for i in vinculos.praticas %}<li><a href="{{ raiz }}{{ i.href }}">{{ i.titulo }}</a></li>{% endfor %}</ul></section>
+{% endif %}
+    <section><h2>Referências</h2>{{ c.lista_referencias(referencias, raiz) }}</section>
+  </aside>
+</div>
+{% endblock %}

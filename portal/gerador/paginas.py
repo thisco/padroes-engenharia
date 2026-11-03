@@ -541,7 +541,7 @@ def prompts(site: Site) -> list[dict[str, Any]]:
     itens = []
     for p in todos_os_prompts(site):
         origem = p.origem
-        origem_id = _slug(origem) if origem.tipo == "receita" else origem.chave
+        origem_id = _slug(origem) if origem.tipo in ("receita", "roteiro") else origem.chave
         itens.append(
             {
                 "id": p.id,

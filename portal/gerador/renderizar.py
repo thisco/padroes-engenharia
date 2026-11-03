@@ -67,8 +67,11 @@ def _tutorial(guia: Conteudo) -> bool:
 
 
 def todos_os_prompts(site: Site) -> list[Prompt]:
-    """Os prompts de exemplo de todas as práticas e receitas, na ordem dos caminhos."""
-    conteudos = sorted((*site.repo.praticas, *site.repo.receitas), key=lambda c: c.caminho_relativo)
+    """Os prompts de exemplo de práticas, receitas e roteiros, na ordem dos caminhos."""
+    conteudos = sorted(
+        (*site.repo.praticas, *site.repo.receitas, *site.repo.roteiros),
+        key=lambda c: c.caminho_relativo,
+    )
     return [p for c in conteudos for p in prompts_de(c)]
 
 
@@ -788,7 +791,7 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
         return f"Caso: {texto_origem(meta['origem'])}, {meta['periodo']}."
-    if conteudo.tipo == "receita":
+    if conteudo.tipo in ("receita", "roteiro"):
         return str(meta["objetivo"])
     return sem_marcadores(str(meta.get("descricao") or ""))
 
