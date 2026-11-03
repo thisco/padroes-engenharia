@@ -263,6 +263,32 @@ def meta_receita(**alteracoes: Any) -> dict[str, Any]:
     )
 
 
+def meta_roteiro(**alteracoes: Any) -> dict[str, Any]:
+    return _com(
+        {
+            "titulo": "Projeto novo: o primeiro dia",
+            "objetivo": "Sair do primeiro dia com o projeto novo pronto para o agente.",
+            "porta": "projeto-novo",
+            "publico": "Time que começa um projeto do zero.",
+            "harnesses": ["kiro"],
+            "passos": [
+                {"titulo": "Abrir o harness", "quem": "voce"},
+                {"titulo": "Instalar o pacote", "quem": "agente"},
+            ],
+            "dominio": "construir-com-ia",
+            "momento": "antes-de-escrever",
+            "pre_requisitos": ["git"],
+            "tempo": 30,
+            "praticas": ["P1-01"],
+            "resultado_esperado": "O projeto abre com o pacote instalado.",
+            "referencias": ["ref-forte"],
+            "dono": "engenharia",
+            "revisado_em": "2026-10-01",
+        },
+        alteracoes,
+    )
+
+
 def meta_starter(**alteracoes: Any) -> dict[str, Any]:
     componente = yaml.safe_load((RAIZ / "componentes.yml").read_text(encoding="utf-8"))
     dados = componente["componentes"]["sdd-scaffold"]
@@ -465,6 +491,33 @@ def receita(
 ) -> Conteudo:
     meta = meta_receita() if meta is None else meta
     return Conteudo("receita", f"receitas/{slug}.md", meta, corpo)
+
+
+CORPO_ROTEIRO = """```prompt
+Leia {URL do portal} e conduza o primeiro dia deste projeto.
+```
+
+## Passo 1: Abrir o harness
+
+Abra a pasta do projeto no harness.
+
+## Passo 2: Instalar o pacote
+
+O agente instala o pacote.
+
+### Kiro
+
+Peça ao agente que rode o instalador.
+"""
+
+
+def roteiro(
+    slug: str = "projeto-novo",
+    meta: dict[str, Any] | None = None,
+    corpo: str = CORPO_ROTEIRO,
+) -> Conteudo:
+    meta = meta_roteiro() if meta is None else meta
+    return Conteudo("roteiro", f"roteiros/{slug}.md", meta, corpo)
 
 
 def starter(meta: dict[str, Any] | None = None) -> Conteudo:

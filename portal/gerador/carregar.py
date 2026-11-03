@@ -16,7 +16,7 @@ import yaml
 
 from portal.gerador.erros import R_FRONTMATTER, R_PRATICA_FORA, Erro
 
-TIPOS_MARKDOWN = ("pratica", "dominio", "conceito", "guia", "caso", "pagina", "receita")
+TIPOS_MARKDOWN = ("pratica", "dominio", "conceito", "guia", "caso", "pagina", "receita", "roteiro")
 TIPOS_YAML_PUBLICADOS = ("starter", "ferramenta", "glossario")
 
 # Blocos estruturados opcionais da página especial (delta v1.1 §6.4).
@@ -53,6 +53,7 @@ FONTES = (
     ("caso", "casos/*.md"),
     ("pagina", "paginas/*.md"),
     ("receita", "receitas/*.md"),
+    ("roteiro", "roteiros/*.md"),
     ("starter", "starters/*.yml"),
     ("ferramenta", "ferramentas/*.yml"),
     ("trilha", "trilhas/*.yml"),
@@ -70,6 +71,7 @@ _CAMPO_POR_TIPO = {
     "caso": "casos",
     "pagina": "paginas",
     "receita": "receitas",
+    "roteiro": "roteiros",
     "starter": "starters",
     "ferramenta": "ferramentas",
     "trilha": "trilhas",
@@ -95,7 +97,8 @@ class Conteudo:
     def chave(self) -> str:
         """Nome do registro em `verificacoes/` e prefixo do ID de prompt.
 
-        ID da prática ou da referência; `starter-<id>`, `ferramenta-<id>` e `receita-<slug>`
+        ID da prática ou da referência; `starter-<id>`, `ferramenta-<id>`, `receita-<slug>` e
+        `roteiro-<slug>`
         (o starter e a ferramenta `sdd-scaffold` não podem disputar o mesmo registro);
         `glossario`; faixa do domínio; pasta da skill; senão, o arquivo.
         """
@@ -105,8 +108,8 @@ class Conteudo:
             return id_
         if self.tipo in ("starter", "ferramenta"):
             return f"{self.tipo}-{id_ if isinstance(id_, str) else caminho.stem}"
-        if self.tipo == "receita":
-            return f"receita-{caminho.stem}"
+        if self.tipo in ("receita", "roteiro"):
+            return f"{self.tipo}-{caminho.stem}"
         if self.tipo == "glossario":
             return "glossario"
         if self.tipo in ("dominio", "skill"):
@@ -146,6 +149,7 @@ class Repositorio:
     casos: tuple[Conteudo, ...] = ()
     paginas: tuple[Conteudo, ...] = ()
     receitas: tuple[Conteudo, ...] = ()
+    roteiros: tuple[Conteudo, ...] = ()
     starters: tuple[Conteudo, ...] = ()
     ferramentas: tuple[Conteudo, ...] = ()
     trilhas: tuple[Conteudo, ...] = ()

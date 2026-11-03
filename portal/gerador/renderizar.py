@@ -269,6 +269,7 @@ def caminho_de(conteudo: Conteudo) -> str:
         "guia": "guias",
         "caso": "casos",
         "receita": "receitas",
+        "roteiro": "roteiros",
         "starter": "starters",
         "ferramenta": "ferramentas",
     }
@@ -276,7 +277,7 @@ def caminho_de(conteudo: Conteudo) -> str:
         return f"referencias.html#{conteudo.chave}"
     if conteudo.tipo == "glossario":
         return "glossario.html"
-    if conteudo.tipo in ("receita", "starter", "ferramenta"):
+    if conteudo.tipo in ("receita", "roteiro", "starter", "ferramenta"):
         # a chave leva o prefixo do tipo (registro de verificação); o caminho usa o slug ou o id
         return f"{pastas[conteudo.tipo]}/{PurePosixPath(conteudo.caminho_relativo).stem}.html"
     return f"{pastas[conteudo.tipo]}/{conteudo.chave}.html"

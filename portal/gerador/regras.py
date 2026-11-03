@@ -841,6 +841,76 @@ def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 
 
+# Roteiro: o primeiro dia de um time (R-ROTEIRO) -----------------------------------------------
+
+QUEM = ("voce", "agente", "voce-decide")
+
+
+def titulo_do_passo(n: int, titulo: str) -> str:
+    """O título que o H2 do corpo precisa ter para o passo `n` (de 1) do frontmatter."""
+    return f"Passo {n}: {titulo}"
+
+
+def _tem_prompt_antes_do_primeiro_passo(corpo: str) -> bool:
+    tokens = _MARKDOWN.parse(corpo)
+    for t in tokens:
+        if t.type == "heading_open" and t.tag == "h2":
+            return False
+        if t.type == "fence" and t.info.strip() == "prompt":
+            return True
+    return False
+
+
+@regra
+def regra_roteiro(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """O roteiro tem prompt inicial, um H2 `Passo N: <titulo>` por passo do frontmatter, na
+    ordem, H3 só de harness listado em `harnesses`, e uma `porta` própria."""
+    harnesses = {
+        (_texto(f.meta, "id") or _nome(f)): _texto(f.meta, "titulo")
+        for f in repo.ferramentas
+        if f.meta.get("categoria") == "harness"
+    }
+    erros: list[Erro] = []
+    portas: dict[str, str] = {}
+    for r in repo.roteiros:
+        arquivo = r.caminho_relativo
+
+        def reprovar(valor: str, arquivo: str = arquivo) -> None:
+            erros.append(Erro(arquivo, "corpo", codigos.R_ROTEIRO, valor))
+
+        if not _tem_prompt_antes_do_primeiro_passo(r.corpo):
+            reprovar("prompt inicial ausente antes do primeiro passo")
+        passos = r.meta.get("passos")
+        esperados = [
+            titulo_do_passo(n, str(p.get("titulo")))
+            for n, p in enumerate(passos if isinstance(passos, list) else [], start=1)
+            if isinstance(p, dict)
+        ]
+        secoes_h2 = secoes(r.corpo)
+        for n, esperado in enumerate(esperados, start=1):
+            if n > len(secoes_h2):
+                reprovar(f"passo {n}: esperado {esperado!r}, ausente")
+            elif secoes_h2[n - 1][0] != esperado:
+                reprovar(f"passo {n}: esperado {esperado!r}, veio {secoes_h2[n - 1][0]!r}")
+        for titulo, _ in secoes_h2[len(esperados) :]:
+            reprovar(f"seção {titulo!r} sem passo no frontmatter")
+        listados = r.meta.get("harnesses")
+        permitidos = {
+            harnesses[h] for h in (listados if isinstance(listados, list) else []) if h in harnesses
+        }
+        for _, texto in secoes_h2:
+            for h3 in sorted(_h3_da_secao(texto)):
+                if h3 not in permitidos:
+                    reprovar(f"### {h3} não é harness listado em harnesses")
+        porta = r.meta.get("porta")
+        if isinstance(porta, str):
+            if porta in portas:
+                reprovar(f"porta {porta} repetida em {portas[porta]}")
+            else:
+                portas[porta] = arquivo
+    return erros
+
+
 # Exemplo obrigatório e blocos de código (delta §6.5, regra 6; §12.1, bloqueio 13) ---------------
 
 LIMITE_BLOCO = 15
