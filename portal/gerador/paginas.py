@@ -237,7 +237,26 @@ def _rotulo_da_porta(site: Site, destino: str, href: str) -> str:
     alvo = next(
         (c for c in site.repo.markdown() if c.tipo != "dominio" and caminho_de(c) == href), None
     )
-    return str(alvo.meta.get("titulo") or "Abrir") if alvo else "Abrir"
+    titulo = str(alvo.meta.get("titulo") or "Abrir") if alvo else "Abrir"
+    return f"Ler o guia: {titulo}" if alvo and alvo.tipo == "guia" else titulo
+
+
+def _roteiro_da_porta(site: Site, porta: str) -> dict[str, str] | None:
+    """O roteiro da porta, com os títulos dos harnesses na ordem declarada pelo roteiro."""
+    roteiro = next((r for r in site.repo.roteiros if r.meta.get("porta") == porta), None)
+    if roteiro is None:
+        return None
+    titulos = {
+        str(f.meta.get("id") or f.caminho_relativo): str(f.meta.get("titulo"))
+        for f in site.repo.ferramentas
+        if f.meta.get("categoria") == "harness"
+    }
+    ids = [str(i) for i in roteiro.meta.get("harnesses") or []]
+    return {
+        "href": caminho_de(roteiro),
+        "titulo": str(roteiro.meta.get("titulo") or ""),
+        "harnesses": " · ".join(titulos[i] for i in ids if i in titulos),
+    }
 
 
 def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
@@ -250,6 +269,9 @@ def _caminhos_da_inicio(site: Site, ids: list[str]) -> list[dict[str, Any]]:
             item = citar(caminho, ids)
             item["href"] = href
             item["rotulo"] = _rotulo_da_porta(site, str(caminho.get("destino", "")), href)
+            roteiro = _roteiro_da_porta(site, str(caminho.get("porta") or ""))
+            if roteiro:
+                item["roteiro"] = roteiro
             resultado.append(item)
     return resultado
 
