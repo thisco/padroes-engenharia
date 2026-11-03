@@ -140,3 +140,68 @@ def test_json_mantem_chaves_antigas_e_ganha_as_novas(tmp_path):
     for chave in ("origem_titulo", "dominio_titulo", "momento_titulo", "previa"):
         assert chave in itens[0]
     assert "### P1-01-prompt-1" in (tmp_path / "prompts.md").read_text(encoding="utf-8")
+
+
+def _site_da_receita(**meta):
+    return fabrica.site(
+        fabrica.receita(meta=fabrica.meta_receita(**meta)),
+        fabrica.ferramenta(),
+        fabrica.pratica(),
+        fabrica.referencia(),
+    )
+
+
+def test_receita_abre_com_o_agente_e_depois_o_a_mao():
+    from portal.gerador.paginas import html_receita
+
+    s = _site_da_receita(ferramentas_aprovadas=["flyway"])
+    raiz = analisar(html_receita(s, s.repo.receitas[0]))
+    titulos = [h.texto for h in raiz.todos("h2")]
+    assert titulos[:7] == [
+        "Com o agente",
+        "Prefere fazer à mão?",
+        "Resultado",
+        "Antes de começar",
+        "Passos",
+        "Confira",
+        "Se der errado",
+    ]
+    assert titulos.count("Com o agente") == 1
+    (disco,) = raiz.todos("div", classe="disco")
+    assert disco.primeiro("h2").texto == "Com o agente"
+    assert disco.primeiro("figure", classe="prompt").attrs["id"] == "receita-ligar-ci-prompt-1"
+
+
+def test_md_gemeo_da_receita_mantem_a_ordem_de_origem():
+    from portal.gerador.paginas import md_receita
+
+    s = _site_da_receita()
+    md = md_receita(s, s.repo.receitas[0])
+    assert md.index("## Resultado") < md.index("## Com o agente") < md.index("## Confira")
+
+
+def test_como_fazer_tem_tempo_ferramentas_e_copiar_prompt():
+    s = _site_da_receita(ferramentas_aprovadas=["flyway"])
+    raiz = analisar(html_como_fazer(s))
+    cartoes = [c for c in raiz.todos("article", classe="cartao") if "Ligar o CI" in c.texto]
+    assert len(cartoes) == 2  # uma vez por domínio e outra por etapa
+    cartao = cartoes[0]
+    meta = cartao.primeiro("div", classe="meta")
+    assert "20 min" in meta.texto and "Flyway" in meta.texto
+    figura = meta.primeiro("figure", classe="prompt")
+    assert "hidden" in figura.primeiro("pre").attrs
+    assert "normas-do-pr" in figura.primeiro("pre").texto
+    botao = figura.primeiro("button", **{"data-copiar": ""})
+    assert botao.texto == "Copiar prompt" and "hidden" not in botao.attrs
+
+
+def test_como_fazer_receita_sem_prompt_nao_tem_copiar():
+    from portal.gerador.carregar import Conteudo
+
+    sem = re.sub(
+        r"## Com o agente\n\n```prompt\n.*?\n```\n\n", "", fabrica.CORPO_RECEITA, flags=re.S
+    )
+    receita = Conteudo("receita", "receitas/ligar-ci.md", fabrica.meta_receita(), sem)
+    s = fabrica.site(receita, fabrica.pratica(), fabrica.referencia())
+    raiz = analisar(html_como_fazer(s))
+    assert raiz.todos("article", classe="cartao") and not raiz.todos("figure", classe="prompt")

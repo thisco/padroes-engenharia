@@ -690,3 +690,13 @@ a.tr-skill:hover { text-decoration: underline; }
 .filtros { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 12px 0 16px; }
 .filtros[hidden] { display: none; }
 .filtros select { font: inherit; font-size: 13px; padding: 4px 8px; }
+
+/* PD-D9: receita com o agente primeiro; "Como fazer" com tempo, ferramentas e Copiar */
+.cartao .meta { font-size: 12.5px; color: var(--tinta-2); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.cartao .meta .prompt { margin: 0; border: 0; padding: 0; }
+.cartao .meta .copiar { margin: 0; }
+.texto > .disco { margin: 0 0 8px; }
+.texto > .disco .prompt { border-color: var(--ambar); }
+.texto > .disco .prompt figcaption { color: var(--sobre-escuro); }
+.texto > .disco .prompt pre { color: var(--papel); }
+.a-mao { margin-top: 28px; }

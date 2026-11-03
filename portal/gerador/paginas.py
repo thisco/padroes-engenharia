@@ -17,7 +17,7 @@ from portal.gerador import trilha
 from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
-from portal.gerador.exemplos import expandir_inclusoes
+from portal.gerador.exemplos import expandir_inclusoes, prompts_de
 from portal.gerador.markdown import inline_html, para_html
 from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.renderizar import (
@@ -647,11 +647,22 @@ def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
     """Receitas por domínio e, depois, por momento: cada receita aparece nos dois recortes."""
     secoes_: list[dict[str, Any]] = []
 
+    ferramentas = {f.meta["id"]: str(f.meta["titulo"]) for f in site.repo.ferramentas}
+
     def item(r: Conteudo) -> dict[str, Any]:
+        achados = prompts_de(r)
         return {
             "titulo": r.meta["titulo"],
             "href": caminho_de(r),
             "nota": f"{r.meta['objetivo']} ({r.meta['tempo']} min)",
+            "objetivo": r.meta["objetivo"],
+            "tempo": f"{r.meta['tempo']} min",
+            "ferramentas": [
+                ferramentas[i]
+                for i in r.meta.get("ferramentas_aprovadas") or []
+                if i in ferramentas
+            ],
+            "prompt": achados[0].texto if achados else None,
         }
 
     for faixa in site.espinha.faixas:
@@ -712,6 +723,7 @@ def _ficha_da_receita(site: Site, receita: Conteudo) -> list[tuple[str, str]]:
 def html_receita(site: Site, receita: Conteudo) -> str:
     meta = receita.meta
     vinculos = vinculos_de(site, receita)
+    secoes_ = corpo_secoes(receita, site.raiz)
     return renderizar(
         site,
         "receita.html",
@@ -719,7 +731,9 @@ def html_receita(site: Site, receita: Conteudo) -> str:
         titulo=meta["titulo"],
         descricao=str(meta["objetivo"]),
         objetivo=meta["objetivo"],
-        secoes=corpo_secoes(receita, site.raiz),
+        secoes=secoes_,
+        agente_html=next((html for t, html in secoes_ if t == "Com o agente"), None),
+        secoes_mao=[(t, html) for t, html in secoes_ if t != "Com o agente"],
         FIGURA_DA_RECEITA=FIGURA_DA_RECEITA,
         campos=_ficha_da_receita(site, receita),
         vinculos=vinculos,
