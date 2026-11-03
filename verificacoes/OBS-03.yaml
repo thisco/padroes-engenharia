@@ -1,0 +1,137 @@
+conteudo: OBS-03
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a instrumentação sem código em Python instala opentelemetry-distro e o exportador OTLP, roda opentelemetry-bootstrap -a install e sobe a aplicação por opentelemetry-instrument, configurada por variáveis OTEL_*
+  ref: otel-python-zero-code
+  localizacao: "seções 'Setup' e 'Configuring the agent'"
+  resultado: confirmada
+- texto: OTEL_SERVICE_NAME define o atributo service.name, e sem ele o valor é unknown_service
+  ref: otel-sdk-env-geral
+  localizacao: "entrada OTEL_SERVICE_NAME ('Sets the value of the service.name resource attribute'; padrão unknown_service)"
+  resultado: confirmada
+- texto: OTEL_EXPORTER_OTLP_ENDPOINT é o destino, com porta padrão 4318 em HTTP e 4317 em gRPC
+  ref: otel-exporter-otlp-env
+  localizacao: "seção 'Endpoint Configuration' (padrões http://localhost:4317 em gRPC e http://localhost:4318 em HTTP)"
+  resultado: confirmada
+- texto: http.server.request.duration é um histograma em segundos, estável, com http.request.method, http.response.status_code e http.route como atributos
+  ref: otel-semconv-http-metricas
+  localizacao: "seção 'HTTP server', 'Metric: http.server.request.duration' (Histogram, s, Stable; method obrigatório, status_code e route condicionais)"
+  resultado: confirmada
+- texto: a instrumentação que ainda emite a convenção antiga passa à estável com OTEL_SEMCONV_STABILITY_OPT_IN=http
+  ref: otel-semconv-http-migracao
+  localizacao: "valor 'http': emite as convenções estáveis e para de emitir as antigas"
+  resultado: confirmada
+- texto: no padrão agente, o Collector roda ao lado da aplicação ou no mesmo host, como sidecar
+  ref: otel-collector-agente
+  localizacao: "definição do padrão ('runs alongside the application or on the same host', sidecar ou DaemonSet)"
+  resultado: confirmada
+- texto: o Collector tem receivers, processors e exporters, e um componente só vale quando entra num pipeline da seção service
+  ref: otel-collector-configuracao
+  localizacao: "seções dos componentes e 'Configuring a receiver does not enable it' (vale para processors, exporters e connectors)"
+  resultado: confirmada
+- texto: no compose, o serviço sem profiles sobe sempre, e o perfil liga um grupo de serviços com --profile ou COMPOSE_PROFILES
+  ref: compose-profiles
+  localizacao: "'Assigning profiles to services' e 'Start specific profiles'"
+  resultado: confirmada
+- texto: o valor none não configura exportador nenhum
+  ref: otel-sdk-env-spec
+  localizacao: "seção 'Exporter Selection' ('none': 'No automatically configured exporter')"
+  resultado: confirmada
+- texto: a regra de alerta do Prometheus tem expressão, um for que segura o alerta em pending antes de disparar, rótulos e anotações; o Prometheus avalia e o Alertmanager notifica
+  ref: prometheus-regras-de-alerta
+  localizacao: "'Defining alerting rules' e 'Sending alert notifications'"
+  resultado: confirmada
+- texto: promtool test rules testa o arquivo de regras com séries sintéticas e o alerta esperado em cada instante
+  ref: prometheus-teste-de-regras
+  localizacao: "comando 'promtool test rules test.yml'; input_series e alert_rule_test com eval_time, alertname e exp_alerts"
+  resultado: confirmada
+- texto: a média esconde a cauda lenta, e o percentil mostra a forma da distribuição
+  ref: sre-book-slo
+  localizacao: "seção 'Aggregation' (aberta na web em 2026-11-03: 'Using percentiles for indicators allows you to consider the shape of the distribution'; a média 'obscures an important detail', a cauda longa)"
+  resultado: confirmada
+- texto: o exporter prometheus do collector expõe /metrics para o Prometheus raspar e tem estabilidade beta para métricas
+  ref: otel-prometheus-exporter
+  localizacao: "README: 'Exports data in the Prometheus format, which allows it to be scraped'; endpoint servido em /metrics; métricas em beta"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/compose-antes.yaml
+  comando: docker compose -f compose-antes.yaml config -q
+  ambiente: Docker 29.5.2 (Docker Desktop), macOS
+  resultado: passou
+  evidencia: "saída 0 (configuração válida)"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/compose.yaml
+  comando: OTEL_EXPORTADOR=otlp docker compose --profile observabilidade up -d; 10 GET /boletos/7 e 1 GET /lento; consulta sum by (http_route)(http_server_request_duration_seconds_count) no Prometheus
+  ambiente: Docker 29.5.2, otel/opentelemetry-collector-contrib:0.115.1, prom/prometheus:v3.0.1, python:3.11-slim, macOS
+  resultado: passou
+  evidencia: 'collector: "Traces ... resource spans: 1, spans: 11"; Prometheus: /boletos/<numero> 10 e /lento 1. Sem o perfil, docker compose up -d api respondeu {"numero":"1","situacao":"em-aberto"} sem erro no log.'
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/app/Dockerfile
+  comando: docker compose --profile observabilidade build
+  ambiente: Docker 29.5.2, python:3.11-slim, flask 3.1.0, opentelemetry-distro 0.49b2, opentelemetry-exporter-otlp 1.28.2
+  resultado: passou
+  evidencia: "Image obs03-api Built; a aplicação subiu por opentelemetry-instrument e exportou traços e métricas (execução acima)"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/app/app.py
+  comando: a mesma subida do compose.yaml
+  ambiente: Docker 29.5.2, python:3.11-slim
+  resultado: passou
+  evidencia: 'GET /boletos/1 respondeu {"numero":"1","situacao":"em-aberto"}; GET /lento respondeu {"ok":true}; a métrica trouxe as duas rotas em http_route'
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/observabilidade/otel-collector.yaml
+  comando: a mesma subida do compose.yaml
+  ambiente: otel/opentelemetry-collector-contrib:0.115.1
+  resultado: passou
+  evidencia: "receiver OTLP HTTP em 0.0.0.0:4318 no log; traços no exporter debug; métricas raspadas pelo Prometheus em otel-collector:8889"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/observabilidade/prometheus.yml
+  comando: a mesma subida do compose.yaml; /api/v1/rules
+  ambiente: prom/prometheus:v3.0.1
+  resultado: passou
+  evidencia: "grupo api-boletos carregado de /etc/prometheus/alertas.yml com a regra LatenciaP95Alta (state inactive); a raspagem trouxe http_server_request_duration_seconds_bucket, _count e _sum"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/observabilidade/alertas.yml
+  comando: promtool check rules /etc/prometheus/alertas.yml (dentro do contêiner do Prometheus)
+  ambiente: prom/prometheus:v3.0.1
+  resultado: passou
+  evidencia: "SUCCESS: 1 rules found"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/observabilidade/alertas-teste.yml
+  comando: docker run --rm -v "$PWD/observabilidade:/r" -w /r --entrypoint promtool prom/prometheus:v3.0.1 test rules alertas-teste.yml
+  ambiente: prom/prometheus:v3.0.1
+  resultado: passou
+  evidencia: "SUCCESS, saída 0"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: exemplos/OBS-03/observabilidade/alertas-teste.yml
+  comando: o mesmo, com o limiar da regra trocado para > 0.8 numa cópia
+  ambiente: prom/prometheus:v3.0.1
+  resultado: falhou-como-esperado
+  evidencia: 'FAILED: alertname: LatenciaP95Alta, time: 10m, exp: [http_route="/lento", severidade="aviso"], got: []'
+  data: '2026-11-03'
+- tipo: prompt
+  prompt: OBS-03-prompt-1
+  harness: execução manual dos passos pela sessão de curadoria
+  ambiente: "repositório Git novo no scratchpad, com compose.yaml igual ao compose-antes.yaml e app/ sem OTel, commitados; {serviço} = api, {limiar} = 0.3. Não foi uma sessão nova de agente: a frente não despacha subagente."
+  resultado: passou
+  evidencia: "promtool test rules: SUCCESS; com o perfil, Prometheus com /boletos/<numero> 10; commit ae95940 'feat(observabilidade): traço, métrica e limiar de alerta desde o compose (OBS-03)', sem coautoria nem trailer"
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador da Onda 1
+  data: '2026-11-03'
+  achados:
+  - afirmacao: "O nome que chega ao Prometheus é http_server_request_duration_seconds_bucket"
+    problema: "[ref] o README do exporter não dá o nome traduzido."
+    tratamento: "O texto diz que o nome foi lido na execução do Exemplo, e a nota da referência registra a versão."
+  - afirmacao: "Como aplicar, passo 5: job limiar-de-alerta"
+    problema: "[executabilidade] o job não rodou num GitLab."
+    tratamento: "O Como verificar diz isso; o comando do job (promtool test rules) foi executado com a mesma imagem."

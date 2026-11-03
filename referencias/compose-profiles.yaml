@@ -1,0 +1,10 @@
+id: compose-profiles
+titulo: "Using profiles with Compose"
+organizacao: Docker
+url: https://docs.docker.com/compose/how-tos/profiles/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'Assigning profiles to services' ('Services without a profiles attribute are always enabled') e 'Start specific profiles' (--profile e COMPOSE_PROFILES)"
+dominios: [observabilidade, infra-iac]
+notas: null

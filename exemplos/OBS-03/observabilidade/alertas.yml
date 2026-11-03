@@ -1,0 +1,17 @@
+groups:
+  - name: api-boletos
+    rules:
+      - alert: LatenciaP95Alta
+        # Limiar declarado: p95 da rota acima de 300 ms por 5 minutos.
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le, http_route) (
+              rate(http_server_request_duration_seconds_bucket{job="otel-collector"}[5m])
+            )
+          ) > 0.3
+        for: 5m
+        labels:
+          severidade: aviso
+        annotations:
+          resumo: "p95 de {{ $labels.http_route }} acima de 300 ms"
+          runbook: docs/runbooks/latencia-p95-alta.md

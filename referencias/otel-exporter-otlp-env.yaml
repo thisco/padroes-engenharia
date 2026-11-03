@@ -1,0 +1,10 @@
+id: otel-exporter-otlp-env
+titulo: "OTLP Exporter Configuration"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/languages/sdk-configuration/otlp-exporter/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'Endpoint Configuration' (OTEL_EXPORTER_OTLP_ENDPOINT, padrão http://localhost:4317 em gRPC e http://localhost:4318 em HTTP) e 'Protocol configuration' (OTEL_EXPORTER_OTLP_PROTOCOL, padrão que depende do SDK, em geral http/protobuf ou grpc)"
+dominios: [observabilidade]
+notas: null

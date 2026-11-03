@@ -1,0 +1,10 @@
+id: prometheus-regras-de-alerta
+titulo: "Alerting rules"
+organizacao: Prometheus (CNCF)
+url: https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'Defining alerting rules': expr, for (estado pending), labels e annotations; seção 'Sending alert notifications' (o Prometheus avalia, o Alertmanager notifica)"
+dominios: [observabilidade]
+notas: null

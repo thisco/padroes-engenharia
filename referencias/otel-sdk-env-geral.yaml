@@ -1,0 +1,10 @@
+id: otel-sdk-env-geral
+titulo: "General SDK Configuration"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/languages/sdk-configuration/general/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "OTEL_SERVICE_NAME (define o atributo de recurso service.name; padrão unknown_service; vence o service.name de OTEL_RESOURCE_ATTRIBUTES), OTEL_TRACES_EXPORTER e OTEL_METRICS_EXPORTER (padrão otlp)"
+dominios: [observabilidade]
+notas: null

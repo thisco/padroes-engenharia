@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 48 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 49 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -17,7 +17,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
 | Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
-| Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
+| Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta), OBS-03 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
 | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (pede aprovação) | P2-06 (só orienta) |
 
@@ -43,6 +43,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | bloqueia | experimentar | nada |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | só orienta | experimentar | nada |
 | OBS-02 | SLO, alerta e runbook antes do deploy | só orienta | experimentar | nada |
+| OBS-03 | Traço e métrica por OpenTelemetry desde o compose local, com limiar de alerta declarado | só orienta | experimentar | nada |
 | P1-01 | Classificar toda mudança em tier antes de codar | só orienta | experimentar | `skill:sdd-lifecycle` |
 | P1-03 | Mantenha a constituição curta e carregada em todo turno | só orienta | adotar | `steering:sdd-processo`, `skill:sdd-lifecycle` |
 | P1-04 | Escreva a spec como delta da mudança | só orienta | adotar | `skill:sdd-lifecycle` |

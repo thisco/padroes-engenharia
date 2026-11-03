@@ -1,0 +1,10 @@
+id: otel-collector-configuracao
+titulo: "Collector: Configuration"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/collector/configuration/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções de receivers, processors e exporters ('Configuring a receiver does not enable it': o componente só vale dentro de um pipeline de 'service'), exemplos do receiver OTLP em 0.0.0.0:4317 (gRPC) e 0.0.0.0:4318 (HTTP) e o exporter debug"
+dominios: [observabilidade]
+notas: "A página não traz data de publicação."
