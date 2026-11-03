@@ -102,14 +102,25 @@
     caixa.hidden = false;
     var seletores = Array.prototype.slice.call(caixa.querySelectorAll("select[data-filtro]"));
 
+    var contagem = caixa.querySelector("[data-contagem]");
+
     function aplicar() {
+      var total = 0;
+      var visiveis = 0;
       document.querySelectorAll(alvo).forEach(function (linha) {
+        total += 1;
         linha.hidden = !seletores.every(function (seletor) {
           var valor = seletor.value;
           var dado = linha.getAttribute("data-" + seletor.getAttribute("data-filtro")) || "";
           return !valor || dado.split(" ").indexOf(valor) !== -1;
         });
+        if (!linha.hidden) {
+          visiveis += 1;
+        }
       });
+      if (contagem) {
+        contagem.textContent = visiveis + " de " + total + " prompts";
+      }
     }
 
     seletores.forEach(function (seletor) {

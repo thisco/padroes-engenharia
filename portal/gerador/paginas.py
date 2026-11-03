@@ -534,6 +534,19 @@ def _slug(conteudo: Conteudo) -> str:
     return conteudo.caminho_relativo.rsplit("/", 1)[-1].removesuffix(".md")
 
 
+def _previa(texto: str) -> str:
+    """As duas primeiras linhas não vazias do prompt, em até 160 caracteres ("…" se cortou)."""
+    linhas = [linha.rstrip() for linha in texto.splitlines() if linha.strip()]
+    previa = "\n".join(linhas[:2])
+    cortou = len(linhas) > 2 or len(previa) > 160
+    return previa[:160] + "…" if cortou else previa
+
+
+def _titulo_da_origem(origem: Conteudo) -> str:
+    titulo = str(origem.meta.get("titulo", origem.chave))
+    return f"{origem.chave} · {titulo}" if origem.tipo == "pratica" else titulo
+
+
 def prompts(site: Site) -> list[dict[str, Any]]:
     """Todos os prompts de exemplo, por domínio e momento da espinha, com a URL da origem."""
     faixas = [f.slug for f in site.espinha.faixas]
@@ -542,6 +555,8 @@ def prompts(site: Site) -> list[dict[str, Any]]:
     for p in todos_os_prompts(site):
         origem = p.origem
         origem_id = _slug(origem) if origem.tipo == "receita" else origem.chave
+        faixa = site.espinha.faixa(str(origem.meta.get("dominio")))
+        momento = site.espinha.momento(str(origem.meta.get("momento")))
         itens.append(
             {
                 "id": p.id,
@@ -551,6 +566,10 @@ def prompts(site: Site) -> list[dict[str, Any]]:
                 "momento": origem.meta.get("momento"),
                 "texto": p.texto,
                 "url": site.url(f"{caminho_de(origem)}#{p.id}"),
+                "origem_titulo": _titulo_da_origem(origem),
+                "dominio_titulo": faixa.titulo if faixa else str(origem.meta.get("dominio")),
+                "momento_titulo": momento.rotulo if momento else str(origem.meta.get("momento")),
+                "previa": _previa(p.texto),
             }
         )
 
@@ -563,6 +582,12 @@ def prompts(site: Site) -> list[dict[str, Any]]:
         )
 
     return sorted(itens, key=ordem)
+
+
+def _cartoes_de_prompts(site: Site) -> list[dict[str, Any]]:
+    """Um cartão por prompt, na ordem da espinha, com o caminho relativo da origem."""
+    prefixo = site.url("")
+    return [{**item, "caminho": item["url"].removeprefix(prefixo)} for item in prompts(site)]
 
 
 def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
@@ -592,7 +617,9 @@ def html_prompts(site: Site) -> str:
         "prompts.html",
         titulo="Biblioteca de prompts",
         descricao=PROMPTS_DESCRICAO,
-        grupos=_grupos_de_prompts(site),
+        cartoes=_cartoes_de_prompts(site),
+        dominios=[(f.slug, f.titulo) for f in site.espinha.faixas],
+        momentos=[(m.slug, m.rotulo) for m in site.espinha.momentos],
     )
 
 

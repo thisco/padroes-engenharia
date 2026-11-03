@@ -13,7 +13,7 @@ def test_bloco_de_codigo_tem_rotulo_e_copiar_visivel():
 
 
 def test_rotulo_da_linguagem_e_escapado():
-    html = para_html('```a<b>\nx\n```\n')
+    html = para_html("```a<b>\nx\n```\n")
     assert '<span class="lang">a&lt;b&gt;</span>' in html
 
 
@@ -46,3 +46,8 @@ def test_copiar_nao_sai_cedo_sem_clipboard():
 def test_css_do_rotulo_da_linguagem():
     css = (RAIZ / "portal/tema/tema.css").read_text()
     assert ".bloco .lang" in css
+
+
+def test_filtros_atualizam_a_contagem():
+    js = (RAIZ / "portal/tema/busca.js").read_text()
+    assert "[data-contagem]" in js and '" prompts"' in js
