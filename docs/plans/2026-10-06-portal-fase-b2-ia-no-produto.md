@@ -13,7 +13,7 @@
 A faixa IA no produto tem dois subdomínios, `apps` (prefixo P2) e `agentes` (prefixo P3), e o
 §10 pede 12 práticas, com ao menos 6 de cada. Hoje existe a P2-01. Esta fatia entrega 5 P2 e
 6 P3, o starter `gateway-poc`, a receita "Ligar uma aplicação ao gateway de IA" e o caso
-"Avaliação do gateway de IA: 8 cenários, 45 casos". O caso do SGD fica fora, até a pendência 7
+"Avaliação do gateway de IA: 8 cenários, 45 casos". O caso do sistema de origem fica fora, até a pendência 7
 do GitLab (localizar o repositório) ser resolvida.
 
 **Insumos:**

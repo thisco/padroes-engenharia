@@ -29,7 +29,7 @@ Os mockups `mapa-da-visao`, `benchmark-mercado` e `monorepo-gitlab` são de pesq
 | D18 | Chip de força na tabela de falhas; subtítulo da faixa; campo `resumo` | Parcial, itens perdidos sem registro | `resumo` presente (linha sob o título em `/praticas/API-01.html`). Chip de força: 1 de 7 linhas em `/o-problema.html`. Subtítulo da faixa: existe em `esquemas/espinha.yml` e em `/dominios/arquitetura.html`, mas não em `/espinha.html` nem em `/dominios/index.html`. O eixo "tipo" e "Conceitos e problemas vira o primeiro guia" foram descartados com registro (D18 e ADR 0001). O elo "Garantia de qualidade" ficou fora com registro (D18): a cadeia tem 3 elos. |
 | D19 | Prompt de exemplo testado nas práticas e receitas; Biblioteca de prompts | Presente | `/prompts.html` e `prompts.json`, por domínio e momento, com origem linkada; as 8 receitas têm `## Com o agente` com bloco `prompt`; a prática API-01 tem o bloco "Prompt para o agente" na seção Exemplo. |
 
-Descartes com registro encontrados: ADR 0006 tira o caso SGD da semente (os mockups não o usam); ADR 0001 retira o campo `ferramentas` (chips de harness).
+Descartes com registro encontrados: ADR 0006 tira o caso do sistema de origem da semente (os mockups não o usam); ADR 0001 retira o campo `ferramentas` (chips de harness).
 
 ## 3. Achados por severidade
 

@@ -1624,7 +1624,7 @@ Nada aqui faz merge, cria tag ou publica. O plano da fase B só é escrito depoi
   5. Agendamento semanal do job `avisos` (Build → Pipeline schedules, `main`).
   6. Quando criar a tag da versão (dispara o pacote offline): após o merge da A.5 ou ao fim da
      fase B.
-  7. Localizar o repositório de origem do SGD, pré-requisito do caso interno da fase B.
+  7. Localizar o repositório do projeto de origem, pré-requisito do caso interno da fase B.
 - [x] **Passo 2: PAUSE A EXECUÇÃO** e pergunte: *"Você aprova a fase A.5 (o motor v1.1 e o molde
   de conteúdo) como está, para que eu escreva o plano da fase B? Há algo a ajustar antes? Quais
   status você confirma para as ferramentas?"* Sem resposta explícita, não escreva o plano B, não
@@ -1822,4 +1822,4 @@ depois da frente sdd-scaffold 1.7.0 + sdd-lifecycle 2.1.0, que vem antes por dec
    aprovação obrigatória, casando com as duas aprovações de risco alto; (4) Pages com acesso
    restrito ao grupo interno; (5) schedule semanal do job `avisos` na segunda de manhã, na
    `main`; (6) tag `v0.2.0` depois do merge na `main` e dos mínimos da fase B; (7) local do
-   repositório do SGD, a informar pelo dono.
+   repositório do projeto de origem, a informar pelo dono.

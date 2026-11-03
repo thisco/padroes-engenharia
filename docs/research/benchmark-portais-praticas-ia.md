@@ -28,7 +28,7 @@ Robustez: **N** normativo/governo · **VO** vendor oficial · **PA** padrão abe
 | GenAI guidance (GCDO, Nova Zelândia) | https://www.standards.digital.govt.nz/collections/generative-ai-guidance-gcdo/ | 2025 [V] | 5 princípios OCDE, 6 pilares, 14 guias | Publicado também como **servidor GraphRAG MCP** (DocRef) | Portal exposto como MCP para checagem de conformidade |
 | GPAI Code of Practice (AI Office, UE) | https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai | 10/07/2025 [V] | Transparência (Model Documentation Form), direito autoral, segurança | PDF/DOCX | Ficha obrigatória de todo modelo consumido |
 | Catalogue of Tools & Metrics (OECD.AI) | https://oecd.ai/en/catalogue/overview | contínuo [V] | Catálogo pesquisável, submissão aberta | Web | Catálogo de ferramentas com metadados |
-| Núcleo de IA (SGD/MGI, Brasil) | https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1 | atualizado 29/09/2026 [V] | Guias (IA generativa, prompt, RAG), Framework AIE, glossário; Portarias 6.618/2024 e 473/2026 | HTML/PDF | Alinhar glossário; referenciar Guia de RAG |
+| Núcleo de IA (Secretaria de Governo Digital/MGI, Brasil) | https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1 | atualizado 29/09/2026 [V] | Guias (IA generativa, prompt, RAG), Framework AIE, glossário; Portarias 6.618/2024 e 473/2026 | HTML/PDF | Alinhar glossário; referenciar Guia de RAG |
 | IA no TCU | https://ia.tcu.gov.br/ | ~jul/2026 [V] | 13 iniciativas com status, resultados, riscos e governança | HTML | Catálogo de casos de uso com status e risco |
 | Guia de IA generativa (CGU, Portaria Normativa 193/2025) | https://repositorio.cgu.gov.br/handle/1/94718 | 2025 [V] | Guia aprovado por ato normativo | PDF | Versão "major" aprovada por ato formal |
 | Guidelines for using GenAI if you're a software developer (HMRC) | https://www.gov.uk/guidance/guidelines-for-using-generative-artificial-intelligence-if-youre-a-software-developer | [V] | Orientação a integradores externos | HTML | Padrão para integradores de terceiros |
@@ -138,7 +138,7 @@ Teste de `llms.txt` em 8 sites governamentais: nenhum tem (404/403). Só o repo 
 
 **Brasil (N):**
 - PBIA 2024–2028 — https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/transformacaodigital/plano-brasileiro-de-inteligencia-artificial
-- Guia de IA generativa (SGD) — https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/publicacoes/guia-ia-generativa
+- Guia de IA generativa (Secretaria de Governo Digital) — https://www.gov.br/governodigital/pt-br/infraestrutura-nacional-de-dados/inteligencia-artificial-1/publicacoes/guia-ia-generativa
 - E-IA/MGI 2025–2027 — https://www.gov.br/gestao/pt-br/central-de-conteudo/publicacoes/planos/e-ia
 - ANPD — https://www.gov.br/anpd/pt-br
 - PL 2338/2023 (em tramitação na Câmara) — https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2487262
