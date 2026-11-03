@@ -1,0 +1,17 @@
+stages: [plano, homologacao, producao]
+
+aplicar-homologacao:
+  stage: homologacao
+  environment: homologacao
+  script:
+    - cd infra && tofu init -input=false
+    - tofu workspace select -or-create homologacao
+    - tofu apply -input=false -auto-approve -var replicas=1 -var "versao=$CI_COMMIT_SHA"
+
+aplicar-producao:
+  stage: producao
+  environment: producao
+  script:
+    - cd infra && tofu init -input=false
+    - tofu workspace select -or-create producao
+    - tofu apply -input=false -auto-approve -var replicas=3 -var "versao=$CI_COMMIT_SHA"

@@ -1,0 +1,10 @@
+id: opentofu-backend-configuracao
+titulo: "OpenTofu: Backend Configuration"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/settings/backends/configuration/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (o backend define onde fica o estado), o trecho sobre credenciais e dado sensível (preferir variável de ambiente; valor de -backend-config vai para a pasta .terraform e para o arquivo de plano) e o trecho sobre configuração parcial (-backend-config com arquivo ou chave=valor)"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-03.

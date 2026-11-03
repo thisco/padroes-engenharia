@@ -1,0 +1,10 @@
+id: gitlab-jobs-manuais
+titulo: "Control how jobs run: manual jobs"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/jobs/job_control/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "trechos sobre job manual (when: manual; fora de rules o padrão é allow_failure: true e o status não conta para o pipeline; dentro de rules o padrão é false e o pipeline para no estágio), sobre proteger job manual (ambiente protegido define quem roda) e sobre informar variáveis ao rodar job manual"
+dominios: [infra-iac, ci-cd]
+notas: Lida na web em 2026-11-03.

@@ -4,7 +4,7 @@ categoria: iac
 status: experimentar
 versao_minima: "1.13.1"
 dono: engenharia
-praticas: [IAC-02]
+praticas: [IAC-02, IAC-04]
 receitas: []
 como_instalar: |
   Instale o binário `tofu` por Homebrew, pelo método standalone ou pela imagem OCI oficial no GitHub

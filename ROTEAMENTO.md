@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 48 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 49 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -15,7 +15,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
 | Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
-| Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta) | IAC-03 (só orienta) |
+| Infra e IaC (`infra-iac`) | IAC-01 (só orienta) | a definir | IAC-02 (só orienta), IAC-04 (avisa) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
@@ -39,6 +39,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | IAC-01 | Ambiente local reproduzível por compose, com ordem de rebuild escrita | só orienta | experimentar | nada |
 | IAC-02 | Infra declarada em código, com o plano de mudança revisado no PR | só orienta | experimentar | nada |
 | IAC-03 | Rollback declarado e testado antes do deploy | só orienta | experimentar | `skill:migrations-reversiveis` |
+| IAC-04 | Promoção entre ambientes por IaC: um workspace por ambiente, configuração por ambiente num só lugar, apply em produção só pelo pipeline com aprovação manual, serviços versionados juntos | avisa | experimentar | nada |
 | LGPD-01 | Classifique o dado pessoal antes de escrever | só orienta | experimentar | nada |
 | LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | bloqueia | experimentar | nada |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | só orienta | experimentar | nada |

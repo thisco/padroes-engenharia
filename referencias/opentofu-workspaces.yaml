@@ -1,0 +1,10 @@
+id: opentofu-workspaces
+titulo: "OpenTofu: Workspaces (estado)"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/state/workspaces/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (vários estados por configuração no mesmo backend; o workspace 'default'), o trecho sobre a interpolação terraform.workspace e o parágrafo sobre quando o workspace não serve (decomposição de sistema e implantação com credenciais e controles de acesso separados)"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-03.

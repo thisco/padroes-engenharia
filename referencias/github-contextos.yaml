@@ -1,0 +1,10 @@
+id: github-contextos
+titulo: "Contexts reference"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/reference/workflows-and-actions/contexts
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "tabela do contexto github: github.sha, github.actor e github.triggering_actor"
+dominios: [infra-iac, ci-cd]
+notas: Lida na web em 2026-11-03.

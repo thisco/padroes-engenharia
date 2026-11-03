@@ -1,0 +1,10 @@
+id: gitlab-ambientes-protegidos
+titulo: "Protected environments"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/environments/protected_environments/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (só quem tem o privilégio implanta no ambiente protegido; Tier Premium e Ultimate) e a seção 'Deployment approvals'"
+dominios: [infra-iac, ci-cd]
+notas: Lida na web em 2026-11-03. Recurso dos planos Premium e Ultimate.

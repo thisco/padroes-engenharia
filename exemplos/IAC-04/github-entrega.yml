@@ -1,0 +1,30 @@
+name: entrega
+on:
+  push:
+    branches: [main]
+env:
+  TF_VAR_versao: ${{ github.sha }}
+jobs:
+  aplicar-homologacao:
+    runs-on: ubuntu-latest
+    environment: homologacao
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: opentofu/setup-opentofu@v2
+        with: { tofu_version: 1.13.2 }
+      - run: tofu init -input=false
+      - run: tofu workspace select -or-create homologacao
+      - run: tofu apply -input=false -auto-approve -var-file=ambientes/homologacao.tfvars
+  aplicar-producao:
+    needs: aplicar-homologacao
+    runs-on: ubuntu-latest
+    environment: producao # revisores obrigatórios configurados no environment
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: opentofu/setup-opentofu@v2
+        with: { tofu_version: 1.13.2 }
+      - run: tofu init -input=false
+      - run: tofu workspace select -or-create producao
+      - run: tofu apply -input=false -auto-approve -var-file=ambientes/producao.tfvars

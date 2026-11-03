@@ -1,0 +1,10 @@
+id: opentofu-variaveis
+titulo: "OpenTofu: Input Variables"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/values/variables/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'Variables on the Command Line', 'Variable Definitions (.tfvars) Files' e 'Variable Definition Precedence'"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-03.

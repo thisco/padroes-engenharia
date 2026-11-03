@@ -1,0 +1,10 @@
+id: opentofu-workspace-select
+titulo: "OpenTofu: comando tofu workspace select"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/cli/commands/workspace/select/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "descrição do comando e a opção -or-create"
+dominios: [infra-iac]
+notas: "Fonte aberta, lida na web em 2026-11-03; a opção também aparece em `tofu workspace select -h` no OpenTofu v1.13.2."
