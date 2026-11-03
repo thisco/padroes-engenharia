@@ -58,7 +58,7 @@ def test_pega_sem_execucao_obrigatorio_e_fora_do_lugar(tmp_path):
         fabrica.pratica(corpo=fora), registro("P1-01", "P1-01-prompt-1"), raiz=tmp_path
     )
     guia = Conteudo("guia", "guias/g.md", fabrica.meta_guia(), "```prompt\nx\n```\n")
-    assert "prompt só em prática e receita" in rodar(guia, raiz=tmp_path)
+    assert "prompt só em prática, receita e roteiro" in rodar(guia, raiz=tmp_path)
 
 
 def test_prompt_sai_escapado_com_id_e_copiar():
@@ -80,3 +80,34 @@ def test_execucao_que_falhou_nao_conta_como_execucao_registrada(tmp_path):
         fabrica.meta_verificacao(conteudo="P1-01", execucoes=execucoes)
     )
     assert rodar(p, com_a_que_passou, raiz=tmp_path) == []
+
+
+ROTEIRO_COM_PROMPTS = (
+    "```prompt\nSiga o roteiro.\n```\n\n"
+    "## Passo 1: Abrir o harness\n\nAbra.\n\n"
+    "## Passo 2: Instalar o pacote\n\n### Kiro\n\n```prompt\nInstale.\n```\n"
+)
+
+
+def test_roteiro_aceita_prompt_no_preambulo_e_nos_passos(tmp_path):
+    r = fabrica.roteiro(corpo=ROTEIRO_COM_PROMPTS)
+    ids = [x.id for x in prompts_de(r)]
+    assert ids == ["roteiro-projeto-novo-prompt-1", "roteiro-projeto-novo-prompt-2"]
+    assert rodar(r, registro("roteiro-projeto-novo", *ids), raiz=tmp_path) == []
+
+
+def test_roteiro_reprova_prompt_fora_dos_passos_e_sem_execucao(tmp_path):
+    corpo = ROTEIRO_COM_PROMPTS + "\n## Se der errado\n\n```prompt\nTente.\n```\n"
+    r = fabrica.roteiro(corpo=corpo)
+    executado = registro("roteiro-projeto-novo", "roteiro-projeto-novo-prompt-1")
+    valores = rodar(r, executado, raiz=tmp_path)
+    assert "prompt fora de o preâmbulo ou um `## Passo N`" in valores
+    assert "roteiro-projeto-novo-prompt-2: sem execução registrada" in valores
+    assert "roteiro-projeto-novo-prompt-3: sem execução registrada" in valores
+
+
+def test_roteiro_sem_prompt_inicial_e_obrigatorio(tmp_path):
+    corpo = "## Passo 1: Abrir o harness\n\nAbra.\n\n## Passo 2: Instalar o pacote\n\nInstale.\n"
+    r = fabrica.roteiro(corpo=corpo)
+    esperado = "prompt de exemplo obrigatório em o preâmbulo ou um `## Passo N`"
+    assert esperado in rodar(r, raiz=tmp_path)

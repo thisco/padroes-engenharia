@@ -1019,13 +1019,23 @@ def regra_execucao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
 LUGAR_DO_PROMPT = {
     "pratica": ("Exemplo", "Para o agente", "## Exemplo › ### Para o agente"),
     "receita": ("Com o agente", "", "## Com o agente"),
+    "roteiro": ("", "", "o preâmbulo ou um `## Passo N`"),
 }
+
+
+def _prompt_no_lugar(tipo: str, h2: str, h3: str, lugar: tuple[str, str]) -> bool:
+    """No roteiro o prompt mora no preâmbulo (o prompt inicial) ou dentro de qualquer
+    `## Passo N`, inclusive numa subseção de harness; nos demais tipos, só no lugar fixo."""
+    if tipo == "roteiro":
+        return h2 == "" or h2.startswith("Passo ")
+    return (h2, h3) == lugar
 
 
 @regra
 def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """O prompt de exemplo mora em `Exemplo › Para o agente` (prática) ou `Com o agente`
-    (receita), é obrigatório onde o Exemplo é e só publica com execução registrada."""
+    """O prompt de exemplo mora em `Exemplo › Para o agente` (prática), `Com o agente`
+    (receita) ou no preâmbulo e nos passos (roteiro), é obrigatório onde o Exemplo é, na
+    receita e no roteiro, e só publica com execução registrada."""
     registros = {_texto(v.meta, "conteudo"): v for v in repo.verificacoes}
     erros: list[Erro] = []
     for c in repo.markdown():
@@ -1036,13 +1046,13 @@ def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
         if c.tipo not in LUGAR_DO_PROMPT:
             if achados:
-                reprovar("prompt só em prática e receita")
+                reprovar("prompt só em prática, receita e roteiro")
             continue
         h2, h3, descricao = LUGAR_DO_PROMPT[c.tipo]
         for achado in achados:
-            if (achado.h2, achado.h3) != (h2, h3):
+            if not _prompt_no_lugar(c.tipo, achado.h2, achado.h3, (h2, h3)):
                 reprovar(f"prompt fora de {descricao}")
-        obrigatorio = c.tipo == "receita" or exemplo_obrigatorio(c.meta)
+        obrigatorio = c.tipo in ("receita", "roteiro") or exemplo_obrigatorio(c.meta)
         if obrigatorio and not any((a.h2, a.h3) == (h2, h3) for a in achados):
             reprovar(f"prompt de exemplo obrigatório em {descricao.split(' › ')[-1]}")
         registro = registros.get(c.chave)
