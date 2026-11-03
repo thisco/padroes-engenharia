@@ -1,0 +1,10 @@
+id: classificacao-hibrida-codigo-publicacao
+titulo: "Código redigido do serviço de publicação"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/classificacao-hibrida-governada/codigo-publicacao.md
+tipo: portal
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "guarda de imutabilidade e função de publicar"
+dominios: [ia-no-produto]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0011). O commit de origem fica no registro de verificação do caso."

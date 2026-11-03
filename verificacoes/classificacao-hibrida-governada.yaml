@@ -1,0 +1,130 @@
+conteudo: classificacao-hibrida-governada
+verificado_em: 2026-11-03
+verificador: agente-curadoria
+afirmacoes:
+- texto: "Taxonomia canônica de cerca de 15 categorias, cada uma com tipo fixo; o item herda o tipo da categoria"
+  ref: classificacao-hibrida-adr-configuracao-governada
+  localizacao: "seção Contexto, segunda lista"
+  resultado: confirmada
+  nota: "artefato. ADR de 2026-06-22 lida no commit 9117a57."
+- texto: "Antes, cerca de 250 linhas de de-para no código dos extratores e arquivos de regras editáveis só por desenvolvedor"
+  ref: classificacao-hibrida-adr-configuracao-governada
+  localizacao: "seção Contexto, itens 1 e 2"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Mudança de classificação é edição de dado, sem deploy, inclusive o prompt; configuração no banco com histórico de vigência permite reprocessar catálogo antigo; contrato de saída validado em código fora do prompt"
+  ref: classificacao-hibrida-adr-configuracao-governada
+  localizacao: "Contexto (meta), Decisão (tabela, linha do prompt) e Consequências (último item)"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O catálogo não pode parar por item não associado; tipo padrão de menor valor, pendente, na fila de revisão"
+  ref: classificacao-hibrida-adr-tipo-padrao
+  localizacao: "Contexto, Decisão (fluxo, passos 3 e 4) e Razões"
+  resultado: confirmada
+  nota: "artefato. ADR de 2026-06-22."
+- texto: "A qualidade fica a cargo da fila de revisão"
+  ref: classificacao-hibrida-adr-tipo-padrao
+  localizacao: "Consequências, primeiro item"
+  resultado: confirmada
+  nota: "artefato. A atribuição 'a cargo' é leitura do curador a partir da fila obrigatória e da ausência de eval."
+- texto: "Modelo antes era segunda passada manual; D1 degrada o lote para o tipo padrão e a execução segue; gate humano e falhar a execução rejeitados"
+  ref: classificacao-hibrida-adr-modelo-no-caminho
+  localizacao: "Contexto, D1 e Alternativas consideradas"
+  resultado: confirmada
+  nota: "artefato. ADR de 2026-06-23."
+- texto: "Cache pelo de-para: associação gravada resolve na execução seguinte sem nova chamada; revisão termina no de-para com origem manual; só categorias novas, dezenas, em catálogos de cerca de 236 mil e 1 milhão de itens; churn de metadado anotado"
+  ref: classificacao-hibrida-adr-modelo-no-caminho
+  localizacao: "D2, item 'Cache pelo de-para', Consequências e trecho da spec §4.4"
+  resultado: confirmada
+  nota: "artefato. Spec de 2026-06-23, §4.4, no mesmo commit."
+- texto: "A degradação é observável na fila e nas métricas de cobertura"
+  ref: classificacao-hibrida-adr-modelo-no-caminho
+  localizacao: "Consequências, último item"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "A cascata é de-para, normalização, modelo e tipo padrão; a camada de regras por sinais ficou vazia e foi removida com migration reversível; o sandbox testa o contexto"
+  ref: classificacao-hibrida-adr-camada-de-regras
+  localizacao: "Contexto e Decisão"
+  resultado: confirmada
+  nota: "artefato. ADR de 2026-06-23."
+- texto: "Contrato de dois canais; ADR de 2026-06-25 substituída em 2026-06-26; esqueleto selado com papel, contrato, anti-injeção, formato e fluxo; contexto por canal em slots; limiar como alavanca única; RBAC global pela governança e override por fornecedor pelo operador; risco de quebra silenciosa do parser"
+  ref: classificacao-hibrida-adr-contrato-selado
+  localizacao: "ADR de 2026-06-25 (contexto e alternativa rejeitada) e ADR de 2026-06-26 (Contexto e Decisão)"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06"
+  ref: classificacao-hibrida-adr-contrato-selado
+  localizacao: "datas dos cabeçalhos das fontes de ADR desta pasta (duas de 2026-06-22, duas de 2026-06-23, uma de 2026-06-25, uma de 2026-06-26)"
+  resultado: confirmada
+  nota: "artefato. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "De-para e normalização determinísticos; órfã sai para o chamador; limiar padrão 0,6 com override por fornecedor; canal A válido aplicado mesmo abaixo do limiar, que decide o registro da sugestão; exceção capturada só na chamada; flag desliga a etapa"
+  ref: classificacao-hibrida-codigo-cascata
+  localizacao: "os três blocos de código e a nota final"
+  resultado: confirmada
+  nota: "artefato. Código lido no commit 9117a57 com git show, não na cópia de trabalho (que tinha alterações não commitadas no motor)."
+- texto: "Esqueleto selado e slots; sanitização e delimitação das nativas; guardrail do canal A contra a taxonomia viva e do canal B pelo tipo; prompt válido sem contexto; erros de programação propagam"
+  ref: classificacao-hibrida-codigo-contrato
+  localizacao: "seções do esqueleto, do guardrail e do lote"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "Lote de 78 categorias truncou; lotes de 20 e teto de 4.096 tokens; o primário às vezes não emitia nenhum canal; modelo de reserva desligado por padrão e restrito às não resolvidas"
+  ref: classificacao-hibrida-commits-lote-e-reserva
+  localizacao: "as duas mensagens de commit"
+  resultado: confirmada
+  nota: "artefato. Commits de 2026-06-26."
+- texto: "O catálogo público mudava em silêncio; publicar é ato explícito; banco guarda versão, checksum SHA-256, autor e data; chave congelada nunca sobrescrita; correção é versão nova; retomada por checksum; cache da borda ignorava a versão"
+  ref: classificacao-hibrida-adr-publicacao-imutavel
+  localizacao: "Contexto e decisões 1, 2, 4 e 5"
+  resultado: confirmada
+  nota: "artefato. ADR de 2026-08-06."
+- texto: "A guarda de imutabilidade aborta com publicação registrada ou órfão divergente e regrava o órfão idêntico"
+  ref: classificacao-hibrida-codigo-publicacao
+  localizacao: "função guardar_imutabilidade"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "391 funções de teste em 48 arquivos na classificação e 88 em 8 na publicação; testes de timeout simulado, de contagem de chamadas no cache, do esqueleto e dos slots; nenhum conjunto de avaliação de qualidade nas specs, planos e testes"
+  ref: classificacao-hibrida-testes
+  localizacao: "tabela, lista de testes e nota final"
+  resultado: confirmada
+  nota: "artefato. Contagem por git grep no commit fixado (ver execucoes). A ausência de eval é resultado de busca, não de declaração do time."
+- texto: "Lote de 20 × cerca de 3,3 s passa do timeout de 30 s; modelo fora do request HTTP; casar a resposta com o vocabulário; fornecedor com 100% pelo de-para; extrator que contornava o motor com cerca de 85 categorias contra 15; variável vazia no compose degradou os atores de modelo"
+  ref: classificacao-hibrida-licoes
+  localizacao: "memória de 2026-07-03 e 2026-06-29; steering de solução de problemas"
+  resultado: confirmada
+  nota: "artefato"
+- texto: "O segundo módulo, de unidades de medida, em 2026-06-29, aplica o canal A sozinho só com confiança igual ou acima do limiar e fator 1; o resto vai para pendente"
+  ref: classificacao-hibrida-segundo-modulo
+  localizacao: "docstring do motor"
+  resultado: confirmada
+  nota: "artefato. Data pelo primeiro commit do arquivo."
+execucoes:
+- tipo: arquivo
+  arquivo: casos/fontes/classificacao-hibrida-governada/testes.md
+  comando: "git rev-parse --short HEAD; git grep -c 'def test_' HEAD -- tests/classificacao (soma); idem para tests/publicacao; git ls-tree --name-only HEAD tests/classificacao/ e tests/publicacao/ contando test_*.py; git diff --stat"
+  ambiente: "clone local do repositório de origem, commit 9117a57, 2026-11-03; somente leitura"
+  resultado: passou
+  evidencia: "9117a57; 391; 88; 48; 8; git diff --stat mostra 3 arquivos alterados e não commitados (motor, configuração e um teste), por isso o código citado foi lido do commit"
+  data: '2026-11-03'
+- tipo: arquivo
+  arquivo: casos/fontes/classificacao-hibrida-governada/adr-contrato-selado.md
+  comando: "ls docs/adr | grep -E '2026-06-2[2-6]|2026-08-06'; git log --format='%h %ad %s' --date=short sobre o módulo do modelo, o serviço de publicação e o motor do segundo módulo"
+  ambiente: "clone local do repositório de origem, commit 9117a57, 2026-11-03; somente leitura"
+  resultado: passou
+  evidencia: "seis ADRs de classificação entre 2026-06-22 e 2026-06-26 e a de publicação de 2026-08-06; commits do lote e da reserva em 2026-06-26; motor do segundo módulo em 2026-06-29; serviço de publicação em 2026-08-06"
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: "autorrevisão do redator, 2026-11-03; a conferência independente em lote (ADR 0005) fica com o controlador da Onda 1"
+  data: '2026-11-03'
+  achados:
+    - afirmacao: "o limiar decide se o canal A é aplicado"
+      problema: "no commit fixado o canal A válido é aplicado mesmo abaixo do limiar; o limiar só decide o registro da sugestão"
+      tratamento: "texto e diagrama dizem 'aplica o canal A e registra a sugestão' abaixo do limiar; a política mais estrita aparece só no segundo módulo"
+    - afirmacao: "política fail-closed que bloqueia a categoria"
+      problema: "existe só na cópia de trabalho, não commitada"
+      tratamento: "fora do caso, citada em 'O que ficou fora' sem detalhe"
+    - afirmacao: "o operador ajusta o limiar"
+      problema: "a spec põe o limiar com a governança e somente leitura para o operador"
+      tratamento: "texto fala em alavanca de sensibilidade, sem atribuir ao operador"
+    - afirmacao: "o time faria de novo"
+      problema: "não há declaração do time sobre isso"
+      tratamento: "a seção fala do que o time repetiu (segundo módulo) e registrou como regra; as recomendações são marcadas como leitura do curador"

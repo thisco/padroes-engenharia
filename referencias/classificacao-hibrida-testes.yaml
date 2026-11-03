@@ -1,0 +1,10 @@
+id: classificacao-hibrida-testes
+titulo: "Testes da classificação e da publicação no projeto de origem"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/classificacao-hibrida-governada/testes.md
+tipo: portal
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "tabela de contagens, lista de testes e nota final"
+dominios: [ia-no-produto]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0011). O commit de origem fica no registro de verificação do caso."
