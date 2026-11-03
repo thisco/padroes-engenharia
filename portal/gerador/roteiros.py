@@ -16,7 +16,14 @@ from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import numerar
 from portal.gerador.exemplos import blocos, expandir_inclusoes, secoes
 from portal.gerador.markdown import para_html
-from portal.gerador.renderizar import Site, caminho_de, descricao_de, renderizar, vinculos_de
+from portal.gerador.renderizar import (
+    Site,
+    caminho_de,
+    descricao_de,
+    renderizar,
+    url_portal,
+    vinculos_de,
+)
 from portal.gerador.texto_md import juntar, md_lista_referencias
 
 ROTULO_QUEM = {"voce": "Você faz", "agente": "O agente", "voce-decide": "Você decide"}
@@ -160,3 +167,26 @@ def md_roteiro_passos(site: Site, roteiro: Conteudo) -> str:
         expandir_inclusoes(roteiro.corpo, site.raiz),
         md_lista_referencias(site, roteiro),
     )
+
+
+def skill_md(site: Site, roteiro: Conteudo) -> str:
+    """A skill do pacote: o roteiro em Markdown de origem, com a URL do portal já trocada."""
+    meta = roteiro.meta
+    texto = expandir_inclusoes(roteiro.corpo, site.raiz)
+    preambulo = texto.split("\n## ", 1)[0].strip("\n")
+    descricao = " ".join(str(meta["objetivo"]).split())
+    descricao = descricao.replace("\\", "\\\\").replace('"', '\\"')
+    declarados = meta.get("passos") or []
+    partes = [
+        f'---\nname: {roteiro.chave}\ndescription: "{descricao}"\n---',
+        f"# {meta['titulo']}",
+        f"Porta: {meta.get('porta', '')}. Siga os passos na ordem. Nos passos marcados "
+        "'Você decide', pare, mostre o resultado e espere a aprovação da pessoa.",
+        f"## Prompt inicial\n\n{preambulo}",
+    ]
+    for n, (_, trecho) in enumerate(secoes(texto), start=1):
+        passo = declarados[n - 1] if n <= len(declarados) else {}
+        quem = str(passo.get("quem", "voce"))
+        titulo = f"## Passo {n}: {passo.get('titulo', '')} ({ROTULO_QUEM.get(quem, quem)})"
+        partes.append(f"{titulo}\n\n{trecho.strip(chr(10))}")
+    return "\n\n".join(partes).replace("{URL do portal}", url_portal(site).rstrip("/")) + "\n"

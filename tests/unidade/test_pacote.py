@@ -15,6 +15,7 @@ from portal.gerador.pacote import (
 )
 from portal.gerador.renderizar import montar_site
 from tests import fabrica
+from tests.conftest import _yaml, escrever
 
 SKILL = (
     "---\nname: curadoria-de-pratica\ndescription: Use quando criar conteúdo.\n---\n\n# Curadoria\n"
@@ -155,3 +156,47 @@ def test_pacote_leva_verificadores_ordenados_sem_ocultos_nem_readme(repo_minimo)
 
 def test_pacote_sem_pasta_de_verificadores_nao_tem_entrada_deles(repo_minimo):
     assert not [c for c in montar_pacote(_site(repo_minimo)) if c.startswith("verificadores/")]
+
+
+def _site_com_roteiro(repo_minimo, corpo=fabrica.CORPO_ROTEIRO, objetivo=None):
+    meta = fabrica.meta_roteiro()
+    if objetivo:
+        meta["objetivo"] = objetivo
+    escrever(
+        repo_minimo,
+        "roteiros/projeto-novo.md",
+        f"---\n{_yaml(meta)}---\n\n{corpo}",
+    )
+    kiro = fabrica.meta_ferramenta(id="kiro", titulo="Kiro", categoria="harness")
+    escrever(repo_minimo, "ferramentas/kiro.yml", _yaml(kiro))
+    return montar_site(
+        repo_minimo,
+        versao="0.1.0",
+        commit="0" * 40,
+        data="2026-10-01",
+        url_base="https://p.exemplo/",
+    )
+
+
+def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo, tmp_path):
+    site = _site_com_roteiro(repo_minimo)
+    arquivos = montar_pacote(site)
+    skill = arquivos["skills/roteiro-projeto-novo/SKILL.md"].decode()
+    assert skill.startswith("---\nname: roteiro-projeto-novo\n")
+    assert 'description: "Sair do primeiro dia com o projeto novo pronto para o agente."' in skill
+    assert "# Projeto novo: o primeiro dia" in skill
+    assert "Porta: projeto-novo. Siga os passos na ordem." in skill
+    assert "## Prompt inicial" in skill and "```prompt" in skill
+    assert "## Passo 1: Abrir o harness (Você faz)" in skill
+    assert "## Passo 2: Instalar o pacote (O agente)" in skill and "### Kiro" in skill
+    assert "Peça ao agente que rode o instalador." in skill
+    assert "{URL do portal}" not in skill and "Leia https://p.exemplo e conduza" in skill
+    saida = tmp_path / "saida"
+    emitir_pacote(site, saida)
+    assert verificar_pacote(saida) == []
+
+
+def test_descricao_da_skill_do_roteiro_escapa_aspas(repo_minimo):
+    site = _site_com_roteiro(repo_minimo, objetivo='Deixar o "agente" pronto: sem surpresas.')
+    skill = montar_pacote(site)["skills/roteiro-projeto-novo/SKILL.md"].decode()
+    assert 'description: "Deixar o \\"agente\\" pronto: sem surpresas."\n' in skill
