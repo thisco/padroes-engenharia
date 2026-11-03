@@ -1,0 +1,39 @@
+# Fontes abertas na web em 2026-11-03. A revisão adversarial em sessão independente fica com o
+# controlador (o despacho desta frente proíbe subagente); `achados: []` aqui quer dizer "ainda não
+# revisada", não "revisada sem achado".
+conteudo: P2-08
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: numa solução generativa o prompt é parte central do que se governa, e um bom ambiente de experimentação
+    guarda as mudanças de prompt junto com as saídas
+  ref: azure-genaiops-mlops
+  localizacao: "seção 'Generative AI technical patterns' ('a key aspect of the solution is the prompt provided to the generative model') e subseção 'Experimentation › RAG and prompt engineering' ('A good experimentation framework enables you to store inputs, such as changes to hyperparameters or prompts, along with outputs')"
+  resultado: confirmada
+- texto: na API da Anthropic todo ID de modelo é um snapshot fixo, e cada modelo tem uma data mínima de aposentadoria
+  ref: anthropic-models-overview
+  localizacao: "notas da tabela 'Compare models': 'Every Claude model ID is a pinned snapshot' e linha 'Retirement' ('Not sooner than ...')"
+  resultado: confirmada
+- texto: com structured outputs a resposta segue o schema dado, sem JSON malformado nem campo obrigatório faltando;
+    sem eles, o modelo pode gerar JSON malformado ou faltar campo mesmo com o prompt bem escrito; o parâmetro
+    é output_config.format
+  ref: anthropic-structured-outputs
+  localizacao: "abertura, 'Why use structured outputs' ('Without structured outputs, Claude can generate malformed JSON responses ... Even with careful prompting') e a seção de JSON outputs (output_config.format)"
+  resultado: confirmada
+- texto: no Langfuse cada versão ganha um ID, o rótulo production marca a versão servida por padrão, voltar atrás
+    é mover o rótulo, e rótulos protegidos existem só nos planos Enterprise
+  ref: langfuse-prompt-version-control
+  localizacao: "seções de versões, rótulos ('Langfuse will serve the version with the production label'), rollback e rótulos protegidos (Enterprise e Self Hosted Enterprise)"
+  resultado: confirmada
+execucoes:
+- tipo: prompt
+  prompt: P2-08-prompt-1
+  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
+  ambiente: repositório Git novo no scratchpad com app.py (prompt, modelo e parâmetros no código, formato pedido no texto), test_app.py com cliente falso e catalogo-modelos.yml; {nome da tarefa} = classificar; PyYAML e pytest do .venv do monorepo; macOS
+  resultado: passou
+  evidencia: 'passo 1 listou app.py:6 (model=), :7 (max_tokens), :8 (temperature) e :10 (mensagem de sistema); passo 2 criou ia/prompts/classificar.md e ia/config/classificar.yml (versao 1, modelo modelo-a-api do catálogo, parametros); passo 3: o código lê a configuração e registra config_versao e modelo; grep do texto do prompt e do modelo em app.py vazio (saída 1); passo 4: schema SAIDA no código, output_config.format e validação da resposta, sem instrução de formato no prompt; passo 5: pytest "1 passed"; commit "refactor: prompt e configuração de modelo versionados (P2-08)". Falta repetir em sessão nova de agente.'
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: pendente, revisão do controlador em sessão independente
+  data: '2026-11-03'
+  achados: []

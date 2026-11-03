@@ -1,0 +1,10 @@
+id: anthropic-models-overview
+titulo: Models overview
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/about-claude/models/overview
+tipo: vendor
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seção 'Compare models', notas da tabela 'Claude API ID' (todo ID de modelo é um snapshot fixo) e 'Retirement' (data mínima de aposentadoria por modelo)"
+dominios: [ia-no-produto]
+notas: null
