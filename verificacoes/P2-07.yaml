@@ -1,0 +1,65 @@
+# Fontes abertas na web em 2026-11-03. A revisão adversarial em sessão independente fica com o
+# controlador (o despacho desta frente proíbe subagente); `achados: []` aqui quer dizer "ainda não
+# revisada", não "revisada sem achado".
+conteudo: P2-07
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o guia de GenAIOps divide o trabalho com modelo em laço interno (dados, experimentação e avaliação)
+    e externo (deploy, inferência, monitoramento e feedback)
+  ref: azure-genaiops-mlops
+  localizacao: "seção 'Extend MLOps for generative AI technical patterns' (listas Inner loop: DataOps, Experimentation, Evaluation; Outer loop: Deployment, Inferencing and monitoring, Feedback loop)"
+  resultado: confirmada
+- texto: o gateway, junto com o versionamento do modelo, reduz o risco do deploy e permite voltar à versão
+    anterior quando há problema
+  ref: azure-genaiops-mlops
+  localizacao: "seção 'Deployment', subseção 'RAG and prompting' ('The use of a gateway, along with model versioning, enables you to minimize risk when you deploy changes and to roll back to previous versions when problems occur')"
+  resultado: confirmada
+- texto: a chave virtual acompanha o gasto e controla o acesso a modelos; a lista models do /key/generate
+    restringe os modelos, o alias vai em key_alias e /key/block bloqueia a chave
+  ref: litellm-virtual-keys
+  localizacao: "abertura ('Track Spend, and control model access via virtual keys'), exemplos de /key/generate com models, seção do padrão de key_alias e seção 'Disable Keys' (/key/block); página aberta em 2026-11-03"
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da MR
+  ref: gitlab-variaveis-predefinidas
+  localizacao: 'linha CI_MERGE_REQUEST_DIFF_BASE_SHA ("The base SHA of the merge request diff."); aberta em 2026-11-03'
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' ('To disable shallow clone ... set to 0'); aberta em 2026-11-03"
+  resultado: confirmada
+- texto: com allow_failure true, o job que falha fica com aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' ('an orange warning ... indicates that a job failed. However, the pipeline is successful'); aberta em 2026-11-03"
+  resultado: confirmada
+- texto: github.base_ref é a branch de destino do pull request
+  ref: github-actions-contextos
+  localizacao: "contexto github, linha github.base_ref"
+  resultado: confirmada
+- texto: fetch-depth 0 traz o histórico de todas as branches e tags
+  ref: github-actions-checkout
+  localizacao: "README, entrada fetch-depth"
+  resultado: confirmada
+- texto: continue-on-error true no passo impede que o job falhe quando o passo falha
+  ref: github-actions-sintaxe
+  localizacao: "seção 'jobs.<job_id>.steps[*].continue-on-error' ('Prevents a job from failing when a step fails')"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: verificadores/p2_07.py
+  comando: python3 -I verificadores/p2_07.py --evento ci --base <sha> (com o manifesto do Exemplo, com o modelo trocado, com base inexistente e com evento pre-commit), num repositório Git temporário; pytest -q tests/verificadores/test_p2_07.py
+  ambiente: repositório Git novo no scratchpad com catalogo-modelos.yml (uma entrada liberada e uma não), evals/test_evals.py e o ia-producao.yml copiado do Exemplo; Python 3 do sistema e Python do .venv do monorepo; macOS. Não foi executado num GitLab nem num GitHub.
+  resultado: passou
+  evidencia: 'manifesto do Exemplo: nada em stdout, saída 0; modelo-x: "ia-producao.yml:2: modelo \"modelo-x\" fora do catálogo (catalogo-modelos.yml)", saída 1; base inexistente: "P2-07: base nao-existe não encontrada (clone raso? use GIT_DEPTH 0)", saída 2; pre-commit: "P2-07: evento não atendido: pre-commit (atende antes-de-ferramenta e ci)", saída 2. pytest: na primeira rodada, sem o script, 37 failed e 1 passed (o de tempo) em test_p2_07.py; depois, 38 passed.'
+  data: '2026-11-03'
+- tipo: prompt
+  prompt: P2-07-prompt-1
+  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
+  ambiente: o mesmo repositório temporário, de volta à sandbox (sem ia-producao.yml), com {id do modelo} = modelo-a-api, aliases app-exemplo-dev e app-exemplo-prd e evidência https://gitlab.example.com/grupo/app/-/pipelines/456
+  resultado: passou
+  evidencia: 'passo 1 mostrou a entrada modelo-a-api com uso_liberado: sim; passo 2 listou evals/test_evals.py; passo 3 criou o ia-producao.yml com os seis campos e só os aliases; passo 4: verificador em ci com --base HEAD~1 sem saída, saída 0; commit "feat: promoção para produção (P2-07)". Contraprova no harness com modelo-b-nuvem: "ia-producao.yml:1: modelo \"modelo-b-nuvem\" no catálogo sem uso_liberado: sim", saída 1. Falta repetir em sessão nova de agente.'
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: pendente, revisão do controlador em sessão independente
+  data: '2026-11-03'
+  achados: []

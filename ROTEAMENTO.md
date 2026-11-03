@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 48 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 49 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -19,7 +19,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
-| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (pede aprovação) | P2-06 (só orienta) |
+| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P2-07 (avisa), P3-06 (pede aprovação) | P2-06 (só orienta) |
 
 ## Práticas
 
@@ -59,6 +59,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | P2-04 | Mascare o dado pessoal antes de enviar ao modelo | só orienta | experimentar | nada |
 | P2-05 | Trate os evals como teste no CI | só orienta | experimentar | nada |
 | P2-06 | Orçamento e alerta por chave virtual | só orienta | adotar | nada |
+| P2-07 | Sandbox e promoção: experimentar livre com chave virtual de dev; produção exige eval aprovado, modelo no catálogo e chave própria | avisa | experimentar | nada |
 | P3-01 | Classifique a agência do agente antes de escrever | só orienta | experimentar | nada |
 | P3-02 | Responda as 4 perguntas do CISO no threat-model do agente | avisa | adotar | nada |
 | P3-03 | Declare no prompt o critério de término, o escopo e os limites de autonomia | só orienta | experimentar | nada |
