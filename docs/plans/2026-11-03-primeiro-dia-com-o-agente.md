@@ -187,9 +187,8 @@ def test_estrutura_do_roteiro_com_prompt_inicial_passos_e_harness():
   CSS do mockup (`.roteiro`, `.passo`, `.quem`, `.abas`, `.painel[hidden]`) copiado para `tema.css`
   em seção comentada, `SECOES` e `SECAO_POR_TIPO` com "Roteiros" (depois de "Receitas"),
   `montar_paginas` iterando `site.repo.roteiros` como as receitas, `todos_os_prompts` com roteiros.
-- [ ] **Passo 6: suíte, ruff, validar, gerar.** Verde; `git status` sem `public/` alterado além do
-  esperado (o gerador grava `public/`; esse diretório é commitado pelo próprio gerar? Conferir
-  `git ls-files public | head`: se `public/` é versionado, ele entra no commit da tarefa).
+- [ ] **Passo 6: suíte, ruff, validar, gerar.** Verde. `public/` não é versionado: nunca entra
+  em commit.
 - [ ] **Passo 7: commit** `feat(portal): página do roteiro, md gêmeo, seção Roteiros e prompts`.
 
 ### Tarefa 3: Copiar sempre visível com fallback, rótulo da linguagem e abas por harness
