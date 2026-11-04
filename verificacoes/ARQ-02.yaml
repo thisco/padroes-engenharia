@@ -1,5 +1,5 @@
 conteudo: ARQ-02
-verificado_em: '2026-10-21'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a skill amarra diagrama, IaC e ambiente local com um manifesto e um script; quando divergem,
@@ -41,7 +41,30 @@ afirmacoes:
   ref: portal-trilha
   localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
+- texto: as comparações do arq_02.py são as do script do scaffold (módulo ou serviço fora do mapa, tofu_modulo ou compose_servicos citado e inexistente, drawio_label que não é fragmento de rótulo normalizado sem acento, caixa e espaço repetido, null como decisão de não desenhar)
+  ref: sdd-scaffold-drift-arquitetura
+  localizacao: "funções _normalizar, extrair_labels_drawio (value=\"...\"), listar_modulos_tofu, listar_servicos_compose e verificar (abertas na web em 2026-11-04 na URL da referência, commit cd121cd da tag v1.7.1; o script do scaffold não foi executado)"
+  resultado: confirmada
+- texto: $CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da MR
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis (aberta na web em 2026-11-04; 'The base SHA of the merge request diff')"
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-11-04; 'To disable shallow clone ... keep the value empty or set to 0'). 'O verificador lê a base' é do portal."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-11-04; 'an orange warning ... indicates that a job failed' e 'the pipeline is successful'). Não exercitado num GitLab real."
+  resultado: confirmada
 execucoes:
+- tipo: arquivo
+  arquivo: verificadores/arq_02.py
+  comando: python3 -I verificadores/arq_02.py --evento ci --base <sha> e --evento depois-de-ferramenta (JSON no stdin), num repositório Git temporário; pytest -q tests/verificadores/test_arq_02.py
+  ambiente: repositório Git novo no scratchpad com exemplos/ARQ-02/mapa-antes.yml, arquitetura-antes.drawio, o docker-compose.yml sem a fila e os módulos api e database no commit-base; a MR acrescenta o serviço e o módulo fila; Python 3.15.2; macOS. Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'MR só com compose e módulo: "infra/cloud/modules/fila:0: módulo de IaC ''fila'' existe e não está no Arquitetura/mapa.yml" e "infra/local/docker-compose.yml:16: serviço ''fila'' existe no compose e não está no Arquitetura/mapa.yml", saída 1 (as mesmas duas divergências do relatório do scaffold no Exemplo); harness com mapa.yml e arquitetura.drawio do Exemplo no disco: saída 0, em 0,32 s; com os dois commitados na MR, ci saída 0. pytest: 37 passed em tests/verificadores/test_arq_02.py (sem o script, 36 failed e 1 passed).'
+  data: '2026-11-04'
 - tipo: arquivo
   arquivo: exemplos/ARQ-02/verificar-drift.py
   comando: 'python3 scripts/verificar-drift.py (estado antes, depois, com componentes: [], sem mapa.yml

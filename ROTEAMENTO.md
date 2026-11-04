@@ -9,7 +9,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Domínio | Especificar | Codar | Revisar | Aprender |
 |---|---|---|---|---|
 | Construir com IA (`construir-com-ia`) | P1-01 (só orienta), P1-03 (só orienta), P1-04 (só orienta), P1-05 (avisa), P1-06 (avisa), P1-07 (só orienta) | P1-08 (só orienta) | P1-09 (avisa), P1-10 (só orienta) | P1-11 (só orienta) |
-| Arquitetura e padrões de projeto (`arquitetura`) | ARQ-01 (só orienta), ARQ-04 (só orienta) | ARQ-03 (só orienta) | ARQ-02 (só orienta) | a definir |
+| Arquitetura e padrões de projeto (`arquitetura`) | ARQ-01 (só orienta), ARQ-04 (só orienta) | ARQ-03 (só orienta) | ARQ-02 (avisa) | a definir |
 | Contratos de API (`contratos-api`) | API-01 (só orienta) | a definir | API-02 (avisa) | a definir |
 | Frontend e UX (`frontend-ux`) | UX-02 (só orienta) | UX-01 (só orienta) | a definir | a definir |
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
@@ -28,7 +28,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | API-01 | Contrato de API versionado: mudança incompatível vira versão nova e ADR | só orienta | experimentar | nada |
 | API-02 | Teste de contrato no CI: quebra de contrato reprova o merge | avisa | experimentar | nada |
 | ARQ-01 | Decisão de arquitetura vira ADR antes do código | só orienta | experimentar | nada |
-| ARQ-02 | Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR | só orienta | experimentar | nada |
+| ARQ-02 | Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR | avisa | experimentar | nada |
 | ARQ-03 | Portas e adaptadores: o domínio não importa framework, e o linter impõe | só orienta | experimentar | nada |
 | ARQ-04 | C4 em dois níveis como fonte, não como ilustração | só orienta | experimentar | nada |
 | CICD-01 | Pipeline obrigatória com gates: lint, suíte e verificador de PR | avisa | experimentar | nada |
