@@ -1,0 +1,11 @@
+id: rfc-9110
+titulo: "RFC 9110: HTTP Semantics"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc9110
+tipo: padrao-aberto
+publicado_em: '2022-06-01'
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 15.3.3 '202 Accepted' (aceito para processamento, ainda não concluído; a resposta deve descrever o estado e apontar um monitor de status)"
+dominios: [ia-no-produto, contratos-api]
+notas: null

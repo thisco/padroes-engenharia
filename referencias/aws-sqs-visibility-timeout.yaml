@@ -1,0 +1,10 @@
+id: aws-sqs-visibility-timeout
+titulo: Amazon SQS visibility timeout
+organizacao: Amazon Web Services
+url: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções 'Setting and adjusting the visibility timeout' (padrão de 30 segundos; mensagem não apagada volta a ficar visível), 'Handling failures' e 'Best practices' (timeout igual ao tempo máximo de processamento, heartbeat com ChangeMessageVisibility, limite de 12 horas, quebrar a tarefa em passos menores, fila de mensagens mortas)"
+dominios: [ia-no-produto]
+notas: "Página de um produto; o portal a usa como exemplo do contrato de visibilidade de uma fila."

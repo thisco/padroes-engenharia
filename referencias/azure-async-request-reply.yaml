@@ -1,0 +1,11 @@
+id: azure-async-request-reply
+titulo: Asynchronous Request-Reply pattern
+organizacao: Microsoft (Azure Architecture Center)
+url: https://learn.microsoft.com/en-us/azure/architecture/patterns/async-request-reply
+tipo: vendor
+publicado_em: '2026-03-30'
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções 'Context and problem' (trabalho longo não espera a resposta), 'Solution' (202 Accepted, endpoint de status com 200 enquanto pendente e 303 ao terminar, processamento entregue a uma fila) e 'Problems and considerations' (cabeçalhos Location e Retry-After, campos do status, erro no recurso, retenção, DELETE para cancelar, Idempotency-Key)"
+dominios: [ia-no-produto, arquitetura]
+notas: "O padrão é descrito de forma genérica; o exemplo usa Azure Functions, que o portal não adota."
