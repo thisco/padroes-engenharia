@@ -1,4 +1,4 @@
-Trecho sanitizado de ADR, 2026-06-22. Lido em 2026-11-03 no commit fixado no registro de verificação; nomes de tabela, de arquivo, do órgão e dos fornecedores retirados ou trocados por papéis.
+Trecho sanitizado de ADR, 2026-06-22. Lido em 2026-11-03 no commit fixado no registro de verificação; nomes de tabela, de arquivo, da organização e dos fornecedores retirados ou trocados por papéis.
 
 # Configuração de classificação governada em banco, com histórico, como fonte única
 
@@ -9,11 +9,11 @@ A classificação dos itens dos catálogos dos fornecedores numa categoria canô
 1. **De-para fixo no código dos extratores:** cerca de 250 linhas de mapeamento por identificador de item; cada serviço novo exigia um commit.
 2. **Listas de regras em arquivos JSON** lidas pelo classificador: versionáveis, mas editáveis só por desenvolvedor, pelo Git.
 
-A análise da planilha de gestão do órgão e a reunião do dia estabeleceram que:
+A análise da planilha de gestão da organização e a reunião do dia estabeleceram que:
 
-- O órgão mantém uma **taxonomia canônica** de cerca de 15 categorias, **cada uma com um tipo fixo**.
+- A organização mantém uma **taxonomia canônica** curta, da ordem de uma dezena de categorias, **cada uma com um tipo fixo**.
 - A classificação é **por categoria**, não por item: todo item herda o tipo da sua categoria.
-- O próprio órgão precisa **editar essas regras** (incluir categoria, reassociar o de-para, ajustar o tipo) e também **o prompt do modelo**, pela interface, sem depender de deploy.
+- A própria organização precisa **editar essas regras** (incluir categoria, reassociar o de-para, ajustar o tipo) e também **o prompt do modelo**, pela interface, sem depender de deploy.
 
 A meta é: **mudança de classificação = edição de dado, sem deploy**.
 

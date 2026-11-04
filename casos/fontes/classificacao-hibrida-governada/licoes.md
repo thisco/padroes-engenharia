@@ -12,6 +12,6 @@ Trechos sanitizados da memória do projeto e do steering de solução de problem
 
 ## Steering de solução de problemas
 
-- **Todo extrator deve usar o motor da cascata.** Um extrator era a exceção (corrigido em 2026-06-28): regravava a categoria nativa como categoria e deixava a nativa vazia. Sintoma: cerca de 85 categorias distintas (nomes nativos) nesse fornecedor contra as 15 canônicas dos outros, e a categoria nativa 100% vazia.
+- **Todo extrator deve usar o motor da cascata.** Um extrator era a exceção (corrigido em 2026-06-28): regravava a categoria nativa como categoria e deixava a nativa vazia. Sintoma: várias vezes mais categorias distintas (nomes nativos) nesse fornecedor que as canônicas dos outros, e a categoria nativa 100% vazia.
 - **Variável redeclarada como vazia no compose sobrescreve o arquivo de ambiente:** foi o que zerou a variável do nome do modelo e **degradou os atores de modelo**. Variáveis vindas do arquivo de ambiente não devem ser redeclaradas com padrão vazio no bloco de ambiente.
 - Um ator de modelo de outro módulo, com o nome do modelo fixo no código e sem a credencial correspondente, **degradava tudo**.

@@ -1,4 +1,4 @@
-Trechos sanitizados de duas ADRs, 2026-06-25 (substituída) e 2026-06-26 (aceita). Lidos em 2026-11-03 no commit fixado no registro de verificação; nomes de papel, de arquivo, de constante e do órgão trocados por papéis.
+Trechos sanitizados de duas ADRs, 2026-06-25 (substituída) e 2026-06-26 (aceita). Lidos em 2026-11-03 no commit fixado no registro de verificação; nomes de papel, de arquivo, de constante e da organização trocados por papéis.
 
 # 2026-06-25: política de emissão do canal B governável pelo prompt de sistema (substituída no dia seguinte)
 

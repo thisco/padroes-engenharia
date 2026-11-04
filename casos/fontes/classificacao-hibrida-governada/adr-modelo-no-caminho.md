@@ -1,4 +1,4 @@
-Trecho sanitizado de ADR, 2026-06-23. Lido em 2026-11-03 no commit fixado no registro de verificação; nomes de módulo, de variável de ambiente, do fornecedor de modelo e do órgão retirados.
+Trecho sanitizado de ADR, 2026-06-23. Lido em 2026-11-03 no commit fixado no registro de verificação; nomes de módulo, de variável de ambiente, do fornecedor de modelo e da organização retirados.
 
 # Modelo no caminho crítico do pipeline de classificação
 
@@ -37,5 +37,3 @@ Pôr o modelo no caminho crítico levanta a questão central: **o que acontece q
 
 - **Idempotência:** a segunda execução de um mesmo catálogo **não** chama o modelo de novo para categorias já resolvidas (provado pela contagem de chamadas nos testes). Há, porém, **churn de metadado**: reclassificar reescreve a origem do item de "modelo" para "de-para" (resolução correta, fidelidade de metadado menor), anotado.
 - **Degradação observável:** quando o modelo degrada, o lote vira órfão provisório, visível na fila e nas métricas de cobertura, sem erro de pipeline.
-
-Trecho da spec do mesmo dia, §4.4 (sanitizado): "Por execução, o modelo só toca categorias novas (dezenas, não itens): custo baixo mesmo em catálogos grandes (cerca de 236 mil e cerca de 1 milhão de itens)."

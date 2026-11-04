@@ -31,9 +31,10 @@ def resolver_orfas_com_modelo(sessao, fornecedor, orfas, taxonomia, sugestoes_or
 
     try:
         resultados = classificar_com_modelo(sessao, fornecedor, orfas)
-    except Exception as exc:
+    except Exception as exc:                       # guarda externa: QUALQUER exceção
         # Degradação: qualquer falha do lote deixa o lote sem casamento;
-        # a execução NÃO levanta.
+        # a execução NÃO levanta. Isso inclui erro de programação que
+        # tenha escapado do retry da chamada.
         log.warning(f"{fornecedor}: falha no lote do modelo, degradando: {exc}")
         resultados = {}
 
@@ -67,7 +68,7 @@ for nativa in orfas:
     if nativa in aplicadas:
         mapa[nativa] = Resolucao(aplicadas[nativa], origem="modelo", status="ASSOCIADA")
         continue
-    # Tipo padrão (o de menor valor), provisório: não bloqueia o pipeline e
+    # Tipo padrão (o mais conservador), provisório: não bloqueia o pipeline e
     # vai para a fila de revisão; a sugestão do canal B, se houver, vai junto.
     origem_da_orfa = "modelo" if nativa in sugestoes_orfas else "tipo_padrao"
     registrar_associacao(sessao, fornecedor, nativa, None,

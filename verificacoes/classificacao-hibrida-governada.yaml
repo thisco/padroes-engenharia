@@ -2,7 +2,7 @@ conteudo: classificacao-hibrida-governada
 verificado_em: 2026-11-03
 verificador: agente-curadoria
 afirmacoes:
-- texto: "Taxonomia canônica de cerca de 15 categorias, cada uma com tipo fixo; o item herda o tipo da categoria"
+- texto: "Taxonomia canônica curta, da ordem de uma dezena de categorias, cada uma com tipo fixo; o item herda o tipo da categoria"
   ref: classificacao-hibrida-adr-configuracao-governada
   localizacao: "seção Contexto, segunda lista"
   resultado: confirmada
@@ -17,7 +17,7 @@ afirmacoes:
   localizacao: "Contexto (meta), Decisão (tabela, linha do prompt) e Consequências (último item)"
   resultado: confirmada
   nota: "artefato"
-- texto: "O catálogo não pode parar por item não associado; tipo padrão de menor valor, pendente, na fila de revisão"
+- texto: "O catálogo não pode parar por item não associado; tipo padrão mais conservador, pendente, na fila de revisão"
   ref: classificacao-hibrida-adr-tipo-padrao
   localizacao: "Contexto, Decisão (fluxo, passos 3 e 4) e Razões"
   resultado: confirmada
@@ -32,11 +32,16 @@ afirmacoes:
   localizacao: "Contexto, D1 e Alternativas consideradas"
   resultado: confirmada
   nota: "artefato. ADR de 2026-06-23."
-- texto: "Cache pelo de-para: associação gravada resolve na execução seguinte sem nova chamada; revisão termina no de-para com origem manual; só categorias novas, dezenas, em catálogos de cerca de 236 mil e 1 milhão de itens; churn de metadado anotado"
+- texto: "Cache pelo de-para: associação gravada resolve na execução seguinte sem nova chamada; revisão termina no de-para com origem manual; churn de metadado anotado"
   ref: classificacao-hibrida-adr-modelo-no-caminho
-  localizacao: "D2, item 'Cache pelo de-para', Consequências e trecho da spec §4.4"
+  localizacao: "D2, item 'Cache pelo de-para', e Consequências"
   resultado: confirmada
-  nota: "artefato. Spec de 2026-06-23, §4.4, no mesmo commit."
+  nota: "artefato"
+- texto: "Por execução o modelo só toca categorias novas, dezenas, em catálogos de centenas de milhares a cerca de um milhão de itens"
+  ref: classificacao-hibrida-spec-modelo-no-caminho
+  localizacao: "§4.4, item do cache"
+  resultado: confirmada
+  nota: "artefato. Spec de 2026-06-23 no mesmo commit; o tamanho exato dos catálogos foi generalizado (decisão do controlador, ADR 0011: números do processo, não do negócio)."
 - texto: "A degradação é observável na fila e nas métricas de cobertura"
   ref: classificacao-hibrida-adr-modelo-no-caminho
   localizacao: "Consequências, último item"
@@ -52,17 +57,42 @@ afirmacoes:
   localizacao: "ADR de 2026-06-25 (contexto e alternativa rejeitada) e ADR de 2026-06-26 (Contexto e Decisão)"
   resultado: confirmada
   nota: "artefato"
-- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06"
-  ref: classificacao-hibrida-adr-contrato-selado
-  localizacao: "datas dos cabeçalhos das fontes de ADR desta pasta (duas de 2026-06-22, duas de 2026-06-23, uma de 2026-06-25, uma de 2026-06-26)"
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-06-22"
+  ref: classificacao-hibrida-adr-configuracao-governada
+  localizacao: "cabeçalho da fonte"
   resultado: confirmada
-  nota: "artefato. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
-- texto: "De-para e normalização determinísticos; órfã sai para o chamador; limiar padrão 0,6 com override por fornecedor; canal A válido aplicado mesmo abaixo do limiar, que decide o registro da sugestão; exceção capturada só na chamada; flag desliga a etapa"
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-06-22"
+  ref: classificacao-hibrida-adr-tipo-padrao
+  localizacao: "cabeçalho da fonte"
+  resultado: confirmada
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-06-23"
+  ref: classificacao-hibrida-adr-modelo-no-caminho
+  localizacao: "cabeçalho da fonte"
+  resultado: confirmada
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-06-23"
+  ref: classificacao-hibrida-adr-camada-de-regras
+  localizacao: "cabeçalho da fonte"
+  resultado: confirmada
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-06-25 e 2026-06-26 (duas ADRs)"
+  ref: classificacao-hibrida-adr-contrato-selado
+  localizacao: "cabeçalho da fonte"
+  resultado: confirmada
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "Seis ADRs de 2026-06-22 a 2026-06-26 e uma sétima em 2026-08-06: esta fonte é de 2026-08-06 (a sétima)"
+  ref: classificacao-hibrida-adr-publicacao-imutavel
+  localizacao: "cabeçalho da fonte"
+  resultado: confirmada
+  nota: "artefato. As seis ADRs de classificação estão em adr-configuracao-governada, adr-tipo-padrao, adr-modelo-no-caminho, adr-camada-de-regras e adr-contrato-selado (que reúne duas); a sétima em adr-publicacao-imutavel. Conferido pela listagem da pasta de ADRs no commit fixado (ver execucoes)."
+- texto: "De-para e normalização determinísticos; órfã sai para o chamador; limiar padrão 0,6 com override por fornecedor; canal A válido aplicado mesmo abaixo do limiar, que decide o registro da sugestão; a guarda externa do núcleo captura qualquer exceção e degrada o lote; flag desliga a etapa"
   ref: classificacao-hibrida-codigo-cascata
   localizacao: "os três blocos de código e a nota final"
   resultado: confirmada
   nota: "artefato. Código lido no commit 9117a57 com git show, não na cópia de trabalho (que tinha alterações não commitadas no motor)."
-- texto: "Esqueleto selado e slots; sanitização e delimitação das nativas; guardrail do canal A contra a taxonomia viva e do canal B pelo tipo; prompt válido sem contexto; erros de programação propagam"
+- texto: "Esqueleto selado e slots; sanitização e delimitação das nativas; guardrail do canal A contra a taxonomia viva e do canal B pelo tipo; prompt válido sem contexto; o retry não repete erros de programação, mas a guarda externa do laço dos lotes (except Exception) ainda degrada o lote"
   ref: classificacao-hibrida-codigo-contrato
   localizacao: "seções do esqueleto, do guardrail e do lote"
   resultado: confirmada
@@ -87,7 +117,7 @@ afirmacoes:
   localizacao: "tabela, lista de testes e nota final"
   resultado: confirmada
   nota: "artefato. Contagem por git grep no commit fixado (ver execucoes). A ausência de eval é resultado de busca, não de declaração do time."
-- texto: "Lote de 20 × cerca de 3,3 s passa do timeout de 30 s; modelo fora do request HTTP; casar a resposta com o vocabulário; fornecedor com 100% pelo de-para; extrator que contornava o motor com cerca de 85 categorias contra 15; variável vazia no compose degradou os atores de modelo"
+- texto: "Lote de 20 × cerca de 3,3 s passa do timeout de 30 s; modelo fora do request HTTP; casar a resposta com o vocabulário; fornecedor com 100% pelo de-para; extrator que contornava o motor com várias vezes mais categorias distintas que as canônicas; variável vazia no compose degradou os atores de modelo"
   ref: classificacao-hibrida-licoes
   localizacao: "memória de 2026-07-03 e 2026-06-29; steering de solução de problemas"
   resultado: confirmada
@@ -113,7 +143,7 @@ execucoes:
   evidencia: "seis ADRs de classificação entre 2026-06-22 e 2026-06-26 e a de publicação de 2026-08-06; commits do lote e da reserva em 2026-06-26; motor do segundo módulo em 2026-06-29; serviço de publicação em 2026-08-06"
   data: '2026-11-03'
 revisao_adversarial:
-  revisor: "autorrevisão do redator, 2026-11-03; a conferência independente em lote (ADR 0005) fica com o controlador da Onda 1"
+  revisor: "autorrevisão do redator e revisão independente do controlador da Onda 1, 2026-11-03 (ADR 0005)"
   data: '2026-11-03'
   achados:
     - afirmacao: "o limiar decide se o canal A é aplicado"
@@ -128,3 +158,12 @@ revisao_adversarial:
     - afirmacao: "o time faria de novo"
       problema: "não há declaração do time sobre isso"
       tratamento: "a seção fala do que o time repetiu (segundo módulo) e registrou como regra; as recomendações são marcadas como leitura do curador"
+    - afirmacao: "a exceção é capturada só em volta da chamada e os erros de programação propagam"
+      problema: "revisão independente de 2026-11-03: no commit fixado, o núcleo do motor e o laço dos lotes têm guarda except Exception; o erro de programação só não é repetido pelo retry, e acaba degradado para o tipo padrão"
+      tratamento: "texto reescrito ('o retry não repete erros de programação, mas a guarda externa ainda degrada o lote'), fonte de código anotada e o fato usado em 'O que deu errado'"
+    - afirmacao: "números e termos do negócio (tamanho dos catálogos e da taxonomia, a contagem do extrator desviado, o uso da publicação, o esquema da versão, o critério do tipo padrão e a natureza do cliente, antes descrito como órgão público e agora como organização)"
+      problema: "revisão independente de 2026-11-03: a ADR 0011 publica os números do processo, não os do negócio, e juntos eles identificam a origem"
+      tratamento: "generalizados no caso, nas fontes, no registro e no frontmatter, por decisão do controlador; o dono pode devolver números depois"
+    - afirmacao: "a política alternativa não commitada citada em 'O que ficou fora'"
+      problema: "revisão independente: o caso não deve falar de trabalho fora do commit fixado"
+      tratamento: "retirada do caso; fica só neste registro"

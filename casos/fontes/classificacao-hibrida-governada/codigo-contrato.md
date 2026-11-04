@@ -1,4 +1,4 @@
-Trecho redigido de código do módulo que chama o modelo, no commit fixado no registro de verificação. Lido em 2026-11-03. O texto do esqueleto foi parafraseado e teve retirados o nome do órgão e a norma que ele citava; nomes de constante, de função e de variável de ambiente foram neutralizados.
+Trecho redigido de código do módulo que chama o modelo, no commit fixado no registro de verificação. Lido em 2026-11-03. O texto do esqueleto foi parafraseado e teve retirados o nome da organização e uma referência externa que ele citava; nomes de constante, de função e de variável de ambiente foram neutralizados.
 
 ## O esqueleto selado e os slots de contexto
 
@@ -7,7 +7,7 @@ Trecho redigido de código do módulo que chama o modelo, no commit fixado no re
 # editável pela interface. Papel, contrato dos dois canais, anti-injeção,
 # fluxo de emissão (sempre sugerir) e formato.
 ESQUELETO_SISTEMA = (
-    "Você é um especialista em classificação segundo a taxonomia canônica do órgão.\n\n"
+    "Você é um especialista em classificação segundo a taxonomia canônica da organização.\n\n"
     "Para cada categoria nativa, responda com um contrato de DOIS CANAIS:\n"
     "- Canal A: mapeie para EXATAMENTE UMA das categorias oficiais fornecidas, "
     "usando o nome EXATO. NUNCA invente nomes. Informe uma confiança de 0.0 a 1.0.\n"
@@ -34,11 +34,12 @@ Sem contexto no banco, o esqueleto selado ainda compõe um prompt válido; só c
 
 ```python
 def sanitizar(texto):
-    for termo in ["ignore", "forget", "instructions", "override", "system prompt"]:
-        texto = re.sub(re.escape(termo), "[REMOVED]", texto, flags=re.IGNORECASE)
-    return texto
+    # Troca por um marcador, sem diferenciar caixa, uma lista curta e fixa de
+    # termos típicos de instrução ao modelo (pedidos para ignorar, esquecer ou
+    # sobrepor instruções, e menções ao prompt de sistema).
+    ...
 
-TIPOS_VALIDOS = frozenset({...})   # os três tipos da taxonomia
+TIPOS_VALIDOS = frozenset({...})   # os tipos da taxonomia
 
 # Canal A: o nome devolvido é normalizado e comparado com a taxonomia viva;
 # fora dela, nome=None (a confiança é preservada para a decisão de limiar).
@@ -58,5 +59,6 @@ parametros = {"temperature": 0, "response_format": {"type": "json_object"},
 ```
 
 - Cada lote tem **degradação independente**: um lote que falha é logado e pulado, e os demais seguem; o chamador aplica o tipo padrão só às categorias ausentes.
-- Erros transitórios (limite de taxa, conexão, timeout, JSON inválido) têm retry com backoff; erros de programação propagam, para não mascarar bug como falha transitória.
+- Erros transitórios (limite de taxa, conexão, timeout, JSON inválido) têm retry com backoff; erros de programação não são repetidos e saem da chamada, para não mascarar bug como falha transitória.
+- Mas o laço dos lotes tem uma guarda `except Exception` em volta da chamada: qualquer exceção que saia dela, erro de programação incluído, faz o lote ser logado e pulado, e o chamador o leva ao tipo padrão. O núcleo do motor tem outra guarda `except Exception` igual (ver o trecho da cascata).
 - Com um **modelo de reserva** configurado (padrão: vazio, desligado), uma segunda passada vai **só** para as categorias não resolvidas pelo primário (ausentes ou vazias nos dois canais), e um lote do primário que falha é tentado de novo no de reserva antes de degradar. Guarda de custo: o de reserva nunca reclassifica o que o primário resolveu.
