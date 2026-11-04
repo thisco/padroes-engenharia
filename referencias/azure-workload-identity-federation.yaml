@@ -1,0 +1,10 @@
+id: azure-workload-identity-federation
+titulo: "Workload identity federation"
+organizacao: Microsoft
+url: https://learn.microsoft.com/en-us/entra/workload-id/workload-identity-federation
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "trechos 'Why use workload identity federation?' (segredo e certificado são risco e pedem rotação; a federação elimina o risco de vazar segredo), 'Supported scenarios' (GitHub Actions e outras plataformas) e 'How it works' (credencial federada com issuer, subject e audience iguais aos do token)"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

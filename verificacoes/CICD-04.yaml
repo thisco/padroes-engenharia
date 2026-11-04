@@ -1,0 +1,120 @@
+conteudo: CICD-04
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: a AWS recomenda com ênfase não guardar credencial AWS de longa duração em aplicação fora da AWS e pedir credencial temporária por federação OIDC
+  ref: aws-iam-oidc
+  localizacao: "abertura ('we strongly recommend that you do not store AWS credentials long-term in applications outside AWS'; 'request temporary AWS security credentials dynamically when needed using OIDC federation') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a credencial temporária é mapeada a um papel com só as permissões da tarefa
+  ref: aws-iam-oidc
+  localizacao: "abertura ('The supplied temporary credentials map to an AWS role that only has permissions needed to perform the tasks required by the application') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a federação OIDC da AWS serve a pipelines de CI/CD
+  ref: aws-iam-oidc
+  localizacao: "terceiro parágrafo ('machine-to-machine authentication (such as CI/CD pipelines, automated scripts, and serverless applications)') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a chave guardada no CI é de longa duração, o que a AWS pede para evitar
+  ref: aws-iam-oidc
+  localizacao: "abertura ('do not store AWS credentials long-term'; 'you don't have to embed and distribute long-term security credentials with your application') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o Google Cloud trata a chave de conta de serviço como credencial poderosa e risco de segurança
+  ref: gcp-workload-identity-federation
+  localizacao: "abertura ('service account keys are powerful credentials, and can present a security risk if they are not managed correctly') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a federação de identidade de carga dispensa a chave, inclusive para serviços de deploy como GitHub e GitLab
+  ref: gcp-workload-identity-federation
+  localizacao: "abertura e lista de provedores de identidade ('deployment services, such as GitHub and GitLab') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a condição de atributo do pool é uma expressão CEL que restringe quem autentica
+  ref: gcp-workload-identity-federation
+  localizacao: "trecho de condições de atributo ('An attribute condition is a CEL expression that can check assertion attributes and target attributes') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: segredo e certificado de aplicação são risco, precisam ser guardados com cuidado e rotacionados, e podem expirar
+  ref: azure-workload-identity-federation
+  localizacao: "'Why use workload identity federation?' ('These credentials pose a security risk and have to be stored securely and rotated regularly. You also run the risk of service downtime if the credentials expire') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a federação elimina o risco de vazar segredo
+  ref: azure-workload-identity-federation
+  localizacao: "'Why use workload identity federation?' ('eliminates the risk of leaking secrets or having certificates expire') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: na credencial federada do Azure, issuer, subject e audience precisam ser iguais aos do token
+  ref: azure-workload-identity-federation
+  localizacao: "nota de 'How it works' ('issuer, subject, and audience values must case-sensitively match the corresponding ... values contained in the token') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: no GitLab o job declara id_tokens com a audiência, e o token autentica o job no provedor de nuvem
+  ref: gitlab-oidc-nuvem
+  localizacao: "abertura ('Each job can be configured with ID tokens'; 'These JWTs can be used to authenticate with the OIDC-supported cloud provider such as AWS, Azure, GCP, or Vault') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: com o token OIDC não há segredo guardado no grupo ou no projeto, e a nuvem devolve credencial temporária
+  ref: gitlab-oidc-nuvem
+  localizacao: "benefícios ('Removes the need to store secrets in your GitLab group or project'; 'Temporary credentials can be retrieved from your cloud provider through OIDC') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a confiança pode exigir ref protegida (ref_protected)
+  ref: gitlab-oidc-nuvem
+  localizacao: "trecho 'Use the project that runs the job as the subject' ('add ref_protected to the sub claim components and require ref_protected:true in the policy') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o pipeline de MR vindo de outro projeto tem ref_protected false, e a condição sobre ref_protected o deixa de fora
+  ref: gitlab-oidc-nuvem
+  localizacao: "mesmo trecho ('When the source project and the target project are different, merge request pipelines have ref_protected:false') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o sub do GitLab tem o formato project_path:<grupo>/<projeto>:ref_type:<tipo>:ref:<branch>
+  ref: gitlab-oidc-aws
+  localizacao: "'Configure a role and trust', condição 'gitlab.com:sub': 'project_path:mygroup/myproject:ref_type:branch:ref:main' (aberta na web em 2026-11-04); o formato genérico também está em gitlab-oidc-nuvem ('project_path:{group}/{project}:ref_type:{type}:ref:{branch_name}')"
+  resultado: confirmada
+- texto: a política de confiança do exemplo da AWS fixa ref_type:branch:ref:main
+  ref: gitlab-oidc-aws
+  localizacao: "'Configure a role and trust' (mesma condição) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: na AWS, registra-se o GitLab como provedor de identidade OIDC e cria-se o papel com a política de confiança
+  ref: gitlab-oidc-aws
+  localizacao: "seções 'Add the identity provider' e 'Configure a role and trust' (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o job do GitLab pede o token por id_tokens e o troca por credencial temporária com aws sts assume-role-with-web-identity
+  ref: gitlab-oidc-aws
+  localizacao: "'Retrieve temporary credentials' (id_tokens GITLAB_OIDC_TOKEN com aud https://gitlab.example.com e assume-role-with-web-identity) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: no GitHub Actions o job precisa da permissão id-token write para pedir o token OIDC
+  ref: github-workflow-syntax
+  localizacao: "tabela de permissions, linha id-token ('Fetch an OpenID Connect (OIDC) token. This requires id-token: write') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o token de acesso que sai da troca é de curta duração, válido para um só job
+  ref: github-oidc
+  localizacao: "'Benefits of using OIDC' ('a short-lived access token that is only valid for a single job') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o sub do GitHub pode citar a branch (ref:refs/heads/main) ou o ambiente do job (environment:prod)
+  ref: github-oidc
+  localizacao: "'Understanding the OIDC token' ('repo:octo-org/octo-repo:environment:prod') e o exemplo 'repo:my-org/my-repo:ref:refs/heads/main' (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o IAM recomenda avaliar a condição token.actions.githubusercontent.com:sub na política de confiança do papel
+  ref: github-oidc-aws
+  localizacao: "'Configuring the role and trust policy' ('AWS Identity and Access Management (IAM) recommends that users evaluate the IAM condition key, token.actions.githubusercontent.com:sub') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o workflow do GitHub declara id-token write e usa a ação aws-actions/configure-aws-credentials com role-to-assume, fixada num commit
+  ref: github-oidc-aws
+  localizacao: "'Updating your GitHub Actions workflow' ('id-token: write   # This is required for requesting the JWT'; aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 com role-to-assume e aws-region) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+execucoes:
+- tipo: prompt
+  prompt: CICD-04-prompt-1
+  harness: execução manual pelo curador
+  ambiente: 'repositório Git novo no rascunho da sessão, main com um .gitlab-ci.yml de dois jobs (testes e implantar, este lendo AWS_ACCESS_KEY_ID e AWS_SECRET_ACCESS_KEY); {grupo/projeto} = grupo/projeto. O prompt foi seguido passo a passo pelo próprio curador, e não colado numa sessão nova de agente: o despacho desta frente proíbe subagente. Fica pendente a execução em sessão nova. Nenhuma chamada à AWS.'
+  resultado: passou
+  evidencia: 'passo 1: branch feat/2026-11-04-deploy-sem-chave; o job implantar, linhas 10 e 11; passo 2: id_tokens GITLAB_OIDC_TOKEN com aud https://gitlab.example.com, assume-role-with-web-identity com --role-arn "$ROLE_ARN" e a regra da branch padrão, o job testes intacto, o YAML carregado sem erro; passo 3: infra/politica-de-confianca.json, json.tool ok; passo 4: só a linha 16 (o export da credencial temporária); passo 5: commit 3595ec9 com os dois arquivos, sem trailer.'
+  data: '2026-11-04'
+revisao_adversarial:
+  revisor: autorrevisão do curador contra as fontes; a revisão em sessão independente fica com o controlador (o despacho desta frente proíbe subagente)
+  data: '2026-11-04'
+  achados:
+  - afirmacao: 'CICD-04, Como aparece quando falta: "A chave não expira sozinha"'
+    problema: '[ref] a página da Microsoft diz que segredo e certificado podem expirar e derrubar o serviço.'
+    tratamento: 'Tratado: o texto passou a dizer que a chave é de longa duração e precisa ser guardada e rotacionada.'
+  - afirmacao: 'CICD-04, Por ferramenta: aws-actions/configure-aws-credentials@v4'
+    problema: '[ref] a documentação mostra a ação fixada num commit, não numa tag.'
+    tratamento: 'Tratado: o Exemplo usa o mesmo commit da documentação.'
+  - afirmacao: 'CICD-04, Como aparece quando falta: "guardada com cuidado e rotacionada, que é o que a AWS e a Microsoft pedem para evitar"'
+    problema: '[ref] a rotação vem só da página da Microsoft; a da AWS fala em não guardar, embutir nem distribuir credencial de longa duração.'
+    tratamento: 'Tratado no registro: uma afirmação por fonte, a da AWS sobre a chave de longa duração e a da Microsoft sobre guardar e rotacionar, as duas confirmadas.'
+  - afirmacao: 'CICD-04, Exemplo'
+    problema: '[executabilidade] a troca de token não foi exercitada numa nuvem real.'
+    tratamento: 'Declarado em Como verificar.'

@@ -1,0 +1,10 @@
+id: gcp-workload-identity-federation
+titulo: "Workload Identity Federation"
+organizacao: Google Cloud
+url: https://docs.cloud.google.com/iam/docs/workload-identity-federation
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (acesso de cargas fora do Google Cloud por identidade federada, sem chave de conta de serviço, que é credencial poderosa e risco de segurança), a lista de provedores (serviços de deploy como GitHub e GitLab) e o trecho sobre condições de atributo (expressão CEL que restringe quem autentica)"
+dominios: [ci-cd]
+notas: "Lida na web em 2026-11-04; a URL antiga em cloud.google.com redireciona para docs.cloud.google.com."

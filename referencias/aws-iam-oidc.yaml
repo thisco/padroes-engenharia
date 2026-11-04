@@ -1,0 +1,10 @@
+id: aws-iam-oidc
+titulo: "OIDC federation"
+organizacao: Amazon Web Services
+url: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc.html
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (recomendação forte de não guardar credencial AWS de longa duração em aplicação fora da AWS; credencial temporária mapeada a um papel IAM; uso por pipelines de CI/CD)"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

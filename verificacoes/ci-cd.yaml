@@ -1,5 +1,6 @@
+# afirmações anteriores a 2026-11-04 não mudaram (conferidas em 2026-10-07); nova: CICD-04
 conteudo: ci-cd
-verificado_em: '2026-10-07'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o merge check Pipelines must succeed impede o merge de uma MR sem pipeline completo e bem-sucedido
@@ -9,6 +10,10 @@ afirmacoes:
 - texto: a capacidade de trabalhar em lotes pequenos é quebrar o trabalho em unidades curtas e independentes, o que reduz o tempo para ter retorno sobre as mudanças
   ref: dora-small-batches
   localizacao: página da capacidade, definição e benefícios (aberta na web em 2026-10-07)
+  resultado: confirmada
+- texto: o GitLab emite um token OIDC por job, que a nuvem troca por credencial temporária, sem segredo guardado no projeto
+  ref: gitlab-oidc-nuvem
+  localizacao: "abertura e benefícios ('Removes the need to store secrets in your GitLab group or project'; 'Temporary credentials can be retrieved from your cloud provider through OIDC') (aberta na web em 2026-11-04)"
   resultado: confirmada
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente
