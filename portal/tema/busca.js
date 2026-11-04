@@ -147,17 +147,26 @@
 
   // Escreve `texto` na área de transferência: Clipboard API quando existe e, senão (página fora de
   // contexto seguro, navegador antigo), um textarea temporário com `execCommand("copy")`.
-  function copiarTexto(texto, feito) {
+  function copiarTexto(texto, feito, falhou) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(texto).then(feito, function () {
-        copiarPorSelecao(texto, feito);
+        copiarPorSelecao(texto, feito, falhou);
       });
       return;
     }
-    copiarPorSelecao(texto, feito);
+    copiarPorSelecao(texto, feito, falhou);
   }
 
-  function copiarPorSelecao(texto, feito) {
+  function copiarPorSelecao(texto, feito, falhou) {
+    var foco = document.activeElement;
+    var selecao = null;
+    var faixa = null;
+    try {
+      selecao = window.getSelection ? window.getSelection() : null;
+      faixa = selecao && selecao.rangeCount ? selecao.getRangeAt(0) : null;
+    } catch (erro) {
+      faixa = null;
+    }
     var area = document.createElement("textarea");
     area.value = texto;
     area.setAttribute("readonly", "");
@@ -172,8 +181,21 @@
       deu = false;
     }
     document.body.removeChild(area);
+    try {
+      if (selecao && faixa) {
+        selecao.removeAllRanges();
+        selecao.addRange(faixa);
+      }
+      if (foco && foco.focus) {
+        foco.focus();
+      }
+    } catch (erro) {
+      /* devolver foco e seleção é cortesia: falhar aqui não desfaz a cópia */
+    }
     if (deu) {
       feito();
+    } else if (falhou) {
+      falhou();
     }
   }
 
@@ -187,12 +209,17 @@
         if (!codigo) {
           return;
         }
-        copiarTexto(codigo.textContent, function () {
-          botao.textContent = "Copiado";
+        function avisar(mensagem) {
+          botao.textContent = mensagem;
           setTimeout(function () {
             botao.textContent = texto;
           }, 2000);
-        });
+        }
+        copiarTexto(
+          codigo.textContent,
+          function () { avisar("Copiado"); },
+          function () { avisar("Não copiou"); }
+        );
       });
     });
   }
@@ -208,21 +235,20 @@
 
     function aplicar(id) {
       grupos.forEach(function (grupo) {
+        var alvo = grupo.querySelector('[role="tab"][data-harness="' + id + '"]') ? id : null;
+        if (!alvo) {
+          var primeira = grupo.querySelector('[role="tab"][data-harness]');
+          alvo = primeira ? primeira.getAttribute("data-harness") : null;
+        }
         var passo = grupo.closest("section.passo") || grupo.parentElement;
         grupo.querySelectorAll('[role="tab"][data-harness]').forEach(function (aba) {
-          var ativa = aba.getAttribute("data-harness") === id;
+          var ativa = aba.getAttribute("data-harness") === alvo;
           aba.setAttribute("aria-selected", ativa ? "true" : "false");
           aba.tabIndex = ativa ? 0 : -1;
         });
         passo.querySelectorAll('.painel[role="tabpanel"][data-harness]').forEach(function (painel) {
-          painel.hidden = painel.getAttribute("data-harness") !== id;
+          painel.hidden = painel.getAttribute("data-harness") !== alvo;
         });
-      });
-    }
-
-    function existe(id) {
-      return !!id && grupos.some(function (grupo) {
-        return !!grupo.querySelector('[role="tab"][data-harness="' + id + '"]');
       });
     }
 
@@ -246,16 +272,7 @@
     } catch (erro) {
       guardado = null;
     }
-    if (existe(guardado)) {
-      aplicar(guardado);
-      return;
-    }
-    grupos.forEach(function (grupo) {
-      var primeira = grupo.querySelector('[role="tab"][data-harness]');
-      if (primeira) {
-        aplicar(primeira.getAttribute("data-harness"));
-      }
-    });
+    aplicar(guardado);
   }
 
   // Passar o mouse ou o foco numa linha de peça acende a peça no desenho do ninho.
@@ -272,6 +289,11 @@
       linha.addEventListener("focusin", function () { marcar(true); });
       linha.addEventListener("focusout", function () { marcar(false); });
     });
+  }
+
+  // Só para os testes de comportamento: expõe as funções quando a página pede.
+  if (window.__portalTeste) {
+    window.__portal = { copiarTexto: copiarTexto, iniciarAbas: iniciarAbas, ligarFiltros: ligarFiltros, iniciarCopiar: iniciarCopiar };
   }
 
   document.addEventListener("DOMContentLoaded", function () {

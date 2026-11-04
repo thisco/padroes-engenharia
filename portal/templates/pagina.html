@@ -11,7 +11,7 @@
 {% for lista in listas %}
 <section aria-label="{{ lista.titulo }}">
   <h2>{{ lista.titulo }}</h2>
-{% if lista.itens and lista.itens[0].tempo is defined %}
+{% if lista.itens and lista.get('cartoes') %}
   <div class="grade">
 {% for item in lista.itens %}
     <article class="cartao">

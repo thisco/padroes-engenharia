@@ -669,13 +669,21 @@ def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
         daqui = [r for r in site.repo.receitas if r.meta.get("dominio") == faixa.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Domínio: {faixa.titulo}", "itens": [item(r) for r in daqui]}
+                {
+                    "titulo": f"Domínio: {faixa.titulo}",
+                    "itens": [item(r) for r in daqui],
+                    "cartoes": True,
+                }
             )
     for momento in site.espinha.momentos:
         daqui = [r for r in site.repo.receitas if r.meta.get("momento") == momento.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Etapa: {momento.rotulo}", "itens": [item(r) for r in daqui]}
+                {
+                    "titulo": f"Etapa: {momento.rotulo}",
+                    "itens": [item(r) for r in daqui],
+                    "cartoes": True,
+                }
             )
     return secoes_
 
@@ -685,7 +693,7 @@ COMO_FAZER_DESCRICAO = "Receitas passo a passo, com o resultado esperado e um pr
 
 def html_como_fazer(site: Site) -> str:
     listas = [
-        {"titulo": s["titulo"], "itens": s["itens"], "vazio": ""}
+        {"titulo": s["titulo"], "itens": s["itens"], "vazio": "", "cartoes": s["cartoes"]}
         for s in _receitas_do_como_fazer(site)
     ]
     return pagina_generica(
