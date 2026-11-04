@@ -65,10 +65,30 @@ def _caminho_seguro(relativo: str) -> bool:
     )
 
 
+def _url_aceita(url: str) -> bool:
+    partes = urllib.parse.urlsplit(url)
+    esquema = partes.scheme.lower()
+    return esquema == "https" or (esquema == "http" and partes.hostname in LOCAIS)
+
+
+class _SoRedirecionamentoSeguro(urllib.request.HTTPRedirectHandler):
+    """Recusa, antes de segui-lo, o redirecionamento que rebaixa para http fora da máquina."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not _url_aceita(newurl):
+            raise ErroDoPacote(
+                f"{req.full_url}: redirecionamento para {newurl} recusado (só https, ou http "
+                "em localhost); aponte --origem para a URL final em https"
+            )
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+_ABRIDOR = urllib.request.build_opener(_SoRedirecionamentoSeguro)
+
+
 def _leitor(origem: str):
     if e_url(origem):
-        url = urllib.parse.urlsplit(origem)
-        if url.scheme.lower() == "http" and url.hostname not in LOCAIS:
+        if urllib.parse.urlsplit(origem).scheme.lower() != "file" and not _url_aceita(origem):
             raise ErroDoPacote(
                 f"{origem}: http sem TLS só para localhost; use https (ou a pasta do pacote)"
             )
@@ -77,7 +97,9 @@ def _leitor(origem: str):
         def ler_url(relativo: str) -> bytes:
             url = base + relativo
             try:
-                with urllib.request.urlopen(url, timeout=TEMPO_LIMITE) as resposta:
+                with _ABRIDOR.open(url, timeout=TEMPO_LIMITE) as resposta:
+                    if not _url_aceita(resposta.geturl()) and not url.lower().startswith("file:"):
+                        raise ErroDoPacote(f"{url}: terminou em {resposta.geturl()}, recusado")
                     return resposta.read()
             except (urllib.error.URLError, OSError) as erro:
                 raise ErroDoPacote(f"{url}: não foi possível baixar ({erro})") from erro
