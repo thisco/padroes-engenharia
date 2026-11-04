@@ -8,12 +8,13 @@ que os IDs batam com `exemplos.prompts_de`.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 from markdown_it import MarkdownIt
 
 from portal.gerador.carregar import Conteudo
-from portal.gerador.citacoes import numerar
+from portal.gerador.citacoes import MARCADOR, numerar
 from portal.gerador.exemplos import blocos, expandir_inclusoes, secoes
 from portal.gerador.markdown import para_html
 from portal.gerador.renderizar import (
@@ -83,6 +84,24 @@ def _dividir_h3(texto: str) -> tuple[str, list[tuple[str, str]]]:
     return abertura, subsecoes
 
 
+def preambulo_de(texto: str) -> str:
+    """O texto antes do primeiro H2, cortado pela AST (um `## ` dentro de cerca não conta)."""
+    for t in _MARKDOWN.parse(texto):
+        if t.type == "heading_open" and t.tag == "h2" and t.map:
+            return "\n".join(texto.split("\n")[: t.map[0]])
+    return texto
+
+
+def _sem_citacoes(texto: str) -> str:
+    """O texto sem os `[ref:id]` (e o espaço antes deles), preservando as quebras de linha."""
+    return re.sub(r"[ \t]*" + MARCADOR.pattern, "", texto)
+
+
+def _sem_prefixo(titulo_h2: str) -> str:
+    """O título do H2 sem o prefixo `Passo N: `."""
+    return re.sub(r"^Passo \d+:\s*", "", titulo_h2).strip() or titulo_h2
+
+
 def _ids_dos_harnesses(site: Site) -> dict[str, str]:
     return {
         str(f.meta.get("titulo")): str(f.meta.get("id") or f.caminho_relativo)
@@ -95,29 +114,30 @@ def estrutura(site: Site, roteiro: Conteudo) -> Roteiro:
     """O prompt inicial, os passos e as abas de cada passo, com os IDs de prompt do corpo."""
     texto, _ = numerar(roteiro.corpo)
     texto = expandir_inclusoes(texto, site.raiz)
-    preambulo = texto.split("\n## ", 1)[0]
+    preambulo = preambulo_de(texto)
     chave = roteiro.chave
     contados = _prompts_em(preambulo)
     inicial = [b for b in blocos(preambulo) if b.linguagem == "prompt"]
     ids = _ids_dos_harnesses(site)
     declarados = roteiro.meta.get("passos") or []
     passos = []
-    for n, (_, trecho) in enumerate(secoes(texto), start=1):
+    for n, (titulo_h2, trecho) in enumerate(secoes(texto), start=1):
         meta = declarados[n - 1] if n <= len(declarados) else {}
         abertura, subsecoes = _dividir_h3(trecho)
         html = para_html(abertura, chave, contados)
         contados += _prompts_em(abertura)
         harnesses = []
         for titulo, sub in subsecoes:
-            harnesses.append(
-                Harness(ids.get(titulo, titulo), titulo, para_html(sub, chave, contados))
-            )
+            if titulo not in ids:
+                raise ValueError(f"{roteiro.caminho_relativo}: ### {titulo} não é harness")
+            harnesses.append(Harness(ids[titulo], titulo, para_html(sub, chave, contados)))
             contados += _prompts_em(sub)
         quem = str(meta.get("quem", "voce"))
+        titulo_passo = str(meta.get("titulo") or "") or _sem_prefixo(titulo_h2)
         passos.append(
             Passo(
                 n,
-                str(meta.get("titulo", "")),
+                titulo_passo,
                 quem,
                 ROTULO_QUEM.get(quem, quem),
                 html,
@@ -172,8 +192,8 @@ def md_roteiro_passos(site: Site, roteiro: Conteudo) -> str:
 def skill_md(site: Site, roteiro: Conteudo) -> str:
     """A skill do pacote: o roteiro em Markdown de origem, com a URL do portal já trocada."""
     meta = roteiro.meta
-    texto = expandir_inclusoes(roteiro.corpo, site.raiz)
-    preambulo = texto.split("\n## ", 1)[0].strip("\n")
+    texto = _sem_citacoes(expandir_inclusoes(roteiro.corpo, site.raiz))
+    preambulo = preambulo_de(texto).strip("\n")
     descricao = " ".join(str(meta["objetivo"]).split())
     descricao = descricao.replace("\\", "\\\\").replace('"', '\\"')
     declarados = meta.get("passos") or []
@@ -182,11 +202,13 @@ def skill_md(site: Site, roteiro: Conteudo) -> str:
         f"# {meta['titulo']}",
         f"Porta: {meta.get('porta', '')}. Siga os passos na ordem. Nos passos marcados "
         "'Você decide', pare, mostre o resultado e espere a aprovação da pessoa.",
-        f"## Prompt inicial\n\n{preambulo}",
     ]
-    for n, (_, trecho) in enumerate(secoes(texto), start=1):
+    if preambulo.strip():
+        partes.append(f"## Prompt inicial\n\n{preambulo}")
+    for n, (titulo_h2, trecho) in enumerate(secoes(texto), start=1):
         passo = declarados[n - 1] if n <= len(declarados) else {}
         quem = str(passo.get("quem", "voce"))
-        titulo = f"## Passo {n}: {passo.get('titulo', '')} ({ROTULO_QUEM.get(quem, quem)})"
+        nome = str(passo.get("titulo") or "") or _sem_prefixo(titulo_h2)
+        titulo = f"## Passo {n}: {nome} ({ROTULO_QUEM.get(quem, quem)})"
         partes.append(f"{titulo}\n\n{trecho.strip(chr(10))}")
     return "\n\n".join(partes).replace("{URL do portal}", url_portal(site).rstrip("/")) + "\n"

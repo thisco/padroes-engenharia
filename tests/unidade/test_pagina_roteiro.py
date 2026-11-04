@@ -1,5 +1,10 @@
 """Página do roteiro: estrutura, stepper, abas por harness, `.md` gêmeo, llms.txt e prompts."""
 
+import re
+from dataclasses import replace
+
+import pytest
+
 from portal.gerador.paginas import prompts
 from portal.gerador.roteiros import estrutura, html_roteiro_passos, md_roteiro_passos
 from portal.gerador.saidas import emitir
@@ -116,3 +121,70 @@ def test_saidas_llms_e_prompts(tmp_path):
     assert item["url"] == (
         "https://p.exemplo/roteiros/projeto-novo.html#roteiro-projeto-novo-prompt-1"
     )
+
+
+def test_h2_dentro_da_cerca_do_prompt_inicial_nao_trunca_o_preambulo():
+    corpo = fabrica.CORPO_ROTEIRO.replace(
+        "Leia {URL do portal} e conduza o primeiro dia deste projeto.\n",
+        "Faça assim:\n## Título falso\nDepois siga.\n",
+    )
+    s = fabrica.site(fabrica.roteiro(corpo=corpo), KIRO, fabrica.pratica(), fabrica.referencia())
+    r = estrutura(s, s.repo.roteiros[0])
+    assert "Depois siga." in r.prompt_inicial_texto
+    assert 'id="roteiro-projeto-novo-prompt-1"' in r.prompt_inicial_html
+    assert [p.n for p in r.passos] == [1, 2]
+    assert 'id="roteiro-projeto-novo-prompt-1"' not in r.passos[0].html
+
+
+def test_titulo_do_passo_nunca_vazio_sem_meta_correspondente():
+    meta = fabrica.meta_roteiro(passos=[{"titulo": "Abrir o harness", "quem": "voce"}])
+    s = fabrica.site(fabrica.roteiro(meta=meta), KIRO, fabrica.pratica(), fabrica.referencia())
+    r = estrutura(s, s.repo.roteiros[0])
+    assert [p.titulo for p in r.passos] == ["Abrir o harness", "Instalar o pacote"]
+
+
+def test_ids_batem_com_prompts_mesmo_com_inclusao(tmp_path):
+    (tmp_path / "exemplos").mkdir()
+    (tmp_path / "exemplos/guia.md").write_text(
+        "## Seção do arquivo\n```prompt\nnão é prompt do roteiro\n```\n", encoding="utf-8"
+    )
+    incluir = "<!-- incluir: exemplos/guia.md -->"
+    corpo = fabrica.CORPO_ROTEIRO.replace(
+        "O agente instala o pacote.\n",
+        f"O agente instala o pacote.\n\n{incluir}\n\n```prompt\nInstale.\n```\n",
+    )
+    base = fabrica.site(fabrica.roteiro(corpo=corpo), KIRO, fabrica.pratica(), fabrica.referencia())
+    s = replace(base, raiz=tmp_path)
+    r = estrutura(s, s.repo.roteiros[0])
+    na_pagina = set(re.findall(r'id="(roteiro-projeto-novo-prompt-\d+)"', r.passos[1].html))
+    assert na_pagina == {i["id"] for i in prompts(s)} - {"roteiro-projeto-novo-prompt-1"}
+
+
+def test_h3_que_nao_e_harness_falha_claro():
+    corpo = fabrica.CORPO_ROTEIRO.replace("### Kiro", "### Vim")
+    s = fabrica.site(fabrica.roteiro(corpo=corpo), KIRO, fabrica.pratica(), fabrica.referencia())
+    with pytest.raises(ValueError, match="Vim"):
+        estrutura(s, s.repo.roteiros[0])
+
+
+def test_skill_md_preambulo_pela_ast_sem_citacoes_e_sem_secao_vazia():
+    from portal.gerador.roteiros import skill_md
+
+    corpo = fabrica.CORPO_ROTEIRO.replace(
+        "Leia {URL do portal} e conduza o primeiro dia deste projeto.\n",
+        "Faça assim:\n## Título falso\nDepois siga.\n",
+    ).replace("O agente instala o pacote.", "O agente instala o pacote [ref:ref-forte].")
+    s = fabrica.site(fabrica.roteiro(corpo=corpo), KIRO, fabrica.pratica(), fabrica.referencia())
+    md = skill_md(s, s.repo.roteiros[0])
+    assert "## Prompt inicial\n\n```prompt\nFaça assim:\n## Título falso\nDepois siga.\n```" in md
+    assert md.count("## Passo 1:") == 1 and md.count("## Passo 2:") == 1
+    assert "[ref:" not in md and "O agente instala o pacote." in md
+
+    sem_preambulo = (
+        "## Passo 1: Abrir o harness\n\nAbra.\n\n## Passo 2: Instalar o pacote\n\nInstale.\n"
+    )
+    s = fabrica.site(
+        fabrica.roteiro(corpo=sem_preambulo), KIRO, fabrica.pratica(), fabrica.referencia()
+    )
+    md = skill_md(s, s.repo.roteiros[0])
+    assert "## Prompt inicial" not in md and md.count("## Passo 1:") == 1
