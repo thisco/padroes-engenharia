@@ -1,0 +1,233 @@
+{
+  "catalogo": {
+    "commit": "badafca5c4c9800ef44110c2891ff9014ea0d1ab",
+    "nome": "Padrões de Engenharia",
+    "versao": "1.1.0"
+  },
+  "regras": [
+    {
+      "dominio": "contratos-api",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "API-02",
+      "mensagem": "API-02: o contrato da API tem mudança incompatível sem versão major nova e sem ADR nova; torne a mudança compatível, ou suba a major em info.version e registre a ADR (API-01). Como aplicar: <URL do portal>/praticas/API-02.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/API-02.md",
+      "verificador": "verificadores/api_02.py"
+    },
+    {
+      "dominio": "ci-cd",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "CICD-01",
+      "mensagem": null,
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/CICD-01.md",
+      "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+    },
+    {
+      "dominio": "ci-cd",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "CICD-02",
+      "mensagem": "CICD-02: a MR passou do teto de arquivos ou de linhas; divida em MRs independentes, cada uma verde, em vez de subir o limite. Como aplicar: <URL do portal>/praticas/CICD-02.md#como-aplicar",
+      "momento": "enquanto-escreve",
+      "url": "http://localhost:8000/praticas/CICD-02.md",
+      "verificador": "verificadores/cicd_02.py"
+    },
+    {
+      "dominio": "privacidade-lgpd",
+      "forca": "bloqueia",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "tests/**",
+            "logs/**",
+            "prompts/**"
+          ],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "pre-commit",
+          "ferramenta": []
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "LGPD-02",
+      "mensagem": "LGPD-02: CPF ou e-mail em claro em teste, log ou prompt; troque por [CPF] e [EMAIL] ou por dado sintético (CPF gerado na hora, e-mail em example.com, example.org, example.net ou .test). Como aplicar: <URL do portal>/praticas/LGPD-02.md#como-aplicar",
+      "momento": "enquanto-escreve",
+      "url": "http://localhost:8000/praticas/LGPD-02.md",
+      "verificador": "verificadores/lgpd_02.py"
+    },
+    {
+      "dominio": "construir-com-ia",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "P1-05",
+      "mensagem": null,
+      "momento": "antes-de-escrever",
+      "url": "http://localhost:8000/praticas/P1-05.md",
+      "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+    },
+    {
+      "dominio": "construir-com-ia",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "P1-06",
+      "mensagem": null,
+      "momento": "antes-de-escrever",
+      "url": "http://localhost:8000/praticas/P1-06.md",
+      "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+    },
+    {
+      "dominio": "construir-com-ia",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "P1-09",
+      "mensagem": null,
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/P1-09.md",
+      "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+    },
+    {
+      "dominio": "seguranca",
+      "forca": "bloqueia",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": "(?i)>|\\btee\\b|\\b(?:sed|perl)\\b",
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "shell"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "pre-commit",
+          "ferramenta": []
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "SEG-02",
+      "mensagem": "SEG-02: segredo em claro (chave privada, chave de acesso da AWS, token do GitHub, do GitLab ou do Slack, chave de provedor de modelo ou senha em literal); leia o valor de variável de ambiente e, se ele já foi publicado, rotacione a credencial. Como aplicar: <URL do portal>/praticas/SEG-02.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/SEG-02.md",
+      "verificador": "verificadores/seg_02.py"
+    },
+    {
+      "dominio": "seguranca",
+      "forca": "pede-aprovacao",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "dependencias-aprovadas.txt",
+            "**/dependencias-aprovadas.txt",
+            "pyproject.toml",
+            "**/pyproject.toml",
+            "requirements*.txt",
+            "**/requirements*.txt",
+            "package.json",
+            "**/package.json",
+            "go.mod",
+            "**/go.mod",
+            "pom.xml",
+            "**/pom.xml",
+            "build.gradle*",
+            "**/build.gradle*",
+            "Cargo.toml",
+            "**/Cargo.toml"
+          ],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": "(?i)\\b(?:npx|bunx|uvx)\\b|\\b(?:npm|pnpm|yarn|bun|pip[0-9.]*|pipx|uv|poetry|pdm|pipenv|cargo|go)\\b[\\s\\S]*\\b(?:install|add|get|i|dlx|exec|x|run|tidy|tool|set)\\b|(?:requirements[\\w.-]*\\.txt|package\\.json|pyproject\\.toml|go\\.mod|pom\\.xml|build\\.gradle[\\w.]*|cargo\\.toml|dependencias-aprovadas\\.txt)",
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "shell"
+          ]
+        }
+      ],
+      "id": "SEG-03",
+      "mensagem": "SEG-03: dependência nova, fonte de pacotes alterada, ou pacote instalado ou executado pela CLI; proponha o pacote com o motivo e espere a aprovação de uma pessoa, que a registra em dependencias-aprovadas.txt. Como aplicar: <URL do portal>/praticas/SEG-03.md#como-aplicar",
+      "momento": "enquanto-escreve",
+      "url": "http://localhost:8000/praticas/SEG-03.md",
+      "verificador": "verificadores/seg_03.py"
+    }
+  ],
+  "versao_formato": 1
+}

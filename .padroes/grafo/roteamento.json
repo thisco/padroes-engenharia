@@ -1,0 +1,2017 @@
+{
+  "celulas": [
+    {
+      "aplica": [
+        "skill:sdd-lifecycle",
+        "steering:sdd-processo"
+      ],
+      "dominio": "construir-com-ia",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-01",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              },
+              {
+                "id": "kiro",
+                "url": "http://localhost:8000/ferramentas/kiro.md"
+              },
+              {
+                "id": "antigravity",
+                "url": "http://localhost:8000/ferramentas/antigravity.md"
+              },
+              {
+                "id": "copilot",
+                "url": "http://localhost:8000/ferramentas/copilot.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-01.md",
+          "md_url": "http://localhost:8000/praticas/P1-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Classificar toda mudança em tier antes de codar"
+        },
+        {
+          "aplica": [
+            "steering:sdd-processo",
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-03",
+          "links": {
+            "aplica": [
+              {
+                "item": "steering:sdd-processo",
+                "url": null
+              },
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              },
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [
+              {
+                "id": "ligar-ci-gitlab-travas",
+                "url": "http://localhost:8000/receitas/ligar-ci-gitlab-travas.md"
+              }
+            ],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-03.md",
+          "md_url": "http://localhost:8000/praticas/P1-03.md",
+          "mecanismo": null,
+          "status": "adotar",
+          "titulo": "Mantenha a constituição curta e carregada em todo turno"
+        },
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-04",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-04.md",
+          "md_url": "http://localhost:8000/praticas/P1-04.md",
+          "mecanismo": null,
+          "status": "adotar",
+          "titulo": "Escreva a spec como delta da mudança"
+        },
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "avisa",
+          "id": "P1-05",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-05.md",
+          "md_url": "http://localhost:8000/praticas/P1-05.md",
+          "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+          "status": "experimentar",
+          "titulo": "Marque a ambiguidade na spec e resolva antes do plano"
+        },
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "avisa",
+          "id": "P1-06",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-06.md",
+          "md_url": "http://localhost:8000/praticas/P1-06.md",
+          "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+          "status": "adotar",
+          "titulo": "Registre quem aprovou a spec antes do plano"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P1-07",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P1-07.md",
+          "md_url": "http://localhost:8000/praticas/P1-07.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Aplique o guia oficial do fornecedor ao adotar ou trocar de modelo"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:sdd-lifecycle"
+      ],
+      "dominio": "construir-com-ia",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-08",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-08.md",
+          "md_url": "http://localhost:8000/praticas/P1-08.md",
+          "mecanismo": null,
+          "status": "avaliar",
+          "titulo": "Proporcione o tamanho da spec ao risco"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:sdd-lifecycle"
+      ],
+      "dominio": "construir-com-ia",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "avisa",
+          "id": "P1-09",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-09.md",
+          "md_url": "http://localhost:8000/praticas/P1-09.md",
+          "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+          "status": "adotar",
+          "titulo": "Revise contra a spec, com veredito por requisito"
+        },
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-10",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-10.md",
+          "md_url": "http://localhost:8000/praticas/P1-10.md",
+          "mecanismo": null,
+          "status": "avaliar",
+          "titulo": "Reconcilie o drift entre spec e código antes do merge"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:sdd-lifecycle"
+      ],
+      "dominio": "construir-com-ia",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-11",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "claude-code",
+                "url": "http://localhost:8000/ferramentas/claude-code.md"
+              },
+              {
+                "id": "codex",
+                "url": "http://localhost:8000/ferramentas/codex.md"
+              }
+            ],
+            "receitas": [],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/P1-11.md",
+          "md_url": "http://localhost:8000/praticas/P1-11.md",
+          "mecanismo": null,
+          "status": "adotar",
+          "titulo": "Arquive a spec e destile o permanente em steering e ADR"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "arquitetura",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "ARQ-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/ARQ-01.md",
+          "md_url": "http://localhost:8000/praticas/ARQ-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Decisão de arquitetura vira ADR antes do código"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "ARQ-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/ARQ-04.md",
+          "md_url": "http://localhost:8000/praticas/ARQ-04.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "C4 em dois níveis como fonte, não como ilustração"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "arquitetura",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "ARQ-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/ARQ-03.md",
+          "md_url": "http://localhost:8000/praticas/ARQ-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Portas e adaptadores: o domínio não importa framework, e o linter impõe"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "arquitetura",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "ARQ-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/ARQ-02.md",
+          "md_url": "http://localhost:8000/praticas/ARQ-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "arquitetura",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "contratos-api",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "API-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/API-01.md",
+          "md_url": "http://localhost:8000/praticas/API-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Contrato de API versionado: mudança incompatível vira versão nova e ADR"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "contratos-api",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "enquanto-escreve",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "contratos-api",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "API-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/API-02.md",
+          "md_url": "http://localhost:8000/praticas/API-02.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "API-02: o contrato da API tem mudança incompatível sem versão major nova e sem ADR nova; torne a mudança compatível, ou suba a major em info.version e registre a ADR (API-01). Como aplicar: <URL do portal>/praticas/API-02.md#como-aplicar",
+            "verificador": "verificadores/api_02.py"
+          },
+          "status": "experimentar",
+          "titulo": "Teste de contrato no CI: quebra de contrato reprova o merge"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "contratos-api",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [
+        "skill:estados-de-interface"
+      ],
+      "dominio": "frontend-ux",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:estados-de-interface"
+          ],
+          "forca": "orienta",
+          "id": "UX-02",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:estados-de-interface",
+                "url": "http://localhost:8000/.well-known/skills/estados-de-interface/SKILL.md"
+              }
+            ],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/UX-02.md",
+          "md_url": "http://localhost:8000/praticas/UX-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Protótipo antes do código, e o estado vazio não é erro"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:estados-de-interface"
+      ],
+      "dominio": "frontend-ux",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:estados-de-interface"
+          ],
+          "forca": "orienta",
+          "id": "UX-01",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:estados-de-interface",
+                "url": "http://localhost:8000/.well-known/skills/estados-de-interface/SKILL.md"
+              }
+            ],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/UX-01.md",
+          "md_url": "http://localhost:8000/praticas/UX-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Toda tela tem os quatro estados: carregando, vazio, erro e sucesso"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "frontend-ux",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-do-merge",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "frontend-ux",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "dados-migrations",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-de-escrever",
+      "praticas": []
+    },
+    {
+      "aplica": [
+        "skill:migrations-reversiveis"
+      ],
+      "dominio": "dados-migrations",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:migrations-reversiveis"
+          ],
+          "forca": "orienta",
+          "id": "DAD-02",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:migrations-reversiveis",
+                "url": "http://localhost:8000/.well-known/skills/migrations-reversiveis/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "flyway",
+                "url": "http://localhost:8000/ferramentas/flyway.md"
+              },
+              {
+                "id": "alembic",
+                "url": "http://localhost:8000/ferramentas/alembic.md"
+              }
+            ],
+            "receitas": [
+              {
+                "id": "adicionar-migration-corretiva",
+                "url": "http://localhost:8000/receitas/adicionar-migration-corretiva.md"
+              }
+            ],
+            "starter": null
+          },
+          "md": "praticas/DAD-02.md",
+          "md_url": "http://localhost:8000/praticas/DAD-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Expanda e contraia: a mudança de schema em duas etapas compatíveis"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:migrations-reversiveis"
+      ],
+      "dominio": "dados-migrations",
+      "estado": "ok",
+      "forca_max": "bloqueia",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:migrations-reversiveis"
+          ],
+          "forca": "bloqueia",
+          "id": "DAD-01",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:migrations-reversiveis",
+                "url": "http://localhost:8000/.well-known/skills/migrations-reversiveis/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "flyway",
+                "url": "http://localhost:8000/ferramentas/flyway.md"
+              },
+              {
+                "id": "alembic",
+                "url": "http://localhost:8000/ferramentas/alembic.md"
+              },
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              }
+            ],
+            "receitas": [
+              {
+                "id": "ligar-ci-gitlab-travas",
+                "url": "http://localhost:8000/receitas/ligar-ci-gitlab-travas.md"
+              }
+            ],
+            "starter": {
+              "id": "sdd-scaffold",
+              "url": "http://localhost:8000/starters/sdd-scaffold.md"
+            }
+          },
+          "md": "praticas/DAD-01.md",
+          "md_url": "http://localhost:8000/praticas/DAD-01.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "**/migration/**",
+                  "**/migrations/**",
+                  "**/alembic/versions/**"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "caminhos": [
+                  "**/migration/**",
+                  "**/migrations/**",
+                  "**/alembic/versions/**"
+                ],
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "DAD-01: migration já aplicada não se edita; crie a próxima migration da sequência e declare o rollback no plano. Como aplicar: <URL do portal>/praticas/DAD-01.md#como-aplicar",
+            "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
+          },
+          "status": "adotar",
+          "titulo": "Migration já aplicada não se edita"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "dados-migrations",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "privacidade-lgpd",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "LGPD-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/LGPD-01.md",
+          "md_url": "http://localhost:8000/praticas/LGPD-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Classifique o dado pessoal antes de escrever"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "privacidade-lgpd",
+      "estado": "ok",
+      "forca_max": "bloqueia",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "bloqueia",
+          "id": "LGPD-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/LGPD-02.md",
+          "md_url": "http://localhost:8000/praticas/LGPD-02.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "tests/**",
+                  "logs/**",
+                  "prompts/**"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "LGPD-02: CPF ou e-mail em claro em teste, log ou prompt; troque por [CPF] e [EMAIL] ou por dado sintético (CPF gerado na hora, e-mail em example.com, example.org, example.net ou .test). Como aplicar: <URL do portal>/praticas/LGPD-02.md#como-aplicar",
+            "verificador": "verificadores/lgpd_02.py"
+          },
+          "status": "experimentar",
+          "titulo": "Dado pessoal não entra em prompt, log nem teste sem máscara"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "privacidade-lgpd",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-do-merge",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "privacidade-lgpd",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "qualidade-bdd",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-de-escrever",
+      "praticas": []
+    },
+    {
+      "aplica": [
+        "steering:qualidade"
+      ],
+      "dominio": "qualidade-bdd",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [
+            "steering:qualidade"
+          ],
+          "forca": "orienta",
+          "id": "QLD-01",
+          "links": {
+            "aplica": [
+              {
+                "item": "steering:qualidade",
+                "url": null
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "pytest",
+                "url": "http://localhost:8000/ferramentas/pytest.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/QLD-01.md",
+          "md_url": "http://localhost:8000/praticas/QLD-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Lógica começa por um teste que falha, com as duas execuções no plano"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "steering:qualidade"
+      ],
+      "dominio": "qualidade-bdd",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [
+            "steering:qualidade"
+          ],
+          "forca": "orienta",
+          "id": "QLD-03",
+          "links": {
+            "aplica": [
+              {
+                "item": "steering:qualidade",
+                "url": null
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              },
+              {
+                "id": "pytest",
+                "url": "http://localhost:8000/ferramentas/pytest.md"
+              }
+            ],
+            "receitas": [
+              {
+                "id": "ligar-ci-gitlab-travas",
+                "url": "http://localhost:8000/receitas/ligar-ci-gitlab-travas.md"
+              }
+            ],
+            "starter": null
+          },
+          "md": "praticas/QLD-03.md",
+          "md_url": "http://localhost:8000/praticas/QLD-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Validação local rígida: o que o CI roda, roda antes do push"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "steering:qualidade",
+        "steering:troubleshooting"
+      ],
+      "dominio": "qualidade-bdd",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [
+            "steering:qualidade",
+            "steering:troubleshooting"
+          ],
+          "forca": "orienta",
+          "id": "QLD-02",
+          "links": {
+            "aplica": [
+              {
+                "item": "steering:qualidade",
+                "url": null
+              },
+              {
+                "item": "steering:troubleshooting",
+                "url": null
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              },
+              {
+                "id": "pytest",
+                "url": "http://localhost:8000/ferramentas/pytest.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/QLD-02.md",
+          "md_url": "http://localhost:8000/praticas/QLD-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Bug vira teste que reproduz o defeito, depois vira regra"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "infra-iac",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "IAC-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/IAC-01.md",
+          "md_url": "http://localhost:8000/praticas/IAC-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Ambiente local reproduzível por compose, com ordem de rebuild escrita"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "infra-iac",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "enquanto-escreve",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "infra-iac",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "IAC-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "opentofu",
+                "url": "http://localhost:8000/ferramentas/opentofu.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/IAC-02.md",
+          "md_url": "http://localhost:8000/praticas/IAC-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Infra declarada em código, com o plano de mudança revisado no PR"
+        }
+      ]
+    },
+    {
+      "aplica": [
+        "skill:migrations-reversiveis"
+      ],
+      "dominio": "infra-iac",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [
+            "skill:migrations-reversiveis"
+          ],
+          "forca": "orienta",
+          "id": "IAC-03",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:migrations-reversiveis",
+                "url": "http://localhost:8000/.well-known/skills/migrations-reversiveis/SKILL.md"
+              }
+            ],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/IAC-03.md",
+          "md_url": "http://localhost:8000/praticas/IAC-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Rollback declarado e testado antes do deploy"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ci-cd",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-de-escrever",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "ci-cd",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "CICD-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/CICD-02.md",
+          "md_url": "http://localhost:8000/praticas/CICD-02.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "CICD-02: a MR passou do teto de arquivos ou de linhas; divida em MRs independentes, cada uma verde, em vez de subir o limite. Como aplicar: <URL do portal>/praticas/CICD-02.md#como-aplicar",
+            "verificador": "verificadores/cicd_02.py"
+          },
+          "status": "experimentar",
+          "titulo": "Lote pequeno: MR curta, frequente e verde"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ci-cd",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "CICD-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              },
+              {
+                "id": "sdd-scaffold",
+                "url": "http://localhost:8000/ferramentas/sdd-scaffold.md"
+              }
+            ],
+            "receitas": [
+              {
+                "id": "ligar-ci-gitlab-travas",
+                "url": "http://localhost:8000/receitas/ligar-ci-gitlab-travas.md"
+              }
+            ],
+            "starter": null
+          },
+          "md": "praticas/CICD-01.md",
+          "md_url": "http://localhost:8000/praticas/CICD-01.md",
+          "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+          "status": "experimentar",
+          "titulo": "Pipeline obrigatória com gates: lint, suíte e verificador de PR"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ci-cd",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "CICD-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/CICD-03.md",
+          "md_url": "http://localhost:8000/praticas/CICD-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Entrega rastreável: tag semântica, changelog e artefato do commit"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "observabilidade",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-de-escrever",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "observabilidade",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "OBS-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/OBS-01.md",
+          "md_url": "http://localhost:8000/praticas/OBS-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Log estruturado, correlacionado e sem dado pessoal"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "observabilidade",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "antes-do-merge",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "observabilidade",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "OBS-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/OBS-02.md",
+          "md_url": "http://localhost:8000/praticas/OBS-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "SLO, alerta e runbook antes do deploy"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "seguranca",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "SEG-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-01.md",
+          "md_url": "http://localhost:8000/praticas/SEG-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Threat-model em cinco perguntas antes de escrever"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "seguranca",
+      "estado": "ok",
+      "forca_max": "pede-aprovacao",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "pede-aprovacao",
+          "id": "SEG-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-03.md",
+          "md_url": "http://localhost:8000/praticas/SEG-03.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "dependencias-aprovadas.txt",
+                  "**/dependencias-aprovadas.txt",
+                  "pyproject.toml",
+                  "**/pyproject.toml",
+                  "requirements*.txt",
+                  "**/requirements*.txt",
+                  "package.json",
+                  "**/package.json",
+                  "go.mod",
+                  "**/go.mod",
+                  "pom.xml",
+                  "**/pom.xml",
+                  "build.gradle*",
+                  "**/build.gradle*",
+                  "Cargo.toml",
+                  "**/Cargo.toml"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "comando": "(?i)\\b(?:npx|bunx|uvx)\\b|\\b(?:npm|pnpm|yarn|bun|pip[0-9.]*|pipx|uv|poetry|pdm|pipenv|cargo|go)\\b[\\s\\S]*\\b(?:install|add|get|i|dlx|exec|x|run|tidy|tool|set)\\b|(?:requirements[\\w.-]*\\.txt|package\\.json|pyproject\\.toml|go\\.mod|pom\\.xml|build\\.gradle[\\w.]*|cargo\\.toml|dependencias-aprovadas\\.txt)",
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "shell"
+                ]
+              }
+            ],
+            "mensagem": "SEG-03: dependência nova, fonte de pacotes alterada, ou pacote instalado ou executado pela CLI; proponha o pacote com o motivo e espere a aprovação de uma pessoa, que a registra em dependencias-aprovadas.txt. Como aplicar: <URL do portal>/praticas/SEG-03.md#como-aplicar",
+            "verificador": "verificadores/seg_03.py"
+          },
+          "status": "experimentar",
+          "titulo": "Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "seguranca",
+      "estado": "ok",
+      "forca_max": "bloqueia",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "bloqueia",
+          "id": "SEG-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "gitleaks",
+                "url": "http://localhost:8000/ferramentas/gitleaks.md"
+              },
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-02.md",
+          "md_url": "http://localhost:8000/praticas/SEG-02.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "comando": "(?i)>|\\btee\\b|\\b(?:sed|perl)\\b",
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "shell"
+                ]
+              },
+              {
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "SEG-02: segredo em claro (chave privada, chave de acesso da AWS, token do GitHub, do GitLab ou do Slack, chave de provedor de modelo ou senha em literal); leia o valor de variável de ambiente e, se ele já foi publicado, rotacione a credencial. Como aplicar: <URL do portal>/praticas/SEG-02.md#como-aplicar",
+            "verificador": "verificadores/seg_02.py"
+          },
+          "status": "experimentar",
+          "titulo": "Segredo não entra no repositório, com varredura no CI e antes do commit"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "seguranca",
+      "estado": "a-definir",
+      "forca_max": null,
+      "momento": "depois-da-entrega",
+      "praticas": []
+    },
+    {
+      "aplica": [],
+      "dominio": "ia-no-produto",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "antes-de-escrever",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-02.md",
+          "md_url": "http://localhost:8000/praticas/P2-02.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Classifique o escopo e o risco da aplicação antes de escrever"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-03.md",
+          "md_url": "http://localhost:8000/praticas/P2-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Registre no catálogo o modelo, a retenção e o operador dos dados"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P3-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-01.md",
+          "md_url": "http://localhost:8000/praticas/P3-01.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Classifique a agência do agente antes de escrever"
+        },
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "P3-02",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-02.md",
+          "md_url": "http://localhost:8000/praticas/P3-02.md",
+          "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
+          "status": "adotar",
+          "titulo": "Responda as 4 perguntas do CISO no threat-model do agente"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ia-no-produto",
+      "estado": "ok",
+      "forca_max": "avisa",
+      "momento": "enquanto-escreve",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "P2-01",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "litellm",
+                "url": "http://localhost:8000/ferramentas/litellm.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-01.md",
+          "md_url": "http://localhost:8000/praticas/P2-01.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "*.py",
+                  "**/*.py",
+                  "*.js",
+                  "**/*.js",
+                  "*.jsx",
+                  "**/*.jsx",
+                  "*.ts",
+                  "**/*.ts",
+                  "*.tsx",
+                  "**/*.tsx",
+                  "*.mjs",
+                  "**/*.mjs",
+                  "*.cjs",
+                  "**/*.cjs",
+                  "*.go",
+                  "**/*.go",
+                  "*.java",
+                  "**/*.java",
+                  "*.kt",
+                  "**/*.kt",
+                  "*.rb",
+                  "**/*.rb",
+                  "*.php",
+                  "**/*.php",
+                  "*.cs",
+                  "**/*.cs",
+                  "*.rs",
+                  "**/*.rs"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "P2-01: chamada direta a provedor de modelo ou chave de provedor no código; leia AI_GATEWAY_URL e AI_GATEWAY_KEY do ambiente e use o modelo do catálogo do gateway. Como aplicar: <URL do portal>/praticas/P2-01.md#como-aplicar",
+            "verificador": "verificadores/p2_01.py"
+          },
+          "status": "experimentar",
+          "titulo": "Toda chamada a modelo passa pelo gateway com chave virtual"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "litellm",
+                "url": "http://localhost:8000/ferramentas/litellm.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-04.md",
+          "md_url": "http://localhost:8000/praticas/P2-04.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Mascare o dado pessoal antes de enviar ao modelo"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P3-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-03.md",
+          "md_url": "http://localhost:8000/praticas/P3-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Declare no prompt o critério de término, o escopo e os limites de autonomia"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P3-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-04.md",
+          "md_url": "http://localhost:8000/praticas/P3-04.md",
+          "mecanismo": null,
+          "status": "adotar",
+          "titulo": "Agente somente-leitura por padrão, com identidade própria e aprovação para escrever"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P3-05",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-05.md",
+          "md_url": "http://localhost:8000/praticas/P3-05.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Isole o conteúdo externo contra prompt injection"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ia-no-produto",
+      "estado": "ok",
+      "forca_max": "pede-aprovacao",
+      "momento": "antes-do-merge",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-05",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "litellm",
+                "url": "http://localhost:8000/ferramentas/litellm.md"
+              },
+              {
+                "id": "gitlab-ci-local",
+                "url": "http://localhost:8000/ferramentas/gitlab-ci-local.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-05.md",
+          "md_url": "http://localhost:8000/praticas/P2-05.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Trate os evals como teste no CI"
+        },
+        {
+          "aplica": [],
+          "forca": "pede-aprovacao",
+          "id": "P3-06",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-06.md",
+          "md_url": "http://localhost:8000/praticas/P3-06.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  ".mcp.json",
+                  "**/.mcp.json",
+                  "mcp.json",
+                  "**/mcp.json",
+                  "mcp_config.json",
+                  "**/mcp_config.json",
+                  ".codex/config.toml",
+                  ".gemini/settings.json",
+                  ".kiro/settings/mcp.json",
+                  "central/**"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "comando": "(?i)\\bmcp['\"]?\\s+['\"]?add|(?:\\.mcp\\.json|mcp\\.json|mcp_config\\.json|\\.codex/config\\.toml|\\.gemini/settings\\.json|\\.kiro/settings/mcp\\.json|central/)",
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "shell"
+                ]
+              }
+            ],
+            "mensagem": "P3-06: servidor MCP novo fora da allowlist central, `mcp add` pela CLI, escrita na configuração pelo shell ou edição da própria allowlist; peça a revisão do servidor no repositório central e só declare-o depois que ele entrar na lista. Como aplicar: <URL do portal>/praticas/P3-06.md#como-aplicar",
+            "verificador": "verificadores/p3_06.py"
+          },
+          "status": "experimentar",
+          "titulo": "MCP e conectores fechados por padrão, com allowlist central"
+        }
+      ]
+    },
+    {
+      "aplica": [],
+      "dominio": "ia-no-produto",
+      "estado": "ok",
+      "forca_max": "orienta",
+      "momento": "depois-da-entrega",
+      "praticas": [
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-06",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "litellm",
+                "url": "http://localhost:8000/ferramentas/litellm.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-06.md",
+          "md_url": "http://localhost:8000/praticas/P2-06.md",
+          "mecanismo": null,
+          "status": "adotar",
+          "titulo": "Orçamento e alerta por chave virtual"
+        }
+      ]
+    }
+  ],
+  "faixas": [
+    {
+      "grupo": "Guia",
+      "prefixos": [
+        "P1"
+      ],
+      "slug": "construir-com-ia",
+      "titulo": "Construir com IA"
+    },
+    {
+      "grupo": "Desenho",
+      "prefixos": [
+        "ARQ"
+      ],
+      "slug": "arquitetura",
+      "titulo": "Arquitetura e padrões de projeto"
+    },
+    {
+      "grupo": "Desenho",
+      "prefixos": [
+        "API"
+      ],
+      "slug": "contratos-api",
+      "titulo": "Contratos de API"
+    },
+    {
+      "grupo": "Desenho",
+      "prefixos": [
+        "UX"
+      ],
+      "slug": "frontend-ux",
+      "titulo": "Frontend e UX"
+    },
+    {
+      "grupo": "Dados",
+      "prefixos": [
+        "DAD"
+      ],
+      "slug": "dados-migrations",
+      "titulo": "Dados e migrations"
+    },
+    {
+      "grupo": "Dados",
+      "prefixos": [
+        "LGPD"
+      ],
+      "slug": "privacidade-lgpd",
+      "titulo": "Privacidade e LGPD"
+    },
+    {
+      "grupo": "Entrega e operação",
+      "prefixos": [
+        "QLD"
+      ],
+      "slug": "qualidade-bdd",
+      "titulo": "Qualidade e BDD"
+    },
+    {
+      "grupo": "Entrega e operação",
+      "prefixos": [
+        "IAC"
+      ],
+      "slug": "infra-iac",
+      "titulo": "Infra e IaC"
+    },
+    {
+      "grupo": "Entrega e operação",
+      "prefixos": [
+        "CICD"
+      ],
+      "slug": "ci-cd",
+      "titulo": "CI/CD"
+    },
+    {
+      "grupo": "Entrega e operação",
+      "prefixos": [
+        "OBS"
+      ],
+      "slug": "observabilidade",
+      "titulo": "Observabilidade e operação"
+    },
+    {
+      "grupo": "Entrega e operação",
+      "prefixos": [
+        "SEG"
+      ],
+      "slug": "seguranca",
+      "titulo": "Segurança"
+    },
+    {
+      "grupo": "IA no produto",
+      "prefixos": [
+        "P2",
+        "P3"
+      ],
+      "slug": "ia-no-produto",
+      "titulo": "Aplicações que consomem modelos e agentes próprios"
+    }
+  ],
+  "momentos": [
+    {
+      "fases": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "slug": "antes-de-escrever",
+      "titulo": "Antes de escrever"
+    },
+    {
+      "fases": [
+        4,
+        5,
+        6
+      ],
+      "slug": "enquanto-escreve",
+      "titulo": "Enquanto escreve"
+    },
+    {
+      "fases": [
+        7
+      ],
+      "slug": "antes-do-merge",
+      "titulo": "Antes do merge"
+    },
+    {
+      "fases": [
+        8
+      ],
+      "slug": "depois-da-entrega",
+      "titulo": "Depois da entrega"
+    }
+  ],
+  "nome": "Padrões de Engenharia",
+  "url_base": "http://localhost:8000",
+  "versao": "1.1.0"
+}
