@@ -17,7 +17,7 @@ from .doctor import doctor, verificar
 from .instalar import ErroDeUso, Opcoes, instalar
 from .lockfile import ErroDeLockfile
 from .origem import ErroDoPacote
-from .util import perguntar_no_terminal
+from .util import ErroDeCaminho, perguntar_no_terminal
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -140,6 +140,6 @@ def main(argv: list[str], lancador: Path | None = None) -> int:
         return 2
     try:
         return _despachar(args, Path(args.raiz).resolve(), lancador)
-    except (ErroDeUso, ErroDoPacote, ErroDeLockfile, ErroDeBloco) as erro:
+    except (ErroDeUso, ErroDoPacote, ErroDeLockfile, ErroDeBloco, ErroDeCaminho) as erro:
         print(f"padroes: erro: {erro}", file=sys.stderr)
         return 2

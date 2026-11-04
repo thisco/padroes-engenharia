@@ -32,6 +32,7 @@ from .instalar import (
     reabrir,
 )
 from .origem import abrir
+from .util import conferir_destino, dentro, escrever_atomico
 
 PASTA_REMOVIDO = ".padroes-removido"
 
@@ -96,6 +97,14 @@ def atualizar(
     lock = _lock(raiz)
     pacote = abrir(origem, versao) if origem else reabrir(raiz, lock, versao)
     escolhas = _escolhas(lock)
+    conhecidos = pacote.json("perfil/sinais.json")["dominios"]
+    if escolhas.perfil != NAO_APLICADO:
+        fora = [d for d in escolhas.perfil if d not in conhecidos]
+        if fora:
+            saida(
+                f"domínios que o pacote {pacote.versao} não tem saem do perfil: {', '.join(fora)}"
+            )
+            escolhas.perfil = [d for d in escolhas.perfil if d in conhecidos]
     regras_antes = _ids(_ler_json(raiz / PASTA / "regras.json"))
     regras_depois = {
         r["id"]
@@ -130,9 +139,18 @@ def _ler_json(caminho: Path) -> dict[str, Any]:
 
 def remover(raiz: Path, saida: Callable[[str], None] = print) -> int:
     """Tira blocos, links e arquivos do `padroes`; guarda `.padroes/` e o lockfile em
-    `.padroes-removido/`. O arquivo compartilhado volta ao backup quando só o bloco mudou."""
+    `.padroes-removido/`. O arquivo compartilhado volta ao backup quando só o bloco mudou.
+
+    O lockfile já foi validado por `lockfile.ler`; mesmo assim, todo destino é conferido contra a
+    raiz antes da primeira mudança (R14, §13)."""
     lock = _lock(raiz)
     criados = set(lock.get("criados", []))
+    proprios = [r for r in sorted(lock.get("arquivos", {})) if not r.startswith(f"{PASTA}/")]
+    for relativo in [*lock.get("blocos", {}), *proprios, lockfile.NOME]:
+        conferir_destino(raiz, raiz / relativo)
+    for link in lock.get("montagens", {}):
+        conferir_destino(raiz, raiz / link, link_permitido=True)
+    conferir_destino(raiz, raiz / PASTA_REMOVIDO / PASTA)
     for relativo in sorted(lock.get("blocos", {})):
         caminho = raiz / relativo
         if not caminho.is_file():
@@ -149,17 +167,17 @@ def remover(raiz: Path, saida: Callable[[str], None] = print) -> int:
         if relativo in criados and not texto.strip():
             caminho.unlink()
         else:
-            caminho.write_text(texto, encoding="utf-8")
+            escrever_atomico(caminho, texto.encode("utf-8"), raiz)
     for link in sorted(lock.get("montagens", {})):
         caminho = raiz / link
         if caminho.is_symlink():
             caminho.unlink()
         for pasta in (caminho.parent, caminho.parent.parent):
-            if pasta != raiz and pasta.is_dir() and not any(pasta.iterdir()):
+            vazia = pasta.is_dir() and not pasta.is_symlink() and not any(pasta.iterdir())
+            if pasta != raiz and dentro(raiz, pasta) and vazia:
                 pasta.rmdir()
-    for relativo in sorted(lock.get("arquivos", {})):
-        if not relativo.startswith(f"{PASTA}/"):
-            (raiz / relativo).unlink(missing_ok=True)
+    for relativo in proprios:
+        (raiz / relativo).unlink(missing_ok=True)
     destino = raiz / PASTA_REMOVIDO
     shutil.rmtree(destino, ignore_errors=True)
     destino.mkdir()

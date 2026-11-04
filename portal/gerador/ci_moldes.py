@@ -11,7 +11,13 @@ O verificador interno (`verificadores/<id>.py`) é chamado com o contrato da ADR
 contrato dele, `--base`. Os dois rodam de `.padroes/` no projeto, onde o CLI os copiou.
 
 O job do GitLab fica no stage `.pre`, que existe sem ser declarado em `stages:`, para o CLI não
-editar a lista de stages do time. Os dois moldes rodam só em pipeline de MR (ou de pull request).
+editar a lista de stages do time, e não herda o `default:` do time (`inherit: default: false`): um
+`before_script` do projeto não derruba o gate. Os dois moldes rodam só em pipeline de MR (ou de pull
+request) e repassam a descrição da MR em `PADROES_DESCRICAO_DA_MR` (plano F4-D15).
+
+Além dos verificadores, há um gate fixo, `padroes-verificar`, que roda `padroes verificar` da cópia
+instalada: é ele que reprova na MR o enforcement desligado e o arquivo de `.padroes/` adulterado
+(spec do motor §6.5, §8.2 e §13).
 """
 
 from __future__ import annotations
@@ -30,6 +36,7 @@ VERSAO_FORMATO_GATES = 1
 PASTA_INSTALADA = ".padroes"
 CHECKOUT = "actions/checkout@v7.0.1"
 IMAGEM = "python:3.11"
+DESCRICAO_DA_MR = "PADROES_DESCRICAO_DA_MR"
 
 
 @dataclass(frozen=True)
@@ -40,14 +47,28 @@ class Gate:
     dominios: tuple[str, ...]
     script: str
     interno: bool
+    fixo: bool = False
 
     @property
     def job(self) -> str:
         return f"padroes-{self.id}"
 
     def comando(self, base: str) -> str:
+        if self.fixo:
+            return f"python3 -I {PASTA_INSTALADA}/{self.script} verificar"
         argumentos = f'--evento ci --base "{base}"' if self.interno else f'--base "{base}"'
         return f"python3 -I {PASTA_INSTALADA}/{self.script} {argumentos}"
+
+
+VERIFICAR = Gate(
+    id="verificar",
+    forca="bloqueia",
+    praticas=(),
+    dominios=(),
+    script="padroes.py",
+    interno=True,
+    fixo=True,
+)
 
 
 def _resolver(verificador: str, hospedados: dict[tuple[str, str], str]) -> tuple[str, str, bool]:
@@ -98,12 +119,20 @@ def gates(site: Site) -> list[Gate]:
                 interno=g["interno"],
             )
         )
-    return resultado
+    return resultado + [VERIFICAR]
+
+
+def _descricao(g: Gate) -> str:
+    return (
+        "padroes verificar (lockfile, cópia fixada e desligamento)"
+        if g.fixo
+        else (", ".join(g.praticas))
+    )
 
 
 def _cabecalho(g: Gate) -> str:
     return (
-        f"# Gate {g.id} ({g.forca}): {', '.join(g.praticas)}.\n"
+        f"# Gate {g.id} ({g.forca}): {_descricao(g)}.\n"
         "# Gerado pelo pacote de padrões; não edite à mão: `padroes atualizar` o regrava.\n"
     )
 
@@ -113,12 +142,15 @@ def gitlab(g: Gate) -> str:
         f"{g.job}:",
         "  stage: .pre",
         f"  image: {IMAGEM}",
+        "  inherit:",
+        "    default: false",
     ]
     if g.forca == "avisa":
         linhas.append("  allow_failure: true")
     linhas += [
         "  variables:",
         '    GIT_DEPTH: "0"',
+        f"    {DESCRICAO_DA_MR}: $CI_MERGE_REQUEST_DESCRIPTION",
         "  rules:",
         '    - if: $CI_PIPELINE_SOURCE == "merge_request_event"',
         "  script:",
@@ -147,9 +179,10 @@ def github(g: Gate) -> str:
         "        with:",
         "          fetch-depth: 0",
         "          persist-credentials: false",
-        f"      - name: {', '.join(g.praticas)}",
+        f"      - name: {_descricao(g)}",
         "        env:",
         "          BASE: ${{ github.event.pull_request.base.sha }}",
+        f"          {DESCRICAO_DA_MR}: ${{{{ github.event.pull_request.body }}}}",
         f"        run: {g.comando('$BASE')}",
     ]
     return _cabecalho(g) + "\n".join(linhas) + "\n"
@@ -166,6 +199,7 @@ def indice(lista: list[Gate]) -> dict[str, Any]:
                 "praticas": list(g.praticas),
                 "dominios": list(g.dominios),
                 "script": g.script,
+                "fixo": g.fixo,
                 "gitlab": f"ci/gitlab/{g.id}.yml",
                 "github": f"ci/github/{g.id}.yml",
             }

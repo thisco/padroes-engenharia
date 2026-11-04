@@ -109,3 +109,17 @@ def test_sem_ci_e_sem_terminal_o_lancador_sai_com_2(projeto, pacote, casa):
     )
     assert r.returncode == 2 and "--ci" in r.stderr
     assert not (projeto / ".padroes").exists()
+
+
+def test_verificar_do_ci_reprova_o_desligamento(projeto, pacote, casa):
+    """O job `padroes-verificar` do molde roda este comando: `desligar` reprova na MR."""
+    lancador = pacote / "padroes.py"
+    argv = ["instalar", "--harness", "kiro", "--perfil", "auto", "--ci", "gitlab"]
+    assert _rodar(lancador, *argv, cwd=projeto, casa=casa).returncode == 0
+    jobs = yaml.safe_load((projeto / ".gitlab-ci.yml").read_text(encoding="utf-8"))
+    comando = jobs["padroes-verificar"]["script"][-1]
+    assert comando == "python3 -I .padroes/padroes.py verificar"
+    copia = projeto / ".padroes" / "padroes.py"
+    assert _rodar(copia, "desligar", "--motivo", "teste", cwd=projeto, casa=casa).returncode == 0
+    r = _rodar(copia, "verificar", cwd=projeto, casa=casa)
+    assert r.returncode == 1 and "desligado" in r.stdout
