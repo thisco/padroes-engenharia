@@ -50,15 +50,15 @@ afirmacoes:
   resultado: confirmada
 - texto: a skill brainstorming faz uma pergunta por mensagem e nada é construído antes da aprovação do documento (no tamanho de projeto)
   ref: superpowers-brainstorming
-  localizacao: "SKILL.md no commit bb92a77, seções 'Your First Message' (uma pergunta por mensagem) e bloco HARD-GATE"
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Conversation' (\"Each message ends with one question\") e, em 'The Written Design', a frase \"Nothing gets built until your human partner approves the full description\""
   resultado: confirmada
 - texto: num repositório de software a skill grava o desenho em docs/superpowers/specs/, e a preferência da pessoa vale mais que esse padrão
   ref: superpowers-brainstorming
   localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Where it goes'"
   resultado: confirmada
-- texto: antes de entregar o documento, a skill manda um subagente novo, sem o histórico da conversa, lê-lo como quem vai construir; sem ferramenta de subagente, o próprio agente faz essa leitura
+- texto: antes de entregar o documento, a skill manda um subagente novo ler o documento como quem vai construir; sem ferramenta de subagente, o próprio agente faz essa leitura
   ref: superpowers-brainstorming
-  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Builder check'"
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Builder check' (\"dispatch a fresh subagent\"; \"Without a subagent tool, read the document as that builder yourself\")"
   resultado: confirmada
 - texto: a skill sdd-lifecycle procura o PRD em docs/prd/ ao escrever a spec e o cita no cabeçalho
   ref: sdd-lifecycle

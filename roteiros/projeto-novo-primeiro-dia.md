@@ -2,7 +2,7 @@
 titulo: "Projeto novo: o primeiro dia"
 objetivo: "Do harness aberto ao primeiro plano aprovado, em sete passos: você abre o agente e decide; o agente instala, lê, entrevista e escreve."
 porta: projeto-novo
-publico: Time que começa um projeto do zero com um agente de código e tem em mãos os documentos do projeto (ofício, requisitos, atas, planilhas exportadas)
+publico: Time que começa um projeto do zero com um agente de código e tem em mãos os documentos do projeto (requisitos, atas, planilhas exportadas)
 harnesses: [kiro, antigravity, claude-code, codex]
 passos:
   - {titulo: "Abrir o harness no projeto", quem: voce}
@@ -129,7 +129,7 @@ ponto de montagem ao terminar.
 
 ## Passo 3: Ler os documentos do projeto
 
-Tudo o que o time já tem: ofício, requisitos, planilhas exportadas, atas. O agente lê, resume e
+Tudo o que o time já tem: requisitos, atas, planilhas exportadas. O agente lê, resume e
 lista o que falta, sem escrever o PRD ainda.
 
 ```prompt
@@ -157,8 +157,8 @@ Não escreva código, spec nem plano: o próximo passo é a revisão do PRD.
 ## Passo 5: Revisão independente do PRD
 
 Um segundo agente, sem o histórico da conversa, lê o PRD e aponta o que não fecha. A própria skill
-`brainstorming` já prevê essa leitura: antes de entregar o documento, ela manda um subagente novo,
-sem o histórico, lê-lo como quem vai construir, e só sem ferramenta de subagente o próprio agente
+`brainstorming` já prevê essa leitura: antes de entregar o documento, ela manda um subagente novo ler
+o documento como quem vai construir, e só sem ferramenta de subagente o próprio agente
 faz essa leitura [ref:superpowers-brainstorming]. Este passo repete a leitura fora da sessão do
 brainstorm: abra uma sessão nova do agente na mesma pasta e cole o prompt abaixo. Você aprova o
 PRD ou o devolve ao passo 4 com os achados.
@@ -176,9 +176,9 @@ responder. Para cada achado, cite o trecho do PRD. Não altere nenhum arquivo.
 O agente escreve o steering a partir do PRD aprovado; você confere e aprova. No projeto do
 scaffold, o `AGENTS.md` é a constituição com a tabela de roteamento, os parâmetros do projeto
 ficam em `docs/steering/`, entre eles `arquitetura.md`, e o `CLAUDE.md` e o `GEMINI.md` são
-ponteiros para o `AGENTS.md` [ref:sdd-scaffold-readme]. Os quatro harnesses leem o `AGENTS.md`,
-então o steering do projeto fica num lugar só; o que muda é onde cada harness lê as regras
-próprias dele, se o time quiser uma.
+ponteiros para o `AGENTS.md` [ref:sdd-scaffold-readme]. O `AGENTS.md` é a fonte única do steering do
+projeto; no Claude Code, o `CLAUDE.md` precisa trazê-lo com `@AGENTS.md`. O que muda de um harness
+para outro é onde cada um lê as regras próprias dele, se o time quiser uma.
 
 ```prompt
 A partir do PRD aprovado em docs/prd/, preencha docs/steering/arquitetura.md com a estrutura e as
