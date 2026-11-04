@@ -3,6 +3,7 @@
 import hashlib
 import http.server
 import json
+import socket
 import threading
 from functools import partial
 
@@ -81,3 +82,39 @@ def test_abre_por_url_e_confere_cada_arquivo(servidor, pacote):
 def test_url_inexistente_reprova_com_a_url(servidor):
     with pytest.raises(ErroDoPacote, match="nao-existe"):
         abrir(servidor + "/nao-existe/")
+
+
+@pytest.fixture
+def redirecionador():
+    """Servidor local que responde 302 para um host http fora da máquina (sem rede: o destino
+    tem TLD `.invalido` e o CLI tem de recusar antes de segui-lo)."""
+
+    class Tratador(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(302)
+            self.send_header("Location", "http://exemplo.invalido/pacote/manifesto.json")
+            self.end_headers()
+
+        def log_message(self, *a, **k):
+            pass
+
+    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Tratador)
+    fio = threading.Thread(target=httpd.serve_forever, daemon=True)
+    fio.start()
+    yield f"http://127.0.0.1:{httpd.server_address[1]}/pacote/"
+    httpd.shutdown()
+    httpd.server_close()
+
+
+def test_redirecionamento_para_http_fora_da_maquina_e_recusado(redirecionador, monkeypatch):
+    tentativas = []
+    original = socket.getaddrinfo
+
+    def registrar(host, *a, **k):
+        tentativas.append(host)
+        return original(host, *a, **k)
+
+    monkeypatch.setattr(socket, "getaddrinfo", registrar)
+    with pytest.raises(ErroDoPacote, match="redirecionamento"):
+        abrir(redirecionador)
+    assert "exemplo.invalido" not in tentativas
