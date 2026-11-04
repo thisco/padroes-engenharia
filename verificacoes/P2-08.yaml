@@ -1,8 +1,9 @@
-# Fontes abertas na web em 2026-11-03. A revisão adversarial em sessão independente fica com o
-# controlador (o despacho desta frente proíbe subagente); `achados: []` aqui quer dizer "ainda não
-# revisada", não "revisada sem achado".
+# Fontes abertas na web em 2026-11-03 e todas reabertas em 2026-11-04, na rodada de correção 1. As
+# afirmações de structured outputs e do Langfuse foram reescritas e conferidas nesse dia; as do
+# GenAIOps e do catálogo de modelos foram conferidas de novo sem mudança. A revisão adversarial foi a
+# revisão independente em lote de 2026-11-04 (ADR 0005); achados e tratamento no fim.
 conteudo: P2-08
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: numa solução generativa o prompt é parte central do que se governa, e um bom ambiente de experimentação
@@ -14,26 +15,43 @@ afirmacoes:
   ref: anthropic-models-overview
   localizacao: "notas da tabela 'Compare models': 'Every Claude model ID is a pinned snapshot' e linha 'Retirement' ('Not sooner than ...')"
   resultado: confirmada
-- texto: com structured outputs a resposta segue o schema dado, sem JSON malformado nem campo obrigatório faltando;
-    sem eles, o modelo pode gerar JSON malformado ou faltar campo mesmo com o prompt bem escrito; o parâmetro
-    é output_config.format
+- texto: com structured outputs a resposta segue o schema na maior parte dos casos, com as exceções da recusa
+    (stop_reason refusal), do corte por max_tokens e da caixa de valor de enum, que pode vir diferente sem
+    erro; sem structured outputs, o modelo pode gerar JSON malformado ou deixar faltar campo obrigatório mesmo
+    com o prompt bem escrito; o parâmetro é output_config.format
   ref: anthropic-structured-outputs
-  localizacao: "abertura, 'Why use structured outputs' ('Without structured outputs, Claude can generate malformed JSON responses ... Even with careful prompting') e a seção de JSON outputs (output_config.format)"
+  localizacao: "'Why use structured outputs' ('Without structured outputs, Claude can generate malformed JSON responses'; lista 'Even with careful prompting, you might encounter' com 'Missing required fields'), 'Invalid outputs' ('guarantee schema compliance in most cases'; refusal; max_tokens; 'Enum value casing') e 'How it works' (output_config.format)"
   resultado: confirmada
+  nota: "reescrita em 2026-11-04: a versão de 2026-11-03 dizia 'sem JSON malformado nem campo obrigatório faltando', sem as exceções"
 - texto: no Langfuse cada versão ganha um ID, o rótulo production marca a versão servida por padrão, voltar atrás
-    é mover o rótulo, e rótulos protegidos existem só nos planos Enterprise
+    é mover o rótulo, e o rótulo se move pela interface ou pelo SDK (update_prompt com new_labels); o rótulo
+    protegido, que só admin e owner mudam, existe no Enterprise, no Pro com o add-on Teams e no self-hosted com a
+    Enterprise Edition, e não existe no Hobby nem no Core
   ref: langfuse-prompt-version-control
-  localizacao: "seções de versões, rótulos ('Langfuse will serve the version with the production label'), rollback e rótulos protegidos (Enterprise e Self Hosted Enterprise)"
+  localizacao: "seções de versões ('automatically assigned a version ID'), rótulos ('Langfuse will serve the version with the production label'), rollback ('setting the production label to that previous version'), atualização de rótulos pelo SDK (update_prompt, new_labels) e 'Protected prompt labels' (tabela de disponibilidade por plano; 'viewer and member roles cannot modify or delete the label')"
   resultado: confirmada
+  nota: "reescrita em 2026-11-04: a versão de 2026-11-03 dizia 'só nos planos Enterprise'. O portão de promoção do passo 5 (quem move, eval verde, conferência) é desenho do portal, sem fonte"
 execucoes:
 - tipo: prompt
   prompt: P2-08-prompt-1
-  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
-  ambiente: repositório Git novo no scratchpad com app.py (prompt, modelo e parâmetros no código, formato pedido no texto), test_app.py com cliente falso e catalogo-modelos.yml; {nome da tarefa} = classificar; PyYAML e pytest do .venv do monorepo; macOS
+  harness: execução manual pelo curador em 2026-11-03 e de novo em 2026-11-04, com o prompt revisto; execução em sessão nova de agente pendente, dono
+  ambiente: repositório Git novo no scratchpad com app.py (prompt, modelo e parâmetros no código, formato pedido no texto) e catalogo-modelos.yml; {nome da tarefa} = classificar; venv do scratchpad com pytest, PyYAML e jsonschema; macOS
   resultado: passou
-  evidencia: 'passo 1 listou app.py:6 (model=), :7 (max_tokens), :8 (temperature) e :10 (mensagem de sistema); passo 2 criou ia/prompts/classificar.md e ia/config/classificar.yml (versao 1, modelo modelo-a-api do catálogo, parametros); passo 3: o código lê a configuração e registra config_versao e modelo; grep do texto do prompt e do modelo em app.py vazio (saída 1); passo 4: schema SAIDA no código, output_config.format e validação da resposta, sem instrução de formato no prompt; passo 5: pytest "1 passed"; commit "refactor: prompt e configuração de modelo versionados (P2-08)". Falta repetir em sessão nova de agente.'
-  data: '2026-11-03'
+  evidencia: 'passo 1 listou app.py:3 (model=), :4 (max_tokens), :5 (temperature) e :6 (mensagem de sistema); passo 2 criou ia/prompts/classificar.md e ia/config/classificar.yml (versao 1, modelo modelo-a-api do catálogo, parametros); passo 3: o código lê a configuração e registra config_versao e modelo; grep do texto do prompt e do modelo em app.py vazio (saída 1); passo 4: schema SAIDA no código, output_config.format, refusal e max_tokens como falha, enum normalizado com lower() e jsonschema.validate, sem instrução de formato no prompt; passo 5: pytest "3 passed" (inclui a resposta "Pedido" com caixa diferente); commit "refactor: prompt e configuração de modelo versionados (P2-08)".'
+  data: '2026-11-04'
 revisao_adversarial:
-  revisor: pendente, revisão do controlador em sessão independente
-  data: '2026-11-03'
-  achados: []
+  revisor: revisão independente em lote, 2026-11-04
+  data: '2026-11-04'
+  achados:
+  - afirmacao: "com structured outputs, a resposta segue o schema, sem JSON malformado nem campo obrigatório faltando"
+    problema: "a fonte diz 'guarantee schema compliance in most cases' e lista exceções (refusal, max_tokens, caixa de enum), e a caixa de enum afeta o próprio Exemplo"
+    tratamento: "texto de O que fazer e Como aplicar diz 'na maior parte dos casos' e lista as exceções; o Exemplo e o prompt tratam refusal e max_tokens como falha e normalizam a caixa do enum antes de validar"
+  - afirmacao: "rótulos protegidos existem só nos planos Enterprise"
+    problema: "a página do Langfuse dá Enterprise, Pro com o add-on Teams e self-hosted com Enterprise Edition; Hobby e Core não"
+    tratamento: "texto e registro corrigidos com a tabela de planos e os papéis que mudam o rótulo"
+  - afirmacao: "o contexto governável tem dono, histórico, versão e o mesmo eval antes de valer em produção"
+    problema: "o mecanismo citado é mover o rótulo production, sem MR nem CI; a promessa não tinha desenho operacional, e a divisão em três camadas parecia fato citado"
+    tratamento: "passo 5 de Como aplicar descreve o portão (só o job de promoção move production, só com a suíte da P2-05 verde, aprovação gravada e job agendado que compara a versão production com as aprovações); Como verificar ganhou a conferência; o texto diz que as três camadas e o portão são desenho do portal"
+  - afirmacao: "execução do prompt registrada como passou"
+    problema: "a execução foi manual pelo curador, não em sessão nova de agente"
+    tratamento: "o campo harness diz que a execução foi manual e que a sessão nova de agente está pendente com o dono"
