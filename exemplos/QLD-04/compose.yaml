@@ -1,0 +1,14 @@
+services:
+  relatorios:
+    build: ./relatorios
+    environment:
+      CACHE_MB: ${CACHE_MB:-0}
+    ports: ["8010:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/')"]
+      interval: 2s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          memory: 256M

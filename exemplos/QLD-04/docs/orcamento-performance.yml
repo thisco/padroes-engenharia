@@ -1,0 +1,6 @@
+# Orçamento de performance por componente (QLD-04). Um componente é um serviço do compose.
+componentes:
+  relatorios:
+    memoria_mb: 64
+    latencia_p95_ms: 200
+    url: http://127.0.0.1:8010/relatorios/mensal

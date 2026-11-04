@@ -1,0 +1,29 @@
+stages: [gates]
+
+# O orçamento está declarado para cada serviço que a MR cria ou muda (verificador do portal).
+orcamento-declarado:
+  stage: gates
+  image: python:3.11
+  allow_failure: true
+  variables:
+    GIT_DEPTH: "0"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python3 -I verificadores/qld_04.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
+
+# O orçamento vira teste: sobe o compose e mede cada componente contra o limite.
+orcamento-de-performance:
+  stage: gates
+  image: docker:27
+  services: [docker:27-dind]
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    HOST_DO_COMPOSE: docker
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - apk add --no-cache python3
+    - docker compose up -d --wait
+    - python3 scripts/medir-orcamento.py docs/orcamento-performance.yml
