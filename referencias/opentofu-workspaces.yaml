@@ -3,8 +3,8 @@ titulo: "OpenTofu: Workspaces (estado)"
 organizacao: "OpenTofu"
 url: https://opentofu.org/docs/language/state/workspaces/
 tipo: padrao-aberto
-verificado_em: 2026-11-03
+verificado_em: 2026-11-04
 verificacao: V
-localizacao: "abertura (vários estados por configuração no mesmo backend; o workspace 'default'), o trecho sobre a interpolação terraform.workspace e o parágrafo sobre quando o workspace não serve (decomposição de sistema e implantação com credenciais e controles de acesso separados)"
+localizacao: "abertura (vários estados por configuração no mesmo backend; o workspace 'default'), o trecho sobre a interpolação terraform.workspace o parágrafo sobre quando o workspace não serve (decomposição de sistema e implantação com credenciais e controles de acesso separados) e a lista de backends com vários workspaces (AzureRM, Consul, COS, GCS, Kubernetes, Local, OSS, Postgres, Remote e S3; o http não está nela)"
 dominios: [infra-iac]
-notas: Fonte aberta, lida na web em 2026-11-03.
+notas: Fonte aberta, lida na web em 2026-11-04.

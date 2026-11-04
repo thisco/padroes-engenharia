@@ -23,8 +23,9 @@ No ci, só confere quando o diff `--base`..`HEAD` toca arquivo de IaC ou de CI; 
 arquivos de CI do `HEAD`. No harness, a escrita de arquivo de CI só acusa o achado que o arquivo em
 disco ainda não tinha.
 
-Isenção: `.iac04-ignorar`, na raiz, uma linha `<arquivo de CI>:<job>` por job (o nome exato, sem
-`*`; `#` é comentário), para o job cujo portão é a aprovação de deployment configurada no servidor.
+Isenção: `.iac04-ignorar`, na raiz, uma linha `<arquivo de CI>:<job>` por job (o nome exato, que
+pode ter dois-pontos, como `deploy:producao`; sem `*`; `#` é comentário), para o job cujo portão
+é a aprovação de deployment configurada no servidor.
 Ela é lida do lado da comparação (a `--base` no ci; o `HEAD` no harness, ou o disco só fora de
 repositório Git), então só vale depois de revisada e commitada. Linha fora do formato sai 2.
 
@@ -54,8 +55,10 @@ RESERVADAS_GITLAB = {
     "stages", "variables", "default", "include", "workflow", "image", "services", "cache",
     "before_script", "after_script", "spec",
 }  # fmt: skip
+# O nome pode ter dois-pontos (`deploy:producao`): só `:` com espaço ou fim depois separa a chave.
 CHAVE = re.compile(
-    r"^(?P<recuo> *)(?:- +)?(?P<nome>[^\s:#][^:#]*?|\"[^\"]+\"|'[^']+'):(?:\s+(?P<valor>.*))?$"
+    r"^(?P<recuo> *)(?:- +)?(?P<nome>[^\s:#](?:[^:#]|:(?!\s|$))*?|\"[^\"]+\"|'[^']+'):"
+    r"(?:\s+(?P<valor>.*))?$"
 )
 APLICA = re.compile(r"\b(?:tofu|terraform|terragrunt)\b.*?(?<![\w-])(?:apply|destroy)\b")
 PLANO_OU_APLICA = re.compile(r"\b(?:tofu|terraform|terragrunt)\b.*?(?<![\w-])(?:plan|apply)\b")
@@ -268,7 +271,7 @@ def isencoes(texto: str | None) -> set[str]:
         linha = bruta.split("#", 1)[0].strip() if not bruta.lstrip().startswith("#") else ""
         if not linha:
             continue
-        arquivo, _, job = linha.rpartition(":")
+        arquivo, _, job = linha.partition(":")  # o caminho não tem `:`; o nome do job pode ter
         if not arquivo or not job or "*" in linha or not arquivo_de_ci(arquivo):
             raise Indeterminado(
                 f"{ARQUIVO_DE_ISENCAO}:{n}: linha fora do formato <arquivo de CI>:<job>, sem *"

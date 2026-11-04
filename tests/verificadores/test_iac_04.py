@@ -326,6 +326,52 @@ def test_isencao_invalida_sai_2(repo_git: RepoGit, linha: str):
     assert r.returncode == 2 and ".iac04-ignorar" in r.stderr and "Traceback" not in r.stderr
 
 
+# --- nome de job com dois-pontos (convenção comum no GitLab, como deploy:producao) -------------
+
+GITLAB_DOIS_PONTOS_SEM_PORTAO = GITLAB_SEM_PORTAO.replace("aplicar-producao:", "deploy:producao:")
+GITLAB_DOIS_PONTOS_COM_PORTAO = GITLAB_COM_PORTAO.replace("aplicar-producao:", "deploy:producao:")
+
+
+def test_ci_pega_job_com_dois_pontos_no_nome(repo_git: RepoGit):
+    base = mr(repo_git, {".gitlab-ci.yml": GITLAB_DOIS_PONTOS_SEM_PORTAO, "infra/main.tf": "#\n"})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1, r.stderr
+    assert r.stdout.splitlines() == [
+        ".gitlab-ci.yml:3: job deploy:producao aplica IaC em produção sem aprovação manual "
+        "(when: manual)"
+    ]
+
+
+def test_ci_inocente_job_com_dois_pontos_e_when_manual(repo_git: RepoGit):
+    base = mr(repo_git, {".gitlab-ci.yml": GITLAB_DOIS_PONTOS_COM_PORTAO, "infra/main.tf": "#\n"})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 0 and r.stdout == "", r.stderr
+
+
+def test_ci_chave_com_valor_que_tem_dois_pontos_continua_lida(repo_git: RepoGit):
+    ci = GITLAB_SEM_PORTAO.replace(
+        "  stage: producao\n", "  stage: producao\n  image: registro.exemplo/tofu:1.13\n"
+    )
+    base = mr(repo_git, {".gitlab-ci.yml": ci, "infra/main.tf": "#\n"})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1 and "job aplicar-producao " in r.stdout, r.stderr
+
+
+def test_isencao_de_job_com_dois_pontos_vale(repo_git: RepoGit):
+    mr(repo_git, {".iac04-ignorar": ".gitlab-ci.yml:deploy:producao\n"})
+    base = mr(repo_git, {".gitlab-ci.yml": GITLAB_DOIS_PONTOS_SEM_PORTAO, "infra/main.tf": "#\n"})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 0 and r.stdout == "", r.stderr
+
+
+def test_harness_pega_job_com_dois_pontos_e_isencao_commitada_vale(repo_git: RepoGit):
+    entrada = harness(".gitlab-ci.yml", GITLAB_DOIS_PONTOS_SEM_PORTAO, repo_git.raiz)
+    r = rodar(SCRIPT, "antes-de-ferramenta", entrada=entrada, cwd=repo_git.raiz)
+    assert r.returncode == 1 and "job deploy:producao " in r.stdout, r.stderr
+    mr(repo_git, {".iac04-ignorar": ".gitlab-ci.yml:deploy:producao\n"})
+    assert rodar(SCRIPT, "antes-de-ferramenta", entrada=entrada, cwd=repo_git.raiz).returncode == 0
+
+
 # --- ci: estado indeterminado -------------------------------------------------------------------
 
 

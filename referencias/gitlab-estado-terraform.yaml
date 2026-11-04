@@ -1,0 +1,10 @@
+id: gitlab-estado-terraform
+titulo: "GitLab-managed Terraform/OpenTofu state"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/infrastructure/iac/terraform_state/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (estado guardado no projeto do GitLab), o bloco backend \"http\" num backend.tf, o endereço .../projects/<id>/terraform/state/<nome do estado> com lock_address, lock_method POST e unlock_method DELETE, o trecho 'Customizing your OpenTofu environment variables' (preferir variável de ambiente a -backend-config, que fica no plano) e o de usuário gitlab-ci-token com a senha CI_JOB_TOKEN no CI"
+dominios: [infra-iac]
+notas: "Lida na web em 2026-11-04 (texto conferido também pelo HTML baixado). A página recomenda o componente de CI do OpenTofu; o Exemplo usa o tofu direto."

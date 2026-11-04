@@ -1,0 +1,10 @@
+id: opentofu-estado-remoto
+titulo: "OpenTofu: Remote State"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/state/remote/
+tipo: padrao-aberto
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (o arquivo local complica o uso em equipe, e cada um precisa ter o estado mais recente antes de rodar; o estado remoto fica num armazenamento compartilhado por todos)"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-04.

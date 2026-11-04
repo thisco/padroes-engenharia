@@ -1,0 +1,10 @@
+id: opentofu-backend-http
+titulo: "OpenTofu: Backend Type http"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/settings/backends/http/
+tipo: padrao-aberto
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "lista de variáveis de configuração (address, lock_address, unlock_address, lock_method, unlock_method, username e password, cada uma com a variável de ambiente TF_HTTP_*) e o suporte opcional a trava de estado"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-04.

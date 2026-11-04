@@ -35,10 +35,15 @@ referencias:
   - github-environments-deploy
   - github-workflow-syntax
   - github-contextos
+  - opentofu-estado-remoto
+  - opentofu-backend-http
+  - opentofu-backend-s3
+  - gitlab-estado-terraform
+  - github-artefatos
 relacionadas: [IAC-02, IAC-03, CICD-01]
 dono: engenharia
-revisado_em: 2026-11-03
-revisar_ate: 2027-05-03
+revisado_em: 2026-11-04
+revisar_ate: 2027-05-04
 resumo: "O mesmo módulo de IaC promove de homologação a produção pelo pipeline, um estado e um arquivo de valores por ambiente, com aprovação manual antes de produção."
 ferramentas_aprovadas: [opentofu]
 exemplos:
@@ -49,6 +54,8 @@ exemplos:
   - exemplos/IAC-04/gitlab-ci-antes.yml
   - exemplos/IAC-04/gitlab-ci-depois.yml
   - exemplos/IAC-04/github-entrega.yml
+  - exemplos/IAC-04/backend-gitlab.tf
+  - exemplos/IAC-04/backend-s3.tf
 ---
 
 ## O que fazer
@@ -66,6 +73,10 @@ produção. A prática tem quatro partes.
    e controles de acesso separados, ela recomenda outra abordagem [ref:opentofu-workspaces-cli].
    Quando produção precisa de credencial própria, troque o workspace por um backend por ambiente,
    informado no `tofu init` com `-backend-config` [ref:opentofu-backend-configuracao].
+   Nos dois casos o estado mora num backend remoto. Com o arquivo local, cada um precisa ter o estado
+   mais recente antes de rodar; o backend remoto guarda o estado num lugar compartilhado
+   [ref:opentofu-estado-remoto]. No pipeline isso é obrigatório: o arquivo local fica no runner do
+   job que o gravou e não chega ao job seguinte.
 2. **A configuração de cada ambiente num só lugar.** Os valores que mudam por ambiente ficam num
    arquivo de definição de variáveis (`ambientes/<ambiente>.tfvars`), passado com `-var-file`
    [ref:opentofu-variaveis]. O pipeline não repete esses valores: na ordem de precedência, o último
@@ -111,6 +122,18 @@ de produção pelo shell ou acrescentar um `-var` ao pipeline.
    [ref:opentofu-workspaces-cli]. Credencial não vai no arquivo de backend: a documentação recomenda
    variável de ambiente, porque o valor do `-backend-config` fica gravado na pasta `.terraform` e no
    arquivo de plano [ref:opentofu-backend-configuracao].
+   O backend é remoto, declarado em `infra/backend.tf`. Nem todo backend tem workspaces: a lista do
+   OpenTofu traz S3, GCS e AzureRM, entre outros, e não traz o `http` [ref:opentofu-workspaces].
+   - **GitLab:** o estado gerenciado pelo GitLab usa o backend `http`, com um endereço por nome de
+     estado (`.../projects/<id>/terraform/state/<nome>`), usuário `gitlab-ci-token` e senha
+     `CI_JOB_TOKEN` no CI [ref:gitlab-estado-terraform]. Como o `http` não está na lista dos que têm
+     workspaces, o estado por ambiente é um nome de estado por ambiente. O GitLab recomenda passar
+     a configuração por variável de ambiente, e não por `-backend-config`, que fica gravado no plano
+     [ref:gitlab-estado-terraform]; as variáveis são as `TF_HTTP_*` [ref:opentofu-backend-http], e o
+     endereço sai de `CI_API_V4_URL` e `CI_PROJECT_ID` [ref:gitlab-variaveis-predefinidas].
+   - **GitHub Actions com AWS:** o backend `s3` guarda o estado de cada workspace num caminho
+     próprio (`env:/<workspace>/<key>`) e trava o estado com `use_lockfile`; para credencial no CI, a
+     documentação recomenda OIDC [ref:opentofu-backend-s3], o que a CICD-04 descreve.
 3. Monte o pipeline em três passos, homologação, plano de produção e produção, com a mesma versão em
    todos (`TF_VAR_versao` a partir do commit) [ref:opentofu-variaveis-de-ambiente]. O plano de
    produção sai num arquivo (`-out`), que o job de produção aplica; com plano salvo, o `tofu apply`
@@ -140,16 +163,18 @@ de produção pelo shell ou acrescentar um `-var` ao pipeline.
    ```
 
 6. Se o portão de um job é a aprovação de deploy configurada no servidor, e não o `when: manual`,
-   registre a exceção em `.iac04-ignorar`, uma linha `<arquivo de CI>:<job>`, num PR revisado.
+   registre a exceção em `.iac04-ignorar`, uma linha `<arquivo de CI>:<job>` (o nome do job pode ter
+   dois-pontos, como `deploy:producao`), num PR revisado.
 7. Peça ao agente, no `AGENTS.md`, que nunca rode `apply` nem `destroy` de produção pelo shell.
 
 ## Exemplo
 
 ### Antes e depois
 
-O módulo do Exemplo usa o provider `local` (que grava arquivos), para que os dois workspaces sejam
-reais e não toquem nenhuma nuvem. Um arquivo por serviço faz o papel do recurso, e a versão de todos
-vem de uma só variável:
+O módulo do Exemplo usa o provider `local` (que grava arquivos) e o backend local, para que o
+`executar.sh` crie dois workspaces reais sem tocar nenhuma nuvem. Isso vale só para o roteiro: no
+projeto, o estado fica num backend remoto, e os pipelines abaixo contam com ele. Um arquivo por
+serviço faz o papel do recurso, e a versão de todos vem de uma só variável:
 
 <!-- incluir: exemplos/IAC-04/infra/main.tf -->
 
@@ -163,8 +188,13 @@ Antes: o pipeline aplica produção a cada commit e repete o número de réplica
 
 <!-- incluir: exemplos/IAC-04/gitlab-ci-antes.yml -->
 
-Depois: o plano de produção sai antes, o job de produção espera uma pessoa (`when: manual` na regra)
-e aplica o plano salvo, e cada ambiente lê o seu arquivo:
+Depois: o estado de cada ambiente fica no GitLab, num nome de estado por ambiente, com o backend
+`http` declarado em `infra/backend.tf`:
+
+<!-- incluir: exemplos/IAC-04/backend-gitlab.tf -->
+
+O plano de produção sai antes, o job de produção espera uma pessoa (`when: manual` na regra) e
+aplica o plano salvo, e cada ambiente lê o seu arquivo:
 
 <!-- incluir: exemplos/IAC-04/gitlab-ci-depois.yml -->
 
@@ -230,9 +260,15 @@ o último traz o módulo em `infra/`, o `.gitlab-ci.yml` com o job de produção
 
 ### Por ferramenta
 
-GitLab CI: o `gitlab-ci-depois.yml` acima. GitHub Actions: o job de produção declara
-`environment: producao`, e os revisores obrigatórios ficam nas configurações do ambiente no
-repositório:
+GitLab CI: o `gitlab-ci-depois.yml` acima. GitHub Actions com AWS: o estado fica no backend `s3`,
+um caminho por workspace [ref:opentofu-backend-s3]:
+
+<!-- incluir: exemplos/IAC-04/backend-s3.tf -->
+
+O plano de produção sai num job e passa ao job de produção como artefato, que compartilha dados
+entre jobs do workflow [ref:github-artefatos]; o job de produção declara `environment: producao`,
+os revisores obrigatórios ficam nas configurações do ambiente no repositório, e ele aplica o plano
+salvo, o mesmo que foi revisado:
 
 <!-- incluir: exemplos/IAC-04/github-entrega.yml -->
 
@@ -263,7 +299,7 @@ CI e do `HEAD` no harness, então só vale depois de revisada e commitada.
 Os limites. O verificador lê o YAML por recuo, sem biblioteca de YAML, e não segue `include`,
 âncora nem `extends`: o job que herda configuração e não tem `when: manual` próprio não é decidido
 e só gera aviso em stderr. Ele não vê se o ambiente está protegido no servidor nem se há revisores
-obrigatórios no GitHub, que são configuração do projeto; aceita qualquer `when: manual` do job,
+obrigatórios no GitHub, que são configuração do projeto, nem se o estado mora num backend remoto; aceita qualquer `when: manual` do job,
 mesmo que outra regra do mesmo job rode sem ele; e só reconhece produção pelas palavras acima, de
 modo que um ambiente chamado `principal` passa. O `apply` em produção pelo shell só é visto quando
 a marca está no comando: com o workspace já selecionado antes da sessão, o comando

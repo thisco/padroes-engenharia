@@ -2,10 +2,18 @@ stages: [plano, homologacao, producao]
 
 variables:
   TF_VAR_versao: $CI_COMMIT_SHA # a mesma versão para todos os serviços e ambientes
+  TF_HTTP_USERNAME: gitlab-ci-token # o estado fica no GitLab (backend "http" em infra/backend.tf)
+  TF_HTTP_LOCK_METHOD: POST
+  TF_HTTP_UNLOCK_METHOD: DELETE
 
+# Um estado por ambiente: o nome do estado é o do ambiente. A credencial vai por variável de
+# ambiente, não por -backend-config, que ficaria gravado no plano.
 .tofu:
   image: ghcr.io/opentofu/opentofu:1.13.2
   before_script:
+    - export TF_HTTP_ADDRESS="$CI_API_V4_URL/projects/$CI_PROJECT_ID/terraform/state/$AMBIENTE"
+    - export TF_HTTP_LOCK_ADDRESS="$TF_HTTP_ADDRESS/lock" TF_HTTP_UNLOCK_ADDRESS="$TF_HTTP_ADDRESS/lock"
+    - export TF_HTTP_PASSWORD="$CI_JOB_TOKEN"
     - cd infra && tofu init -input=false
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
@@ -13,8 +21,8 @@ variables:
 plano-producao:
   extends: .tofu
   stage: plano
+  variables: { AMBIENTE: producao }
   script:
-    - tofu workspace select -or-create producao
     - tofu plan -input=false -var-file=ambientes/producao.tfvars -out=producao.plano
   artifacts:
     paths: [infra/producao.plano]
@@ -23,8 +31,8 @@ aplicar-homologacao:
   extends: .tofu
   stage: homologacao
   environment: homologacao
+  variables: { AMBIENTE: homologacao }
   script:
-    - tofu workspace select -or-create homologacao
     - tofu apply -input=false -auto-approve -var-file=ambientes/homologacao.tfvars
 
 aplicar-producao:
@@ -32,10 +40,13 @@ aplicar-producao:
   image: ghcr.io/opentofu/opentofu:1.13.2
   environment: producao
   needs: [plano-producao, aplicar-homologacao]
+  variables: { AMBIENTE: producao }
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
   script:
+    - export TF_HTTP_ADDRESS="$CI_API_V4_URL/projects/$CI_PROJECT_ID/terraform/state/$AMBIENTE"
+    - export TF_HTTP_LOCK_ADDRESS="$TF_HTTP_ADDRESS/lock" TF_HTTP_UNLOCK_ADDRESS="$TF_HTTP_ADDRESS/lock"
+    - export TF_HTTP_PASSWORD="$CI_JOB_TOKEN"
     - cd infra && tofu init -input=false
-    - tofu workspace select producao
     - tofu apply -input=false producao.plano
