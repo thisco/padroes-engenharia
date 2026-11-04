@@ -1,8 +1,8 @@
 # Fontes abertas na web em 2026-11-03 (primeira curadoria) e reabertas inteiras em 2026-11-04 (retomada
-# da frente): as quatro referências foram relidas hoje e todas as afirmações abaixo conferidas de novo
-# contra a página; o campo `nota` de cada uma diz o que mudou em 2026-11-04. A revisão adversarial em
-# sessão independente fica com o controlador (o despacho desta frente proíbe subagente);
-# `achados: []` aqui quer dizer "ainda não revisada", não "revisada sem achado".
+# da frente e rodada de correção 1): as quatro referências foram relidas em 2026-11-04 e todas as
+# afirmações abaixo conferidas de novo contra a página; o campo `nota` de cada uma diz o que mudou. A
+# revisão adversarial foi a revisão independente em lote de 2026-11-04 (ADR 0005); achados e
+# tratamento no fim.
 conteudo: P2-09
 verificado_em: '2026-11-04'
 verificador: agente-curadoria
@@ -14,11 +14,12 @@ afirmacoes:
   localizacao: "abertura e 'Context and problem' ('In most cases, APIs for a client application respond in about 100 milliseconds (ms) or less'; 'you can't wait for the work to finish before you send a response')"
   resultado: confirmada
   nota: "conferida em 2026-11-03 e de novo em 2026-11-04 (página com ms.date 2026-03-30)"
-- texto: o cliente que não distingue resposta perdida de pedido não recebido repete o POST que o servidor já aceitou
+- texto: quando uma falha de rede perde a resposta, o cliente que não distingue resposta perdida de pedido não
+    recebido repete o POST que o servidor já aceitou
   ref: azure-async-request-reply
   localizacao: "'Problems and considerations', item do Idempotency-Key ('protects against network failures that cause the client to retry a POST that the server already accepted'; 'the client can't distinguish between a lost response and a request that was never received')"
   resultado: confirmada
-  nota: "afirmação nova em 2026-11-04 (o texto passou a citar a fonte nesse trecho); conferida hoje"
+  nota: "afirmação nova em 2026-11-04 (o texto passou a citar a fonte nesse trecho); conferida nesse dia. Na rodada de correção 1, a frase do proxy que corta a conexão, sem fonte, saiu"
 - texto: validar antes e responder com erro como 400 se inválido; 202 com Location (status) e Retry-After (espera
     sugerida); trabalho entregue a uma fila; status 200 enquanto pendente e 303 See Other ao terminar; erro gravado
     no recurso; Idempotency-Key devolve o status existente; DELETE para cancelar
@@ -34,11 +35,12 @@ afirmacoes:
   nota: "conferida em 2026-11-03 e de novo em 2026-11-04"
 - texto: mensagem não apagada antes do fim da visibilidade volta a ficar visível e outro consumidor a processa;
     padrão de 30 segundos; ajustar ao tempo máximo de processamento; estender com ChangeMessageVisibility; teto de
-    12 horas, acima do qual quebrar a tarefa em passos menores; fila de mensagens mortas para o que falha sempre
+    12 horas, acima do qual a documentação sugere o AWS Step Functions ou quebrar a tarefa em passos menores; a
+    mensagem que falha várias vezes vai para a fila de mensagens mortas, sem circular para sempre na principal
   ref: aws-sqs-visibility-timeout
   localizacao: "'Setting and adjusting the visibility timeout' (30 segundos; 'becomes visible again in the queue and can be retrieved by another consumer'), 'Handling failures' e 'Best practices' (match the maximum time, heartbeat, 12-hour limit, 'breaking the task into smaller steps', DLQ 'preventing them from repeatedly circulating in the main queue')"
   resultado: confirmada
-  nota: "conferida em 2026-11-03 e de novo em 2026-11-04"
+  nota: "conferida em 2026-11-03 e de novo em 2026-11-04. Na rodada de correção 1 (2026-11-04), 'a documentação manda quebrar' virou 'sugere o AWS Step Functions ou quebrar' ('consider using AWS Step Functions or breaking the task into smaller steps'), e 'o lote nunca termina' virou 'recomeça até a mensagem ir para a fila de mensagens mortas, se houver' ('Handling unprocessed messages')"
 - texto: na API de lote da Anthropic, até 100.000 pedidos ou 256 MB, a maioria em menos de uma hora, expira em 24
     horas, 50% do preço padrão, estado por processing_status
   ref: anthropic-message-batches
@@ -48,12 +50,24 @@ afirmacoes:
 execucoes:
 - tipo: prompt
   prompt: P2-09-prompt-1
-  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
+  harness: execução manual pelo curador em 2026-11-03; execução em sessão nova de agente pendente, dono
   ambiente: repositório Git novo no scratchpad com app.py (post_classificacao que chama o modelo e devolve 200); {endpoint} = post_classificacao; {p95 estimado} = 4,0 s; pytest do .venv do monorepo; macOS
   resultado: passou
   evidencia: 'passo 1 mostrou o endpoint síncrono (o projeto não tinha medida de tempo); passos 2 a 4: post_classificacao valida (400), cria tarefa pendente, enfileira numa FilaEmMemoria atrás de enviar/receber (o projeto não tinha fila) e responde 202 com Location e Retry-After; mesma Idempotency-Key devolve a mesma tarefa; get_status 200 e 303; worker grava resultado ou erro; passo 5: teste da conta do lote com o p95 marcado como estimado; passo 6: pytest "3 passed" (o modelo chamado uma vez com dois pedidos de mesma chave); commit "feat: trabalho de modelo fora do request (P2-09)". Falta repetir em sessão nova de agente.'
   data: '2026-11-03'
 revisao_adversarial:
-  revisor: pendente, revisão do controlador em sessão independente
+  revisor: revisão independente em lote, 2026-11-04
   data: '2026-11-04'
-  achados: []
+  achados:
+  - afirmacao: "o proxy ou o balanceador pode cortar a conexão antes de o modelo responder"
+    problema: "afirmação sem citação"
+    tratamento: "frase retirada; o trecho cita só o que a fonte do Azure diz (falha de rede perde a resposta e o cliente repete o POST já aceito)"
+  - afirmacao: "o lote nunca termina"
+    problema: "não está na fonte: com fila de mensagens mortas, a mensagem sai da fila principal"
+    tratamento: "reescrito: o lote recomeça a cada tentativa até a mensagem ir para a fila de mensagens mortas, se houver, com citação"
+  - afirmacao: "acima de 12 horas, a documentação manda quebrar a tarefa em passos menores"
+    problema: "a fonte diz 'consider using AWS Step Functions or breaking the task into smaller steps'"
+    tratamento: "reescrito como sugestão, com as duas saídas da fonte"
+  - afirmacao: "execução do prompt registrada como passou"
+    problema: "a execução foi manual pelo curador, não em sessão nova de agente"
+    tratamento: "o campo harness diz que a execução foi manual e que a sessão nova de agente está pendente com o dono"
