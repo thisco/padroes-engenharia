@@ -50,7 +50,7 @@ afirmacoes:
   ref: gitlab-oidc-nuvem
   localizacao: "benefícios ('Removes the need to store secrets in your GitLab group or project'; 'Temporary credentials can be retrieved from your cloud provider through OIDC') (aberta na web em 2026-11-04)"
   resultado: confirmada
-- texto: a confiança pode exigir ref protegida (ref_protected)
+- texto: a confiança pode exigir ref protegida acrescentando ref_protected aos componentes do sub e exigindo ref_protected:true na política
   ref: gitlab-oidc-nuvem
   localizacao: "trecho 'Use the project that runs the job as the subject' ('add ref_protected to the sub claim components and require ref_protected:true in the policy') (aberta na web em 2026-11-04)"
   resultado: confirmada
@@ -94,6 +94,15 @@ afirmacoes:
   ref: github-oidc-aws
   localizacao: "'Updating your GitHub Actions workflow' ('id-token: write   # This is required for requesting the JWT'; aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 com role-to-assume e aws-region) (aberta na web em 2026-11-04)"
   resultado: confirmada
+- texto: pela API de projetos, ci_id_token_sub_claim_components define os componentes do sub e pode incluir ref_protected, a partir do GitLab 17.10, com o padrão ["project_path", "ref_type", "ref"]
+  ref: gitlab-api-projetos
+  localizacao: "atributo ci_id_token_sub_claim_components ('Fields included in the sub claim of the ID Token'; 'The array might also include ref_type, ref, ref_protected'; 'Defaults to [\"project_path\", \"ref_type\", \"ref\"]'; 'Introduced in GitLab 17.10') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o sub segue a ordem dos componentes, e com ref_protected no fim a condição passa a ser project_path:grupo/projeto:ref_type:branch:ref:main:ref_protected:true
+  ref: gitlab-api-projetos
+  localizacao: "a página de cloud services e a de ID token mostram o sub na ordem dos componentes (['project_id', 'ref_type', 'ref'] dá project_id:<id>:ref_type:<type>:ref:<ref>; ['job_project_path', 'ref_type', 'ref'] dá job_project_path:...:ref_type:...:ref:...) (abertas na web em 2026-11-04)"
+  resultado: parcial
+  nota: "nenhuma página mostra o sub com ref_protected escrito por extenso; o valor do texto aplica a regra de formato das tabelas (componente:valor, na ordem do array). Conferir no primeiro token real (decodificar o ID token no job, como a página de ID token ensina)."
 execucoes:
 - tipo: prompt
   prompt: CICD-04-prompt-1
@@ -103,9 +112,15 @@ execucoes:
   evidencia: 'passo 1: branch feat/2026-11-04-deploy-sem-chave; o job implantar, linhas 10 e 11; passo 2: id_tokens GITLAB_OIDC_TOKEN com aud https://gitlab.example.com, assume-role-with-web-identity com --role-arn "$ROLE_ARN" e a regra da branch padrão, o job testes intacto, o YAML carregado sem erro; passo 3: infra/politica-de-confianca.json, json.tool ok; passo 4: só a linha 16 (o export da credencial temporária); passo 5: commit 3595ec9 com os dois arquivos, sem trailer.'
   data: '2026-11-04'
 revisao_adversarial:
-  revisor: autorrevisão do curador contra as fontes; a revisão em sessão independente fica com o controlador (o despacho desta frente proíbe subagente)
+  revisor: revisão independente em lote, 2026-11-04 (antes dela, autorrevisão do curador no mesmo dia, cujos achados seguem no fim da lista)
   data: '2026-11-04'
   achados:
+  - afirmacao: 'CICD-04, O que fazer e Como aplicar: "acrescente ref_protected"'
+    problema: '[Minor] não dizia como (componentes do sub pela API do projeto) nem a forma da condição; o exemplo StringEquals não mostrava o valor coerente.'
+    tratamento: 'Tratado: O que fazer e Como aplicar dizem que se põe ref_protected em ci_id_token_sub_claim_components pela API de projetos (gitlab-api-projetos, GitLab 17.10) e se exige ref_protected:true (gitlab-oidc-nuvem); o texto do Exemplo dá o valor do sub com o componente. O formato por extenso ficou parcial com nota.'
+  - afirmacao: 'CICD-04 como base da CICD-05: a proteção da operação destrutiva'
+    problema: '[Important, achado da CICD-05] a checagem da ref dentro do job não protege, porque o disparo contra outra branch roda o arquivo daquela branch; o controle é do servidor, entre eles o sub preso à main ou ao ambiente.'
+    tratamento: 'Tratado na CICD-05, que aponta a confiança presa pelo sub desta prática como uma das proteções do servidor; aqui o texto já restringe o sub à main ou ao ambiente.'
   - afirmacao: 'CICD-04, Como aparece quando falta: "A chave não expira sozinha"'
     problema: '[ref] a página da Microsoft diz que segredo e certificado podem expirar e derrubar o serviço.'
     tratamento: 'Tratado: o texto passou a dizer que a chave é de longa duração e precisa ser guardada e rotacionada.'

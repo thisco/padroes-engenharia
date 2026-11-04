@@ -17,6 +17,7 @@ referencias:
   - github-oidc
   - github-oidc-aws
   - github-workflow-syntax
+  - gitlab-api-projetos
 relacionadas: [IAC-04, CICD-01, SEG-02]
 dono: engenharia
 revisado_em: 2026-11-04
@@ -46,7 +47,8 @@ credencial temporária pela identidade federada do próprio CI. A prática tem t
    claim `sub`, que diz de onde o job veio. No GitLab, o `sub` tem o formato
    `project_path:<grupo>/<projeto>:ref_type:<tipo>:ref:<branch>`, e a política de confiança do
    exemplo da AWS fixa `ref_type:branch:ref:main` [ref:gitlab-oidc-aws]; a confiança também pode
-   exigir branch protegida (`ref_protected`) [ref:gitlab-oidc-nuvem]. No GitHub, a documentação
+   exigir ref protegida: acrescenta-se `ref_protected` aos componentes do `sub` e exige-se
+   `ref_protected:true` na política [ref:gitlab-oidc-nuvem]. No GitHub, a documentação
    lembra que o IAM recomenda avaliar a condição `token.actions.githubusercontent.com:sub` no papel
    [ref:github-oidc-aws], e o `sub` pode citar a branch (`ref:refs/heads/main`) ou o ambiente do
    job (`environment:prod`) [ref:github-oidc].
@@ -77,8 +79,13 @@ GitLab, o pipeline de MR vindo de outro projeto tem `ref_protected:false`, e a c
    `subject` e `audience` precisam ser iguais aos do token [ref:azure-workload-identity-federation].
 3. Restrinja a confiança ao projeto e à branch principal pelo `sub` (`ref:main` no GitLab,
    `ref:refs/heads/main` ou `environment:producao` no GitHub) [ref:gitlab-oidc-aws]
-   [ref:github-oidc]. No GitLab, acrescente `ref_protected` [ref:gitlab-oidc-nuvem]. Dê ao papel só
-   as permissões do deploy [ref:aws-iam-oidc].
+   [ref:github-oidc]. No GitLab, exija também a ref protegida: pela API de projetos, ponha
+   `ref_protected` no `ci_id_token_sub_claim_components` (GitLab 17.10 ou mais novo), por exemplo
+   `["project_path", "ref_type", "ref", "ref_protected"]` [ref:gitlab-api-projetos], e exija
+   `ref_protected:true` na condição [ref:gitlab-oidc-nuvem]. O `sub` segue a ordem dos componentes,
+   e a condição do Exemplo passa a ser
+   `project_path:grupo/projeto:ref_type:branch:ref:main:ref_protected:true`. Dê ao papel só as
+   permissões do deploy [ref:aws-iam-oidc].
 4. Troque o job: `id_tokens` e a troca do token por credencial temporária no GitLab
    [ref:gitlab-oidc-aws], ou `permissions: id-token: write` e a ação de credencial da nuvem no
    GitHub Actions [ref:github-oidc-aws]. Rode o job na `main` e confira que o deploy funciona.
@@ -119,7 +126,8 @@ implantar:
 ```
 
 A condição da política de confiança do papel, restrita ao projeto e à `main` (o `aud` é o mesmo do
-`id_tokens`):
+`id_tokens`), com os componentes padrão do `sub`; com `ref_protected` nos componentes, o valor do
+`sub` ganha `:ref_protected:true` no fim, como no passo 3 de Como aplicar:
 
 ```json
 {

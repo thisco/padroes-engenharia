@@ -1,0 +1,10 @@
+id: gitlab-api-projetos
+titulo: "Projects API: ci_id_token_sub_claim_components"
+organizacao: GitLab
+url: https://docs.gitlab.com/api/projects/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "atributo ci_id_token_sub_claim_components da edição de projeto (campos do sub do ID token; o primeiro é project_path, project_id, job_project_path, job_project_id, source_project_path ou source_project_id; pode incluir ref_type, ref, ref_protected, environment_protected e deployment_tier; padrão [\"project_path\", \"ref_type\", \"ref\"]; introduzido no GitLab 17.10)"
+dominios: [ci-cd]
+notas: "Lida na web em 2026-11-04 pelo HTML baixado da página."
