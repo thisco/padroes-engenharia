@@ -25,7 +25,13 @@ def site():
 
 
 def test_estrutura_do_roteiro_com_prompt_inicial_passos_e_harness():
-    s = fabrica.site(fabrica.roteiro(), KIRO, fabrica.pratica(), fabrica.referencia())
+    s = fabrica.site(
+        fabrica.roteiro(),
+        KIRO,
+        fabrica.pratica(),
+        fabrica.referencia(),
+        url_base="http://localhost:8000/",
+    )
     r = estrutura(s, s.repo.roteiros[0])
     assert 'id="roteiro-projeto-novo-prompt-1"' in r.prompt_inicial_html
     assert r.prompt_inicial_texto.startswith("Leia {URL do portal}")
@@ -79,7 +85,7 @@ def test_pagina_do_roteiro():
     assert painel.attrs["data-harness"] == "kiro" and painel.attrs["role"] == "tabpanel"
     assert painel.primeiro("h3").texto == "Kiro"
     assert not passos[0].todos(**{"data-abas": True})
-    assert "hidden" not in html.replace("data-copiar hidden", "")
+    assert "hidden" not in html
     lado = d.primeiro("aside")
     titulos = [h.texto for h in lado.todos("h2")]
     assert titulos == ["Ficha", "Práticas", "Referências"]
@@ -197,3 +203,25 @@ def test_corpo_do_passo_nao_usa_a_classe_corpo_do_grid_de_duas_colunas():
         assert not passo.todos(classe="corpo")
         (corpo,) = passo.todos("div", classe="passo-corpo")
         assert corpo.primeiro("h2")
+
+
+def test_base_publicada_troca_o_marcador_nos_roteiros_e_some_o_aviso():
+    s = site()
+    r = s.repo.roteiros[0]
+    html = html_roteiro_passos(s, r)
+    md = md_roteiro_passos(s, r)
+    assert "{URL do portal}" not in html and "{URL do portal}" not in md
+    assert "https://p.exemplo" in html and "https://p.exemplo" in md
+    assert "Troque" not in html
+
+
+def test_base_local_mantem_o_marcador_e_o_aviso_nos_roteiros():
+    s = fabrica.site(
+        fabrica.roteiro(),
+        KIRO,
+        fabrica.pratica(),
+        fabrica.referencia(),
+        url_base="http://localhost:8000/",
+    )
+    html = html_roteiro_passos(s, s.repo.roteiros[0])
+    assert "Troque" in html and "{URL do portal}" in html

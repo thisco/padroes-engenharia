@@ -13,6 +13,7 @@ from dataclasses import dataclass
 
 from markdown_it import MarkdownIt
 
+from portal.gerador.avisos import eh_local
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, numerar
 from portal.gerador.exemplos import blocos, expandir_inclusoes, secoes
@@ -173,6 +174,7 @@ def html_roteiro_passos(site: Site, roteiro: Conteudo) -> str:
         titulo=meta["titulo"],
         descricao=descricao_de(site, roteiro),
         objetivo=meta["objetivo"],
+        url_local=eh_local(site.url_base),
         roteiro=estrutura(site, roteiro),
         campos=_ficha(site, roteiro),
         vinculos=vinculos_de(site, roteiro),

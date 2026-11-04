@@ -629,7 +629,9 @@ def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
     return list(grupos.values())
 
 
-PROMPTS_DESCRICAO = "Os prompts de exemplo das práticas e receitas, cada um testado num agente."
+PROMPTS_DESCRICAO = (
+    "Os prompts de exemplo das práticas, receitas e roteiros, cada um testado num agente."
+)
 
 
 def html_prompts(site: Site) -> str:

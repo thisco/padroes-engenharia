@@ -10,7 +10,7 @@
   <article class="texto" aria-label="Roteiro">
     <div class="disco">
       <h2>Cole isto no agente</h2>
-      <p>Troque <code>{URL do portal}</code> pelo endereço do portal. O agente segue o roteiro pelo <code>.md</code> e para nos passos marcados "você decide".</p>
+      <p>{% if url_local %}Troque <code>{URL do portal}</code> pelo endereço do portal. {% endif %}O agente segue o roteiro pelo <code>.md</code> e para nos passos marcados "você decide".</p>
       {{ roteiro.prompt_inicial_html|safe }}
     </div>
     <div class="roteiro">

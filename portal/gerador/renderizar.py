@@ -205,7 +205,16 @@ def montar_site(
     )
 
 
-CAMPOS_COM_CORPO = ("praticas", "dominios", "conceitos", "guias", "casos", "paginas", "receitas")
+CAMPOS_COM_CORPO = (
+    "praticas",
+    "dominios",
+    "conceitos",
+    "guias",
+    "casos",
+    "paginas",
+    "receitas",
+    "roteiros",
+)
 
 
 def _com_url_do_portal(repo: Repositorio, url: str) -> Repositorio:
