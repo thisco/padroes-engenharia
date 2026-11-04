@@ -28,10 +28,26 @@ from typing import Any
 from . import blocos, lockfile
 from .deteccao import detectar_ci, detectar_perfil
 from .harness import NOMES, detectar_harnesses, montagens, ordenar, tem_runtime
+from .lockfile import (
+    AGENTS,
+    CLAUDE,
+    GITLAB_CI,
+    MOLDES,
+    NAO_APLICADO,
+    NIVEIS_DE_IDS,
+    PASTA,
+)
 from .origem import Pacote, abrir, e_url
-from .util import escrever_atomico, para_json, perguntar_no_terminal, sha256
+from .util import (
+    conferir_destino,
+    dentro,
+    escrever_atomico,
+    existente,
+    para_json,
+    perguntar_no_terminal,
+    sha256,
+)
 
-PASTA = ".padroes"
 BACKUP = f"{PASTA}/backup"
 LOG = f"{PASTA}/log"
 ESPELHO = (
@@ -46,15 +62,9 @@ ESPELHO = (
     "hooks/",
     "git/",
 )
-MOLDES = ("gitlab", "github", "nenhum")
-NIVEIS_DE_IDS = ("falha", "aviso")
 JOB = re.compile(r"^padroes-[a-z0-9]+(?:-[a-z0-9]+)*$")
-NAO_APLICADO = "nao-aplicado"
 IMPORT_AGENTS = "@AGENTS.md"
 BLOCO_CLAUDE = f"<!-- padroes:inicio -->\n{IMPORT_AGENTS}\n<!-- padroes:fim -->\n"
-AGENTS = "AGENTS.md"
-CLAUDE = "CLAUDE.md"
-GITLAB_CI = ".gitlab-ci.yml"
 LINHA_HOOKS = "Hooks ativos neste projeto (bloqueiam ou pedem aprovação): "
 
 Perguntar = Callable[[str], "str | None"]
@@ -97,6 +107,7 @@ class Plano:
     blocos: dict[str, tuple[str, str]] = field(default_factory=dict)
     links: dict[str, str] = field(default_factory=dict)
     pulados: list[str] = field(default_factory=list)
+    links_do_projeto: list[str] = field(default_factory=list)
     gates: list[dict[str, Any]] = field(default_factory=list)
     regras: bytes = b""
 
@@ -133,7 +144,12 @@ def regras_filtradas(pacote: Pacote, dominios: list[str]) -> bytes:
 
 
 def gates_do_perfil(pacote: Pacote, dominios: list[str]) -> list[dict[str, Any]]:
-    gates = [g for g in pacote.json("ci/gates.json")["gates"] if set(g["dominios"]) & set(dominios)]
+    # O gate fixo (`padroes verificar`) entra em todo perfil: é ele que reprova o desligamento.
+    gates = [
+        g
+        for g in pacote.json("ci/gates.json")["gates"]
+        if g.get("fixo") or set(g["dominios"]) & set(dominios)
+    ]
     for g in gates:
         # O nome do job vira nome de arquivo em .github/workflows/: só o formato do gerador.
         if not JOB.match(str(g.get("job", ""))):
@@ -271,9 +287,20 @@ def _link_nosso(raiz: Path, link: str, alvo: str) -> bool:
     return caminho.is_symlink() and os.path.realpath(caminho) == os.path.realpath(raiz / alvo)
 
 
-def _dentro(raiz: Path, caminho: Path) -> bool:
-    real, base = os.path.realpath(caminho), os.path.realpath(raiz)
-    return real == base or real.startswith(base + os.sep)
+def _claude_e_link_para_agents(raiz: Path) -> bool:
+    """`CLAUDE.md` que é link para o `AGENTS.md` já o referencia: o CLI não o toca (I-3)."""
+    claude = raiz / CLAUDE
+    return claude.is_symlink() and os.path.realpath(claude) == os.path.realpath(raiz / AGENTS)
+
+
+def conferir_dominios(pacote: Pacote, escolhas: Escolhas) -> None:
+    conhecidos = pacote.json("perfil/sinais.json")["dominios"]
+    desconhecidos = [d for d in escolhas.dominios if d not in conhecidos]
+    if desconhecidos:
+        raise ErroDeUso(
+            f"perfil com domínio que o pacote {pacote.versao} não tem: "
+            f"{', '.join(desconhecidos)}; rode `padroes perfil` ou passe --perfil"
+        )
 
 
 def planejar(raiz: Path, pacote: Pacote, escolhas: Escolhas) -> Plano:
@@ -301,14 +328,17 @@ def planejar(raiz: Path, pacote: Pacote, escolhas: Escolhas) -> Plano:
         bloco = compor_bloco(pacote, dominios, tem_runtime(pacote))
         plano.blocos[escolhas.bloco] = ("md", bloco)
     claude = raiz / CLAUDE
-    if "claude" in escolhas.harnesses and claude.is_file():
+    if "claude" in escolhas.harnesses and _claude_e_link_para_agents(raiz):
+        plano.links_do_projeto.append(CLAUDE)
+    elif "claude" in escolhas.harnesses and claude.is_file():
         sem_bloco = blocos.remover(claude.read_text(encoding="utf-8"), "md")
         if not any(linha.strip() == IMPORT_AGENTS for linha in sem_bloco.splitlines()):
             plano.blocos[CLAUDE] = ("md", BLOCO_CLAUDE)
 
     skills = sorted({c.split("/")[1] for c in pacote.arquivos if c.startswith("skills/")})
     for ponto in montagens(escolhas.harnesses):
-        if (raiz / ponto).exists() and not _dentro(raiz, raiz / ponto):
+        # Ponto (ou pasta acima dele) que resolve para fora da raiz não é montado (R14).
+        if not dentro(raiz, existente(raiz / ponto)):
             plano.pulados += [f"{ponto}/{nome}" for nome in skills]
             continue
         for nome in skills:
@@ -426,19 +456,30 @@ def novo_lock(
         "montagens": dict(sorted(plano.links.items())),
         "montagens_do_projeto": sorted(plano.pulados),
         "criados": sorted(criados & set(plano.blocos)),
+        "links_do_projeto": sorted(plano.links_do_projeto),
     }
     if lock != antigo or not lock["instalado_em"]:
         lock["instalado_em"] = datetime.date.today().isoformat()
     return lock
 
 
+def conferir(raiz: Path, m: Mudancas) -> None:
+    """Todo destino dentro da raiz e nenhum link substituído, antes da primeira escrita (R14)."""
+    for relativo in [*(f"{BACKUP}/{r}" for r in m.backups), *m.escrever, *m.apagar]:
+        conferir_destino(raiz, raiz / relativo)
+    conferir_destino(raiz, raiz / lockfile.NOME)
+    for link in [*m.desfazer_links, *m.links]:
+        conferir_destino(raiz, raiz / link, link_permitido=True)
+
+
 def aplicar(raiz: Path, m: Mudancas) -> None:
+    conferir(raiz, m)
     for relativo, dados in m.backups.items():
         destino = raiz / BACKUP / relativo
         if not destino.exists():
-            escrever_atomico(destino, dados)
+            escrever_atomico(destino, dados, raiz)
     for relativo, dados in m.escrever.items():
-        escrever_atomico(raiz / relativo, dados)
+        escrever_atomico(raiz / relativo, dados, raiz)
     for relativo in m.apagar:
         (raiz / relativo).unlink(missing_ok=True)
     for link in m.desfazer_links:
@@ -478,10 +519,12 @@ def executar(
 ) -> dict[str, Any]:
     """Planeja, calcula a diferença e aplica (ou só mostra, com `dry_run`). Devolve o lockfile."""
     antigo = antigo or {}
+    conferir_dominios(pacote, escolhas)
     plano = planejar(raiz, pacote, escolhas)
     m = calcular(raiz, plano, antigo)
     lock = novo_lock(pacote, plano, antigo, m.criados | set(antigo.get("criados", [])))
     lock_muda = lock != antigo
+    conferir(raiz, m)
     if dry_run:
         mostrar(m, lock_muda, saida)
         saida("--dry-run: nada foi escrito")
@@ -528,6 +571,11 @@ def instalar(
         pacote = abrir(opcoes.origem, opcoes.versao)
     elif antigo is not None:
         pacote = reabrir(raiz, antigo, opcoes.versao)
+        if pacote.sha256 != antigo["pacote_sha256"]:
+            raise ErroDeUso(
+                "a origem gravada no lockfile tem outro pacote; troque de versão com "
+                "`padroes atualizar` (ou passe --origem)"
+            )
     else:
         raise ErroDeUso("sem origem: passe --origem <pasta do pacote ou URL>")
     escolhas = resolver(raiz, casa or Path.home(), pacote, opcoes, antigo, perguntar)

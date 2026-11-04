@@ -1,8 +1,9 @@
 """Origem do pacote de distribuição (spec do motor §10, `--origem`; plano F4-D2).
 
 A origem é uma pasta (a `public/pacote/` do build, ou o tarball da release extraído) ou uma URL
-`http`, `https` ou `file` que serve a mesma pasta. O `manifesto.json` lista cada arquivo com o
-SHA-256; nada é aceito sem a conferência de todos, e o CLI só escreve no projeto depois dela.
+`https`, `file` ou `http` (este só para localhost) que serve a mesma pasta. O `manifesto.json`
+lista cada arquivo com o SHA-256; nada é aceito sem a conferência de todos, e o CLI só escreve no
+projeto depois dela.
 Arquivo presente na pasta e fora do manifesto não entra.
 """
 
@@ -12,6 +13,7 @@ import hashlib
 import json
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
@@ -20,6 +22,8 @@ from typing import Any
 MANIFESTO = "manifesto.json"
 _URL = re.compile(r"^(?:https?|file)://", re.I)
 TEMPO_LIMITE = 30
+# `http` sem TLS só para a máquina local (o servidor de teste, o `http.server` do portal).
+LOCAIS = frozenset({"localhost", "127.0.0.1", "::1"})
 
 
 class ErroDoPacote(Exception):
@@ -63,6 +67,11 @@ def _caminho_seguro(relativo: str) -> bool:
 
 def _leitor(origem: str):
     if e_url(origem):
+        url = urllib.parse.urlsplit(origem)
+        if url.scheme.lower() == "http" and url.hostname not in LOCAIS:
+            raise ErroDoPacote(
+                f"{origem}: http sem TLS só para localhost; use https (ou a pasta do pacote)"
+            )
         base = origem if origem.endswith("/") else origem + "/"
 
         def ler_url(relativo: str) -> bytes:
