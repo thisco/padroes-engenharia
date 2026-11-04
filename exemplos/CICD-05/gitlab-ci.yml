@@ -1,0 +1,14 @@
+destruir-homologacao:
+  stage: limpeza
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: manual
+  manual_confirmation: "Isto destrói homologacao. Rode o job pelo nome, com a variável CONFIRMAR=homologacao."
+  variables:
+    ALVO: homologacao
+  environment:
+    name: homologacao
+    action: stop
+  script:
+    - cd infra && tofu init -input=false -no-color
+    - QUEM="$GITLAB_USER_LOGIN" COMMIT="$CI_COMMIT_SHA" sh ../destruir.sh "$ALVO" "${CONFIRMAR:-}"

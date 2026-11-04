@@ -1,4 +1,4 @@
-# afirmações anteriores a 2026-11-04 não mudaram (conferidas em 2026-10-07); nova: CICD-04
+# afirmações anteriores a 2026-11-04 não mudaram (conferidas em 2026-10-07); novas: CICD-04 e CICD-05
 conteudo: ci-cd
 verificado_em: '2026-11-04'
 verificador: agente-curadoria
@@ -14,6 +14,10 @@ afirmacoes:
 - texto: o GitLab emite um token OIDC por job, que a nuvem troca por credencial temporária, sem segredo guardado no projeto
   ref: gitlab-oidc-nuvem
   localizacao: "abertura e benefícios ('Removes the need to store secrets in your GitLab group or project'; 'Temporary credentials can be retrieved from your cloud provider through OIDC') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o job manual só roda quando alguém o inicia
+  ref: gitlab-jobs-manuais
+  localizacao: "trecho de job manual ('You can require that a job doesn't run unless a user starts it. This type of job is called a manual job') (aberta na web em 2026-11-04)"
   resultado: confirmada
 revisao_adversarial:
   revisor: conferência em lote (ADR 0005), sessão independente

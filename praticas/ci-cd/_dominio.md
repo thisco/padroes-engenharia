@@ -4,7 +4,7 @@ grupo: Entrega e operação
 descricao: "O que o pipeline do GitLab exige antes do merge e na hora da release: gates que reprovam, merge request pequena e entrega rastreável até o commit."
 steering: []
 skills: []
-referencias: [gitlab-pipeline-obrigatorio, dora-small-batches, gitlab-oidc-nuvem]
+referencias: [gitlab-pipeline-obrigatorio, dora-small-batches, gitlab-oidc-nuvem, gitlab-jobs-manuais]
 revisado_em: 2026-11-04
 ---
 
@@ -27,3 +27,6 @@ máquina com o `gitlab-ci-local`.
 O deploy também é assunto da faixa. O job que implanta não guarda chave de nuvem: o GitLab emite
 um token OIDC por job, que a nuvem troca por credencial temporária, sem segredo guardado no projeto
 [ref:gitlab-oidc-nuvem]. É a CICD-04.
+
+A operação que destrói ambiente ou dado também sai do terminal: ela roda num job manual, que só
+roda quando alguém o inicia [ref:gitlab-jobs-manuais], com o nome do alvo digitado. É a CICD-05.

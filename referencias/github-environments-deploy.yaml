@@ -3,8 +3,8 @@ titulo: "Deployments and environments"
 organizacao: GitHub
 url: https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments
 tipo: vendor
-verificado_em: 2026-11-03
+verificado_em: 2026-11-04
 verificacao: V
 localizacao: "trechos sobre regras de proteção de deploy, revisores obrigatórios (até seis, basta um aprovar; impedir a autoaprovação), branches e tags de deploy, segredos do ambiente (o job só os lê depois da aprovação) e as notas de disponibilidade por plano"
 dominios: [infra-iac, ci-cd]
-notas: "Lida na web em 2026-11-03. Nos planos Free, Pro e Team, revisores obrigatórios só existem em repositório público."
+notas: "Lida na web em 2026-11-04. Nos planos Free, Pro e Team, revisores obrigatórios só existem em repositório público."

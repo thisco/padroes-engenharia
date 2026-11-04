@@ -3,8 +3,8 @@ titulo: "OpenTofu: comando tofu apply"
 organizacao: "OpenTofu"
 url: https://opentofu.org/docs/cli/commands/apply/
 tipo: padrao-aberto
-verificado_em: 2026-11-03
+verificado_em: 2026-11-04
 verificacao: V
 localizacao: "trecho do modo sem plano salvo (cria o plano e pede aprovação; -auto-approve dispensa a pergunta) e do modo com plano salvo (aplica sem pedir confirmação)"
 dominios: [infra-iac, ci-cd]
-notas: Fonte aberta, lida na web em 2026-11-03.
+notas: Fonte aberta, lida na web em 2026-11-04.

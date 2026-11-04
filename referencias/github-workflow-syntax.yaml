@@ -3,8 +3,8 @@ titulo: "Workflow syntax for GitHub Actions"
 organizacao: GitHub
 url: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
 tipo: vendor
-verificado_em: 2026-11-03
+verificado_em: 2026-11-04
 verificacao: V
 localizacao: "seções 'on.workflow_dispatch.inputs.<input_id>.type' (boolean, choice, number, environment ou string), '.required', 'permissions' (id-token: write para pedir o token OIDC) e 'jobs.<job_id>.environment' (as regras de proteção passam antes de o job ir ao runner)"
 dominios: [infra-iac, ci-cd]
-notas: Lida na web em 2026-11-03.
+notas: Lida na web em 2026-11-04.

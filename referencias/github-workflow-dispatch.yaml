@@ -1,0 +1,10 @@
+id: github-workflow-dispatch
+titulo: "Events that trigger workflows: workflow_dispatch"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#workflow_dispatch
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'workflow_dispatch' (disparo manual; só dispara se o arquivo do workflow estiver na branch padrão; pela API ou pela CLI dispara contra qualquer branch ou tag; entradas lidas no contexto inputs; entrada obrigatória preenchida à mão no navegador)"
+dominios: [ci-cd]
+notas: "Lida na web em 2026-11-04. A página não diz se a entrada obrigatória é exigida no disparo pela API."

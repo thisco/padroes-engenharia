@@ -1,0 +1,157 @@
+conteudo: CICD-05
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o tofu destroy destrói todos os objetos remotos que a configuração gerencia
+  ref: opentofu-destroy
+  localizacao: "abertura ('The tofu destroy command is a convenient way to destroy all remote objects managed by a particular OpenTofu configuration') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a documentação lembra que em produção, em geral, não se quer destruir objeto de longa duração
+  ref: opentofu-destroy
+  localizacao: "abertura ('While you will typically not want to destroy long-lived objects in a production environment') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: tofu plan -destroy grava o plano de destruição, mostrando as mudanças propostas sem executá-las
+  ref: opentofu-destroy
+  localizacao: "trecho da prévia ('tofu plan -destroy' roda o plan em modo destroy, 'showing you the proposed destroy changes without executing them'); o -out vem do tofu plan e o tofu destroy é atalho de tofu apply -destroy (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o tofu apply de um plano salvo executa sem pedir outra confirmação
+  ref: opentofu-apply
+  localizacao: "modo com plano salvo ('OpenTofu takes the actions in the saved plan without prompting you for confirmation') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: com prevent_destroy, o OpenTofu rejeita com erro o plano que destruiria o objeto
+  ref: opentofu-prevent-destroy
+  localizacao: "'Lifecycle Customizations', prevent_destroy ('will cause OpenTofu to reject with an error any plan that would destroy' o objeto; exemplo de objeto caro: instância de banco) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o prevent_destroy só protege enquanto está na configuração e não impede a destruição quando o bloco do recurso sai dela
+  ref: opentofu-prevent-destroy
+  localizacao: "mesmo trecho ('as long as the argument remains present in the configuration'; 'cannot prevent the remote object from being destroyed when the resource block is removed from configuration') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o job manual só roda quando alguém o inicia
+  ref: gitlab-jobs-manuais
+  localizacao: "trecho de job manual ('You can require that a job doesn't run unless a user starts it. This type of job is called a manual job') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: ao rodar o job manual, informam-se variáveis próprias do job
+  ref: gitlab-jobs-manuais
+  localizacao: "trecho 'When running manual jobs you can supply additional job specific CI/CD variables' (abrir o job pelo nome, não pelo botão Run) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: com ambiente protegido, só quem está na lista roda o job manual, nos planos Premium e Ultimate
+  ref: gitlab-jobs-manuais
+  localizacao: "seção de proteger job manual ('Use protected environments to define a list of users authorized to run a manual job'; 'Only users in this list or GitLab administrators can run this manual job'; seção marcada Premium e Ultimate) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o manual_confirmation acrescenta ao job manual uma confirmação com mensagem própria
+  ref: gitlab-manual-confirmation
+  localizacao: "seção 'manual_confirmation' ('Use manual_confirmation with when: manual to define a custom confirmation message for manual jobs'; introduzido no GitLab 17.1; vale também para job de environment:action: stop desde o 18.3) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o manual_confirmation pede GitLab 17.1 ou mais novo, e 18.3 no job que para ambiente
+  ref: gitlab-manual-confirmation
+  localizacao: "History da seção ('Introduced in GitLab 17.1'; 'Support for environment stop jobs introduced in GitLab 18.3') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: environment com action stop marca o job como o que para o ambiente
+  ref: gitlab-environment-action
+  localizacao: "seção 'environment:action', valor stop ('Indicates that the job stops an environment') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: no job manual, GITLAB_USER_LOGIN é quem iniciou o job
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "linha GITLAB_USER_LOGIN ('In manual jobs, the value is the username of the user who started the job') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: CI_COMMIT_SHA é o commit do pipeline
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "linha CI_COMMIT_SHA ('The commit revision the project is built for') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: workflow_dispatch é o disparo manual de um workflow
+  ref: github-workflow-dispatch
+  localizacao: "seção 'workflow_dispatch' ('To enable a workflow to be triggered manually, you need to configure the workflow_dispatch event') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o workflow_dispatch só dispara se o arquivo do workflow estiver na branch padrão
+  ref: github-workflow-dispatch
+  localizacao: "seção 'workflow_dispatch' ('This event will only trigger a workflow run if the workflow file exists on the default branch') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: pela API ou pela CLI, o disparo pode apontar qualquer branch ou tag
+  ref: github-workflow-dispatch
+  localizacao: "seção 'workflow_dispatch' ('you can dispatch it against any branch or tag via the GitHub API or GitHub CLI') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a entrada obrigatória é preenchida à mão no formulário do navegador e lida no contexto inputs
+  ref: github-workflow-dispatch
+  localizacao: "seção 'workflow_dispatch' ('you must enter values for the required inputs manually before the workflow will run'; 'you can access the input values in the inputs context') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a entrada do workflow_dispatch pode ser string ou choice e pode ser obrigatória
+  ref: github-workflow-syntax
+  localizacao: "seções 'on.workflow_dispatch.inputs.<input_id>.type' ('This must be one of: boolean, choice, number, environment or string') e '.required' ('A boolean specifying whether the input must be supplied') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: github.triggering_actor é quem iniciou a execução e github.sha é o commit
+  ref: github-contextos
+  localizacao: "tabela do contexto github ('The username of the user that initiated the workflow run'; 'The commit SHA that triggered the workflow') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: com revisores obrigatórios no ambiente, o job espera uma aprovação, e quem dispara pode ser impedido de aprovar o próprio pedido; nos planos Free, Pro e Team, só em repositório público
+  ref: github-environments-deploy
+  localizacao: "trechos de revisores obrigatórios ('require a specific person or team to approve workflow jobs that reference the environment'), de impedir a autoaprovação ('users who initiate a deployment cannot approve the deployment job') e a nota de planos (aberta na web em 2026-11-04)"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/executar.sh
+  comando: sh exemplos/CICD-05/executar.sh
+  ambiente: OpenTofu v1.13.2; provider hashicorp/local v2.9.1; macOS; pasta temporária. Os pipelines não foram executados num GitLab nem num GitHub.
+  resultado: passou
+  evidencia: 'apply "2 added" em homologacao; confirmação errada: mensagem "nada foi destruído", saída 1, banco.txt e servico.txt intactos; confirmação certa com prevent_destroy: "Error: Resource instance cannot be destroyed", saída 1, os dois arquivos intactos; sem a proteção: "Plan: 0 to add, 0 to change, 2 to destroy", "Apply complete! Resources: 0 added, 0 changed, 2 destroyed", saída 0, nenhum arquivo restante.'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/destruir.sh
+  comando: sh destruir.sh homologacao <confirmação> (dentro de executar.sh); sh -n
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'saída 1 sem chamar o tofu com a confirmação errada; com a certa, o plano salvo destruir.tfplan aplicado (ou rejeitado pelo prevent_destroy)'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/infra/main.tf
+  comando: tofu init, tofu apply, tofu plan -destroy -out e tofu apply do plano (dentro de executar.sh); tofu fmt -check
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'dois recursos local_file (servico e banco); o banco com prevent_destroy rejeitou o plano de destruição; fmt sem diferença'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/infra/ambientes/homologacao.tfvars
+  comando: tofu apply e tofu plan -destroy com -var-file=ambientes/homologacao.tfvars (dentro de executar.sh)
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'servico.txt com replicas=1'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/gitlab-ci.yml
+  comando: yaml.safe_load (PyYAML) e leitura contra a referência das palavras-chave rules, when, manual_confirmation e environment:action
+  ambiente: Python da .venv do portal; não executado num GitLab
+  resultado: passou
+  evidencia: 'carregou com o job destruir-homologacao; o script do job é o destruir.sh exercitado em executar.sh'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/CICD-05/github-destruir.yml
+  comando: yaml.safe_load (PyYAML) e leitura contra a referência de workflow_dispatch, inputs e contextos
+  ambiente: Python da .venv do portal; não executado num GitHub (sem actionlint na máquina)
+  resultado: passou
+  evidencia: 'carregou com on, name e jobs.destruir; as entradas ambiente (choice) e confirmar (string) obrigatórias; o passo de destruição chama o mesmo destruir.sh'
+  data: '2026-11-04'
+- tipo: prompt
+  prompt: CICD-05-prompt-1
+  harness: execução manual pelo curador
+  ambiente: 'repositório Git novo no rascunho da sessão, main com um .gitlab-ci.yml de um job (testes) e infra/ com o main.tf e o homologacao.tfvars do Exemplo; {ambiente} = homologacao. O prompt foi seguido passo a passo pelo próprio curador, e não colado numa sessão nova de agente: o despacho desta frente proíbe subagente. Fica pendente a execução em sessão nova. Nenhum tofu apply nem destroy.'
+  resultado: passou
+  evidencia: 'passo 1: branch feat/2026-11-04-destroy-pelo-ci; passo 2: destruir.sh com set -eu, a comparação e o plano salvo; passo 3: job destruir-homologacao no estágio limpeza (criado), regra da branch padrão com when: manual, manual_confirmation, environment homologacao com action: stop, o job testes intacto; passo 4: sh -n ok, "sh destruir.sh homologacao errado" saída 1 com "nada foi destruído" e sem tofu no PATH, YAML carregado; passo 5: commit 660b7bb só com os dois arquivos, sem trailer; recurso indicado para prevent_destroy: local_file.banco (já protegido).'
+  data: '2026-11-04'
+revisao_adversarial:
+  revisor: autorrevisão do curador contra as fontes; a revisão em sessão independente fica com o controlador (o despacho desta frente proíbe subagente)
+  data: '2026-11-04'
+  achados:
+  - afirmacao: 'CICD-05, O que fazer: workflow_dispatch "só aparece se o arquivo estiver na branch padrão"'
+    problema: '[ref] a fonte diz que o evento só dispara se o arquivo existir na branch padrão, e que pela API ou CLI o disparo aponta qualquer branch ou tag.'
+    tratamento: 'Tratado: o texto diz "só dispara" e acrescenta o disparo pela API; o job confere a ref no primeiro passo.'
+  - afirmacao: 'CICD-05, Exemplo GitLab: regra com a variável do alvo informada ao rodar o job'
+    problema: '[executabilidade] a variável informada ao rodar o job manual não existe quando as rules são avaliadas, na criação do pipeline.'
+    tratamento: 'Tratado: um job por ambiente, com o alvo fixo no job; só a confirmação vem da variável informada ao rodar.'
+  - afirmacao: 'CICD-05, prevent_destroy'
+    problema: '[limite] o erro do OpenTofu sugere excluir o recurso da rodada (-exclude), o que contorna a proteção.'
+    tratamento: 'Declarado em Como verificar: o script do Exemplo não aceita a opção.'
+  - afirmacao: 'CICD-05, Exemplo'
+    problema: '[executabilidade] os pipelines não rodaram num GitLab nem num GitHub.'
+    tratamento: 'Declarado em Como verificar; o script e o OpenTofu rodaram de verdade em executar.sh.'
+  - afirmacao: 'CICD-05, O que fazer: o manual_confirmation "é um clique"'
+    problema: '[ref] a fonte fala em mensagem de confirmação própria e não descreve a forma da confirmação.'
+    tratamento: 'Tratado: o texto diz só que acrescenta uma confirmação com mensagem própria; a comparação do nome digitado fica no script.'

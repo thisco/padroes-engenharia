@@ -1,0 +1,10 @@
+id: opentofu-prevent-destroy
+titulo: "OpenTofu: Resource Behavior, lifecycle prevent_destroy"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/resources/behavior/
+tipo: padrao-aberto
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'Lifecycle Customizations', argumento prevent_destroy (rejeita com erro o plano que destrói o objeto; não protege quando o bloco do recurso sai da configuração)"
+dominios: [ci-cd]
+notas: Fonte aberta, lida na web em 2026-11-04.
