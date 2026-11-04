@@ -38,6 +38,10 @@ def executar(tarefa_id, tipo, entrada, modelo, ferramentas, interruptor, preco, 
             span.set_attributes({"tarefa.resultado": "interrompida", "error.type": str(motivo)})
             ao_interromper(tarefa_id, historico)
             raise
+        except Exception as erro:  # ferramenta ou modelo que falha: mesmo registro e mesma saída
+            span.set_attributes({"tarefa.resultado": "falhou", "error.type": type(erro).__name__})
+            ao_interromper(tarefa_id, historico)
+            raise
         finally:
             span.set_attributes({"gen_ai.usage.input_tokens": entrada_tok,
                                  "gen_ai.usage.output_tokens": saida_tok,

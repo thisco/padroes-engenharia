@@ -1,8 +1,8 @@
 # Fontes abertas na web em 2026-11-04. As quatro referências novas (openai-governing-agentic,
 # otel-genai-agent-spans, otel-genai-spans, anthropic-agent-evals) foram criadas em 2026-11-03 pela
-# sessão anterior desta frente e relidas hoje; litellm-virtual-keys já existia e foi relida hoje.
-# A revisão adversarial em sessão independente fica com o controlador (o despacho desta frente
-# proíbe subagente); `achados: []` aqui quer dizer "ainda não revisada", não "revisada sem achado".
+# sessão anterior desta frente e relidas em 2026-11-04; litellm-virtual-keys já existia e foi relida
+# no mesmo dia. A revisão adversarial foi a revisão independente em lote de 2026-11-04 (ADR 0005);
+# achados e tratamento no fim. A rodada de correção 1 mudou só o Exemplo e o prompt, sem afirmação nova.
 conteudo: P3-07
 verificado_em: '2026-11-04'
 verificador: agente-curadoria
@@ -54,16 +54,22 @@ execucoes:
   comando: pytest -q test_laco.py (teste do curador, fora do repositório, com InMemorySpanExporter)
   ambiente: venv no scratchpad com opentelemetry-sdk 1.45.2 e pytest; Python 3.15; macOS
   resultado: passou
-  evidencia: '"3 passed": sucesso gera invoke_agent triagem com execute_tool buscar como filho, tokens 2000/200 e custo 0,003 USD; interruptor desligado para antes do primeiro passo, chama a saída e grava error.type interruptor; teto de custo e teto de passos interrompem'
+  evidencia: '"4 passed": sucesso gera invoke_agent triagem com execute_tool buscar como filho, tokens 2000/200 e custo 0,003 USD; interruptor desligado para antes do primeiro passo, chama a saída e grava error.type interruptor; teto de custo e teto de passos interrompem; ferramenta que lança TimeoutError grava error.type TimeoutError e tarefa.resultado falhou e chama a saída. O teste novo falhou com o laço antigo (1 failed, 3 passed) antes da correção.'
   data: '2026-11-04'
 - tipo: prompt
   prompt: P3-07-prompt-1
-  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
+  harness: execução manual pelo curador em 2026-11-04, duas vezes (a segunda com o prompt revisto na rodada de correção 1); execução em sessão nova de agente pendente, dono
   ambiente: repositório Git novo no scratchpad com agente.py (o laço do Antes) e catalogo-modelos.yml com preço por token; {nome do agente} = triagem; {máximo de passos} = 20; {teto em USD} = 0,50; venv com opentelemetry-sdk 1.45.2 e pytest; macOS
   resultado: passou
-  evidencia: 'passo 1 mostrou o laço (agente.py:4 proximo_passo e :7 chamada da ferramenta), sem interruptor, teto nem traço; passo 2: interruptor.py com InterruptorEmMemoria (o projeto não tinha serviço de configuração), só lido pelo laço; passos 3 e 4: laço com tetos, saída na interrupção e spans invoke_agent/execute_tool; passo 5: três testes com exportador em memória; passo 6: pytest "3 passed" e commit "feat: controles de operação do agente (P3-07)". Os testes usam um interruptor falso próprio, não o InterruptorEmMemoria. Falta repetir em sessão nova de agente.'
+  evidencia: 'passo 1 mostrou o laço (agente.py:4 proximo_passo e :7 chamada da ferramenta), sem interruptor, teto nem traço; passo 2: interruptor.py com InterruptorEmMemoria (o projeto não tinha serviço de configuração), só lido pelo laço; passos 3 e 4: laço com tetos, saída na interrupção e na falha, spans invoke_agent/execute_tool; passo 5: quatro testes com exportador em memória, inclusive a ferramenta que lança exceção; passo 6: pytest "4 passed" e commit "feat: controles de operação do agente (P3-07)". Os testes usam um interruptor falso próprio, não o InterruptorEmMemoria.'
   data: '2026-11-04'
 revisao_adversarial:
-  revisor: pendente, revisão do controlador em sessão independente
+  revisor: revisão independente em lote, 2026-11-04
   data: '2026-11-04'
-  achados: []
+  achados:
+  - afirmacao: "o laço chama a saída preparada em toda interrupção e grava error.type quando termina em erro (Como aplicar, passos 4 e 5)"
+    problema: "em exemplos/P3-07/laco.py, ferramenta que lança exceção deixava o span invoke_agent em ERROR sem error.type nem tarefa.resultado, e ao_interromper não era chamado"
+    tratamento: "o laço captura Exception, grava error.type com o nome da classe e tarefa.resultado falhou e chama a saída antes de relançar; teste novo cobre o caminho (RED com o laço antigo, GREEN depois); Como aplicar, Exemplo e prompt dizem que a saída vale também para a falha"
+  - afirmacao: "execução do prompt registrada como passou"
+    problema: "a execução foi manual pelo curador, não em sessão nova de agente"
+    tratamento: "o campo harness diz que a execução foi manual e que a sessão nova de agente está pendente com o dono"
