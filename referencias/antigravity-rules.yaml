@@ -3,7 +3,7 @@ titulo: "Rules (Antigravity)"
 organizacao: Google
 url: https://antigravity.google/docs/rules
 tipo: vendor
-verificado_em: 2026-10-07
+verificado_em: 2026-11-03
 verificacao: V
 localizacao: "seção de descoberta de regras por diretório (AGENTS.md, GEMINI.md, .agents/rules/)"
 dominios: [construir-com-ia]

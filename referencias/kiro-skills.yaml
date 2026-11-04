@@ -3,7 +3,7 @@ titulo: "Agent Skills (Kiro)"
 organizacao: Kiro
 url: https://kiro.dev/docs/skills/
 tipo: vendor
-verificado_em: 2026-10-07
+verificado_em: 2026-11-03
 verificacao: V
 localizacao: "seções de local do workspace (.kiro/skills/) e formato do SKILL.md (name igual à pasta)"
 dominios: [construir-com-ia]

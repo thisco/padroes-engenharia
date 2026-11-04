@@ -3,7 +3,7 @@ titulo: "How Claude remembers your project"
 organizacao: Anthropic
 url: https://code.claude.com/docs/en/memory
 tipo: vendor
-verificado_em: 2026-10-07
+verificado_em: 2026-11-03
 verificacao: V
 localizacao: "seções 'CLAUDE.md vs auto memory', 'Write effective instructions' (Size) e 'AGENTS.md'"
 dominios: [construir-com-ia]

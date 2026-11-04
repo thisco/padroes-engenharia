@@ -4,8 +4,8 @@ organizacao: sdd-lifecycle (github.com/thisco)
 url: https://github.com/thisco/sdd-lifecycle/blob/5f6e9ad879f7abd11267547fb3f527e876b60140/SKILL.md
 tipo: interno
 versao: "3.0.0"
-verificado_em: 2026-10-21
+verificado_em: 2026-11-03
 verificacao: V
 localizacao: "SKILL.md, 'Fase 0 — Contexto e classificação' (passos 1 a 5), 'Matriz tier → fases', Fases 1 a 8 (cada uma com critério de saída) e 'Retomada multi-sessão'"
 dominios: [construir-com-ia]
-notas: "Cópia publicada em skills/sdd-lifecycle/SKILL.md, no mesmo commit (PROCEDENCIA.md). Reconferido em 2026-10-05 na tag v3.0.0 (clone local): a Fase 0, a Matriz tier → fases e a descrição do frontmatter não mudaram desde a 2.0.0. Mudaram as Fases 1, 3, 4, 6, 7 e 8 (requisitos R<n> com critério, aprovação gravada no cabeçalho da spec, tabela de veredito, spec arquivada). Relida em 2026-10-21 na cópia local, Fases 1 a 8 e Retomada, para os caminhos da trilha."
+notas: "Cópia publicada em skills/sdd-lifecycle/SKILL.md, no mesmo commit (PROCEDENCIA.md). Reconferido em 2026-10-05 na tag v3.0.0 (clone local): a Fase 0, a Matriz tier → fases e a descrição do frontmatter não mudaram desde a 2.0.0. Mudaram as Fases 1, 3, 4, 6, 7 e 8 (requisitos R<n> com critério, aprovação gravada no cabeçalho da spec, tabela de veredito, spec arquivada). Relida em 2026-10-21 na cópia local, Fases 1 a 8 e Retomada, para os caminhos da trilha. Aberta na web em 2026-11-03 no commit fixado: Fase 1 lê o PRD de docs/prd/; spec em docs/specs/ e plano em docs/plans/."

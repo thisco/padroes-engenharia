@@ -1,0 +1,98 @@
+conteudo: roteiro-projeto-novo-primeiro-dia
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Kiro CLI começa a sessão com o comando kiro-cli, rodado dentro da pasta do projeto no exemplo de início
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Starting a session'; a página kiro.dev/docs/cli/ mostra cd my-project e kiro-cli"
+  resultado: confirmada
+  nota: "O mockup trazia kiro-cli chat; a documentação mostra kiro-cli para iniciar, e o subcomando chat só aparece em kiro-cli chat --resume. O texto segue a documentação."
+- texto: o Kiro lembra a conversa pela pasta em que ela começou, e kiro-cli chat --resume retoma a conversa da pasta atual
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Directory-based persistence'"
+  resultado: confirmada
+- texto: no Antigravity CLI, entra-se na pasta do projeto e roda-se agy; na primeira vez ele pede a confirmação de confiança no diretório antes de indexar os arquivos
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started?tab=cli, seção 'Start a project', aba Antigravity CLI, e passo 'Workspace trust' da instalação"
+  resultado: confirmada
+- texto: no app do Antigravity, clica-se em New Project, depois em Add Folder para escolher a pasta e em Create
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started, seção 'Start a project', aba Antigravity App, passos 1 a 3"
+  resultado: confirmada
+- texto: o Claude Code começa com cd na pasta do projeto e o comando claude
+  ref: claude-code-quickstart
+  localizacao: "code.claude.com/docs/en/quickstart, seção 'Step 2: Start your first session'"
+  resultado: confirmada
+- texto: depois de instalado, o Codex começa com o comando codex
+  ref: codex-readme
+  localizacao: "github.com/openai/codex, README, seção 'Quickstart' ('Then simply run codex to get started')"
+  resultado: confirmada
+  nota: "O README não fala da pasta; rodar de dentro da pasta do projeto é instrução do roteiro, sustentada pela forma como o Codex procura as instruções (afirmação seguinte)."
+- texto: o Codex procura as instruções a partir da raiz do projeto até a pasta atual
+  ref: codex-agents-md
+  localizacao: "learn.chatgpt.com/docs/agent-configuration/agents-md, seção 'How Codex discovers guidance' ('Starting at the project root (typically the Git root), Codex walks down to your current working directory')"
+  resultado: confirmada
+- texto: o Codex lê no máximo um arquivo de instruções por pasta (AGENTS.override.md, senão AGENTS.md), da raiz até a pasta atual, e para de acrescentar arquivos ao chegar a 32 KiB (project_doc_max_bytes, padrão)
+  ref: codex-agents-md
+  localizacao: "mesma página, seção 'How Codex discovers guidance' (ordem de busca por pasta e limite project_doc_max_bytes)"
+  resultado: confirmada
+- texto: as skills de repositório do Codex ficam em .agents/skills, varrida da pasta atual até a raiz do repositório
+  ref: codex-skills
+  localizacao: "learn.chatgpt.com/docs/build-skills, seção de localização das skills ('Codex scans .agents/skills in every directory from your current working directory')"
+  resultado: confirmada
+- texto: no projeto do scaffold, .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para a mesma pasta skills/
+  ref: sdd-scaffold-readme
+  localizacao: "README no commit fixado da v1.7.1, seções 'O que você recebe' e 'Um corpo de skill, quatro pontos de montagem'"
+  resultado: confirmada
+- texto: no projeto do scaffold o AGENTS.md é a constituição com a tabela de roteamento, docs/steering/ tem os parâmetros do projeto (entre eles arquitetura.md) e CLAUDE.md e GEMINI.md são ponteiros para o AGENTS.md
+  ref: sdd-scaffold-readme
+  localizacao: "README no commit fixado da v1.7.1, seção 'O que você recebe'"
+  resultado: confirmada
+- texto: a skill brainstorming faz uma pergunta por mensagem e nada é construído antes da aprovação do documento (no tamanho de projeto)
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Conversation' (\"Each message ends with one question\") e, em 'The Written Design', a frase \"Nothing gets built until your human partner approves the full description\""
+  resultado: confirmada
+- texto: num repositório de software a skill grava o desenho em docs/superpowers/specs/, e a preferência da pessoa vale mais que esse padrão
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Where it goes'"
+  resultado: confirmada
+- texto: antes de entregar o documento, a skill manda um subagente novo ler o documento como quem vai construir; sem ferramenta de subagente, o próprio agente faz essa leitura
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Builder check' (\"dispatch a fresh subagent\"; \"Without a subagent tool, read the document as that builder yourself\")"
+  resultado: confirmada
+- texto: a skill sdd-lifecycle procura o PRD em docs/prd/ ao escrever a spec e o cita no cabeçalho
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md no commit fixado da v3.0.0, 'Fase 1 — Especificação (Tier 2)' ('Se houver PRD relacionado em docs/prd/, leia-o e cite-o no cabeçalho da spec')"
+  resultado: confirmada
+- texto: a sdd-lifecycle classifica a mudança em tier e, no Tier 2, escreve a spec em docs/specs/, espera a aprovação de uma pessoa e só então escreve o plano em docs/plans/
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md no commit fixado da v3.0.0, 'Fase 0', 'Matriz tier → fases' e Fases 1, 3 e 4"
+  resultado: confirmada
+- texto: o Kiro lê o steering do workspace em .kiro/steering/ e o AGENTS.md da raiz do workspace, que entra sempre, sem modo de inclusão
+  ref: kiro-steering
+  localizacao: "kiro.dev/docs/steering/, seções 'Workspace steering' e 'Agents.md'"
+  resultado: confirmada
+- texto: as skills de workspace do Kiro ficam em .kiro/skills/
+  ref: kiro-skills
+  localizacao: "kiro.dev/docs/skills/, seção de local do workspace"
+  resultado: confirmada
+- texto: o Antigravity lê AGENTS.md ou GEMINI.md e .agents/rules/ da pasta do workspace e de cada pasta acima até a raiz do repositório, e junta todas as regras que acha
+  ref: antigravity-rules
+  localizacao: "antigravity.google/docs/rules, seção de descoberta das regras do workspace e 'Combining rules'"
+  resultado: confirmada
+- texto: as skills de workspace do Antigravity ficam em .agents/skills/
+  ref: antigravity-skills
+  localizacao: "antigravity.google/docs/skills, seção de local do workspace (<workspace-root>/.agents/skills/<skill-folder>/)"
+  resultado: confirmada
+- texto: o Claude Code lê as instruções do projeto em ./CLAUDE.md ou ./.claude/CLAUDE.md e as regras de .claude/rules/; com CLAUDE.md na pasta, lê esse arquivo em vez do AGENTS.md, e @AGENTS.md no CLAUDE.md traz o AGENTS.md
+  ref: claude-code-memory
+  localizacao: "code.claude.com/docs/en/memory, seções 'Choose where to put CLAUDE.md files' (linha Project instructions), 'Organize rules with .claude/rules/', 'When Claude Code reads AGENTS.md' e 'Share one file with other coding tools'"
+  resultado: confirmada
+- texto: as skills de projeto do Claude Code ficam em .claude/skills/<nome>/SKILL.md
+  ref: claude-code-skills
+  localizacao: "code.claude.com/docs/en/skills, seção 'Choose where skills load', linha Project"
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "pendente: não rodada nesta passagem, que não usa subagente; roda em sessão independente junto das execuções dos prompts"
+  data: '2026-11-03'
+  achados: []

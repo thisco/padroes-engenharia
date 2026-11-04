@@ -1,0 +1,24 @@
+conteudo: roteiro-projeto-existente-primeiro-dia
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Kiro CLI começa a sessão com o comando kiro-cli, rodado dentro da pasta do projeto no exemplo de início
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Starting a session'; a página kiro.dev/docs/cli/ mostra cd my-project e kiro-cli"
+  resultado: confirmada
+- texto: o Kiro lembra a conversa pela pasta em que ela começou, e kiro-cli chat --resume retoma a conversa da pasta atual
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Directory-based persistence'"
+  resultado: confirmada
+- texto: no Antigravity CLI, entra-se na pasta do projeto e roda-se agy; na primeira vez ele pede a confirmação de confiança no diretório antes de indexar os arquivos
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started?tab=cli, seção 'Start a project', aba Antigravity CLI, e passo 'Workspace trust' da instalação"
+  resultado: confirmada
+- texto: no app do Antigravity, clica-se em New Project, depois em Add Folder para escolher a pasta e em Create
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started, seção 'Start a project', aba Antigravity App, passos 1 a 3"
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "pendente: não rodada nesta passagem, que não usa subagente; roda em sessão independente junto das execuções dos prompts"
+  data: '2026-11-03'
+  achados: []
