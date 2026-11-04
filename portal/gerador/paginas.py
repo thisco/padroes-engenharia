@@ -17,7 +17,7 @@ from portal.gerador import trilha
 from portal.gerador.apresentacoes import Apresentacao
 from portal.gerador.carregar import Conteudo
 from portal.gerador.citacoes import MARCADOR, extrair, sem_marcadores
-from portal.gerador.exemplos import expandir_inclusoes
+from portal.gerador.exemplos import expandir_inclusoes, prompts_de
 from portal.gerador.markdown import inline_html, para_html
 from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.renderizar import (
@@ -556,6 +556,19 @@ def _slug(conteudo: Conteudo) -> str:
     return conteudo.caminho_relativo.rsplit("/", 1)[-1].removesuffix(".md")
 
 
+def _previa(texto: str) -> str:
+    """As duas primeiras linhas não vazias do prompt, em até 160 caracteres ("…" se cortou)."""
+    linhas = [linha.rstrip() for linha in texto.splitlines() if linha.strip()]
+    previa = "\n".join(linhas[:2])
+    cortou = len(linhas) > 2 or len(previa) > 160
+    return previa[:160] + "…" if cortou else previa
+
+
+def _titulo_da_origem(origem: Conteudo) -> str:
+    titulo = str(origem.meta.get("titulo", origem.chave))
+    return f"{origem.chave} · {titulo}" if origem.tipo == "pratica" else titulo
+
+
 def prompts(site: Site) -> list[dict[str, Any]]:
     """Todos os prompts de exemplo, por domínio e momento da espinha, com a URL da origem."""
     faixas = [f.slug for f in site.espinha.faixas]
@@ -564,6 +577,8 @@ def prompts(site: Site) -> list[dict[str, Any]]:
     for p in todos_os_prompts(site):
         origem = p.origem
         origem_id = _slug(origem) if origem.tipo in ("receita", "roteiro") else origem.chave
+        faixa = site.espinha.faixa(str(origem.meta.get("dominio")))
+        momento = site.espinha.momento(str(origem.meta.get("momento")))
         itens.append(
             {
                 "id": p.id,
@@ -573,6 +588,10 @@ def prompts(site: Site) -> list[dict[str, Any]]:
                 "momento": origem.meta.get("momento"),
                 "texto": p.texto,
                 "url": site.url(f"{caminho_de(origem)}#{p.id}"),
+                "origem_titulo": _titulo_da_origem(origem),
+                "dominio_titulo": faixa.titulo if faixa else str(origem.meta.get("dominio")),
+                "momento_titulo": momento.rotulo if momento else str(origem.meta.get("momento")),
+                "previa": _previa(p.texto),
             }
         )
 
@@ -585,6 +604,12 @@ def prompts(site: Site) -> list[dict[str, Any]]:
         )
 
     return sorted(itens, key=ordem)
+
+
+def _cartoes_de_prompts(site: Site) -> list[dict[str, Any]]:
+    """Um cartão por prompt, na ordem da espinha, com o caminho relativo da origem."""
+    prefixo = site.url("")
+    return [{**item, "caminho": item["url"].removeprefix(prefixo)} for item in prompts(site)]
 
 
 def _grupos_de_prompts(site: Site) -> list[dict[str, Any]]:
@@ -614,7 +639,9 @@ def html_prompts(site: Site) -> str:
         "prompts.html",
         titulo="Biblioteca de prompts",
         descricao=PROMPTS_DESCRICAO,
-        grupos=_grupos_de_prompts(site),
+        cartoes=_cartoes_de_prompts(site),
+        dominios=[(f.slug, f.titulo) for f in site.espinha.faixas],
+        momentos=[(m.slug, m.rotulo) for m in site.espinha.momentos],
     )
 
 
@@ -642,24 +669,43 @@ def _receitas_do_como_fazer(site: Site) -> list[dict[str, Any]]:
     """Receitas por domínio e, depois, por momento: cada receita aparece nos dois recortes."""
     secoes_: list[dict[str, Any]] = []
 
+    ferramentas = {f.meta["id"]: str(f.meta["titulo"]) for f in site.repo.ferramentas}
+
     def item(r: Conteudo) -> dict[str, Any]:
+        achados = prompts_de(r)
         return {
             "titulo": r.meta["titulo"],
             "href": caminho_de(r),
             "nota": f"{r.meta['objetivo']} ({r.meta['tempo']} min)",
+            "objetivo": r.meta["objetivo"],
+            "tempo": f"{r.meta['tempo']} min",
+            "ferramentas": [
+                ferramentas[i]
+                for i in r.meta.get("ferramentas_aprovadas") or []
+                if i in ferramentas
+            ],
+            "prompt": achados[0].texto if achados else None,
         }
 
     for faixa in site.espinha.faixas:
         daqui = [r for r in site.repo.receitas if r.meta.get("dominio") == faixa.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Domínio: {faixa.titulo}", "itens": [item(r) for r in daqui]}
+                {
+                    "titulo": f"Domínio: {faixa.titulo}",
+                    "itens": [item(r) for r in daqui],
+                    "cartoes": True,
+                }
             )
     for momento in site.espinha.momentos:
         daqui = [r for r in site.repo.receitas if r.meta.get("momento") == momento.slug]
         if daqui:
             secoes_.append(
-                {"titulo": f"Etapa: {momento.rotulo}", "itens": [item(r) for r in daqui]}
+                {
+                    "titulo": f"Etapa: {momento.rotulo}",
+                    "itens": [item(r) for r in daqui],
+                    "cartoes": True,
+                }
             )
     return secoes_
 
@@ -669,7 +715,7 @@ COMO_FAZER_DESCRICAO = "Receitas passo a passo, com o resultado esperado e um pr
 
 def html_como_fazer(site: Site) -> str:
     listas = [
-        {"titulo": s["titulo"], "itens": s["itens"], "vazio": ""}
+        {"titulo": s["titulo"], "itens": s["itens"], "vazio": "", "cartoes": s["cartoes"]}
         for s in _receitas_do_como_fazer(site)
     ]
     return pagina_generica(
@@ -707,6 +753,7 @@ def _ficha_da_receita(site: Site, receita: Conteudo) -> list[tuple[str, str]]:
 def html_receita(site: Site, receita: Conteudo) -> str:
     meta = receita.meta
     vinculos = vinculos_de(site, receita)
+    secoes_ = corpo_secoes(receita, site.raiz)
     return renderizar(
         site,
         "receita.html",
@@ -714,7 +761,9 @@ def html_receita(site: Site, receita: Conteudo) -> str:
         titulo=meta["titulo"],
         descricao=str(meta["objetivo"]),
         objetivo=meta["objetivo"],
-        secoes=corpo_secoes(receita, site.raiz),
+        secoes=secoes_,
+        agente_html=next((html for t, html in secoes_ if t == "Com o agente"), None),
+        secoes_mao=[(t, html) for t, html in secoes_ if t != "Com o agente"],
         FIGURA_DA_RECEITA=FIGURA_DA_RECEITA,
         campos=_ficha_da_receita(site, receita),
         vinculos=vinculos,

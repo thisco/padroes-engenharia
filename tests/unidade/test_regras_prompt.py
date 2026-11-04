@@ -65,7 +65,7 @@ def test_prompt_sai_escapado_com_id_e_copiar():
     html = para_html("```prompt\n<script>x</script> e ```\n```\n", chave="DAD-01")
     assert '<figure class="prompt" id="DAD-01-prompt-1">' in html
     assert "&lt;script&gt;" in html and "<script>" not in html
-    assert 'class="copiar" data-copiar hidden>Copiar</button>' in html
+    assert 'class="copiar" data-copiar>Copiar</button>' in html
 
 
 def test_execucao_que_falhou_nao_conta_como_execucao_registrada(tmp_path):

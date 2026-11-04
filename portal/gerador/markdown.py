@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from markdown_it import MarkdownIt
 from markdown_it.renderer import RendererHTML
-from markupsafe import Markup
+from markupsafe import Markup, escape
 
 from portal.gerador.citacoes import MARCADOR
 from portal.gerador.exemplos import id_prompt
@@ -24,14 +24,14 @@ def criar() -> MarkdownIt:
 
     def fence(self, tokens, idx, options, env):
         html = RendererHTML.fence(self, tokens, idx, options, env)
-        if tokens[idx].info.strip().split(" ")[0] != "prompt":
-            botao_simples = (
-                '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'
-            )
-            return f'<div class="bloco">{botao_simples}{html}</div>\n'
+        linguagem = tokens[idx].info.strip().split(" ")[0]
+        if linguagem != "prompt":
+            botao_simples = '<button type="button" class="copiar" data-copiar>Copiar</button>'
+            rotulo = f'<span class="lang">{escape(linguagem)}</span>' if linguagem else ""
+            return f'<div class="bloco">{rotulo}{botao_simples}{html}</div>\n'
         env["prompts"] = env.get("prompts", 0) + 1
         ancora = f' id="{id_prompt(env["chave"], env["prompts"])}"' if env.get("chave") else ""
-        botao = '<button type="button" class="copiar" data-copiar hidden>Copiar</button>'
+        botao = '<button type="button" class="copiar" data-copiar>Copiar</button>'
         legenda = f"<figcaption>Prompt para o agente {botao}</figcaption>"
         return f'<figure class="prompt"{ancora}>{legenda}{html}</figure>\n'
 
