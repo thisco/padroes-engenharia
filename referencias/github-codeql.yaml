@@ -1,0 +1,10 @@
+id: github-codeql
+titulo: "About code scanning with CodeQL"
+organizacao: GitHub
+url: https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura (CodeQL é o motor de análise de código do GitHub para automatizar checagens de segurança; o resultado vira alerta de code scanning) e seção sobre as formas de configurar (default setup, advanced setup com workflow que usa a github/codeql-action, ou CLI em outro CI)"
+dominios: [seguranca, ci-cd]
+notas: "A página não diz o plano exigido em repositório privado; o portal não afirma preço nem plano."

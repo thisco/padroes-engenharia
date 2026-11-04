@@ -1,0 +1,22 @@
+# SEG-06 no GitHub Actions: .github/workflows/seguranca.yml
+name: seguranca
+on: [pull_request]
+
+jobs:
+  varredura-imagem:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker build -t app:${{ github.sha }} .
+      - uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: app:${{ github.sha }}
+          exit-code: "1"
+          severity: CRITICAL,HIGH
+
+  sast:
+    runs-on: ubuntu-24.04
+    container: semgrep/semgrep:1.182.1
+    steps:
+      - uses: actions/checkout@v5
+      - run: semgrep scan --config p/default --error --metrics off .

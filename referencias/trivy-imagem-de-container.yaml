@@ -1,0 +1,10 @@
+id: trivy-imagem-de-container
+titulo: "Trivy: Container Image"
+organizacao: Aqua Security
+url: https://trivy.dev/latest/docs/target/container_image/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura da página ('Trivy scans the files inside container images for' vulnerabilidades, misconfigurações, segredos e licenças; vulnerabilidade e segredo ligados por padrão) e seções 'Docker Engine' e 'Container Registry' (procura a imagem no Docker Engine local primeiro, depois containerd, Podman e o registro)"
+dominios: [seguranca]
+notas: "A página não traz número de versão; as execuções do portal usaram a imagem aquasec/trivy:0.76.1."

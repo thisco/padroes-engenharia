@@ -1,0 +1,27 @@
+# SEG-06: varredura de imagem e SAST como job da MR, ao lado do job de segredo (SEG-02).
+# A imagem foi publicada pelo job de build no registro do projeto, com a tag do commit.
+stages: [build, test]
+
+variables:
+  IMAGEM: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
+
+varredura-imagem:
+  stage: test
+  image:
+    name: aquasec/trivy:0.76.1
+    entrypoint: [""]
+  variables:
+    TRIVY_USERNAME: "$CI_REGISTRY_USER"
+    TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
+  script:
+    - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGEM"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+sast:
+  stage: test
+  image: semgrep/semgrep:1.182.1
+  script:
+    - semgrep scan --config p/default --error --metrics off .
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

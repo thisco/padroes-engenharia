@@ -1,0 +1,10 @@
+id: gitlab-sast-template
+titulo: "Jobs/SAST.gitlab-ci.yml (template)"
+organizacao: GitLab
+url: https://gitlab.com/gitlab-org/gitlab/-/raw/master/lib/gitlab/ci/templates/Jobs/SAST.gitlab-ci.yml
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "job oculto .sast-analyzer com allow_failure: true, estendido pelos analisadores; job semgrep-sast com regra exists pela lista de extensões (.py, .js, .ts, .go, .java e outras)"
+dominios: [seguranca, ci-cd]
+notas: "Arquivo da branch master do repositório do GitLab, lido na data; o template muda com as versões do GitLab."

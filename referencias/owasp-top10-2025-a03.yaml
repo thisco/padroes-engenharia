@@ -1,0 +1,11 @@
+id: owasp-top10-2025-a03
+titulo: "A03:2025 Software Supply Chain Failures"
+organizacao: OWASP Foundation
+url: https://top10.owasp.org/2025/A03_2025-Software_Supply_Chain_Failures
+tipo: padrao-aberto
+versao: '2025'
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções 'Description' (não varrer vulnerabilidade com regularidade; software vulnerável, sem suporte ou desatualizado, inclusive o sistema operacional; pipeline de CI/CD menos seguro que o que ele entrega) e 'How to prevent' (inventariar continuamente as versões dos componentes com ferramentas)"
+dominios: [seguranca]
+notas: null

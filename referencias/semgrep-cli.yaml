@@ -1,0 +1,10 @@
+id: semgrep-cli
+titulo: "Semgrep CLI reference"
+organizacao: Semgrep
+url: https://docs.semgrep.dev/cli-reference
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "ajuda do semgrep scan (--error: 'Exit 1 if there are findings'; --metrics off desliga o envio de métricas; --config, com o exemplo p/default) e seção de códigos de saída (0 com achado quando não há --error; 1 com achado e --error)"
+dominios: [seguranca]
+notas: "semgrep.dev/docs/cli-reference redireciona (301) para docs.semgrep.dev/cli-reference. As execuções do portal usaram a imagem semgrep/semgrep:1.182.1."
