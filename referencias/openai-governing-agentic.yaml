@@ -1,0 +1,11 @@
+id: openai-governing-agentic
+titulo: Practices for Governing Agentic AI Systems
+organizacao: OpenAI
+url: https://cdn.openai.com/papers/practices-for-governing-agentic-ai-systems.pdf
+tipo: vendor
+versao: '2023'
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções 4.4 'Legibility of Agent Activity' (expor ações, entradas de ferramentas e raciocínio para notar o erro e intervir), 4.5 'Automatic Monitoring' (um segundo sistema revê ações e raciocínio; custo e risco de privacidade da retenção) e 4.7 'Interruptibility and Maintaining Control' (desligar é a última barreira; parar uma categoria de ação, como revogar uma credencial, ou o agente todo; procedimento de fallback preparado antes; o agente não pode impedir o desligamento)"
+dominios: [ia-no-produto]
+notas: "White paper. A página de anúncio em openai.com respondeu 403 ao robô; o PDF foi baixado direto da CDN e lido por inteiro nas seções citadas."

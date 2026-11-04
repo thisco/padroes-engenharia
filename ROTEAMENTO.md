@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 51 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 52 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -19,7 +19,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
-| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P2-08 (só orienta), P2-09 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P2-07 (avisa), P3-06 (pede aprovação) | P2-06 (só orienta) |
+| Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P2-08 (só orienta), P2-09 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P2-07 (avisa), P3-06 (pede aprovação) | P2-06 (só orienta), P3-07 (só orienta) |
 
 ## Práticas
 
@@ -68,6 +68,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | P3-04 | Agente somente-leitura por padrão, com identidade própria e aprovação para escrever | só orienta | adotar | nada |
 | P3-05 | Isole o conteúdo externo contra prompt injection | só orienta | experimentar | nada |
 | P3-06 | MCP e conectores fechados por padrão, com allowlist central | pede aprovação | experimentar | nada |
+| P3-07 | Operação do agente: desligar, telemetria de trajetória, custo e taxa de sucesso por tarefa | só orienta | experimentar | nada |
 | QLD-01 | Lógica começa por um teste que falha, com as duas execuções no plano | só orienta | experimentar | `steering:qualidade` |
 | QLD-02 | Bug vira teste que reproduz o defeito, depois vira regra | só orienta | experimentar | `steering:qualidade`, `steering:troubleshooting` |
 | QLD-03 | Validação local rígida: o que o CI roda, roda antes do push | só orienta | experimentar | `steering:qualidade` |

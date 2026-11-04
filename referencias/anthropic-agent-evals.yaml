@@ -1,0 +1,11 @@
+id: anthropic-agent-evals
+titulo: Demystifying evals for AI agents
+organizacao: Anthropic
+url: https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents
+tipo: vendor
+publicado_em: '2026-01-09'
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "definições de task, trial, transcript e outcome; pass@k e pass^k; o conselho de avaliar o que o agente produziu e não o caminho; latência, uso de tokens, custo por tarefa e taxa de erro acompanhados num banco fixo de tarefas; monitoramento em produção como complemento dos evals"
+dominios: [ia-no-produto]
+notas: null
