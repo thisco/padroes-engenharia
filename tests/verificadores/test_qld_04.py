@@ -118,7 +118,7 @@ def test_harness_pega_servico_novo_sem_orcamento(tmp_path: Path):
     assert r.returncode == 1, r.stderr
     assert r.stdout.splitlines() == [
         f"compose.yaml:5: serviço 'relatorios' sem orçamento em {ORCAMENTO} "
-        "(memoria_mb e latencia_p95_ms, ou isento com o motivo)"
+        "(memoria_mb e latencia_p95_ms)"
     ]
 
 
@@ -194,21 +194,53 @@ def test_harness_compose_novo_aponta_cada_servico_sem_orcamento(tmp_path: Path):
     assert [s.split(":")[1] for s in r.stdout.splitlines()] == ["2", "5"]
 
 
-def test_harness_isento_com_motivo_vale_e_sem_motivo_nao(tmp_path: Path):
-    isento = (
-        ORCAMENTO_SO_API
-        + '  relatorios:\n    isento: "roda só à noite, fora do caminho do usuário"\n'
+ISENTO_RELATORIOS = '  relatorios:\n    isento: "roda só à noite, fora do caminho do usuário"\n'
+
+
+def isento_fora_da_base(arquivo: str = "compose.yaml", linha: int = 5) -> str:
+    return (
+        f"{arquivo}:{linha}: serviço 'relatorios' com isento que não está na base; a isenção só "
+        "vale depois de aprovada por uma pessoa numa MR própria (declare memoria_mb e "
+        "latencia_p95_ms)"
     )
-    projeto(tmp_path, {"compose.yaml": COMPOSE_BASE, ORCAMENTO: isento})
-    assert harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=tmp_path).returncode == 0
-    projeto(tmp_path, {ORCAMENTO: ORCAMENTO_SO_API + '  relatorios:\n    isento: ""\n'})
-    assert harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=tmp_path).returncode == 1
 
 
-def test_harness_so_isento_nao_exige_job_de_ci(tmp_path: Path):
+def test_harness_isento_so_no_disco_continua_acusando(tmp_path: Path):
+    """Fora de um repositório Git não há base: a isenção escrita agora não vale."""
+    projeto(
+        tmp_path, {"compose.yaml": COMPOSE_BASE, ORCAMENTO: ORCAMENTO_SO_API + ISENTO_RELATORIOS}
+    )
+    r = harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=tmp_path)
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == [isento_fora_da_base()]
+
+
+def test_harness_isento_criado_no_disco_sobre_o_head_continua_acusando(repo_git: RepoGit):
+    base_com_api(repo_git)
+    repo_git.escrever(ORCAMENTO, ORCAMENTO_SO_API + ISENTO_RELATORIOS)
+    r = harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=repo_git.raiz)
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == [isento_fora_da_base()]
+
+
+def test_harness_isento_que_ja_esta_no_head_vale(repo_git: RepoGit):
+    base_com_api(repo_git)
+    commit_com(repo_git, {ORCAMENTO: ORCAMENTO_SO_API + ISENTO_RELATORIOS}, "isenção aprovada")
+    r = harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=repo_git.raiz)
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_harness_isento_vazio_no_head_nao_vale(repo_git: RepoGit):
+    base_com_api(repo_git)
+    commit_com(repo_git, {ORCAMENTO: ORCAMENTO_SO_API + '  relatorios:\n    isento: ""\n'})
+    r = harness("compose.yaml", COMPOSE_COM_RELATORIOS, cwd=repo_git.raiz)
+    assert r.returncode == 1
+
+
+def test_harness_so_isento_da_base_nao_exige_job_de_ci(repo_git: RepoGit):
     isento = 'componentes:\n  api:\n    isento: "banco gerenciado"\n'
-    projeto(tmp_path, {ORCAMENTO: isento})
-    assert harness("compose.yaml", COMPOSE_BASE, cwd=tmp_path).returncode == 0
+    commit_com(repo_git, {ORCAMENTO: isento})
+    assert harness("compose.yaml", COMPOSE_BASE, cwd=repo_git.raiz).returncode == 0
 
 
 @pytest.mark.parametrize(
@@ -384,7 +416,7 @@ def test_ci_pega_servico_novo_sem_orcamento(repo_git: RepoGit):
     assert r.returncode == 1
     assert r.stdout.splitlines() == [
         f"compose.yaml:5: serviço 'relatorios' sem orçamento em {ORCAMENTO} "
-        "(memoria_mb e latencia_p95_ms, ou isento com o motivo)"
+        "(memoria_mb e latencia_p95_ms)"
     ]
 
 
@@ -395,6 +427,41 @@ def test_ci_inocente_com_o_orcamento_na_mesma_mr(repo_git: RepoGit):
     )
     r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
     assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_ci_isento_criado_na_propria_mr_continua_acusando(repo_git: RepoGit):
+    base = base_com_api(repo_git)
+    commit_com(
+        repo_git,
+        {"compose.yaml": COMPOSE_COM_RELATORIOS, ORCAMENTO: ORCAMENTO_SO_API + ISENTO_RELATORIOS},
+    )
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1
+    assert r.stdout.splitlines() == [isento_fora_da_base()]
+
+
+def test_ci_isento_presente_na_base_passa(repo_git: RepoGit):
+    base_com_api(repo_git)
+    base = commit_com(repo_git, {ORCAMENTO: ORCAMENTO_SO_API + ISENTO_RELATORIOS}, "isenção")
+    commit_com(repo_git, {"compose.yaml": COMPOSE_COM_RELATORIOS})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_ci_isento_da_base_retirado_no_head_exige_orcamento(repo_git: RepoGit):
+    base_com_api(repo_git)
+    base = commit_com(repo_git, {ORCAMENTO: ORCAMENTO_SO_API + ISENTO_RELATORIOS}, "isenção")
+    commit_com(repo_git, {"compose.yaml": COMPOSE_COM_RELATORIOS, ORCAMENTO: ORCAMENTO_SO_API})
+    r = rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base)
+    assert r.returncode == 1 and "sem orçamento em" in r.stdout
+
+
+def test_ci_isento_com_orcamento_completo_na_mr_mede_pelo_orcamento(repo_git: RepoGit):
+    """O isento novo não vale, mas a entrada com os dois campos continua válida."""
+    base = base_com_api(repo_git)
+    orcamento = ORCAMENTO_COM_RELATORIOS + '    isento: "quero pular"\n'
+    commit_com(repo_git, {"compose.yaml": COMPOSE_COM_RELATORIOS, ORCAMENTO: orcamento})
+    assert rodar(SCRIPT, "ci", cwd=repo_git.raiz, base=base).returncode == 0
 
 
 def test_ci_le_o_orcamento_e_o_ci_do_head_e_nao_do_disco(repo_git: RepoGit):

@@ -23,10 +23,12 @@ referencias:
   - prometheus-regras-de-alerta
   - prometheus-teste-de-regras
   - sre-book-slo
+  - gitlab-mr-pipelines
+  - gitlab-rules-changes
 relacionadas: [OBS-01, OBS-02]
 dono: engenharia
-revisado_em: 2026-11-03
-revisar_ate: 2027-05-03
+revisado_em: 2026-11-04
+revisar_ate: 2027-05-04
 resumo: "O serviço emite traço e métrica por OpenTelemetry já no compose local, com um collector num perfil, e o limiar de alerta mora num arquivo versionado com teste."
 ferramentas_aprovadas: []
 exemplos:
@@ -65,8 +67,12 @@ quatro partes.
    [ref:otel-collector-configuracao]. No compose, o serviço sem `profiles` sobe sempre, e o perfil liga
    um grupo de serviços com `--profile` ou `COMPOSE_PROFILES` [ref:compose-profiles]: o collector e o
    Prometheus ficam no perfil `observabilidade`, e quem só quer subir a aplicação não paga por eles.
-   Sem o perfil, o exportador fica em `none`, o valor que não configura exportador nenhum
-   [ref:otel-sdk-env-spec].
+   As duas chaves andam juntas: o perfil sobe o collector, e a variável `OTEL_EXPORTADOR` liga o
+   exportador da aplicação, que sem ela fica em `none`, o valor que não configura exportador nenhum
+   [ref:otel-sdk-env-spec]. Com as duas, a telemetria chega ao collector. Sem nenhuma, só a aplicação
+   sobe e nada é exportado. Com o perfil e sem a variável, o collector e o Prometheus sobem e não
+   recebem nada. Com a variável e sem o perfil, a aplicação aponta para um collector que não subiu, e
+   a telemetria não chega a lugar nenhum (combinação que o Exemplo não executou).
 4. **O limiar declarado e testado.** O alerta é uma regra do Prometheus: uma expressão, um `for` que
    segura o alerta em `pending` antes de disparar, rótulos e anotações [ref:prometheus-regras-de-alerta].
    O arquivo da regra é versionado, e o `promtool test rules` o testa com séries sintéticas e o alerta
@@ -95,7 +101,8 @@ telemetria só existe longe dali.
 2. No `compose.yaml`, dê ao serviço `OTEL_SERVICE_NAME`, `OTEL_EXPORTER_OTLP_ENDPOINT`
    (`http://otel-collector:4318`), `OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf` e
    `OTEL_SEMCONV_STABILITY_OPT_IN: http`. Os exportadores de traço e de métrica leem
-   `${OTEL_EXPORTADOR:-none}`: sem o perfil, nada é exportado.
+   `${OTEL_EXPORTADOR:-none}`: sem a variável, nada é exportado, com ou sem o perfil; ligue as duas
+   juntas, como no passo 6.
 3. Acrescente o `otel-collector` e o `prometheus` com `profiles: [observabilidade]`, a configuração do
    collector em `observabilidade/otel-collector.yaml` (receiver OTLP; traços para o `debug`, métricas
    para o exporter `prometheus`, que expõe `/metrics` para o Prometheus raspar
@@ -105,13 +112,18 @@ telemetria só existe longe dali.
    chega ao Prometheus é `http_server_request_duration_seconds_bucket` (lido na execução do Exemplo).
 5. Escreva `observabilidade/alertas-teste.yml` com um caso que dispara e um que não, e rode
    `promtool test rules observabilidade/alertas-teste.yml` no CI de toda MR que mexe na pasta. Um job
-   mínimo, com a imagem do Prometheus:
+   mínimo, com a imagem do Prometheus, que roda em pipeline de MR [ref:gitlab-mr-pipelines] e só
+   quando a MR muda `observabilidade/`, comparada com o branch de destino [ref:gitlab-rules-changes]:
 
    ```yaml
    limiar-de-alerta:
      image:
        name: prom/prometheus:v3.0.1
        entrypoint: [""]
+     rules:
+       - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+         changes:
+           - observabilidade/**/*
      script:
        - promtool test rules observabilidade/alertas-teste.yml
    ```
@@ -176,7 +188,7 @@ $ promtool test rules alertas-teste.yml   # com "> 0.8" na regra
         got:[]
 ```
 
-Sem o perfil, `docker compose up -d api` sobe só a aplicação, que responde normalmente e sem erro de
+Sem o perfil e sem a variável, `docker compose up -d api` sobe só a aplicação, que responde normalmente e sem erro de
 exportação no log. Os números (300 ms, 5 minutos, p95) são de exemplo: cada time parte do SLO da OBS-02.
 
 ### Para o agente
@@ -235,7 +247,7 @@ manual: subir o perfil e ver a métrica no Prometheus. Um verificador candidato,
 leria o `compose.yaml` e reprovaria o serviço novo sem `OTEL_SERVICE_NAME`.
 
 Os limites: a execução do Exemplo foi local, com Docker Desktop, e o job do passo 5 não rodou num
-GitLab. A métrica só chega ao Prometheus depois do intervalo de exportação do SDK e da raspagem (no
+GitLab (nem a regra `rules:changes` dele). A métrica só chega ao Prometheus depois do intervalo de exportação do SDK e da raspagem (no
 Exemplo, cerca de um minuto). O exporter `prometheus` do collector tem estabilidade beta para métricas
 [ref:otel-prometheus-exporter], e a regra depende do nome traduzido que ele produz, conferido na
 execução e não na documentação. O teste prova a regra contra séries sintéticas, e não que o limiar

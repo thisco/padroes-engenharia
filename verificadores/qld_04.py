@@ -11,6 +11,10 @@ projeto).
 relação à `--base`. Serviço removido não conta.
 Cada serviço tocado precisa de uma entrada em `docs/orcamento-performance.yml`, sob `componentes:`,
 com `memoria_mb` e `latencia_p95_ms` (números positivos) ou com `isento: "<motivo>"` não vazio.
+A isenção só vale se já estiver na base, como o `.lgpd02-ignorar` da LGPD-02: no harness, no
+orçamento do `HEAD` (fora de um repositório Git, nenhuma vale); no ci, no orçamento da `--base`.
+O `isento` criado na própria MR não vale e é apontado; a isenção é decisão de uma pessoa, numa MR
+própria.
 Havendo um serviço tocado com orçamento (não isento), algum arquivo de CI (`.gitlab-ci.yml`,
 `.gitlab/**/*.yml|yaml` ou `.github/workflows/*.yml|yaml`) precisa citar o caminho do orçamento.
 O orçamento e o CI vêm do disco no harness e do `HEAD` no ci.
@@ -168,12 +172,30 @@ def tocados(novo: str, antigo: str | None, arquivo: str) -> list[tuple[str, int]
     ]
 
 
+def isentos_de(texto: str | None) -> set[str]:
+    """Componentes com `isento` não vazio num orçamento da base; orçamento ausente ou fora do
+    YAML restrito não isenta ninguém (a base ruim não pode abrir uma porta)."""
+    if texto is None:
+        return set()
+    try:
+        declarado = orcamento(texto)
+    except Indeterminado:
+        return set()
+    return {
+        nome
+        for nome, campos in declarado.items()
+        if "isento" in campos and campos["isento"][1].strip()
+    }
+
+
 def avaliar(
     mudancas: list[tuple[str, str, str | None]],
     texto_orcamento: str | None,
     textos_de_ci: list[str],
+    isentos_da_base: set[str],
 ) -> list[str]:
-    """`mudancas` é [(arquivo do compose, texto novo, texto antigo ou None)]."""
+    """`mudancas` é [(arquivo do compose, texto novo, texto antigo ou None)];
+    `isentos_da_base` são os componentes que a base já isenta."""
     lista = [
         (arquivo, nome, n)
         for arquivo, novo, antigo in mudancas
@@ -191,13 +213,20 @@ def avaliar(
     for arquivo, nome, n in lista:
         entrada = declarado.get(nome, {})
         isento = entrada.get("isento")
-        if isento is not None and isento[1].strip():
+        if isento is not None and isento[1].strip() and nome in isentos_da_base:
             continue
         if not all(c in entrada for c in CAMPOS):
-            achados.append(
-                f"{arquivo}:{n}: serviço '{nome}' sem orçamento em {ORCAMENTO} "
-                "(memoria_mb e latencia_p95_ms, ou isento com o motivo)"
-            )
+            if isento is not None:
+                achados.append(
+                    f"{arquivo}:{n}: serviço '{nome}' com isento que não está na base; a isenção "
+                    "só vale depois de aprovada por uma pessoa numa MR própria (declare "
+                    "memoria_mb e latencia_p95_ms)"
+                )
+            else:
+                achados.append(
+                    f"{arquivo}:{n}: serviço '{nome}' sem orçamento em {ORCAMENTO} "
+                    "(memoria_mb e latencia_p95_ms)"
+                )
             continue
         exige_ci = True
         for campo in CAMPOS:
@@ -290,7 +319,32 @@ def evento_harness() -> list[str]:
         return []
     raiz = Path(cwd or ".")
     antigo = le_disco(raiz, caminho)
-    return avaliar([(caminho, conteudo, antigo)], le_disco(raiz, ORCAMENTO), ci_do_disco(raiz))
+    return avaliar(
+        [(caminho, conteudo, antigo)],
+        le_disco(raiz, ORCAMENTO),
+        ci_do_disco(raiz),
+        isentos_de(orcamento_do_head(raiz)),
+    )
+
+
+def orcamento_do_head(raiz: Path) -> str | None:
+    """O orçamento do `HEAD` do repositório em `raiz`; None fora de um repositório Git, sem
+    commit ou sem o arquivo no `HEAD`."""
+    if not raiz.is_dir():
+        return None
+    try:
+        r = subprocess.run(
+            ["git", "show", f"HEAD:{ORCAMENTO}"],
+            cwd=raiz,
+            capture_output=True,
+            timeout=TEMPO_GIT,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if r.returncode != 0:
+        return None
+    return decodifica(r.stdout, ORCAMENTO)
 
 
 # --- ci ----------------------------------------------------------------------------------------
@@ -344,7 +398,12 @@ def evento_ci(base: str | None) -> list[str]:
     textos_de_ci = [
         no_git(raiz, "HEAD", c, no_head) or "" for c in sorted(no_head) if arquivo_de_ci(c)
     ]
-    return avaliar(mudancas, no_git(raiz, "HEAD", ORCAMENTO, no_head), textos_de_ci)
+    return avaliar(
+        mudancas,
+        no_git(raiz, "HEAD", ORCAMENTO, no_head),
+        textos_de_ci,
+        isentos_de(no_git(raiz, base, ORCAMENTO, na_base)),
+    )
 
 
 def decide(evento: str, base: str | None) -> list[str]:

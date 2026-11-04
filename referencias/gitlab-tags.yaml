@@ -1,0 +1,10 @@
+id: gitlab-tags
+titulo: "CI/CD YAML syntax reference: tags"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/yaml/#tags
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'tags': 'Use tags to select a specific runner from the list of all runners that are available for the project'"
+dominios: [ci-cd, qualidade-bdd]
+notas: null

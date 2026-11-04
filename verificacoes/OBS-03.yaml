@@ -1,5 +1,5 @@
 conteudo: OBS-03
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a instrumentação sem código em Python instala opentelemetry-distro e o exportador OTLP, roda opentelemetry-bootstrap -a install e sobe a aplicação por opentelemetry-instrument, configurada por variáveis OTEL_*
@@ -34,9 +34,18 @@ afirmacoes:
   ref: compose-profiles
   localizacao: "'Assigning profiles to services' e 'Start specific profiles'"
   resultado: confirmada
-- texto: o valor none não configura exportador nenhum
+- texto: a variável OTEL_EXPORTADOR liga o exportador, que sem ela fica em none, o valor que não configura exportador nenhum
   ref: otel-sdk-env-spec
-  localizacao: "seção 'Exporter Selection' ('none': 'No automatically configured exporter')"
+  localizacao: "seção 'Exporter Selection' ('none': 'No automatically configured exporter for traces' e '... for metrics'), aberta em 2026-11-04"
+  resultado: confirmada
+  nota: "A fonte sustenta o significado de none; que OTEL_EXPORTADOR é a variável do compose do Exemplo que escolhe o valor, e o que acontece em cada combinação com o perfil, é leitura do compose do portal (a combinação variável sem perfil não foi executada)."
+- texto: a regra $CI_PIPELINE_SOURCE == "merge_request_event" roda o job em pipeline de merge request
+  ref: gitlab-mr-pipelines
+  localizacao: "seção 'Configure individual jobs': '- if: $CI_PIPELINE_SOURCE == \"merge_request_event\"' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: rules:changes roda o job só quando a MR muda os arquivos listados, comparando com o branch de destino
+  ref: gitlab-rules-changes
+  localizacao: "seção 'rules:changes': 'Use rules:changes to specify when to add a job to a pipeline by checking for changes to specific files'; em pipeline de merge request, compara com o branch de destino da MR (aberta em 2026-11-04)"
   resultado: confirmada
 - texto: a regra de alerta do Prometheus tem expressão, um for que segura o alerta em pending antes de disparar, rótulos e anotações; o Prometheus avalia e o Alertmanager notifica
   ref: prometheus-regras-de-alerta
@@ -127,7 +136,7 @@ execucoes:
   data: '2026-11-03'
 revisao_adversarial:
   revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador da Onda 1
-  data: '2026-11-03'
+  data: '2026-11-04'
   achados:
   - afirmacao: "O nome que chega ao Prometheus é http_server_request_duration_seconds_bucket"
     problema: "[ref] o README do exporter não dá o nome traduzido."
@@ -135,3 +144,9 @@ revisao_adversarial:
   - afirmacao: "Como aplicar, passo 5: job limiar-de-alerta"
     problema: "[executabilidade] o job não rodou num GitLab."
     tratamento: "O Como verificar diz isso; o comando do job (promtool test rules) foi executado com a mesma imagem."
+  - afirmacao: "Sem o perfil, o exportador fica em none (rodada de correção 1 do controlador)"
+    problema: "[fato] quem liga o exportador é OTEL_EXPORTADOR, e não o perfil."
+    tratamento: "Texto diz que as duas chaves andam juntas e o que acontece em cada combinação; passo 2 e a frase do Exemplo ajustados."
+  - afirmacao: "Job limiar-de-alerta em toda MR que mexe na pasta (rodada de correção 1)"
+    problema: "[coerência] o job não tinha rules:changes."
+    tratamento: "rules com merge_request_event e changes: observabilidade/**/*, citando gitlab-mr-pipelines e gitlab-rules-changes."

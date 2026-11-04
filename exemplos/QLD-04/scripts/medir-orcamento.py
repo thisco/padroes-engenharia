@@ -1,10 +1,12 @@
 """Mede cada componente do compose contra o orçamento de performance (QLD-04).
 
-Uso: python3 scripts/medir-orcamento.py docs/orcamento-performance.yml
+Uso: python3 scripts/medir-orcamento.py docs/orcamento-performance.yml [orçamento da base]
 Com o compose no ar, para cada componente do orçamento: faz AMOSTRAS (padrão 100) GETs na `url` e
 calcula o p95 da latência; depois lê a memória do contêiner com `docker stats --no-stream`.
+`isento` só vale se o orçamento da base (o segundo argumento, no CI o da base da MR) já isenta o
+componente; o isento criado na própria MR conta como fora do orçamento.
 HOST_DO_COMPOSE troca o 127.0.0.1 da `url` (no CI com docker-in-docker, `docker`).
-Saída: 0 tudo dentro; 1 algum componente acima do orçamento; 2 erro (arquivo, url ou docker).
+Saída: 0 tudo dentro; 1 algum componente acima ou fora do orçamento; 2 erro (arquivo, url, docker).
 """
 
 import math
@@ -60,10 +62,15 @@ def memoria_mib(servico):
 
 def main():
     amostras = int(os.environ.get("AMOSTRAS", "100"))
+    base = ler_orcamento(sys.argv[2]) if len(sys.argv) > 2 else {}
     acima = False
     for nome, campos in ler_orcamento(sys.argv[1]).items():
-        if "isento" in campos:
-            print(f"{nome}: isento ({campos['isento']})")
+        if campos.get("isento") and base.get(nome, {}).get("isento"):
+            print(f"{nome}: isento na base ({base[nome]['isento']})")
+            continue
+        if "isento" in campos and "memoria_mb" not in campos:
+            print(f"{nome}: isento que não está na base; meça o componente ou peça a isenção")
+            acima = True
             continue
         url = campos["url"].replace("127.0.0.1", os.environ.get("HOST_DO_COMPOSE", "127.0.0.1"))
         p95 = p95_ms(url, amostras)

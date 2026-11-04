@@ -1,6 +1,7 @@
 stages: [gates]
 
 # O orçamento está declarado para cada serviço que a MR cria ou muda (verificador do portal).
+# Avisa: com allow_failure, a falha fica laranja e o pipeline segue.
 orcamento-declarado:
   stage: gates
   image: python:3.11
@@ -12,18 +13,30 @@ orcamento-declarado:
   script:
     - python3 -I verificadores/qld_04.py --evento ci --base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
 
-# O orçamento vira teste: sobe o compose e mede cada componente contra o limite.
+# O orçamento vira teste: sobe o compose e mede cada componente contra o limite. Também avisa.
+# Docker-in-Docker com TLS, num runner privilegiado dedicado a este job (tag docker-privilegiado).
 orcamento-de-performance:
   stage: gates
   image: docker:27
   services: [docker:27-dind]
+  tags: [docker-privilegiado]
+  allow_failure: true
   variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
+    GIT_DEPTH: "0"
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_TLS_VERIFY: "1"
+    DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
     HOST_DO_COMPOSE: docker
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - compose.yaml
+        - relatorios/**/*
+        - docs/orcamento-performance.yml
+        - scripts/medir-orcamento.py
   script:
-    - apk add --no-cache python3
+    - apk add --no-cache python3 git
+    - git show "$CI_MERGE_REQUEST_DIFF_BASE_SHA:docs/orcamento-performance.yml" > /tmp/base.yml || true
     - docker compose up -d --wait
-    - python3 scripts/medir-orcamento.py docs/orcamento-performance.yml
+    - python3 scripts/medir-orcamento.py docs/orcamento-performance.yml /tmp/base.yml
