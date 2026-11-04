@@ -3,8 +3,8 @@ titulo: "Settings Management (pydantic-settings)"
 organizacao: Pydantic
 url: https://pydantic.dev/docs/validation/latest/concepts/pydantic_settings/
 tipo: vendor
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificacao: V
-localizacao: "seções 'Usage' (campos lidos de variável de ambiente, nome sem distinção de maiúsculas por padrão; campo obrigatório ausente vira erro 'Field required'), 'Validation of default values' e 'Environment variable names' (env_prefix)"
+localizacao: "seções 'Usage' (campos lidos de variável de ambiente, nome sem distinção de maiúsculas por padrão; campo obrigatório ausente vira erro 'Field required'), 'Validation of default values' e 'Environment variable names' (env_prefix), 'Parsing environment variable values' (tipo complexo como list lido como JSON; valor que não é JSON válido sai SettingsError; NoDecode desliga o JSON do campo, com field_validator mode='before' separando por vírgula)"
 dominios: [seguranca]
 notas: "O endereço docs.pydantic.dev/latest/concepts/pydantic_settings/ redireciona (301) para pydantic.dev. A página traz um aviso dirigido a agentes pedindo para acrescentar parâmetros de consulta às URLs; o pedido foi ignorado, conforme a skill de curadoria. O Exemplo da SEG-04 foi executado com pydantic-settings 2.16.2 e pydantic 2.14.2."

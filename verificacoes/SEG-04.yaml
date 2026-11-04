@@ -1,5 +1,5 @@
 conteudo: SEG-04
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: "a OWASP lista contas padrão ativas, recurso desnecessário habilitado, erro que mostra stack trace e configuração de segurança do framework fora de valor seguro entre as falhas de configuração"
@@ -39,28 +39,35 @@ afirmacoes:
   ref: spring-boot-external-config
   localizacao: "'Type-safe Configuration Properties' › '@ConfigurationProperties Validation'"
   resultado: confirmada
+- texto: "no pydantic-settings, lista é lida do ambiente como JSON, valor que não é JSON válido sai SettingsError, e NoDecode com field_validator mode='before' permite separar por vírgula"
+  ref: pydantic-settings
+  localizacao: "seção 'Parsing environment variable values' ('treating the environment variable's value as a JSON-encoded string'; SettingsError para valor que não é JSON; 'The NoDecode annotation disables JSON parsing')"
+  resultado: confirmada
 execucoes:
 - tipo: arquivo
   arquivo: exemplos/SEG-04/config.py
-  comando: "uv run -q --no-project --with pydantic-settings==2.16.2 python config.py, em quatro ambientes: produção com APP_DEBUG=true, chave curta e APP_ORIGENS_CORS='[\"*\"]'; produção sem APP_CHAVE_DE_SESSAO; produção com chave de 40 caracteres e uma origem explícita; local com debug ligado e chave curta"
+  comando: "uv run -q --no-project --with pydantic-settings==2.16.2 python config.py, em seis ambientes: produção com APP_DEBUG=true, chave curta e APP_ORIGENS_CORS=*; produção sem APP_CHAVE_DE_SESSAO; produção com chave de 40 caracteres e APP_ORIGENS_CORS=a.com,b.com; produção com APP_ORIGENS_CORS='a.com, *'; local com debug ligado e chave curta; produção com APP_DEBUG=talvez"
   ambiente: "macOS; uv; Python 3.14 do uv; pydantic-settings 2.16.2; pydantic 2.14.2"
   resultado: passou
-  evidencia: "saída 1 com 'boot abortado: config: Value error, configuração insegura em produção: APP_DEBUG ligado; APP_CHAVE_DE_SESSAO com menos de 32 caracteres; APP_ORIGENS_CORS aceita qualquer origem', sem o valor da chave; saída 1 com 'boot abortado: chave_de_sessao: Field required'; saída 0 'configuração ok para producao'; saída 0 'configuração ok para local'. Sem hide_input_in_errors, o mesmo erro trazia a chave em input_value."
-  data: '2026-11-03'
+  evidencia: "saída 1 'boot abortado: config: Value error, configuração insegura em produção: APP_DEBUG ligado; APP_CHAVE_DE_SESSAO com menos de 32 caracteres; APP_ORIGENS_CORS aceita qualquer origem', sem o valor da chave; saída 1 'chave_de_sessao: Field required'; saída 0 'configuração ok para producao'; saída 1 só pelo CORS; saída 0 'configuração ok para local'; saída 1 'debug: Input should be a valid boolean'. Antes da correção, APP_ORIGENS_CORS=* ou a.com,b.com saía com traceback de SettingsError (error parsing value for field origens_cors from source EnvSettingsSource), fora do carregar()."
+  data: '2026-11-04'
 - tipo: prompt
   prompt: SEG-04-prompt-1
-  harness: "execução manual pelo curador, seguindo o prompt passo a passo (não foi sessão nova de agente)"
-  ambiente: "repositório Git temporário com o app/config.py do Antes; uv com pydantic-settings 2.16.2 e pytest"
+  harness: "execução manual pelo curador, seguindo o prompt passo a passo (não foi sessão nova de agente; a execução em sessão nova é pendência do dono)"
+  ambiente: "repositório Git temporário com o app/config.py do Antes; uv com pydantic-settings 2.16.2 e pytest 9.0.2"
   resultado: passou
-  evidencia: "app/config.py reescrito com Config(BaseSettings), model_validator e carregar(); tests/test_config.py com os três casos: '3 passed in 0.73s'; o teste confere que o stderr não contém a chave usada."
-  data: '2026-11-03'
+  evidencia: "reexecutado em 2026-11-04: app/config.py reescrito com Config(BaseSettings), NoDecode e field_validator em origens_cors, model_validator e carregar() com ValidationError e SettingsError; tests/test_config.py com os quatro casos: '4 passed in 0.82s'; com o config.py anterior à correção: '2 failed, 2 passed' (lista por vírgula e CORS aberto). Os testes conferem que o stderr não contém a chave."
+  data: '2026-11-04'
 revisao_adversarial:
-  revisor: "autorrevisão do curador; a revisão independente fica com o controlador da Onda 1"
-  data: '2026-11-03'
+  revisor: "revisão independente em lote, 2026-11-04 (controlador da Onda 1), mais a autorrevisão do curador de 2026-11-03"
+  data: '2026-11-04'
   achados:
+  - afirmacao: "origens_cors: list[str] lida do ambiente, no formato do Antes"
+    problema: "Minor da revisão independente: o pydantic-settings lê list como JSON; APP_ORIGENS_CORS=* ou a.com,b.com saía SettingsError com traceback, fora do carregar()."
+    tratamento: "exemplos/SEG-04/config.py anota o campo com NoDecode e separa por vírgula num field_validator; carregar() captura também SettingsError; Como aplicar 2 e 5 e o prompt dizem o formato, com [ref:pydantic-settings]; RED e GREEN do prompt registrados."
   - afirmacao: "Spring Boot: invalid configuration fails at startup"
-    problema: "A subseção de validação não diz que a falha impede a aplicação de subir."
+    problema: "A subseção de validação não diz que a falha impede a aplicação de subir (autorrevisão, 2026-11-03)."
     tratamento: "O texto afirma só que a classe é validada; a falha no boot não é atribuída à fonte."
   - afirmacao: "O erro diz o quê, nunca o valor"
-    problema: "Na execução, o erro do pydantic repetiu a chave em input_value."
+    problema: "Na execução, o erro do pydantic repetiu a chave em input_value (autorrevisão, 2026-11-03)."
     tratamento: "hide_input_in_errors entrou no Exemplo e no Como aplicar, com fonte."

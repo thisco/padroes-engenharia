@@ -12,8 +12,8 @@ aplica: []
 referencias: [owasp-top10-2025-a02, twelve-factor-config, pydantic-settings, pydantic-config, django-deployment-checklist, spring-boot-external-config]
 relacionadas: [SEG-02, SEG-05]
 dono: engenharia
-revisado_em: 2026-11-03
-revisar_ate: 2027-05-03
+revisado_em: 2026-11-04
+revisar_ate: 2027-05-04
 resumo: "A aplicação lê a configuração do ambiente, confere no boot e, em produção, se recusa a subir com debug ligado, chave fraca ou CORS aberto."
 ferramentas_aprovadas: []
 exemplos:
@@ -56,14 +56,18 @@ padrão. O Django diz o mesmo da depuração: nunca a ligue em produção [ref:d
 2. Declare cada campo com tipo. Tire o padrão de todo campo que só tem valor seguro em produção. No
    pydantic-settings, cada campo de uma classe `BaseSettings` é lido da variável de ambiente de mesmo
    nome, sem distinção de maiúsculas por padrão e com o prefixo de `env_prefix`, e o campo obrigatório
-   ausente vira erro de validação [ref:pydantic-settings].
+   ausente vira erro de validação [ref:pydantic-settings]. Lista e outro tipo complexo são lidos do
+   ambiente como JSON, e o valor que não é JSON válido (`a.com,b.com`) sai `SettingsError`, fora do
+   erro de validação; a anotação `NoDecode` desliga a leitura em JSON do campo, e um `field_validator`
+   com `mode="before"` separa o texto por vírgula [ref:pydantic-settings]. O Exemplo faz isso em
+   `origens_cors`, que aceita o formato do Antes.
 3. Escreva a regra de produção como validação do próprio objeto de configuração (no Exemplo, um
    `model_validator`), e não como `if` espalhado pela aplicação.
 4. Faça a falha não repetir o valor. No pydantic, `hide_input_in_errors` esconde o valor recebido na
    mensagem de erro; o padrão é mostrá-lo [ref:pydantic-config]. Na execução do portal, sem essa opção,
    o erro do validador repetiu a chave lida do ambiente.
-5. No ponto de entrada, capture o erro, escreva uma linha por problema em stderr e saia com 1, antes de
-   abrir a porta. O orquestrador vê o processo falhar e não põe a versão nova no ar.
+5. No ponto de entrada, capture o erro (no pydantic-settings, `ValidationError` e `SettingsError`),
+   escreva uma linha por problema em stderr e saia com 1, antes de abrir a porta. O orquestrador vê o processo falhar e não põe a versão nova no ar.
 6. Escreva um teste por regra: com `ambiente=producao` e o valor inseguro, o carregamento falha; com o
    valor seguro, passa.
 
@@ -87,14 +91,16 @@ em `exemplos/SEG-04/config.py`):
 <!-- incluir: exemplos/SEG-04/config.py -->
 
 Executado com `uv run --no-project --with pydantic-settings==2.16.2 python config.py` (pydantic
-2.14.2), em produção com debug ligado, chave curta e CORS aberto, o processo sai com 1:
+2.14.2), em produção com debug ligado, chave curta e `APP_ORIGENS_CORS=*`, o processo sai com 1:
 
 ```text
 boot abortado: config: Value error, configuração insegura em produção: APP_DEBUG ligado; APP_CHAVE_DE_SESSAO com menos de 32 caracteres; APP_ORIGENS_CORS aceita qualquer origem
 ```
 
 Sem `APP_CHAVE_DE_SESSAO`, também sai com 1 (`boot abortado: chave_de_sessao: Field required`). Com
-uma chave de 40 caracteres e uma origem explícita, sai com 0 (`configuração ok para producao`); com
+uma chave de 40 caracteres e `APP_ORIGENS_CORS=a.com,b.com`, sai com 0 (`configuração ok para
+producao`); com `a.com, *`, sai com 1 pelo CORS; com `APP_DEBUG=talvez`, sai com 1 (`boot abortado:
+debug: Input should be a valid boolean, unable to interpret input`); com
 `APP_AMBIENTE=local`, debug ligado e chave curta passam, porque a regra é de produção.
 
 ### Para o agente
@@ -116,13 +122,16 @@ Aplique a prática SEG-04 do portal de padrões de engenharia neste repositório
    com valores padrão. Reescreva-o com pydantic-settings: uma classe Config(BaseSettings) com
    env_prefix "APP_" e hide_input_in_errors=True; os campos ambiente (local, homologacao ou
    producao, sem padrão), debug (padrão False), chave_de_sessao (SecretStr, sem padrão) e
-   origens_cors (lista, padrão vazia).
+   origens_cors (lista, padrão vazia, lida do ambiente separada por vírgula: anote-a com NoDecode e
+   separe o texto num field_validator com mode="before").
 2. Acrescente um model_validator que, só com ambiente producao, recusa debug ligado, chave com menos
    de 32 caracteres e "*" em origens_cors, com uma mensagem que nomeia a variável e nunca o valor.
-3. Crie a função carregar(), que devolve a Config ou escreve uma linha por erro em stderr e sai com 1.
+3. Crie a função carregar(), que devolve a Config ou, com ValidationError ou SettingsError, escreve
+   uma linha por erro em stderr e sai com 1.
    Não mude outro arquivo.
-4. Escreva tests/test_config.py com três casos: produção com debug ligado sai com 1; produção sem a
-   chave sai com 1; produção com chave de 40 caracteres e origem explícita carrega. Rode os testes e
+4. Escreva tests/test_config.py com quatro casos: produção com debug ligado sai com 1; produção sem a
+   chave sai com 1; produção com chave de 40 caracteres e APP_ORIGENS_CORS=a.com,b.com carrega, com
+   as duas origens; produção com APP_ORIGENS_CORS=* sai com 1. Rode os testes e
    mostre a saída. Confirme que nenhuma saída de erro contém o valor da chave usado no teste.
 ```
 

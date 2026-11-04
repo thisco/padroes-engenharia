@@ -1,10 +1,10 @@
 """Configuração da aplicação: lida do ambiente e conferida no boot (SEG-04)."""
 
 import sys
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import SecretStr, ValidationError, model_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr, ValidationError, field_validator, model_validator
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict, SettingsError
 
 
 class Config(BaseSettings):
@@ -14,8 +14,16 @@ class Config(BaseSettings):
     ambiente: Literal["local", "homologacao", "producao"]  # sem padrão: ausente, o boot falha
     debug: bool = False
     chave_de_sessao: SecretStr  # sem padrão: não existe chave "de desenvolvimento" embutida
-    origens_cors: list[str] = []
+    # NoDecode: a lista vem separada por vírgula (a.com,b.com), não em JSON.
+    origens_cors: Annotated[list[str], NoDecode] = []
     docs_publicas: bool = False
+
+    @field_validator("origens_cors", mode="before")
+    @classmethod
+    def lista_por_virgula(cls, valor: object) -> object:
+        if isinstance(valor, str):
+            return [origem.strip() for origem in valor.split(",") if origem.strip()]
+        return valor
 
     @model_validator(mode="after")
     def segura_em_producao(self) -> "Config":
@@ -43,6 +51,10 @@ def carregar() -> Config:
         for e in erro.errors():
             campo = ".".join(str(p) for p in e["loc"]) or "config"
             print(f"boot abortado: {campo}: {e['msg']}", file=sys.stderr)
+        sys.exit(1)
+    except SettingsError as erro:
+        # Valor que a fonte do ambiente não conseguiu ler; a mensagem nomeia o campo, não o valor.
+        print(f"boot abortado: {erro}", file=sys.stderr)
         sys.exit(1)
 
 
