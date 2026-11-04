@@ -93,6 +93,18 @@ afirmacoes:
   localizacao: "code.claude.com/docs/en/skills, seção 'Choose where skills load', linha Project"
   resultado: confirmada
 revisao_adversarial:
-  revisor: "pendente: não rodada nesta passagem, que não usa subagente; roda em sessão independente junto das execuções dos prompts"
-  data: '2026-11-03'
-  achados: []
+  revisor: "revisão independente em lote, 2026-11-04"
+  data: '2026-11-04'
+  achados:
+  - afirmacao: a steering por harness (onde cada um lê as regras próprias) sem [ref] e imprecisa para o Claude Code
+    problema: '[importante] o trecho afirmava um fato sobre o local das regras de cada harness sem citar fonte, e para o Claude Code estava impreciso'
+    tratamento: 'resolvido: reescrito como instrução, sem afirmação factual não sustentada'
+  - afirmacao: '"sem o histórico" não sustentado e localização HARD-GATE inexistente'
+    problema: '[importante] a expressão não tinha sustentação na fonte, e a localização registrada (HARD-GATE) não existe na fonte'
+    tratamento: 'resolvido: texto e localização corrigidos'
+  - afirmacao: '"ofício" no texto do roteiro'
+    problema: '[baixo] achado minor da revisão'
+    tratamento: 'retirado: o achado foi retirado pelo revisor na re-revisão'
+  - afirmacao: execução dos prompts em sessão nova
+    problema: 'a revisão de conteúdo não executa os prompts'
+    tratamento: 'pendência do dono: executar os prompts em sessão nova e registrar as execuções; segue aberta'

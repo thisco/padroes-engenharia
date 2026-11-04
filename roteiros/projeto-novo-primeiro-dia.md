@@ -177,7 +177,7 @@ O agente escreve o steering a partir do PRD aprovado; você confere e aprova. No
 scaffold, o `AGENTS.md` é a constituição com a tabela de roteamento, os parâmetros do projeto
 ficam em `docs/steering/`, entre eles `arquitetura.md`, e o `CLAUDE.md` e o `GEMINI.md` são
 ponteiros para o `AGENTS.md` [ref:sdd-scaffold-readme]. O `AGENTS.md` é a fonte única do steering do
-projeto; no Claude Code, o `CLAUDE.md` precisa trazê-lo com `@AGENTS.md`. O que muda de um harness
+projeto; no Claude Code, o `CLAUDE.md` precisa trazê-lo com `@AGENTS.md` [ref:claude-code-memory]. O que muda de um harness
 para outro é onde cada um lê as regras próprias dele, se o time quiser uma.
 
 ```prompt

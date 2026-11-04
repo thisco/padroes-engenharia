@@ -19,6 +19,10 @@ afirmacoes:
   localizacao: "antigravity.google/docs/getting-started, seção 'Start a project', aba Antigravity App, passos 1 a 3"
   resultado: confirmada
 revisao_adversarial:
-  revisor: "pendente: não rodada nesta passagem, que não usa subagente; roda em sessão independente junto das execuções dos prompts"
-  data: '2026-11-03'
-  achados: []
+  revisor: "revisão independente em lote, 2026-11-04"
+  data: '2026-11-04'
+  achados:
+  - afirmacao: sem achados próprios, mesma revisão em lote do roteiro do projeto novo
+    problema: 'nenhum achado próprio; os achados da revisão em lote estão em roteiro-projeto-novo-primeiro-dia.yaml'
+    tratamento: 'nada a tratar neste roteiro; a execução dos prompts em sessão nova segue pendência do dono'
+

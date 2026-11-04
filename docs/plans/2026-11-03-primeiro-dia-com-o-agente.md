@@ -406,31 +406,36 @@ pessoa; o texto do guia não é copiado. Prompt inicial no mesmo molde da T8.
 
 ## Evidências
 
-Branch `feat/2026-11-03-primeiro-dia-com-o-agente`, HEAD 7e44a88, 2026-11-04.
+Branch `feat/2026-11-03-primeiro-dia-com-o-agente`, código em dc19a26 (rodada única de correção após a
+revisão final) mais o commit de documentação que registra estas evidências, 2026-11-04.
 
 ```
 $ .venv/bin/python -m pytest -q -p no:cacheprovider
 FAILED tests/integracao/test_cli_validar.py::test_sai_0_no_repositorio_real
 FAILED tests/unidade/test_regras_ids.py::test_validar_tudo_no_repositorio_real_nao_tem_erro
-2 failed, 2593 passed in 261.02s (0:04:21)
+2 failed, 2598 passed in 232.44s (0:03:52)
 
 $ .venv/bin/ruff check .
 All checks passed!
 
 $ .venv/bin/python scripts/validar.py        (saída 1)
 10 erro(s) de validação.
-roteiros/projeto-existente-primeiro-dia.md:corpo: R-PROMPT (roteiro-projeto-existente-primeiro-dia-prompt-1..3: sem execução registrada)
-roteiros/projeto-novo-primeiro-dia.md:corpo: R-PROMPT (roteiro-projeto-novo-primeiro-dia-prompt-1..7: sem execução registrada)
+roteiros/projeto-existente-primeiro-dia.md:corpo: R-PROMPT (prompt-1..3: sem execução registrada)
+roteiros/projeto-novo-primeiro-dia.md:corpo: R-PROMPT (prompt-1..7: sem execução registrada)
 
 $ .venv/bin/python scripts/gerar.py          (saída 1, pelos mesmos 10 R-PROMPT)
 
-$ .venv/bin/python scripts/gerar.py --previa --saida <scratchpad>/previa-t10   (saída 0)
-PRÉVIA, não publicada: portal gerado em .../previa-t10 (versão 1.1.0, commit 7e44a88, 2026-11-04).
+$ .venv/bin/python scripts/gerar.py --previa --saida <scratchpad>/previa-final   (saída 0)
+PRÉVIA, não publicada: portal gerado em .../previa-final (versão 1.1.0, commit dc19a26, 2026-11-04).
+
+$ .venv/bin/python scripts/gerar.py --previa --saida <scratchpad>/previa-final-url --url-base https://portal.exemplo.org/   (saída 0)
 ```
 
-As duas falhas da suíte são as únicas e têm a mesma causa dos 10 erros do validador: os dois testes
-validam o repositório real e encontram os 10 `R-PROMPT` "sem execução registrada" (7 prompts do
-roteiro de projeto novo, 3 do de projeto existente). Nenhum outro erro do validador.
+Com a base publicada, nenhum arquivo da prévia contém `{URL do portal}`; na prévia sem `--url-base`
+nenhum arquivo contém `data-copiar hidden`. As duas falhas da suíte são as únicas e têm a mesma causa
+dos 10 erros do validador: os dois testes validam o repositório real e encontram os 10 `R-PROMPT`
+"sem execução registrada" (7 prompts do roteiro de projeto novo, 3 do de projeto existente). Nenhum
+outro erro do validador.
 
 ## Checkpoint
 
@@ -443,32 +448,26 @@ Prévia servida em 127.0.0.1 e aberta no Playwright (1280x900). Capturas em
 - **Tela 1, Início:** bate. Três portas; "Projeto novo" e "Projeto existente" com o link "Roteiro com o
   agente: <título>", os harnesses cobertos ("Kiro · Antigravity · Claude Code · Codex" e "Kiro ·
   Antigravity") e o link do guia; "No meio de uma mudança" só com a trilha.
-- **Tela 2, Roteiro: DEFEITO.** Prompt inicial escuro, Copiar, passos numerados com a marca de quem faz
-  e abas por harness existem, mas o stepper não tem o layout do mockup. O seletor global
-  `.corpo { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px }` do tema vaza para
-  `.passo .corpo`, e o corpo do passo vira duas colunas (título e abas à esquerda, texto à direita; os
-  painéis por harness ficam na coluna estreita). As abas, em coluna de 320 px, encolhem para botões de
-  cerca de 50 px de largura por 165 de altura (retângulos altos em vez de pílulas). Além disso o
-  roteiro ocupa só a coluna principal (cerca de 660 px), ao lado do aside de ficha e referências, e
-  não a largura toda do mockup. Correção sugerida: `.passo .corpo { display: block; }` (ou
-  restringir o seletor global) em `portal/tema/tema.css`, com teste. Não corrigi (risco alto, fora
-  da tarefa). A regra legada `.passo` do how-to (linha 108 do `tema.css`) também compartilha o nome.
+- **Tela 2, Roteiro:** o defeito do stepper (o seletor global `.corpo` em grid de duas colunas vazava
+  para o corpo do passo e deformava as abas) foi corrigido em fabc082; a captura
+  `scratchpad/capturas-css/roteiro-1280.png` bate com o mockup. O roteiro ocupa a coluna principal
+  ao lado do aside de ficha e referências.
 - **Tela 3, Biblioteca:** bate no essencial: cartões em três colunas, título, chips (domínio, etapa,
   origem), prévia, "Ver o prompt inteiro", Copiar e "Abrir a origem", filtros Domínio, Etapa e Origem e
-  contagem ("66 de 66 prompts"). Diferenças: o cartão tem barra tracejada âmbar à esquerda (herdada de
-  `figure.prompt`; o mockup não tem); o rótulo de etapa é o momento da espinha ("Especificar"), e não
-  "Antes de escrever"; o subtítulo diz "das práticas e receitas" (o mockup acrescenta "e roteiros").
+  contagem ("66 de 66 prompts"). Diferenças: o rótulo de etapa é o momento da espinha ("Especificar"),
+  e não "Antes de escrever"; o subtítulo dizia "das práticas e receitas" e passou a incluir os
+  roteiros nesta rodada. A barra tracejada âmbar do cartão está no mockup (`primeiro-dia.html:35`).
 - **Tela 4, Receita:** "Com o agente" é o primeiro bloco (escuro, Copiar visível), seguido de "Prefere
-  fazer à mão?" e das seções de sempre. Diferenças: o prompt mostra um fundo de código por linha
-  (estilo de `code` herdado dentro do `pre` escuro), com aspecto irregular, o que o mockup não tem; o
-  bloco fica na coluna principal ao lado do aside "Ficha", e não na largura toda; 7 botões Copiar
+  fazer à mão?" e das seções de sempre. Diferenças: o fundo de código por linha dentro do `pre` escuro
+  foi corrigido nesta rodada (`.disco pre code { background: none; }`); o bloco fica na coluna principal ao lado do aside "Ficha", e não na largura toda; 7 botões Copiar
   visíveis e 6 rótulos de linguagem. O índice "Como fazer" não foi comparado cartão a cartão.
 
 ### Pendências do dono
 
 - Executar os 10 prompts dos dois roteiros e registrar as `execucoes` antes do merge na main (hoje
   `validar.py` e `gerar.py` saem com 1; os dois testes do repositório real passam a verde junto).
-- Decidir sobre a correção do CSS do stepper (defeito acima) antes do merge.
+- Executar os 10 prompts em sessão nova e registrar as execuções: o revisor independente de conteúdo
+  já rodou em 2026-11-04, mas não executa prompts, e os registros das duas revisões dizem isso.
 
 ### Minor estacionados pelas revisões (não corrigidos)
 
@@ -478,5 +477,13 @@ Prévia servida em 127.0.0.1 e aberta no Playwright (1280x900). Capturas em
 - Receita repetida no "Como fazer" (domínio e etapa).
 - O regex dos casos do teste em node depende da indentação.
 - Os testes de node pulam quando não há node.
-- `[ref:claude-code-memory]` explícito na linha 180 do roteiro de projeto novo.
 - `referencias/superpowers-brainstorming.yaml` cita "bloco HARD-GATE".
+- Bloco legado `.passos`/`.passo` em `tema.css:107-116` vaza para o roteiro.
+- Links relativos no `SKILL.md` gerado não resolvem a partir de `skills/roteiro-*/`.
+- `_sem_citacoes` deixa ". O guia" quando o marcador abre a linha.
+- O seletor de `iniciarAbas` é montado com valor do localStorage sem `CSS.escape`, e a chave
+  "harness" não tem prefixo.
+- Abas sem `aria-controls`.
+- A skill `roteiro-<slug>` do pacote sobrescreve skill homônima do repositório sem regra.
+- Nota contraditória em `referencias/sdd-scaffold-readme.yaml:11`.
+- Sem node no CI do GitLab (os testes em node pulam).
