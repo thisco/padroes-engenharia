@@ -1,8 +1,9 @@
-# Fontes abertas na web em 2026-11-03. A revisão adversarial em sessão independente fica com o
-# controlador (o despacho desta frente proíbe subagente); `achados: []` aqui quer dizer "ainda não
-# revisada", não "revisada sem achado".
+# Fontes abertas na web em 2026-11-03 e todas reabertas em 2026-11-04, na rodada de correção 1: cada
+# afirmação abaixo foi conferida de novo na página nesse dia (nenhuma mudou de resultado). A revisão
+# adversarial foi a revisão independente em lote de 2026-11-04 (ADR 0005); os achados e o tratamento
+# estão no fim.
 conteudo: P2-07
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o guia de GenAIOps divide o trabalho com modelo em laço interno (dados, experimentação e avaliação)
@@ -47,19 +48,25 @@ afirmacoes:
 execucoes:
 - tipo: arquivo
   arquivo: verificadores/p2_07.py
-  comando: python3 -I verificadores/p2_07.py --evento ci --base <sha> (com o manifesto do Exemplo, com o modelo trocado, com base inexistente e com evento pre-commit), num repositório Git temporário; pytest -q tests/verificadores/test_p2_07.py
-  ambiente: repositório Git novo no scratchpad com catalogo-modelos.yml (uma entrada liberada e uma não), evals/test_evals.py e o ia-producao.yml copiado do Exemplo; Python 3 do sistema e Python do .venv do monorepo; macOS. Não foi executado num GitLab nem num GitHub.
+  comando: python3 -I verificadores/p2_07.py --evento ci --base <sha> num repositório Git temporário (sem manifesto com catálogo e código que lê AI_GATEWAY_URL; estagio sandbox; produção sem job de eval; produção com job; modelo trocado; projeto sem IA); pytest -q tests/verificadores/test_p2_07.py
+  ambiente: repositório Git novo no scratchpad com catalogo-modelos.yml (uma entrada liberada e uma não), evals/test_evals.py, src/app.py e o ia-producao.yml do Exemplo; Python 3.15 do sistema e Python do .venv do monorepo; macOS. Não foi executado num GitLab nem num GitHub.
   resultado: passou
-  evidencia: 'manifesto do Exemplo: nada em stdout, saída 0; modelo-x: "ia-producao.yml:2: modelo \"modelo-x\" fora do catálogo (catalogo-modelos.yml)", saída 1; base inexistente: "P2-07: base nao-existe não encontrada (clone raso? use GIT_DEPTH 0)", saída 2; pre-commit: "P2-07: evento não atendido: pre-commit (atende antes-de-ferramenta e ci)", saída 2. pytest: na primeira rodada, sem o script, 37 failed e 1 passed (o de tempo) em test_p2_07.py; depois, 38 passed.'
-  data: '2026-11-03'
+  evidencia: 'sem manifesto: "ia-producao.yml:0: o projeto chama modelo (catalogo-modelos.yml) e não tem ia-producao.yml; declare a promoção ou estagio: sandbox", saída 1; estagio sandbox: saída 0; produção sem job: "ia-producao.yml:8: nenhum job \"eval\" no .gitlab-ci.yml nem em .github/workflows/; a suíte de eval (P2-05) precisa rodar no CI", saída 1; com o job: saída 0; modelo-x: "ia-producao.yml:2: modelo \"modelo-x\" fora do catálogo (catalogo-modelos.yml)", saída 1; projeto sem IA: saída 0. pytest: com os testes novos e o script antigo, 11 failed e 41 passed; depois, 52 passed. A primeira execução, de 2026-11-03, tinha 38 passed.'
+  data: '2026-11-04'
 - tipo: prompt
   prompt: P2-07-prompt-1
-  harness: execução manual pelo curador, passo a passo, sem sessão nova de agente (o despacho desta frente proíbe subagente)
-  ambiente: o mesmo repositório temporário, de volta à sandbox (sem ia-producao.yml), com {id do modelo} = modelo-a-api, aliases app-exemplo-dev e app-exemplo-prd e evidência https://gitlab.example.com/grupo/app/-/pipelines/456
+  harness: execução manual pelo curador em 2026-11-03 e de novo em 2026-11-04, com o prompt revisto; execução em sessão nova de agente pendente, dono
+  ambiente: o mesmo repositório temporário, de volta a estagio sandbox, com {id do modelo} = modelo-a-api, aliases app-exemplo-dev e app-exemplo-prd e evidência https://gitlab.example.com/grupo/app/-/pipelines/456
   resultado: passou
-  evidencia: 'passo 1 mostrou a entrada modelo-a-api com uso_liberado: sim; passo 2 listou evals/test_evals.py; passo 3 criou o ia-producao.yml com os seis campos e só os aliases; passo 4: verificador em ci com --base HEAD~1 sem saída, saída 0; commit "feat: promoção para produção (P2-07)". Contraprova no harness com modelo-b-nuvem: "ia-producao.yml:1: modelo \"modelo-b-nuvem\" no catálogo sem uso_liberado: sim", saída 1. Falta repetir em sessão nova de agente.'
-  data: '2026-11-03'
+  evidencia: 'passo 1 mostrou a entrada modelo-a-api com uso_liberado: sim; passo 2 listou evals/test_evals.py e o job eval do .gitlab-ci.yml (pytest evals); passo 3 trocou estagio sandbox pelos seis campos de produção, só com os aliases; passo 4: verificador em ci com --base HEAD~1 sem saída, saída 0; commit "feat: promoção para produção (P2-07)".'
+  data: '2026-11-04'
 revisao_adversarial:
-  revisor: pendente, revisão do controlador em sessão independente
-  data: '2026-11-03'
-  achados: []
+  revisor: revisão independente em lote, 2026-11-04
+  data: '2026-11-04'
+  achados:
+  - afirmacao: "o verificador confere a promoção para produção (Como verificar; verificadores/p2_07.py)"
+    problema: "só agia com ia-producao.yml presente: projeto que chama modelo sem declarar a promoção saía 0, o próprio caso de 'Como aparece quando falta'; e não conferia job de eval, só a pasta eval_suite e o formato de eval_evidencia"
+    tratamento: "o verificador acusa a falta do manifesto quando há sinal de uso de modelo (catalogo-modelos.yml na raiz ou código fora de teste que lê AI_GATEWAY_URL ou AI_GATEWAY_KEY); estagio: sandbox declara a sandbox; em produção, exige um job eval (ou o nome de eval_job) no .gitlab-ci.yml ou em .github/workflows/ que cite o eval_suite; testes RED e GREEN em tests/verificadores/test_p2_07.py; texto de O que fazer, Como aplicar, Exemplo, prompt e Como verificar atualizado"
+  - afirmacao: "execução do prompt registrada como passou"
+    problema: "a execução foi manual pelo curador, não em sessão nova de agente, e o registro parecia completo"
+    tratamento: "o campo harness diz que a execução foi manual e que a sessão nova de agente está pendente com o dono; o validador só aceita passou, falhou-como-esperado ou falhou"

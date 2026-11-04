@@ -3,7 +3,7 @@ titulo: "CI/CD YAML syntax reference: allow_failure"
 organizacao: GitLab
 url: https://docs.gitlab.com/ci/yaml/#allow_failure
 tipo: vendor
-verificado_em: 2026-10-08
+verificado_em: '2026-11-04'
 verificacao: V
 localizacao: "seção 'allow_failure': com allow_failure: true, a falha do job mostra um aviso laranja, e o pipeline é bem-sucedido, com o commit marcado como passou, sem avisos"
 dominios: [ci-cd]

@@ -3,7 +3,7 @@ titulo: Contexts reference (GitHub Actions)
 organizacao: GitHub
 url: https://docs.github.com/en/actions/reference/workflows-and-actions/contexts
 tipo: vendor
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificacao: V
 localizacao: "seção do contexto github, linha github.base_ref (a branch de destino do pull request; só nos eventos pull_request e pull_request_target)"
 dominios: [ci-cd]

@@ -4,19 +4,26 @@ Contrato: `python3 verificadores/p2_07.py --evento <evento> [--base <ref>]`.
 Atende `antes-de-ferramenta` (JSON no stdin) e `ci` (`--base` e `HEAD`); outro evento sai 2.
 
 A promoção é declarada no manifesto `ia-producao.yml`, na raiz do projeto, com um campo por linha
-(`campo: valor`, `#` começa comentário, valor entre aspas aceito). Projeto sem o manifesto está só
-na sandbox: nada a apontar. Com o manifesto, cada campo é conferido:
+(`campo: valor`, `#` começa comentário, valor entre aspas aceito).
+Projeto que chama modelo precisa do manifesto. O sinal é o `catalogo-modelos.yml` na raiz ou um
+arquivo de código (fora de teste e de terceiros, o mesmo critério da P2-01) que lê
+`AI_GATEWAY_URL` ou `AI_GATEWAY_KEY`, as variáveis do gateway; com o sinal e sem o manifesto, acusa
+a falta. Projeto sem sinal e sem manifesto: nada a apontar.
+`estagio: sandbox` declara que o projeto só experimenta: nada mais é conferido. Sem `estagio`, ou
+com `estagio: producao`, cada campo é conferido:
 - `modelo`: o `id` de uma entrada do `catalogo-modelos.yml` (o catálogo da P2-03, na raiz) com
   `uso_liberado: sim`;
 - `chave_sandbox` e `chave_producao`: o alias (nome) da chave virtual de cada ambiente, nunca o
   valor; minúsculas, dígitos, `.`, `_` e `-`; os dois diferentes;
 - `eval_suite`: pasta ou arquivo da suíte de eval (P2-05) que existe no repositório;
 - `eval_aprovado_em`: data `AAAA-MM-DD` válida e não posterior a hoje;
-- `eval_evidencia`: URL `https://` (o pipeline ou o job que aprovou) ou arquivo do repositório.
-No harness, vale quando a escrita é no manifesto (o conteúdo novo contra o catálogo e as pastas em
-disco) ou no catálogo (o manifesto em disco contra o catálogo novo); o resto sai 0. No ci, vale o
-estado do `HEAD` (manifesto, catálogo e suíte commitados), em toda MR, porque um catálogo que
-retira o modelo também quebra a promoção.
+- `eval_evidencia`: URL `https://` (o pipeline ou o job que aprovou) ou arquivo do repositório;
+- o job de eval: um job chamado `eval_job` (opcional; `eval` quando falta) no `.gitlab-ci.yml` ou
+  num `.github/workflows/*.yml`, cujo bloco cita o caminho do `eval_suite`.
+No harness, vale quando a escrita é no manifesto (o conteúdo novo contra o catálogo, as pastas e o
+CI em disco) ou no catálogo (o manifesto em disco contra o catálogo novo; sem manifesto, o catálogo
+é o sinal); o resto sai 0. No ci, vale o estado do `HEAD` (manifesto, catálogo, suíte, CI e código
+commitados), em toda MR, porque um catálogo que retira o modelo também quebra a promoção.
 
 Saída: 0 nada a apontar; 1 achados, um por linha em `<caminho>:<linha>: <motivo>`; 2 erro de uso,
 arquivo ilegível ou estado indeterminado (mensagem em stderr). Valor que parece chave nunca é
@@ -43,6 +50,19 @@ CAMPOS = (
     "eval_aprovado_em",
     "eval_evidencia",
 )
+ESTAGIOS = ("sandbox", "producao")
+JOB_PADRAO = "eval"
+GITLAB_CI = ".gitlab-ci.yml"
+WORKFLOWS = ".github/workflows/"
+# Montadas por partes para o próprio verificador, copiado para o projeto, não virar sinal.
+VARIAVEIS_DO_GATEWAY = ("AI_" + "GATEWAY_URL", "AI_" + "GATEWAY_KEY")
+EXTENSOES = {
+    ".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs", ".go", ".java", ".kt", ".rb", ".php",
+    ".cs", ".rs",
+}  # fmt: skip
+PASTAS_DE_TESTE = {"tests", "test", "__tests__", "spec", "specs", "e2e", "__mocks__", "mocks"}
+PASTAS_DE_TESTE |= {"fixtures", "testdata"}
+PASTAS_DE_TERCEIROS = {"node_modules", ".venv", "venv", "vendor", "site-packages"}
 ALIAS = re.compile(r"[a-z0-9][a-z0-9._-]{0,63}")
 # Prefixos de chave de gateway e de provedor: o valor nunca vai para a saída.
 PARECE_CHAVE = re.compile(r"^(?:sk|pk|rk)[-_]")
@@ -129,11 +149,119 @@ def caminho_relativo_seguro(valor: str) -> str | None:
     return p.as_posix()
 
 
-def confere(manifesto: str, catalogo: str | None, existe) -> list[str]:
-    """Achados do manifesto. `catalogo` é o texto (None se não existe) e `existe(caminho)` diz se
-    o caminho relativo existe no repositório."""
+def falta_manifesto(sinal: str) -> list[str]:
+    return [
+        f"{MANIFESTO}:0: o projeto chama modelo ({sinal}) e não tem {MANIFESTO}; declare a"
+        " promoção ou estagio: sandbox"
+    ]
+
+
+def varre_caminho(caminho: str) -> bool:
+    """Código do projeto (o critério da P2-01): por extensão, fora de teste e de terceiros."""
+    p = PurePosixPath(caminho)
+    if not p.parts or ".." in p.parts or p.suffix.lower() not in EXTENSOES:
+        return False
+    if set(p.parts[:-1]) & (PASTAS_DE_TESTE | PASTAS_DE_TERCEIROS):
+        return False
+    nome = p.name
+    if nome == "conftest.py":
+        return False
+    stem = nome[: -len(p.suffix)]
+    if stem.lower().startswith("test_") or stem.lower().endswith(("_test", ".test", ".spec")):
+        return False
+    return not stem.endswith(("Test", "Tests"))
+
+
+def _recuo(linha: str) -> int:
+    return len(linha) - len(linha.lstrip(" \t"))
+
+
+def _chave(linha: str) -> str | None:
+    m = re.match(r"\s*(?:\"([^\"]+)\"|'([^']+)'|([^\s:#\"'][^:#]*?))\s*:(?:\s|$)", linha)
+    if not m:
+        return None
+    return next(g for g in m.groups() if g is not None)
+
+
+def jobs_gitlab(texto: str) -> dict[str, str]:
+    """{nome: bloco} das chaves de topo do `.gitlab-ci.yml`."""
+    jobs: dict[str, list[str]] = {}
+    atual: list[str] | None = None
+    for linha in texto.lstrip("\ufeff").replace("\r", "").split("\n"):
+        if not linha.strip() or linha.lstrip().startswith("#"):
+            continue
+        if _recuo(linha) == 0:
+            nome = _chave(linha)
+            atual = jobs.setdefault(nome, []) if nome else None
+        elif atual is not None:
+            atual.append(linha)
+    return {nome: "\n".join(bloco) for nome, bloco in jobs.items()}
+
+
+def jobs_github(texto: str) -> dict[str, str]:
+    """{nome: bloco} dos jobs sob `jobs:` de um workflow do GitHub Actions."""
+    jobs: dict[str, list[str]] = {}
+    dentro, nivel, atual = False, None, None
+    for linha in texto.lstrip("\ufeff").replace("\r", "").split("\n"):
+        if not linha.strip() or linha.lstrip().startswith("#"):
+            continue
+        recuo = _recuo(linha)
+        if recuo == 0:
+            dentro, nivel, atual = _chave(linha) == "jobs", None, None
+            continue
+        if not dentro:
+            continue
+        if nivel is None:
+            nivel = recuo
+        if recuo == nivel:
+            nome = _chave(linha)
+            atual = jobs.setdefault(nome, []) if nome else None
+        elif recuo < nivel:
+            dentro, atual = False, None
+        elif atual is not None:
+            atual.append(linha)
+    return {nome: "\n".join(bloco) for nome, bloco in jobs.items()}
+
+
+def confere_job(campos: dict[str, tuple[str, int]], existe, arquivos_ci) -> list[tuple[int, str]]:
+    nome, n = campos.get("eval_job", (JOB_PADRAO, 0))
+    nome = nome or JOB_PADRAO
+    achados: list[tuple[int, str]] = []
+    encontrados: list[tuple[str, str]] = []
+    for caminho, texto in arquivos_ci():
+        jobs = jobs_gitlab(texto) if caminho == GITLAB_CI else jobs_github(texto)
+        if nome in jobs:
+            encontrados.append((caminho, jobs[nome]))
+    if not encontrados:
+        return [
+            (
+                n,
+                f"nenhum job {mostra(nome)} no {GITLAB_CI} nem em {WORKFLOWS}; a suíte de eval"
+                " (P2-05) precisa rodar no CI",
+            )
+        ]
+    suite = campos.get("eval_suite", ("", 0))[0]
+    relativo = caminho_relativo_seguro(suite) if suite else None
+    if relativo and existe(relativo):  # suíte inexistente já é acusada no eval_suite
+        alvo = re.compile(r"(?<![\w.-])(?:\./)?" + re.escape(relativo.rstrip("/")) + r"(?![\w-])")
+        if not any(alvo.search(bloco) for _, bloco in encontrados):
+            onde = ", ".join(c for c, _ in encontrados)
+            achados.append((n, f"o job {mostra(nome)} ({onde}) não roda a suíte {mostra(suite)}"))
+    return achados
+
+
+def confere(manifesto: str, catalogo: str | None, existe, arquivos_ci) -> list[str]:
+    """Achados do manifesto. `catalogo` é o texto (None se não existe), `existe(caminho)` diz se
+    o caminho relativo existe no repositório e `arquivos_ci()` devolve [(caminho, texto)] do
+    `.gitlab-ci.yml` e dos workflows."""
     campos = ler_manifesto(manifesto)
     achados: list[tuple[int, str]] = []
+    if "estagio" in campos:
+        estagio, n = campos["estagio"]
+        if estagio == "sandbox":
+            return []
+        if estagio not in ESTAGIOS:
+            achados.append((n, "estagio deve ser sandbox ou producao"))
     for campo in CAMPOS:
         if campo not in campos or not campos[campo][0]:
             achados.append((0, f"falta o campo {campo}"))
@@ -185,6 +313,7 @@ def confere(manifesto: str, catalogo: str | None, existe) -> list[str]:
         if not url and (relativo is None or not existe(relativo)):
             achados.append((n, "eval_evidencia não é uma URL https nem um arquivo do repositório"))
 
+    achados.extend(confere_job(campos, existe, arquivos_ci))
     return [f"{MANIFESTO}:{n}: {motivo}" for n, motivo in sorted(achados, key=lambda a: a[0])]
 
 
@@ -257,12 +386,25 @@ def evento_harness() -> list[str]:
     def existe(relativo: str) -> bool:
         return (raiz / relativo).exists()
 
+    def arquivos_ci() -> list[tuple[str, str]]:
+        arquivos = []
+        gitlab = ler_disco(raiz, GITLAB_CI)
+        if gitlab is not None:
+            arquivos.append((GITLAB_CI, gitlab))
+        pasta = raiz / WORKFLOWS
+        if pasta.is_dir():
+            for arquivo in sorted(pasta.iterdir()):
+                if arquivo.suffix in (".yml", ".yaml") and arquivo.is_file():
+                    relativo = WORKFLOWS + arquivo.name
+                    arquivos.append((relativo, ler_disco(raiz, relativo) or ""))
+        return arquivos
+
     if caminho == MANIFESTO:
-        return confere(conteudo, ler_disco(raiz, CATALOGO), existe)
+        return confere(conteudo, ler_disco(raiz, CATALOGO), existe, arquivos_ci)
     manifesto = ler_disco(raiz, MANIFESTO)
     if manifesto is None:
-        return []
-    return confere(manifesto, conteudo, existe)
+        return falta_manifesto(CATALOGO)
+    return confere(manifesto, conteudo, existe, arquivos_ci)
 
 
 def git(raiz: str | None, *args: str, verificar: bool = True) -> subprocess.CompletedProcess:
@@ -297,10 +439,39 @@ def evento_ci(base: str | None) -> list[str]:
     def existe(relativo: str) -> bool:
         return git(raiz, "cat-file", "-e", f"HEAD:{relativo}", verificar=False).returncode == 0
 
+    def arquivos_ci() -> list[tuple[str, str]]:
+        arquivos = []
+        gitlab = no_head(GITLAB_CI)
+        if gitlab is not None:
+            arquivos.append((GITLAB_CI, gitlab))
+        lista = git(raiz, "ls-tree", "--name-only", "HEAD", WORKFLOWS, verificar=False)
+        for nome in sorted(lista.stdout.decode("utf-8", "replace").splitlines()):
+            if nome.endswith((".yml", ".yaml")):
+                arquivos.append((nome, no_head(nome) or ""))
+        return arquivos
+
     manifesto = no_head(MANIFESTO)
+    catalogo = no_head(CATALOGO)
     if manifesto is None:
-        return []
-    return confere(manifesto, no_head(CATALOGO), existe)
+        sinal = sinal_no_head(raiz, catalogo is not None)
+        return falta_manifesto(sinal) if sinal else []
+    return confere(manifesto, catalogo, existe, arquivos_ci)
+
+
+def sinal_no_head(raiz: str, tem_catalogo: bool) -> str | None:
+    """O que mostra que o projeto chama modelo: o catálogo ou código que lê o gateway."""
+    if tem_catalogo:
+        return CATALOGO
+    padrao = "|".join(VARIAVEIS_DO_GATEWAY)
+    r = git(raiz, "grep", "-I", "-o", "-E", padrao, "HEAD", verificar=False)
+    if r.returncode not in (0, 1):
+        detalhe = r.stderr.decode("utf-8", "replace").strip().split("\n")[0]
+        raise Indeterminado(f"git grep falhou: {detalhe}")
+    for linha in r.stdout.decode("utf-8", "replace").splitlines():
+        _, caminho, variavel = linha.split(":", 2)
+        if varre_caminho(caminho):
+            return f"{caminho} usa {variavel}"
+    return None
 
 
 def decide(evento: str, base: str | None) -> list[str]:

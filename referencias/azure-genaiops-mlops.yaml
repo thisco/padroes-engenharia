@@ -4,7 +4,7 @@ organizacao: Microsoft (Azure Architecture Center)
 url: https://learn.microsoft.com/en-us/azure/architecture/ai-ml/guide/genaiops-for-mlops
 tipo: vendor
 publicado_em: '2025-09-16'
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificacao: V
 localizacao: "seção 'Extend MLOps for generative AI technical patterns' (inner loop com DataOps, experimentação e avaliação; outer loop com deploy, inferência e monitoramento, feedback), subseção 'Experimentation' (guardar as mudanças de prompt com as saídas), 'Deployment' (gateway e versionamento de modelo para reduzir risco e voltar à versão anterior) e 'Operational monitoring' (latência, uso de tokens e erros 429)"
 dominios: [ia-no-produto]
