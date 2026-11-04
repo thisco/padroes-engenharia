@@ -1,0 +1,10 @@
+id: gitlab-registro-build-e-push
+titulo: "Build and push container images to the container registry"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/packages/container_registry/build_and_push_images/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção de exemplos com GitLab CI/CD (job com imagem docker:<versão>-cli e serviço docker:<versão>-dind; docker login com CI_REGISTRY_PASSWORD por --password-stdin e CI_REGISTRY_USER; docker build e docker push; DOCKER_HOST tcp://docker:2376 e DOCKER_TLS_CERTDIR '/certs')"
+dominios: [ci-cd]
+notas: "O exemplo da página usa docker 24.0.5; o portal usa 29.5.2, fixada por digest."

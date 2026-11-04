@@ -15,7 +15,7 @@ mecanismo:
   mensagem: "SEG-06: o repositório constrói imagem ou tem código e o CI não tem job de varredura de imagem (trivy, grype, container_scanning) ou de SAST (semgrep, codeql, sast); acrescente o job que falha com achado. Como aplicar: {URL do portal}/praticas/SEG-06.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [owasp-top10-2025-a03, trivy-imagem-de-container, trivy-exit-code, trivy-action, semgrep-cli, gitlab-container-scanning, gitlab-container-scanning-template, gitlab-sast, gitlab-sast-template, gitlab-allow-failure, gitlab-politicas-de-aprovacao, gitlab-mr-pipelines, gitlab-pipeline-obrigatorio, github-branch-protegida, github-codeql, grype-limite-de-falha]
+referencias: [owasp-top10-2025-a03, trivy-imagem-de-container, trivy-exit-code, trivy-action, semgrep-cli, gitlab-container-scanning, gitlab-container-scanning-template, gitlab-sast, gitlab-sast-template, gitlab-allow-failure, gitlab-politicas-de-aprovacao, gitlab-mr-pipelines, gitlab-pipeline-obrigatorio, github-branch-protegida, github-codeql, grype-limite-de-falha, github-actions-uso-seguro, docker-pull-por-digest, gitlab-registro-build-e-push, gitlab-docker-build, gitlab-variaveis-predefinidas, gitlab-include-local, gitlab-pipelines-downstream]
 relacionadas: [SEG-02, SEG-03, CICD-01]
 dono: engenharia
 revisado_em: 2026-11-04
@@ -73,15 +73,28 @@ fica laranja e a MR entra [ref:gitlab-allow-failure].
 
 ## Como aplicar
 
-1. Acrescente ao CI os dois jobs do Exemplo (`gitlab-ci.yml` ou `github-workflow.yml`), no mesmo
-   stage do job de segredo da SEG-02, sem `allow_failure`. No GitLab, rode-os na MR com a regra
-   `$CI_PIPELINE_SOURCE == "merge_request_event"` [ref:gitlab-mr-pipelines]. Fixe a versão das
-   imagens dos scanners e suba-a numa MR própria.
-2. A varredura de imagem precisa da imagem construída. No GitLab, o job de build publica a imagem no
-   registro do projeto com a tag do commit, e o Trivy a lê de lá (ele procura a imagem no Docker
-   Engine local, depois no containerd, no Podman e no registro) [ref:trivy-imagem-de-container]. No
-   GitHub Actions, o workflow constrói a imagem e a `trivy-action` a varre com `image-ref`,
-   `exit-code: "1"` e `severity` [ref:trivy-action].
+1. Acrescente ao CI os jobs do Exemplo (`gitlab-ci.yml` ou `github-workflow.yml`), sem
+   `allow_failure`. No GitLab, os dois jobs de varredura ficam no stage `travas`, o mesmo do job de
+   segredo da SEG-02, e rodam na MR com a regra `$CI_PIPELINE_SOURCE == "merge_request_event"`
+   [ref:gitlab-mr-pipelines]. Fixe o que o CI baixa pelo identificador que não muda: a action do
+   GitHub pelo SHA do commit, com a tag num comentário, porque a tag pode ser movida ou apagada por
+   quem ganhar acesso ao repositório da action [ref:github-actions-uso-seguro]; a imagem do scanner
+   pela tag e pelo digest, que fixa a versão exata [ref:docker-pull-por-digest]. Em troca, nada se
+   atualiza sozinho, nem com correção de segurança [ref:docker-pull-por-digest]: suba a versão numa MR
+   própria, trocando o SHA ou o digest junto com a tag. O Exemplo diz de onde veio cada um (`git
+   ls-remote` no repositório da action, `docker buildx imagetools inspect` na imagem).
+2. A varredura de imagem precisa da imagem construída. No GitLab, o job `construir-imagem` do Exemplo
+   constrói e publica a imagem no registro do projeto, com `docker login` por `CI_REGISTRY_USER` e
+   `CI_REGISTRY_PASSWORD`, `docker build` e `docker push` num serviço Docker-in-Docker
+   [ref:gitlab-registro-build-e-push]; o Docker-in-Docker exige o runner em modo `privileged`, e sem
+   ele o projeto usa uma alternativa ao Docker [ref:gitlab-docker-build]. A tag é
+   `$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA`, com a revisão para a qual o pipeline roda
+   [ref:gitlab-variaveis-predefinidas]: o build e a varredura leem a mesma variável no mesmo
+   pipeline e apontam para a mesma imagem, e o `needs` faz a varredura esperar o build. Se o projeto
+   já tem um job de build, aponte a varredura para a tag que ele publica, com a mesma regra de MR. O
+   Trivy lê a imagem do registro (ele procura no Docker Engine local, depois no containerd, no Podman
+   e no registro) [ref:trivy-imagem-de-container]. No GitHub Actions, o workflow constrói a imagem e
+   a `trivy-action` a varre com `image-ref`, `exit-code: "1"` e `severity` [ref:trivy-action].
 3. Comece a severidade por `HIGH,CRITICAL` [ref:trivy-exit-code]. Se o primeiro pipeline reprovar
    por pacote da imagem base, troque a base ou tire o pacote que não roda em produção, antes de
    pensar em ignorar o achado. O Exemplo faz as duas coisas.
@@ -107,7 +120,7 @@ fica laranja e a MR entra [ref:gitlab-allow-failure].
 
    ```yaml
    lacuna-de-varredura:
-     stage: test
+     stage: travas
      image: python:3.11
      allow_failure: true
      variables:
@@ -144,7 +157,7 @@ lista de argumentos, sem shell:
 
 <!-- incluir: exemplos/SEG-06/depois/app.py -->
 
-Os dois jobs no GitLab CI:
+Os jobs no GitLab CI (o build e as duas varreduras):
 
 <!-- incluir: exemplos/SEG-06/gitlab-ci.yml -->
 
@@ -152,9 +165,9 @@ E no GitHub Actions:
 
 <!-- incluir: exemplos/SEG-06/github-workflow.yml -->
 
-Rodados em 2026-11-04 com as imagens `aquasec/trivy:0.76.1` e `semgrep/semgrep:1.182.1`, com os mesmos
-argumentos dos jobs (o Trivy lendo a imagem do Docker local, não do registro), os scanners reprovam o
-antes e passam o depois:
+Rodados em 2026-11-04 com as imagens dos jobs, fixadas pelo digest, e os mesmos argumentos (o Trivy
+lendo a imagem do Docker local, não do registro), os scanners reprovam o antes e passam o depois. Os
+jobs não rodaram num runner do GitLab nem do GitHub:
 
 ```text
 antes   trivy  : debian 10.13, Total: 42 (HIGH: 40, CRITICAL: 2); pacotes Python, Total: 4 (HIGH: 4); saída 1
@@ -185,9 +198,13 @@ Aplique a prática SEG-06 do portal de padrões de engenharia neste repositório
 1. Leia o Dockerfile, o app.py e o .gitlab-ci.yml. Rode
    python3 -I verificadores/seg_06.py --evento ci --base 0000000000000000000000000000000000000000
    (a base de zeros avalia o HEAD inteiro) e mostre a saída.
-2. Acrescente ao .gitlab-ci.yml os jobs varredura-imagem (aquasec/trivy:0.76.1, trivy image
-   --exit-code 1 --severity HIGH,CRITICAL) e sast (semgrep/semgrep:1.182.1, semgrep scan --config
-   p/default --error --metrics off .), só em pipeline de merge request e sem allow_failure.
+2. Acrescente ao .gitlab-ci.yml, só em pipeline de merge request e sem allow_failure: o job
+   construir-imagem (stage build, docker:29.5.2-cli com o serviço docker:29.5.2-dind, docker login,
+   build e push de $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA) e, no stage travas, os jobs varredura-imagem
+   (aquasec/trivy:0.76.1, needs construir-imagem, trivy image --exit-code 1 --severity
+   HIGH,CRITICAL sobre a mesma tag) e sast (semgrep/semgrep:1.182.1, semgrep scan --config p/default
+   --error --metrics off .). Fixe cada imagem pela tag e pelo digest, lido com
+   docker buildx imagetools inspect, e diga de onde veio cada digest.
 3. Rode localmente os dois scanners com docker run, com os mesmos argumentos, sobre a imagem
    construída do Dockerfile e sobre o código. Mostre o resumo de cada um.
 4. Corrija o que eles acharem: troque a imagem base por uma atual, tire da imagem final o que não roda
@@ -218,17 +235,20 @@ precisa deles.
   `*.Dockerfile`, `Containerfile` ou um compose com `build:`, e o CI não cita `trivy`, `grype`,
   `container_scanning` nem `anchore/scan-action`. Há lacuna de SAST quando há código (`.py`, `.js`,
   `.ts`, `.go`, `.java` e outras extensões) e o CI não cita `semgrep`, `codeql` nem `sast` como
-  palavra. O CI é o `.gitlab-ci.yml` da raiz, os arquivos locais que ele inclui (até três níveis) e
-  os `.github/workflows/*.yml`. Nome dentro de comentário YAML não conta. Pastas de terceiros
+  palavra. Sem arquivo de CI, não há lacuna. O CI é o `.gitlab-ci.yml` da raiz, os arquivos locais
+  que ele inclui (até três níveis, com os curingas `*` e `**` que o `include:local` aceita
+  [ref:gitlab-include-local]) e os `.github/workflows/*.yml`. Nome dentro de comentário YAML não conta. Pastas de terceiros
   (`node_modules`, `.venv`, `vendor`), submódulos e links simbólicos ficam fora.
 - **Quando avisa.** No harness, antes de o agente editar ou escrever um arquivo, comparando o disco
   com o arquivo novo contra o disco de antes; no CI, comparando o `HEAD` com `--base`. A lacuna nova
   é sempre apontada; a antiga só quando a mudança toca o CI, um `Dockerfile`, um compose ou o
-  `.seg06-ignorar`, para uma MR só de código não repetir o aviso. Sem arquivo de CI, não avisa.
+  `.seg06-ignorar`, para uma MR só de código não repetir o aviso.
 - **Saídas.** 0: nada a apontar. 1: uma linha por lacuna, `<arquivo de CI>:0: <motivo>`. 2: não
   conseguiu decidir, com o motivo em stderr: base ausente (clone raso; use `GIT_DEPTH: "0"`), isenção
   ampla demais, ou CI que inclui arquivo de outro projeto (`project:`, `remote:`, workflow
-  reutilizável de outro repositório), que o verificador não lê.
+  reutilizável de outro repositório), que o verificador não lê. O `project:` dentro de `trigger:` não
+  conta: ele dispara um pipeline em outro projeto [ref:gitlab-pipelines-downstream], que não soma jobs
+  a este.
 - **Os limites.** É conferência de nome: um job chamado `sast` que não roda nada passa, e uma variável
   como `SAST_DISABLED` também conta como SAST. Ele não sabe se o job tem `allow_failure`, se roda na
   MR nem se a severidade é a certa; isso fica para a revisão do arquivo de CI, sob CODEOWNERS. Não lê

@@ -10,9 +10,10 @@ O estado de um lado da comparação tem duas lacunas possíveis:
   `anchore/scan-action`;
 - sast: há código (`.py .js .jsx .ts .tsx .mjs .cjs .go .java .kt .rb .php .cs .rs .c .cc .cpp .h
   .hpp .swift .scala`) e o CI não cita `semgrep`, `codeql` nem `sast` como palavra.
-O CI é o `.gitlab-ci.yml` da raiz, os arquivos locais que ele inclui (até três níveis) e os
-`.github/workflows/*.y[a]ml`. Sem arquivo de CI, não há lacuna (não há CI para comparar). O nome só
-vale fora de comentário YAML (`#` no começo da linha ou depois de espaço).
+O CI é o `.gitlab-ci.yml` da raiz, os arquivos locais que ele inclui (até três níveis, com os
+curingas `*` e `**` do `include:local`) e os `.github/workflows/*.y[a]ml`. Sem arquivo de CI, não
+há lacuna (não há CI para comparar). O nome só vale fora de comentário YAML (`#` no começo da linha
+ou depois de espaço).
 Pastas de terceiros (`node_modules`, `.venv`, `venv`, `vendor`, `site-packages`), submódulos e links
 simbólicos não contam. Os caminhos isentos no `.seg06-ignorar` também não.
 
@@ -23,7 +24,8 @@ no conteúdo do JSON, e o da comparação é o disco antes; no ci, `HEAD` e `--b
 zeros compara com a árvore vazia: tudo é novo).
 
 Se há lacuna e o CI inclui arquivo que o verificador não lê (`project:` ou `remote:` no GitLab,
-workflow reutilizável de outro repositório no GitHub), sai 2: o que falta pode estar lá.
+workflow reutilizável de outro repositório no GitHub), sai 2: o que falta pode estar lá. O
+`project:` dentro de `trigger:` não conta: ele dispara outro pipeline, que não soma jobs a este.
 
 Isenção: `.seg06-ignorar`, na raiz, com a mesma forma da SEG-02 (caminho exato de um arquivo ou uma
 subpasta com `/**` ou `/` no fim, com ao menos dois segmentos literais e sem `*`, `?` nem `[` fora
@@ -72,7 +74,9 @@ BUILD_NO_COMPOSE = re.compile(r"^\s*(?:-\s*)?build\s*:", re.M)
 INCLUDE_EXTERNO = re.compile(r"^\s*(?:-\s*)?(?:project|remote)\s*:", re.M)
 # `uses: dono/repo/.github/workflows/x.yml@ref`: workflow reutilizável de outro repositório.
 WORKFLOW_EXTERNO = re.compile(r"uses\s*:\s*['\"]?[^.\s'\"][^\s'\"]*/\.github/workflows/", re.I)
-CAMINHO_YAML = re.compile(r"""['"]?(/?[\w./-]+\.ya?ml)['"]?""")
+# Caminho de YAML, com os curingas `*` e `**` que o `include:local` aceita.
+CAMINHO_YAML = re.compile(r"""['"]?(/?[\w./*-]+\.ya?ml)['"]?""")
+CHAVE_YAML = re.compile(r"^(\s*)(?:-\s+)?([\w-]+)\s*:")
 NIVEIS_DE_INCLUDE = 3
 MODOS_PULADOS = {"160000", "120000"}  # submódulo (gitlink) e link simbólico
 TEMPO_GIT = 60  # segundos; o git não pode travar o hook
@@ -184,6 +188,44 @@ class Estado:
     externo: bool
 
 
+def arquivos_do_caminho(caminho: str, arquivos: frozenset[str]) -> set[str]:
+    """Os arquivos que o caminho do include nomeia: ele mesmo ou, com curinga, os que casam (`*` não
+    passa de uma pasta, `**` passa)."""
+    caminho = caminho.lstrip("/")
+    if "*" not in caminho:
+        alvo = posixpath.normpath(caminho)
+        return {alvo} if alvo in arquivos else set()
+    partes = re.split(r"(\*\*|\*)", caminho)
+    regex = "".join(".*" if p == "**" else "[^/]*" if p == "*" else re.escape(p) for p in partes)
+    padrao = re.compile(regex)
+    return {a for a in arquivos if padrao.fullmatch(a)}
+
+
+def include_externo(texto: str) -> bool:
+    """Há `project:` ou `remote:` de include, fora de um `trigger:`? O `trigger` dispara outro
+    pipeline (downstream), que não soma jobs a este."""
+    linhas = texto.split("\n")
+    for i, linha in enumerate(linhas):
+        if not INCLUDE_EXTERNO.match(linha):
+            continue
+        m = CHAVE_YAML.match(linha)
+        recuo = len(linha) - len(linha.lstrip(" -")) if m else 0
+        dentro_de_trigger = False
+        for anterior in reversed(linhas[:i]):
+            chave = CHAVE_YAML.match(anterior)
+            if not chave:
+                continue
+            recuo_anterior = len(anterior) - len(anterior.lstrip(" -"))
+            if recuo_anterior < recuo:
+                if chave.group(2) == "trigger":
+                    dentro_de_trigger = True
+                    break
+                recuo = recuo_anterior
+        if not dentro_de_trigger:
+            return True
+    return False
+
+
 def texto_de_ci(lado: Lado, arquivos_de_ci: list[str]) -> tuple[str, bool]:
     """O texto dos arquivos de CI e dos includes locais do GitLab, sem comentário, e se há include
     que o verificador não lê."""
@@ -204,13 +246,13 @@ def texto_de_ci(lado: Lado, arquivos_de_ci: list[str]) -> tuple[str, bool]:
         if caminho.startswith(PASTA_WORKFLOWS):
             externo = externo or WORKFLOW_EXTERNO.search(limpo) is not None
             continue
-        externo = externo or INCLUDE_EXTERNO.search(limpo) is not None
+        externo = externo or include_externo(limpo)
         if nivel >= NIVEIS_DE_INCLUDE:
             continue
         for m in CAMINHO_YAML.finditer(limpo):
-            alvo = posixpath.normpath(m.group(1).lstrip("/"))
-            if alvo in lado.arquivos and alvo not in vistos:
-                fila.append((alvo, nivel + 1))
+            for alvo in sorted(arquivos_do_caminho(m.group(1), lado.arquivos)):
+                if alvo not in vistos:
+                    fila.append((alvo, nivel + 1))
     return "\n".join(partes), externo
 
 

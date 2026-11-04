@@ -268,6 +268,51 @@ def test_harness_include_de_outro_projeto_sem_lacuna_nao_casa(repo_git: RepoGit)
     assert harness(repo_git, ".gitlab-ci.yml", texto).returncode == 0
 
 
+@pytest.mark.parametrize(
+    "padrao",
+    ["ci/*.yml", "/ci/*.yml", "ci/**.yml", "ci/**/*.yml"],
+    ids=["estrela", "raiz", "duas-estrelas", "subpastas"],
+)
+def test_harness_include_local_com_curinga_e_lido(repo_git: RepoGit, padrao: str):
+    destino = "ci/seguranca.yml" if padrao != "ci/**/*.yml" else "ci/jobs/seguranca.yml"
+    commitar(repo_git, {"Dockerfile": DOCKERFILE, destino: CI_COMPLETO})
+    texto = f"include:\n  - local: '{padrao}'\n"
+    r = harness(repo_git, ".gitlab-ci.yml", texto)
+    assert r.returncode == 0, r.stdout + r.stderr
+
+
+def test_harness_curinga_que_nao_alcanca_a_subpasta_nao_vale(repo_git: RepoGit):
+    commitar(repo_git, {"Dockerfile": DOCKERFILE, "ci/jobs/seguranca.yml": CI_COMPLETO})
+    r = harness(repo_git, ".gitlab-ci.yml", "include:\n  - local: 'ci/*.yml'\n")
+    assert r.returncode == 1
+
+
+def test_harness_trigger_de_outro_projeto_nao_e_include(repo_git: RepoGit):
+    commitar(repo_git, {"Dockerfile": DOCKERFILE})
+    texto = CI_SO_SAST + "\ndeploy:\n  trigger:\n    project: grupo/implantacao\n"
+    r = harness(repo_git, ".gitlab-ci.yml", texto)
+    assert r.returncode == 1, r.stderr
+    assert "varredura de imagem" in r.stdout
+
+
+def test_harness_trigger_com_include_de_outro_projeto_nao_e_include(repo_git: RepoGit):
+    commitar(repo_git, {"Dockerfile": DOCKERFILE})
+    texto = (
+        CI_SO_SAST
+        + "\nfilho:\n  trigger:\n    include:\n      - project: grupo/modelos\n"
+        + "        file: /filho.yml\n"
+    )
+    assert harness(repo_git, ".gitlab-ci.yml", texto).returncode == 1
+
+
+def test_harness_remote_no_include_continua_saindo_2(repo_git: RepoGit):
+    commitar(repo_git, {"Dockerfile": DOCKERFILE})
+    texto = "include:\n  - remote: 'https://exemplo.invalid/base.yml'\n"
+    r = harness(repo_git, ".gitlab-ci.yml", texto)
+    assert r.returncode == 2
+    sem_traceback(r)
+
+
 # --- antes-de-ferramenta: isenção --------------------------------------------------------------
 
 

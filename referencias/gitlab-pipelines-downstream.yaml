@@ -1,0 +1,10 @@
+id: gitlab-pipelines-downstream
+titulo: "Downstream pipelines"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/pipelines/downstream_pipelines/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções de pipeline multiprojeto (trigger: project: dispara um pipeline em outro projeto) e de pipeline pai e filho (trigger: include: local:)"
+dominios: [ci-cd]
+notas: null

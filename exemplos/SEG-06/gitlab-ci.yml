@@ -1,27 +1,47 @@
-# SEG-06: varredura de imagem e SAST como job da MR, ao lado do job de segredo (SEG-02).
-# A imagem foi publicada pelo job de build no registro do projeto, com a tag do commit.
-stages: [build, test]
+# SEG-06: varredura de imagem e SAST como job da MR, no stage `travas`, o mesmo do job de segredo
+# (SEG-02). O build publica a imagem no registro do projeto com a tag do commit do pipeline, e a
+# varredura lê a mesma tag: os dois usam $CI_COMMIT_SHA do mesmo pipeline. Imagens fixadas pela tag
+# e pelo digest (docker buildx imagetools inspect, 2026-11-04); ao subir a versão, troque os dois.
+stages: [build, travas]
 
 variables:
   IMAGEM: "$CI_REGISTRY_IMAGE:$CI_COMMIT_SHA"
 
+.so-em-merge-request:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+construir-imagem:
+  extends: .so-em-merge-request
+  stage: build
+  image: docker:29.5.2-cli@sha256:9ba8e32bfc35a2c7ae2feb1e3241b2778ae21dee80f4dcd31d04e1cfdea86ea2
+  services:
+    - docker:29.5.2-dind@sha256:6b9cd914eb9c6b342c040a49a27a5eb3804453bae6ecc90f7ff96133595a95e8
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+  script:
+    - echo "$CI_REGISTRY_PASSWORD" | docker login "$CI_REGISTRY" -u "$CI_REGISTRY_USER" --password-stdin
+    - docker build -t "$IMAGEM" .
+    - docker push "$IMAGEM"
+
 varredura-imagem:
-  stage: test
+  extends: .so-em-merge-request
+  stage: travas
+  needs: [construir-imagem]
   image:
-    name: aquasec/trivy:0.76.1
+    name: aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c
     entrypoint: [""]
   variables:
     TRIVY_USERNAME: "$CI_REGISTRY_USER"
     TRIVY_PASSWORD: "$CI_REGISTRY_PASSWORD"
   script:
     - trivy image --exit-code 1 --severity HIGH,CRITICAL "$IMAGEM"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
 sast:
-  stage: test
-  image: semgrep/semgrep:1.182.1
+  extends: .so-em-merge-request
+  stage: travas
+  needs: []
+  image: semgrep/semgrep:1.182.1@sha256:451b3d875c00dac7ed5db5293e584a07de11449a409c10b3c2d2652f429630b6
   script:
     - semgrep scan --config p/default --error --metrics off .
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"

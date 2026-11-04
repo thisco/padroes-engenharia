@@ -1,0 +1,10 @@
+id: gitlab-docker-build
+titulo: "Use Docker to build Docker images"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/docker/using_docker_build/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "tabela de abordagens e seção de Docker-in-Docker (exige o modo privileged do runner; sem ele, use uma alternativa ao Docker)"
+dominios: [ci-cd]
+notas: null

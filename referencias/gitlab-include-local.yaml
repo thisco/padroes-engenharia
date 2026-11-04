@@ -1,0 +1,10 @@
+id: gitlab-include-local
+titulo: "Use CI/CD configuration from other files (include)"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/yaml/includes/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Use include:local with wildcard file paths' (aceita * e **; 'configs/*.yml' não entra em subpastas, 'configs/**.yml' entra, 'configs/**/*.yml' só subpastas)"
+dominios: [ci-cd]
+notas: null
