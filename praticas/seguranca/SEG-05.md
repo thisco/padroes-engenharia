@@ -9,11 +9,11 @@ forca: orienta
 mecanismo: null
 status: experimentar
 aplica: []
-referencias: [owasp-authorization-cheat-sheet, owasp-authentication-cheat-sheet, owasp-api4-2023, fastapi-dependencias-globais, fastapi-aplicacoes-maiores, spring-security-authorize-http-requests, rfc-9110, rfc-6585, slowapi-docs]
+referencias: [owasp-authorization-cheat-sheet, owasp-authentication-cheat-sheet, owasp-api4-2023, fastapi-dependencias-globais, fastapi-aplicacoes-maiores, spring-security-authorize-http-requests, rfc-9110, rfc-6585, slowapi-docs, python-hmac, fastapi-parametros-de-caminho]
 relacionadas: [SEG-01, SEG-04]
 dono: engenharia
-revisado_em: 2026-11-03
-revisar_ate: 2027-05-03
+revisado_em: 2026-11-04
+revisar_ate: 2027-05-04
 resumo: "Credencial e limite ficam no roteador, valem para toda rota; a rota pública é uma lista curta, e um teste quebra se aparecer outra."
 ferramentas_aprovadas: []
 exemplos:
@@ -67,7 +67,9 @@ tentativa repetida não custa nada.
    autenticação as libera pelo par, e nada mais.
 3. Faça uma função só para a falha de credencial, que devolve `401`, o mesmo corpo e
    `WWW-Authenticate` [ref:rfc-9110]. Toda falha de credencial passa por ela. Compare o token com
-   `hmac.compare_digest`, que não termina mais cedo no primeiro caractere diferente.
+   `hmac.compare_digest`, que não para no primeiro caractere diferente, e compare em bytes
+   (`token.encode()` contra `esperado.encode()`): com `str`, ele só aceita ASCII [ref:python-hmac], e o
+   token com um caractere fora do ASCII lança `TypeError` e vira `500` em vez de `401`.
 4. Escreva o teste que percorre todas as rotas da aplicação, inclusive as que não passam pelas
    dependências (a documentação gerada, uma rota acrescentada com `add_route`), chama cada uma sem
    credencial e exige `401`, menos as de `ROTAS_PUBLICAS`. Rode-o na suíte do CI.
@@ -81,17 +83,19 @@ tentativa repetida não custa nada.
 
 ### Antes e depois
 
-Antes, cada rota lembra (ou não) da própria credencial:
+Antes, cada rota lembra (ou não) da própria credencial. A rota fixa vem antes da que tem parâmetro,
+porque o FastAPI avalia as rotas em ordem e `/pedidos/{pedido_id}` casaria também com
+`/pedidos/exportar` [ref:fastapi-parametros-de-caminho]:
 
 ```python
-@app.get("/pedidos/{pedido_id}", dependencies=[Depends(exigir_credencial)])
-def pedido(pedido_id: int) -> dict:
-    return {"id": pedido_id}
-
-
 @app.get("/pedidos/exportar")  # copiada de outro arquivo, sem a dependência
 def exportar() -> list:
     return [...]
+
+
+@app.get("/pedidos/{pedido_id}", dependencies=[Depends(exigir_credencial)])
+def pedido(pedido_id: int) -> dict:
+    return {"id": pedido_id}
 ```
 
 Depois, a credencial e o limite são dependências da aplicação, a documentação gerada fica desligada e a
@@ -104,13 +108,13 @@ O teste percorre todas as rotas do app:
 <!-- incluir: exemplos/SEG-05/test_rotas.py -->
 
 Rodado com `uv run --no-project --with fastapi==0.162.0 --with httpx==0.28.1 --with pytest==9.0.2
-python -m pytest test_rotas.py`, ele passa (`7 passed, 1 skipped`; a rota pública é pulada). Com uma rota
+python -m pytest test_rotas.py`, ele passa (`8 passed, 1 skipped`; a rota pública é pulada). Com uma rota
 acrescentada por `app.add_route("/interno/metricas", ...)`, que não passa pelas dependências, ele quebra:
 
 ```text
 FAILED test_rotas.py::test_rota_sem_credencial_responde_401[GET-/interno/metricas]
 FAILED test_rotas.py::test_rota_sem_credencial_responde_401[HEAD-/interno/metricas]
-2 failed, 7 passed, 1 skipped
+2 failed, 8 passed, 1 skipped
 ```
 
 Com a documentação gerada ligada (`docs_url` e `openapi_url` com o padrão), quebra em `/docs`,
@@ -138,16 +142,19 @@ Aplique a prática SEG-05 do portal de padrões de engenharia neste repositório
 2. Crie ROTAS_PUBLICAS = {("GET", "/saude")} e faça exigir_credencial liberar só esses pares. Não
    acrescente outra rota pública.
 3. Faça toda falha de credencial responder por uma função só: 401, corpo {"detail": "credencial
-   inválida"} e WWW-Authenticate: Bearer. Compare o token com hmac.compare_digest.
+   inválida"} e WWW-Authenticate: Bearer. Compare o token com hmac.compare_digest, em bytes
+   (token.encode() contra esperado.encode()).
 4. Desligue docs_url, redoc_url e openapi_url.
 5. Crie test_rotas.py: um teste parametrizado por todas as rotas de app.routes (as que não são
    APIRoute também), que chama cada uma sem credencial e exige 401, menos as de ROTAS_PUBLICAS; e um
-   teste que confere a mesma resposta para credencial ausente, errada e com outro esquema. Rode com
+   teste que confere a mesma resposta (status, corpo e WWW-Authenticate) para credencial ausente,
+   errada, com outro esquema e com um caractere fora do ASCII. Rode com
    pytest e mostre a saída. No relatório, diga quais rotas estavam abertas antes.
 ```
 
 Antes de rodar, o repositório precisa ter o `app.py` com as rotas `/saude`, `/pedidos/{pedido_id}`,
-`POST /pedidos` e `GET /pedidos/exportar` (esta sem a dependência), e o `fastapi`, o `httpx` e o
+`POST /pedidos` e `GET /pedidos/exportar` (esta sem a dependência e declarada antes de
+`/pedidos/{pedido_id}`), e o `fastapi`, o `httpx` e o
 `pytest` instalados.
 
 ### Por ferramenta

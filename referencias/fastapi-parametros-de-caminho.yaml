@@ -1,0 +1,10 @@
+id: fastapi-parametros-de-caminho
+titulo: "FastAPI: Path Parameters"
+organizacao: FastAPI
+url: https://fastapi.tiangolo.com/tutorial/path-params/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Order matters' (as path operations são avaliadas em ordem; /users/me precisa vir antes de /users/{user_id}, senão a rota com parâmetro casa primeiro)"
+dominios: [seguranca, contratos-api]
+notas: null

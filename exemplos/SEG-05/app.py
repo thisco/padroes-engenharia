@@ -35,7 +35,9 @@ def exigir_credencial(request: Request) -> None:
     esperado = os.environ.get("APP_TOKEN", "")
     cabecalho = request.headers.get("authorization", "")
     esquema, _, token = cabecalho.partition(" ")
-    if not esperado or esquema.lower() != "bearer" or not hmac.compare_digest(token, esperado):
+    # Em bytes: com `str` fora do ASCII, o compare_digest lança TypeError e a resposta vira 500.
+    iguais = hmac.compare_digest(token.encode(), esperado.encode())
+    if not esperado or esquema.lower() != "bearer" or not iguais:
         raise falha_de_credencial()
 
 

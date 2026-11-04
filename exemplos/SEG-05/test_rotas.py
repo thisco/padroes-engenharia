@@ -30,11 +30,15 @@ def test_rota_sem_credencial_responde_401(metodo, caminho):
     assert resposta.headers["www-authenticate"] == "Bearer"
 
 
-@pytest.mark.parametrize("cabecalho", [None, "Bearer errado", "Basic abc", "Bearer"])
+# O último caso é um caractere fora do ASCII, que o cliente manda em latin-1.
+@pytest.mark.parametrize(
+    "cabecalho", [None, "Bearer errado", "Basic abc", "Bearer", "Bearer \xe9".encode("latin-1")]
+)
 def test_falha_de_credencial_tem_resposta_unica(cabecalho):
     headers = {"Authorization": cabecalho} if cabecalho else {}
     resposta = TestClient(modulo.app).get("/pedidos/1", headers=headers)
     assert (resposta.status_code, resposta.json()) == (401, {"detail": "credencial inválida"})
+    assert resposta.headers["www-authenticate"] == "Bearer"
 
 
 def test_limite_responde_429(monkeypatch):
