@@ -17,7 +17,7 @@
 {% for p in roteiro.passos %}
       <section class="passo" id="passo-{{ p.n }}" data-quem="{{ p.quem }}" aria-label="Passo {{ p.n }}">
         <div class="n">{{ p.n }}</div>
-        <div class="corpo">
+        <div class="passo-corpo">
           <h2>{{ p.titulo }} <span class="quem">{{ p.rotulo_quem }}</span></h2>
 {{ p.html|safe }}
 {% if p.harnesses %}

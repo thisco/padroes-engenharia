@@ -188,3 +188,12 @@ def test_skill_md_preambulo_pela_ast_sem_citacoes_e_sem_secao_vazia():
     )
     md = skill_md(s, s.repo.roteiros[0])
     assert "## Prompt inicial" not in md and md.count("## Passo 1:") == 1
+
+
+def test_corpo_do_passo_nao_usa_a_classe_corpo_do_grid_de_duas_colunas():
+    s = site()
+    d = analisar(html_roteiro_passos(s, s.repo.roteiros[0]))
+    for passo in d.todos("section", classe="passo"):
+        assert not passo.todos(classe="corpo")
+        (corpo,) = passo.todos("div", classe="passo-corpo")
+        assert corpo.primeiro("h2")
