@@ -228,6 +228,29 @@ def test_harness_documento_novo_nao_rastreado_conta(repo_git: RepoGit):
     assert harness(repo_git, "compose.yml", ferramenta="escrever").returncode == 0
 
 
+def test_harness_documento_apagado_nao_conta(com_ambiente: RepoGit):
+    com_ambiente.escrever("infra/local/docker-compose.yml", COMPOSE + "  api: {}\n")
+    (com_ambiente.raiz / DOC).unlink()
+    r = harness(com_ambiente, "infra/local/docker-compose.yml")
+    assert r.returncode == 1 and r.stdout.startswith("infra/local/docker-compose.yml:0: ")
+    com_ambiente._git("rm", "--quiet", "--cached", DOC)  # a remoção também no índice
+    assert harness(com_ambiente, "infra/local/docker-compose.yml").returncode == 1
+
+
+def test_harness_documento_apagado_e_o_outro_alterado_conta(com_ambiente: RepoGit):
+    # Igual ao caso acima, mas o documento do steering muda junto: ele vale.
+    com_ambiente.escrever("infra/local/docker-compose.yml", COMPOSE + "  api: {}\n")
+    (com_ambiente.raiz / DOC).unlink()
+    com_ambiente.escrever("docs/steering/infra-devops.md", "# Infra\n- api\n")
+    assert harness(com_ambiente, "infra/local/docker-compose.yml").returncode == 0
+
+
+def test_harness_documento_renomeado_para_fora_nao_conta(com_ambiente: RepoGit):
+    com_ambiente.escrever("infra/local/docker-compose.yml", COMPOSE + "  api: {}\n")
+    com_ambiente._git("mv", DOC, "docs/antigo.md")
+    assert harness(com_ambiente, "infra/local/docker-compose.yml").returncode == 1
+
+
 def test_harness_aceita_caminho_absoluto_e_barra_invertida(com_ambiente: RepoGit):
     absoluto = str(com_ambiente.raiz / "infra/local/docker-compose.yml")
     assert harness(com_ambiente, absoluto).returncode == 1

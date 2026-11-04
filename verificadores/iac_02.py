@@ -6,11 +6,13 @@ Atende `depois-de-ferramenta` (JSON no stdin), `pre-commit` (lê o índice) e `c
 "IaC" é o arquivo de configuração `*.tf`, `*.tf.json`, `*.tofu` ou `*.tofu.json`, fora da pasta
 `.terraform` e de código de terceiros (`node_modules`, `vendor`, `.venv`, `venv`, `site-packages`).
 O lockfile, o `*.tfvars` e o estado não contam.
-"Resumo do plano" é uma linha que começa (depois de espaços) por `Plan: ... N to destroy.`,
-`No changes.` ou `Changes to Outputs:`, as que o `tofu plan` imprime. Ele vale no `PR.md` da raiz,
+"Resumo do plano" é uma linha que começa (depois de espaços) por `Plan: ... N to destroy.` (ou
+`..., N to forget.`, com bloco `removed`), `No changes.` ou `Changes to Outputs:`, as que o
+`tofu plan` imprime. Ele vale no `PR.md` da raiz,
 criado ou alterado na mesma mudança (no ci, no diff `--base...HEAD`; no pre-commit, no índice), ou,
 só no ci, na variável de ambiente `PADROES_DESCRICAO_DA_MR` (o job a preenche com a descrição da
-MR). No harness, vale o `PR.md` no disco, depois de o agente editar ou escrever um arquivo de IaC.
+MR). No harness, vale o `PR.md` da raiz do Git no disco (o do `cwd` só fora de um repositório),
+depois de o agente editar ou escrever um arquivo de IaC.
 Um achado por arquivo de IaC mudado quando nenhum resumo vale.
 O `.iac02-ignorar`, na raiz, isenta arquivos de IaC que não são infra do projeto (exemplo,
 fixture): um caminho literal por linha (o arquivo exato ou uma pasta com `/` no fim, com ao menos
@@ -36,7 +38,8 @@ PASTAS_IGNORADAS = {".terraform", "node_modules", "vendor", ".venv", "venv", "si
 ARQUIVO_DO_PLANO = "PR.md"
 VARIAVEL_DESCRICAO = "PADROES_DESCRICAO_DA_MR"
 RESUMO = re.compile(
-    r"^[ \t]*(?:Plan: (?:\d+ to [a-z]+, )*\d+ to destroy\.|No changes\.|Changes to Outputs:)",
+    r"^[ \t]*(?:Plan: (?:\d+ to [a-z]+, )*\d+ to destroy(?:, \d+ to forget)?\."
+    r"|No changes\.|Changes to Outputs:)",
     re.MULTILINE,
 )
 ARQUIVO_DE_ISENCAO = ".iac02-ignorar"
@@ -172,21 +175,23 @@ def evento_harness() -> list[str]:
         raise Indeterminado("`caminho` e `cwd` devem ser texto ou null")
     if caminho is None or entrada.get("ferramenta") not in ("editar", "escrever"):
         return []
-    caminho = relativo_a_raiz(caminho, cwd)
-    if caminho is None or not e_iac(caminho):
-        return []
     pasta = cwd or os.getcwd()
     try:
-        texto = (Path(pasta) / ARQUIVO_DO_PLANO).read_text(encoding="utf-8", errors="replace")
+        raiz: str | None = raiz_do_projeto(pasta)
+    except Indeterminado:
+        raiz = None  # fora de um repositório (ou git quebrado): o cwd faz de raiz, sem isenção
+    caminho = relativo_a_raiz(caminho, raiz or cwd)
+    if caminho is None or not e_iac(caminho):
+        return []
+    try:
+        texto = (Path(raiz or pasta) / ARQUIVO_DO_PLANO).read_text(
+            encoding="utf-8", errors="replace"
+        )
     except OSError:
         texto = None
     if tem_resumo(texto):
         return []
-    try:
-        raiz = raiz_do_projeto(pasta)
-        isencao = isencao_na_revisao(raiz, head_de(raiz))
-    except Indeterminado:
-        isencao = []  # fora de um repositório (ou git quebrado): sem isenção
+    isencao = isencao_na_revisao(raiz, head_de(raiz)) if raiz else []
     if isento(caminho, isencao):
         return []
     return [

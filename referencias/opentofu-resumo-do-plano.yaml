@@ -1,0 +1,11 @@
+id: opentofu-resumo-do-plano
+titulo: "OpenTofu: internal/command/jsonformat/plan.go (linha de resumo do plano)"
+organizacao: "OpenTofu"
+url: https://github.com/opentofu/opentofu/blob/v1.13.2/internal/command/jsonformat/plan.go
+tipo: padrao-aberto
+versao: "1.13.2"
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "função renderHuman, os quatro formatos da linha 'Plan:' (com e sem 'to import', com e sem ', N to forget.'), a variante 'to forget' quando forgettingCount > 0"
+dominios: [infra-iac]
+notas: "Código-fonte da tag v1.13.2, aberto na web em 2026-11-04. A documentação do bloco removed (opentofu.org, 'Removing Resources') não mostra a linha de resumo; o formato foi conferido no código e observado executando o OpenTofu v1.13.2."

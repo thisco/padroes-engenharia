@@ -1,5 +1,5 @@
 conteudo: IAC-01
-verificado_em: '2026-11-03'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o modelo de steering diz que o ambiente de dev roda no Docker Compose e que, com o código dentro das imagens e sem live-reload, toda alteração exige rebuild antes de recriar os serviços
@@ -38,7 +38,7 @@ afirmacoes:
   resultado: confirmada
 - texto: o modelo de steering de infra e DevOps do scaffold é o docs/steering/infra-devops.md, onde a ordem de rebuild é registrada
   ref: sdd-scaffold-infra-devops
-  localizacao: "caminho template/docs/steering/infra-devops.md e seção 'Ambiente de dev local (ordem de rebuild)' (lidos em 2026-11-03 no clone da tag v1.7.1, commit cd121cd, o mesmo fixado na URL da referência)"
+  localizacao: "caminho template/docs/steering/infra-devops.md e seção 'Ambiente de dev local (ordem de rebuild)' (abertos na web em 2026-11-04 na URL da referência, commit cd121cd da tag v1.7.1: caminho no cabeçalho da página e título da seção, cujo primeiro parágrafo diz que o ambiente roda no docker compose)"
   resultado: confirmada
 - texto: $CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da MR
   ref: gitlab-variaveis-predefinidas
@@ -58,7 +58,7 @@ execucoes:
   comando: python3 -I verificadores/iac_01.py --evento ci --base <sha> e --evento depois-de-ferramenta (JSON no stdin), num repositório Git temporário; pytest -q tests/verificadores/test_iac_01.py
   ambiente: repositório Git novo no scratchpad com infra/local/docker-compose.yml (serviço db) e docs/ambiente-local.md no commit-base; Python 3.15.2; macOS. Não foi executado num GitLab.
   resultado: passou
-  evidencia: 'MR que acrescenta o serviço api só no compose: "infra/local/docker-compose.yml:0: compose alterado sem atualizar docs/ambiente-local.md nem docs/steering/infra-devops.md no mesmo PR", saída 1; com o documento atualizado num commit seguinte da MR, saída 0. Harness com o compose editado no disco e o documento igual ao HEAD: saída 1, em 0,11 s. pytest: 47 passed em tests/verificadores/test_iac_01.py.'
+  evidencia: 'MR que acrescenta o serviço api só no compose: "infra/local/docker-compose.yml:0: compose alterado sem atualizar docs/ambiente-local.md nem docs/steering/infra-devops.md no mesmo PR", saída 1; com o documento atualizado num commit seguinte da MR, saída 0. Harness com o compose editado no disco e o documento igual ao HEAD: saída 1, em 0,11 s. pytest: 47 passed em tests/verificadores/test_iac_01.py; na rodada de correção 1 (2026-11-04), 50 passed, com o documento apagado no harness (no disco, no índice e renomeado para fora) acusado.'
   data: '2026-11-03'
 - tipo: arquivo
   arquivo: exemplos/IAC-01/verificar-ambiente.py

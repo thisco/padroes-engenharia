@@ -10,7 +10,7 @@ fora de código de terceiros (`node_modules`, `vendor`, `.venv`, `venv`, `site-p
 `docs/steering/infra-devops.md` (o do steering do scaffold), um dos dois, removido não conta.
 Acusa, um achado por compose, quando o compose muda e nenhum documento muda junto: no ci, no diff
 `--base...HEAD` (a partir do ancestral comum); no pre-commit, no índice; no harness, quando o
-agente edita ou escreve o compose e o documento está igual ao `HEAD` no disco.
+agente edita ou escreve o compose e o documento está igual ao `HEAD` ou apagado no disco.
 O `.iac01-ignorar`, na raiz, isenta composes que não são o ambiente local: um caminho literal por
 linha (o arquivo exato ou uma pasta com `/` no fim, com ao menos dois segmentos e sem `*`, `?`,
 `[`, `..` nem `/` no início; `#` é comentário). Ele é lido do lado da comparação (o `HEAD` no
@@ -142,6 +142,25 @@ def achados_da_mudanca(
     ]
 
 
+def documento_mudou_no_disco(status: bytes) -> bool:
+    """Lê o `git status --porcelain -z`: cada registro é `XY caminho`, e a renomeação traz em
+    seguida o caminho de origem, sem `XY`. O documento apagado (no índice ou no disco) não conta,
+    nem o caminho de origem de uma renomeação."""
+    registros = status.split(b"\0")
+    i = 0
+    while i < len(registros):
+        r = registros[i]
+        i += 1
+        if len(r) < 4:
+            continue
+        xy = r[:2]
+        if b"R" in xy or b"C" in xy:
+            i += 1  # pula o caminho de origem
+        if b"D" not in xy:
+            return True
+    return False
+
+
 def raiz_do_projeto(cwd: str | None = None) -> str:
     return git(cwd, "rev-parse", "--show-toplevel").decode("utf-8").strip()
 
@@ -165,7 +184,7 @@ def evento_harness() -> list[str]:
     if isento(caminho, isencao_na_revisao(raiz, head_de(raiz))):
         return []
     status = git(raiz, "status", "--porcelain", "-z", "--untracked-files=all", "--", *DOCUMENTOS)
-    if status.strip(b"\0"):
+    if documento_mudou_no_disco(status):
         return []
     return [
         f"{caminho}:0: compose editado e {DOCUMENTOS[0]} (ou {DOCUMENTOS[1]}) igual ao HEAD; "

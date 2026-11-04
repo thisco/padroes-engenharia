@@ -19,7 +19,7 @@ aplica: []
 referencias: [sdd-scaffold-infra-devops, docker-compose-startup-order, docker-compose-up, docker-dockerfile-healthcheck, gateway-poc-compose, gitlab-allow-failure, gitlab-git-depth, gitlab-variaveis-predefinidas]
 relacionadas: [IAC-03, DAD-02]
 dono: engenharia
-revisado_em: 2026-11-03
+revisado_em: 2026-11-04
 revisar_ate: 2027-04-07
 resumo: "O ambiente local sobe com um comando de compose, cada serviço declara quando está saudável e a ordem de rebuild fica escrita no repositório."
 ferramentas_aprovadas: []
@@ -239,7 +239,7 @@ antes da extensão (`docker-compose.override.yml`, `compose.prod.yaml`), em qual
 scaffold [ref:sdd-scaffold-infra-devops]; um dos dois basta, e o documento removido não conta. No
 `ci` e no `pre-commit`, cada compose mudado (criado, alterado ou removido) sem documento mudado na
 mesma MR ou no mesmo commit vira um achado, `<compose>:0: compose alterado sem atualizar ...`. No
-harness, o achado sai quando o documento está igual ao `HEAD` no disco. O `.iac01-ignorar`, na
+harness, o achado sai quando o documento está igual ao `HEAD` no disco ou foi apagado. O `.iac01-ignorar`, na
 raiz, isenta o compose que não é o ambiente local (uma fixture de teste, um exemplo): um caminho
 literal por linha, o arquivo exato ou uma pasta com `/` no fim, com ao menos dois segmentos e sem
 `*`, `?`, `[`, `..` nem `/` no início. Ele é lido do `HEAD` (harness e `pre-commit`) ou do

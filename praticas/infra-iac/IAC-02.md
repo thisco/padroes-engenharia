@@ -17,10 +17,10 @@ mecanismo:
   mensagem: "IAC-02: a IaC mudou e o resumo do tofu plan não veio junto; cole a linha 'Plan: ...' no PR.md da raiz ou na descrição da MR, e leia o que ele destrói. Como aplicar: {URL do portal}/praticas/IAC-02.md#como-aplicar"
 status: experimentar
 aplica: []
-referencias: [sdd-scaffold-infra-devops, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-allow-failure]
+referencias: [sdd-scaffold-infra-devops, opentofu-plan, opentofu-show, opentofu-json-format, opentofu-dependency-lock, gitlab-variaveis-predefinidas, gitlab-git-depth, gitlab-allow-failure, opentofu-resumo-do-plano]
 relacionadas: [IAC-01, IAC-03]
 dono: engenharia
-revisado_em: 2026-11-03
+revisado_em: 2026-11-04
 revisar_ate: 2027-04-07
 resumo: "A infra vive em código versionado, e todo PR que a muda traz o plano gerado, com a destruição de recurso decidida por uma pessoa."
 ferramentas_aprovadas: [opentofu]
@@ -216,10 +216,11 @@ diff `--base...HEAD`, a partir do ancestral comum). Outro evento sai com 2.
 "IaC" é o arquivo `*.tf`, `*.tf.json`, `*.tofu` ou `*.tofu.json`, fora da pasta `.terraform` e de
 `node_modules`, `vendor`, `.venv`, `venv` e `site-packages`; o `.terraform.lock.hcl`, o `*.tfvars` e
 o estado não contam. "Resumo do plano" é uma linha que começa, depois de espaços, por
-`Plan: ... N to destroy.` (como no Exemplo), `No changes.` (o plano sem mudança, observado no
-OpenTofu v1.13.2) ou `Changes to Outputs:`. No `ci`, vale o `PR.md` da raiz criado ou alterado na
+`Plan: ... N to destroy.` (como no Exemplo), ou `Plan: ... N to destroy, N to forget.` quando o
+plano esquece recursos de um bloco `removed` [ref:opentofu-resumo-do-plano], `No changes.` (o plano
+sem mudança, observado no OpenTofu v1.13.2) ou `Changes to Outputs:`. No `ci`, vale o `PR.md` da raiz criado ou alterado na
 MR, ou a descrição da MR que o job passa em `PADROES_DESCRICAO_DA_MR`; no `pre-commit`, o `PR.md`
-do índice, se entrou no mesmo commit; no harness, o `PR.md` no disco. Sem resumo, cada arquivo de
+do índice, se entrou no mesmo commit; no harness, o `PR.md` da raiz do repositório no disco, mesmo com o agente numa subpasta. Sem resumo, cada arquivo de
 IaC mudado vira um achado, `<arquivo>:0: IaC alterada sem o resumo do plano ...`. O
 `.iac02-ignorar`, na raiz, isenta o arquivo de IaC que não é infra do projeto (um exemplo, uma
 fixture): um caminho literal por linha, o arquivo exato ou uma pasta com `/` no fim, com ao menos

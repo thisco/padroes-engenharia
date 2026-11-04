@@ -99,6 +99,8 @@ def test_ci_plano_na_descricao_da_mr(com_infra: RepoGit, monkeypatch: pytest.Mon
     [
         "Plan: 1 to add, 0 to change, 0 to destroy.",
         "Plan: 1 to import, 0 to add, 0 to change, 0 to destroy.",
+        "Plan: 0 to add, 0 to change, 0 to destroy, 1 to forget.",
+        "Plan: 1 to import, 0 to add, 0 to change, 0 to destroy, 2 to forget.",
         "   Plan: 0 to add, 2 to change, 0 to destroy.",
         "No changes. Your infrastructure matches the configuration.",
         "Changes to Outputs:",
@@ -111,7 +113,13 @@ def test_ci_formas_aceitas_do_resumo(com_infra: RepoGit, linha: str):
 
 @pytest.mark.parametrize(
     "linha",
-    ["Plano: 1 to add", "o plan: 1 to add, 0 to change, 0 to destroy.", "No changes", "Plan:"],
+    [
+        "Plano: 1 to add",
+        "o plan: 1 to add, 0 to change, 0 to destroy.",
+        "No changes",
+        "Plan:",
+        "Plan: 0 to add, 0 to change, 0 to destroy, to forget.",
+    ],
 )
 def test_ci_texto_parecido_nao_e_resumo(com_infra: RepoGit, linha: str):
     base = commitar(com_infra, {"infra/main.tf": TF + "\n", "PR.md": f"# PR\n\n{linha}\n"})
@@ -236,6 +244,20 @@ def test_harness_inocente_com_pr_md_com_plano_no_disco(com_infra: RepoGit):
 def test_harness_pr_md_sem_plano_casa(com_infra: RepoGit):
     com_infra.escrever("PR.md", PR_SEM_PLANO)
     assert harness(com_infra.raiz, "infra/main.tf").returncode == 1
+
+
+def test_harness_le_o_pr_md_da_raiz_com_cwd_numa_subpasta(com_infra: RepoGit):
+    com_infra.escrever("PR.md", PR_COM_PLANO)
+    assert harness(com_infra.raiz / "infra", "infra/main.tf").returncode == 0
+    caminho = str(com_infra.raiz / "infra/main.tf")
+    assert harness(com_infra.raiz / "infra", caminho).returncode == 0
+
+
+def test_harness_pr_md_da_subpasta_nao_vale(com_infra: RepoGit):
+    # Mesmo cwd do caso acima; o resumo está no PR.md da subpasta, e não no da raiz.
+    com_infra.escrever("infra/PR.md", PR_COM_PLANO)
+    r = harness(com_infra.raiz / "infra", "infra/main.tf")
+    assert r.returncode == 1 and r.stdout.startswith("infra/main.tf:0: ")
 
 
 def test_harness_funciona_fora_de_repositorio(tmp_path: Path):
