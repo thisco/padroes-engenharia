@@ -1,7 +1,7 @@
 # O primeiro dia com o agente: plano de implementação
 
 > **Para agentes:** SUB-SKILL OBRIGATÓRIA: `superpowers:subagent-driven-development` (recomendada)
-> ou `superpowers:executing-plans`, tarefa por tarefa. Os passos usam caixas `- [ ]`.
+> ou `superpowers:executing-plans`, tarefa por tarefa. Os passos usam caixas `- [x]`.
 
 **Tier:** 2 · **Status:** em-execucao · **Branch:** `feat/2026-11-03-primeiro-dia-com-o-agente`
 
@@ -83,14 +83,14 @@ Mockup: `docs/specs/2026-11-03-primeiro-dia-mockups/primeiro-dia.html`.
   `fabrica.meta_roteiro(**alteracoes)`, `fabrica.roteiro(slug="projeto-novo", meta=None, corpo=CORPO_ROTEIRO)`
   e `fabrica.CORPO_ROTEIRO` (prompt inicial + dois passos, o segundo com `### Kiro`).
 
-- [ ] **Passo 1: schema.** Escrever `esquemas/roteiro.schema.json` no molde de `receita.schema.json`:
+- [x] **Passo 1: schema.** Escrever `esquemas/roteiro.schema.json` no molde de `receita.schema.json`:
   `additionalProperties: false`; obrigatórios `titulo, objetivo, porta, publico, harnesses, passos,
   dominio, momento, pre_requisitos, tempo, praticas, resultado_esperado, referencias, dono,
   revisado_em`; `porta` enum dos três valores; `harnesses` array de slug, `minItems: 1`,
   `uniqueItems`; `passos` array `minItems: 1` de objetos `{titulo: string minLength 1, quem: enum
   voce|agente|voce-decide}` com `additionalProperties: false`; opcionais `ferramentas_aprovadas`,
   `starter`, `exemplos` iguais aos da receita.
-- [ ] **Passo 2: teste de carga e chave.**
+- [x] **Passo 2: teste de carga e chave.**
 
 ```python
 def test_roteiro_carrega_com_chave_e_caminho(tmp_path):
@@ -101,12 +101,12 @@ def test_roteiro_carrega_com_chave_e_caminho(tmp_path):
     assert caminho_de(r) == "roteiros/projeto-novo.html"
 ```
 
-- [ ] **Passo 3: rodar e ver falhar** (`AttributeError: roteiros`).
-- [ ] **Passo 4: carga.** `"roteiro"` em `TIPOS_MARKDOWN`; `("roteiro", "roteiros/*.md")` em `FONTES`
+- [x] **Passo 3: rodar e ver falhar** (`AttributeError: roteiros`).
+- [x] **Passo 4: carga.** `"roteiro"` em `TIPOS_MARKDOWN`; `("roteiro", "roteiros/*.md")` em `FONTES`
   logo após receita; `"roteiro": "roteiros"` em `_CAMPO_POR_TIPO`; campo `roteiros` em `Repositorio`;
   `chave` devolve `f"roteiro-{stem}"` como a receita; `caminho_de` trata `roteiro` como `receita`
   (pasta `roteiros`, stem do arquivo); `ESQUEMA_POR_TIPO["roteiro"] = "roteiro"`.
-- [ ] **Passo 5: teste do schema** (`R-ESQUEMA` sem `passos`, sem `porta`, sem `harnesses`, `quem`
+- [x] **Passo 5: teste do schema** (`R-ESQUEMA` sem `passos`, sem `porta`, sem `harnesses`, `quem`
   fora do enum) e **testes da regra**, um por caso da spec R2:
 
 ```python
@@ -124,18 +124,18 @@ def test_r_roteiro_valido_sem_erros(): ...
   `"### Vim não é harness listado em harnesses"`; `"prompt inicial ausente antes do primeiro passo"`;
   `"porta projeto-novo repetida em roteiros/outro.md"`). O H3 é harness quando seu texto é o
   `titulo` de uma ferramenta com `categoria: harness` cujo `id` está em `harnesses`.
-- [ ] **Passo 6: implementar `regra_roteiro`** em `regras.py` com `exemplos.secoes` para os H2 e
+- [x] **Passo 6: implementar `regra_roteiro`** em `regras.py` com `exemplos.secoes` para os H2 e
   `_h3_da_secao` (ou uma função irmã que preserve a ordem) para os H3; `R_ROTEIRO` em `erros.py`
   com a descrição "roteiro sem prompt inicial, passos fora do frontmatter, harness não listado ou
   porta repetida".
-- [ ] **Passo 7: fábrica.** `meta_roteiro` (titulo "Projeto novo: o primeiro dia", porta
+- [x] **Passo 7: fábrica.** `meta_roteiro` (titulo "Projeto novo: o primeiro dia", porta
   `projeto-novo`, publico, harnesses `["kiro"]`, passos `[{"titulo": "Abrir o harness", "quem":
   "voce"}, {"titulo": "Instalar o pacote", "quem": "agente"}]`, dominio `construir-com-ia`, momento
   `antes-de-escrever`, demais campos como `meta_receita`), `CORPO_ROTEIRO` e `roteiro(...)`. A
   fábrica de ferramenta já cria `kiro`? Se não, `fabrica.ferramenta(fabrica.meta_ferramenta(id="kiro",
   titulo="Kiro", categoria="harness"))` no teste.
-- [ ] **Passo 8: suíte, ruff, validar.** Tudo verde.
-- [ ] **Passo 9: commit** `feat(gerador): tipo roteiro com schema, carga e regra R-ROTEIRO`.
+- [x] **Passo 8: suíte, ruff, validar.** Tudo verde.
+- [x] **Passo 9: commit** `feat(gerador): tipo roteiro com schema, carga e regra R-ROTEIRO`.
 
 ### Tarefa 2: módulo `roteiros.py`, página do roteiro, `.md` gêmeo, llms.txt e prompts
 
@@ -161,7 +161,7 @@ def test_r_roteiro_valido_sem_erros(): ...
   com `n` acumulado na ordem do corpo, para os ids `roteiro-<slug>-prompt-<n>` baterem com
   `prompts_de`.
 
-- [ ] **Passo 1: teste da estrutura.**
+- [x] **Passo 1: teste da estrutura.**
 
 ```python
 def test_estrutura_do_roteiro_com_prompt_inicial_passos_e_harness():
@@ -173,23 +173,23 @@ def test_estrutura_do_roteiro_com_prompt_inicial_passos_e_harness():
     assert r.passos[1].harnesses[0].titulo == "Kiro" and r.passos[1].harnesses[0].id == "kiro"
 ```
 
-- [ ] **Passo 2: teste da página** (DOM): breadcrumb; `.disco` com `figure.prompt` e botão
+- [x] **Passo 2: teste da página** (DOM): breadcrumb; `.disco` com `figure.prompt` e botão
   `[data-copiar]`; um `section.passo[data-quem]` por passo com `id="passo-N"`, `.n` com o número e
   `.quem` com o rótulo; no passo 2, `[data-abas]` com um `button[role=tab][data-harness=kiro]` e um
   `.painel[data-harness=kiro]` contendo `h3` "Kiro"; nenhum `hidden` no HTML; aside com "Ficha"
   (Porta, Público, Tempo, Harnesses), "Práticas", "Referências".
-- [ ] **Passo 3: teste das saídas:** `emitir` grava `roteiros/projeto-novo.html` e `.md`; `llms.txt`
+- [x] **Passo 3: teste das saídas:** `emitir` grava `roteiros/projeto-novo.html` e `.md`; `llms.txt`
   tem a seção `## Roteiros` com o link; `prompts(s)` traz `tipo_origem == "roteiro"`, `origem ==
   "projeto-novo"`, `id == "roteiro-projeto-novo-prompt-1"` e URL com âncora.
-- [ ] **Passo 4: rodar e ver falhar.**
-- [ ] **Passo 5: implementar** `roteiros.py`, `roteiro.html` (seguir `receita.html` para o aside; o
+- [x] **Passo 4: rodar e ver falhar.**
+- [x] **Passo 5: implementar** `roteiros.py`, `roteiro.html` (seguir `receita.html` para o aside; o
   stepper segue o mockup: `.roteiro` → `section.passo` → `.n` + `.corpo` com `h2` e `.quem`), o
   CSS do mockup (`.roteiro`, `.passo`, `.quem`, `.abas`, `.painel[hidden]`) copiado para `tema.css`
   em seção comentada, `SECOES` e `SECAO_POR_TIPO` com "Roteiros" (depois de "Receitas"),
   `montar_paginas` iterando `site.repo.roteiros` como as receitas, `todos_os_prompts` com roteiros.
-- [ ] **Passo 6: suíte, ruff, validar, gerar.** Verde. `public/` não é versionado: nunca entra
+- [x] **Passo 6: suíte, ruff, validar, gerar.** Verde. `public/` não é versionado: nunca entra
   em commit.
-- [ ] **Passo 7: commit** `feat(portal): página do roteiro, md gêmeo, seção Roteiros e prompts`.
+- [x] **Passo 7: commit** `feat(portal): página do roteiro, md gêmeo, seção Roteiros e prompts`.
 
 ### Tarefa 3: Copiar sempre visível com fallback, rótulo da linguagem e abas por harness
 
@@ -210,7 +210,7 @@ def test_estrutura_do_roteiro_com_prompt_inicial_passos_e_harness():
   carregamento, lê a chave (também em `try/catch`) e aplica se houver aba com esse id, senão a
   primeira aba de cada grupo.
 
-- [ ] **Passo 1: testes.**
+- [x] **Passo 1: testes.**
 
 ```python
 def test_bloco_de_codigo_tem_rotulo_e_copiar_visivel():
@@ -224,14 +224,14 @@ def test_busca_js_tem_fallback_e_abas():
     assert 'execCommand("copy")' in js and 'localStorage' in js and 'function iniciarAbas' in js
 ```
 
-- [ ] **Passo 2: rodar e ver falhar.**
-- [ ] **Passo 3: implementar.** No `fence`, `info = tokens[idx].info.strip().split(" ")[0]`;
+- [x] **Passo 2: rodar e ver falhar.**
+- [x] **Passo 3: implementar.** No `fence`, `info = tokens[idx].info.strip().split(" ")[0]`;
   rótulo só quando `info` não vazio e escapado com `markupsafe.escape`. No JS, `iniciarCopiar` deixa
   de sair cedo; o alvo do texto é `botao.closest("figure") || botao.closest(".bloco") ||
   botao.parentElement` e depois `querySelector("pre")`. Registrar `iniciarAbas()` no `DOMContentLoaded`.
-- [ ] **Passo 4: atualizar os testes antigos** que afirmam `hidden` no botão (trocar pela ausência).
-- [ ] **Passo 5: suíte, ruff, validar, gerar.**
-- [ ] **Passo 6: commit** `feat(tema): Copiar sempre visível com fallback, rótulo da linguagem e abas por harness`.
+- [x] **Passo 4: atualizar os testes antigos** que afirmam `hidden` no botão (trocar pela ausência).
+- [x] **Passo 5: suíte, ruff, validar, gerar.**
+- [x] **Passo 6: commit** `feat(tema): Copiar sempre visível com fallback, rótulo da linguagem e abas por harness`.
 
 ### Tarefa 4: skill gerada por roteiro no pacote
 
@@ -248,7 +248,7 @@ def test_busca_js_tem_fallback_e_abas():
   do passo, inclusive os `### <Harness>`. Toda ocorrência de `{URL do portal}` é trocada por
   `url_portal(site).rstrip("/")`. Pacote: `arquivos[f"skills/roteiro-{slug}/SKILL.md"]`.
 
-- [ ] **Passo 1: teste.**
+- [x] **Passo 1: teste.**
 
 ```python
 def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
@@ -262,8 +262,8 @@ def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
     assert erros == []
 ```
 
-- [ ] **Passo 2: rodar e ver falhar.** **Passo 3: implementar.** **Passo 4: suíte, ruff, validar, gerar.**
-- [ ] **Passo 5: commit** `feat(pacote): skill roteiro-<slug> gerada de cada roteiro`.
+- [x] **Passo 2: rodar e ver falhar.** **Passo 3: implementar.** **Passo 4: suíte, ruff, validar, gerar.**
+- [x] **Passo 5: commit** `feat(pacote): skill roteiro-<slug> gerada de cada roteiro`.
 
 ### Tarefa 5: portas da Início com o roteiro
 
@@ -279,13 +279,13 @@ def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
   "harnesses": "Kiro · Antigravity"}` quando existe roteiro com a mesma `porta`; senão sem a chave.
   Os títulos dos harnesses vêm das ferramentas, na ordem de `harnesses` do roteiro.
 
-- [ ] **Passo 1: testes:** porta com roteiro mostra `a[href="roteiros/projeto-novo.html"]` com texto
+- [x] **Passo 1: testes:** porta com roteiro mostra `a[href="roteiros/projeto-novo.html"]` com texto
   começando por "Roteiro com o agente" e `.harn` "Kiro"; porta com `porta` sem roteiro e porta sem
   `porta` ficam só com o link do guia; nenhum `a.tr-porta` (agora `div.tr-porta`).
-- [ ] **Passo 2: rodar e ver falhar.** **Passo 3: implementar** (schema, `inicio.md`, função, template,
+- [x] **Passo 2: rodar e ver falhar.** **Passo 3: implementar** (schema, `inicio.md`, função, template,
   CSS). O link do guia ganha o rótulo "Ler o guia: <título do destino>" só quando o destino é guia;
   a trilha mantém "Abrir a trilha".
-- [ ] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): portas da Início com o roteiro do primeiro dia`.
+- [x] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): portas da Início com o roteiro do primeiro dia`.
 
 ### Tarefa 6: Biblioteca de prompts em cartões com filtros
 
@@ -301,15 +301,15 @@ def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
   linhas não vazias, até 160 caracteres, com "…" se cortou). `prompts.json` e `prompts.md` mantêm
   as chaves de hoje (as novas entram no JSON sem tirar as antigas).
 
-- [ ] **Passo 1: testes:** `html_prompts` tem `.filtros[data-alvo=".cartao-prompt"]` com três
+- [x] **Passo 1: testes:** `html_prompts` tem `.filtros[data-alvo=".cartao-prompt"]` com três
   `select[data-filtro]` (`dominio`, `momento`, `origem`) e um `[data-contagem]`; um
   `figure.cartao-prompt` por prompt com `data-dominio`, `data-momento`, `data-origem` (`pratica`,
   `receita`, `roteiro`), `b` com o `origem_titulo`, `.previa`, `details > pre` com o texto inteiro,
   botão `[data-copiar]` sem `hidden` e `a` "Abrir a origem" com a âncora; prompt com crases triplas
   aparece escapado no `pre`.
-- [ ] **Passo 2: rodar e ver falhar.** **Passo 3: implementar** seguindo a tela 3 do mockup; `ligarFiltros`
+- [x] **Passo 2: rodar e ver falhar.** **Passo 3: implementar** seguindo a tela 3 do mockup; `ligarFiltros`
   atualiza `[data-contagem]` com "x de N prompts" após `aplicar()`.
-- [ ] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): Biblioteca de prompts em cartões com filtros`.
+- [x] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): Biblioteca de prompts em cartões com filtros`.
 
 ### Tarefa 7: receita com o agente primeiro e "Como fazer" com Copiar
 
@@ -324,14 +324,14 @@ def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
   demais, na ordem de origem); itens do "Como fazer" ganham `tempo`, `ferramentas` (títulos de
   `ferramentas_aprovadas` que existem) e `prompt` (texto do primeiro prompt da receita, ou `None`).
 
-- [ ] **Passo 1: testes:** na página, o primeiro `h2` depois do `.topo` é "Com o agente" dentro de
+- [x] **Passo 1: testes:** na página, o primeiro `h2` depois do `.topo` é "Com o agente" dentro de
   `.disco`, seguido de `h2` "Prefere fazer à mão?" e das seções "Resultado", "Antes de começar",
   "Passos", "Confira", "Se der errado" nessa ordem; o id do prompt continua
   `receita-ligar-ci-prompt-1`; no índice, cada receita com prompt tem `figure.prompt > pre[hidden]`
   e botão "Copiar prompt", e mostra "20 min".
-- [ ] **Passo 2: rodar e ver falhar.** **Passo 3: implementar.** O `.md` gêmeo não muda (teste
+- [x] **Passo 2: rodar e ver falhar.** **Passo 3: implementar.** O `.md` gêmeo não muda (teste
   existente de `md_receita` continua passando).
-- [ ] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): receita mostra o prompt do agente primeiro; Como fazer com Copiar`.
+- [x] **Passo 4: suíte, ruff, validar, gerar.** **Passo 5: commit** `feat(portal): receita mostra o prompt do agente primeiro; Como fazer com Copiar`.
 
 ### Tarefa 8: conteúdo, roteiro "Projeto novo: o primeiro dia" (curadoria)
 
@@ -365,13 +365,13 @@ def test_pacote_traz_skill_gerada_do_roteiro(repo_minimo):
   independente: citar); passo 7 entrega na `trilha.html` e no guia `do-zero-a-primeira-mr`.
 - Nenhum nome de órgão, departamento, pessoa ou sistema de origem.
 
-- [ ] **Passo 1:** ler a skill de curadoria e `regra_prompt`; listar as referências existentes a usar.
-- [ ] **Passo 2:** escrever o roteiro e o registro de verificação (uma afirmação por fato, com
+- [x] **Passo 1:** ler a skill de curadoria e `regra_prompt`; listar as referências existentes a usar.
+- [x] **Passo 2:** escrever o roteiro e o registro de verificação (uma afirmação por fato, com
   `localizacao` e `resultado`).
-- [ ] **Passo 3:** `validar.py` e `gerar.py` com 0; abrir `public/roteiros/projeto-novo-primeiro-dia.html`
+- [x] **Passo 3:** `validar.py` e `gerar.py` com 0; abrir `public/roteiros/projeto-novo-primeiro-dia.html`
   e conferir contra a tela 2 do mockup; `grep -ri` pelos nomes proibidos (lista fora do repositório:
   conferir apenas que não há nome de órgão, departamento ou pessoa).
-- [ ] **Passo 4: commit** `feat(conteudo): roteiro Projeto novo: o primeiro dia`.
+- [x] **Passo 4: commit** `feat(conteudo): roteiro Projeto novo: o primeiro dia`.
 
 ### Tarefa 9: conteúdo, roteiro "Projeto existente: o primeiro dia"
 
@@ -385,7 +385,7 @@ pacote e as skills" (`agente`, mesmo prompt da T8), 3 "Adotar o scaffold pelo gu
 `{URL do portal}/guias/brownfield-em-5-passos.md` e parar nos pontos em que o guia pede o sim da
 pessoa; o texto do guia não é copiado. Prompt inicial no mesmo molde da T8.
 
-- [ ] **Passo 1:** escrever o roteiro e o registro. **Passo 2:** `validar.py`, `gerar.py`, conferência
+- [x] **Passo 1:** escrever o roteiro e o registro. **Passo 2:** `validar.py`, `gerar.py`, conferência
   da página gerada. **Passo 3: commit** `feat(conteudo): roteiro Projeto existente: o primeiro dia`.
 
 ### Tarefa 10: ADR 0014, changelog, aceite visual e evidências
@@ -397,17 +397,86 @@ pessoa; o texto do guia não é copiado. Prompt inicial no mesmo molde da T8.
   gerada, portas, Biblioteca em cartões, receita com o agente primeiro, Copiar com fallback;
   Alterado: `pagina.schema.json` com `porta`), este plano (Evidências e Checkpoint)
 
-- [ ] **Passo 1:** ADR e changelog.
-- [ ] **Passo 2:** suíte inteira, ruff, `validar.py`, `gerar.py`; colar as saídas em "Evidências".
-- [ ] **Passo 3:** abrir no navegador `public/index.html`, `public/roteiros/projeto-novo-primeiro-dia.html`,
+- [x] **Passo 1:** ADR e changelog.
+- [x] **Passo 2:** suíte inteira, ruff, `validar.py`, `gerar.py`; colar as saídas em "Evidências".
+- [x] **Passo 3:** abrir no navegador `public/index.html`, `public/roteiros/projeto-novo-primeiro-dia.html`,
   `public/prompts.html`, `public/receitas/instalar-skills-por-harness.html` e comparar com as quatro
   telas do mockup; registrar diferenças em "Checkpoint" (R13).
-- [ ] **Passo 4:** `graphify update .`; commit `docs: ADR 0014, changelog e evidências do primeiro dia com o agente`.
+- [x] **Passo 4:** `graphify update .`; commit `docs: ADR 0014, changelog e evidências do primeiro dia com o agente`.
 
 ## Evidências
 
-(preenchido na T10)
+Branch `feat/2026-11-03-primeiro-dia-com-o-agente`, HEAD 7e44a88, 2026-11-04.
+
+```
+$ .venv/bin/python -m pytest -q -p no:cacheprovider
+FAILED tests/integracao/test_cli_validar.py::test_sai_0_no_repositorio_real
+FAILED tests/unidade/test_regras_ids.py::test_validar_tudo_no_repositorio_real_nao_tem_erro
+2 failed, 2593 passed in 261.02s (0:04:21)
+
+$ .venv/bin/ruff check .
+All checks passed!
+
+$ .venv/bin/python scripts/validar.py        (saída 1)
+10 erro(s) de validação.
+roteiros/projeto-existente-primeiro-dia.md:corpo: R-PROMPT (roteiro-projeto-existente-primeiro-dia-prompt-1..3: sem execução registrada)
+roteiros/projeto-novo-primeiro-dia.md:corpo: R-PROMPT (roteiro-projeto-novo-primeiro-dia-prompt-1..7: sem execução registrada)
+
+$ .venv/bin/python scripts/gerar.py          (saída 1, pelos mesmos 10 R-PROMPT)
+
+$ .venv/bin/python scripts/gerar.py --previa --saida <scratchpad>/previa-t10   (saída 0)
+PRÉVIA, não publicada: portal gerado em .../previa-t10 (versão 1.1.0, commit 7e44a88, 2026-11-04).
+```
+
+As duas falhas da suíte são as únicas e têm a mesma causa dos 10 erros do validador: os dois testes
+validam o repositório real e encontram os 10 `R-PROMPT` "sem execução registrada" (7 prompts do
+roteiro de projeto novo, 3 do de projeto existente). Nenhum outro erro do validador.
 
 ## Checkpoint
 
-(preenchido na T10: diferenças com o mockup; pendências do dono)
+### Aceite visual (R13)
+
+Prévia servida em 127.0.0.1 e aberta no Playwright (1280x900). Capturas em
+`/private/tmp/claude-501/-Users-thiago-Documents-Workspace-repos-padroes-engenharia/88498b5e-f01f-4c3e-8f31-86bcbd6c2450/scratchpad/capturas-t10/`
+(`t10-index.png`, `t10-roteiro.png`, `t10-prompts.png`, `t10-receita.png`).
+
+- **Tela 1, Início:** bate. Três portas; "Projeto novo" e "Projeto existente" com o link "Roteiro com o
+  agente: <título>", os harnesses cobertos ("Kiro · Antigravity · Claude Code · Codex" e "Kiro ·
+  Antigravity") e o link do guia; "No meio de uma mudança" só com a trilha.
+- **Tela 2, Roteiro: DEFEITO.** Prompt inicial escuro, Copiar, passos numerados com a marca de quem faz
+  e abas por harness existem, mas o stepper não tem o layout do mockup. O seletor global
+  `.corpo { display: grid; grid-template-columns: 1.4fr 1fr; gap: 40px }` do tema vaza para
+  `.passo .corpo`, e o corpo do passo vira duas colunas (título e abas à esquerda, texto à direita; os
+  painéis por harness ficam na coluna estreita). As abas, em coluna de 320 px, encolhem para botões de
+  cerca de 50 px de largura por 165 de altura (retângulos altos em vez de pílulas). Além disso o
+  roteiro ocupa só a coluna principal (cerca de 660 px), ao lado do aside de ficha e referências, e
+  não a largura toda do mockup. Correção sugerida: `.passo .corpo { display: block; }` (ou
+  restringir o seletor global) em `portal/tema/tema.css`, com teste. Não corrigi (risco alto, fora
+  da tarefa). A regra legada `.passo` do how-to (linha 108 do `tema.css`) também compartilha o nome.
+- **Tela 3, Biblioteca:** bate no essencial: cartões em três colunas, título, chips (domínio, etapa,
+  origem), prévia, "Ver o prompt inteiro", Copiar e "Abrir a origem", filtros Domínio, Etapa e Origem e
+  contagem ("66 de 66 prompts"). Diferenças: o cartão tem barra tracejada âmbar à esquerda (herdada de
+  `figure.prompt`; o mockup não tem); o rótulo de etapa é o momento da espinha ("Especificar"), e não
+  "Antes de escrever"; o subtítulo diz "das práticas e receitas" (o mockup acrescenta "e roteiros").
+- **Tela 4, Receita:** "Com o agente" é o primeiro bloco (escuro, Copiar visível), seguido de "Prefere
+  fazer à mão?" e das seções de sempre. Diferenças: o prompt mostra um fundo de código por linha
+  (estilo de `code` herdado dentro do `pre` escuro), com aspecto irregular, o que o mockup não tem; o
+  bloco fica na coluna principal ao lado do aside "Ficha", e não na largura toda; 7 botões Copiar
+  visíveis e 6 rótulos de linguagem. O índice "Como fazer" não foi comparado cartão a cartão.
+
+### Pendências do dono
+
+- Executar os 10 prompts dos dois roteiros e registrar as `execucoes` antes do merge na main (hoje
+  `validar.py` e `gerar.py` saem com 1; os dois testes do repositório real passam a verde junto).
+- Decidir sobre a correção do CSS do stepper (defeito acima) antes do merge.
+
+### Minor estacionados pelas revisões (não corrigidos)
+
+- `R_ROTEIRO` fora da ordem de declaração em `erros.py`.
+- O H3 do preâmbulo não é conferido pela regra.
+- `.lang` sem caixa alta, por causa de `test_tema_largura`.
+- Receita repetida no "Como fazer" (domínio e etapa).
+- O regex dos casos do teste em node depende da indentação.
+- Os testes de node pulam quando não há node.
+- `[ref:claude-code-memory]` explícito na linha 180 do roteiro de projeto novo.
+- `referencias/superpowers-brainstorming.yaml` cita "bloco HARD-GATE".
