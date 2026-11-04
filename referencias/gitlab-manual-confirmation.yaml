@@ -7,4 +7,4 @@ verificado_em: 2026-11-04
 verificacao: V
 localizacao: "seção 'manual_confirmation' (mensagem de confirmação própria para job when: manual; sem efeito sem when: manual; introduzido no GitLab 17.1, com suporte a job de parada de ambiente no 18.3; vale para todo job manual, inclusive o de environment:action: stop)"
 dominios: [ci-cd]
-notas: "Lida na web em 2026-11-04. A confirmação é um clique numa caixa de diálogo; a página não fala em digitar texto."
+notas: "Lida na web em 2026-11-04. A página fala em mensagem de confirmação própria e não descreve a forma da confirmação."

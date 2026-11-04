@@ -27,6 +27,7 @@ referencias:
   - github-workflow-syntax
   - github-contextos
   - github-environments-deploy
+  - gitlab-branches-protegidas
 relacionadas: [IAC-04, CICD-04, P3-03]
 dono: engenharia
 revisado_em: 2026-11-04
@@ -46,7 +47,18 @@ prática tem três partes.
    que só roda quando alguém o inicia [ref:gitlab-jobs-manuais], com regra para a branch padrão. No
    GitHub Actions, é um workflow com `workflow_dispatch`, o disparo manual, que só dispara se o
    arquivo estiver na branch padrão; pela API ou pela CLI, porém, o disparo pode apontar qualquer
-   branch ou tag [ref:github-workflow-dispatch], e por isso o primeiro passo do job confere a ref.
+   branch ou tag, e a execução roda o último commit dessa ref [ref:github-workflow-dispatch], ou
+   seja, o workflow e o script daquela branch.
+
+   Por isso a proteção que vale é a do servidor, e não uma linha do arquivo, que quem escreve a
+   branch pode apagar. No GitHub, o ambiente do job restringe as branches que podem implantar nele
+   (só a `main`, em "Selected branches and tags") e exige revisores [ref:github-environments-deploy].
+   No GitLab, o ambiente protegido define quem roda o job manual [ref:gitlab-jobs-manuais], e a
+   branch protegida define quem faz push e merge na `main` [ref:gitlab-branches-protegidas]. Nas
+   duas, a credencial de destruição sai da identidade federada da CICD-04, com a confiança presa à
+   `main` ou ao ambiente pelo `sub`. A conferência da ref no primeiro passo do job e a regra
+   `$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH` do GitLab ficam como defesa em profundidade: evitam o
+   engano, não o abuso.
 2. **Confirmação digitada.** Quem dispara digita o nome do alvo, e o job compara com o alvo antes de
    qualquer comando. No GitHub, é uma entrada `string` obrigatória do `workflow_dispatch`
    [ref:github-workflow-syntax], preenchida à mão no formulário do navegador e lida no contexto
@@ -87,14 +99,18 @@ linha.
    seguido de `tofu apply` do plano salvo [ref:opentofu-destroy] [ref:opentofu-apply].
 3. No GitLab, crie um job por ambiente com `when: manual` na regra da branch padrão
    [ref:gitlab-jobs-manuais], `manual_confirmation` (GitLab 17.1 ou mais novo, e 18.3 no job que
-   para ambiente) [ref:gitlab-manual-confirmation] e
-   `environment` com `action: stop`, que marca o job como o que para o ambiente
-   [ref:gitlab-environment-action]. Restrinja quem pode rodá-lo com ambiente protegido: só quem
-   está na lista roda o job manual, nos planos Premium e Ultimate [ref:gitlab-jobs-manuais].
+   para ambiente) [ref:gitlab-manual-confirmation] e `environment` com `action: stop`, que marca o
+   job como o que para o ambiente [ref:gitlab-environment-action]. No servidor, que é onde está a
+   proteção: proteja o ambiente, e só quem está na lista roda o job manual, nos planos Premium e
+   Ultimate [ref:gitlab-jobs-manuais]; proteja a `main`, limitando quem faz push e merge nela
+   [ref:gitlab-branches-protegidas].
 4. No GitHub Actions, crie um workflow `workflow_dispatch` com a entrada do ambiente e a entrada de
-   confirmação, as duas obrigatórias [ref:github-workflow-syntax], e o job com `environment`. Com
-   revisores obrigatórios no ambiente, o job espera uma aprovação, e quem dispara pode ser impedido
-   de aprovar o próprio pedido; nos planos Free, Pro e Team, isso só existe em repositório público
+   confirmação, as duas obrigatórias [ref:github-workflow-syntax], e o job com `environment`. No
+   servidor, que é onde está a proteção: no ambiente, restrinja as branches de deploy à `main`
+   ("Selected branches and tags"), recurso de todo repositório público e, nos planos Pro e Team,
+   também do privado [ref:github-environments-deploy]; e ligue revisores obrigatórios, com os quais
+   o job espera uma aprovação e quem dispara pode ser impedido de aprovar o próprio pedido; nos
+   planos Free, Pro e Team, revisores só existem em repositório público
    [ref:github-environments-deploy].
 5. Marque o recurso caro com `lifecycle { prevent_destroy = true }` [ref:opentofu-prevent-destroy].
 6. Tire a credencial de destruição das máquinas: o job usa a identidade federada da CICD-04, e a
@@ -195,7 +211,9 @@ arquivo do ambiente; troque `{ambiente}` pelo nome dele.
 GitHub Actions: o workflow de disparo manual pede o ambiente numa lista e a confirmação num campo de
 texto, confere a ref antes do checkout e passa as entradas ao script por variável de ambiente, nunca
 interpoladas no comando [ref:github-workflow-dispatch] [ref:github-workflow-syntax]
-[ref:github-contextos]. O runner precisa do `tofu` e da credencial da CICD-04.
+[ref:github-contextos]. A conferência da ref é defesa em profundidade: quem dispara contra outra
+branch roda o arquivo daquela branch, e quem barra é a política de branches de deploy do ambiente
+[ref:github-environments-deploy]. O runner precisa do `tofu` e da credencial da CICD-04.
 
 <!-- incluir: exemplos/CICD-05/github-destruir.yml -->
 
@@ -210,8 +228,11 @@ candidato é um job que procura `destroy` no arquivo de CI e nos scripts e repro
 de job manual. Hoje, a IAC-04 já avisa quando o agente roda `apply` ou `destroy` de produção pelo
 shell.
 
-Os limites: quem pode rodar o job manual (ambiente protegido no GitLab, revisores no GitHub) é
-configuração do servidor, fora do repositório, e uma pessoa confere. O plano rejeitado pelo
+Os limites: a proteção de verdade é configuração do servidor, fora do repositório, e uma pessoa
+confere: ambiente e branch protegidos no GitLab; branches de deploy restritas à `main` e revisores
+no ambiente do GitHub; e a confiança do papel presa à `main` ou ao ambiente (CICD-04). A regra de
+branch e a conferência da ref que o repositório mostra são só defesa em profundidade, porque vivem
+no arquivo que a branch pode mudar. O plano rejeitado pelo
 `prevent_destroy` sugere excluir o recurso da rodada, e o script do Exemplo não aceita essa opção;
 um script que a aceite reabre a porta. Os pipelines do Exemplo foram conferidos só na sintaxe; o
 roteiro rodou o script e o OpenTofu de verdade, numa pasta temporária, sem GitLab nem GitHub.

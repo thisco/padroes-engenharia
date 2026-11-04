@@ -1,6 +1,6 @@
 destruir-homologacao:
   stage: limpeza
-  rules:
+  rules: # defesa em profundidade; a proteção é o ambiente e a branch protegidos no servidor
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
       when: manual
   manual_confirmation: "Isto destrói homologacao. Rode o job pelo nome, com a variável CONFIRMAR=homologacao."

@@ -5,6 +5,6 @@ url: https://docs.github.com/en/actions/reference/workflows-and-actions/deployme
 tipo: vendor
 verificado_em: 2026-11-04
 verificacao: V
-localizacao: "trechos sobre regras de proteção de deploy, revisores obrigatórios (até seis, basta um aprovar; impedir a autoaprovação), branches e tags de deploy, segredos do ambiente (o job só os lê depois da aprovação) e as notas de disponibilidade por plano"
+localizacao: "trechos sobre regras de proteção de deploy, revisores obrigatórios (até seis, basta um aprovar; impedir a autoaprovação), branches e tags de deploy (sem restrição, só branches protegidas, ou branches e tags selecionadas), segredos do ambiente (o job só os lê depois da aprovação) e as notas de disponibilidade por plano"
 dominios: [infra-iac, ci-cd]
-notas: "Lida na web em 2026-11-04. Nos planos Free, Pro e Team, revisores obrigatórios só existem em repositório público."
+notas: "Lida na web em 2026-11-04. Nos planos Free, Pro e Team, revisores obrigatórios só existem em repositório público; branches e tags de deploy existem em todo repositório público e, nos planos Pro e Team, também no privado."

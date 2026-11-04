@@ -1,0 +1,10 @@
+id: gitlab-branches-protegidas
+titulo: "Protected branches"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/project/repository/branches/protected/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "tabela de permissões ('Allowed to merge' controla quem faz merge por merge request; 'Allowed to push and merge' controla quem faz push direto na branch protegida)"
+dominios: [ci-cd]
+notas: "Lida na web em 2026-11-04 pelo HTML baixado da página."

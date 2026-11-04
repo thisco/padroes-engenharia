@@ -66,9 +66,17 @@ afirmacoes:
   ref: github-workflow-dispatch
   localizacao: "seção 'workflow_dispatch' ('This event will only trigger a workflow run if the workflow file exists on the default branch') (aberta na web em 2026-11-04)"
   resultado: confirmada
-- texto: pela API ou pela CLI, o disparo pode apontar qualquer branch ou tag
+- texto: pela API ou pela CLI, o disparo pode apontar qualquer branch ou tag, e a execução roda o último commit dessa ref
   ref: github-workflow-dispatch
-  localizacao: "seção 'workflow_dispatch' ('you can dispatch it against any branch or tag via the GitHub API or GitHub CLI') (aberta na web em 2026-11-04)"
+  localizacao: "seção 'workflow_dispatch' ('you can dispatch it against any branch or tag via the GitHub API or GitHub CLI'; tabela do evento: GITHUB_SHA 'Last commit on the GITHUB_REF branch or tag', GITHUB_REF 'Branch or tag that received dispatch') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o ambiente do GitHub restringe as branches que podem implantar nele (Selected branches and tags), em todo repositório público e, nos planos Pro e Team, também no privado
+  ref: github-environments-deploy
+  localizacao: "'Deployment branches and tags' ('Use deployment branches and tags to restrict which branches and tags can deploy to the environment'; opção 'Selected branches and tags'; 'available for all public repositories. For users on GitHub Pro or GitHub Team plans, ... also available for private repositories') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: a branch protegida do GitLab define quem faz push e merge nela
+  ref: gitlab-branches-protegidas
+  localizacao: "tabela de permissões ('Allowed to merge: Controls who can merge changes through merge requests'; 'Allowed to push and merge: Controls who can push directly to existing protected branches') (aberta na web em 2026-11-04)"
   resultado: confirmada
 - texto: a entrada obrigatória é preenchida à mão no formulário do navegador e lida no contexto inputs
   ref: github-workflow-dispatch
@@ -137,9 +145,15 @@ execucoes:
   evidencia: 'passo 1: branch feat/2026-11-04-destroy-pelo-ci; passo 2: destruir.sh com set -eu, a comparação e o plano salvo; passo 3: job destruir-homologacao no estágio limpeza (criado), regra da branch padrão com when: manual, manual_confirmation, environment homologacao com action: stop, o job testes intacto; passo 4: sh -n ok, "sh destruir.sh homologacao errado" saída 1 com "nada foi destruído" e sem tofu no PATH, YAML carregado; passo 5: commit 660b7bb só com os dois arquivos, sem trailer; recurso indicado para prevent_destroy: local_file.banco (já protegido).'
   data: '2026-11-04'
 revisao_adversarial:
-  revisor: autorrevisão do curador contra as fontes; a revisão em sessão independente fica com o controlador (o despacho desta frente proíbe subagente)
+  revisor: revisão independente em lote, 2026-11-04 (antes dela, autorrevisão do curador no mesmo dia, cujos achados seguem no fim da lista)
   data: '2026-11-04'
   achados:
+  - afirmacao: 'CICD-05, O que fazer 1, e github-destruir.yml: "o primeiro passo do job confere a ref"'
+    problema: '[Important] falsa garantia: o workflow_dispatch contra outra branch roda o arquivo daquela branch, e quem a escreve pode apagar o test "$REF" e a comparação. O mesmo, em menor grau, para a regra $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH do GitLab.'
+    tratamento: 'Tratado: O que fazer, Como aplicar 3 e 4, Por ferramenta e Como verificar atribuem a proteção ao servidor (branches de deploy e revisores do ambiente no GitHub, github-environments-deploy; ambiente protegido e branch protegida no GitLab, gitlab-jobs-manuais e gitlab-branches-protegidas; a confiança presa à main ou ao ambiente da CICD-04) e chamam a checagem no arquivo de defesa em profundidade; os dois moldes dizem isso em comentário.'
+  - afirmacao: 'referencias/gitlab-manual-confirmation.yaml, notas: "um clique numa caixa de diálogo"'
+    problema: '[Minor] frase retirada do corpo por falta de fonte continuava na nota da referência.'
+    tratamento: 'Tratado: a nota diz que a página fala em mensagem de confirmação própria e não descreve a forma da confirmação.'
   - afirmacao: 'CICD-05, O que fazer: workflow_dispatch "só aparece se o arquivo estiver na branch padrão"'
     problema: '[ref] a fonte diz que o evento só dispara se o arquivo existir na branch padrão, e que pela API ou CLI o disparo aponta qualquer branch ou tag.'
     tratamento: 'Tratado: o texto diz "só dispara" e acrescenta o disparo pela API; o job confere a ref no primeiro passo.'

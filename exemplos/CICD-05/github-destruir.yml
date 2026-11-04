@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ inputs.ambiente }}
     steps:
+      # Defesa em profundidade: a proteção é a política de branches de deploy do environment.
       - name: Só da branch padrão
         env: { REF: "${{ github.ref }}" }
         run: test "$REF" = refs/heads/main
