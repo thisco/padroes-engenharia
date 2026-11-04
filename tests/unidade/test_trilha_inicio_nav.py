@@ -104,9 +104,9 @@ def test_porta_mostra_o_titulo_do_destino():
         *_guias_de_fabrica(),
     )
     html = html_inicio(site)
-    assert "<em>Do zero à primeira MR com IA</em>" in html
-    assert "<em>Brownfield em 5 passos</em>" in html
-    assert "<em>Abrir a trilha</em>" in html
+    assert ">Ler o guia: Do zero à primeira MR com IA</a></em>" in html
+    assert ">Ler o guia: Brownfield em 5 passos</a></em>" in html
+    assert ">Abrir a trilha</a></em>" in html
     assert "Abrir →" not in html
 
 
