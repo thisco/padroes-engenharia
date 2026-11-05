@@ -1,0 +1,10 @@
+id: pydantic-config
+titulo: "Configuration (ConfigDict)"
+organizacao: Pydantic
+url: https://pydantic.dev/docs/validation/latest/api/pydantic/config/
+tipo: vendor
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "ConfigDict, atributo hide_input_in_errors: esconde o valor recebido na mensagem de erro; o padrão é False"
+dominios: [seguranca]
+notas: "Na execução do portal (pydantic 2.14.2), sem hide_input_in_errors o erro de um model_validator repetiu em input_value o dicionário com a chave lida do ambiente."

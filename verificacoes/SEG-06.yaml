@@ -1,0 +1,178 @@
+conteudo: SEG-06
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "a OWASP põe entre as falhas de cadeia de suprimento não varrer vulnerabilidades com regularidade e rodar software vulnerável, sem suporte ou desatualizado, inclusive o sistema operacional"
+  ref: owasp-top10-2025-a03
+  localizacao: "seção 'Description' ('you do not scan for vulnerabilities regularly'; 'the software is vulnerable, unsupported, or out of date. This includes the OS')"
+  resultado: confirmada
+- texto: "o Trivy varre os arquivos dentro da imagem atrás de vulnerabilidade, misconfiguração, segredo e licença, com vulnerabilidade e segredo ligados por padrão"
+  ref: trivy-imagem-de-container
+  localizacao: "abertura da página ('Trivy scans the files inside container images for'; vulnerabilidade e segredo ligados por padrão, controlados por --scanners)"
+  resultado: confirmada
+- texto: "o Trivy procura a imagem no Docker Engine local, depois no containerd, no Podman e no registro"
+  ref: trivy-imagem-de-container
+  localizacao: "seções 'Docker Engine' e 'Container Registry' e a ordem padrão de busca (alterável com --image-src)"
+  resultado: confirmada
+- texto: "por padrão o Trivy sai com 0 mesmo quando acha problema; --exit-code 1 com --severity faz o job falhar só a partir da severidade escolhida"
+  ref: trivy-exit-code
+  localizacao: "seção 'Exit Code' ('By default, Trivy exits with code 0 even when security issues are detected'; exemplo --exit-code 1 --severity CRITICAL, 'useful for CI/CD')"
+  resultado: confirmada
+- texto: "com --fail-on, o Grype sai com 2 quando acha vulnerabilidade na severidade dada ou acima"
+  ref: grype-limite-de-falha
+  localizacao: "seção 'Set failure thresholds' ('Grype exits with code 2 if it found vulnerabilities at or above the specified severity')"
+  resultado: confirmada
+- texto: "o Semgrep sai com 0 quando acha problema, a menos que rode com --error, que faz achado virar saída 1; --metrics off desliga o envio de métricas"
+  ref: semgrep-cli
+  localizacao: "ajuda do semgrep scan (--error: 'Exit 1 if there are findings'; --metrics: 'If off, metrics are disabled altogether and not sent') e seção de códigos de saída"
+  resultado: confirmada
+- texto: "o job container_scanning do template de Container Scanning vem com allow_failure: true"
+  ref: gitlab-container-scanning-template
+  localizacao: "definição do job container_scanning (stage: test; allow_failure: true), branch master lida em 2026-11-04"
+  resultado: confirmada
+- texto: "os analisadores do template de SAST vêm com allow_failure: true"
+  ref: gitlab-sast-template
+  localizacao: "job oculto .sast-analyzer (extends: sast; allow_failure: true), estendido por semgrep-sast (extends: .sast-analyzer)"
+  resultado: confirmada
+- texto: "o job com allow_failure: true que falha deixa só um aviso laranja, com o pipeline bem-sucedido"
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' ('an orange warning ... indicates that a job failed'; 'the pipeline is successful and the associated commit is marked as passed with no warnings')"
+  resultado: confirmada
+- texto: "a política de aprovação de MR do GitLab é do tier Ultimate, exige aprovação a partir do resultado dos scanners e também quando o scanner exigido termina sem relatório"
+  ref: gitlab-politicas-de-aprovacao
+  localizacao: "abertura ('Tier: Ultimate'; 'Detect results from security and license scanners to enforce approval rules') e a seção de fallback_behavior (job do scanner que termina sem sucesso e sem relatório exige aprovação)"
+  resultado: confirmada
+- texto: "o merge check Pipelines must succeed exige um pipeline completo e bem-sucedido antes do merge"
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: "seção sobre exigir pipeline bem-sucedido ('require a complete and successful pipeline before merge'; Settings > Merge requests > Merge checks)"
+  resultado: confirmada
+- texto: "no GitHub, Require status checks before merging exige que os checks marcados estejam com status successful, skipped ou neutral"
+  ref: github-branch-protegida
+  localizacao: "seção 'Require status checks before merging' ('Required status checks must have a successful, skipped, or neutral status')"
+  resultado: confirmada
+- texto: "o job da MR roda com a regra $CI_PIPELINE_SOURCE == \"merge_request_event\""
+  ref: gitlab-mr-pipelines
+  localizacao: "seção de configuração (if: $CI_PIPELINE_SOURCE == \"merge_request_event\"; roda a cada mudança na branch de origem da MR)"
+  resultado: confirmada
+- texto: "no GitHub Actions, o workflow constrói a imagem e a trivy-action a varre com image-ref, exit-code '1' e severity"
+  ref: trivy-action
+  localizacao: "README, exemplo 'Scan CI Pipeline' e tabela de entradas (exit-code, severity, image-ref)"
+  resultado: confirmada
+- texto: "o template Jobs/Container-Scanning.gitlab-ci.yml usa o Trivy e lê a imagem de CS_IMAGE; o relatório JSON sai como artefato no Free, e o resultado na MR e na aba Security é do Ultimate"
+  ref: gitlab-container-scanning
+  localizacao: "abertura ('GitLab integrates with the Trivy security scanner'), configuração (template, job container_scanning, variável CS_IMAGE) e tabela de recursos por tier"
+  resultado: confirmada
+- texto: "o template Jobs/SAST.gitlab-ci.yml tem analisador padrão baseado no Semgrep, no job semgrep-sast, exige o stage test, sai com relatório JSON no Free e a gestão de vulnerabilidades é do Ultimate"
+  ref: gitlab-sast
+  localizacao: "configuração (include do template; 'must include the test stage'), tabela por tier e seção do analisador ('Uses Semgrep analyzer with GitLab-managed rules'; job semgrep-sast)"
+  resultado: confirmada
+- texto: "o CodeQL é o motor de análise de código do GitHub, ligado pelo default setup ou por um workflow com a github/codeql-action"
+  ref: github-codeql
+  localizacao: "abertura e seção sobre as formas de configurar (default setup, advanced setup com a github/codeql-action, CLI em outro CI)"
+  resultado: confirmada
+- texto: "a action do GitHub se fixa pelo SHA do commit, porque a tag pode ser movida ou apagada por quem ganhar acesso ao repositório da action"
+  ref: github-actions-uso-seguro
+  localizacao: "seção 'Using third-party actions' ('Pin references to actions to a commit SHA'; 'a tag can be moved or deleted if a bad actor gains access to the repository storing the action')"
+  resultado: confirmada
+- texto: "a imagem fixada pelo digest é sempre a mesma versão, e em troca não recebe atualização, nem com correção de segurança"
+  ref: docker-pull-por-digest
+  localizacao: "seção 'Pull an image by digest (immutable identifier)' ('guarantee that the image you're using is always the same'; 'does therefore not pull updated versions of an image, which may include security updates')"
+  resultado: confirmada
+- texto: "o job de build faz docker login com CI_REGISTRY_USER e CI_REGISTRY_PASSWORD, docker build e docker push num serviço Docker-in-Docker"
+  ref: gitlab-registro-build-e-push
+  localizacao: "seção 'Container registry examples with GitLab CI/CD', exemplo Docker-in-Docker (docker:<versão>-cli com serviço docker:<versão>-dind; DOCKER_HOST e DOCKER_TLS_CERTDIR no exemplo multi-stage)"
+  resultado: confirmada
+- texto: "o Docker-in-Docker exige o runner em modo privileged; sem ele, use uma alternativa ao Docker"
+  ref: gitlab-docker-build
+  localizacao: "tabela de abordagens (Privileged mode: Yes para Docker-in-Docker) e 'If you cannot enable privileged mode, use a Docker alternative'"
+  resultado: confirmada
+- texto: "CI_COMMIT_SHA é a revisão para a qual o pipeline roda"
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis, CI_COMMIT_SHA ('The commit revision the project is built for')"
+  resultado: confirmada
+- texto: "o include:local aceita os curingas * e **"
+  ref: gitlab-include-local
+  localizacao: "seção 'Use include:local with wildcard file paths'"
+  resultado: confirmada
+- texto: "trigger: project: dispara um pipeline em outro projeto"
+  ref: gitlab-pipelines-downstream
+  localizacao: "seção de pipelines multiprojeto (trigger_job com trigger: project:)"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/antes/Dockerfile
+  comando: "docker build -t seg06-antes exemplos/SEG-06/antes; docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c image --exit-code 1 --severity HIGH,CRITICAL --no-progress seg06-antes"
+  ambiente: "macOS; Docker 29.5.2; Trivy 0.76.1 fixado pelo digest, com o banco baixado em 2026-11-04"
+  resultado: falhou-como-esperado
+  evidencia: "o antes existe para reprovar (imagem base antiga): seg06-antes (debian 10.13) Total: 42 (HIGH: 40, CRITICAL: 2); pacotes Python Total: 4 (HIGH: 4); saída 1"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/antes/app.py
+  comando: "docker run --rm -v exemplos/SEG-06/antes:/src -w /src semgrep/semgrep:1.182.1@sha256:451b3d875c00dac7ed5db5293e584a07de11449a409c10b3c2d2652f429630b6 semgrep scan --config p/default --error --metrics off ."
+  ambiente: "macOS; Docker 29.5.2; Semgrep 1.182.1 fixado pelo digest"
+  resultado: falhou-como-esperado
+  evidencia: "o antes existe para reprovar: 2 findings (python.lang.security.audit.subprocess-shell-true, dockerfile.security.missing-user); saída 1"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/depois/Dockerfile
+  comando: "docker build -t seg06-depois exemplos/SEG-06/depois (também com docker:29.5.2-cli@sha256:9ba8e32b..., a imagem do job construir-imagem, pelo socket do Docker local); o mesmo trivy image da linha do antes sobre seg06-depois"
+  ambiente: "o mesmo do antes"
+  resultado: passou
+  evidencia: "build com a imagem do job: saída 0, mesma imagem (sha256:5add277a2362); seg06-depois (alpine 3.24.3): 0 vulnerabilidades; saída 0. Em 2026-11-03, com o pip ainda na imagem, deu Total: 5 (HIGH: 5) em bibliotecas embutidas no pip."
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/depois/app.py
+  comando: "o mesmo semgrep scan da linha do antes sobre exemplos/SEG-06/depois"
+  ambiente: "o mesmo do antes"
+  resultado: passou
+  evidencia: "Ran 296 rules on 2 files: 0 findings; saída 0"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/gitlab-ci.yml
+  comando: "os comandos dos jobs (docker build com a imagem do construir-imagem, trivy image e semgrep scan com as imagens fixadas pelo digest) rodados com docker run sobre o antes e o depois; yaml.safe_load do arquivo; verificadores/seg_06.py --evento ci num repositório Git temporário com o antes, CI só com testes na base e este arquivo no HEAD"
+  ambiente: "macOS; Docker 29.5.2; repositório Git temporário. Não rodou em runner: o gitlab-ci-local não está instalado, e o download pelo npx foi negado pela política de permissões desta sessão; o job construir-imagem também precisa de runner privileged com Docker-in-Docker e do registro de um projeto GitLab, que a máquina não tem. Os digests e SHAs vieram de docker buildx imagetools inspect e git ls-remote em 2026-11-04."
+  resultado: passou
+  evidencia: "scanners: antes saída 1, depois saída 0 (linhas acima); YAML válido; verificador: saída 0"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/SEG-06/github-workflow.yml
+  comando: "yaml.safe_load do arquivo; git ls-remote --tags em github.com/actions/checkout (v6.1.0 -> d23441a48e516b6c34aea4fa41551a30e30af803) e github.com/aquasecurity/trivy-action (v0.36.0^{} -> ed142fd0673e97e23eac54620cfb913e5ce36c25); verificadores/seg_06.py --evento ci com este arquivo em .github/workflows/seguranca.yml"
+  ambiente: "macOS; repositório Git temporário; o workflow não foi executado no GitHub Actions (os passos de scanner são os mesmos comandos já rodados com docker run)"
+  resultado: passou
+  evidencia: "YAML válido; SHAs conferidos nos repositórios das actions (não em fork); verificador: saída 0"
+  data: '2026-11-04'
+- tipo: prompt
+  prompt: SEG-06-prompt-1
+  harness: "execução manual pelo curador, seguindo o prompt passo a passo (não foi sessão nova de agente; a execução em sessão nova é pendência do dono)"
+  ambiente: "repositório Git temporário com o Dockerfile e o app.py do antes, .gitlab-ci.yml só com o job de testes, verificadores/seg_06.py e Docker 29.5.2"
+  resultado: passou
+  evidencia: "reexecutado em 2026-11-04 depois da rodada de correção: passo 1, 2 lacunas e saída 1; passo 2, CI com construir-imagem, varredura-imagem e sast; passo 3, trivy Total 42 (HIGH 40, CRITICAL 2) e 4 HIGH em Python, saída 1, e semgrep 2 findings, saída 1; passo 5 (depois do commit com o depois), trivy 0 vulnerabilidades, semgrep 0 findings e verificador com saída 0"
+  data: '2026-11-04'
+revisao_adversarial:
+  revisor: "revisão independente em lote, 2026-11-04 (controlador da Onda 1), mais a autorrevisão do curador"
+  data: '2026-11-04'
+  achados:
+  - afirmacao: "Exemplo: trivy-action@v0.36.0, actions/checkout@v5 e as imagens trivy e semgrep só pela tag"
+    problema: "Important da revisão independente: tag mutável numa prática que cita a A03; a SEG-02 fixa imagem por digest."
+    tratamento: "exemplos/SEG-06/github-workflow.yml fixa as actions pelo SHA do commit, com a tag em comentário, e a imagem do Semgrep pelo digest; exemplos/SEG-06/gitlab-ci.yml fixa todas as imagens pela tag e pelo digest; o Como aplicar 1 diz isso com [ref:github-actions-uso-seguro] e [ref:docker-pull-por-digest]; a origem de cada SHA e digest está em execucoes."
+  - afirmacao: "Exemplo do GitLab: stages [build, test] sem job de build, com $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA pressuposto"
+    problema: "Important da revisão independente: quem segue o prompt fica com varredura-imagem falhando por imagem inexistente."
+    tratamento: "O Exemplo traz o job construir-imagem (Docker-in-Docker, login, build e push da mesma tag) e a varredura com needs dele; o Como aplicar 2 explica a tag e o requisito de runner privileged, com fontes; o registro diz que os jobs não rodaram em runner e por quê."
+  - afirmacao: "Os jobs ficam no mesmo stage do job de segredo da SEG-02"
+    problema: "Minor da revisão independente: a SEG-02 usa travas, e o Exemplo usava test."
+    tratamento: "O Exemplo e o job lacuna-de-varredura usam o stage travas."
+  - afirmacao: "Verificador: include local com curinga e trigger de outro projeto"
+    problema: "Minor da revisão independente: include local com 'ci/*.yml' não era seguido (falso positivo), e trigger: project: saía 2 como se fosse include de outro projeto."
+    tratamento: "verificadores/seg_06.py segue os curingas * e ** e ignora project: dentro de trigger:, com testes RED e GREEN; o Como verificar diz isso, com [ref:gitlab-include-local] e [ref:gitlab-pipelines-downstream]."
+  - afirmacao: "Os templates de segurança do GitLab reprovam a MR com achado"
+    problema: "Autorrevisão: os dois templates vêm com allow_failure: true; com eles, o achado deixa o job laranja e a MR entra."
+    tratamento: "O texto diz que os templates não reprovam, cita o template e a política de aprovação do Ultimate, e o Exemplo usa jobs próprios com o código de saída ligado."
+  - afirmacao: "O relatório de SAST aparece na MR só no Ultimate"
+    problema: "Autorrevisão: a página do SAST não diz isso com essas palavras."
+    tratamento: "O texto afirma a apresentação na MR só para Container Scanning e, para SAST, só o que a página sustenta."
+  - afirmacao: "Prompt, passo 1, com a base no primeiro commit"
+    problema: "Autorrevisão: num repositório de um commit, a base igual ao HEAD não dá diff e o verificador não aponta a lacuna antiga."
+    tratamento: "O passo 1 usa a base de zeros, que avalia o HEAD inteiro."
+  - afirmacao: "O depois com python:3.13-alpine passa no Trivy"
+    problema: "Autorrevisão: com o pip na imagem final, o Trivy acusou 5 HIGH em bibliotecas embutidas no pip (2026-11-03)."
+    tratamento: "O depois tira o pip da imagem final, e o Exemplo registra o caso."

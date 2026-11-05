@@ -1,0 +1,10 @@
+id: rfc-6585
+titulo: "RFC 6585: Additional HTTP Status Codes"
+organizacao: IETF
+url: https://www.rfc-editor.org/rfc/rfc6585
+tipo: normativo
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seção 4, 429 Too Many Requests (o cliente mandou requisições demais num período; Retry-After opcional; a resposta não pode ser guardada em cache)"
+dominios: [seguranca]
+notas: null

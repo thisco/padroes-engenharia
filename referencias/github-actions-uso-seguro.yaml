@@ -1,0 +1,10 @@
+id: github-actions-uso-seguro
+titulo: "Secure use reference (GitHub Actions)"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/reference/security/secure-use
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Using third-party actions' ('Pin references to actions to a commit SHA in your workflow files'; a tag pode ser movida ou apagada por quem ganhar acesso ao repositório da action; conferir que o SHA é do repositório da action, não de um fork)"
+dominios: [seguranca, ci-cd]
+notas: "A página também cita lockfile de dependências de workflow como proteção mais forte que o SHA, para quem puder adotá-lo; o portal não trata disso."

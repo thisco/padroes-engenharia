@@ -1,0 +1,11 @@
+id: owasp-api4-2023
+titulo: "API4:2023 Unrestricted Resource Consumption"
+organizacao: OWASP API Security Project
+url: https://api-security.owasp.org/editions/2023/en/0xa4-unrestricted-resource-consumption
+tipo: padrao-aberto
+versao: '2023'
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seções 'Is the API Vulnerable?' (a API é vulnerável se falta ou está mal ajustado ao menos um limite) e 'How To Prevent' (limitar quantas vezes um cliente chama a API num período; política mais estrita em endpoint sensível; limitar quantas vezes um cliente executa uma mesma operação)"
+dominios: [seguranca]
+notas: "O endereço owasp.org/API-Security/... redireciona (308) para api-security.owasp.org."

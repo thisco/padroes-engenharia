@@ -1,0 +1,11 @@
+id: spring-boot-external-config
+titulo: "Externalized Configuration"
+organizacao: Spring
+url: https://docs.spring.io/spring-boot/reference/features/external-config.html
+tipo: vendor
+versao: '4.1.2'
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seção 'Type-safe Configuration Properties', subseção '@ConfigurationProperties Validation': a classe anotada com @Validated é validada, com as anotações de restrição do jakarta.validation nos campos"
+dominios: [seguranca]
+notas: "A subseção não diz, com essas palavras, que a falha de validação impede a aplicação de subir; o portal não afirma isso com esta fonte."

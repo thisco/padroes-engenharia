@@ -1,0 +1,10 @@
+id: gitlab-container-scanning
+titulo: "Container Scanning"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/application_security/container_scanning/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura (acha vulnerabilidade na imagem base e nos pacotes do sistema operacional; 'GitLab integrates with the Trivy security scanner'), seção de configuração (template Jobs/Container-Scanning.gitlab-ci.yml, job container_scanning, variável CS_IMAGE) e tabela de recursos por tier (relatório JSON como artefato no Free; resultado na MR e na aba Security só no Ultimate)"
+dominios: [seguranca, ci-cd]
+notas: null

@@ -1,0 +1,10 @@
+id: python-hmac
+titulo: "hmac: Keyed-Hashing for Message Authentication"
+organizacao: Python Software Foundation
+url: https://docs.python.org/3/library/hmac.html
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "função hmac.compare_digest(a, b): evita o curto-circuito pelo conteúdo, contra análise de tempo; a e b do mesmo tipo, str só ASCII ou objeto bytes-like"
+dominios: [seguranca]
+notas: null

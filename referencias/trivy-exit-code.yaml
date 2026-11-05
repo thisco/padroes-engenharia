@@ -1,0 +1,10 @@
+id: trivy-exit-code
+titulo: "Trivy: Others (Exit Code)"
+organizacao: Aqua Security
+url: https://trivy.dev/latest/docs/configuration/others/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Exit Code' ('By default, Trivy exits with code 0 even when security issues are detected'; exemplo trivy image --exit-code 1 --severity CRITICAL, útil para CI/CD)"
+dominios: [seguranca]
+notas: null

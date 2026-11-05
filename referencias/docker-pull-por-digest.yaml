@@ -1,0 +1,10 @@
+id: docker-pull-por-digest
+titulo: "docker image pull: Pull an image by digest (immutable identifier)"
+organizacao: Docker
+url: https://docs.docker.com/reference/cli/docker/image/pull/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Pull an image by digest (immutable identifier)' (o digest fixa a versão exata, e a imagem usada é sempre a mesma; em troca, o Docker não traz versão nova, que pode ter correção de segurança)"
+dominios: [seguranca, ci-cd]
+notas: null

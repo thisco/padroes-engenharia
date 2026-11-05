@@ -1,0 +1,10 @@
+id: fastapi-dependencias-globais
+titulo: "Global Dependencies"
+organizacao: FastAPI
+url: https://fastapi.tiangolo.com/tutorial/dependencies/global-dependencies/
+tipo: vendor
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "página inteira: FastAPI(dependencies=[...]) aplica as dependências a todas as path operations da aplicação"
+dominios: [seguranca]
+notas: "Exemplo do portal executado com FastAPI 0.162.0."

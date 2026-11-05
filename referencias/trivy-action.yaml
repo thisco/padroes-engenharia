@@ -1,0 +1,10 @@
+id: trivy-action
+titulo: "trivy-action"
+organizacao: Aqua Security
+url: https://github.com/aquasecurity/trivy-action
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "README: exemplo 'Scan CI Pipeline' (docker build da imagem com a tag do commit e aquasecurity/trivy-action@v0.36.0 com image-ref, exit-code '1' e severity 'CRITICAL,HIGH') e tabela de entradas (exit-code com padrão 0, severity com padrão de todas as severidades)"
+dominios: [seguranca, ci-cd]
+notas: "O README fixa os exemplos na tag v0.36.0 e a entrada version padrão na v0.76.1 do Trivy."

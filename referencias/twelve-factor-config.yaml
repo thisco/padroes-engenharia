@@ -1,0 +1,10 @@
+id: twelve-factor-config
+titulo: "The Twelve-Factor App: III. Config"
+organizacao: The Twelve-Factor App
+url: https://12factor.net/config
+tipo: comunidade
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "fator III, Config: configuração é o que varia entre deploys, fica em variável de ambiente e separada do código"
+dominios: [seguranca]
+notas: null

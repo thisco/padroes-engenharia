@@ -1,0 +1,10 @@
+id: grype-limite-de-falha
+titulo: "Grype: Filter results (Set failure thresholds)"
+organizacao: Anchore
+url: https://oss.anchore.com/docs/guides/vulnerability/filter-results/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Set failure thresholds' (com --fail-on, o Grype sai com 2 quando acha vulnerabilidade na severidade dada ou acima)"
+dominios: [seguranca]
+notas: null

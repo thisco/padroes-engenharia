@@ -1,0 +1,10 @@
+id: gitlab-sast
+titulo: "Static application security testing (SAST)"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/application_security/sast/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura ('discovers vulnerabilities in your source code before they reach production'), configuração (include do template Jobs/SAST.gitlab-ci.yml; o stage test é obrigatório), tabela por tier (analisadores de código aberto e relatório JSON no Free; GitLab Advanced SAST e gestão de vulnerabilidades no Ultimate) e analisador padrão baseado no Semgrep, job semgrep-sast"
+dominios: [seguranca, ci-cd]
+notas: null

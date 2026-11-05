@@ -1,0 +1,11 @@
+id: spring-security-authorize-http-requests
+titulo: "Authorize HttpServletRequests"
+organizacao: Spring
+url: https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
+tipo: vendor
+versao: '7.1.2'
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "introdução (por padrão toda requisição exige autenticação; com HttpSecurity, declarar ao menos anyRequest().authenticated()), 'Matching By Http Method' (negar por padrão transforma as regras numa lista de permissões) e o exemplo com anyRequest().denyAll()"
+dominios: [seguranca]
+notas: null

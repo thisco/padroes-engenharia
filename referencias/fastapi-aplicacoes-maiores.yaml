@@ -1,0 +1,10 @@
+id: fastapi-aplicacoes-maiores
+titulo: "Bigger Applications - Multiple Files"
+organizacao: FastAPI
+url: https://fastapi.tiangolo.com/tutorial/bigger-applications/
+tipo: vendor
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seções do APIRouter com dependencies (executadas em cada requisição de toda path operation do router, antes das do decorador; uso para exigir autenticação de um grupo inteiro) e de app.include_router(..., dependencies=...)"
+dominios: [seguranca]
+notas: null

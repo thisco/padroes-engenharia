@@ -1,0 +1,10 @@
+id: gitlab-politicas-de-aprovacao
+titulo: "Merge request approval policies"
+organizacao: GitLab
+url: https://docs.gitlab.com/user/application_security/policies/merge_request_approval_policies/
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura (Tier: Ultimate; usa o resultado dos scanners de segurança para exigir aprovação) e seção de fallback_behavior (por padrão, closed: regra que não pode ser avaliada exige aprovação; scanner exigido que termina sem relatório exige aprovação)"
+dominios: [seguranca, ci-cd]
+notas: null

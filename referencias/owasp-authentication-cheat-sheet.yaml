@@ -1,0 +1,10 @@
+id: owasp-authentication-cheat-sheet
+titulo: "Authentication Cheat Sheet"
+organizacao: OWASP Cheat Sheet Series
+url: https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html
+tipo: padrao-aberto
+verificado_em: '2026-11-03'
+verificacao: V
+localizacao: "seção 'Authentication and Error Messages' ('Authentication Responses': mensagem genérica sem revelar se o usuário existe, tempo de resposta parecido; 'Error Codes and URLs': código HTTP diferente também revela) e seção 'Protect Against Automated Attacks' ('Login Throttling', 'Account Lockout')"
+dominios: [seguranca]
+notas: null

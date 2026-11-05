@@ -1,0 +1,10 @@
+id: gitlab-container-scanning-template
+titulo: "Jobs/Container-Scanning.gitlab-ci.yml (template)"
+organizacao: GitLab
+url: https://gitlab.com/gitlab-org/gitlab/-/raw/master/lib/gitlab/ci/templates/Jobs/Container-Scanning.gitlab-ci.yml
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "definição do job container_scanning: stage test e allow_failure: true"
+dominios: [seguranca, ci-cd]
+notas: "Arquivo da branch master do repositório do GitLab, lido na data; o template muda com as versões do GitLab."
