@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 48 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 50 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -14,10 +14,10 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Frontend e UX (`frontend-ux`) | UX-02 (só orienta) | UX-01 (só orienta) | a definir | a definir |
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
 | Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
-| Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta) | QLD-02 (só orienta) |
+| Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta), QLD-04 (avisa) | QLD-02 (só orienta) |
 | Infra e IaC (`infra-iac`) | IAC-01 (avisa) | a definir | IAC-02 (avisa) | IAC-03 (só orienta) |
 | CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
-| Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta) | a definir | OBS-02 (só orienta) |
+| Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta), OBS-03 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
 | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P3-06 (pede aprovação) | P2-06 (só orienta) |
 
@@ -43,6 +43,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | bloqueia | experimentar | nada |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | só orienta | experimentar | nada |
 | OBS-02 | SLO, alerta e runbook antes do deploy | só orienta | experimentar | nada |
+| OBS-03 | Traço e métrica por OpenTelemetry desde o compose local, com limiar de alerta declarado | só orienta | experimentar | nada |
 | P1-01 | Classificar toda mudança em tier antes de codar | só orienta | experimentar | `skill:sdd-lifecycle` |
 | P1-03 | Mantenha a constituição curta e carregada em todo turno | só orienta | adotar | `steering:sdd-processo`, `skill:sdd-lifecycle` |
 | P1-04 | Escreva a spec como delta da mudança | só orienta | adotar | `skill:sdd-lifecycle` |
@@ -68,6 +69,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | QLD-01 | Lógica começa por um teste que falha, com as duas execuções no plano | só orienta | experimentar | `steering:qualidade` |
 | QLD-02 | Bug vira teste que reproduz o defeito, depois vira regra | só orienta | experimentar | `steering:qualidade`, `steering:troubleshooting` |
 | QLD-03 | Validação local rígida: o que o CI roda, roda antes do push | só orienta | experimentar | `steering:qualidade` |
+| QLD-04 | Orçamento de performance como teste: limite de memória e latência por componente no CI | avisa | experimentar | nada |
 | SEG-01 | Threat-model em cinco perguntas antes de escrever | só orienta | experimentar | nada |
 | SEG-02 | Segredo não entra no repositório, com varredura no CI e antes do commit | bloqueia | experimentar | nada |
 | SEG-03 | Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa | pede aprovação | experimentar | nada |

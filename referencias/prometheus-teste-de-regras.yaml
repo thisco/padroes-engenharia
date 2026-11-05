@@ -1,0 +1,10 @@
+id: prometheus-teste-de-regras
+titulo: "Unit testing for rules"
+organizacao: Prometheus (CNCF)
+url: https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "comando 'promtool test rules test.yml'; formato do arquivo (rule_files, evaluation_interval, tests, input_series, alert_rule_test com eval_time, alertname e exp_alerts) e a notação 'a+bxn' das séries"
+dominios: [observabilidade]
+notas: null

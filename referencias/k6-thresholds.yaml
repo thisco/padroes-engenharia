@@ -1,0 +1,10 @@
+id: k6-thresholds
+titulo: "Thresholds (Grafana k6)"
+organizacao: Grafana Labs
+url: https://grafana.com/docs/k6/latest/using-k6/thresholds/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'Thresholds' ('the pass/fail criteria that you define for your test metrics'), exemplo http_req_duration: ['p(95)<200'] e saída diferente de zero quando um limiar falha; 'abortOnFail'"
+dominios: [qualidade-bdd]
+notas: null

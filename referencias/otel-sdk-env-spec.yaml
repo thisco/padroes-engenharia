@@ -1,0 +1,10 @@
+id: otel-sdk-env-spec
+titulo: "Environment Variable Specification (OpenTelemetry Specification)"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'Exporter Selection': valores conhecidos de OTEL_TRACES_EXPORTER e OTEL_METRICS_EXPORTER, entre eles 'none' ('No automatically configured exporter'), padrão otlp"
+dominios: [observabilidade]
+notas: null

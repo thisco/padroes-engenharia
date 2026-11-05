@@ -1,0 +1,10 @@
+id: otel-python-zero-code
+titulo: "Python zero-code instrumentation"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/zero-code/python/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'Setup' (pip install opentelemetry-distro opentelemetry-exporter-otlp; opentelemetry-bootstrap -a install) e 'Configuring the agent' (opentelemetry-instrument com variáveis OTEL_*)"
+dominios: [observabilidade]
+notas: "O exemplo do Exemplo fixou opentelemetry-distro 0.49b2 e opentelemetry-exporter-otlp 1.28.2."

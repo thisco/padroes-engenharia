@@ -1,0 +1,10 @@
+id: gitlab-rules-changes
+titulo: "CI/CD YAML syntax reference: rules:changes"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/yaml/#ruleschanges
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'rules:changes': 'Use rules:changes to specify when to add a job to a pipeline by checking for changes to specific files'; em pipeline de MR, compara as mudanças com o branch de destino da MR; caminhos com '**/*' para pasta e subpastas"
+dominios: [ci-cd, qualidade-bdd, observabilidade]
+notas: null

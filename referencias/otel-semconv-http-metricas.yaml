@@ -1,0 +1,10 @@
+id: otel-semconv-http-metricas
+titulo: "Semantic conventions for HTTP metrics"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/specs/semconv/http/http-metrics/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'HTTP server', métrica http.server.request.duration: histograma, unidade s, estável; atributos http.request.method (obrigatório), http.response.status_code e http.route (condicionais)"
+dominios: [observabilidade]
+notas: null

@@ -1,0 +1,10 @@
+id: docker-stats
+titulo: "docker container stats (referência da CLI)"
+organizacao: Docker
+url: https://docs.docker.com/reference/cli/docker/container/stats/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'Description' (MEM USAGE / LIMIT: memória total em uso e o máximo permitido), opção --no-stream ('only pull the first result') e 'Format the output' (.MemUsage, .Name)"
+dominios: [qualidade-bdd]
+notas: null

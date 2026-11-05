@@ -1,0 +1,10 @@
+id: otel-prometheus-exporter
+titulo: "Prometheus Exporter (OpenTelemetry Collector Contrib)"
+organizacao: OpenTelemetry (CNCF)
+url: https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/prometheusexporter/README.md
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "README: exporta no formato do Prometheus para ser raspado; 'endpoint' obrigatório, servido em /metrics; nomes normalizados para as regras do Prometheus por padrão (translation_strategy); estabilidade beta para métricas"
+dominios: [observabilidade]
+notas: "O README não dá exemplo do nome traduzido; o nome http_server_request_duration_seconds_bucket do Exemplo foi lido no Prometheus da execução de 2026-11-03 (collector-contrib 0.115.1)."

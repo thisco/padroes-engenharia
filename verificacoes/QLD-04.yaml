@@ -1,0 +1,176 @@
+conteudo: QLD-04
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: um orçamento de performance é um conjunto de limites impostos às métricas que afetam a performance
+  ref: webdev-orcamento-performance
+  localizacao: "seção 'Definition' ('A performance budget is a set of limits imposed on metrics that affect site performance'), aberta em 2026-11-04"
+  resultado: parcial
+  nota: "A página fala de desempenho de site; aplicar o conceito a serviço de back-end é leitura do portal, e o texto não diz que a fonte trata de serviço."
+- texto: a página reserva uma etapa para estabelecer a linha de base, em que recomenda testar o que funciona e oferece números padrão para quem não tem tempo de pesquisar
+  ref: webdev-orcamento-performance
+  localizacao: "seção 'Establish a baseline' ('try it—research and then test your findings'; números padrão de Time to Interactive e de recursos do caminho crítico), aberta em 2026-11-04"
+  resultado: confirmada
+  nota: "A fonte não manda medir o próprio componente antes de fixar o orçamento; o texto atribui essa leitura ao portal ('aqui, a linha de base é a medida do componente')."
+- texto: para o que passa do limite, a página dá as saídas de otimizar o recurso, retirá-lo ou não acrescentar o novo
+  ref: webdev-orcamento-performance
+  localizacao: "seção 'Add performance budgets to your build process', aberta em 2026-11-04"
+  resultado: confirmada
+- texto: o modelo do Compose trata os serviços como os componentes da aplicação
+  ref: compose-modelo-aplicacao
+  localizacao: "seção 'The Compose application model': 'Computing components of an application are defined as services.' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: a média de latência esconde a cauda de pedidos lentos, e o percentil mostra a forma da distribuição
+  ref: sre-book-slo
+  localizacao: "seção 'Aggregation' (aberta na web em 2026-11-04: 'A simple average can obscure these tail latencies')"
+  resultado: confirmada
+- texto: "os limiares do k6 usam a forma http_req_duration: ['p(95)<200'], e o k6 sai com código diferente de zero quando um limiar falha"
+  ref: k6-thresholds
+  localizacao: "seção 'Thresholds example for HTTP errors and response duration': \"http_req_duration: ['p(95)<200']\" e 'k6 would exit with a non-zero exit code' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: o docker stats mostra a memória do contêiner como uso e limite
+  ref: docker-stats
+  localizacao: "seção 'Description', MEM USAGE / LIMIT: 'the total memory the container is using, and the total amount of memory it is allowed to use'; --no-stream: 'Disable streaming stats and only pull the first result' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: a plataforma não deixa o contêiner passar o limite de deploy.resources.limits
+  ref: compose-deploy-resources
+  localizacao: "atributo 'resources', limits: 'The platform must prevent the container from allocating more resources.' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: docker compose up --wait espera os serviços ficarem em execução ou saudáveis
+  ref: docker-compose-up
+  localizacao: "opção --wait ('Wait for services to be running|healthy. Implies detached mode.'), aberta em 2026-11-04"
+  resultado: confirmada
+- texto: o Docker-in-Docker no GitLab exige privileged = true; o modo privilegiado, na prática, desliga os mecanismos de segurança do contêiner, expõe o host a escalada de privilégio e pode levar a fuga do contêiner; a documentação manda usar TLS quando possível, e o TLS é o padrão desde o Docker 19.03.12
+  ref: gitlab-docker-in-docker
+  localizacao: "aviso do --docker-privileged: 'effectively disables the container's security mechanisms', 'exposes your host to privilege escalation', 'This action can cause container breakout.'; 'Use TLS when possible'; 'TLS is the default in Docker 19.03.12 and later' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: a forma com TLS usa DOCKER_HOST tcp://docker:2376, DOCKER_TLS_CERTDIR /certs, DOCKER_TLS_VERIFY 1 e DOCKER_CERT_PATH $DOCKER_TLS_CERTDIR/client, com o volume /certs/client no config.toml do runner
+  ref: gitlab-docker-in-docker
+  localizacao: "seção 'Docker-in-Docker with TLS enabled in the Docker executor' (DOCKER_TLS_CERTDIR '/certs', volumes ['/certs/client', '/cache']) e exemplo com TLS do Kubernetes executor (DOCKER_HOST tcp://docker:2376, DOCKER_TLS_VERIFY 1, DOCKER_CERT_PATH '$DOCKER_TLS_CERTDIR/client'), aberta em 2026-11-04"
+  resultado: parcial
+  nota: "No exemplo do Docker executor a página só fixa DOCKER_TLS_CERTDIR; DOCKER_HOST, DOCKER_TLS_VERIFY e DOCKER_CERT_PATH aparecem no exemplo do Kubernetes executor. O Exemplo os declara explicitamente, e a forma rodou em docker:27 com docker:27-dind locais."
+- texto: a forma sem TLS usa DOCKER_HOST tcp://docker:2375 e DOCKER_TLS_CERTDIR vazio
+  ref: gitlab-docker-in-docker
+  localizacao: "seção 'Docker-in-Docker with TLS disabled in the Docker executor' (DOCKER_HOST tcp://docker:2375, DOCKER_TLS_CERTDIR ''), aberta em 2026-11-04"
+  resultado: confirmada
+- texto: tags escolhem o runner que roda o job
+  ref: gitlab-tags
+  localizacao: "seção 'tags': 'Use tags to select a specific runner from the list of all runners that are available for the project' (aberta em 2026-11-04)"
+  resultado: confirmada
+  nota: "Que o runner com a tag seja dedicado ao job é decisão do portal, dita como tal no texto."
+- texto: rules:changes roda o job só quando a MR muda os arquivos listados, e no pipeline de MR compara com o branch de destino
+  ref: gitlab-rules-changes
+  localizacao: "seção 'rules:changes': 'Use rules:changes to specify when to add a job to a pipeline by checking for changes to specific files'; em pipeline de merge request, compara as mudanças com o branch de destino da MR (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: exigir pipeline bem-sucedido nas configurações de merge request do projeto barra o merge sem pipeline verde
+  ref: gitlab-pipeline-obrigatorio
+  localizacao: "seção 'Require a successful pipeline for merge': Settings > Merge requests > Merge checks > Pipelines must succeed (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: a regra $CI_PIPELINE_SOURCE == "merge_request_event" roda o job em pipeline de merge request
+  ref: gitlab-mr-pipelines
+  localizacao: "seção de configuração (aberta em 2026-11-04: '- if: $CI_PIPELINE_SOURCE == \"merge_request_event\"')"
+  resultado: confirmada
+- texto: CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da merge request
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis (aberta em 2026-11-04: 'The base SHA of the merge request diff')"
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta em 2026-11-04)"
+  resultado: confirmada
+- texto: com allow_failure true, a falha do job fica como aviso laranja e o pipeline segue bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta em 2026-11-04: 'an orange warning'; o pipeline é bem-sucedido)"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/compose.yaml
+  comando: CACHE_MB=120 docker compose up -d --build --wait; docker compose up -d --wait
+  ambiente: Docker 29.5.2 (Docker Desktop), python:3.11-slim, macOS
+  resultado: passou
+  evidencia: "Container qld04ex-relatorios-1 Healthy nas duas subidas (2026-11-04); teto de 256MiB visto no docker stats em 2026-11-03 (17.01MiB / 256MiB)"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/relatorios/Dockerfile
+  comando: docker compose up -d --build --wait
+  ambiente: Docker 29.5.2, python:3.11-slim
+  resultado: passou
+  evidencia: "imagem construída e serviço saudável; também construída dentro de docker:27-dind em 2026-11-03"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/relatorios/servidor.py
+  comando: GET /relatorios/mensal com CACHE_MB=0 e CACHE_MB=120
+  ambiente: Docker 29.5.2, python:3.11-slim
+  resultado: passou
+  evidencia: "200 com JSON nas duas; memória 13.9 MiB sem o cache e 134.3 MiB com ele (2026-11-04)"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/docs/orcamento-performance.yml
+  comando: python3 -I verificadores/qld_04.py --evento ci --base <sha> (repositório Git de teste, antes e depois do orçamento e do .gitlab-ci.yml)
+  ambiente: repositório Git novo no scratchpad; Python 3 do sistema, macOS
+  resultado: passou
+  evidencia: "sem orçamento: 'compose.yaml:2: serviço ''relatorios'' sem orçamento (docs/orcamento-performance.yml não existe)', saída 1; com orçamento e sem CI: 'nenhum job de CI cita', saída 1; com os três: saída 0"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/scripts/medir-orcamento.py
+  comando: python3 scripts/medir-orcamento.py docs/orcamento-performance.yml, com CACHE_MB=120 e sem ele
+  ambiente: Docker 29.5.2, Python 3 do sistema, macOS
+  resultado: passou
+  evidencia: "sem o cache: 'relatorios: memória 13.9 MiB (limite 64), p95 2.5 ms (limite 200) em 100 pedidos: dentro', saída 0"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/scripts/medir-orcamento.py
+  comando: o mesmo, com CACHE_MB=120; e com o serviço fora do ar
+  ambiente: Docker 29.5.2, Python 3 do sistema, macOS
+  resultado: falhou-como-esperado
+  evidencia: "'relatorios: memória 134.3 MiB (limite 64), p95 3.3 ms (limite 200) em 100 pedidos: ACIMA', saída 1; fora do ar: 'QLD-04: não deu para medir: URLError(ConnectionRefusedError(61, ''Connection refused''))', saída 2"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/QLD-04/gitlab-ci.yml
+  comando: script do job orcamento-de-performance (apk add python3 git; git show base:docs/orcamento-performance.yml; docker compose up -d --build --wait; medir-orcamento.py com o orçamento da base) num contêiner docker:27 com DOCKER_HOST tcp://docker:2376, DOCKER_TLS_VERIFY 1 e DOCKER_CERT_PATH /certs/client, ligado a um docker:27-dind privilegiado com DOCKER_TLS_CERTDIR /certs na mesma rede; script do orcamento-declarado com python3 -I no repositório de teste
+  ambiente: docker:27 (Compose v2.33.0) e docker:27-dind locais, TLS na porta 2376; não foi executado num runner do GitLab (tags, rules:changes e allow_failure não exercitados)
+  resultado: passou
+  evidencia: "sem o cache: 'memória 14.2 MiB (limite 64), p95 1.3 ms ... dentro', saída 0; com CACHE_MB=120: '134.2 MiB ... ACIMA', saída 1; isento só no orçamento da MR: 'isento que não está na base', saída 1; isento na base: 'isento na base (quero pular)', saída 0; daemon com 'API listen on [::]:2376'"
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: verificadores/qld_04.py
+  comando: pytest -q tests/verificadores/test_qld_04.py tests/verificadores/test_contrato_dos_verificadores.py; python3 -I verificadores/qld_04.py --evento ci --base <sha> no repositório de teste
+  ambiente: Python 3.14 do venv do repositório e Python 3 do sistema, macOS; não foi executado num GitLab
+  resultado: passou
+  evidencia: "RED com o script trocado por um esboço que sai 0: 43 failed, 21 passed em test_qld_04.py; GREEN: 64 passed em test_qld_04.py e 1683 passed em tests/verificadores/; repositório de teste com as saídas 1, 1 e 0 descritas acima; rodada de correção 1 (isento da base): RED 5 failed, 66 passed; GREEN 71 passed; no repositório de teste, isento criado na MR saiu 1 ('isento que não está na base')"
+  data: '2026-11-04'
+- tipo: prompt
+  prompt: QLD-04-prompt-1
+  harness: execução manual dos passos pela sessão de curadoria
+  ambiente: "repositório Git novo no scratchpad: base com verificadores/qld_04.py, MR com compose.yaml e relatorios/ do Exemplo; {serviço} = relatorios, {url do serviço} = http://127.0.0.1:8010/relatorios/mensal. Não foi uma sessão nova de agente: a frente não despacha subagente."
+  resultado: passou
+  evidencia: "passo 1: saída 1 com 'serviço ''relatorios'' sem orçamento'; medida 17.01MiB e p95 4.4 ms; orçamento 32 MiB e 50 ms; medir-orcamento.py 'dentro', saída 0; commit 7d8a7c2 'test(performance): orçamento de memória e latência do relatorios (QLD-04)'; passo 1 de novo com saída 0"
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador da Onda 1
+  data: '2026-11-04'
+  achados:
+  - afirmacao: "Um orçamento de performance é um conjunto de limites impostos às métricas que afetam a performance"
+    problema: "[ref] a fonte trata de site no navegador."
+    tratamento: "Registrada como parcial, com nota; o texto não atribui à fonte a aplicação a serviço de back-end."
+  - afirmacao: "isento: com motivo vale na mesma MR"
+    problema: "[desenho] a LGPD-02 lê a isenção do lado da base, para a MR não se isentar sozinha."
+    tratamento: "Mantido e dito no Como verificar: o orçamento nasce junto do serviço, e a isenção fica no diff revisado. Pendência do dono."
+  - afirmacao: "Job orcamento-de-performance"
+    problema: "[executabilidade] não rodou num runner do GitLab, e a forma sem TLS não é a recomendada."
+    tratamento: "O texto diz as duas coisas; o script do job rodou em docker:27 com docker:27-dind locais."
+  - afirmacao: "A página do web.dev manda estabelecer uma linha de base antes de fixar o orçamento"
+    problema: "[ref] a seção 'Establish a baseline' recomenda testar e oferece números padrão; não manda medir o componente antes."
+    tratamento: "Texto reescrito: a fonte reserva a etapa e recomenda testar; medir o componente como está é leitura do portal, dita como tal."
+  - afirmacao: "Job orcamento-de-performance sem allow_failure (rodada de correção 1 do controlador)"
+    problema: "[coerência] um componente fora do orçamento reprovava a MR, e a força declarada é avisa."
+    tratamento: "allow_failure: true e rules:changes no job de medida; Como aplicar passo 6 diz como subir a bloqueia."
+  - afirmacao: "isento vale na mesma MR (rodada de correção 1)"
+    problema: "[desenho] o agente podia isentar o próprio serviço; a mensagem e a regra do agente ofereciam a saída."
+    tratamento: "Isenção lida da base (HEAD no harness, --base no ci) no verificador e no script de medida; a mensagem e a regra do agente proíbem criar isento sem pedido de uma pessoa; testes novos nos dois eventos."
+  - afirmacao: "DinD sem TLS (rodada de correção 1)"
+    problema: "[segurança] forma sem TLS sobre runner privilegiado, com o aviso da fonte atenuado."
+    tratamento: "Forma com TLS (2376, /certs), runner dedicado por tags, aviso completo citado; a forma sem TLS fica como alternativa com o risco dito. Exemplo rodado de novo com TLS."
+  - afirmacao: "A força avisa não impede o merge"
+    problema: "[vocabulário] 'impede' fora do vocabulário de força."
+    tratamento: "Trocado por 'deixa o merge seguir'."

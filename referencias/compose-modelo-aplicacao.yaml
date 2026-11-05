@@ -1,0 +1,10 @@
+id: compose-modelo-aplicacao
+titulo: "How Compose works"
+organizacao: Docker
+url: https://docs.docker.com/compose/intro/compose-application-model/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seções 'The Compose application model' (serviços são os componentes da aplicação) e 'The Compose file' (compose.yaml preferido ou compose.yml; docker-compose.yaml e docker-compose.yml por compatibilidade)"
+dominios: [qualidade-bdd, infra-iac]
+notas: null

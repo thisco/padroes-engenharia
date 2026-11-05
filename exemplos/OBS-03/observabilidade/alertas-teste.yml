@@ -1,0 +1,41 @@
+rule_files:
+  - alertas.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      # /lento: 10 pedidos por minuto, todos entre 0,5 s e 0,75 s.
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/lento",le="0.25"}'
+        values: '0x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/lento",le="0.5"}'
+        values: '0x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/lento",le="0.75"}'
+        values: '0+10x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/lento",le="+Inf"}'
+        values: '0+10x20'
+      # /boletos/<numero>: 10 pedidos por minuto, todos abaixo de 0,25 s.
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/boletos/<numero>",le="0.25"}'
+        values: '0+10x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/boletos/<numero>",le="0.5"}'
+        values: '0+10x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/boletos/<numero>",le="0.75"}'
+        values: '0+10x20'
+      - series: 'http_server_request_duration_seconds_bucket{job="otel-collector",http_route="/boletos/<numero>",le="+Inf"}'
+        values: '0+10x20'
+    alert_rule_test:
+      # Aos 3 minutos o limiar já passou, mas o "for: 5m" ainda segura o alerta.
+      - eval_time: 3m
+        alertname: LatenciaP95Alta
+        exp_alerts: []
+      # Aos 10 minutos dispara, só para a rota lenta.
+      - eval_time: 10m
+        alertname: LatenciaP95Alta
+        exp_alerts:
+          - exp_labels:
+              severidade: aviso
+              http_route: /lento
+            exp_annotations:
+              resumo: "p95 de /lento acima de 300 ms"
+              runbook: docs/runbooks/latencia-p95-alta.md

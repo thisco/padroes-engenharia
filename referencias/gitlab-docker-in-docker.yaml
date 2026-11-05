@@ -1,0 +1,10 @@
+id: gitlab-docker-in-docker
+titulo: "Use Docker-in-Docker"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/docker/docker_in_docker/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seções 'Docker-in-Docker with TLS enabled in the Docker executor (recommended)' e 'with TLS disabled' (DOCKER_HOST tcp://docker:2375, DOCKER_TLS_CERTDIR vazio); 'Use TLS when possible'; exige privileged = true, que 'effectively disables the container's security mechanisms'"
+dominios: [ci-cd, qualidade-bdd]
+notas: null

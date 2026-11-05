@@ -1,0 +1,10 @@
+id: otel-collector-agente
+titulo: "Collector deployment: Agent"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/collector/deploy/agent/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "definição do padrão agente (o Collector roda junto da aplicação ou no mesmo host, como sidecar ou DaemonSet) e as listas de prós e contras"
+dominios: [observabilidade]
+notas: null

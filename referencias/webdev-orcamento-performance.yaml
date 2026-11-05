@@ -1,0 +1,10 @@
+id: webdev-orcamento-performance
+titulo: "Performance budgets 101"
+organizacao: Google (web.dev)
+url: https://web.dev/articles/performance-budgets-101
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seções 'Definition' ('A performance budget is a set of limits imposed on metrics that affect site performance'), 'Choose metrics', 'Establish a baseline' e 'Add performance budgets to your build process'"
+dominios: [qualidade-bdd]
+notas: "A página trata de desempenho de site no navegador; o portal estende a ideia a serviço de back-end (leitura do portal). Sem data de publicação na página."

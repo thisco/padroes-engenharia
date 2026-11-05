@@ -1,0 +1,10 @@
+id: otel-semconv-http-migracao
+titulo: "HTTP semantic convention stability migration"
+organizacao: OpenTelemetry (CNCF)
+url: https://opentelemetry.io/docs/specs/semconv/non-normative/http-migration/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "OTEL_SEMCONV_STABILITY_OPT_IN: 'http' emite as convenções estáveis e para de emitir as antigas; 'http/dup' emite as duas; sem o valor, a instrumentação segue emitindo as antigas"
+dominios: [observabilidade]
+notas: null

@@ -1,0 +1,10 @@
+id: compose-deploy-resources
+titulo: "Compose Deploy Specification: resources"
+organizacao: Docker
+url: https://docs.docker.com/reference/compose-file/deploy/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "atributo 'resources': 'limits' ('The platform must prevent the container from allocating more resources') e 'reservations', com 'memory' e 'cpus'"
+dominios: [qualidade-bdd, infra-iac]
+notas: null
