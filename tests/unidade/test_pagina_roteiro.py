@@ -90,9 +90,17 @@ def test_pagina_do_roteiro():
     titulos = [h.texto for h in lado.todos("h2")]
     assert titulos == ["Ficha", "Práticas", "Referências"]
     ficha = lado.primeiro("dl").texto
-    for rotulo in ("Porta", "Público", "Tempo", "Harnesses"):
+    for rotulo in (
+        "Porta",
+        "Público",
+        "Tempo",
+        "Harnesses",
+        "Pré-requisitos",
+        "Resultado esperado",
+    ):
         assert rotulo in ficha
     assert "Kiro" in ficha and "30 min" in ficha
+    assert "git" in ficha and "O projeto abre com o pacote instalado." in ficha
 
 
 def test_md_gemeo_tem_titulo_objetivo_e_corpo_inteiro():
@@ -101,9 +109,39 @@ def test_md_gemeo_tem_titulo_objetivo_e_corpo_inteiro():
     md = md_roteiro_passos(s, r)
     assert md.startswith(
         "# Projeto novo: o primeiro dia\n\n"
-        "Sair do primeiro dia com o projeto novo pronto para o agente.\n\n```prompt\n"
+        "Sair do primeiro dia com o projeto novo pronto para o agente.\n\n- Porta: "
     )
-    assert "## Passo 2: Instalar o pacote" in md and "### Kiro" in md
+    assert "\n\n```prompt\n" in md
+    assert "### Kiro" in md
+
+
+def test_md_gemeo_marca_quem_faz_cada_passo_e_traz_a_ficha_completa():
+    s = fabrica.site(
+        fabrica.roteiro(
+            meta=fabrica.meta_roteiro(
+                passos=[
+                    {"titulo": "Abrir o harness", "quem": "voce"},
+                    {"titulo": "Instalar o pacote", "quem": "agente"},
+                    {"titulo": "Aprovar o resultado", "quem": "voce-decide"},
+                ],
+                pre_requisitos=["git", "node"],
+            ),
+            corpo=fabrica.CORPO_ROTEIRO + "\n## Passo 3: Aprovar\n\nConfira.\n",
+        ),
+        KIRO,
+        fabrica.pratica(),
+        fabrica.referencia(),
+        url_base="https://p.exemplo/",
+    )
+    md = md_roteiro_passos(s, s.repo.roteiros[0])
+    assert "## Passo 1: Abrir o harness (Você faz)" in md
+    assert "## Passo 2: Instalar o pacote (O agente)" in md
+    assert "## Passo 3: Aprovar o resultado (Você decide)" in md
+    assert "- Pré-requisitos: git; node" in md
+    assert "- Resultado esperado: O projeto abre com o pacote instalado." in md
+    for rotulo in ("Porta: Projeto novo", "Público:", "Tempo: 30 min", "Harnesses: Kiro"):
+        assert f"- {rotulo}" in md
+    assert md.index("- Porta:") < md.index("```prompt")
 
 
 def test_saidas_llms_e_prompts(tmp_path):

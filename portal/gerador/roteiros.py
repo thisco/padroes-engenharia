@@ -162,6 +162,8 @@ def _ficha(site: Site, roteiro: Conteudo) -> list[tuple[str, str]]:
         ("Público", str(m.get("publico", ""))),
         ("Tempo", f"{m['tempo']} min"),
         ("Harnesses", harnesses or "nenhum"),
+        ("Pré-requisitos", "; ".join(m.get("pre_requisitos") or []) or "nenhum"),
+        ("Resultado esperado", str(m.get("resultado_esperado", ""))),
     ]
 
 
@@ -182,11 +184,26 @@ def html_roteiro_passos(site: Site, roteiro: Conteudo) -> str:
     )
 
 
+def _titulo_do_passo(n: int, titulo_h2: str, declarados: list) -> str:
+    """`## Passo N: Título (Você faz|O agente|Você decide)`, igual no `.md` e na skill."""
+    passo = declarados[n - 1] if n <= len(declarados) else {}
+    quem = str(passo.get("quem", "voce"))
+    nome = str(passo.get("titulo") or "") or _sem_prefixo(titulo_h2)
+    return f"## Passo {n}: {nome} ({ROTULO_QUEM.get(quem, quem)})"
+
+
 def md_roteiro_passos(site: Site, roteiro: Conteudo) -> str:
+    texto = expandir_inclusoes(roteiro.corpo, site.raiz)
+    declarados = roteiro.meta.get("passos") or []
+    partes = [preambulo_de(texto).strip("\n")]
+    for n, (titulo_h2, trecho) in enumerate(secoes(texto), start=1):
+        partes.append(f"{_titulo_do_passo(n, titulo_h2, declarados)}\n\n{trecho.strip(chr(10))}")
+    ficha = "\n".join(f"- {rotulo}: {valor}" for rotulo, valor in _ficha(site, roteiro))
     return juntar(
         f"# {roteiro.meta['titulo']}",
         str(roteiro.meta["objetivo"]),
-        expandir_inclusoes(roteiro.corpo, site.raiz),
+        ficha,
+        "\n\n".join(p for p in partes if p.strip()),
         md_lista_referencias(site, roteiro),
     )
 
@@ -208,9 +225,6 @@ def skill_md(site: Site, roteiro: Conteudo) -> str:
     if preambulo.strip():
         partes.append(f"## Prompt inicial\n\n{preambulo}")
     for n, (titulo_h2, trecho) in enumerate(secoes(texto), start=1):
-        passo = declarados[n - 1] if n <= len(declarados) else {}
-        quem = str(passo.get("quem", "voce"))
-        nome = str(passo.get("titulo") or "") or _sem_prefixo(titulo_h2)
-        titulo = f"## Passo {n}: {nome} ({ROTULO_QUEM.get(quem, quem)})"
+        titulo = _titulo_do_passo(n, titulo_h2, declarados)
         partes.append(f"{titulo}\n\n{trecho.strip(chr(10))}")
     return "\n\n".join(partes).replace("{URL do portal}", url_portal(site).rstrip("/")) + "\n"
