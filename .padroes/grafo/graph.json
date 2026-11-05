@@ -1,9 +1,9 @@
 {
-  "built_at_commit": "b226ab5efb0e625aa12c1ddd0b787d9394ea23b5",
+  "built_at_commit": "009582ec3e3d75940b61247bb9634c390393824e",
   "directed": true,
   "graph": {
     "catalogo": "Padrões de Engenharia",
-    "versao": "1.1.0",
+    "versao": "1.2.0",
     "versao_formato": 1
   },
   "hyperedges": [],
@@ -258,6 +258,33 @@
       "source": "ARQ-02",
       "source_file": "praticas/arquitetura/ARQ-02.md",
       "target": "celula:arquitetura|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "ARQ-02",
+      "source_file": "praticas/arquitetura/ARQ-02.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "ARQ-02",
+      "source_file": "praticas/arquitetura/ARQ-02.md",
+      "target": "ref:gitlab-git-depth",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "ARQ-02",
+      "source_file": "praticas/arquitetura/ARQ-02.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
       "weight": 1.0
     },
     {
@@ -723,6 +750,267 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "relation": "relaciona",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "CICD-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "IAC-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "SEG-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "celula:ci-cd|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:aws-iam-oidc",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:azure-workload-identity-federation",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:gcp-workload-identity-federation",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:github-oidc",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:github-oidc-aws",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:github-workflow-syntax",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:gitlab-api-projetos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:gitlab-oidc-aws",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-04",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "target": "ref:gitlab-oidc-nuvem",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "CICD-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "IAC-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "P3-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "celula:ci-cd|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:github-contextos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:github-environments-deploy",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:github-workflow-dispatch",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:github-workflow-syntax",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:gitlab-branches-protegidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:gitlab-environment-action",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:gitlab-jobs-manuais",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:gitlab-manual-confirmation",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:opentofu-apply",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:opentofu-destroy",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "CICD-05",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "target": "ref:opentofu-prevent-destroy",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
       "source": "DAD-01",
       "source_file": "praticas/dados-migrations/DAD-01.md",
       "target": "P1-01",
@@ -1031,6 +1319,33 @@
       "relation": "cita",
       "source": "IAC-01",
       "source_file": "praticas/infra-iac/IAC-01.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-01",
+      "source_file": "praticas/infra-iac/IAC-01.md",
+      "target": "ref:gitlab-git-depth",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-01",
+      "source_file": "praticas/infra-iac/IAC-01.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-01",
+      "source_file": "praticas/infra-iac/IAC-01.md",
       "target": "ref:sdd-scaffold-infra-devops",
       "weight": 1.0
     },
@@ -1076,6 +1391,33 @@
       "relation": "cita",
       "source": "IAC-02",
       "source_file": "praticas/infra-iac/IAC-02.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-02",
+      "source_file": "praticas/infra-iac/IAC-02.md",
+      "target": "ref:gitlab-git-depth",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-02",
+      "source_file": "praticas/infra-iac/IAC-02.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-02",
+      "source_file": "praticas/infra-iac/IAC-02.md",
       "target": "ref:opentofu-dependency-lock",
       "weight": 1.0
     },
@@ -1095,6 +1437,15 @@
       "source": "IAC-02",
       "source_file": "praticas/infra-iac/IAC-02.md",
       "target": "ref:opentofu-plan",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-02",
+      "source_file": "praticas/infra-iac/IAC-02.md",
+      "target": "ref:opentofu-resumo-do-plano",
       "weight": 1.0
     },
     {
@@ -1194,6 +1545,231 @@
       "source": "IAC-03",
       "source_file": "praticas/infra-iac/IAC-03.md",
       "target": "skill:migrations-reversiveis",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "CICD-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "IAC-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "IAC-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "celula:infra-iac|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ferramenta:opentofu",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:github-artefatos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:github-contextos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:github-environments-deploy",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:github-workflow-syntax",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-ambientes-protegidos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-aprovacao-de-deploy",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-environments",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-estado-terraform",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-jobs-manuais",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-apply",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-backend-configuracao",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-backend-http",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-backend-s3",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-estado-remoto",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-variaveis",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-variaveis-de-ambiente",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-workspace-select",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-workspaces",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "IAC-04",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "target": "ref:opentofu-workspaces-cli",
       "weight": 1.0
     },
     {
@@ -1409,6 +1985,168 @@
       "relation": "cita",
       "source": "OBS-02",
       "source_file": "praticas/observabilidade/OBS-02.md",
+      "target": "ref:sre-book-slo",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "OBS-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "OBS-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "celula:observabilidade|enquanto-escreve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:compose-profiles",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:gitlab-mr-pipelines",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:gitlab-rules-changes",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-collector-agente",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-collector-configuracao",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-exporter-otlp-env",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-prometheus-exporter",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-python-zero-code",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-sdk-env-geral",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-sdk-env-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-semconv-http-metricas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:otel-semconv-http-migracao",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:prometheus-regras-de-alerta",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "target": "ref:prometheus-teste-de-regras",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "OBS-03",
+      "source_file": "praticas/observabilidade/OBS-03.md",
       "target": "ref:sre-book-slo",
       "weight": 1.0
     },
@@ -3180,6 +3918,276 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "relation": "relaciona",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "P2-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "P2-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "P2-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "P2-06",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "celula:ia-no-produto|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ferramenta:litellm",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:azure-genaiops-mlops",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:github-actions-checkout",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:github-actions-contextos",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:github-actions-sintaxe",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:gitlab-git-depth",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-07",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "target": "ref:litellm-virtual-keys",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "P2-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "P2-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "P2-07",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "P3-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "celula:ia-no-produto|enquanto-escreve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "ref:anthropic-models-overview",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "ref:anthropic-structured-outputs",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "ref:azure-genaiops-mlops",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-08",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "target": "ref:langfuse-prompt-version-control",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "P2-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "P2-06",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "celula:ia-no-produto|enquanto-escreve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "ref:anthropic-message-batches",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "ref:aws-sqs-visibility-timeout",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "ref:azure-async-request-reply",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P2-09",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "target": "ref:rfc-9110",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
       "source": "P3-01",
       "source_file": "praticas/ia-no-produto/P3-01.md",
       "target": "P2-02",
@@ -3585,6 +4593,114 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P2-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P2-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P2-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P2-06",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P3-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "P3-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "celula:ia-no-produto|depois-da-entrega",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "ref:anthropic-agent-evals",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "ref:litellm-virtual-keys",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "ref:openai-governing-agentic",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "ref:otel-genai-agent-spans",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P3-07",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "target": "ref:otel-genai-spans",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
       "source": "QLD-01",
       "source_file": "praticas/qualidade-bdd/QLD-01.md",
       "target": "P1-01",
@@ -3912,6 +5028,186 @@
       "source": "QLD-03",
       "source_file": "praticas/qualidade-bdd/QLD-03.md",
       "target": "steering:qualidade",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ARQ-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "CICD-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "OBS-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "QLD-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "celula:qualidade-bdd|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:compose-deploy-resources",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:compose-modelo-aplicacao",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:docker-compose-up",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:docker-stats",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-docker-in-docker",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-git-depth",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-mr-pipelines",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-pipeline-obrigatorio",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-rules-changes",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-tags",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:k6-thresholds",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:sre-book-slo",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "QLD-04",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "target": "ref:webdev-orcamento-performance",
       "weight": 1.0
     },
     {
@@ -4452,6 +5748,456 @@
       "source": "SEG-03",
       "source_file": "praticas/seguranca/SEG-03.md",
       "target": "ref:uv-project-dependencies",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "SEG-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "SEG-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "celula:seguranca|enquanto-escreve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:django-deployment-checklist",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:owasp-top10-2025-a02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:pydantic-config",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:pydantic-settings",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:spring-boot-external-config",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-04",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "target": "ref:twelve-factor-config",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "SEG-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "SEG-04",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "celula:seguranca|enquanto-escreve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:fastapi-aplicacoes-maiores",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:fastapi-dependencias-globais",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:fastapi-parametros-de-caminho",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:owasp-api4-2023",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:owasp-authentication-cheat-sheet",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:owasp-authorization-cheat-sheet",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:python-hmac",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:rfc-6585",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:rfc-9110",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:slowapi-docs",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-05",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "target": "ref:spring-security-authorize-http-requests",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "CICD-01",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "SEG-02",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "SEG-03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "celula:seguranca|antes-do-merge",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:docker-pull-por-digest",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:github-actions-uso-seguro",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:github-branch-protegida",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:github-codeql",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-allow-failure",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-container-scanning",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-container-scanning-template",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-docker-build",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-include-local",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-mr-pipelines",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-pipeline-obrigatorio",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-pipelines-downstream",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-politicas-de-aprovacao",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-registro-build-e-push",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-sast",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-sast-template",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:gitlab-variaveis-predefinidas",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:grype-limite-de-falha",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:owasp-top10-2025-a03",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:semgrep-cli",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:trivy-action",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:trivy-exit-code",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "SEG-06",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "target": "ref:trivy-imagem-de-container",
       "weight": 1.0
     },
     {
@@ -6224,12 +7970,12 @@
       "community_name": "arquitetura",
       "dominio": "arquitetura",
       "file_type": "pratica",
-      "forca": "orienta",
+      "forca": "avisa",
       "id": "ARQ-02",
       "label": "ARQ-02 Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR",
       "momento": "antes-do-merge",
       "norm_label": "arq-02 arquitetura viva: manifesto, diagrama e compose conferidos no mesmo pr",
-      "rationale": "O PR que cria, remove ou renomeia um componente atualiza compose, módulo de IaC, diagrama e mapa.yml juntos, e um verificador que reprova confere os quatro.",
+      "rationale": "O PR que cria, remove ou renomeia um componente atualiza compose, módulo de IaC, diagrama e mapa.yml juntos, e um verificador que avisa confere os quatro.",
       "source_file": "praticas/arquitetura/ARQ-02.md",
       "source_location": null,
       "status": "experimentar",
@@ -6322,6 +8068,40 @@
     },
     {
       "_origin": "catalogo",
+      "community": "ci-cd",
+      "community_name": "ci-cd",
+      "dominio": "ci-cd",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "CICD-04",
+      "label": "CICD-04 Identidade federada no deploy, sem chave estática no CI",
+      "momento": "antes-do-merge",
+      "norm_label": "cicd-04 identidade federada no deploy, sem chave estatica no ci",
+      "rationale": "O deploy troca o token OIDC do CI por credencial temporária da nuvem, com a confiança presa à branch principal, sem chave guardada no CI.",
+      "source_file": "praticas/ci-cd/CICD-04.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/CICD-04.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ci-cd",
+      "community_name": "ci-cd",
+      "dominio": "ci-cd",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "CICD-05",
+      "label": "CICD-05 Operação destrutiva só por workflow rastreável com confirmação digitada",
+      "momento": "antes-do-merge",
+      "norm_label": "cicd-05 operacao destrutiva so por workflow rastreavel com confirmacao digitada",
+      "rationale": "Destruir ambiente ou recurso só por um job manual do CI, na branch padrão, que exige digitar o nome do alvo e deixa no log quem pediu e de qual commit.",
+      "source_file": "praticas/ci-cd/CICD-05.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/CICD-05.md"
+    },
+    {
+      "_origin": "catalogo",
       "community": "dados-migrations",
       "community_name": "dados-migrations",
       "dominio": "dados-migrations",
@@ -6360,7 +8140,7 @@
       "community_name": "infra-iac",
       "dominio": "infra-iac",
       "file_type": "pratica",
-      "forca": "orienta",
+      "forca": "avisa",
       "id": "IAC-01",
       "label": "IAC-01 Ambiente local reproduzível por compose, com ordem de rebuild escrita",
       "momento": "antes-de-escrever",
@@ -6377,7 +8157,7 @@
       "community_name": "infra-iac",
       "dominio": "infra-iac",
       "file_type": "pratica",
-      "forca": "orienta",
+      "forca": "avisa",
       "id": "IAC-02",
       "label": "IAC-02 Infra declarada em código, com o plano de mudança revisado no PR",
       "momento": "antes-do-merge",
@@ -6404,6 +8184,23 @@
       "source_location": null,
       "status": "experimentar",
       "url": "http://localhost:8000/praticas/IAC-03.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "infra-iac",
+      "community_name": "infra-iac",
+      "dominio": "infra-iac",
+      "file_type": "pratica",
+      "forca": "avisa",
+      "id": "IAC-04",
+      "label": "IAC-04 Promoção entre ambientes por IaC: um workspace por ambiente, configuração por ambiente num só lugar, apply em produção só pelo pipeline com aprovação manual, serviços versionados juntos",
+      "momento": "antes-do-merge",
+      "norm_label": "iac-04 promocao entre ambientes por iac: um workspace por ambiente, configuracao por ambiente num so lugar, apply em producao so pelo pipeline com aprovacao manual, servicos versionados juntos",
+      "rationale": "O mesmo módulo de IaC promove de homologação a produção pelo pipeline, um estado e um arquivo de valores por ambiente, com aprovação manual antes de produção.",
+      "source_file": "praticas/infra-iac/IAC-04.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/IAC-04.md"
     },
     {
       "_origin": "catalogo",
@@ -6472,6 +8269,23 @@
       "source_location": null,
       "status": "experimentar",
       "url": "http://localhost:8000/praticas/OBS-02.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "observabilidade",
+      "community_name": "observabilidade",
+      "dominio": "observabilidade",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "OBS-03",
+      "label": "OBS-03 Traço e métrica por OpenTelemetry desde o compose local, com limiar de alerta declarado",
+      "momento": "enquanto-escreve",
+      "norm_label": "obs-03 traco e metrica por opentelemetry desde o compose local, com limiar de alerta declarado",
+      "rationale": "O serviço emite traço e métrica por OpenTelemetry já no compose local, com um collector num perfil, e o limiar de alerta mora num arquivo versionado com teste.",
+      "source_file": "praticas/observabilidade/OBS-03.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/OBS-03.md"
     },
     {
       "_origin": "catalogo",
@@ -6751,6 +8565,57 @@
       "community_name": "ia-no-produto",
       "dominio": "ia-no-produto",
       "file_type": "pratica",
+      "forca": "avisa",
+      "id": "P2-07",
+      "label": "P2-07 Sandbox e promoção: experimentar livre com chave virtual de dev; produção exige eval aprovado, modelo no catálogo e chave própria",
+      "momento": "antes-do-merge",
+      "norm_label": "p2-07 sandbox e promocao: experimentar livre com chave virtual de dev; producao exige eval aprovado, modelo no catalogo e chave propria",
+      "rationale": "Experimente na sandbox com a chave de dev; produção pede eval aprovado, modelo liberado no catálogo e chave própria, no ia-producao.yml.",
+      "source_file": "praticas/ia-no-produto/P2-07.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/P2-07.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ia-no-produto",
+      "community_name": "ia-no-produto",
+      "dominio": "ia-no-produto",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "P2-08",
+      "label": "P2-08 Prompt e configuração de modelo como artefato versionado, com contrato selado em código e contexto governável",
+      "momento": "enquanto-escreve",
+      "norm_label": "p2-08 prompt e configuracao de modelo como artefato versionado, com contrato selado em codigo e contexto governavel",
+      "rationale": "Prompt, modelo e parâmetros ficam num arquivo versionado com número de versão; o contrato de saída fica no código; o contexto muda com dono, histórico e eval.",
+      "source_file": "praticas/ia-no-produto/P2-08.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/P2-08.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ia-no-produto",
+      "community_name": "ia-no-produto",
+      "dominio": "ia-no-produto",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "P2-09",
+      "label": "P2-09 Trabalho de modelo fora do request: fila, 202 e polling; lote × custo unitário abaixo do timeout",
+      "momento": "enquanto-escreve",
+      "norm_label": "p2-09 trabalho de modelo fora do request: fila, 202 e polling; lote  custo unitario abaixo do timeout",
+      "rationale": "A chamada a modelo não roda dentro do request HTTP: a API responde 202 com o endereço de status, um worker tira da fila, e o lote cabe no timeout.",
+      "source_file": "praticas/ia-no-produto/P2-09.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/P2-09.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ia-no-produto",
+      "community_name": "ia-no-produto",
+      "dominio": "ia-no-produto",
+      "file_type": "pratica",
       "forca": "orienta",
       "id": "P3-01",
       "label": "P3-01 Classifique a agência do agente antes de escrever",
@@ -6849,6 +8714,23 @@
     },
     {
       "_origin": "catalogo",
+      "community": "ia-no-produto",
+      "community_name": "ia-no-produto",
+      "dominio": "ia-no-produto",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "P3-07",
+      "label": "P3-07 Operação do agente: desligar, telemetria de trajetória, custo e taxa de sucesso por tarefa",
+      "momento": "depois-da-entrega",
+      "norm_label": "p3-07 operacao do agente: desligar, telemetria de trajetoria, custo e taxa de sucesso por tarefa",
+      "rationale": "O agente em produção tem interruptor que ele não alcança, um traço por execução com cada ferramenta, e custo e taxa de sucesso medidos por tipo de tarefa.",
+      "source_file": "praticas/ia-no-produto/P3-07.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/P3-07.md"
+    },
+    {
+      "_origin": "catalogo",
       "community": "qualidade-bdd",
       "community_name": "qualidade-bdd",
       "dominio": "qualidade-bdd",
@@ -6900,6 +8782,23 @@
     },
     {
       "_origin": "catalogo",
+      "community": "qualidade-bdd",
+      "community_name": "qualidade-bdd",
+      "dominio": "qualidade-bdd",
+      "file_type": "pratica",
+      "forca": "avisa",
+      "id": "QLD-04",
+      "label": "QLD-04 Orçamento de performance como teste: limite de memória e latência por componente no CI",
+      "momento": "antes-do-merge",
+      "norm_label": "qld-04 orcamento de performance como teste: limite de memoria e latencia por componente no ci",
+      "rationale": "Cada serviço do compose tem limite de memória e de latência p95 num arquivo versionado, e um job de CI sobe o compose e reprova o componente que passa dele.",
+      "source_file": "praticas/qualidade-bdd/QLD-04.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/QLD-04.md"
+    },
+    {
+      "_origin": "catalogo",
       "community": "seguranca",
       "community_name": "seguranca",
       "dominio": "seguranca",
@@ -6948,6 +8847,57 @@
       "source_location": null,
       "status": "experimentar",
       "url": "http://localhost:8000/praticas/SEG-03.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "seguranca",
+      "community_name": "seguranca",
+      "dominio": "seguranca",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "SEG-04",
+      "label": "SEG-04 Configuração insegura aborta o boot em produção",
+      "momento": "enquanto-escreve",
+      "norm_label": "seg-04 configuracao insegura aborta o boot em producao",
+      "rationale": "A aplicação lê a configuração do ambiente, confere no boot e, em produção, se recusa a subir com debug ligado, chave fraca ou CORS aberto.",
+      "source_file": "praticas/seguranca/SEG-04.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/SEG-04.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "seguranca",
+      "community_name": "seguranca",
+      "dominio": "seguranca",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "SEG-05",
+      "label": "SEG-05 Rota nasce protegida: auth e rate limit no roteador, teste que quebra se uma rota dispensar credencial, resposta única para falha de credencial",
+      "momento": "enquanto-escreve",
+      "norm_label": "seg-05 rota nasce protegida: auth e rate limit no roteador, teste que quebra se uma rota dispensar credencial, resposta unica para falha de credencial",
+      "rationale": "Credencial e limite ficam no roteador, valem para toda rota; a rota pública é uma lista curta, e um teste quebra se aparecer outra.",
+      "source_file": "praticas/seguranca/SEG-05.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/SEG-05.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "seguranca",
+      "community_name": "seguranca",
+      "dominio": "seguranca",
+      "file_type": "pratica",
+      "forca": "avisa",
+      "id": "SEG-06",
+      "label": "SEG-06 Varredura de imagem e SAST como gate, ao lado da varredura de segredo",
+      "momento": "antes-do-merge",
+      "norm_label": "seg-06 varredura de imagem e sast como gate, ao lado da varredura de segredo",
+      "rationale": "A MR passa por dois jobs que falham com achado: um varre a imagem construída, outro o código; o verificador do portal avisa quando o CI não tem um deles.",
+      "source_file": "praticas/seguranca/SEG-06.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/SEG-06.md"
     },
     {
       "_origin": "catalogo",
@@ -8728,6 +10678,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:anthropic-agent-evals",
+      "label": "Demystifying evals for AI agents",
+      "norm_label": "demystifying evals for ai agents",
+      "rationale": "Anthropic",
+      "source_file": "referencias/anthropic-agent-evals.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:anthropic-api-data-retention",
       "label": "API and data retention",
       "norm_label": "api and data retention",
@@ -8824,6 +10786,30 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:anthropic-message-batches",
+      "label": "Batch processing (Message Batches API)",
+      "norm_label": "batch processing (message batches api)",
+      "rationale": "Anthropic",
+      "source_file": "referencias/anthropic-message-batches.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:anthropic-models-overview",
+      "label": "Models overview",
+      "norm_label": "models overview",
+      "rationale": "Anthropic",
+      "source_file": "referencias/anthropic-models-overview.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:anthropic-prompting-best-practices",
       "label": "Prompting best practices",
       "norm_label": "prompting best practices",
@@ -8841,6 +10827,18 @@
       "norm_label": "prompting claude opus 5.5",
       "rationale": "Anthropic",
       "source_file": "referencias/anthropic-prompting-opus-5-5.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:anthropic-structured-outputs",
+      "label": "Structured outputs",
+      "norm_label": "structured outputs",
+      "rationale": "Anthropic",
+      "source_file": "referencias/anthropic-structured-outputs.yaml",
       "source_location": null
     },
     {
@@ -8944,11 +10942,71 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:aws-iam-oidc",
+      "label": "OIDC federation",
+      "norm_label": "oidc federation",
+      "rationale": "Amazon Web Services",
+      "source_file": "referencias/aws-iam-oidc.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:aws-sqs-visibility-timeout",
+      "label": "Amazon SQS visibility timeout",
+      "norm_label": "amazon sqs visibility timeout",
+      "rationale": "Amazon Web Services",
+      "source_file": "referencias/aws-sqs-visibility-timeout.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:azure-apim-ai-gateway",
       "label": "AI gateway capabilities in Azure API Management",
       "norm_label": "ai gateway capabilities in azure api management",
       "rationale": "Microsoft Learn",
       "source_file": "referencias/azure-apim-ai-gateway.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:azure-async-request-reply",
+      "label": "Asynchronous Request-Reply pattern",
+      "norm_label": "asynchronous request-reply pattern",
+      "rationale": "Microsoft (Azure Architecture Center)",
+      "source_file": "referencias/azure-async-request-reply.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:azure-genaiops-mlops",
+      "label": "Generative AI Operations for Organizations with MLOps Investments",
+      "norm_label": "generative ai operations for organizations with mlops investments",
+      "rationale": "Microsoft (Azure Architecture Center)",
+      "source_file": "referencias/azure-genaiops-mlops.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:azure-workload-identity-federation",
+      "label": "Workload identity federation",
+      "norm_label": "workload identity federation",
+      "rationale": "Microsoft",
+      "source_file": "referencias/azure-workload-identity-federation.yaml",
       "source_location": null
     },
     {
@@ -9100,11 +11158,59 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:compose-deploy-resources",
+      "label": "Compose Deploy Specification: resources",
+      "norm_label": "compose deploy specification: resources",
+      "rationale": "Docker",
+      "source_file": "referencias/compose-deploy-resources.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:compose-modelo-aplicacao",
+      "label": "How Compose works",
+      "norm_label": "how compose works",
+      "rationale": "Docker",
+      "source_file": "referencias/compose-modelo-aplicacao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:compose-profiles",
+      "label": "Using profiles with Compose",
+      "norm_label": "using profiles with compose",
+      "rationale": "Docker",
+      "source_file": "referencias/compose-profiles.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:conventional-commits",
       "label": "Conventional Commits 1.0.0",
       "norm_label": "conventional commits 1.0.0",
       "rationale": "Conventional Commits",
       "source_file": "referencias/conventional-commits.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:django-deployment-checklist",
+      "label": "Deployment checklist",
+      "norm_label": "deployment checklist",
+      "rationale": "Django Software Foundation",
+      "source_file": "referencias/django-deployment-checklist.yaml",
       "source_location": null
     },
     {
@@ -9141,6 +11247,30 @@
       "norm_label": "dockerfile reference: healthcheck",
       "rationale": "Docker",
       "source_file": "referencias/docker-dockerfile-healthcheck.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:docker-pull-por-digest",
+      "label": "docker image pull: Pull an image by digest (immutable identifier)",
+      "norm_label": "docker image pull: pull an image by digest (immutable identifier)",
+      "rationale": "Docker",
+      "source_file": "referencias/docker-pull-por-digest.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:docker-stats",
+      "label": "docker container stats (referência da CLI)",
+      "norm_label": "docker container stats (referencia da cli)",
+      "rationale": "Docker",
+      "source_file": "referencias/docker-stats.yaml",
       "source_location": null
     },
     {
@@ -9201,6 +11331,42 @@
       "norm_label": "eu artificial intelligence act: high-level summary",
       "rationale": "Future of Life Institute (artificialintelligenceact.eu)",
       "source_file": "referencias/eu-ai-act-resumo.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:fastapi-aplicacoes-maiores",
+      "label": "Bigger Applications - Multiple Files",
+      "norm_label": "bigger applications - multiple files",
+      "rationale": "FastAPI",
+      "source_file": "referencias/fastapi-aplicacoes-maiores.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:fastapi-dependencias-globais",
+      "label": "Global Dependencies",
+      "norm_label": "global dependencies",
+      "rationale": "FastAPI",
+      "source_file": "referencias/fastapi-dependencias-globais.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:fastapi-parametros-de-caminho",
+      "label": "FastAPI: Path Parameters",
+      "norm_label": "fastapi: path parameters",
+      "rationale": "FastAPI",
+      "source_file": "referencias/fastapi-parametros-de-caminho.yaml",
       "source_location": null
     },
     {
@@ -9340,11 +11506,83 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:gcp-workload-identity-federation",
+      "label": "Workload Identity Federation",
+      "norm_label": "workload identity federation",
+      "rationale": "Google Cloud",
+      "source_file": "referencias/gcp-workload-identity-federation.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:gemini-cli-mcp",
       "label": "MCP servers with the Gemini CLI",
       "norm_label": "mcp servers with the gemini cli",
       "rationale": "Google",
       "source_file": "referencias/gemini-cli-mcp.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-actions-checkout",
+      "label": "actions/checkout (README)",
+      "norm_label": "actions/checkout (readme)",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-actions-checkout.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-actions-contextos",
+      "label": "Contexts reference (GitHub Actions)",
+      "norm_label": "contexts reference (github actions)",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-actions-contextos.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-actions-sintaxe",
+      "label": "Workflow syntax for GitHub Actions",
+      "norm_label": "workflow syntax for github actions",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-actions-sintaxe.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-actions-uso-seguro",
+      "label": "Secure use reference (GitHub Actions)",
+      "norm_label": "secure use reference (github actions)",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-actions-uso-seguro.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-artefatos",
+      "label": "Store and share data with workflow artifacts",
+      "norm_label": "store and share data with workflow artifacts",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-artefatos.yaml",
       "source_location": null
     },
     {
@@ -9376,11 +11614,59 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:github-branch-protegida",
+      "label": "About protected branches",
+      "norm_label": "about protected branches",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-branch-protegida.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:github-codeowners",
       "label": "About code owners (documentação do GitHub)",
       "norm_label": "about code owners (documentacao do github)",
       "rationale": "GitHub",
       "source_file": "referencias/github-codeowners.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-codeql",
+      "label": "About code scanning with CodeQL",
+      "norm_label": "about code scanning with codeql",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-codeql.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-contextos",
+      "label": "Contexts reference",
+      "norm_label": "contexts reference",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-contextos.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-environments-deploy",
+      "label": "Deployments and environments",
+      "norm_label": "deployments and environments",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-environments-deploy.yaml",
       "source_location": null
     },
     {
@@ -9412,11 +11698,59 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:github-oidc",
+      "label": "OpenID Connect",
+      "norm_label": "openid connect",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-oidc.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-oidc-aws",
+      "label": "Configuring OpenID Connect in Amazon Web Services",
+      "norm_label": "configuring openid connect in amazon web services",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-oidc-aws.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:github-rest-revogacao",
       "label": "REST API endpoints for revocation",
       "norm_label": "rest api endpoints for revocation",
       "rationale": "GitHub",
       "source_file": "referencias/github-rest-revogacao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-workflow-dispatch",
+      "label": "Events that trigger workflows: workflow_dispatch",
+      "norm_label": "events that trigger workflows: workflow_dispatch",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-workflow-dispatch.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:github-workflow-syntax",
+      "label": "Workflow syntax for GitHub Actions",
+      "norm_label": "workflow syntax for github actions",
+      "rationale": "GitHub",
+      "source_file": "referencias/github-workflow-syntax.yaml",
       "source_location": null
     },
     {
@@ -9436,11 +11770,59 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:gitlab-ambientes-protegidos",
+      "label": "Protected environments",
+      "norm_label": "protected environments",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-ambientes-protegidos.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-api-projetos",
+      "label": "Projects API: ci_id_token_sub_claim_components",
+      "norm_label": "projects api: ci_id_token_sub_claim_components",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-api-projetos.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:gitlab-api-runners",
       "label": "Runners API",
       "norm_label": "runners api",
       "rationale": "GitLab",
       "source_file": "referencias/gitlab-api-runners.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-aprovacao-de-deploy",
+      "label": "Deployment approvals",
+      "norm_label": "deployment approvals",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-aprovacao-de-deploy.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-branches-protegidas",
+      "label": "Protected branches",
+      "norm_label": "protected branches",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-branches-protegidas.yaml",
       "source_location": null
     },
     {
@@ -9472,11 +11854,107 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:gitlab-container-scanning",
+      "label": "Container Scanning",
+      "norm_label": "container scanning",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-container-scanning.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-container-scanning-template",
+      "label": "Jobs/Container-Scanning.gitlab-ci.yml (template)",
+      "norm_label": "jobs/container-scanning.gitlab-ci.yml (template)",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-container-scanning-template.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-docker-build",
+      "label": "Use Docker to build Docker images",
+      "norm_label": "use docker to build docker images",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-docker-build.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-docker-in-docker",
+      "label": "Use Docker-in-Docker",
+      "norm_label": "use docker-in-docker",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-docker-in-docker.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-environment-action",
+      "label": "CI/CD YAML syntax reference: environment:action",
+      "norm_label": "ci/cd yaml syntax reference: environment:action",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-environment-action.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-environments",
+      "label": "Environments",
+      "norm_label": "environments",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-environments.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-estado-terraform",
+      "label": "GitLab-managed Terraform/OpenTofu state",
+      "norm_label": "gitlab-managed terraform/opentofu state",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-estado-terraform.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:gitlab-git-depth",
       "label": "Pipeline settings: Limit the number of changes fetched during clone",
       "norm_label": "pipeline settings: limit the number of changes fetched during clone",
       "rationale": "GitLab",
       "source_file": "referencias/gitlab-git-depth.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-include-local",
+      "label": "Use CI/CD configuration from other files (include)",
+      "norm_label": "use ci/cd configuration from other files (include)",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-include-local.yaml",
       "source_location": null
     },
     {
@@ -9496,11 +11974,59 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:gitlab-jobs-manuais",
+      "label": "Control how jobs run: manual jobs",
+      "norm_label": "control how jobs run: manual jobs",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-jobs-manuais.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-manual-confirmation",
+      "label": "CI/CD YAML syntax reference: manual_confirmation",
+      "norm_label": "ci/cd yaml syntax reference: manual_confirmation",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-manual-confirmation.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:gitlab-mr-pipelines",
       "label": "Merge request pipelines",
       "norm_label": "merge request pipelines",
       "rationale": "GitLab",
       "source_file": "referencias/gitlab-mr-pipelines.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-oidc-aws",
+      "label": "Configure OpenID Connect in AWS to retrieve temporary credentials",
+      "norm_label": "configure openid connect in aws to retrieve temporary credentials",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-oidc-aws.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-oidc-nuvem",
+      "label": "Connect to cloud services (OpenID Connect)",
+      "norm_label": "connect to cloud services (openid connect)",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-oidc-nuvem.yaml",
       "source_location": null
     },
     {
@@ -9532,11 +12058,95 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:gitlab-pipelines-downstream",
+      "label": "Downstream pipelines",
+      "norm_label": "downstream pipelines",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-pipelines-downstream.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-politicas-de-aprovacao",
+      "label": "Merge request approval policies",
+      "norm_label": "merge request approval policies",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-politicas-de-aprovacao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:gitlab-prefixos-de-token",
       "label": "GitLab token overview",
       "norm_label": "gitlab token overview",
       "rationale": "GitLab",
       "source_file": "referencias/gitlab-prefixos-de-token.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-registro-build-e-push",
+      "label": "Build and push container images to the container registry",
+      "norm_label": "build and push container images to the container registry",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-registro-build-e-push.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-rules-changes",
+      "label": "CI/CD YAML syntax reference: rules:changes",
+      "norm_label": "ci/cd yaml syntax reference: rules:changes",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-rules-changes.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-sast",
+      "label": "Static application security testing (SAST)",
+      "norm_label": "static application security testing (sast)",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-sast.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-sast-template",
+      "label": "Jobs/SAST.gitlab-ci.yml (template)",
+      "norm_label": "jobs/sast.gitlab-ci.yml (template)",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-sast-template.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:gitlab-tags",
+      "label": "CI/CD YAML syntax reference: tags",
+      "norm_label": "ci/cd yaml syntax reference: tags",
+      "rationale": "GitLab",
+      "source_file": "referencias/gitlab-tags.yaml",
       "source_location": null
     },
     {
@@ -9616,6 +12226,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:grype-limite-de-falha",
+      "label": "Grype: Filter results (Set failure thresholds)",
+      "norm_label": "grype: filter results (set failure thresholds)",
+      "rationale": "Anchore",
+      "source_file": "referencias/grype-limite-de-falha.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:import-linter-docs",
       "label": "Import Linter: contratos forbidden e layers",
       "norm_label": "import linter: contratos forbidden e layers",
@@ -9640,11 +12262,35 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:k6-thresholds",
+      "label": "Thresholds (Grafana k6)",
+      "norm_label": "thresholds (grafana k6)",
+      "rationale": "Grafana Labs",
+      "source_file": "referencias/k6-thresholds.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:kiro-mcp",
       "label": "MCP configuration - Kiro",
       "norm_label": "mcp configuration - kiro",
       "rationale": "Kiro",
       "source_file": "referencias/kiro-mcp.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:langfuse-prompt-version-control",
+      "label": "Prompt Version Control",
+      "norm_label": "prompt version control",
+      "rationale": "Langfuse",
+      "source_file": "referencias/langfuse-prompt-version-control.yaml",
       "source_location": null
     },
     {
@@ -9904,6 +12550,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:openai-governing-agentic",
+      "label": "Practices for Governing Agentic AI Systems",
+      "norm_label": "practices for governing agentic ai systems",
+      "rationale": "OpenAI",
+      "source_file": "referencias/openai-governing-agentic.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:openai-openapi",
       "label": "OpenAPI specification for the OpenAI API",
       "norm_label": "openapi specification for the openai api",
@@ -10000,11 +12658,83 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:opentofu-apply",
+      "label": "OpenTofu: comando tofu apply",
+      "norm_label": "opentofu: comando tofu apply",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-apply.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-backend-configuracao",
+      "label": "OpenTofu: Backend Configuration",
+      "norm_label": "opentofu: backend configuration",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-backend-configuracao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-backend-http",
+      "label": "OpenTofu: Backend Type http",
+      "norm_label": "opentofu: backend type http",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-backend-http.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-backend-s3",
+      "label": "OpenTofu: Backend Type s3",
+      "norm_label": "opentofu: backend type s3",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-backend-s3.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:opentofu-dependency-lock",
       "label": "OpenTofu: dependency lock file",
       "norm_label": "opentofu: dependency lock file",
       "rationale": "OpenTofu",
       "source_file": "referencias/opentofu-dependency-lock.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-destroy",
+      "label": "OpenTofu: comando tofu destroy",
+      "norm_label": "opentofu: comando tofu destroy",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-destroy.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-estado-remoto",
+      "label": "OpenTofu: Remote State",
+      "norm_label": "opentofu: remote state",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-estado-remoto.yaml",
       "source_location": null
     },
     {
@@ -10036,6 +12766,30 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:opentofu-prevent-destroy",
+      "label": "OpenTofu: Resource Behavior, lifecycle prevent_destroy",
+      "norm_label": "opentofu: resource behavior, lifecycle prevent_destroy",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-prevent-destroy.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-resumo-do-plano",
+      "label": "OpenTofu: internal/command/jsonformat/plan.go (linha de resumo do plano)",
+      "norm_label": "opentofu: internal/command/jsonformat/plan.go (linha de resumo do plano)",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-resumo-do-plano.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:opentofu-show",
       "label": "OpenTofu: comando tofu show",
       "norm_label": "opentofu: comando tofu show",
@@ -10048,11 +12802,263 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:opentofu-variaveis",
+      "label": "OpenTofu: Input Variables",
+      "norm_label": "opentofu: input variables",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-variaveis.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-variaveis-de-ambiente",
+      "label": "OpenTofu: Environment Variables",
+      "norm_label": "opentofu: environment variables",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-variaveis-de-ambiente.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-workspace-select",
+      "label": "OpenTofu: comando tofu workspace select",
+      "norm_label": "opentofu: comando tofu workspace select",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-workspace-select.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-workspaces",
+      "label": "OpenTofu: Workspaces (estado)",
+      "norm_label": "opentofu: workspaces (estado)",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-workspaces.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:opentofu-workspaces-cli",
+      "label": "OpenTofu: Managing Workspaces (CLI)",
+      "norm_label": "opentofu: managing workspaces (cli)",
+      "rationale": "OpenTofu",
+      "source_file": "referencias/opentofu-workspaces-cli.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-collector-agente",
+      "label": "Collector deployment: Agent",
+      "norm_label": "collector deployment: agent",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-collector-agente.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-collector-configuracao",
+      "label": "Collector: Configuration",
+      "norm_label": "collector: configuration",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-collector-configuracao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-exporter-otlp-env",
+      "label": "OTLP Exporter Configuration",
+      "norm_label": "otlp exporter configuration",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-exporter-otlp-env.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-genai-agent-spans",
+      "label": "Semantic Conventions for GenAI agent and framework spans",
+      "norm_label": "semantic conventions for genai agent and framework spans",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-genai-agent-spans.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-genai-spans",
+      "label": "Semantic Conventions for GenAI spans",
+      "norm_label": "semantic conventions for genai spans",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-genai-spans.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-prometheus-exporter",
+      "label": "Prometheus Exporter (OpenTelemetry Collector Contrib)",
+      "norm_label": "prometheus exporter (opentelemetry collector contrib)",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-prometheus-exporter.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-python-zero-code",
+      "label": "Python zero-code instrumentation",
+      "norm_label": "python zero-code instrumentation",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-python-zero-code.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-sdk-env-geral",
+      "label": "General SDK Configuration",
+      "norm_label": "general sdk configuration",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-sdk-env-geral.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-sdk-env-spec",
+      "label": "Environment Variable Specification (OpenTelemetry Specification)",
+      "norm_label": "environment variable specification (opentelemetry specification)",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-sdk-env-spec.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-semconv-http-metricas",
+      "label": "Semantic conventions for HTTP metrics",
+      "norm_label": "semantic conventions for http metrics",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-semconv-http-metricas.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:otel-semconv-http-migracao",
+      "label": "HTTP semantic convention stability migration",
+      "norm_label": "http semantic convention stability migration",
+      "rationale": "OpenTelemetry (CNCF)",
+      "source_file": "referencias/otel-semconv-http-migracao.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:owasp-api4-2023",
+      "label": "API4:2023 Unrestricted Resource Consumption",
+      "norm_label": "api4:2023 unrestricted resource consumption",
+      "rationale": "OWASP API Security Project",
+      "source_file": "referencias/owasp-api4-2023.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:owasp-authentication-cheat-sheet",
+      "label": "Authentication Cheat Sheet",
+      "norm_label": "authentication cheat sheet",
+      "rationale": "OWASP Cheat Sheet Series",
+      "source_file": "referencias/owasp-authentication-cheat-sheet.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:owasp-authorization-cheat-sheet",
+      "label": "Authorization Cheat Sheet",
+      "norm_label": "authorization cheat sheet",
+      "rationale": "OWASP Cheat Sheet Series",
+      "source_file": "referencias/owasp-authorization-cheat-sheet.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:owasp-llm-top10",
       "label": "LLM01:2025 Prompt Injection",
       "norm_label": "llm01:2025 prompt injection",
       "rationale": "OWASP GenAI Security Project",
       "source_file": "referencias/owasp-llm-top10.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:owasp-top10-2025-a02",
+      "label": "A02:2025 Security Misconfiguration",
+      "norm_label": "a02:2025 security misconfiguration",
+      "rationale": "OWASP Foundation",
+      "source_file": "referencias/owasp-top10-2025-a02.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:owasp-top10-2025-a03",
+      "label": "A03:2025 Software Supply Chain Failures",
+      "norm_label": "a03:2025 software supply chain failures",
+      "rationale": "OWASP Foundation",
+      "source_file": "referencias/owasp-top10-2025-a03.yaml",
       "source_location": null
     },
     {
@@ -10113,6 +13119,54 @@
       "norm_label": "managing dependencies (documentacao do poetry)",
       "rationale": "Poetry",
       "source_file": "referencias/poetry-managing-dependencies.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:prometheus-regras-de-alerta",
+      "label": "Alerting rules",
+      "norm_label": "alerting rules",
+      "rationale": "Prometheus (CNCF)",
+      "source_file": "referencias/prometheus-regras-de-alerta.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:prometheus-teste-de-regras",
+      "label": "Unit testing for rules",
+      "norm_label": "unit testing for rules",
+      "rationale": "Prometheus (CNCF)",
+      "source_file": "referencias/prometheus-teste-de-regras.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:pydantic-config",
+      "label": "Configuration (ConfigDict)",
+      "norm_label": "configuration (configdict)",
+      "rationale": "Pydantic",
+      "source_file": "referencias/pydantic-config.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:pydantic-settings",
+      "label": "Settings Management (pydantic-settings)",
+      "norm_label": "settings management (pydantic-settings)",
+      "rationale": "Pydantic",
+      "source_file": "referencias/pydantic-settings.yaml",
       "source_location": null
     },
     {
@@ -10204,6 +13258,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:python-hmac",
+      "label": "hmac: Keyed-Hashing for Message Authentication",
+      "norm_label": "hmac: keyed-hashing for message authentication",
+      "rationale": "Python Software Foundation",
+      "source_file": "referencias/python-hmac.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:rfc-5915",
       "label": "RFC 5915: Elliptic Curve Private Key Structure",
       "norm_label": "rfc 5915: elliptic curve private key structure",
@@ -10216,11 +13282,35 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:rfc-6585",
+      "label": "RFC 6585: Additional HTTP Status Codes",
+      "norm_label": "rfc 6585: additional http status codes",
+      "rationale": "IETF",
+      "source_file": "referencias/rfc-6585.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:rfc-7468",
       "label": "RFC 7468: Textual Encodings of PKIX, PKCS, and CMS Structures",
       "norm_label": "rfc 7468: textual encodings of pkix, pkcs, and cms structures",
       "rationale": "IETF",
       "source_file": "referencias/rfc-7468.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:rfc-9110",
+      "label": "RFC 9110: HTTP Semantics",
+      "norm_label": "rfc 9110: http semantics",
+      "rationale": "IETF",
+      "source_file": "referencias/rfc-9110.yaml",
       "source_location": null
     },
     {
@@ -10516,6 +13606,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:semgrep-cli",
+      "label": "Semgrep CLI reference",
+      "norm_label": "semgrep cli reference",
+      "rationale": "Semgrep",
+      "source_file": "referencias/semgrep-cli.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:semver",
       "label": "Versionamento Semântico 2.0.0",
       "norm_label": "versionamento semantico 2.0.0",
@@ -10552,6 +13654,18 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:slowapi-docs",
+      "label": "SlowApi",
+      "norm_label": "slowapi",
+      "rationale": "SlowApi (projeto de código aberto)",
+      "source_file": "referencias/slowapi-docs.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:spec-kit",
       "label": "Spec Kit",
       "norm_label": "spec kit",
@@ -10569,6 +13683,30 @@
       "norm_label": "specification-driven development (spec-driven.md)",
       "rationale": "GitHub (Spec Kit)",
       "source_file": "referencias/speckit-spec-driven.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:spring-boot-external-config",
+      "label": "Externalized Configuration",
+      "norm_label": "externalized configuration",
+      "rationale": "Spring",
+      "source_file": "referencias/spring-boot-external-config.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:spring-security-authorize-http-requests",
+      "label": "Authorize HttpServletRequests",
+      "norm_label": "authorize httpservletrequests",
+      "rationale": "Spring",
+      "source_file": "referencias/spring-security-authorize-http-requests.yaml",
       "source_location": null
     },
     {
@@ -10624,6 +13762,54 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:trivy-action",
+      "label": "trivy-action",
+      "norm_label": "trivy-action",
+      "rationale": "Aqua Security",
+      "source_file": "referencias/trivy-action.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:trivy-exit-code",
+      "label": "Trivy: Others (Exit Code)",
+      "norm_label": "trivy: others (exit code)",
+      "rationale": "Aqua Security",
+      "source_file": "referencias/trivy-exit-code.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:trivy-imagem-de-container",
+      "label": "Trivy: Container Image",
+      "norm_label": "trivy: container image",
+      "rationale": "Aqua Security",
+      "source_file": "referencias/trivy-imagem-de-container.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:twelve-factor-config",
+      "label": "The Twelve-Factor App: III. Config",
+      "norm_label": "the twelve-factor app: iii. config",
+      "rationale": "The Twelve-Factor App",
+      "source_file": "referencias/twelve-factor-config.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:usenix-pacotes-alucinados",
       "label": "Package hallucinations in code-generating LLMs (USENIX Security 2025)",
       "norm_label": "package hallucinations in code-generating llms (usenix security 2025)",
@@ -10665,6 +13851,18 @@
       "norm_label": "understanding success criterion 3.3.3: error suggestion (wcag 2.2)",
       "rationale": "W3C",
       "source_file": "referencias/wcag-error-suggestion.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:webdev-orcamento-performance",
+      "label": "Performance budgets 101",
+      "norm_label": "performance budgets 101",
+      "rationale": "Google (web.dev)",
+      "source_file": "referencias/webdev-orcamento-performance.yaml",
       "source_location": null
     },
     {

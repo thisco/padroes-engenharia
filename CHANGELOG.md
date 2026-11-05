@@ -7,8 +7,36 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+## [1.2.0] - 2026-11-05
+
 ### Adicionado
 
+- Diagramas Mermaid desenhados no navegador (R26): o bloco ```` ```mermaid ```` vira `<pre class="mermaid">`
+  e o Mermaid 12.2.0 fica fixado em `portal/vendor/mermaid/`, com procedência.
+- CLI `padroes` (F4, ADR 0009 e spec do motor): `python3 padroes.py instalar | doctor | verificar |
+  atualizar`, sem nada instalado além do Python; origem por pasta ou URL com SHA-256 por arquivo,
+  lockfile `padroes.lock.json`, blocos gerenciados nos arquivos do harness, detecção de perfil por
+  sinais e moldes de CI para GitLab e GitHub com o gate fixo `padroes-verificar`. O pacote passa a
+  levar `padroes.py`, `padroes_cli/`, `ci/`, `perfil/sinais.json` e os mecanismos hospedados. O
+  próprio repositório instala o pacote em `.padroes/` (dogfooding, Kiro, sem CI).
+- Dez práticas novas, todas em `experimentar`: P2-07 (sandbox e promoção para produção, `avisa`),
+  P2-08 (prompt e configuração de modelo versionados), P2-09 (trabalho de modelo fora do request),
+  P3-07 (operação do agente), OBS-03 (traço e métrica por OpenTelemetry desde o compose), QLD-04
+  (orçamento de performance como teste, `avisa`), IAC-04 (promoção entre ambientes por IaC, `avisa`),
+  CICD-04 (identidade federada no deploy), CICD-05 (operação destrutiva só por workflow rastreável) e
+  SEG-04 (configuração insegura aborta o boot), SEG-05 (rota nasce protegida) e SEG-06 (varredura de
+  imagem e SAST como gate, `avisa`), cada uma com referências conferidas na web, exemplo executado e
+  registro em `verificacoes/`.
+- IAC-01, IAC-02 e ARQ-02 passam a `avisa`, com verificador interno e job de CI (R8).
+- Verificadores internos novos em `verificadores/`, cada um com teste: `arq_02.py`, `iac_01.py`,
+  `iac_02.py`, `iac_04.py`, `p2_07.py`, `qld_04.py` e `seg_06.py`. O catálogo passa a ter 20 práticas
+  acima de `orienta`.
+- Caso "Classificação híbrida governada" (R10), sanitizado, com treze fontes publicadas em
+  `casos/fontes/classificacao-hibrida-governada/`: cascata com limiar de confiança, modelo que não
+  bloqueia o pipeline, cache de decisão, contrato selado em código e saída publicada imutável.
+- Os dez prompts dos dois roteiros têm execução registrada em `verificacoes/`: sessões novas do Claude
+  Code sobre projetos de teste (gerados pelo sdd-scaffold e um repositório existente), com o portal
+  servido em http local.
 - Tipo de conteúdo `roteiro` (`roteiros/<slug>.md`, ADR 0014): a sequência do primeiro dia de um
   time num projeto, com prompt inicial, passos numerados, quem faz cada passo (você, o agente ou
   você decide) e subseções por harness; schema `esquemas/roteiro.schema.json`, regra `R-ROTEIRO`,
@@ -79,6 +107,10 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Alterado
 
+- O `.md` gêmeo do roteiro traz a ficha completa (porta, público, tempo, harnesses, pré-requisitos e
+  resultado esperado) e diz quem faz cada passo, como a skill do pacote; a citação que abre a linha não
+  deixa pontuação solta na skill gerada.
+- Planos, specs e notas deixam de citar o nome do projeto de origem (ADR 0011).
 - `pagina.schema.json` aceita o campo opcional `porta` nos caminhos da Início (aditivo, minor).
 - ADR 0006 renomeada para `0006-caso-de-origem-fora-da-semente.md`: o arquivo e o título deixam
   de citar a sigla do sistema de origem; a decisão não muda.

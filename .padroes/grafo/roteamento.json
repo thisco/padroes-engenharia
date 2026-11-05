@@ -540,12 +540,12 @@
       "aplica": [],
       "dominio": "arquitetura",
       "estado": "ok",
-      "forca_max": "orienta",
+      "forca_max": "avisa",
       "momento": "antes-do-merge",
       "praticas": [
         {
           "aplica": [],
-          "forca": "orienta",
+          "forca": "avisa",
           "id": "ARQ-02",
           "links": {
             "aplica": [],
@@ -555,7 +555,30 @@
           },
           "md": "praticas/ARQ-02.md",
           "md_url": "http://localhost:8000/praticas/ARQ-02.md",
-          "mecanismo": null,
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "Arquitetura/**",
+                  "infra/local/**",
+                  "infra/cloud/modules/**"
+                ],
+                "evento": "depois-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "ARQ-02: compose, módulo de IaC, diagrama e Arquitetura/mapa.yml divergiram nesta mudança; continue o ciclo no mesmo PR (compose, módulo, diagrama, mapa) até o drift sumir. Como aplicar: <URL do portal>/praticas/ARQ-02.md#como-aplicar",
+            "verificador": "verificadores/arq_02.py"
+          },
           "status": "experimentar",
           "titulo": "Arquitetura Viva: manifesto, diagrama e compose conferidos no mesmo PR"
         }
@@ -1025,7 +1048,7 @@
       ],
       "dominio": "qualidade-bdd",
       "estado": "ok",
-      "forca_max": "orienta",
+      "forca_max": "avisa",
       "momento": "antes-do-merge",
       "praticas": [
         {
@@ -1064,6 +1087,43 @@
           "mecanismo": null,
           "status": "experimentar",
           "titulo": "Validação local rígida: o que o CI roda, roda antes do push"
+        },
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "QLD-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/QLD-04.md",
+          "md_url": "http://localhost:8000/praticas/QLD-04.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "compose.yaml",
+                  "compose.yml",
+                  "docker-compose.yaml",
+                  "docker-compose.yml"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "QLD-04: serviço do compose criado ou alterado sem orçamento de performance; declare memoria_mb e latencia_p95_ms em docs/orcamento-performance.yml e cite o arquivo num job de CI que mede; não crie isento: a isenção é decisão de uma pessoa, numa MR própria. Como aplicar: <URL do portal>/praticas/QLD-04.md#como-aplicar",
+            "verificador": "verificadores/qld_04.py"
+          },
+          "status": "experimentar",
+          "titulo": "Orçamento de performance como teste: limite de memória e latência por componente no CI"
         }
       ]
     },
@@ -1120,12 +1180,12 @@
       "aplica": [],
       "dominio": "infra-iac",
       "estado": "ok",
-      "forca_max": "orienta",
+      "forca_max": "avisa",
       "momento": "antes-de-escrever",
       "praticas": [
         {
           "aplica": [],
-          "forca": "orienta",
+          "forca": "avisa",
           "id": "IAC-01",
           "links": {
             "aplica": [],
@@ -1135,7 +1195,35 @@
           },
           "md": "praticas/IAC-01.md",
           "md_url": "http://localhost:8000/praticas/IAC-01.md",
-          "mecanismo": null,
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "docker-compose*.yml",
+                  "**/docker-compose*.yml",
+                  "docker-compose*.yaml",
+                  "**/docker-compose*.yaml",
+                  "compose*.yml",
+                  "**/compose*.yml",
+                  "compose*.yaml",
+                  "**/compose*.yaml"
+                ],
+                "evento": "depois-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "IAC-01: o compose mudou e docs/ambiente-local.md (ou docs/steering/infra-devops.md) não mudou junto; atualize os serviços e a ordem de rebuild no mesmo PR. Como aplicar: <URL do portal>/praticas/IAC-01.md#como-aplicar",
+            "verificador": "verificadores/iac_01.py"
+          },
           "status": "experimentar",
           "titulo": "Ambiente local reproduzível por compose, com ordem de rebuild escrita"
         }
@@ -1153,12 +1241,12 @@
       "aplica": [],
       "dominio": "infra-iac",
       "estado": "ok",
-      "forca_max": "orienta",
+      "forca_max": "avisa",
       "momento": "antes-do-merge",
       "praticas": [
         {
           "aplica": [],
-          "forca": "orienta",
+          "forca": "avisa",
           "id": "IAC-02",
           "links": {
             "aplica": [],
@@ -1173,9 +1261,85 @@
           },
           "md": "praticas/IAC-02.md",
           "md_url": "http://localhost:8000/praticas/IAC-02.md",
-          "mecanismo": null,
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "*.tf",
+                  "**/*.tf",
+                  "*.tf.json",
+                  "**/*.tf.json",
+                  "*.tofu",
+                  "**/*.tofu",
+                  "*.tofu.json",
+                  "**/*.tofu.json"
+                ],
+                "evento": "depois-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "pre-commit"
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "IAC-02: a IaC mudou e o resumo do tofu plan não veio junto; cole a linha 'Plan: ...' no PR.md da raiz ou na descrição da MR, e leia o que ele destrói. Como aplicar: <URL do portal>/praticas/IAC-02.md#como-aplicar",
+            "verificador": "verificadores/iac_02.py"
+          },
           "status": "experimentar",
           "titulo": "Infra declarada em código, com o plano de mudança revisado no PR"
+        },
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "IAC-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "opentofu",
+                "url": "http://localhost:8000/ferramentas/opentofu.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/IAC-04.md",
+          "md_url": "http://localhost:8000/praticas/IAC-04.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  ".gitlab-ci.yml",
+                  ".github/workflows/*.yml",
+                  ".github/workflows/*.yaml"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "comando": "(?i)\\b(?:tofu|terraform|terragrunt)\\b[\\s\\S]*\\b(?:apply|destroy)\\b",
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "shell"
+                ]
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "IAC-04: apply de IaC em produção sem aprovação manual no pipeline, valor de ambiente literal no comando, ou apply em produção pelo shell; ponha o job atrás de when: manual (GitLab) ou de um environment protegido (GitHub), leve o valor ao arquivo do ambiente e aplique produção só pelo pipeline. Como aplicar: <URL do portal>/praticas/IAC-04.md#como-aplicar",
+            "verificador": "verificadores/iac_04.py"
+          },
+          "status": "experimentar",
+          "titulo": "Promoção entre ambientes por IaC: um workspace por ambiente, configuração por ambiente num só lugar, apply em produção só pelo pipeline com aprovação manual, serviços versionados juntos"
         }
       ]
     },
@@ -1295,6 +1459,38 @@
           "mecanismo": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1",
           "status": "experimentar",
           "titulo": "Pipeline obrigatória com gates: lint, suíte e verificador de PR"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "CICD-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/CICD-04.md",
+          "md_url": "http://localhost:8000/praticas/CICD-04.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Identidade federada no deploy, sem chave estática no CI"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "CICD-05",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/CICD-05.md",
+          "md_url": "http://localhost:8000/praticas/CICD-05.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Operação destrutiva só por workflow rastreável com confirmação digitada"
         }
       ]
     },
@@ -1358,6 +1554,22 @@
           "mecanismo": null,
           "status": "experimentar",
           "titulo": "Log estruturado, correlacionado e sem dado pessoal"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "OBS-03",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/OBS-03.md",
+          "md_url": "http://localhost:8000/praticas/OBS-03.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Traço e métrica por OpenTelemetry desde o compose local, com limiar de alerta declarado"
         }
       ]
     },
@@ -1478,6 +1690,38 @@
           },
           "status": "experimentar",
           "titulo": "Dependência conferida, com pacote existente, lockfile com hash e aprovação de uma pessoa"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "SEG-04",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-04.md",
+          "md_url": "http://localhost:8000/praticas/SEG-04.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Configuração insegura aborta o boot em produção"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "SEG-05",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-05.md",
+          "md_url": "http://localhost:8000/praticas/SEG-05.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Rota nasce protegida: auth e rate limit no roteador, teste que quebra se uma rota dispensar credencial, resposta única para falha de credencial"
         }
       ]
     },
@@ -1537,6 +1781,37 @@
           },
           "status": "experimentar",
           "titulo": "Segredo não entra no repositório, com varredura no CI e antes do commit"
+        },
+        {
+          "aplica": [],
+          "forca": "avisa",
+          "id": "SEG-06",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/SEG-06.md",
+          "md_url": "http://localhost:8000/praticas/SEG-06.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "SEG-06: o repositório constrói imagem ou tem código e o CI não tem job de varredura de imagem (trivy, grype, container_scanning) ou de SAST (semgrep, codeql, sast); acrescente o job que falha com achado. Como aplicar: <URL do portal>/praticas/SEG-06.md#como-aplicar",
+            "verificador": "verificadores/seg_06.py"
+          },
+          "status": "experimentar",
+          "titulo": "Varredura de imagem e SAST como gate, ao lado da varredura de segredo"
         }
       ]
     },
@@ -1718,6 +1993,38 @@
         {
           "aplica": [],
           "forca": "orienta",
+          "id": "P2-08",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-08.md",
+          "md_url": "http://localhost:8000/praticas/P2-08.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Prompt e configuração de modelo como artefato versionado, com contrato selado em código e contexto governável"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P2-09",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-09.md",
+          "md_url": "http://localhost:8000/praticas/P2-09.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Trabalho de modelo fora do request: fila, 202 e polling; lote × custo unitário abaixo do timeout"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
           "id": "P3-03",
           "links": {
             "aplica": [],
@@ -1799,6 +2106,46 @@
         },
         {
           "aplica": [],
+          "forca": "avisa",
+          "id": "P2-07",
+          "links": {
+            "aplica": [],
+            "ferramentas": [
+              {
+                "id": "litellm",
+                "url": "http://localhost:8000/ferramentas/litellm.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P2-07.md",
+          "md_url": "http://localhost:8000/praticas/P2-07.md",
+          "mecanismo": {
+            "gatilhos": [
+              {
+                "caminhos": [
+                  "ia-producao.yml",
+                  "catalogo-modelos.yml"
+                ],
+                "evento": "antes-de-ferramenta",
+                "ferramenta": [
+                  "editar",
+                  "escrever"
+                ]
+              },
+              {
+                "evento": "ci"
+              }
+            ],
+            "mensagem": "P2-07: promoção para produção sem eval aprovado, sem modelo liberado no catálogo ou sem chave própria; complete o ia-producao.yml. Como aplicar: <URL do portal>/praticas/P2-07.md#como-aplicar",
+            "verificador": "verificadores/p2_07.py"
+          },
+          "status": "experimentar",
+          "titulo": "Sandbox e promoção: experimentar livre com chave virtual de dev; produção exige eval aprovado, modelo no catálogo e chave própria"
+        },
+        {
+          "aplica": [],
           "forca": "pede-aprovacao",
           "id": "P3-06",
           "links": {
@@ -1873,6 +2220,22 @@
           "mecanismo": null,
           "status": "adotar",
           "titulo": "Orçamento e alerta por chave virtual"
+        },
+        {
+          "aplica": [],
+          "forca": "orienta",
+          "id": "P3-07",
+          "links": {
+            "aplica": [],
+            "ferramentas": [],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P3-07.md",
+          "md_url": "http://localhost:8000/praticas/P3-07.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Operação do agente: desligar, telemetria de trajetória, custo e taxa de sucesso por tarefa"
         }
       ]
     }
@@ -2013,5 +2376,5 @@
   ],
   "nome": "Padrões de Engenharia",
   "url_base": "http://localhost:8000",
-  "versao": "1.1.0"
+  "versao": "1.2.0"
 }

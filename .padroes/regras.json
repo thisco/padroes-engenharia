@@ -1,8 +1,8 @@
 {
   "catalogo": {
-    "commit": "b226ab5efb0e625aa12c1ddd0b787d9394ea23b5",
+    "commit": "009582ec3e3d75940b61247bb9634c390393824e",
     "nome": "Padrões de Engenharia",
-    "versao": "1.1.0"
+    "versao": "1.2.0"
   },
   "regras": [
     {
@@ -21,6 +21,42 @@
       "momento": "antes-do-merge",
       "url": "http://localhost:8000/praticas/API-02.md",
       "verificador": "verificadores/api_02.py"
+    },
+    {
+      "dominio": "arquitetura",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "Arquitetura/**",
+            "infra/local/**",
+            "infra/cloud/modules/**"
+          ],
+          "comando": null,
+          "evento": "depois-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "pre-commit",
+          "ferramenta": []
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "ARQ-02",
+      "mensagem": "ARQ-02: compose, módulo de IaC, diagrama e Arquitetura/mapa.yml divergiram nesta mudança; continue o ciclo no mesmo PR (compose, módulo, diagrama, mapa) até o drift sumir. Como aplicar: <URL do portal>/praticas/ARQ-02.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/ARQ-02.md",
+      "verificador": "verificadores/arq_02.py"
     },
     {
       "dominio": "ci-cd",
@@ -55,6 +91,126 @@
       "momento": "enquanto-escreve",
       "url": "http://localhost:8000/praticas/CICD-02.md",
       "verificador": "verificadores/cicd_02.py"
+    },
+    {
+      "dominio": "infra-iac",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "docker-compose*.yml",
+            "**/docker-compose*.yml",
+            "docker-compose*.yaml",
+            "**/docker-compose*.yaml",
+            "compose*.yml",
+            "**/compose*.yml",
+            "compose*.yaml",
+            "**/compose*.yaml"
+          ],
+          "comando": null,
+          "evento": "depois-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "pre-commit",
+          "ferramenta": []
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "IAC-01",
+      "mensagem": "IAC-01: o compose mudou e docs/ambiente-local.md (ou docs/steering/infra-devops.md) não mudou junto; atualize os serviços e a ordem de rebuild no mesmo PR. Como aplicar: <URL do portal>/praticas/IAC-01.md#como-aplicar",
+      "momento": "antes-de-escrever",
+      "url": "http://localhost:8000/praticas/IAC-01.md",
+      "verificador": "verificadores/iac_01.py"
+    },
+    {
+      "dominio": "infra-iac",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "*.tf",
+            "**/*.tf",
+            "*.tf.json",
+            "**/*.tf.json",
+            "*.tofu",
+            "**/*.tofu",
+            "*.tofu.json",
+            "**/*.tofu.json"
+          ],
+          "comando": null,
+          "evento": "depois-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "pre-commit",
+          "ferramenta": []
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "IAC-02",
+      "mensagem": "IAC-02: a IaC mudou e o resumo do tofu plan não veio junto; cole a linha 'Plan: ...' no PR.md da raiz ou na descrição da MR, e leia o que ele destrói. Como aplicar: <URL do portal>/praticas/IAC-02.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/IAC-02.md",
+      "verificador": "verificadores/iac_02.py"
+    },
+    {
+      "dominio": "infra-iac",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [
+            ".gitlab-ci.yml",
+            ".github/workflows/*.yml",
+            ".github/workflows/*.yaml"
+          ],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": "(?i)\\b(?:tofu|terraform|terragrunt)\\b[\\s\\S]*\\b(?:apply|destroy)\\b",
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "shell"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "IAC-04",
+      "mensagem": "IAC-04: apply de IaC em produção sem aprovação manual no pipeline, valor de ambiente literal no comando, ou apply em produção pelo shell; ponha o job atrás de when: manual (GitLab) ou de um environment protegido (GitHub), leve o valor ao arquivo do ambiente e aplique produção só pelo pipeline. Como aplicar: <URL do portal>/praticas/IAC-04.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/IAC-04.md",
+      "verificador": "verificadores/iac_04.py"
     },
     {
       "dominio": "privacidade-lgpd",
@@ -144,6 +300,37 @@
       "verificador": "sdd-scaffold:template/scripts/verificar_pr.py@1.7.1"
     },
     {
+      "dominio": "qualidade-bdd",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [
+            "compose.yaml",
+            "compose.yml",
+            "docker-compose.yaml",
+            "docker-compose.yml"
+          ],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "QLD-04",
+      "mensagem": "QLD-04: serviço do compose criado ou alterado sem orçamento de performance; declare memoria_mb e latencia_p95_ms em docs/orcamento-performance.yml e cite o arquivo num job de CI que mede; não crie isento: a isenção é decisão de uma pessoa, numa MR própria. Como aplicar: <URL do portal>/praticas/QLD-04.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/QLD-04.md",
+      "verificador": "verificadores/qld_04.py"
+    },
+    {
       "dominio": "seguranca",
       "forca": "bloqueia",
       "gatilhos": [
@@ -227,6 +414,32 @@
       "momento": "enquanto-escreve",
       "url": "http://localhost:8000/praticas/SEG-03.md",
       "verificador": "verificadores/seg_03.py"
+    },
+    {
+      "dominio": "seguranca",
+      "forca": "avisa",
+      "gatilhos": [
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "antes-de-ferramenta",
+          "ferramenta": [
+            "editar",
+            "escrever"
+          ]
+        },
+        {
+          "caminhos": [],
+          "comando": null,
+          "evento": "ci",
+          "ferramenta": []
+        }
+      ],
+      "id": "SEG-06",
+      "mensagem": "SEG-06: o repositório constrói imagem ou tem código e o CI não tem job de varredura de imagem (trivy, grype, container_scanning) ou de SAST (semgrep, codeql, sast); acrescente o job que falha com achado. Como aplicar: <URL do portal>/praticas/SEG-06.md#como-aplicar",
+      "momento": "antes-do-merge",
+      "url": "http://localhost:8000/praticas/SEG-06.md",
+      "verificador": "verificadores/seg_06.py"
     }
   ],
   "versao_formato": 1
