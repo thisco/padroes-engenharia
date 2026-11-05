@@ -1,0 +1,10 @@
+id: classificacao-hibrida-codigo-cascata
+titulo: "Código redigido da cascata e do limiar de confiança"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/classificacao-hibrida-governada/codigo-cascata.md
+tipo: portal
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "resolvedor, núcleo das órfãs e tratamento do que não casou"
+dominios: [ia-no-produto]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0011). O commit de origem fica no registro de verificação do caso."

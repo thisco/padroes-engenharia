@@ -1,0 +1,10 @@
+id: classificacao-hibrida-spec-modelo-no-caminho
+titulo: "Spec do modelo no caminho crítico: integração no motor, cache e degradação"
+organizacao: Portal de Padrões de Engenharia
+url: casos/fontes/classificacao-hibrida-governada/spec-modelo-no-caminho.md
+tipo: portal
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "§4.4, três itens"
+dominios: [ia-no-produto]
+notas: "Material sanitizado do projeto de origem, publicado neste portal (ADR 0011). O commit de origem fica no registro de verificação do caso."
