@@ -3,7 +3,7 @@ com `rel="noopener noreferrer"`."""
 
 from __future__ import annotations
 
-from html import escape
+from html import escape as escape_html
 
 from markdown_it import MarkdownIt
 from markdown_it.renderer import RendererHTML
@@ -28,7 +28,7 @@ def criar() -> MarkdownIt:
         if tokens[idx].info.strip().split(" ")[0] == "mermaid":
             # Diagrama desenhado no navegador pela biblioteca local (R26): sem Copiar, e o texto
             # escapado é o que a biblioteca lê. O `.md` gêmeo guarda o bloco cercado.
-            return f'<pre class="mermaid">{escape(tokens[idx].content, quote=False)}</pre>\n'
+            return f'<pre class="mermaid">{escape_html(tokens[idx].content, quote=False)}</pre>\n'
         html = RendererHTML.fence(self, tokens, idx, options, env)
         linguagem = tokens[idx].info.strip().split(" ")[0]
         if linguagem != "prompt":
