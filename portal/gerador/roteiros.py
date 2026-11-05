@@ -94,9 +94,12 @@ def preambulo_de(texto: str) -> str:
 
 
 def _sem_citacoes(texto: str) -> str:
-    """O texto sem os `[ref:id]` e o espaço antes deles. Uma citação que abre a linha leva
-    junto a quebra anterior, para a pontuação que a segue não ficar sozinha na linha."""
-    return re.sub(r"(?:\n|[ \t])*" + MARCADOR.pattern, "", texto)
+    """O texto sem os `[ref:id]` e o espaço antes deles. Uma citação que abre a linha e é
+    seguida de pontuação leva junto a quebra anterior, para a pontuação não ficar sozinha na
+    linha; seguida de texto, leva só o espaço seguinte. Linhas em branco ficam como estão."""
+    texto = re.sub(r"\n[ \t]*" + MARCADOR.pattern + r"(?=[.,;:!?)])", "", texto)
+    texto = re.sub(r"(?m)^" + MARCADOR.pattern + r"[ \t]+", "", texto)
+    return re.sub(r"[ \t]*" + MARCADOR.pattern, "", texto)
 
 
 def _sem_prefixo(titulo_h2: str) -> str:

@@ -275,3 +275,13 @@ def test_skill_md_nao_deixa_pontuacao_solta_quando_a_citacao_abre_a_linha():
     md = skill_md(s, s.repo.roteiros[0])
     assert "O agente instala o pacote. E segue." in md
     assert not any(linha.startswith(".") for linha in md.splitlines())
+
+
+def test_sem_citacoes_preserva_paragrafos_e_titulos():
+    from portal.gerador.roteiros import _sem_citacoes
+
+    assert _sem_citacoes("A.\n\n[ref:x] Próximo") == "A.\n\nPróximo"
+    assert _sem_citacoes("## Passo\n\n[ref:x] Texto") == "## Passo\n\nTexto"
+    assert _sem_citacoes("fim [ref:x]\n\nB") == "fim\n\nB"
+    assert _sem_citacoes("a [ref:x] [ref:y].") == "a."
+    assert _sem_citacoes("acha\n[ref:x]. As skills") == "acha. As skills"
