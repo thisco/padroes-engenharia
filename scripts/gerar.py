@@ -85,7 +85,7 @@ def problema_da_saida(raiz: Path, saida: Path, *, previa: bool) -> str | None:
     em_public = destino == publico or publico in destino.parents
     if previa and (em_public or any(_mesma_pasta(p, publico) for p in (destino, *destino.parents))):
         return f"a prévia não pode ficar em public/ ({destino}); escolha outra pasta"
-    dentro = raiz in destino.parents and publico not in destino.parents
+    dentro = raiz in destino.parents and not em_public
     if dentro and not _mesma_pasta(destino, publico):
         return f"--saida não pode ficar dentro do repositório fora de public/ ({destino})"
     if destino.is_dir() and any(destino.iterdir()):
