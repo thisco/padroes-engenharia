@@ -200,3 +200,26 @@ def test_descricao_da_skill_do_roteiro_escapa_aspas(repo_minimo):
     site = _site_com_roteiro(repo_minimo, objetivo='Deixar o "agente" pronto: sem surpresas.')
     skill = montar_pacote(site)["skills/roteiro-projeto-novo/SKILL.md"].decode()
     assert 'description: "Deixar o \\"agente\\" pronto: sem surpresas."\n' in skill
+
+
+def test_pacote_leva_os_moldes_de_ci_os_sinais_e_os_mecanismos_hospedados(repo_minimo):
+    """Entradas da F4 (plano F4-D6, F4-D8, F4-D9): `ci/`, `perfil/sinais.json`, `mecanismos/`."""
+    import shutil
+
+    shutil.copytree(fabrica.RAIZ / "mecanismos", repo_minimo / "mecanismos")
+    arquivos = montar_pacote(_site(repo_minimo))
+    assert "ci/gates.json" in arquivos
+    assert json.loads(arquivos["perfil/sinais.json"])["versao_formato"] == 1
+    hospedado = fabrica.RAIZ / "mecanismos" / "sdd-scaffold" / "verificar_pr.py"
+    assert arquivos["mecanismos/sdd-scaffold/verificar_pr.py"] == hospedado.read_bytes()
+    assert not [c for c in arquivos if c.endswith("PROCEDENCIA.md") and c.startswith("mecan")]
+
+
+def test_pacote_leva_o_cli_e_o_lancador(repo_minimo):
+    """Plano F4-D1 e F4-D2: o projeto roda `python3 padroes.py` sem nada instalado."""
+    arquivos = montar_pacote(_site(repo_minimo))
+    lancador = fabrica.RAIZ / "scripts" / "padroes.py"
+    assert arquivos["padroes.py"] == lancador.read_bytes()
+    modulos = sorted(c for c in arquivos if c.startswith("padroes_cli/"))
+    assert "padroes_cli/__init__.py" in modulos and "padroes_cli/principal.py" in modulos
+    assert not [c for c in modulos if "__pycache__" in c or not c.endswith(".py")]

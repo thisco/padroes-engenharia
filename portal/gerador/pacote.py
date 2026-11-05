@@ -12,9 +12,12 @@ import json
 from pathlib import Path
 from typing import Any
 
+from portal.gerador.ci_moldes import templates
 from portal.gerador.erros import R_PACOTE, Erro
 from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
+from portal.gerador.mecanismos import carregar_mecanismos
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
+from portal.gerador.perfil import sinais
 from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes, url_portal
 from portal.gerador.roteiros import skill_md
@@ -24,6 +27,9 @@ PASTA_PACOTE = "pacote"
 PASTA_VERIFICADORES = "verificadores"
 VERSAO_FORMATO_PACOTE = 1
 NOME_PLUGIN = "padroes-engenharia"
+# O código que viaja no pacote mora neste repositório, não no `site.raiz` (como o `consultar.py`).
+RAIZ_DO_CODIGO = Path(__file__).resolve().parents[2]
+PASTA_CLI = "padroes_cli"
 
 
 def plugin_json(site: Site) -> dict[str, Any]:
@@ -78,6 +84,15 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
         oculto = arquivo.name.startswith((".", "_"))
         if arquivo.is_file() and not arquivo.is_symlink() and not oculto:
             arquivos[f"verificadores/{arquivo.name}"] = arquivo.read_bytes()
+    # F4 (plano F4-D1, F4-D6, F4-D8, F4-D9): o CLI, os moldes de CI, os sinais de perfil e os
+    # mecanismos hospedados, que o gate de CI do `verificar_pr.py` roda a partir de `.padroes/`.
+    arquivos["padroes.py"] = (RAIZ_DO_CODIGO / "scripts" / "padroes.py").read_bytes()
+    for modulo in sorted((RAIZ_DO_CODIGO / "portal" / "cli").glob("*.py")):
+        arquivos[f"{PASTA_CLI}/{modulo.name}"] = modulo.read_bytes()
+    arquivos.update(templates(site))
+    arquivos["perfil/sinais.json"] = para_json(sinais(site.espinha)).encode("utf-8")
+    for m in carregar_mecanismos(site.raiz):
+        arquivos[f"mecanismos/{m.componente}/{m.arquivo}"] = m.conteudo
     for constituicao in constituicoes(site):
         arquivos[f"constituicao/{Path(constituicao).name}"] = (
             site.raiz / constituicao
