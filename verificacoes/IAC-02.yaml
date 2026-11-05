@@ -1,5 +1,5 @@
 conteudo: IAC-02
-verificado_em: '2026-10-21'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o modelo de steering pede registrar a proibição de operações manuais fora do CI/CD por perda de rastreabilidade
@@ -35,7 +35,40 @@ afirmacoes:
   ref: portal-trilha
   localizacao: "página da trilha, etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
   resultado: confirmada
+- texto: $CI_MERGE_REQUEST_DESCRIPTION é a descrição da MR, e com mais de 2700 caracteres só os primeiros 2700 entram na variável
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis, linha CI_MERGE_REQUEST_DESCRIPTION (aberta na web em 2026-11-03; 'The description of the merge request. If the description is more than 2700 characters long, only the first 2700 characters are stored in the variable.')"
+  resultado: confirmada
+- texto: $CI_MERGE_REQUEST_DIFF_BASE_SHA é o SHA base do diff da MR
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "tabela de variáveis (aberta na web em 2026-11-03; 'The base SHA of the merge request diff')"
+  resultado: confirmada
+- texto: GIT_DEPTH 0 desliga o clone raso
+  ref: gitlab-git-depth
+  localizacao: "seção 'Limit the number of changes fetched during clone' (aberta na web em 2026-11-03; 'To disable shallow clone ... keep the value empty or set to 0'). 'O verificador precisa do commit da base' é do portal."
+  resultado: confirmada
+- texto: um job com allow_failure true que falha mostra um aviso laranja e o pipeline continua bem-sucedido
+  ref: gitlab-allow-failure
+  localizacao: "seção 'allow_failure' (aberta na web em 2026-11-03). Não exercitado num GitLab real."
+  resultado: confirmada
+- texto: sem mudança necessária, o tofu plan relata que nenhuma ação precisa ser feita
+  ref: opentofu-plan
+  localizacao: "abertura da página (aberta na web em 2026-11-03; 'will report that no actions need to be taken'); a página não mostra o texto literal"
+  resultado: confirmada
+  nota: "O texto literal 'No changes. Your infrastructure matches the configuration.' foi observado executando o OpenTofu v1.13.2 num módulo só com um output, depois do apply; antes do apply, o plano mostrou 'Changes to Outputs:' e nenhuma linha 'Plan:'. Por isso o corpo diz 'observado no OpenTofu v1.13.2' e não cita a referência para o texto."
+- texto: com recurso esquecido por um bloco removed, a linha de resumo do plano termina em ', N to forget.' depois de 'N to destroy'
+  ref: opentofu-resumo-do-plano
+  localizacao: "função renderHuman, formatos '%d to add, %d to change, %d to destroy, %d to forget.' e a variante com 'to import' (aberto na web em 2026-11-04, tag v1.13.2)"
+  resultado: confirmada
+  nota: "Observado também executando o OpenTofu v1.13.2 com um local_file aplicado e depois trocado por removed { lifecycle { destroy = false } }: 'Plan: 0 to add, 0 to change, 0 to destroy, 1 to forget.'"
 execucoes:
+- tipo: arquivo
+  arquivo: verificadores/iac_02.py
+  comando: python3 -I verificadores/iac_02.py --evento ci --base <sha> (sem e com PADROES_DESCRICAO_DA_MR, e com PR.md) e --evento depois-de-ferramenta, num repositório Git temporário; pytest -q tests/verificadores/test_iac_02.py
+  ambiente: repositório Git novo no scratchpad com exemplos/IAC-02/modulo-base/main.tf em infra/main.tf no commit-base e a MR com o modulo-antes/main.tf; Python 3.15.2; macOS. Não foi executado num GitLab.
+  resultado: passou
+  evidencia: 'MR só com a IaC: "infra/main.tf:0: IaC alterada sem o resumo do plano (linha ''Plan: ...'' ou ''No changes.'') no PR.md do mesmo PR (nem na descrição da MR)", saída 1; com PADROES_DESCRICAO_DA_MR trazendo "Plan: 1 to add, 0 to change, 1 to destroy.", saída 0; com o PR.md commitado na MR, saída 0. Harness com o PR.md com resumo no disco: saída 0, em 0,07 s. pytest: 50 passed em tests/verificadores/test_iac_02.py (sem o script, 49 failed); na rodada de correção 1 (2026-11-04), 55 passed, com o PR.md lido da raiz do Git com o cwd numa subpasta e o resumo com '', N to forget.''.'
+  data: '2026-11-03'
 - tipo: arquivo
   arquivo: exemplos/IAC-02/executar.sh
   comando: sh executar.sh
