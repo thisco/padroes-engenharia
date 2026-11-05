@@ -86,6 +86,7 @@ from portal.gerador.renderizar import (
 from portal.gerador.renderizar import (
     indices as indices_,
 )
+from portal.gerador.roteiros import html_roteiro_passos, md_roteiro_passos
 from portal.gerador.texto_md import celula as _celula
 from portal.gerador.texto_md import juntar as _juntar
 from portal.gerador.texto_md import md_lista_referencias
@@ -96,6 +97,7 @@ SECOES = (
     "Domínios",
     "Práticas",
     "Receitas",
+    "Roteiros",
     "Prompts",
     "Starters",
     "Ferramentas",
@@ -117,6 +119,7 @@ SECAO_POR_TIPO = {
     "caso": "Casos",
     "pagina": "Páginas",
     "receita": "Receitas",
+    "roteiro": "Roteiros",
 }
 
 
@@ -203,6 +206,17 @@ def montar_paginas(site: Site) -> list[Pagina]:
                 descricao_de(site, r),
                 html_receita(site, r),
                 md_receita(site, r),
+            )
+        )
+    for r in site.repo.roteiros:
+        paginas.append(
+            Pagina(
+                caminho_de(r),
+                str(r.meta["titulo"]),
+                SECAO_POR_TIPO["roteiro"],
+                descricao_de(site, r),
+                html_roteiro_passos(site, r),
+                md_roteiro_passos(site, r),
             )
         )
     for s in site.repo.starters:

@@ -1,0 +1,10 @@
+id: claude-code-quickstart
+titulo: "Quickstart (Claude Code)"
+organizacao: Anthropic
+url: https://code.claude.com/docs/en/quickstart
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'Step 2: Start your first session' (cd na pasta do projeto e claude)"
+dominios: [construir-com-ia]
+notas: null

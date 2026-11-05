@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: o primeiro dia com o agente</title>
+<link rel="stylesheet" href="../../../portal/tema/tema.css">
+<style>
+  /* Só o que o tema ainda não tem. O resto reaproveita as classes do portal. */
+  body { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  .mock-tela { border-top: 3px solid var(--ambar); margin: 48px 0 24px; padding-top: 8px; }
+  .mock-tela > h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--ambar-texto); }
+  .tr-porta .acoes { display: grid; gap: 4px; }
+  .tr-porta .acoes em { display: block; }
+  .tr-porta .acoes .harn { font-size: 12.5px; color: var(--tinta-2); }
+
+  .roteiro { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 16px; }
+  .passo { display: contents; }
+  .passo .n { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--tinta); font-weight: 700; background: var(--branco); }
+  .passo[data-quem="agente"] .n { background: var(--tinta); color: var(--papel); }
+  .passo[data-quem="voce-decide"] .n { background: #fff3d6; border-color: #b8860b; }
+  .passo .corpo { border-left: 2px solid var(--regra); margin-left: -36px; padding: 0 0 28px 36px; }
+  .passo .corpo h3 { margin: 6px 0 4px; }
+  .quem { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--tinta); margin-left: 8px; vertical-align: middle; }
+  .passo[data-quem="agente"] .quem { background: var(--tinta); color: var(--papel); }
+  .passo[data-quem="voce-decide"] .quem { background: #fff3d6; border-color: #b8860b; }
+  .abas { display: flex; gap: 6px; margin: 10px 0 6px; flex-wrap: wrap; }
+  .abas button { font: inherit; font-size: 13px; padding: 4px 12px; border: 1px solid var(--regra); background: var(--branco); border-radius: 14px; cursor: pointer; }
+  .abas button[aria-selected="true"] { border-color: var(--tinta); background: var(--tinta); color: var(--papel); }
+  .painel[hidden] { display: none; }
+  .bloco .lang { position: absolute; top: 8px; left: 10px; font-size: 11px; color: var(--tinta-2); text-transform: uppercase; letter-spacing: .06em; }
+  .bloco pre { padding-top: 28px; }
+
+  .cartoes-prompt { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+  .cartao-prompt { border: 1px solid var(--regra); border-left: 3px dashed var(--ambar); background: var(--branco); padding: 12px 14px; display: grid; gap: 8px; }
+  .cartao-prompt .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .cartao-prompt .chips span { font-size: 11.5px; border: 1px solid var(--regra); border-radius: 10px; padding: 1px 8px; color: var(--tinta-2); }
+  .cartao-prompt .previa { font-family: var(--mono); font-size: 12.5px; color: var(--tinta-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cartao-prompt details pre { white-space: pre-wrap; font-size: 12.5px; }
+  .cartao-prompt .acoes { display: flex; gap: 8px; align-items: center; }
+  .filtros { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 12px 0 16px; }
+  .filtros select { font: inherit; font-size: 13px; padding: 4px 8px; }
+
+  .cartao .meta { font-size: 12.5px; color: var(--tinta-2); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+</style>
+</head>
+<body>
+
+<h1>Mockup: o primeiro dia com o agente</h1>
+<p class="lead">Quatro telas da spec <code>2026-11-03-primeiro-dia-com-o-agente-delta.md</code>. As classes vêm do tema do portal; o que é novo está no <code>&lt;style&gt;</code> desta página.</p>
+
+<!-- ============================================================ -->
+<section class="mock-tela">
+<h2>Tela 1 · Início: as três portas com guia e roteiro (PD-D6)</h2>
+<section aria-label="Comece aqui">
+  <h2>Comece aqui</h2>
+  <div class="tr-portas">
+    <div class="tr-porta"><b>Projeto novo</b><span>Comece com o projeto já montado: regras, roteiro de trabalho e verificações.</span>
+      <div class="acoes"><em><a href="#roteiro">Roteiro com o agente: o primeiro dia</a></em><span class="harn">Kiro · Antigravity · Claude Code · Codex</span><em><a href="#">Ler o guia: do zero à primeira MR</a></em></div></div>
+    <div class="tr-porta"><b>Projeto existente</b><span>Traga as regras e as verificações para um repositório que já existe.</span>
+      <div class="acoes"><em><a href="#">Roteiro com o agente: o primeiro dia</a></em><span class="harn">Kiro · Antigravity</span><em><a href="#">Ler o guia: brownfield em 5 passos</a></em></div></div>
+    <div class="tr-porta"><b>No meio de uma mudança</b><span>Veja o que a etapa em que você está exige para sair dela.</span>
+      <div class="acoes"><em><a href="#">Abrir a trilha</a></em></div></div>
+  </div>
+</section>
+</section>
+
+<!-- ============================================================ -->
+<section class="mock-tela" id="roteiro">
+<h2>Tela 2 · Roteiro: projeto novo, o primeiro dia (PD-D3, PD-D4, PD-D7)</h2>
+<p class="trilha"><a href="#">Início</a> · Roteiros</p>
+<div class="topo">
+  <h1>Projeto novo: o primeiro dia</h1>
+  <p>Do harness aberto ao primeiro plano aprovado, em sete passos: você abre o agente e decide; o agente instala, lê, entrevista e escreve.</p>
+</div>
+
+<div class="disco" style="margin-bottom:24px">
+  <h2 style="margin-top:0">Cole isto no agente</h2>
+  <p>Troque <code>{URL do portal}</code> pelo endereço do portal. O agente segue o roteiro pelo <code>.md</code> e para nos passos marcados "você decide".</p>
+  <figure class="prompt" id="roteiro-projeto-novo-primeiro-dia-prompt-1" style="border-color:#f0c060">
+    <figcaption style="color:#f0c060">Prompt inicial <button type="button" class="copiar" data-copiar>Copiar</button></figcaption>
+    <pre style="color:#fff">Siga o roteiro "Projeto novo: o primeiro dia" do portal de padrões de engenharia, em
+{URL do portal}/roteiros/projeto-novo-primeiro-dia.md. Faça os passos marcados "o agente"
+sem me perguntar; nos passos marcados "você decide", pare, mostre o resultado e espere meu
+sim. Nunca sobrescreva arquivo que já exista e me avise antes de qualquer passo destrutivo.</pre>
+  </figure>
+</div>
+
+<div class="roteiro">
+
+  <div class="passo" data-quem="voce">
+    <div class="n">1</div>
+    <div class="corpo">
+      <h3>Abrir o harness no projeto <span class="quem">Você faz</span></h3>
+      <p>Abra o agente dentro da pasta do projeto. O que muda é só o comando ou o botão.</p>
+      <div class="abas" role="tablist"><button role="tab" aria-selected="true">Kiro</button><button role="tab">Antigravity</button><button role="tab">Claude Code</button><button role="tab">Codex</button></div>
+      <div class="painel" role="tabpanel">
+        <p>No terminal, dentro da pasta do projeto:</p>
+        <div class="bloco"><span class="lang">bash</span><button type="button" class="copiar" data-copiar>Copiar</button><pre><code>cd ~/projetos/meu-projeto
+kiro-cli chat</code></pre></div>
+        <p>No IDE, abra a pasta do projeto e deixe os <code>.md</code> em <code>docs/entrada/</code> dentro dela: é dali que o agente lê no passo 3.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="agente">
+    <div class="n">2</div>
+    <div class="corpo">
+      <h3>Instalar o pacote e as skills <span class="quem">O agente</span></h3>
+      <p>O pacote do portal (práticas com força, roteamento, skills) e as skills de terceiros adotadas na trilha, montadas numa pasta só, por harness. Receita: <a href="#">Instalar as skills por harness</a>.</p>
+      <figure class="prompt"><figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar>Copiar</button></figcaption><pre>Instale o pacote de padrões de engenharia em {URL do portal}/pacote/ neste repositório e monte
+os pontos de montagem das skills seguindo a receita {URL do portal}/receitas/instalar-skills-por-harness.md.
+Mostre o ls de cada ponto de montagem ao terminar.</pre></figure>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="agente">
+    <div class="n">3</div>
+    <div class="corpo">
+      <h3>Ler os documentos do projeto <span class="quem">O agente</span></h3>
+      <p>Tudo que o time já tem: ofício, requisitos, planilhas exportadas, atas. O agente lê, resume e lista o que falta.</p>
+      <figure class="prompt"><figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar>Copiar</button></figcaption><pre>Leia todos os arquivos de docs/entrada/ e me devolva: um resumo de uma página, a lista de
+sistemas e integrações citados, os termos que aparecem sem definição e as perguntas que
+você precisaria me fazer antes de escrever um PRD. Não escreva o PRD ainda.</pre></figure>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="agente">
+    <div class="n">4</div>
+    <div class="corpo">
+      <h3>PRD por brainstorm <span class="quem">O agente</span></h3>
+      <p>O agente conduz a conversa com a skill de brainstorm; você responde. O resultado é um PRD em <code>docs/prd/</code>.</p>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="voce-decide">
+    <div class="n">5</div>
+    <div class="corpo">
+      <h3>Revisão independente do PRD <span class="quem">Você decide</span></h3>
+      <p>Um segundo agente, sem o histórico da conversa, lê o PRD e aponta o que não fecha. Você aprova o PRD ou devolve.</p>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="voce-decide">
+    <div class="n">6</div>
+    <div class="corpo">
+      <h3>Steering: arquitetura e requisitos <span class="quem">Você decide</span></h3>
+      <div class="abas" role="tablist"><button role="tab" aria-selected="true">Kiro</button><button role="tab">Antigravity</button><button role="tab">Claude Code</button><button role="tab">Codex</button></div>
+      <p>Onde o harness lê as regras do projeto (no Kiro, <code>.kiro/steering/</code>). O agente escreve a partir do PRD; você confere e aprova.</p>
+    </div>
+  </div>
+
+  <div class="passo" data-quem="agente">
+    <div class="n">7</div>
+    <div class="corpo">
+      <h3>Primeira spec e primeiro plano <span class="quem">O agente</span></h3>
+      <p>Daqui em diante vale a <a href="#">trilha</a>: a etapa diz o que precisa ser verdade para sair dela. O guia <a href="#">Do zero à primeira MR</a> mostra a execução inteira.</p>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section class="mock-tela">
+<h2>Tela 3 · Biblioteca de prompts em cartões (PD-D8)</h2>
+<div class="topo"><h1>Biblioteca de prompts</h1><p>Os prompts de exemplo das práticas, receitas e roteiros, cada um testado num agente.</p></div>
+<div class="filtros" data-alvo=".cartao-prompt">
+  <label>Domínio <select data-filtro="dominio"><option value="">todos</option><option>Construir com IA</option><option>CI/CD</option></select></label>
+  <label>Etapa <select data-filtro="momento"><option value="">todas</option><option>Antes de escrever</option><option>Antes do merge</option></select></label>
+  <label>Origem <select data-filtro="origem"><option value="">todas</option><option>prática</option><option>receita</option><option>roteiro</option></select></label>
+  <span class="ref-meta">3 de 41 prompts</span>
+</div>
+<div class="cartoes-prompt">
+  <figure class="cartao-prompt" data-dominio="construir-com-ia" data-momento="antes-de-escrever" data-origem="roteiro">
+    <b>Projeto novo: o primeiro dia</b>
+    <div class="chips"><span>Construir com IA</span><span>Antes de escrever</span><span>roteiro</span></div>
+    <p class="previa">Leia todos os arquivos de docs/entrada/ e me devolva: um resumo de uma página, a lista de sistemas e integrações citados, os termos que aparecem…</p>
+    <details><summary>Ver o prompt inteiro</summary><pre>Leia todos os arquivos de docs/entrada/ e me devolva: um resumo de uma página, a lista de
+sistemas e integrações citados, os termos que aparecem sem definição e as perguntas que
+você precisaria me fazer antes de escrever um PRD. Não escreva o PRD ainda.</pre></details>
+    <div class="acoes"><button type="button" class="copiar" data-copiar>Copiar</button><a href="#">Abrir a origem</a></div>
+  </figure>
+  <figure class="cartao-prompt" data-dominio="construir-com-ia" data-momento="antes-de-escrever" data-origem="receita">
+    <b>Instalar as skills por harness</b>
+    <div class="chips"><span>Construir com IA</span><span>Antes de escrever</span><span>receita</span></div>
+    <p class="previa">Monte os pontos de montagem das skills neste repositório seguindo a receita "Instalar as skills por harness" do portal…</p>
+    <details><summary>Ver o prompt inteiro</summary><pre>Monte os pontos de montagem das skills neste repositório…</pre></details>
+    <div class="acoes"><button type="button" class="copiar" data-copiar>Copiar</button><a href="#">Abrir a origem</a></div>
+  </figure>
+  <figure class="cartao-prompt" data-dominio="ci-cd" data-momento="antes-do-merge" data-origem="pratica">
+    <b>CICD-02 · Travas na merge request</b>
+    <div class="chips"><span>CI/CD</span><span>Antes do merge</span><span>prática</span></div>
+    <p class="previa">Ligue o job normas-do-pr no .gitlab-ci.yml deste repositório e rode o pipeline.</p>
+    <details><summary>Ver o prompt inteiro</summary><pre>Ligue o job normas-do-pr no .gitlab-ci.yml deste repositório e rode o pipeline.</pre></details>
+    <div class="acoes"><button type="button" class="copiar" data-copiar>Copiar</button><a href="#">Abrir a origem</a></div>
+  </figure>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<section class="mock-tela">
+<h2>Tela 4 · Receita: o agente primeiro, e o índice "Como fazer" com Copiar (PD-D9)</h2>
+<p class="trilha"><a href="#">Como fazer</a></p>
+<div class="topo"><h1>Instalar as skills por harness</h1><p>Cada harness enxerga as mesmas skills do projeto, a partir de uma única pasta skills/, sem cópia que divirja.</p></div>
+<div class="disco">
+  <h2 style="margin-top:0">Com o agente</h2>
+  <p>Troque <code>{URL do portal}</code> pelo endereço em que o portal está publicado e <code>AAAA-MM-DD</code> pela data de hoje.</p>
+  <figure class="prompt" style="border-color:#f0c060"><figcaption style="color:#f0c060">Prompt para o agente <button type="button" class="copiar" data-copiar>Copiar</button></figcaption><pre style="color:#fff">Monte os pontos de montagem das skills neste repositório seguindo a receita "Instalar as skills
+por harness" do portal de padrões de engenharia, em
+{URL do portal}/receitas/instalar-skills-por-harness.md. …</pre></figure>
+</div>
+<h2 style="margin-top:28px">Prefere fazer à mão?</h2>
+<p class="lead">Resultado · Antes de começar · Passos · Confira · Se der errado (como hoje, abaixo).</p>
+
+<h3 style="margin-top:32px">No índice "Como fazer"</h3>
+<div class="grade">
+  <article class="cartao"><h3><a href="#">Instalar as skills por harness</a></h3><p class="s">Cada harness enxerga as mesmas skills do projeto, a partir de uma única pasta skills/.</p>
+    <div class="meta"><span>10 min</span><span>sdd-scaffold · Kiro · Antigravity · Claude Code · Codex</span><figure class="prompt" style="margin:0;border:0;padding:0"><pre hidden>Monte os pontos de montagem…</pre><button type="button" class="copiar" data-copiar style="margin:0">Copiar prompt</button></figure></div></article>
+  <article class="cartao"><h3><a href="#">Ligar o CI do GitLab com as travas</a></h3><p class="s">Três jobs que barram a MR: normas, governança e segredos.</p>
+    <div class="meta"><span>20 min</span><span>gitlab-ci-local · gitleaks</span><figure class="prompt" style="margin:0;border:0;padding:0"><pre hidden>Ligue o job…</pre><button type="button" class="copiar" data-copiar style="margin:0">Copiar prompt</button></figure></div></article>
+</div>
+</section>
+
+</body>
+</html>

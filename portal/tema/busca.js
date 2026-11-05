@@ -102,14 +102,25 @@
     caixa.hidden = false;
     var seletores = Array.prototype.slice.call(caixa.querySelectorAll("select[data-filtro]"));
 
+    var contagem = caixa.querySelector("[data-contagem]");
+
     function aplicar() {
+      var total = 0;
+      var visiveis = 0;
       document.querySelectorAll(alvo).forEach(function (linha) {
+        total += 1;
         linha.hidden = !seletores.every(function (seletor) {
           var valor = seletor.value;
           var dado = linha.getAttribute("data-" + seletor.getAttribute("data-filtro")) || "";
           return !valor || dado.split(" ").indexOf(valor) !== -1;
         });
+        if (!linha.hidden) {
+          visiveis += 1;
+        }
       });
+      if (contagem) {
+        contagem.textContent = visiveis + " de " + total + " prompts";
+      }
     }
 
     seletores.forEach(function (seletor) {
@@ -134,28 +145,134 @@
     });
   }
 
-  // Botão Copiar do prompt de exemplo: só escreve na área de transferência, nunca lê.
-  function iniciarCopiar() {
-    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+  // Escreve `texto` na área de transferência: Clipboard API quando existe e, senão (página fora de
+  // contexto seguro, navegador antigo), um textarea temporário com `execCommand("copy")`.
+  function copiarTexto(texto, feito, falhou) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(feito, function () {
+        copiarPorSelecao(texto, feito, falhou);
+      });
       return;
     }
+    copiarPorSelecao(texto, feito, falhou);
+  }
+
+  function copiarPorSelecao(texto, feito, falhou) {
+    var foco = document.activeElement;
+    var selecao = null;
+    var faixa = null;
+    try {
+      selecao = window.getSelection ? window.getSelection() : null;
+      faixa = selecao && selecao.rangeCount ? selecao.getRangeAt(0) : null;
+    } catch (erro) {
+      faixa = null;
+    }
+    var area = document.createElement("textarea");
+    area.value = texto;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.top = "-1000px";
+    document.body.appendChild(area);
+    area.select();
+    var deu = false;
+    try {
+      deu = document.execCommand("copy");
+    } catch (erro) {
+      deu = false;
+    }
+    document.body.removeChild(area);
+    try {
+      if (selecao && faixa) {
+        selecao.removeAllRanges();
+        selecao.addRange(faixa);
+      }
+      if (foco && foco.focus) {
+        foco.focus();
+      }
+    } catch (erro) {
+      /* devolver foco e seleção é cortesia: falhar aqui não desfaz a cópia */
+    }
+    if (deu) {
+      feito();
+    } else if (falhou) {
+      falhou();
+    }
+  }
+
+  // Botão Copiar (bloco de código e prompt): só escreve na área de transferência, nunca lê.
+  function iniciarCopiar() {
     document.querySelectorAll("[data-copiar]").forEach(function (botao) {
       var texto = botao.textContent;
-      botao.hidden = false;
       botao.addEventListener("click", function () {
-        var figura = botao.closest("figure") || botao.parentElement;
-        var codigo = figura ? figura.querySelector("pre") : null;
+        var raiz = botao.closest("figure") || botao.closest(".bloco") || botao.parentElement;
+        var codigo = raiz ? raiz.querySelector("pre") : null;
         if (!codigo) {
           return;
         }
-        navigator.clipboard.writeText(codigo.textContent).then(function () {
-          botao.textContent = "Copiado";
+        function avisar(mensagem) {
+          botao.textContent = mensagem;
           setTimeout(function () {
             botao.textContent = texto;
           }, 2000);
+        }
+        copiarTexto(
+          codigo.textContent,
+          function () { avisar("Copiado"); },
+          function () { avisar("Não copiou"); }
+        );
+      });
+    });
+  }
+
+  // Abas por harness: `[data-abas]` é um tablist dentro de `section.passo`; os painéis são
+  // `.painel[data-harness]` da mesma seção. A escolha vale para todos os grupos da página e fica
+  // guardada no navegador (se ele deixar).
+  function iniciarAbas() {
+    var grupos = Array.prototype.slice.call(document.querySelectorAll("[data-abas]"));
+    if (!grupos.length) {
+      return;
+    }
+
+    function aplicar(id) {
+      grupos.forEach(function (grupo) {
+        var alvo = grupo.querySelector('[role="tab"][data-harness="' + id + '"]') ? id : null;
+        if (!alvo) {
+          var primeira = grupo.querySelector('[role="tab"][data-harness]');
+          alvo = primeira ? primeira.getAttribute("data-harness") : null;
+        }
+        var passo = grupo.closest("section.passo") || grupo.parentElement;
+        grupo.querySelectorAll('[role="tab"][data-harness]').forEach(function (aba) {
+          var ativa = aba.getAttribute("data-harness") === alvo;
+          aba.setAttribute("aria-selected", ativa ? "true" : "false");
+          aba.tabIndex = ativa ? 0 : -1;
+        });
+        passo.querySelectorAll('.painel[role="tabpanel"][data-harness]').forEach(function (painel) {
+          painel.hidden = painel.getAttribute("data-harness") !== alvo;
+        });
+      });
+    }
+
+    grupos.forEach(function (grupo) {
+      grupo.querySelectorAll('[role="tab"][data-harness]').forEach(function (aba) {
+        aba.addEventListener("click", function () {
+          var id = aba.getAttribute("data-harness");
+          aplicar(id);
+          try {
+            localStorage.setItem("harness", id);
+          } catch (erro) {
+            /* navegação privada ou armazenamento bloqueado: a escolha só não persiste */
+          }
         });
       });
     });
+
+    var guardado = null;
+    try {
+      guardado = localStorage.getItem("harness");
+    } catch (erro) {
+      guardado = null;
+    }
+    aplicar(guardado);
   }
 
   // Passar o mouse ou o foco numa linha de peça acende a peça no desenho do ninho.
@@ -174,11 +291,17 @@
     });
   }
 
+  // Só para os testes de comportamento: expõe as funções quando a página pede.
+  if (window.__portalTeste) {
+    window.__portal = { copiarTexto: copiarTexto, iniciarAbas: iniciarAbas, ligarFiltros: ligarFiltros, iniciarCopiar: iniciarCopiar };
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     iniciarPecas();
     iniciarBusca();
     iniciarFiltros();
     iniciarMenu();
     iniciarCopiar();
+    iniciarAbas();
   });
 })();

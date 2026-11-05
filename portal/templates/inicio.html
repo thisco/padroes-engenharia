@@ -16,7 +16,17 @@
   <h2>Comece aqui</h2>
   <div class="tr-portas">
 {% for caminho in caminhos %}
-    <a class="tr-porta" href="{{ raiz }}{{ caminho.href }}"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span><em>{{ caminho.rotulo }}</em></a>
+    <div class="tr-porta"><b>{{ caminho.titulo }}</b><span>{{ caminho.texto }}</span>
+      <div class="acoes">
+{% set roteiro = caminho.get("roteiro") %}
+{% if roteiro %}
+        <em><a href="{{ raiz }}{{ roteiro.href }}">Roteiro com o agente: {{ roteiro.titulo }}</a></em>
+{% if roteiro.harnesses %}
+        <span class="harn">{{ roteiro.harnesses }}</span>
+{% endif %}
+{% endif %}
+        <em><a href="{{ raiz }}{{ caminho.href }}">{{ caminho.rotulo }}</a></em>
+      </div></div>
 {% endfor %}
   </div>
 </section>

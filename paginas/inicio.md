@@ -9,12 +9,15 @@ caminhos:
 - titulo: Projeto novo
   texto: 'Comece com o projeto já montado: regras, roteiro de trabalho e verificações.'
   destino: guias/do-zero-a-primeira-mr
+  porta: projeto-novo
 - titulo: Projeto existente
   texto: Traga as regras e as verificações para um repositório que já existe.
   destino: guias/brownfield-em-5-passos
+  porta: projeto-existente
 - titulo: No meio de uma mudança
   texto: Veja o que a etapa em que você está exige para sair dela.
   destino: trilha
+  porta: mudanca
 fatos:
 - Cada afirmação tem uma fonte, aberta e conferida na web por quem escreveu.
 - Cada lote de conteúdo passa por uma conferência de executabilidade feita por um agente independente, que segue os passos e abre uma fonte por conteúdo; a revisão com modelo forte vale quando há mudança de motor ou de schema, ou achado crítico.

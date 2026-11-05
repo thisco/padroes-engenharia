@@ -841,6 +841,76 @@ def regra_secoes(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
     return erros
 
 
+# Roteiro: o primeiro dia de um time (R-ROTEIRO) -----------------------------------------------
+
+QUEM = ("voce", "agente", "voce-decide")
+
+
+def titulo_do_passo(n: int, titulo: str) -> str:
+    """O título que o H2 do corpo precisa ter para o passo `n` (de 1) do frontmatter."""
+    return f"Passo {n}: {titulo}"
+
+
+def _tem_prompt_antes_do_primeiro_passo(corpo: str) -> bool:
+    tokens = _MARKDOWN.parse(corpo)
+    for t in tokens:
+        if t.type == "heading_open" and t.tag == "h2":
+            return False
+        if t.type == "fence" and t.info.strip() == "prompt":
+            return True
+    return False
+
+
+@regra
+def regra_roteiro(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
+    """O roteiro tem prompt inicial, um H2 `Passo N: <titulo>` por passo do frontmatter, na
+    ordem, H3 só de harness listado em `harnesses`, e uma `porta` própria."""
+    harnesses = {
+        (_texto(f.meta, "id") or _nome(f)): _texto(f.meta, "titulo")
+        for f in repo.ferramentas
+        if f.meta.get("categoria") == "harness"
+    }
+    erros: list[Erro] = []
+    portas: dict[str, str] = {}
+    for r in repo.roteiros:
+        arquivo = r.caminho_relativo
+
+        def reprovar(valor: str, arquivo: str = arquivo) -> None:
+            erros.append(Erro(arquivo, "corpo", codigos.R_ROTEIRO, valor))
+
+        if not _tem_prompt_antes_do_primeiro_passo(r.corpo):
+            reprovar("prompt inicial ausente antes do primeiro passo")
+        passos = r.meta.get("passos")
+        esperados = [
+            titulo_do_passo(n, str(p.get("titulo")))
+            for n, p in enumerate(passos if isinstance(passos, list) else [], start=1)
+            if isinstance(p, dict)
+        ]
+        secoes_h2 = secoes(r.corpo)
+        for n, esperado in enumerate(esperados, start=1):
+            if n > len(secoes_h2):
+                reprovar(f"passo {n}: esperado {esperado!r}, ausente")
+            elif secoes_h2[n - 1][0] != esperado:
+                reprovar(f"passo {n}: esperado {esperado!r}, veio {secoes_h2[n - 1][0]!r}")
+        for titulo, _ in secoes_h2[len(esperados) :]:
+            reprovar(f"seção {titulo!r} sem passo no frontmatter")
+        listados = r.meta.get("harnesses")
+        permitidos = {
+            harnesses[h] for h in (listados if isinstance(listados, list) else []) if h in harnesses
+        }
+        for _, texto in secoes_h2:
+            for h3 in sorted(_h3_da_secao(texto)):
+                if h3 not in permitidos:
+                    reprovar(f"### {h3} não é harness listado em harnesses")
+        porta = r.meta.get("porta")
+        if isinstance(porta, str):
+            if porta in portas:
+                reprovar(f"porta {porta} repetida em {portas[porta]}")
+            else:
+                portas[porta] = arquivo
+    return erros
+
+
 # Exemplo obrigatório e blocos de código (delta §6.5, regra 6; §12.1, bloqueio 13) ---------------
 
 LIMITE_BLOCO = 15
@@ -949,13 +1019,23 @@ def regra_execucao(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> l
 LUGAR_DO_PROMPT = {
     "pratica": ("Exemplo", "Para o agente", "## Exemplo › ### Para o agente"),
     "receita": ("Com o agente", "", "## Com o agente"),
+    "roteiro": ("", "", "o preâmbulo ou um `## Passo N`"),
 }
+
+
+def _prompt_no_lugar(tipo: str, h2: str, h3: str, lugar: tuple[str, str]) -> bool:
+    """No roteiro o prompt mora no preâmbulo (o prompt inicial) ou dentro de qualquer
+    `## Passo N`, inclusive numa subseção de harness; nos demais tipos, só no lugar fixo."""
+    if tipo == "roteiro":
+        return h2 == "" or h2.startswith("Passo ")
+    return (h2, h3) == lugar
 
 
 @regra
 def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> list[Erro]:
-    """O prompt de exemplo mora em `Exemplo › Para o agente` (prática) ou `Com o agente`
-    (receita), é obrigatório onde o Exemplo é e só publica com execução registrada."""
+    """O prompt de exemplo mora em `Exemplo › Para o agente` (prática), `Com o agente`
+    (receita) ou no preâmbulo e nos passos (roteiro), é obrigatório onde o Exemplo é, na
+    receita e no roteiro, e só publica com execução registrada."""
     registros = {_texto(v.meta, "conteudo"): v for v in repo.verificacoes}
     erros: list[Erro] = []
     for c in repo.markdown():
@@ -966,13 +1046,13 @@ def regra_prompt(repo: Repositorio, espinha: Espinha, contexto: Contexto) -> lis
 
         if c.tipo not in LUGAR_DO_PROMPT:
             if achados:
-                reprovar("prompt só em prática e receita")
+                reprovar("prompt só em prática, receita e roteiro")
             continue
         h2, h3, descricao = LUGAR_DO_PROMPT[c.tipo]
         for achado in achados:
-            if (achado.h2, achado.h3) != (h2, h3):
+            if not _prompt_no_lugar(c.tipo, achado.h2, achado.h3, (h2, h3)):
                 reprovar(f"prompt fora de {descricao}")
-        obrigatorio = c.tipo == "receita" or exemplo_obrigatorio(c.meta)
+        obrigatorio = c.tipo in ("receita", "roteiro") or exemplo_obrigatorio(c.meta)
         if obrigatorio and not any((a.h2, a.h3) == (h2, h3) for a in achados):
             reprovar(f"prompt de exemplo obrigatório em {descricao.split(' › ')[-1]}")
         registro = registros.get(c.chave)

@@ -11,7 +11,21 @@
 {% for lista in listas %}
 <section aria-label="{{ lista.titulo }}">
   <h2>{{ lista.titulo }}</h2>
-{% if lista.itens %}
+{% if lista.itens and lista.get('cartoes') %}
+  <div class="grade">
+{% for item in lista.itens %}
+    <article class="cartao">
+      <h3><a href="{{ raiz }}{{ item.href }}">{{ item.titulo }}</a></h3>
+      <p class="s">{{ item.objetivo }}</p>
+      <div class="meta"><span>{{ item.tempo }}</span>{% if item.ferramentas %}<span>{{ item.ferramentas | join(" · ") }}</span>{% endif %}
+{% if item.prompt %}
+        <figure class="prompt"><pre hidden>{{ item.prompt }}</pre><button type="button" class="copiar" data-copiar>Copiar prompt</button></figure>
+{% endif %}
+      </div>
+    </article>
+{% endfor %}
+  </div>
+{% elif lista.itens %}
   <ul class="praticas">
 {% for item in lista.itens %}
     <li><a href="{{ raiz }}{{ item.href }}">{{ item.titulo }}</a>{% if item.nota %} <span class="ref-meta">{{ item.nota }}</span>{% endif %}</li>

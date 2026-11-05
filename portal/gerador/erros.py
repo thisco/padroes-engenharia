@@ -50,11 +50,18 @@ R_COLECAO = "R-COLECAO"
 R_CASO_REF = "R-CASO-REF"
 R_CASO_ORIGEM = "R-CASO-ORIGEM"
 R_TRILHA = "R-TRILHA"
+R_ROTEIRO = "R-ROTEIRO"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
     R_ESQUEMA: "frontmatter fora do JSON Schema do tipo",
-    R_SECOES: "seções obrigatórias da prática, da receita ou do tutorial ausentes ou fora de ordem",
+    R_ROTEIRO: (
+        "roteiro sem prompt inicial, passos fora do frontmatter, "
+        "harness não listado ou porta repetida"
+    ),
+    R_SECOES: (
+        "seções obrigatórias da prática, da receita ou do tutorial ausentes ou fora de ordem"
+    ),
     R_ESPINHA: "domínio, subdomínio, momento ou pasta fora de esquemas/espinha.yml",
     R_ID_FORMATO: "ID fora do formato <PREFIXO>-<NN>",
     R_ID_PREFIXO: "prefixo do ID incoerente com o domínio",

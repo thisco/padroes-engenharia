@@ -70,8 +70,11 @@ def _tutorial(guia: Conteudo) -> bool:
 
 
 def todos_os_prompts(site: Site) -> list[Prompt]:
-    """Os prompts de exemplo de todas as práticas e receitas, na ordem dos caminhos."""
-    conteudos = sorted((*site.repo.praticas, *site.repo.receitas), key=lambda c: c.caminho_relativo)
+    """Os prompts de exemplo de práticas, receitas e roteiros, na ordem dos caminhos."""
+    conteudos = sorted(
+        (*site.repo.praticas, *site.repo.receitas, *site.repo.roteiros),
+        key=lambda c: c.caminho_relativo,
+    )
     return [p for c in conteudos for p in prompts_de(c)]
 
 
@@ -205,7 +208,16 @@ def montar_site(
     )
 
 
-CAMPOS_COM_CORPO = ("praticas", "dominios", "conceitos", "guias", "casos", "paginas", "receitas")
+CAMPOS_COM_CORPO = (
+    "praticas",
+    "dominios",
+    "conceitos",
+    "guias",
+    "casos",
+    "paginas",
+    "receitas",
+    "roteiros",
+)
 
 
 def _com_url_do_portal(repo: Repositorio, url: str) -> Repositorio:
@@ -272,6 +284,7 @@ def caminho_de(conteudo: Conteudo) -> str:
         "guia": "guias",
         "caso": "casos",
         "receita": "receitas",
+        "roteiro": "roteiros",
         "starter": "starters",
         "ferramenta": "ferramentas",
     }
@@ -279,7 +292,7 @@ def caminho_de(conteudo: Conteudo) -> str:
         return f"referencias.html#{conteudo.chave}"
     if conteudo.tipo == "glossario":
         return "glossario.html"
-    if conteudo.tipo in ("receita", "starter", "ferramenta"):
+    if conteudo.tipo in ("receita", "roteiro", "starter", "ferramenta"):
         # a chave leva o prefixo do tipo (registro de verificação); o caminho usa o slug ou o id
         return f"{pastas[conteudo.tipo]}/{PurePosixPath(conteudo.caminho_relativo).stem}.html"
     return f"{pastas[conteudo.tipo]}/{conteudo.chave}.html"
@@ -803,7 +816,7 @@ def descricao_de(site: Site, conteudo: Conteudo) -> str:
         return f"Guia para {meta['publico']}, {meta['tempo_leitura']} min de leitura."
     if conteudo.tipo == "caso":
         return f"Caso: {texto_origem(meta['origem'])}, {meta['periodo']}."
-    if conteudo.tipo == "receita":
+    if conteudo.tipo in ("receita", "roteiro"):
         return str(meta["objetivo"])
     return sem_marcadores(str(meta.get("descricao") or ""))
 

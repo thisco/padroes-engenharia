@@ -5,15 +5,21 @@
   <h1>{{ titulo }}</h1>
   <p>{{ descricao }}</p>
 </div>
-{% for grupo in grupos %}
-<section aria-label="{{ grupo.titulo }}">
-  <h2>{{ grupo.titulo }}</h2>
-{% for p in grupo.itens %}
-  <figure class="prompt" id="{{ p.id }}">
-    <figcaption>Prompt para o agente <button type="button" class="copiar" data-copiar hidden>Copiar</button> <a href="{{ raiz }}{{ p.caminho }}#{{ p.id }}">{{ p.origem }}</a> <span class="ref-meta">{{ p.momento_titulo }}</span></figcaption>
-    <pre>{{ p.texto }}</pre>
+<div class="filtros" data-alvo=".cartao-prompt" hidden>
+  <label>Domínio <select data-filtro="dominio"><option value="">todos</option>{% for slug, rotulo in dominios %}<option value="{{ slug }}">{{ rotulo }}</option>{% endfor %}</select></label>
+  <label>Etapa <select data-filtro="momento"><option value="">todas</option>{% for slug, rotulo in momentos %}<option value="{{ slug }}">{{ rotulo }}</option>{% endfor %}</select></label>
+  <label>Origem <select data-filtro="origem"><option value="">todas</option><option value="pratica">prática</option><option value="receita">receita</option><option value="roteiro">roteiro</option></select></label>
+  <span class="ref-meta" data-contagem aria-live="polite">{{ cartoes|length }} de {{ cartoes|length }} prompts</span>
+</div>
+<div class="cartoes-prompt">
+{% for p in cartoes %}
+  <figure class="cartao-prompt" id="{{ p.id }}" data-dominio="{{ p.dominio }}" data-momento="{{ p.momento }}" data-origem="{{ p.tipo_origem }}">
+    <b>{{ p.origem_titulo }}</b>
+    <div class="chips"><span>{{ p.dominio_titulo }}</span><span>{{ p.momento_titulo }}</span><span>{{ {"pratica": "prática"}.get(p.tipo_origem, p.tipo_origem) }}</span></div>
+    <p class="previa">{{ p.previa }}</p>
+    <details><summary>Ver o prompt inteiro</summary><pre>{{ p.texto }}</pre></details>
+    <div class="acoes"><button type="button" class="copiar" data-copiar>Copiar</button><a href="{{ raiz }}{{ p.caminho }}">Abrir a origem</a></div>
   </figure>
 {% endfor %}
-</section>
-{% endfor %}
+</div>
 {% endblock %}

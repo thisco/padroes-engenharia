@@ -1,0 +1,10 @@
+id: antigravity-getting-started
+titulo: "Getting started (Antigravity)"
+organizacao: Google
+url: https://antigravity.google/docs/getting-started
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seção 'Start a project': aba Antigravity CLI (entrar na pasta e rodar agy; confirmação de confiança no diretório antes da indexação) e aba Antigravity App (New Project, Add Folder, Create)"
+dominios: [construir-com-ia]
+notas: "A URL antiga /docs/cli/getting-started/ redireciona para /docs/getting-started?tab=cli."

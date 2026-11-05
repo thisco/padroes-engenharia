@@ -9,6 +9,19 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Adicionado
 
+- Tipo de conteúdo `roteiro` (`roteiros/<slug>.md`, ADR 0014): a sequência do primeiro dia de um
+  time num projeto, com prompt inicial, passos numerados, quem faz cada passo (você, o agente ou
+  você decide) e subseções por harness; schema `esquemas/roteiro.schema.json`, regra `R-ROTEIRO`,
+  página com stepper e abas por harness, `.md` gêmeo e seção "Roteiros" no `llms.txt`.
+- Dois roteiros: "Projeto novo: o primeiro dia" (sete passos) e "Projeto existente: o primeiro dia",
+  com curadoria e registro em `verificacoes/`.
+- Skill `roteiro-<slug>` gerada de cada roteiro no pacote de distribuição, coberta pelo manifesto
+  (nada é escrito em `skills/` do repositório).
+- Portas da Início com o segundo link "Roteiro com o agente" e os harnesses cobertos.
+- Biblioteca de prompts em cartões, com filtros e contagem.
+- Receita com o prompt do agente primeiro ("Com o agente") e "Como fazer" depois.
+- Botão Copiar sempre visível, com fallback sem a API de área de transferência, e rótulo da
+  linguagem no canto do bloco.
 - Laboratório de eval e otimização dos prompts (`otimizacao/`, ADR 0008), com ambiente Python
   próprio: cenários por prática com variações de projeto, runner sem interação em Claude Code,
   Codex, Kiro CLI e Antigravity CLI, métrica com feedback do verificador e otimização pelo GEPA
@@ -66,6 +79,7 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ### Alterado
 
+- `pagina.schema.json` aceita o campo opcional `porta` nos caminhos da Início (aditivo, minor).
 - ADR 0006 renomeada para `0006-caso-de-origem-fora-da-semente.md`: o arquivo e o título deixam
   de citar a sigla do sistema de origem; a decisão não muda.
 

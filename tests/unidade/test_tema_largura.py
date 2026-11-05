@@ -49,3 +49,8 @@ def test_grade_empilhada_deixa_o_item_encolher():
 def test_barra_de_navegacao_quebra_linha_em_tela_estreita():
     assert re.search(r"\.nav\s*\{[^}]*flex-wrap:\s*wrap", CSS)
     assert re.search(r"\.barra\s+\.menu\s*\{[^}]*flex:\s*1 1 100%", _bloco_estreito(CSS))
+
+
+def test_corpo_do_passo_do_roteiro_nao_herda_o_grid_de_duas_colunas():
+    assert not re.search(r"\.passo\s+\.corpo", CSS)
+    assert re.search(r"\.passo\s+\.passo-corpo\s*\{", CSS)

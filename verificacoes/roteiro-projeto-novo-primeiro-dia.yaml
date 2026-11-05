@@ -1,0 +1,160 @@
+conteudo: roteiro-projeto-novo-primeiro-dia
+verificado_em: '2026-11-03'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Kiro CLI começa a sessão com o comando kiro-cli, rodado dentro da pasta do projeto no exemplo de início
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Starting a session'; a página kiro.dev/docs/cli/ mostra cd my-project e kiro-cli"
+  resultado: confirmada
+  nota: "O mockup trazia kiro-cli chat; a documentação mostra kiro-cli para iniciar, e o subcomando chat só aparece em kiro-cli chat --resume. O texto segue a documentação."
+- texto: o Kiro lembra a conversa pela pasta em que ela começou, e kiro-cli chat --resume retoma a conversa da pasta atual
+  ref: kiro-cli-chat
+  localizacao: "kiro.dev/docs/cli/chat/, seção 'Directory-based persistence'"
+  resultado: confirmada
+- texto: no Antigravity CLI, entra-se na pasta do projeto e roda-se agy; na primeira vez ele pede a confirmação de confiança no diretório antes de indexar os arquivos
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started?tab=cli, seção 'Start a project', aba Antigravity CLI, e passo 'Workspace trust' da instalação"
+  resultado: confirmada
+- texto: no app do Antigravity, clica-se em New Project, depois em Add Folder para escolher a pasta e em Create
+  ref: antigravity-getting-started
+  localizacao: "antigravity.google/docs/getting-started, seção 'Start a project', aba Antigravity App, passos 1 a 3"
+  resultado: confirmada
+- texto: o Claude Code começa com cd na pasta do projeto e o comando claude
+  ref: claude-code-quickstart
+  localizacao: "code.claude.com/docs/en/quickstart, seção 'Step 2: Start your first session'"
+  resultado: confirmada
+- texto: depois de instalado, o Codex começa com o comando codex
+  ref: codex-readme
+  localizacao: "github.com/openai/codex, README, seção 'Quickstart' ('Then simply run codex to get started')"
+  resultado: confirmada
+  nota: "O README não fala da pasta; rodar de dentro da pasta do projeto é instrução do roteiro, sustentada pela forma como o Codex procura as instruções (afirmação seguinte)."
+- texto: o Codex procura as instruções a partir da raiz do projeto até a pasta atual
+  ref: codex-agents-md
+  localizacao: "learn.chatgpt.com/docs/agent-configuration/agents-md, seção 'How Codex discovers guidance' ('Starting at the project root (typically the Git root), Codex walks down to your current working directory')"
+  resultado: confirmada
+- texto: o Codex lê no máximo um arquivo de instruções por pasta (AGENTS.override.md, senão AGENTS.md), da raiz até a pasta atual, e para de acrescentar arquivos ao chegar a 32 KiB (project_doc_max_bytes, padrão)
+  ref: codex-agents-md
+  localizacao: "mesma página, seção 'How Codex discovers guidance' (ordem de busca por pasta e limite project_doc_max_bytes)"
+  resultado: confirmada
+- texto: as skills de repositório do Codex ficam em .agents/skills, varrida da pasta atual até a raiz do repositório
+  ref: codex-skills
+  localizacao: "learn.chatgpt.com/docs/build-skills, seção de localização das skills ('Codex scans .agents/skills in every directory from your current working directory')"
+  resultado: confirmada
+- texto: no projeto do scaffold, .claude/skills, .codex/skills, .kiro/skills e .agents/skills são links para a mesma pasta skills/
+  ref: sdd-scaffold-readme
+  localizacao: "README no commit fixado da v1.7.1, seções 'O que você recebe' e 'Um corpo de skill, quatro pontos de montagem'"
+  resultado: confirmada
+- texto: no projeto do scaffold o AGENTS.md é a constituição com a tabela de roteamento, docs/steering/ tem os parâmetros do projeto (entre eles arquitetura.md) e CLAUDE.md e GEMINI.md são ponteiros para o AGENTS.md
+  ref: sdd-scaffold-readme
+  localizacao: "README no commit fixado da v1.7.1, seção 'O que você recebe'"
+  resultado: confirmada
+- texto: a skill brainstorming faz uma pergunta por mensagem e nada é construído antes da aprovação do documento (no tamanho de projeto)
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Conversation' (\"Each message ends with one question\") e, em 'The Written Design', a frase \"Nothing gets built until your human partner approves the full description\""
+  resultado: confirmada
+- texto: num repositório de software a skill grava o desenho em docs/superpowers/specs/, e a preferência da pessoa vale mais que esse padrão
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Where it goes'"
+  resultado: confirmada
+- texto: antes de entregar o documento, a skill manda um subagente novo ler o documento como quem vai construir; sem ferramenta de subagente, o próprio agente faz essa leitura
+  ref: superpowers-brainstorming
+  localizacao: "SKILL.md no commit bb92a77, seção 'The Written Design', item 'Builder check' (\"dispatch a fresh subagent\"; \"Without a subagent tool, read the document as that builder yourself\")"
+  resultado: confirmada
+- texto: a skill sdd-lifecycle procura o PRD em docs/prd/ ao escrever a spec e o cita no cabeçalho
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md no commit fixado da v3.0.0, 'Fase 1 — Especificação (Tier 2)' ('Se houver PRD relacionado em docs/prd/, leia-o e cite-o no cabeçalho da spec')"
+  resultado: confirmada
+- texto: a sdd-lifecycle classifica a mudança em tier e, no Tier 2, escreve a spec em docs/specs/, espera a aprovação de uma pessoa e só então escreve o plano em docs/plans/
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md no commit fixado da v3.0.0, 'Fase 0', 'Matriz tier → fases' e Fases 1, 3 e 4"
+  resultado: confirmada
+- texto: o Kiro lê o steering do workspace em .kiro/steering/ e o AGENTS.md da raiz do workspace, que entra sempre, sem modo de inclusão
+  ref: kiro-steering
+  localizacao: "kiro.dev/docs/steering/, seções 'Workspace steering' e 'Agents.md'"
+  resultado: confirmada
+- texto: as skills de workspace do Kiro ficam em .kiro/skills/
+  ref: kiro-skills
+  localizacao: "kiro.dev/docs/skills/, seção de local do workspace"
+  resultado: confirmada
+- texto: o Antigravity lê AGENTS.md ou GEMINI.md e .agents/rules/ da pasta do workspace e de cada pasta acima até a raiz do repositório, e junta todas as regras que acha
+  ref: antigravity-rules
+  localizacao: "antigravity.google/docs/rules, seção de descoberta das regras do workspace e 'Combining rules'"
+  resultado: confirmada
+- texto: as skills de workspace do Antigravity ficam em .agents/skills/
+  ref: antigravity-skills
+  localizacao: "antigravity.google/docs/skills, seção de local do workspace (<workspace-root>/.agents/skills/<skill-folder>/)"
+  resultado: confirmada
+- texto: o Claude Code lê as instruções do projeto em ./CLAUDE.md ou ./.claude/CLAUDE.md e as regras de .claude/rules/; com CLAUDE.md na pasta, lê esse arquivo em vez do AGENTS.md, e @AGENTS.md no CLAUDE.md traz o AGENTS.md
+  ref: claude-code-memory
+  localizacao: "code.claude.com/docs/en/memory, seções 'Choose where to put CLAUDE.md files' (linha Project instructions), 'Organize rules with .claude/rules/', 'When Claude Code reads AGENTS.md' e 'Share one file with other coding tools'"
+  resultado: confirmada
+- texto: as skills de projeto do Claude Code ficam em .claude/skills/<nome>/SKILL.md
+  ref: claude-code-skills
+  localizacao: "code.claude.com/docs/en/skills, seção 'Choose where skills load', linha Project"
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "revisão independente em lote, 2026-11-04"
+  data: '2026-11-04'
+  achados:
+  - afirmacao: a steering por harness (onde cada um lê as regras próprias) sem [ref] e imprecisa para o Claude Code
+    problema: '[importante] o trecho afirmava um fato sobre o local das regras de cada harness sem citar fonte, e para o Claude Code estava impreciso'
+    tratamento: 'resolvido: reescrito como instrução, sem afirmação factual não sustentada'
+  - afirmacao: '"sem o histórico" não sustentado e localização HARD-GATE inexistente'
+    problema: '[importante] a expressão não tinha sustentação na fonte, e a localização registrada (HARD-GATE) não existe na fonte'
+    tratamento: 'resolvido: texto e localização corrigidos'
+  - afirmacao: '"ofício" no texto do roteiro'
+    problema: '[baixo] achado minor da revisão'
+    tratamento: 'retirado: o achado foi retirado pelo revisor na re-revisão'
+  - afirmacao: execução dos prompts em sessão nova
+    problema: 'a revisão de conteúdo não executa os prompts'
+    tratamento: 'pendência do dono: executar os prompts em sessão nova e registrar as execuções; segue aberta'
+execucoes:
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-1
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num projeto gerado pelo sdd-scaffold 1.7.1 com três documentos em docs/entrada/; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt; a pessoa respondeu o brainstorm e os pontos de decisão e abriu as sessões novas dos passos 5 e 7"
+    resultado: passou
+    evidencia: "passos 2 a 6 na mesma sessão: 51 SHA-256 conferidos e 23 skills nos 4 pontos; resumo, sistemas, termos e perguntas; PRD por brainstorm em docs/prd/2026-11-05-prd.md; revisor em sessão nova trouxe 15 achados, PRD corrigido e aprovado (16 RF e 5 RN com aceite, 7 estados, decisões D1-D20); arquitetura.md e requisitos.md escritos e aprovados, commit 0376a9c; passo 7 em sessão nova: sessão nova do passo 7: tier 2, spec docs/specs/2026-11-05-primeira-entrega.md (R1-R21, propostas P1-P18 ratificadas pela pessoa) aprovada em commit próprio (04adbf2, f34c8e6) e plano docs/plans/2026-11-05-primeira-entrega.md com 30 tarefas em 6 fases (85523b3); nada implementado; estado final bate com o Resultado esperado da ficha"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-2
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num projeto gerado pelo sdd-scaffold 1.7.1; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt"
+    resultado: passou
+    evidencia: "51 arquivos em .padroes/, 51 SHA-256 conferidos; 3 skills do pacote copiadas e as 5 que o scaffold já trazia preservadas; coleção superpowers bb92a77 copiada; os 4 pontos de montagem do scaffold já apontavam para ../skills e listam 23 skills"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-3
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) no projeto já com o pacote do prompt 2"
+    resultado: passou
+    evidencia: "resumo de uma página, 8 sistemas e integrações, 13 termos sem definição e 26 perguntas, sem escrever o PRD nem alterar arquivo"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-4
+    harness: claude-code
+    ambiente: "mesma sessão do prompt 3 (o roteiro só pede sessão nova nos passos 5 e 7); a pessoa respondeu as perguntas do brainstorm"
+    resultado: passou
+    evidencia: "skill brainstorming do projeto lida e seguida (oferta de pular, uma pergunta por mensagem); PRD gravado em docs/prd/2026-11-05-prd.md no molde do scaffold (problema, quem usa, 13 requisitos, régua de sucesso, restrições, fora de escopo, 10 perguntas abertas), sem spec, plano ou código; a skill gravaria em docs/superpowers/specs/ e commitaria, o roteiro prevaleceu"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-5
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code), sem o histórico do brainstorm"
+    resultado: passou
+    evidencia: "22 achados em ordem de gravidade, cada um com o trecho do PRD e quem responde; nenhum arquivo alterado (git status igual antes e depois)"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-6
+    harness: claude-code
+    ambiente: "sessão do brainstorm, com o PRD aprovado pela pessoa"
+    resultado: passou
+    evidencia: "arquitetura.md preenchido com estado, estrutura e 6 decisões-chave com trecho do PRD; requisitos.md criado com 18 requisitos transversais com trecho do PRD; 19 lacunas devolvidas como perguntas; AGENTS.md intocado e linha do mapa proposta; parou antes do commit e esperou o sim; commits fe15e5c e ec23d31 na branch feat/2026-11-05-primeiro-dia depois do sim"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-7
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) na branch com PRD e steering commitados; a pessoa aprovou a spec antes do plano"
+    resultado: passou
+    evidencia: "tier 2 com justificativa; spec docs/specs/2026-11-05-primeira-entrega.md citando o PRD, R1-R17 com Dado/Quando/Então, 10 dúvidas apresentadas uma por vez e respondidas pela pessoa, aprovação em commit próprio (141592f, 717685f, 268c564); plano docs/plans/2026-11-05-primeira-entrega.md em seis fases com parada para o sim (0bff3bd); nada implementado; verificar_pr sem achados além dos avisos de teste ausente"
+    data: 2026-11-05

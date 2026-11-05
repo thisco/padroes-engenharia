@@ -17,6 +17,7 @@ from portal.gerador.grafo_catalogo import VERSAO_FORMATO_GRAFO, montar_grafo
 from portal.gerador.nucleo import cabecalho, hooks_do_dominio, linhas_do_dominio
 from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes, url_portal
+from portal.gerador.roteiros import skill_md
 from portal.gerador.saidas import dados_roteamento, para_json, sufixo_da_organizacao
 
 PASTA_PACOTE = "pacote"
@@ -70,6 +71,8 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
             if arquivo.is_file() and not arquivo.is_symlink() and not oculto:
                 relativo = "/".join(partes)
                 arquivos[f"skills/{s.chave}/{relativo}"] = arquivo.read_bytes()
+    for r in site.repo.roteiros:
+        arquivos[f"skills/{r.chave}/SKILL.md"] = skill_md(site, r).encode("utf-8")
     # Verificadores internos (delta §3): um `.py` por verificador, sem `.` nem `_` no início.
     for arquivo in sorted((site.raiz / PASTA_VERIFICADORES).glob("*.py")):
         oculto = arquivo.name.startswith((".", "_"))

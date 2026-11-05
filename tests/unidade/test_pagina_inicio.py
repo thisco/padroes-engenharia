@@ -116,3 +116,72 @@ def test_ciclo_compacto_substitui_a_lista_de_momentos():
         x for x in html.todos("section") if x.attrs.get("aria-label") == "O ciclo de toda mudança"
     )
     assert [a.texto for a in bloco.todos("a", href="espinha.html")] == ["Ver a espinha →"]
+
+
+def _inicio_com_portas():
+    return Conteudo(
+        "pagina",
+        "paginas/inicio.md",
+        fabrica.meta_pagina(
+            lead="Práticas.",
+            caminhos=[
+                {
+                    "titulo": "Projeto novo",
+                    "texto": "Do zero.",
+                    "destino": "guias/g-um",
+                    "porta": "projeto-novo",
+                },
+                {
+                    "titulo": "Projeto existente",
+                    "texto": "Já existe.",
+                    "destino": "guias/g-dois",
+                    "porta": "projeto-existente",
+                },
+                {"titulo": "Sem porta", "texto": "Solta.", "destino": "guias/g-tres"},
+            ],
+            fatos=["Fonte conferida."],
+            referencias=[],
+        ),
+        "",
+    )
+
+
+def _site_com_portas():
+    guias = [
+        fabrica.Conteudo("guia", f"guias/{s}.md", fabrica.meta_guia(titulo=t), "x\n")
+        for s, t in (("g-um", "Guia um"), ("g-dois", "Guia dois"), ("g-tres", "Guia tres"))
+    ]
+    harness = [
+        fabrica.ferramenta(fabrica.meta_ferramenta(id=i, titulo=t, categoria="harness"))
+        for i, t in (("kiro", "Kiro"), ("antigravity", "Antigravity"))
+    ]
+    return fabrica.site(
+        _inicio_com_portas(),
+        PROBLEMA,
+        fabrica.pratica(),
+        fabrica.referencia(),
+        fabrica.roteiro(meta=fabrica.meta_roteiro(harnesses=["antigravity", "kiro"])),
+        *harness,
+        *guias,
+    )
+
+
+def test_porta_com_roteiro_mostra_o_roteiro_e_o_guia():
+    html = analisar(html_inicio(_site_com_portas()))
+    assert not html.todos("a", classe="tr-porta")
+    portas = html.todos("div", classe="tr-porta")
+    assert len(portas) == 3
+    link = portas[0].primeiro("a", href="roteiros/projeto-novo.html")
+    assert link.texto.startswith("Roteiro com o agente")
+    assert "Projeto novo: o primeiro dia" in link.texto
+    assert portas[0].primeiro(classe="harn").texto == "Antigravity · Kiro"
+    guia = portas[0].primeiro("a", href="guias/g-um.html")
+    assert guia.texto == "Ler o guia: Guia um"
+
+
+def test_porta_sem_roteiro_ou_sem_porta_fica_so_com_o_guia():
+    html = analisar(html_inicio(_site_com_portas()))
+    for porta in html.todos("div", classe="tr-porta")[1:]:
+        assert not porta.todos("a", href="roteiros/projeto-novo.html")
+        assert not porta.todos(classe="harn")
+        assert len(porta.todos("a")) == 1

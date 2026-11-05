@@ -20,6 +20,7 @@ VALIDOS = {
         "componentes": {"x": {"repo": "https://x.org/r", "versao": "1.0.0", "commit": "a" * 40}}
     },
     "pratica": fabrica.meta_pratica,
+    "roteiro": fabrica.meta_roteiro,
     "referencia": fabrica.meta_referencia,
     "dominio": fabrica.meta_dominio,
     "conceito": fabrica.meta_conceito,

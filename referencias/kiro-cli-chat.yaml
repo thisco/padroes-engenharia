@@ -1,0 +1,10 @@
+id: kiro-cli-chat
+titulo: "Chat (Kiro CLI)"
+organizacao: Kiro
+url: https://kiro.dev/docs/cli/chat/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'Starting a session' (comando kiro-cli) e 'Directory-based persistence' (conversa ligada à pasta em que começou; kiro-cli chat --resume)"
+dominios: [construir-com-ia]
+notas: "A página de entrada do CLI (kiro.dev/docs/cli/) mostra o mesmo início: cd na pasta do projeto e kiro-cli."

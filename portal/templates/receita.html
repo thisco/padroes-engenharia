@@ -8,7 +8,14 @@
 </div>
 <div class="corpo">
   <article class="texto cadeia-secoes" aria-label="Receita">
-{% for titulo_secao, html in secoes %}
+{% if agente_html %}
+    <div class="disco">
+      <h2>Com o agente</h2>
+{{ agente_html }}
+    </div>
+    <h2 class="a-mao">Prefere fazer à mão?</h2>
+{% endif %}
+{% for titulo_secao, html in secoes_mao %}
     <section class="elo{% if titulo_secao == "Confira" %} verif{% endif %}" aria-label="{{ titulo_secao }}">
       {{ c.figura(FIGURA_DA_RECEITA[titulo_secao]) if titulo_secao in FIGURA_DA_RECEITA }}
       <div><h2>{{ titulo_secao }}</h2>
