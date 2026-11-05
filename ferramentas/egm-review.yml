@@ -26,10 +26,12 @@ como_instalar: |
   fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
   para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
   `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
-  antes de atualizar [ref:egm-harnesses]. Copilot e Kiro não aparecem na tabela de instalação nem
-  na situação de suporte da página de harnesses, e a origem só conta um harness como suportado
-  depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela instalação do
-  plugin [ref:egm-harnesses]; para os dois, o portal não tem caminho conferido.
+  antes de atualizar [ref:egm-harnesses]. Para o Copilot CLI há só um adaptador experimental: a
+  própria origem diz que a execução do fluxo e o isolamento dos revisores não foram verificados, e
+  o guia não vale para o Copilot no VS Code nem para o agente na nuvem [ref:egm-copilot]. O Kiro
+  não aparece na tabela de instalação nem na situação de suporte da página de harnesses, e a origem
+  só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
+  ponta a ponta pela instalação do plugin [ref:egm-harnesses].
 limites: |
   A revisão exige um harness que crie subagentes com contexto novo: sem ferramenta de
   subagente a skill para e avisa que revisar no mesmo contexto não é revisão Goldfish
@@ -51,4 +53,4 @@ limites: |
   [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
   da `main`, com `0.1.0` no `plugin.json`; a única tag, `v0.1.0`, ficou 54 commits para trás e
   ainda nomeia esta skill `egm_review`, com sublinhado [ref:egm-review-skill].
-referencias: [egm-readme, egm-harnesses, egm-review-skill, egm-getting-started, egm-releases]
+referencias: [egm-readme, egm-harnesses, egm-copilot, egm-review-skill, egm-getting-started, egm-releases]

@@ -28,16 +28,23 @@ afirmacoes:
   localizacao: subseção 'Antigravity App and Antigravity for IDEs', bloco de comandos e parágrafo anterior
     ('remove ~/.gemini/config/plugins/egm first when updating')
   resultado: confirmada
-- texto: Copilot e Kiro não aparecem na tabela de instalação nem na situação de suporte; um harness só
-    conta como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela
-    instalação do plugin
+- texto: para o Copilot CLI há só um adaptador experimental, com execução do fluxo e isolamento dos revisores
+    não verificados pela origem, e o guia não vale para o Copilot no VS Code nem para o agente na nuvem
+  ref: egm-copilot
+  localizacao: 'abertura: ''Experimental adapter for issue #147. Workflow execution and reviewer isolation
+    remain unverified. This guide does not establish support for Copilot in VS Code or the cloud agent.'''
+  resultado: confirmada
+  nota: 'A seção ''Validation and remaining limits'' repete o limite: a descoberta offline no CLI 1.0.82
+    não prova execução da skill, bloqueio de escrita nem isolamento de contexto.'
+- texto: o Kiro não aparece na tabela de instalação nem na situação de suporte; um harness só conta como
+    suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela instalação
+    do plugin
   ref: egm-harnesses
   localizacao: seções 'Install' (tabela) e 'Support Status & Contributing Other Harnesses', subseção 'Contributing
     Support for New Harnesses' ('A harness counts as supported after...')
   resultado: confirmada
-  nota: O repositório tem um guia à parte, docs/copilot.md, que chama a integração com o Copilot CLI de
-    adaptador experimental, com execução do fluxo e isolamento dos revisores não verificados; ele não
-    é referência do portal, e a afirmação publicada se limita ao que a página de harnesses diz.
+  nota: 'Conferido também na árvore do commit fixado (API do GitHub, 2026-11-05): nenhum caminho de arquivo
+    cita Kiro, e README, getting_started e harnesses não o mencionam.'
 - texto: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências
     (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente)
   ref: egm-drift-report-skill
@@ -110,7 +117,8 @@ revisao_adversarial:
   data: '2026-11-05'
   achados:
   - afirmacao: 'como_instalar: a situação do Copilot como adaptador experimental, não verificado'
-    problema: a única fonte é docs/copilot.md, que não tem referência no portal; a página de harnesses
-      não fala do Copilot
-    tratamento: o texto diz só o que a página de harnesses sustenta (Copilot e Kiro fora da tabela e da
-      situação de suporte, e o critério de suporte da origem); o guia do Copilot fica na nota da afirmação
+    problema: na primeira versão, a única fonte (docs/copilot.md) não tinha referência no portal, e o
+      texto falava só da ausência do Copilot na página de harnesses
+    tratamento: por decisão do controlador, nova referência egm-copilot, lida no raw do commit fixado;
+      o texto cita o adaptador experimental e os limites com [ref:egm-copilot], e o Kiro, ausente da tabela,
+      com [ref:egm-harnesses]
