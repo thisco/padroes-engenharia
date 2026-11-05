@@ -1,0 +1,31 @@
+name: destruir-ambiente
+on:
+  workflow_dispatch:
+    inputs:
+      ambiente:
+        description: "Ambiente a destruir"
+        type: choice
+        options: [homologacao]
+        required: true
+      confirmar:
+        description: "Digite o nome do ambiente para confirmar"
+        type: string
+        required: true
+jobs:
+  destruir:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.ambiente }}
+    steps:
+      # Defesa em profundidade: a proteção é a política de branches de deploy do environment.
+      - name: Só da branch padrão
+        env: { REF: "${{ github.ref }}" }
+        run: test "$REF" = refs/heads/main
+      - uses: actions/checkout@v4
+      - name: Destruir com a confirmação digitada
+        working-directory: infra
+        env:
+          ALVO: ${{ inputs.ambiente }}
+          CONFIRMAR: ${{ inputs.confirmar }}
+          QUEM: ${{ github.triggering_actor }}
+          COMMIT: ${{ github.sha }}
+        run: tofu init -input=false -no-color && sh ../destruir.sh "$ALVO" "$CONFIRMAR"

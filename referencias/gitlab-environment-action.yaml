@@ -1,0 +1,10 @@
+id: gitlab-environment-action
+titulo: "CI/CD YAML syntax reference: environment:action"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/yaml/#environmentaction
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seção 'environment:action', valor stop ('Indicates that the job stops an environment'), com o exemplo de job de parada em when: manual"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

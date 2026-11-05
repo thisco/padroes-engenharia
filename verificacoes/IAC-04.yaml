@@ -1,0 +1,204 @@
+conteudo: IAC-04
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o workspace associa vários estados a uma mesma configuração, e o nome do workspace atual fica disponível como terraform.workspace
+  ref: opentofu-workspaces
+  localizacao: "abertura ('Some backends support multiple named workspaces, allowing multiple states to be associated with a single configuration') e o trecho da interpolação ${terraform.workspace} (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: tofu workspace select -or-create escolhe o workspace e o cria se ele não existir
+  ref: opentofu-workspace-select
+  localizacao: "descrição do comando e a opção '-or-create - If the workspace that is being selected does not exist, create it' (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: os workspaces de um diretório usam o mesmo backend e não são mecanismo de isolamento; para implantações com credenciais e controles de acesso separados, a documentação recomenda outra abordagem
+  ref: opentofu-workspaces-cli
+  localizacao: "trecho sobre quando não usar vários workspaces ('CLI workspaces within a working directory use the same backend, so they are not a suitable isolation mechanism'; 'We recommend using alternative approaches for complex deployments requiring separate credentials and access controls') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: o backend por ambiente é informado no tofu init com -backend-config (arquivo ou chave=valor); credencial vai por variável de ambiente, porque o valor do -backend-config fica gravado na pasta .terraform e no arquivo de plano
+  ref: opentofu-backend-configuracao
+  localizacao: "trechos sobre configuração parcial ('use the -backend-config=PATH option when running tofu init') e sobre credenciais ('We recommend using environment variables to supply credentials'; 'OpenTofu will include these values in both the .terraform subdirectory and in plan files') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: os valores ficam num arquivo de definição de variáveis passado com -var-file; na ordem de precedência o último valor encontrado vence, e um -var dado depois do -var-file passa por cima do arquivo
+  ref: opentofu-variaveis
+  localizacao: "seções do arquivo .tfvars e 'Variable Definition Precedence' ('OpenTofu uses the last value it finds, overriding any previous values'; 'Any -var and -var-file options on the command line, in the order they are provided') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o OpenTofu lê variável de ambiente no formato TF_VAR_<nome>
+  ref: opentofu-variaveis-de-ambiente
+  localizacao: "seção TF_VAR_name ('The environment variables must be in the format TF_VAR_name') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: com plano salvo, o tofu apply não pede confirmação
+  ref: opentofu-apply
+  localizacao: "trecho do modo com plano salvo ('OpenTofu takes the actions in the saved plan without prompting you for confirmation') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: when manual faz o job só rodar quando alguém o inicia; dentro de rules, o job manual bloqueia o pipeline no estágio dele
+  ref: gitlab-jobs-manuais
+  localizacao: "trechos sobre job manual ('You can require that a job doesn't run unless a user starts it'; dentro de rules o padrão é allow_failure: false e 'The pipeline stops at the stage where the job is defined') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: o GitLab rastreia o que está implantado em cada ambiente pelos jobs de deploy
+  ref: gitlab-environments
+  localizacao: "abertura ('Track what code is deployed where') e o histórico ('Deployments show up in this list only after a deployment job has created them') (aberta na web em 2026-11-03). Que o apply feito à mão fica fora do registro é consequência, dita pelo portal."
+  resultado: confirmada
+- texto: o ambiente protegido deixa só quem tem o privilégio implantar, nos planos Premium e Ultimate
+  ref: gitlab-ambientes-protegidos
+  localizacao: "abertura ('only people with the appropriate privileges can deploy to it'; Tier: Premium, Ultimate) (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: a aprovação de deploy bloqueia o job até as aprovações
+  ref: gitlab-aprovacao-de-deploy
+  localizacao: "'Deployments are blocked until all required approvals are given'; 'All jobs deploying to the environment are blocked and wait for approvals before running' (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: CI_COMMIT_SHA é a revisão do commit para a qual o projeto é construído
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "linha CI_COMMIT_SHA, 'The commit revision the project is built for' (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: o job que referencia um environment só vai ao runner depois que as regras de proteção passam
+  ref: github-workflow-syntax
+  localizacao: "seção jobs.<job_id>.environment ('All deployment protection rules must pass before a job referencing the environment is sent to a runner') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: uma das regras de proteção é a lista de revisores obrigatórios, com a autoaprovação que pode ser impedida; nos planos Free, Pro e Team, revisor obrigatório só existe em repositório público
+  ref: github-environments-deploy
+  localizacao: "trechos de revisores obrigatórios ('require a specific person or team to approve workflow jobs that reference the environment'), de impedir a autoaprovação e a nota de disponibilidade ('required reviewers are only available for public repositories') (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: github.sha é o commit que disparou o workflow
+  ref: github-contextos
+  localizacao: "tabela do contexto github, 'The commit SHA that triggered the workflow' (aberta na web em 2026-11-03)"
+  resultado: confirmada
+- texto: "o rótulo do marco, 'produção só pelo pipeline', resume o que a prática exige e aparece na etapa Revisar da trilha"
+  ref: portal-trilha
+  localizacao: "página da trilha gerada (gerar.py), etapa Revisar, 'Para sair desta etapa'; corpo da prática, seção 'O que fazer'"
+  resultado: confirmada
+- texto: com o arquivo local, cada um precisa ter o estado mais recente antes de rodar; o backend remoto guarda o estado num lugar compartilhado; no pipeline, o arquivo local fica no runner do job que o gravou
+  ref: opentofu-estado-remoto
+  localizacao: "abertura ('use of a local file makes OpenTofu usage complicated'; 'each user must make sure they always have the latest state data before running OpenTofu'; 'writes the state data to a remote data store, which can then be shared between all members of a team') (aberta na web em 2026-11-04)"
+  resultado: parcial
+  nota: "a fonte fala de equipe, não de pipeline; que o arquivo local fica no runner do job é consequência, reproduzida pela revisão (workspace inexistente no job de produção, saída 1)."
+- texto: nem todo backend tem workspaces; a lista traz S3, GCS e AzureRM, entre outros, e não traz o http
+  ref: opentofu-workspaces
+  localizacao: "lista 'You can use multiple workspaces with the following backends' (AzureRM, Consul, COS, GCS, Kubernetes, Local, OSS, Postgres, Remote, S3) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o estado gerenciado pelo GitLab usa o backend http, com um endereço por nome de estado, usuário gitlab-ci-token e senha CI_JOB_TOKEN no CI
+  ref: gitlab-estado-terraform
+  localizacao: "bloco backend \"http\" num backend.tf; TF_ADDRESS '.../api/v4/projects/${PROJECT_ID}/terraform/state/<nome>' com lock_address, lock_method=POST e unlock_method=DELETE; 'If you are using GitLab CI/CD, this value is gitlab-ci-token' e 'the contents of the ${CI_JOB_TOKEN}' (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o GitLab recomenda passar a configuração do backend por variável de ambiente, e não por -backend-config, que fica gravado no plano
+  ref: gitlab-estado-terraform
+  localizacao: "'Customizing your OpenTofu environment variables' ('use environment variables instead of the init -backend-config=... approach'; com -backend-config a configuração fica 'Cached in the output of the plan command') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: as variáveis de ambiente do backend http são as TF_HTTP_*
+  ref: opentofu-backend-http
+  localizacao: "lista de variáveis ('address / TF_HTTP_ADDRESS', 'lock_address / TF_HTTP_LOCK_ADDRESS', 'lock_method / TF_HTTP_LOCK_METHOD', 'username / TF_HTTP_USERNAME', 'password / TF_HTTP_PASSWORD') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o endereço do estado sai de CI_API_V4_URL e CI_PROJECT_ID
+  ref: gitlab-variaveis-predefinidas
+  localizacao: "linhas CI_API_V4_URL ('The GitLab API v4 root URL') e CI_PROJECT_ID ('The ID of the current project') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o backend s3 guarda o estado de cada workspace num caminho próprio (env:/<workspace>/<key>), trava com use_lockfile e, para credencial no CI, a documentação recomenda OIDC
+  ref: opentofu-backend-s3
+  localizacao: "'When using a non-default workspace, the state path will be /workspace_key_prefix/workspace_name/key' (prefixo padrão env:), a trava S3 com use_lockfile=true e a recomendação de OIDC para ambiente de CI (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o artefato compartilha dados entre jobs do workflow, e o plano passa ao job de produção por upload-artifact e download-artifact
+  ref: github-artefatos
+  localizacao: "abertura ('Use artifacts to share data between jobs in a workflow') e o exemplo 'Share data between jobs' (actions/upload-artifact@v4, actions/download-artifact@v5) (aberta na web em 2026-11-04)"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/executar.sh
+  comando: sh exemplos/IAC-04/executar.sh
+  ambiente: OpenTofu v1.13.2; provider hashicorp/local v2.9.1; Python 3 do sistema; git; macOS; pasta temporária. Os pipelines não foram executados num GitLab nem num GitHub.
+  resultado: passou
+  evidencia: 'init instalou hashicorp/local v2.9.1; apply "2 added" em homologacao e em producao; workspace list com default, homologacao e * producao; terraform.tfstate.d com homologacao e producao; saida/producao/api.txt com "imagem=registro.exemplo/api:abc1234" e "replicas=3". Antes: três achados (dois -var literais, linhas 9 e 17, e aplicar-producao sem when: manual, linha 11), saída 1; depois no GitLab: saída 0; depois no GitHub Actions: saída 0. Rodado de novo em 2026-11-04, com os moldes de backend remoto: a mesma saída.'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/infra/main.tf
+  comando: tofu init, tofu workspace select -or-create e tofu apply -var-file (dentro de executar.sh)
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'dois recursos local_file.servico (api e worker) por workspace, com a versão de TF_VAR_versao'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/infra/ambientes/homologacao.tfvars
+  comando: tofu apply -var-file=ambientes/homologacao.tfvars (dentro de executar.sh)
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'apply "2 added" no workspace homologacao'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/infra/ambientes/producao.tfvars
+  comando: tofu apply -var-file=ambientes/producao.tfvars (dentro de executar.sh)
+  ambiente: o mesmo da execução de executar.sh
+  resultado: passou
+  evidencia: 'apply "2 added" no workspace producao; replicas=3 no arquivo gerado'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/gitlab-ci-antes.yml
+  comando: python3 -I verificadores/iac_04.py --evento ci --base HEAD~1 (dentro de executar.sh, com o arquivo como .gitlab-ci.yml)
+  ambiente: repositório Git temporário; não executado num GitLab
+  resultado: falhou-como-esperado
+  evidencia: 'três achados e saída 1'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/gitlab-ci-depois.yml
+  comando: python3 -I verificadores/iac_04.py --evento ci --base HEAD~1 (dentro de executar.sh)
+  ambiente: repositório Git temporário; não executado num GitLab
+  resultado: passou
+  evidencia: 'saída 0, sem achado, com o estado no backend http do GitLab (TF_HTTP_*), um nome de estado por ambiente e sem workspace select; YAML carregado com PyYAML'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/github-entrega.yml
+  comando: python3 -I verificadores/iac_04.py --evento ci --base HEAD~1 (dentro de executar.sh, como .github/workflows/entrega.yml)
+  ambiente: repositório Git temporário; não executado num GitHub
+  resultado: passou
+  evidencia: 'saída 0, sem achado, com o plano de produção salvo como artefato (upload-artifact) e aplicado no job de produção (download-artifact); YAML carregado com PyYAML'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/backend-gitlab.tf
+  comando: tofu init -backend=false e tofu validate numa pasta temporária, com o main.tf do Exemplo e o arquivo como backend.tf; tofu fmt -check
+  ambiente: OpenTofu v1.13.2; macOS; sem GitLab
+  resultado: passou
+  evidencia: 'Success! The configuration is valid.; fmt sem diferença'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: exemplos/IAC-04/backend-s3.tf
+  comando: tofu init -backend=false e tofu validate numa pasta temporária, com o main.tf do Exemplo e o arquivo como backend.tf; tofu fmt -check
+  ambiente: OpenTofu v1.13.2; macOS; sem AWS
+  resultado: passou
+  evidencia: 'Success! The configuration is valid.; fmt sem diferença'
+  data: '2026-11-04'
+- tipo: arquivo
+  arquivo: verificadores/iac_04.py
+  comando: pytest -q tests/verificadores/test_iac_04.py tests/verificadores/test_contrato_dos_verificadores.py
+  ambiente: Python da .venv do portal; repositórios Git temporários; macOS
+  resultado: passou
+  evidencia: '60 testes do IAC-04 (pega e inocente por evento, isenção, estado indeterminado, cópia do pacote com python3 -I, tempo abaixo de 1 s com 2000 jobs, e desde 2026-11-04 o nome de job com dois-pontos no ci, no harness e na isenção) e os 77 do contrato comum verdes'
+  data: '2026-11-04'
+- tipo: prompt
+  prompt: IAC-04-prompt-1
+  harness: execução manual pelo curador
+  ambiente: 'repositório Git novo no rascunho da sessão (main com o commit inicial e um commit com infra/main.tf, o gitlab-ci-antes.yml como .gitlab-ci.yml e verificadores/iac_04.py); OpenTofu v1.13.2. O prompt foi seguido passo a passo pelo próprio curador, e não colado numa sessão nova de agente: o despacho desta frente proíbe subagente. Fica pendente a execução em sessão nova.'
+  resultado: passou
+  evidencia: 'passo 1: três achados, saída 1; passos 2 e 3: os dois -var replicas viraram -var-file=ambientes/<ambiente>.tfvars, os arquivos criados com replicas = 1 e replicas = 3, o -var "versao=$CI_COMMIT_SHA" mantido e a regra "- when: manual" no job aplicar-producao; passo 4: fmt ok, validate "Success! The configuration is valid.", verificador saída 0; passo 5: commit 052d8ad só com .gitlab-ci.yml e infra/ambientes/, sem trailer.'
+  data: '2026-11-03'
+revisao_adversarial:
+  revisor: revisão independente em lote, 2026-11-04 (antes dela, autorrevisão do curador em 2026-11-03, cujos achados seguem no fim da lista)
+  data: '2026-11-04'
+  achados:
+  - afirmacao: 'verificadores/iac_04.py, regex CHAVE e parse da isenção'
+    problema: '[Important] job do GitLab com dois-pontos no nome (deploy:producao) não era reconhecido: o caso-alvo saía 0; e a isenção .gitlab-ci.yml:deploy:producao saía 2, porque o rpartition cortava no último dois-pontos.'
+    tratamento: 'Tratado: CHAVE aceita dois-pontos no nome quando não seguido de espaço ou do fim; a isenção corta no primeiro dois-pontos (o caminho não tem). Cinco testes novos (RED: 3 falhas; GREEN: 60 passaram).'
+  - afirmacao: 'IAC-04, Exemplo: gitlab-ci-depois.yml e github-entrega.yml sem backend remoto'
+    problema: '[Important] sem backend remoto, tofu workspace select producao falha num runner novo (Workspace "producao" doesn''t exist), e mesmo com -or-create o estado local se perde entre jobs, contra "um estado por ambiente".'
+    tratamento: 'Tratado: O que fazer e Como aplicar exigem backend remoto (opentofu-estado-remoto, opentofu-workspaces, gitlab-estado-terraform, opentofu-backend-http, opentofu-backend-s3); o molde GitLab usa o backend http do GitLab com um nome de estado por ambiente e TF_HTTP_*; o do GitHub, backend s3 com workspaces; o texto diz que o provider e o backend locais valem só para o executar.sh.'
+  - afirmacao: 'IAC-04, Por ferramenta: github-entrega.yml aplicava produção com apply -auto-approve sem plano salvo'
+    problema: '[Minor] diverge do passo 3 e do molde GitLab.'
+    tratamento: 'Tratado: job plano-producao com o plano como artefato (github-artefatos) e aplicar-producao aplicando o plano salvo.'
+  - afirmacao: 'verificacoes/IAC-04.yaml, afirmação de -var-file e precedência'
+    problema: '[Minor] registro parcial com redação antiga, enquanto o corpo já tinha a forma confirmada.'
+    tratamento: 'Tratado: afirmação reescrita com a redação do corpo, reaberta na fonte, confirmada.'
+  - afirmacao: 'IAC-04, título: "um workspace por ambiente"'
+    problema: '[ref] a documentação do OpenTofu diz que workspace não é mecanismo de isolamento e recomenda outra abordagem quando produção exige credencial e controle de acesso separados.'
+    tratamento: 'Tratado no corpo: o título da spec foi mantido, e O que fazer e Como aplicar dizem que o workspace serve quando os ambientes compartilham backend e credencial, e que produção com credencial própria usa um backend por ambiente (-backend-config). Decisão do dono: ajustar o título na spec para "um estado por ambiente".'
+  - afirmacao: 'IAC-04: "um -var na linha de comando vence o valor do arquivo"'
+    problema: '[ref] a precedência põe -var e -var-file no mesmo degrau, na ordem dada.'
+    tratamento: 'Tratado: o texto diz que o -var dado depois do -var-file passa por cima do arquivo; confirmada em 2026-11-04.'
+  - afirmacao: 'iac_04.py: aceita qualquer when: manual do job'
+    problema: '[limite] um job com duas regras, uma manual e outra automática, passa.'
+    tratamento: 'Declarado em Como verificar, junto com extends/include não seguidos e produção reconhecida só por palavra.'

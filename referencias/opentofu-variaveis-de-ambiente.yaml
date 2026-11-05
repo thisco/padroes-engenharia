@@ -1,0 +1,10 @@
+id: opentofu-variaveis-de-ambiente
+titulo: "OpenTofu: Environment Variables"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/cli/config/environment-variables/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "seções 'TF_VAR_name' e 'TF_WORKSPACE'"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-03.

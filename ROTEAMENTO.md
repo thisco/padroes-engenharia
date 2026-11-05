@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 54 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.1.0: 57 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -15,8 +15,8 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | Dados e migrations (`dados-migrations`) | a definir | DAD-02 (só orienta) | DAD-01 (bloqueia) | a definir |
 | Privacidade e LGPD (`privacidade-lgpd`) | LGPD-01 (só orienta) | LGPD-02 (bloqueia) | a definir | a definir |
 | Qualidade e BDD (`qualidade-bdd`) | a definir | QLD-01 (só orienta) | QLD-03 (só orienta), QLD-04 (avisa) | QLD-02 (só orienta) |
-| Infra e IaC (`infra-iac`) | IAC-01 (avisa) | a definir | IAC-02 (avisa) | IAC-03 (só orienta) |
-| CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa) | CICD-03 (só orienta) |
+| Infra e IaC (`infra-iac`) | IAC-01 (avisa) | a definir | IAC-02 (avisa), IAC-04 (avisa) | IAC-03 (só orienta) |
+| CI/CD (`ci-cd`) | a definir | CICD-02 (avisa) | CICD-01 (avisa), CICD-04 (só orienta), CICD-05 (só orienta) | CICD-03 (só orienta) |
 | Observabilidade e operação (`observabilidade`) | a definir | OBS-01 (só orienta), OBS-03 (só orienta) | a definir | OBS-02 (só orienta) |
 | Segurança (`seguranca`) | SEG-01 (só orienta) | SEG-03 (pede aprovação) | SEG-02 (bloqueia) | a definir |
 | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | P2-02 (só orienta), P2-03 (só orienta), P3-01 (só orienta), P3-02 (avisa) | P2-01 (avisa), P2-04 (só orienta), P2-08 (só orienta), P2-09 (só orienta), P3-03 (só orienta), P3-04 (só orienta), P3-05 (só orienta) | P2-05 (só orienta), P2-07 (avisa), P3-06 (pede aprovação) | P2-06 (só orienta), P3-07 (só orienta) |
@@ -34,11 +34,14 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | CICD-01 | Pipeline obrigatória com gates: lint, suíte e verificador de PR | avisa | experimentar | nada |
 | CICD-02 | Lote pequeno: MR curta, frequente e verde | avisa | experimentar | nada |
 | CICD-03 | Entrega rastreável: tag semântica, changelog e artefato do commit | só orienta | experimentar | nada |
+| CICD-04 | Identidade federada no deploy, sem chave estática no CI | só orienta | experimentar | nada |
+| CICD-05 | Operação destrutiva só por workflow rastreável com confirmação digitada | só orienta | experimentar | nada |
 | DAD-01 | Migration já aplicada não se edita | bloqueia | adotar | `skill:migrations-reversiveis` |
 | DAD-02 | Expanda e contraia: a mudança de schema em duas etapas compatíveis | só orienta | experimentar | `skill:migrations-reversiveis` |
 | IAC-01 | Ambiente local reproduzível por compose, com ordem de rebuild escrita | avisa | experimentar | nada |
 | IAC-02 | Infra declarada em código, com o plano de mudança revisado no PR | avisa | experimentar | nada |
 | IAC-03 | Rollback declarado e testado antes do deploy | só orienta | experimentar | `skill:migrations-reversiveis` |
+| IAC-04 | Promoção entre ambientes por IaC: um workspace por ambiente, configuração por ambiente num só lugar, apply em produção só pelo pipeline com aprovação manual, serviços versionados juntos | avisa | experimentar | nada |
 | LGPD-01 | Classifique o dado pessoal antes de escrever | só orienta | experimentar | nada |
 | LGPD-02 | Dado pessoal não entra em prompt, log nem teste sem máscara | bloqueia | experimentar | nada |
 | OBS-01 | Log estruturado, correlacionado e sem dado pessoal | só orienta | experimentar | nada |

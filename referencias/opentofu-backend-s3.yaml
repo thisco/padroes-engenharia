@@ -1,0 +1,10 @@
+id: opentofu-backend-s3
+titulo: "OpenTofu: Backend Type s3"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/language/settings/backends/s3/
+tipo: padrao-aberto
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (estado numa chave de um bucket S3; vários mecanismos de trava, entre eles use_lockfile), o caminho por workspace (/workspace_key_prefix/workspace_name/key, prefixo padrão env:), o exemplo do bloco backend e a recomendação de OIDC para credencial em CI"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-04.

@@ -1,0 +1,10 @@
+id: gitlab-aprovacao-de-deploy
+titulo: "Deployment approvals"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/environments/deployment_approvals/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (aprovações adicionais para deploy em ambiente protegido; Tier Premium e Ultimate) e o comportamento (os jobs que implantam no ambiente ficam bloqueados até as aprovações)"
+dominios: [infra-iac]
+notas: Lida na web em 2026-11-03. Recurso dos planos Premium e Ultimate.

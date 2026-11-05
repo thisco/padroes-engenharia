@@ -1,0 +1,10 @@
+id: github-oidc-aws
+titulo: "Configuring OpenID Connect in Amazon Web Services"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "seções 'Configuring the role and trust policy' (condições token.actions.githubusercontent.com:aud e :sub; a recomendação de avaliar o sub) e 'Updating your GitHub Actions workflow' (permissions id-token: write; aws-actions/configure-aws-credentials com role-to-assume)"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

@@ -1,0 +1,54 @@
+name: entrega
+on:
+  push:
+    branches: [main]
+permissions:
+  id-token: write # credencial temporária da nuvem (CICD-04); o estado fica no backend s3
+  contents: read
+env:
+  TF_VAR_versao: ${{ github.sha }}
+jobs:
+  aplicar-homologacao:
+    runs-on: ubuntu-latest
+    environment: homologacao
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with: { role-to-assume: "${{ vars.ROLE_ARN }}", aws-region: us-east-1 }
+      - uses: opentofu/setup-opentofu@v2
+        with: { tofu_version: 1.13.2 }
+      - run: tofu init -input=false
+      - run: tofu workspace select -or-create homologacao
+      - run: tofu apply -input=false -auto-approve -var-file=ambientes/homologacao.tfvars
+  plano-producao:
+    needs: aplicar-homologacao
+    runs-on: ubuntu-latest
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with: { role-to-assume: "${{ vars.ROLE_ARN }}", aws-region: us-east-1 }
+      - uses: opentofu/setup-opentofu@v2
+        with: { tofu_version: 1.13.2 }
+      - run: tofu init -input=false
+      - run: tofu workspace select -or-create producao
+      - run: tofu plan -input=false -var-file=ambientes/producao.tfvars -out=producao.plano
+      - uses: actions/upload-artifact@v4
+        with: { name: plano-producao, path: infra/producao.plano }
+  aplicar-producao:
+    needs: plano-producao
+    runs-on: ubuntu-latest
+    environment: producao # revisores obrigatórios configurados no environment
+    defaults: { run: { working-directory: infra } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502
+        with: { role-to-assume: "${{ vars.ROLE_ARN }}", aws-region: us-east-1 }
+      - uses: opentofu/setup-opentofu@v2
+        with: { tofu_version: 1.13.2 }
+      - uses: actions/download-artifact@v5
+        with: { name: plano-producao, path: infra }
+      - run: tofu init -input=false
+      - run: tofu workspace select producao
+      - run: tofu apply -input=false producao.plano

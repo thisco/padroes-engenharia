@@ -1,0 +1,10 @@
+id: github-oidc
+titulo: "OpenID Connect"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/concepts/security/openid-connect
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "trecho de benefícios do OIDC (sem segredo de nuvem de longa duração no GitHub; token de curta duração, válido para um job; controle mais granular) e o trecho sobre o token (sub com o environment, como environment:prod, ou com a ref)"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

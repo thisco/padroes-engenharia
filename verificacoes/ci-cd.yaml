@@ -1,5 +1,6 @@
+# afirmações anteriores a 2026-11-04 não mudaram (conferidas em 2026-10-07); novas: CICD-04 e CICD-05
 conteudo: ci-cd
-verificado_em: '2026-10-07'
+verificado_em: '2026-11-04'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o merge check Pipelines must succeed impede o merge de uma MR sem pipeline completo e bem-sucedido
@@ -10,10 +11,21 @@ afirmacoes:
   ref: dora-small-batches
   localizacao: página da capacidade, definição e benefícios (aberta na web em 2026-10-07)
   resultado: confirmada
+- texto: o GitLab emite um token OIDC por job, que a nuvem troca por credencial temporária, sem segredo guardado no projeto
+  ref: gitlab-oidc-nuvem
+  localizacao: "abertura e benefícios ('Removes the need to store secrets in your GitLab group or project'; 'Temporary credentials can be retrieved from your cloud provider through OIDC') (aberta na web em 2026-11-04)"
+  resultado: confirmada
+- texto: o job manual só roda quando alguém o inicia
+  ref: gitlab-jobs-manuais
+  localizacao: "trecho de job manual ('You can require that a job doesn't run unless a user starts it. This type of job is called a manual job') (aberta na web em 2026-11-04)"
+  resultado: confirmada
 revisao_adversarial:
-  revisor: conferência em lote (ADR 0005), sessão independente
-  data: '2026-10-07'
+  revisor: revisão independente em lote, 2026-11-04 (o texto anterior a 2026-11-04 passou pela conferência em lote da ADR 0005, sessão independente, em 2026-10-07, cujo achado segue no fim da lista)
+  data: '2026-11-04'
   achados:
+  - afirmacao: '_dominio.md, parágrafos novos da CICD-04 (token OIDC por job, sem segredo guardado) e da CICD-05 (job manual com o nome do alvo digitado)'
+    problema: '[sem achado próprio] o texto do domínio foi revisto junto das práticas; os achados Important da CICD-05 (proteção no servidor) não mudam a frase do domínio, que só diz que a operação roda num job manual com o nome digitado.'
+    tratamento: 'Nada a corrigir no domínio; as duas afirmações (gitlab-oidc-nuvem, gitlab-jobs-manuais) seguem confirmadas, reabertas em 2026-11-04.'
   - afirmacao: commit 692e309 engolido por --amend (obrigatório 1, T1..T5)
     problema: '[baixo] refutado como descrito: o commit está no HEAD com praticas/infra-iac/_dominio.md,
       verificacoes/infra-iac.yaml e, por engano, verificacoes/ci-cd.yaml; os registros e o domínio estão

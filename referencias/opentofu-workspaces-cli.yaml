@@ -1,0 +1,10 @@
+id: opentofu-workspaces-cli
+titulo: "OpenTofu: Managing Workspaces (CLI)"
+organizacao: "OpenTofu"
+url: https://opentofu.org/docs/cli/workspaces/
+tipo: padrao-aberto
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (instâncias separadas de estado no mesmo diretório de trabalho), o trecho sobre quando não usar vários workspaces (mesmo backend, não é mecanismo de isolamento; credenciais e controles de acesso separados pedem outra abordagem) e o trecho sobre o funcionamento interno (terraform.tfstate.d no estado local; o workspace atual guardado na pasta .terraform)"
+dominios: [infra-iac]
+notas: Fonte aberta, lida na web em 2026-11-03.

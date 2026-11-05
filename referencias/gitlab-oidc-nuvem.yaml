@@ -1,0 +1,10 @@
+id: gitlab-oidc-nuvem
+titulo: "Connect to cloud services (OpenID Connect)"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/cloud_services/
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura (id_tokens; provedores com OIDC, entre eles AWS, Azure e GCP), a lista de benefícios (sem segredo guardado no grupo ou projeto, credencial temporária, condições por grupo, projeto, branch ou tag) e o trecho sobre claims (sub no formato project_path:...:ref_type:...:ref:...; ref_protected)"
+dominios: [ci-cd]
+notas: Lida na web em 2026-11-04.

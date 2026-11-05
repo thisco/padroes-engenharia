@@ -1,0 +1,10 @@
+id: github-artefatos
+titulo: "Store and share data with workflow artifacts"
+organizacao: GitHub
+url: https://docs.github.com/en/actions/tutorials/store-and-share-data
+tipo: vendor
+verificado_em: 2026-11-04
+verificacao: V
+localizacao: "abertura ('Use artifacts to share data between jobs in a workflow') e o exemplo 'Share data between jobs' (actions/upload-artifact@v4 e actions/download-artifact@v5)"
+dominios: [infra-iac]
+notas: "Lida na web em 2026-11-04 pelo HTML baixado da página."

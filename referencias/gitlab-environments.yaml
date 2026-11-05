@@ -1,0 +1,10 @@
+id: gitlab-environments
+titulo: "Environments"
+organizacao: GitLab
+url: https://docs.gitlab.com/ci/environments/
+tipo: vendor
+verificado_em: 2026-11-03
+verificacao: V
+localizacao: "abertura (o ambiente representa um alvo de deploy; rastrear o que está implantado onde), o trecho sobre ambiente estático (environment com name, criado se não existir), o histórico de deploys e o trecho sobre parar um ambiente (job com action: stop, em geral when: manual)"
+dominios: [infra-iac, ci-cd]
+notas: Lida na web em 2026-11-03.
