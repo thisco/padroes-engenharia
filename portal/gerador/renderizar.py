@@ -35,6 +35,9 @@ ROTULO_TIPO_REFERENCIA = {
     "interno": "Interno",
     "portal": "Portal",
 }
+# Marca do bloco `mermaid` já renderizado; só a página que a tem carrega a biblioteca (R26).
+MARCA_MERMAID = '<pre class="mermaid">'
+
 ROTULO_SUBDOMINIO = {"apps": "Aplicações que consomem modelos", "agentes": "Agentes próprios"}
 
 # Páginas geradas (não vêm de um único conteúdo): o caminho e a condição para existirem. A que
@@ -366,14 +369,27 @@ def navegacao(site: Site, atual: str) -> list[dict[str, Any]]:
 def renderizar(site: Site, template: str, caminho: str, **contexto: Any) -> str:
     """Renderiza `template` para a página em `caminho`, com os links relativos à raiz do site."""
     contexto.setdefault("descricao", "")
-    return site.ambiente.get_template(template).render(
+    raiz = "../" * caminho.count("/")
+    html = site.ambiente.get_template(template).render(
         site=site,
         caminho=caminho,
-        raiz="../" * caminho.count("/"),
+        raiz=raiz,
         md=PurePosixPath(para_md(caminho)).name,
         nav=navegacao(site, caminho),
         **contexto,
     )
+    return _com_mermaid(html, raiz)
+
+
+def _com_mermaid(html: str, raiz: str) -> str:
+    """Só a página com diagrama (`<pre class="mermaid">`) carrega a biblioteca local (R26)."""
+    if MARCA_MERMAID not in html:
+        return html
+    scripts = (
+        f'<script src="{raiz}vendor/mermaid/mermaid.min.js" defer></script>\n'
+        f'<script src="{raiz}tema/mermaid-init.js" defer></script>\n'
+    )
+    return html.replace("</head>", scripts + "</head>", 1)
 
 
 def corpo_html(conteudo: Conteudo, raiz: Path | None = None) -> str:
