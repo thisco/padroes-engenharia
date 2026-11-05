@@ -2,9 +2,9 @@
 
 > **Tier:** 2 (passo novo em `esquemas/espinha.yml`, `componentes.yml`, ferramentas, trilha,
 > prática e glossário; `esquemas/` e `portal/` são risco alto).
-> **Status:** rascunho
-> **Aprovado por:**
-> **Aprovado em:**
+> **Status:** aprovada
+> **Aprovado por:** thiago
+> **Aprovado em:** 2026-11-05
 > **Data:** 2026-11-04
 > **Altera:** [`2026-10-14-trilha-sdd-design.md`](2026-10-14-trilha-sdd-design.md) (R1, R4, R5,
 > R15, R16) e [`2026-10-15-trilha-sdd-v3-delta.md`](2026-10-15-trilha-sdd-v3-delta.md) (TV3-D6,
