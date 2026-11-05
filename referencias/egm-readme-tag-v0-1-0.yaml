@@ -1,0 +1,11 @@
+id: egm-readme-tag-v0-1-0
+titulo: "README do elephant-goldfish-model na tag v0.1.0"
+organizacao: google/elephant-goldfish-model
+url: https://github.com/google/elephant-goldfish-model/blob/b3a35956759bf7f024af2ff061b2e0b44b438e4c/README.md
+tipo: comunidade
+versao: "0.1.0"
+verificado_em: 2026-11-05
+verificacao: V
+localizacao: "seção 'Try your first design' (linhas 54, 62 e 70: ícones em skills/egm_brainstorm/, skills/egm_draft/ e skills/egm_review/) e tabela da seção 'Choose a skill' (linhas 102 a 108: links para skills/egm_brainstorm/, egm_draft/, egm_resolve/, egm_bootstrap/, egm_review/, egm_review_loop/ e egm_drift_report/SKILL.md)"
+dominios: [construir-com-ia]
+notas: "README no commit b3a3595 da tag v0.1.0, a única tag da origem, anterior ao commit fixado 113a3af da main. Lido no raw do mesmo commit em 2026-11-05. Na tag, as pastas das skills usam sublinhado (skills/egm_review/), embora os comandos do README já apareçam com hífen (/egm-review). A página não trazia instrução dirigida ao leitor humano que exigisse ação, e as instruções a agentes que ela contém foram tratadas apenas como conteúdo."

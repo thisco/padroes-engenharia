@@ -48,6 +48,7 @@ limites: |
   e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
   o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
   [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
-  da `main`, com `0.1.0` no `plugin.json`; a única tag, `v0.1.0`, ficou 54 commits para trás e
-  ainda nomeia esta skill `egm_brainstorm`, com sublinhado [ref:egm-brainstorm-skill].
-referencias: [egm-readme, egm-harnesses, egm-copilot, egm-brainstorm-skill, egm-releases]
+  da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
+  `skills/egm_brainstorm/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
+  `skills/egm-brainstorm/` [ref:egm-readme].
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-brainstorm-skill, egm-releases]

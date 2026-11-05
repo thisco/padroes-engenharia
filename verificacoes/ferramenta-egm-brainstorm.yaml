@@ -109,15 +109,18 @@ afirmacoes:
   resultado: confirmada
   nota: 'A ausência de CHANGELOG.md foi conferida na árvore do commit fixado pela API do GitHub em 2026-11-05:
     a raiz não tem o arquivo.'
-- texto: a única tag, v0.1.0, está 54 commits atrás do commit fixado e nomeia a skill egm_brainstorm,
-    com sublinhado; o plugin.json do commit fixado tem 0.1.0
-  ref: egm-brainstorm-skill
-  localizacao: URL da referência no commit fixado (skills/egm-brainstorm/SKILL.md) e notas da referência
+- texto: a tag v0.1.0 guarda a skill em skills/egm_brainstorm/, com sublinhado
+  ref: egm-readme-tag-v0-1-0
+  localizacao: README no commit b3a3595 da tag, tabela da seção 'Choose a skill' (linhas 102 a 108) e
+    ícones de 'Try your first design' (linhas 54, 62 e 70)
   resultado: confirmada
-  nota: 'conferido na API do GitHub em 2026-11-05: skills/ na tag v0.1.0 (b3a3595) lista egm_brainstorm,
-    e a comparação v0.1.0...113a3af dá 54 commits à frente e 0 atrás; o caminho com hífen é o da URL desta
-    referência no commit fixado, e as notas da referência registram a diferença; plugin.json lido no raw
-    do commit fixado: "version": "0.1.0".'
+  nota: Nas linhas da tabela, os links apontam para skills/egm_<nome>/SKILL.md; os comandos do README
+    da tag já aparecem com hífen (/egm-review).
+- texto: a main lida usa skills/egm-brainstorm/, com hífen
+  ref: egm-readme
+  localizacao: tabela da seção 'Choose a skill', link da skill para skills/egm-brainstorm/SKILL.md, no
+    commit fixado 113a3af
+  resultado: confirmada
 revisao_adversarial:
   revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador
     desta entrega
@@ -129,3 +132,9 @@ revisao_adversarial:
     tratamento: por decisão do controlador, nova referência egm-copilot, lida no raw do commit fixado;
       o texto cita o adaptador experimental e os limites com [ref:egm-copilot], e o Kiro, ausente da tabela,
       com [ref:egm-harnesses]
+  - afirmacao: 'limites: a tag v0.1.0 ficou 54 commits para trás e nomeia a skill com sublinhado, citado
+      no SKILL.md do commit fixado'
+    problema: '[importante, revisão das Tarefas 4 e 5] o SKILL.md no commit fixado não fala da tag, e
+      a contagem de 54 commits vinha só da API do GitHub'
+    tratamento: nova referência egm-readme-tag-v0-1-0 (README no commit da tag); a frase cita a tag nela
+      e o nome com hífen no egm-readme, sem a contagem de commits
