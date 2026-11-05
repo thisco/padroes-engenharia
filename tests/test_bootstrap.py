@@ -45,6 +45,7 @@ def test_componentes_fixados_com_versao_e_commit():
         "agent-skills": "addyosmani/agent-skills",
         "claude-plugins-official": "anthropics/claude-plugins-official",
         "playwright-mcp": "microsoft/playwright-mcp",
+        "elephant-goldfish-model": "google/elephant-goldfish-model",
     }
     for nome, item in componentes.items():
         if nome in EXTERNOS:

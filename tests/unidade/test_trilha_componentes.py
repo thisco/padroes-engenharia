@@ -22,3 +22,13 @@ def test_colecoes_fixadas():
     for nome, (repo, versao, commit) in ESPERADO.items():
         c = componentes[nome]
         assert (c.repo, c.versao, c.commit) == (repo, versao, commit), nome
+
+
+def test_componentes_fixa_o_elephant_goldfish_model():
+    """R2 da spec do Elefante e Goldfish: versão do plugin.json no commit da main lida."""
+    c = carregar_componentes(fabrica.RAIZ)["elephant-goldfish-model"]
+    assert (c.repo, c.versao, c.commit) == (
+        "https://github.com/google/elephant-goldfish-model",
+        "0.1.0",
+        "113a3afc44e8f4f54722d7150d5701f65cc8ef7f",
+    )
