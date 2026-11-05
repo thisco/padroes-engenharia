@@ -1,0 +1,120 @@
+conteudo: ferramenta-egm-bootstrap
+verificado_em: '2026-11-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
+    de documento
+  ref: egm-readme
+  localizacao: 'seção ''Install'', primeiro parágrafo: ''Install the complete plugin so its skills can
+    read the reviewer prompts and document standards'''
+  resultado: confirmada
+- texto: 'os comandos de instalação por harness: agy plugin install <url> (Antigravity CLI); claude plugin
+    marketplace add google/elephant-goldfish-model e claude plugin install egm@egm (Claude Code); codex
+    plugin marketplace add google/elephant-goldfish-model e codex plugin add egm@egm (Codex)'
+  ref: egm-harnesses
+  localizacao: seção 'Install', tabela de instalação, linhas Antigravity CLI, Claude Code e Codex
+  resultado: confirmada
+  nota: Os mesmos comandos estão no README, seção 'Install'.
+- texto: 'abrir sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com
+    o prefixo /egm: (/egm:egm-bootstrap), e no Codex é escolhida na lista de skills'
+  ref: egm-readme
+  localizacao: 'seção ''Install'', ''Start a new session after installation''; seção ''Try your first
+    design'', segundo parágrafo (prefixo /egm: e skill picker do Codex)'
+  resultado: confirmada
+- texto: 'a cópia manual documentada é a do Antigravity App e do Antigravity para IDEs: clonar e copiar
+    plugin.json, README.md, LICENSE, skills, agents, resources, docs e assets para ~/.gemini/config/plugins/egm/,
+    apagando a pasta antiga antes de atualizar'
+  ref: egm-harnesses
+  localizacao: subseção 'Antigravity App and Antigravity for IDEs', bloco de comandos e parágrafo anterior
+    ('remove ~/.gemini/config/plugins/egm first when updating')
+  resultado: confirmada
+- texto: Copilot e Kiro não aparecem na tabela de instalação nem na situação de suporte; um harness só
+    conta como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela
+    instalação do plugin
+  ref: egm-harnesses
+  localizacao: seções 'Install' (tabela) e 'Support Status & Contributing Other Harnesses', subseção 'Contributing
+    Support for New Harnesses' ('A harness counts as supported after...')
+  resultado: confirmada
+  nota: O repositório tem um guia à parte, docs/copilot.md, que chama a integração com o Copilot CLI de
+    adaptador experimental, com execução do fluxo e isolamento dos revisores não verificados; ele não
+    é referência do portal, e a afirmação publicada se limita ao que a página de harnesses diz.
+- texto: a skill gera, de baixo para cima, um README.md por pasta com código (interface, invariantes e
+    efeitos colaterais) e resume as pastas-mãe até a raiz
+  ref: egm-bootstrap-skill
+  localizacao: '''Overview'' (Peanuts e Hay); Step 2, item 3 (poda das pastas sem código); Step 4 (percurso
+    em pós-ordem e propagação aos pais)'
+  resultado: confirmada
+- texto: pede aprovação antes de seguir quando acha mais de 15 subpastas e não faz commit
+  ref: egm-bootstrap-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', itens 2 (VCS Isolation) e 6 (Mandatory Safety Gate);
+    Step 2, item 2'
+  resultado: confirmada
+- texto: README que já existe é corrigido com as notas preservadas, e target_filename (por exemplo EGM.md)
+    evita tocar nele
+  ref: egm-bootstrap-skill
+  localizacao: '''Inputs'', item target_filename; Step 4, item 2, ''Correction & Modification Policy'''
+  resultado: confirmada
+- texto: a skill só escreve documentação, nunca código
+  ref: egm-bootstrap-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', item 1 (No Code Generation)'
+  resultado: confirmada
+- texto: sem ferramenta de subagente a skill roda as varreduras no mesmo contexto, em vez de parar
+  ref: egm-bootstrap-skill
+  localizacao: 'seção ''Delegation'', último parágrafo: ''If your harness has no subagent tool, run the
+    scout steps inline'''
+  resultado: confirmada
+- texto: os README gerados saem em inglês, nos modelos fixos da skill
+  ref: egm-bootstrap-skill
+  localizacao: seção 'Templates' e Step 4 (classificação e modelo por pasta)
+  resultado: confirmada
+- texto: a origem pede que uma pessoa revise a saída, e a skill de contexto <projeto>-elephant é opcional
+    e escrita pelo time
+  ref: egm-getting-started
+  localizacao: seção 'Bootstrapping Existing Codebases', subseções 'Bootstrapping' ('Humans should still
+    review this output') e 'Project Context Skill (Optional)'
+  resultado: confirmada
+- texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
+    em tempo de execução
+  ref: egm-harnesses
+  localizacao: 'seção ''Install'', parágrafo depois da tabela: ''Install the whole plugin. Skill-only
+    installers that copy skills/ alone break EGM'''
+  resultado: confirmada
+- texto: 'o frontmatter da skill declara disable-model-invocation: true'
+  ref: egm-bootstrap-skill
+  localizacao: frontmatter, linha 4
+  resultado: confirmada
+  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
+    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+- texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
+    de saída e formato de relatório só ficam estáveis na 1.0
+  ref: egm-releases
+  localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
+    contract for skill names, parameters, output paths, and report formats')
+  resultado: confirmada
+- texto: a origem não tem CHANGELOG.md; o versionamento está em docs/releases.md e as mudanças vão nas
+    notas de cada release
+  ref: egm-releases
+  localizacao: seção 'Versioned releases' ('Explain breaking changes in release notes') e 'Prepare a candidate',
+    passo 5 (notas da release)
+  resultado: confirmada
+  nota: 'A ausência de CHANGELOG.md foi conferida na árvore do commit fixado pela API do GitHub em 2026-11-05:
+    a raiz não tem o arquivo.'
+- texto: a única tag, v0.1.0, está 54 commits atrás do commit fixado e nomeia a skill egm_bootstrap, com
+    sublinhado; o plugin.json do commit fixado tem 0.1.0
+  ref: egm-bootstrap-skill
+  localizacao: URL da referência no commit fixado (skills/egm-bootstrap/SKILL.md) e notas da referência
+  resultado: confirmada
+  nota: 'conferido na API do GitHub em 2026-11-05: skills/ na tag v0.1.0 (b3a3595) lista egm_bootstrap,
+    e a comparação v0.1.0...113a3af dá 54 commits à frente e 0 atrás; o caminho com hífen é o da URL desta
+    referência no commit fixado, e as notas da referência registram a diferença; plugin.json lido no raw
+    do commit fixado: "version": "0.1.0".'
+revisao_adversarial:
+  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador
+    desta entrega
+  data: '2026-11-05'
+  achados:
+  - afirmacao: 'como_instalar: a situação do Copilot como adaptador experimental, não verificado'
+    problema: a única fonte é docs/copilot.md, que não tem referência no portal; a página de harnesses
+      não fala do Copilot
+    tratamento: o texto diz só o que a página de harnesses sustenta (Copilot e Kiro fora da tabela e da
+      situação de suporte, e o critério de suporte da origem); o guia do Copilot fica na nota da afirmação

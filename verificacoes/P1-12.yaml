@@ -1,0 +1,57 @@
+conteudo: P1-12
+verificado_em: '2026-11-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o Goldfish do EGM é um revisor que recebe só o documento e os arquivos que ele cita, sem a conversa anterior, para expor suposições não ditas e pontos cegos
+  ref: egm-readme
+  localizacao: "parágrafo de abertura ('Goldfish reviewers examine the draft and referenced source material without the earlier conversation, helping expose unstated assumptions and blind spots') e tabela da seção 'How it works', linha Goldfish"
+  resultado: confirmada
+- texto: a revisão não substitui os testes nem o julgamento humano, e quem aprova o desenho é a pessoa
+  ref: egm-readme
+  localizacao: "seção 'How it works', parágrafo depois da tabela ('A review does not replace tests or human judgment') e linha You da tabela ('approve the design'); parágrafo de abertura ('You ... approve the specification before implementing')"
+  resultado: confirmada
+- texto: no teste de compreensão o revisor parafraseia o documento, e o autor recebe a paráfrase inteira, não só os achados
+  ref: egm-review-skill
+  localizacao: "'Subflow: Comprehension Test', itens 1 ('the author must see the paraphrase') e 2 (relatório começa pelas duas seções de paráfrase)"
+  resultado: confirmada
+- texto: a egm-review para quando o harness não cria subagente, porque revisar no mesmo contexto não é revisão Goldfish, e grava os relatórios em arquivos, não no chat
+  ref: egm-review-skill
+  localizacao: "seção 'Delegation', último parágrafo; 'Execution Constraints (CRITICAL)', item 1 (Artifact-First Delivery)"
+  resultado: confirmada
+- texto: numa spec sem seção de plano de implementação, a egm-review não acha a divisão do documento e oferece só os estágios 5 a 8
+  ref: egm-review-skill
+  localizacao: "'Step 3: Semantic Split Discovery', item 3, caso 'No Implementation Plan Found' ('Offer to execute Stages 5–8')"
+  resultado: confirmada
+  nota: "O cabeçalho procurado é '## Detailed Implementation Plan' ou um sinônimo ('## Implementation Plan', '## Work Breakdown', '## Implementation Steps'). No preset 'Feature spec only' a divisão nem é procurada."
+- texto: no modo sem pausas, o relatório consolidado é o consolidated_review_report.md; nos demais, há um relatório por estágio
+  ref: egm-review-skill
+  localizacao: "'Subflow: Uninterrupted Full Flow', itens 1 e 3; subfluxos de cada estágio"
+  resultado: confirmada
+- texto: a egm-resolve roda na sessão que escreveu o documento, classifica cada achado, só edita depois da escolha da pessoa e traz primeiro os achados ESCALATE, que dependem do que só ela sabe
+  ref: egm-resolve-skill
+  localizacao: "'Prerequisites & Context Strategy'; Step 2 (categorias); Step 4 (primeiro parágrafo e 'You MUST immediately yield active execution by calling zero tools')"
+  resultado: confirmada
+- texto: com o desenho escrito, o brainstorming despacha um subagente novo que devolve só as perguntas que um construtor ainda precisaria responder; as que só a pessoa responde voltam a ela numa única rodada, antes da entrega
+  ref: superpowers-brainstorming
+  localizacao: "seção 'The Written Design', item 'Builder check' (três pilhas, 'Bring the theirs pile in one message', 'That's the only round of questions the check produces') e builder-check-prompt.md ao lado da skill"
+  resultado: confirmada
+  nota: "Lido no raw do commit fixado bb92a77 em 2026-11-05 (SKILL.md e builder-check-prompt.md)."
+- texto: sem ferramenta de subagente, o brainstorming lê o documento ele mesmo, no papel do construtor
+  ref: superpowers-brainstorming
+  localizacao: "seção 'The Written Design', item 'Builder check', última frase: 'Without a subagent tool, read the document as that builder yourself'"
+  resultado: confirmada
+- texto: a Fase 2 da sdd-lifecycle varre a spec por mudança destrutiva antes de existir plano, e a Fase 3 para a execução e pergunta se a pessoa aprova a spec, com a aprovação gravada no cabeçalho por quem aprova
+  ref: sdd-lifecycle
+  localizacao: "SKILL.md no commit 5f6e9ad (v3.0.0), 'Fase 2 — Gate arquitetural' (item 1, 'ambas sobre a spec (antes de existir plano ou código)') e 'Fase 3 — Checkpoint humano da spec'"
+  resultado: confirmada
+  nota: "Lido no raw do commit fixado em 2026-11-05."
+revisao_adversarial:
+  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador desta entrega
+  data: '2026-11-05'
+  achados:
+  - afirmacao: "Como aplicar, caminho 3: o dono no checkpoint é o leitor que menos encontra a suposição implícita"
+    problema: "é juízo do portal, não afirmação das fontes"
+    tratamento: "fica sem [ref:], como argumento da prática; a ADR 0015 registra a mesma ordem dos caminhos como decisão"
+  - afirmacao: "Como aparece quando falta: o evento repetido descartado, e não processado de novo"
+    problema: "exemplo inventado; poderia ser lido como caso real"
+    tratamento: "o texto o apresenta como exemplo ('por exemplo'), sem citar fonte nem caso"

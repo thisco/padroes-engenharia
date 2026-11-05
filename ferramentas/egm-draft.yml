@@ -1,0 +1,51 @@
+id: egm-draft
+titulo: egm-draft
+categoria: skill
+colecao: elephant-goldfish-model
+status: avaliar
+versao_minima: "0.1.0"
+dono: engenharia
+praticas: [P1-12]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: escrever-spec
+    papel: caminho
+    bom_quando: "a direção já foi acordada (um concepts_brief.md ou notas) e falta o documento: a skill escreve seção por seção (problema e objetivos, plano técnico, alternativas e implementação detalhada) e para em cada uma até você aprovar; quando uma decisão de arquitetura tem mais de uma resposta defensável, ela mostra até três opções, sem recomendar nenhuma, e você escolhe."
+    cuidado: "o rascunho vai para design_draft.md, na pasta de trabalho ou na pasta de artefatos do harness, seção por seção com pausa para o seu retorno, e não aparece no chat; só na finalização a skill pergunta onde salvar, com docs/designs/ como padrão, e o plano de implementação fica no mesmo documento. É um design doc, não uma spec com requisitos R<n> e critério de aceite: a spec da constituição entra por conta do projeto."
+como_instalar: |
+  Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
+  skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
+  CLI: `agy plugin install https://github.com/google/elephant-goldfish-model`. Claude Code:
+  `claude plugin marketplace add google/elephant-goldfish-model` e depois
+  `claude plugin install egm@egm`. Codex: `codex plugin marketplace add
+  google/elephant-goldfish-model` e depois `codex plugin add egm@egm` [ref:egm-harnesses]. Abra
+  uma sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com o
+  prefixo, `/egm:egm-draft`, e no Codex ela é escolhida na lista de skills [ref:egm-readme].
+  Esses comandos não fixam commit. Quem precisa de reprodutibilidade clona o repositório no commit
+  fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
+  para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
+  `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
+  antes de atualizar [ref:egm-harnesses]. Copilot e Kiro não aparecem na tabela de instalação nem
+  na situação de suporte da página de harnesses, e a origem só conta um harness como suportado
+  depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela instalação do
+  plugin [ref:egm-harnesses]; para os dois, o portal não tem caminho conferido.
+limites: |
+  A skill não usa subagente; a leitura por quem não escreveu o documento é da egm-review,
+  que para sem ferramenta de subagente [ref:egm-harnesses]. Enquanto o fluxo de design está ativo,
+  o agente não escreve, não altera nem compila arquivo de produção, faz uma pergunta por resposta e
+  não muda de passo sem o seu de acordo [ref:egm-execution-instructions]. Na finalização, a skill
+  relê o brief e lista o que o rascunho contradiz nele antes de salvar
+  [ref:egm-draft-skill]. Documento e mensagens saem em inglês simples, com proibição de adjetivos
+  de elogio e de pedidos de desculpa [ref:egm-draft-skill].
+  Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
+  `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
+  declara `disable-model-invocation: true` [ref:egm-draft-skill]: a skill é chamada pelo comando, e não
+  escolhida pelo agente por conta própria, nos harnesses que respeitam o campo. A origem é
+  pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
+  o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
+  [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
+  da `main`, com `0.1.0` no `plugin.json`; a única tag, `v0.1.0`, ficou 54 commits para trás e
+  ainda nomeia esta skill `egm_draft`, com sublinhado [ref:egm-draft-skill].
+referencias: [egm-readme, egm-harnesses, egm-execution-instructions, egm-draft-skill, egm-releases]

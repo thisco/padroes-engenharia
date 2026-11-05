@@ -1,0 +1,144 @@
+conteudo: ferramenta-egm-review
+verificado_em: '2026-11-05'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
+    de documento
+  ref: egm-readme
+  localizacao: 'seção ''Install'', primeiro parágrafo: ''Install the complete plugin so its skills can
+    read the reviewer prompts and document standards'''
+  resultado: confirmada
+- texto: 'os comandos de instalação por harness: agy plugin install <url> (Antigravity CLI); claude plugin
+    marketplace add google/elephant-goldfish-model e claude plugin install egm@egm (Claude Code); codex
+    plugin marketplace add google/elephant-goldfish-model e codex plugin add egm@egm (Codex)'
+  ref: egm-harnesses
+  localizacao: seção 'Install', tabela de instalação, linhas Antigravity CLI, Claude Code e Codex
+  resultado: confirmada
+  nota: Os mesmos comandos estão no README, seção 'Install'.
+- texto: 'abrir sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com
+    o prefixo /egm: (/egm:egm-review), e no Codex é escolhida na lista de skills'
+  ref: egm-readme
+  localizacao: 'seção ''Install'', ''Start a new session after installation''; seção ''Try your first
+    design'', segundo parágrafo (prefixo /egm: e skill picker do Codex)'
+  resultado: confirmada
+- texto: 'a cópia manual documentada é a do Antigravity App e do Antigravity para IDEs: clonar e copiar
+    plugin.json, README.md, LICENSE, skills, agents, resources, docs e assets para ~/.gemini/config/plugins/egm/,
+    apagando a pasta antiga antes de atualizar'
+  ref: egm-harnesses
+  localizacao: subseção 'Antigravity App and Antigravity for IDEs', bloco de comandos e parágrafo anterior
+    ('remove ~/.gemini/config/plugins/egm first when updating')
+  resultado: confirmada
+- texto: Copilot e Kiro não aparecem na tabela de instalação nem na situação de suporte; um harness só
+    conta como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela
+    instalação do plugin
+  ref: egm-harnesses
+  localizacao: seções 'Install' (tabela) e 'Support Status & Contributing Other Harnesses', subseção 'Contributing
+    Support for New Harnesses' ('A harness counts as supported after...')
+  resultado: confirmada
+  nota: O repositório tem um guia à parte, docs/copilot.md, que chama a integração com o Copilot CLI de
+    adaptador experimental, com execução do fluxo e isolamento dos revisores não verificados; ele não
+    é referência do portal, e a afirmação publicada se limita ao que a página de harnesses diz.
+- texto: 'revisores sem o histórico da conversa recebem o documento e os arquivos que ele cita, em cinco
+    estágios: Zoom Out inicial, teste de compreensão, crítica do desenho, Zoom Out intermediário e prontidão
+    de implementação'
+  ref: egm-review-skill
+  localizacao: 'frontmatter (description: ''Executes five review phases''); ''Delegation''; Step 1, item
+    3 (Linked Files); ''Subflows'''
+  resultado: confirmada
+- texto: o teste de compreensão entrega a paráfrase do revisor ao autor, e não só os achados
+  ref: egm-review-skill
+  localizacao: '''Subflow: Comprehension Test'', itens 1 e 2'
+  resultado: confirmada
+- texto: os relatórios vão para arquivos (zoom_out_report.md, comprehension_report.md, critic_report.md,
+    intermediate_zoom_out_report.md e implementation_readiness_report.md), não para o chat
+  ref: egm-review-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', item 1; ''Subflow: Uninterrupted Full Flow'', item
+    1; subfluxos de cada estágio, item ''Delivery'' ou ''Notify User (No Chat Dumps)'''
+  resultado: confirmada
+- texto: no modo interativo cada estágio termina num portão de uma pergunta, e cada estágio aceita no
+    máximo uma nova auditoria
+  ref: egm-review-skill
+  localizacao: '''Subflow Checkpoint Gates & Pause/Resume Protocol'', itens 1 e 3 (''1-Audit Convergence
+    Cap''); Step 2, ''Modal Invariants'' (len(questions) == 1)'
+  resultado: confirmada
+- texto: link para fora da pasta de trabalho e URL só entram no contexto dos revisores com aprovação da
+    pessoa
+  ref: egm-review-skill
+  localizacao: Step 1, item 3 (Linked Files)
+  resultado: confirmada
+- texto: sem ferramenta de subagente a skill para e avisa que revisar no mesmo contexto não é revisão
+    Goldfish
+  ref: egm-review-skill
+  localizacao: seção 'Delegation', último parágrafo
+  resultado: confirmada
+- texto: os estágios 7 e 9 chamam a egm-review-loop
+  ref: egm-review-skill
+  localizacao: '''Subflow: Critic Review'', item 1; ''Subflow: Implementation Readiness Test'', item 1'
+  resultado: confirmada
+- texto: relatórios e mensagens em inglês simples, com proibição de adjetivos de elogio e de pedidos de
+    desculpa
+  ref: egm-review-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', itens 2 (Plain-English Standard), 9 (Banned Adjectives)
+    e 10 (Banned Apologies)'
+  resultado: confirmada
+- texto: há relato de que o Codex CLI e o Antigravity CLI passam o AGENTS.md do projeto ao revisor, e
+    a origem não verificou a exclusão de arquivos de instrução nesses dois harnesses
+  ref: egm-harnesses
+  localizacao: 'seção ''Support Status & Contributing Other Harnesses'', segundo parágrafo (issue #237,
+    ''No host-specific exclusion control is verified here for Codex or Antigravity'')'
+  resultado: confirmada
+- texto: a revisão não substitui os testes nem o julgamento humano
+  ref: egm-readme
+  localizacao: 'seção ''How it works'', parágrafo depois da tabela: ''A review does not replace tests
+    or human judgment'''
+  resultado: confirmada
+- texto: a revisão devolve muito achado de propósito, e a pessoa escolhe o que acatar
+  ref: egm-getting-started
+  localizacao: '''Main Workflow'', subseção ''Core Loop'', item 3: ''This will provide a lot of feedback
+    by design. Take what you think is relevant'''
+  resultado: confirmada
+- texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
+    em tempo de execução
+  ref: egm-harnesses
+  localizacao: 'seção ''Install'', parágrafo depois da tabela: ''Install the whole plugin. Skill-only
+    installers that copy skills/ alone break EGM'''
+  resultado: confirmada
+- texto: 'o frontmatter da skill declara disable-model-invocation: true'
+  ref: egm-review-skill
+  localizacao: frontmatter, linha 4
+  resultado: confirmada
+  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
+    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+- texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
+    de saída e formato de relatório só ficam estáveis na 1.0
+  ref: egm-releases
+  localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
+    contract for skill names, parameters, output paths, and report formats')
+  resultado: confirmada
+- texto: a origem não tem CHANGELOG.md; o versionamento está em docs/releases.md e as mudanças vão nas
+    notas de cada release
+  ref: egm-releases
+  localizacao: seção 'Versioned releases' ('Explain breaking changes in release notes') e 'Prepare a candidate',
+    passo 5 (notas da release)
+  resultado: confirmada
+  nota: 'A ausência de CHANGELOG.md foi conferida na árvore do commit fixado pela API do GitHub em 2026-11-05:
+    a raiz não tem o arquivo.'
+- texto: a única tag, v0.1.0, está 54 commits atrás do commit fixado e nomeia a skill egm_review, com
+    sublinhado; o plugin.json do commit fixado tem 0.1.0
+  ref: egm-review-skill
+  localizacao: URL da referência no commit fixado (skills/egm-review/SKILL.md) e notas da referência
+  resultado: confirmada
+  nota: 'conferido na API do GitHub em 2026-11-05: skills/ na tag v0.1.0 (b3a3595) lista egm_review, e
+    a comparação v0.1.0...113a3af dá 54 commits à frente e 0 atrás; o caminho com hífen é o da URL desta
+    referência no commit fixado, e as notas da referência registram a diferença; plugin.json lido no raw
+    do commit fixado: "version": "0.1.0".'
+revisao_adversarial:
+  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador
+    desta entrega
+  data: '2026-11-05'
+  achados:
+  - afirmacao: 'como_instalar: a situação do Copilot como adaptador experimental, não verificado'
+    problema: a única fonte é docs/copilot.md, que não tem referência no portal; a página de harnesses
+      não fala do Copilot
+    tratamento: o texto diz só o que a página de harnesses sustenta (Copilot e Kiro fora da tabela e da
+      situação de suporte, e o critério de suporte da origem); o guia do Copilot fica na nota da afirmação
