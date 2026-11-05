@@ -24,7 +24,7 @@ revisao_adversarial:
   achados:
   - afirmacao: sem achados próprios, mesma revisão em lote do roteiro do projeto novo
     problema: 'nenhum achado próprio; os achados da revisão em lote estão em roteiro-projeto-novo-primeiro-dia.yaml'
-    tratamento: 'nada a tratar neste roteiro; a execução dos prompts em sessão nova segue pendência do dono'
+    tratamento: 'nada a tratar neste roteiro; os prompts foram executados em sessão nova em 2026-11-05 (ver execucoes)'
 execucoes:
   - tipo: prompt
     prompt: roteiro-projeto-existente-primeiro-dia-prompt-1

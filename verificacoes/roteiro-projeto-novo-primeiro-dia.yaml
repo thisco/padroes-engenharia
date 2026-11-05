@@ -107,14 +107,14 @@ revisao_adversarial:
     tratamento: 'retirado: o achado foi retirado pelo revisor na re-revisão'
   - afirmacao: execução dos prompts em sessão nova
     problema: 'a revisão de conteúdo não executa os prompts'
-    tratamento: 'pendência do dono: executar os prompts em sessão nova e registrar as execuções; segue aberta'
+    tratamento: 'prompts executados em sessão nova em 2026-11-05 (ver execucoes)'
 execucoes:
   - tipo: prompt
     prompt: roteiro-projeto-novo-primeiro-dia-prompt-1
     harness: claude-code
     ambiente: "sessão nova (subagente do Claude Code) num projeto gerado pelo sdd-scaffold 1.7.1 com três documentos em docs/entrada/; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt; a pessoa respondeu o brainstorm e os pontos de decisão e abriu as sessões novas dos passos 5 e 7"
     resultado: passou
-    evidencia: "passos 2 a 6 na mesma sessão: 51 SHA-256 conferidos e 23 skills nos 4 pontos; resumo, sistemas, termos e perguntas; PRD por brainstorm em docs/prd/2026-11-05-prd.md; revisor em sessão nova trouxe 15 achados, PRD corrigido e aprovado (16 RF e 5 RN com aceite, 7 estados, decisões D1-D20); arquitetura.md e requisitos.md escritos e aprovados, commit 0376a9c; passo 7 em sessão nova: sessão nova do passo 7: tier 2, spec docs/specs/2026-11-05-primeira-entrega.md (R1-R21, propostas P1-P18 ratificadas pela pessoa) aprovada em commit próprio (04adbf2, f34c8e6) e plano docs/plans/2026-11-05-primeira-entrega.md com 30 tarefas em 6 fases (85523b3); nada implementado; estado final bate com o Resultado esperado da ficha"
+    evidencia: "passos 2, 3, 4 e 6 na mesma sessão, passos 5 e 7 em sessões novas: 51 SHA-256 conferidos e 23 skills nos 4 pontos; resumo, sistemas, termos e perguntas; PRD por brainstorm em docs/prd/2026-11-05-prd.md; revisor em sessão nova trouxe 15 achados, PRD corrigido e aprovado (16 RF e 5 RN com aceite, 7 estados, decisões D1-D20); arquitetura.md e requisitos.md escritos e aprovados, commit 0376a9c; passo 7: tier 2, spec docs/specs/2026-11-05-primeira-entrega.md (R1-R21, propostas P1-P18 ratificadas pela pessoa) aprovada em commit próprio (04adbf2, f34c8e6) e plano docs/plans/2026-11-05-primeira-entrega.md com 30 tarefas em 6 fases (85523b3); nada implementado; a sessão do passo 7 confirmou que o estado final bate com o Resultado esperado da ficha"
     data: 2026-11-05
   - tipo: prompt
     prompt: roteiro-projeto-novo-primeiro-dia-prompt-2
