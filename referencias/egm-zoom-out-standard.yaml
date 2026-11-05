@@ -1,0 +1,11 @@
+id: egm-zoom-out-standard
+titulo: "EGM: padrão Zoom Out"
+organizacao: google/elephant-goldfish-model
+url: https://github.com/google/elephant-goldfish-model/blob/113a3afc44e8f4f54722d7150d5701f65cc8ef7f/resources/document_standards/zoom-out-standard.md
+tipo: comunidade
+versao: "0.1.0"
+verificado_em: 2026-11-05
+verificacao: V
+localizacao: "seções '0. Context Sufficiency (Prerequisite Check)', '1. Root Problem Focus', '2. Simplicity & Extensibility', '3. Anti-Weeds (Altitude Control)' e '4. Leverage Existing'"
+dominios: [construir-com-ia]
+notas: "A tag v0.1.0 da origem nomeia as skills com sublinhado (egm_review); a main lida usa hífen (egm-review), e este commit fixado segue a main. Lida no raw do commit fixado em 2026-11-05; a página não trazia instrução dirigida ao leitor humano que exigisse ação, e as instruções a agentes que ela contém foram tratadas apenas como conteúdo."
