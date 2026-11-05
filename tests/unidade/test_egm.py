@@ -60,3 +60,15 @@ def test_p1_12_e_pratica_de_especificar_em_experimentar():
     assert caminhos <= set(p.meta["ferramentas_aprovadas"])
     assert "0015" in p.corpo
     assert (fabrica.RAIZ / "docs/adr/0015-revisar-spec-por-quem-nao-a-escreveu.md").exists()
+
+
+def test_p1_10_glossario_e_pagina_da_trilha_absorvem_o_egm():
+    """R8 da spec do Elefante e Goldfish."""
+    repo = carregar(fabrica.RAIZ)
+    p10 = next(c for c in repo.praticas if c.meta["id"] == "P1-10").meta
+    assert "egm-drift-report" in p10["ferramentas_aprovadas"]
+    termos = yaml.safe_load((fabrica.RAIZ / "glossario.yml").read_text(encoding="utf-8"))["termos"]
+    goldfish = next(t for t in termos if t["termo"].startswith("Leitor sem contexto"))
+    assert goldfish["conceito"] == "subagente" and len(goldfish["definicao"]) <= 200
+    pagina = (fabrica.RAIZ / "paginas/trilha.md").read_text(encoding="utf-8")
+    assert "elephant-goldfish-model" in pagina and "design_draft.md" in pagina

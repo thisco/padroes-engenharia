@@ -1,5 +1,5 @@
 conteudo: P1-10
-verificado_em: '2026-10-21'
+verificado_em: '2026-11-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a spec arquivada é histórico, e não fonte de verdade viva
@@ -29,6 +29,15 @@ afirmacoes:
 - texto: "o rótulo do marco, 'sem drift spec e código', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
   ref: portal-trilha
   localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
+  resultado: confirmada
+- texto: 'a skill egm-drift-report lê cada design doc de uma pasta, procura o código que o documento cita e lista só as divergências, num arquivo AAAA-MM-DD_DRIFT_REPORT.md; a varredura é da pasta inteira contra o código atual, e não do diff da branch'
+  ref: egm-drift-report-skill
+  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), passos 1 a 4 e Guidance'
+  resultado: confirmada
+  nota: "Que ela não corrige nada e não escreve adendo à spec é leitura do corpo (só escreve o relatório); a frase 'o diff da branch' é inferência do portal: a skill não menciona diff."
+- texto: 'a origem diz que quem escolhe entre atualizar o documento ou o código é a pessoa, e recomenda rodar a skill uma vez por semana, ou numa rotação de manutenção'
+  ref: egm-getting-started
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), seção 'Drift Detection'"
   resultado: confirmada
 execucoes:
 - tipo: arquivo

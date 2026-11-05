@@ -1,5 +1,5 @@
 conteudo: glossario
-verificado_em: '2026-10-21'
+verificado_em: '2026-11-05'
 verificador: agente-curadoria
 afirmacoes:
 - texto: 'Agente de código: Agentes são, em geral, modelos usando ferramentas em loop; o agente de código
@@ -188,6 +188,11 @@ afirmacoes:
   ref: portal-trilha
   localizacao: "seções 'Trilhas prontas' e 'Monte a sua'"
   resultado: confirmada
+- texto: 'Leitor sem contexto (Goldfish): Revisor que lê o documento e o código citado sem a conversa anterior, para expor premissas não ditas; no EGM, é o Goldfish, um subagente novo'
+  ref: egm-readme
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), seções 'How it works' (Goldfish: o documento e o material de origem, sem a conversa anterior; encontra suposições e riscos) e a nota de que a revisão exige contextos novos de subagente"
+  resultado: confirmada
+  nota: "A expressão 'Leitor sem contexto' é do portal; a fonte usa Goldfish."
 revisao_adversarial:
   revisor: sessao-independente
   data: '2026-10-04'

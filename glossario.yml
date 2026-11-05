@@ -28,6 +28,11 @@ termos:
   conceito: subagente
   referencias:
   - claude-code-subagents
+- termo: Leitor sem contexto (Goldfish)
+  definicao: Revisor que lê o documento e o código citado sem a conversa anterior, para expor premissas não ditas; no EGM, é o Goldfish, um subagente novo [ref:egm-readme].
+  conceito: subagente
+  referencias:
+  - egm-readme
 - termo: Skill
   definicao: 'Pasta com um SKILL.md: a descrição é carregada no início e o corpo, quando a skill é ativada [ref:agent-skills-spec].'
   conceito: skill
