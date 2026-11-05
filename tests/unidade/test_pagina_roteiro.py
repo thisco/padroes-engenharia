@@ -263,3 +263,15 @@ def test_base_local_mantem_o_marcador_e_o_aviso_nos_roteiros():
     )
     html = html_roteiro_passos(s, s.repo.roteiros[0])
     assert "Troque" in html and "{URL do portal}" in html
+
+
+def test_skill_md_nao_deixa_pontuacao_solta_quando_a_citacao_abre_a_linha():
+    from portal.gerador.roteiros import skill_md
+
+    corpo = fabrica.CORPO_ROTEIRO.replace(
+        "O agente instala o pacote.", "O agente instala o pacote\n[ref:ref-forte]. E segue."
+    )
+    s = fabrica.site(fabrica.roteiro(corpo=corpo), KIRO, fabrica.pratica(), fabrica.referencia())
+    md = skill_md(s, s.repo.roteiros[0])
+    assert "O agente instala o pacote. E segue." in md
+    assert not any(linha.startswith(".") for linha in md.splitlines())
