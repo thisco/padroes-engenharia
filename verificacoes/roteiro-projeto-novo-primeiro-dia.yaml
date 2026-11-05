@@ -108,3 +108,53 @@ revisao_adversarial:
   - afirmacao: execução dos prompts em sessão nova
     problema: 'a revisão de conteúdo não executa os prompts'
     tratamento: 'pendência do dono: executar os prompts em sessão nova e registrar as execuções; segue aberta'
+execucoes:
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-1
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num projeto gerado pelo sdd-scaffold 1.7.1 com três documentos em docs/entrada/; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt; a pessoa respondeu o brainstorm e os pontos de decisão e abriu as sessões novas dos passos 5 e 7"
+    resultado: passou
+    evidencia: "passos 2 a 6 na mesma sessão: 51 SHA-256 conferidos e 23 skills nos 4 pontos; resumo, sistemas, termos e perguntas; PRD por brainstorm em docs/prd/2026-11-05-prd.md; revisor em sessão nova trouxe 15 achados, PRD corrigido e aprovado (16 RF e 5 RN com aceite, 7 estados, decisões D1-D20); arquitetura.md e requisitos.md escritos e aprovados, commit 0376a9c; passo 7 em sessão nova: sessão nova do passo 7: tier 2, spec docs/specs/2026-11-05-primeira-entrega.md (R1-R21, propostas P1-P18 ratificadas pela pessoa) aprovada em commit próprio (04adbf2, f34c8e6) e plano docs/plans/2026-11-05-primeira-entrega.md com 30 tarefas em 6 fases (85523b3); nada implementado; estado final bate com o Resultado esperado da ficha"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-2
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num projeto gerado pelo sdd-scaffold 1.7.1; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt"
+    resultado: passou
+    evidencia: "51 arquivos em .padroes/, 51 SHA-256 conferidos; 3 skills do pacote copiadas e as 5 que o scaffold já trazia preservadas; coleção superpowers bb92a77 copiada; os 4 pontos de montagem do scaffold já apontavam para ../skills e listam 23 skills"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-3
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) no projeto já com o pacote do prompt 2"
+    resultado: passou
+    evidencia: "resumo de uma página, 8 sistemas e integrações, 13 termos sem definição e 26 perguntas, sem escrever o PRD nem alterar arquivo"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-4
+    harness: claude-code
+    ambiente: "mesma sessão do prompt 3 (o roteiro só pede sessão nova nos passos 5 e 7); a pessoa respondeu as perguntas do brainstorm"
+    resultado: passou
+    evidencia: "skill brainstorming do projeto lida e seguida (oferta de pular, uma pergunta por mensagem); PRD gravado em docs/prd/2026-11-05-prd.md no molde do scaffold (problema, quem usa, 13 requisitos, régua de sucesso, restrições, fora de escopo, 10 perguntas abertas), sem spec, plano ou código; a skill gravaria em docs/superpowers/specs/ e commitaria, o roteiro prevaleceu"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-5
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code), sem o histórico do brainstorm"
+    resultado: passou
+    evidencia: "22 achados em ordem de gravidade, cada um com o trecho do PRD e quem responde; nenhum arquivo alterado (git status igual antes e depois)"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-6
+    harness: claude-code
+    ambiente: "sessão do brainstorm, com o PRD aprovado pela pessoa"
+    resultado: passou
+    evidencia: "arquitetura.md preenchido com estado, estrutura e 6 decisões-chave com trecho do PRD; requisitos.md criado com 18 requisitos transversais com trecho do PRD; 19 lacunas devolvidas como perguntas; AGENTS.md intocado e linha do mapa proposta; parou antes do commit e esperou o sim; commits fe15e5c e ec23d31 na branch feat/2026-11-05-primeiro-dia depois do sim"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-novo-primeiro-dia-prompt-7
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) na branch com PRD e steering commitados; a pessoa aprovou a spec antes do plano"
+    resultado: passou
+    evidencia: "tier 2 com justificativa; spec docs/specs/2026-11-05-primeira-entrega.md citando o PRD, R1-R17 com Dado/Quando/Então, 10 dúvidas apresentadas uma por vez e respondidas pela pessoa, aprovação em commit próprio (141592f, 717685f, 268c564); plano docs/plans/2026-11-05-primeira-entrega.md em seis fases com parada para o sim (0bff3bd); nada implementado; verificar_pr sem achados além dos avisos de teste ausente"
+    data: 2026-11-05

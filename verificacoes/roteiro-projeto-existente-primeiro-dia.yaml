@@ -25,4 +25,25 @@ revisao_adversarial:
   - afirmacao: sem achados próprios, mesma revisão em lote do roteiro do projeto novo
     problema: 'nenhum achado próprio; os achados da revisão em lote estão em roteiro-projeto-novo-primeiro-dia.yaml'
     tratamento: 'nada a tratar neste roteiro; a execução dos prompts em sessão nova segue pendência do dono'
-
+execucoes:
+  - tipo: prompt
+    prompt: roteiro-projeto-existente-primeiro-dia-prompt-1
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num repositório de teste com testes, .gitlab-ci.yml e main; portal servido em http local (prévia 3c53302); {URL do portal} trocado à mão no prompt; a pessoa respondeu os pontos de decisão e rodou o gerador do scaffold quando o agente pediu"
+    resultado: passou
+    evidencia: "passos 1 a 3 cumpridos: pacote com 51 SHA-256 conferidos e 23 skills nos 4 pontos de montagem (commit 9f9ed30); adoção pelo guia Brownfield sem alterar arquivo existente, hook protegendo o .gitlab-ci.yml, CI com stage travas e job testes intacto, verificar_pr sem achados, plano Tier 1, commits 5d3cabc e bed95d1 na branch de adoção, MR pronta para abrir; drift check e pipeline não rodados (pip e gitlab-ci-local indisponíveis); roteiro lista Kiro e Antigravity, execução feita no Claude Code"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-existente-primeiro-dia-prompt-2
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) num repositório de teste; portal servido em http local (prévia 7e98c5f); {URL do portal} trocado à mão no prompt"
+    resultado: passou
+    evidencia: "51 arquivos do pacote em .padroes/, 51 SHA-256 conferidos, 0 divergências; 8 skills do pacote e 15 da coleção superpowers (commit bb92a77) em skills/, nada sobrescrito; .claude/skills, .codex/skills, .kiro/skills e .agents/skills apontam para ../skills e listam as mesmas 23 skills"
+    data: 2026-11-05
+  - tipo: prompt
+    prompt: roteiro-projeto-existente-primeiro-dia-prompt-3
+    harness: claude-code
+    ambiente: "sessão nova (subagente do Claude Code) no repositório de teste já com o pacote instalado pelo prompt 2; portal servido em http local (prévia 7e98c5f); {URL do portal} trocado à mão no prompt; a pessoa respondeu os três pontos de decisão"
+    resultado: passou
+    evidencia: "guia Brownfield seguido até o fim: scaffold 1.7.1 copiado com rsync --ignore-existing (sha256 dos arquivos existentes igual antes e depois), 10 marcadores preenchidos, infra/ removida, hook protegendo o .gitlab-ci.yml, CI com normas-do-pr, governanca e segredos; gitlab-ci-local: testes, governanca e segredos PASS, normas-do-pr FAIL só por falta de origin; verificar_pr --base main sem achados; commits 506e0d2, 4239ff4 e 1fda7bd na branch chore/2026-11-05-adota-scaffold; MR pronta para abrir"
+    data: 2026-11-05

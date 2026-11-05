@@ -462,12 +462,39 @@ Prévia servida em 127.0.0.1 e aberta no Playwright (1280x900). Capturas em
   foi corrigido nesta rodada (`.disco pre code { background: none; }`); o bloco fica na coluna principal ao lado do aside "Ficha", e não na largura toda; 7 botões Copiar
   visíveis e 6 rótulos de linguagem. O índice "Como fazer" não foi comparado cartão a cartão.
 
+### Execução dos 10 prompts (2026-11-05)
+
+Os 10 prompts dos dois roteiros foram executados em 2026-11-05, cada um numa sessão nova do Claude
+Code (subagente), sobre projetos de teste: dois gerados pelo sdd-scaffold 1.7.1 com três documentos
+em `docs/entrada/` (roteiro de projeto novo) e dois repositórios Python com testes, `.gitlab-ci.yml`
+e branch `main` (roteiro de projeto existente). O portal foi servido em http local a partir da prévia
+desta branch, com `{URL do portal}` trocado à mão no prompt, como a base local prevê. O prompt
+inicial de cada roteiro rodou o fluxo inteiro num projeto; os prompts dos passos rodaram um a um no
+outro, com sessão nova onde o roteiro manda (passos 5 e 7). A pessoa respondeu os pontos de decisão
+e, a pedido do agente, rodou o gerador do scaffold quando a permissão do harness o negou. Resultado:
+10 `passou`, registrados em `verificacoes/roteiro-*.yaml` com `harness`, `ambiente` e `evidencia`.
+Divergências do harness: o roteiro de projeto existente lista Kiro e Antigravity, e a execução foi
+no Claude Code (os três harnesses alternativos exigiriam confiar em todas as ferramentas para rodar
+sem supervisão).
+
+Defeitos encontrados pela execução e corrigidos nesta branch: o `.md` gêmeo do roteiro não dizia
+quem faz cada passo nem trazia a ficha com resultado esperado e pré-requisitos (commit 3c53302); a
+skill gerada deixava um `.` sozinho na linha quando a citação abria a linha (commit 77b7cdb).
+
+Depois das execuções: `validar.py` e `gerar.py` saem com 0 e a suíte inteira fica verde (saídas no
+ledger da execução).
+
 ### Pendências do dono
 
-- Executar os 10 prompts dos dois roteiros e registrar as `execucoes` antes do merge na main (hoje
-  `validar.py` e `gerar.py` saem com 1; os dois testes do repositório real passam a verde junto).
-- Executar os 10 prompts em sessão nova e registrar as execuções: o revisor independente de conteúdo
-  já rodou em 2026-11-04, mas não executa prompts, e os registros das duas revisões dizem isso.
+- Divergências de conteúdo apontadas pelas execuções, fora do escopo deste plano: o guia Brownfield
+  supõe `origin/main`, exige diff do `.gitlab-ci.yml` sem linha removida (impossível com `stages:` numa
+  linha), compara só arquivos rastreados e supõe ruff; a receita de skills tem o `AGENTS.md` como
+  pré-requisito, mas no roteiro de projeto existente ele só chega no passo 3; a página do
+  brainstorming só documenta a instalação por plugin (global) e o caminho sem plugin copia a coleção
+  inteira; o roteiro de projeto novo não manda branch nem commit entre os passos 2 e 6, e o `AGENTS.md`
+  do scaffold exige.
+- Repetir a execução do roteiro de projeto existente no Kiro ou no Antigravity, se quiser o registro
+  no harness que ele lista.
 
 ### Minor estacionados pelas revisões (não corrigidos)
 
