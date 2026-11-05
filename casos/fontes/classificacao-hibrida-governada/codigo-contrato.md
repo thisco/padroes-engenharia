@@ -19,13 +19,16 @@ ESQUELETO_SISTEMA = (
     "Responda APENAS com o objeto JSON no formato indicado."
 )
 
+
 def compor_sistema(sessao, fornecedor):
     # Cada canal junta o contexto global com o override do fornecedor, do banco.
     ctx_a = carregar_contexto(sessao, "CONTEXTO_CANAL_A", fornecedor)
     ctx_b = carregar_contexto(sessao, "CONTEXTO_CANAL_B", fornecedor)
-    return (f"{ESQUELETO_SISTEMA}\n\n"
-            f"<contexto_classificacao>\n{ctx_a}\n</contexto_classificacao>\n\n"
-            f"<contexto_sugestao>\n{ctx_b}\n</contexto_sugestao>")
+    return (
+        f"{ESQUELETO_SISTEMA}\n\n"
+        f"<contexto_classificacao>\n{ctx_a}\n</contexto_classificacao>\n\n"
+        f"<contexto_sugestao>\n{ctx_b}\n</contexto_sugestao>"
+    )
 ```
 
 Sem contexto no banco, o esqueleto selado ainda compõe um prompt válido; só cai a qualidade das sugestões (docstring do módulo).
@@ -39,7 +42,8 @@ def sanitizar(texto):
     # sobrepor instruções, e menções ao prompt de sistema).
     ...
 
-TIPOS_VALIDOS = frozenset({...})   # os tipos da taxonomia
+
+TIPOS_VALIDOS = frozenset({...})  # os tipos da taxonomia
 
 # Canal A: o nome devolvido é normalizado e comparado com a taxonomia viva;
 # fora dela, nome=None (a confiança é preservada para a decisão de limiar).
@@ -54,8 +58,12 @@ TIPOS_VALIDOS = frozenset({...})   # os tipos da taxonomia
 TAMANHO_LOTE = 20
 MAX_TOKENS_SAIDA = 4096
 
-parametros = {"temperature": 0, "response_format": {"type": "json_object"},
-              "timeout": 30.0, "max_tokens": MAX_TOKENS_SAIDA}
+parametros = {
+    "temperature": 0,
+    "response_format": {"type": "json_object"},
+    "timeout": 30.0,
+    "max_tokens": MAX_TOKENS_SAIDA,
+}
 ```
 
 - Cada lote tem **degradação independente**: um lote que falha é logado e pulado, e os demais seguem; o chamador aplica o tipo padrão só às categorias ausentes.

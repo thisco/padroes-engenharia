@@ -24,14 +24,14 @@ def resolver_categoria(sessao, fornecedor, categoria_nativa):
 
 ```python
 def resolver_orfas_com_modelo(sessao, fornecedor, orfas, taxonomia, sugestoes_orfas):
-    limiar = 0.6                                   # padrão quando não há parâmetro
+    limiar = 0.6  # padrão quando não há parâmetro
     parametro = carregar_parametro(sessao, "confianca_minima_canal_a", fornecedor)
-    if parametro is not None:                      # override por fornecedor vence o global
+    if parametro is not None:  # override por fornecedor vence o global
         limiar = parametro
 
     try:
         resultados = classificar_com_modelo(sessao, fornecedor, orfas)
-    except Exception as exc:                       # guarda externa: QUALQUER exceção
+    except Exception as exc:  # guarda externa: QUALQUER exceção
         # Degradação: qualquer falha do lote deixa o lote sem casamento;
         # a execução NÃO levanta. Isso inclui erro de programação que
         # tenha escapado do retry da chamada.
@@ -53,10 +53,16 @@ def resolver_orfas_com_modelo(sessao, fornecedor, orfas, taxonomia, sugestoes_or
         # Canal A aplicado (melhor palpite); o tipo deriva da categoria.
         observacao = None
         if r.canal_a.confianca < limiar and r.canal_b is not None:
-            observacao = r.canal_b                  # sugestão registrada para revisão
-        registrar_associacao(sessao, fornecedor, nativa, categoria,
-                             status="ASSOCIADA", origem="modelo",
-                             observacao=observacao)
+            observacao = r.canal_b  # sugestão registrada para revisão
+        registrar_associacao(
+            sessao,
+            fornecedor,
+            nativa,
+            categoria,
+            status="ASSOCIADA",
+            origem="modelo",
+            observacao=observacao,
+        )
         aplicadas[nativa] = categoria
     return aplicadas
 ```
@@ -71,11 +77,16 @@ for nativa in orfas:
     # Tipo padrão (o mais conservador), provisório: não bloqueia o pipeline e
     # vai para a fila de revisão; a sugestão do canal B, se houver, vai junto.
     origem_da_orfa = "modelo" if nativa in sugestoes_orfas else "tipo_padrao"
-    registrar_associacao(sessao, fornecedor, nativa, None,
-                         status="PENDENTE", origem=origem_da_orfa,
-                         observacao=sugestoes_orfas.get(nativa))
-    mapa[nativa] = Resolucao(None, tipo=TIPO_PADRAO, origem="tipo_padrao",
-                             status="PENDENTE")
+    registrar_associacao(
+        sessao,
+        fornecedor,
+        nativa,
+        None,
+        status="PENDENTE",
+        origem=origem_da_orfa,
+        observacao=sugestoes_orfas.get(nativa),
+    )
+    mapa[nativa] = Resolucao(None, tipo=TIPO_PADRAO, origem="tipo_padrao", status="PENDENTE")
 ```
 
 A etapa do modelo só roda com a flag de configuração ligada (padrão: ligada); desligada, a cascata é inteiramente determinística.

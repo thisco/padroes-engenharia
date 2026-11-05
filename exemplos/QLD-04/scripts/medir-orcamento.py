@@ -17,8 +17,15 @@ import sys
 import time
 import urllib.request
 
-UNIDADES = {"B": 1 / 2**20, "KiB": 1 / 1024, "MiB": 1, "GiB": 1024,
-            "kB": 1e3 / 2**20, "MB": 1e6 / 2**20, "GB": 1e9 / 2**20}
+UNIDADES = {
+    "B": 1 / 2**20,
+    "KiB": 1 / 1024,
+    "MiB": 1,
+    "GiB": 1024,
+    "kB": 1e3 / 2**20,
+    "MB": 1e6 / 2**20,
+    "GB": 1e9 / 2**20,
+}
 
 
 def ler_orcamento(caminho):
@@ -50,12 +57,17 @@ def p95_ms(url, amostras):
 
 
 def memoria_mib(servico):
-    ids = subprocess.run(["docker", "compose", "ps", "-q", servico], capture_output=True,
-                         text=True, check=True).stdout.split()
+    ids = subprocess.run(
+        ["docker", "compose", "ps", "-q", servico], capture_output=True, text=True, check=True
+    ).stdout.split()
     if not ids:
         raise RuntimeError(f"serviço {servico} não está no ar")
-    uso = subprocess.run(["docker", "stats", "--no-stream", "--format", "{{.MemUsage}}", ids[0]],
-                         capture_output=True, text=True, check=True).stdout
+    uso = subprocess.run(
+        ["docker", "stats", "--no-stream", "--format", "{{.MemUsage}}", ids[0]],
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
     numero, unidade = re.match(r"\s*([0-9.]+)\s*([A-Za-z]+)", uso).groups()
     return float(numero) * UNIDADES[unidade]
 
@@ -78,15 +90,23 @@ def main():
         lim_mem, lim_p95 = float(campos["memoria_mb"]), float(campos["latencia_p95_ms"])
         estourou = mem > lim_mem or p95 > lim_p95
         acima |= estourou
-        print(f"{nome}: memória {mem:.1f} MiB (limite {lim_mem:g}), p95 {p95:.1f} ms "
-              f"(limite {lim_p95:g}) em {amostras} pedidos: {'ACIMA' if estourou else 'dentro'}")
+        print(
+            f"{nome}: memória {mem:.1f} MiB (limite {lim_mem:g}), p95 {p95:.1f} ms "
+            f"(limite {lim_p95:g}) em {amostras} pedidos: {'ACIMA' if estourou else 'dentro'}"
+        )
     return 1 if acima else 0
 
 
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except (OSError, KeyError, ValueError, AttributeError, RuntimeError,
-            subprocess.CalledProcessError) as erro:
+    except (
+        OSError,
+        KeyError,
+        ValueError,
+        AttributeError,
+        RuntimeError,
+        subprocess.CalledProcessError,
+    ) as erro:
         print(f"QLD-04: não deu para medir: {erro!r}", file=sys.stderr)
         sys.exit(2)
