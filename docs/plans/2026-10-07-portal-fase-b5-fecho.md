@@ -19,7 +19,7 @@ de produto do §23 e o merge na `main` com tag.
 **O que falta do §10** (delta v1.1): guias 3 ("Brownfield em 5 passos") e 4 ("Como escolher e
 configurar o harness"); 4 receitas para chegar a 8, com uma por grupo (falta o grupo Desenho);
 fichas `opentofu` e `pytest` no radar; página "Pessoas e normas" com as 5 normas do D13 (está no
-menu e não tem fonte: `paginas/pessoas-e-normas.md`); o caso "SGD Catálogo de Nuvem" sai por ADR
+menu e não tem fonte: `paginas/pessoas-e-normas.md`); o caso do sistema de origem sai por ADR
 (decisão do dono em 2026-10-07: sem fonte no workspace e conflita com a regra de não citar a
 organização).
 
@@ -82,7 +82,7 @@ na T1** (motor e schema); laços de espera com limite; nunca `--amend` no worktr
   Schema `receita`; Exemplo executado; prompt testado com o portal em **modo de prévia** (T1).
 - [x] **T5 (radar, páginas, ADR, starter).** Fichas `ferramentas/opentofu.yml` e
   `ferramentas/pytest.yml`; `paginas/pessoas-e-normas.md` com `lead`, `modos` e as 5 normas do
-  D13 (ler o D13 na spec); ADR 0006 "o caso SGD sai da semente"; prova da instalação completa do
+  D13 (ler o D13 na spec); ADR 0006 "o caso do sistema de origem sai da semente"; prova da instalação completa do
   starter `gateway-poc` com a porta 4000 livre (prompt do README do starter em sessão nova,
   registro em `verificacoes/starter-gateway-poc.yaml`).
 - [x] **T6.** Testes de prompt em sessão nova: 2 guias, 4 receitas, 1 starter.
@@ -237,7 +237,7 @@ por `R-GERADO-DIVERGENTE` do README); depois do build: 710 passed. `validar.py`:
 `/Users/thiago/.claude/jobs/0c679baa/tmp/build5`: `diff -rq` sem diferença; pastas `<nome> <n>` vazias
 removidas em seguida. Gerado: `public/guias/` com 4 guias, `public/receitas/` com 8,
 `public/pessoas-e-normas.html`, `public/ferramentas/` com 14 fichas (inclui `opentofu` e `pytest`);
-`grep` por NUJOR, NUARQ, Serpro e SGD em `public/**/*.html`: vazio; `grep -c "a definir"
+`grep` por NUJOR, NUARQ, Serpro e o projeto de origem em `public/**/*.html`: vazio; `grep -c "a definir"
 public/espinha.md`: 11 linhas; nenhum "PRÉVIA" em `public/`. A T6 (testes de prompt em sessão nova) não
 foi executada: os preparos estão prontos e nenhuma execução de prompt foi registrada; a prova completa
 do starter `gateway-poc` aguarda o `docker compose up` do dono (o classificador barrou o testador).
@@ -266,7 +266,7 @@ Achado -> tratamento, uma linha cada:
 - Conteúdo M7 (LGPD-01) -> `exemplos/LGPD-01/dados-antes.md`, rodado nos dois estados (saída 1 e 0), com execução registrada.
 - T1 (6) iCloud -> `gerar.py` varre `<nome> <n>` também no início do build (teste vermelho antes).
 - T1 (16) `SKILL.md:136` -> lista `passou | falhou | falhou-como-esperado`, `motivo` no `falhou` (só essa linha; alinhamento ao schema).
-- Baixos: `CHANGELOG.md:40` (sem reteste, decisão do dono); "SGD" fora dos testes; segundo laço do gateway sai com 1; frase truncada da receita de segredos; permissões do Claude Code com `[ref:claude-code-permissions]` (página aberta em 2026-10-07); registros da B.5 com `revisor` "conferência em lote (ADR 0005), sessão independente" e os achados do slug.
+- Baixos: `CHANGELOG.md:40` (sem reteste, decisão do dono); nome do projeto de origem fora dos testes; segundo laço do gateway sai com 1; frase truncada da receita de segredos; permissões do Claude Code com `[ref:claude-code-permissions]` (página aberta em 2026-10-07); registros da B.5 com `revisor` "conferência em lote (ADR 0005), sessão independente" e os achados do slug.
 - Frontend médios só CSS: B5-M1 (`max-width: 100%` no select do filtro) e B5-M3 (`align-items: start` na fileira do ninho), com teste.
 
 Pendências pós-v1 (não tratadas):
@@ -314,7 +314,7 @@ Base conferida: `0ccf67e` (HEAD da branch), escopo `4243995..HEAD` sem a T1. Tud
 - T2, gateway, LGPD-02: o 403 virou o passo 6 antes do estouro de orçamento (passo 7) e as remissões a "passo 5/4" seguem corretas; o "trocando só as linhas acusadas" está no prompt da LGPD-02 com a nota "sem reteste" em `verificacoes/LGPD-02.yaml` — sem achado.
 - T5, pessoas-e-normas (obrigatório 5): as cinco normas (LGPD, Portaria MGI 3.485, PL 2338, NIST AI RMF, ISO 42001) batem com a lista do D13 em `docs/specs/2026-10-02-portal-v1-1-delta.md:158-160`, na mesma ordem. A Portaria é descrita só pelo que a fonte diz (política de governança de IA do MGI; transparência, proteção de dados e supervisão humana; vale para o Ministério e usuários do ColaboraGov; "fonte secundária" dito no texto). O "cerca de 70% … 20%" confere com a fonte da Anthropic (70% do planejamento, 20% da execução). O quirk da saída `.md` com `[ref:id]` cru (16 ocorrências em `public/pessoas-e-normas.md`) não está no plano como pendência; as mesmas marcas aparecem em `public/o-problema.md`, `public/index.md` e nos guias `.md`, o que indica comportamento do motor para o `.md` e não defeito da página — baixo — registrar no plano (T10) como decisão ("o `.md` mantém `[ref:id]`") ou como pendência de motor.
 - T5, portaria-mgi-3485 (fonte): a fonte primária (DOU, `in.gov.br`) deu `socket hang up` na tentativa de hoje; uma segunda fonte independente (`contadores.cnt.br`, 2026-04-30) confirma assinatura em 2026-04-24, publicação no DOU em 2026-04-28, escopo no Ministério e usuários dos serviços de tecnologia compartilhados, vigência 60 dias após a publicação e os princípios (transparência, proteção de dados, segurança da informação, direitos fundamentais, supervisão humana de decisões automatizadas). O registro continua [S], coerente — sem achado; manter a nota "primária bloqueada" e reabrir no DOU.
-- T5, ADR 0006 (obrigatório do item e): "SGD" aparece só na ADR 0006 entre guias, receitas, fichas, páginas, casos e registros; fora do conteúdo, aparece em `tests/fabrica.py:197` e `tests/unidade/test_carregar.py:63` (dado de teste) e na própria spec e planos — baixo — trocar por um nome neutro nos dois testes.
+- T5, ADR 0006 (obrigatório do item e): o nome do projeto de origem aparece só na ADR 0006 entre guias, receitas, fichas, páginas, casos e registros; fora do conteúdo, aparece em `tests/fabrica.py:197` e `tests/unidade/test_carregar.py:63` (dado de teste) e na própria spec e planos — baixo — trocar por um nome neutro nos dois testes.
 - T5, fichas opentofu e pytest: schema e seções passam no `validar.py`; `status` e `versao_minima` coerentes com o texto ("a única versão testada é a 1.13.1" e "9.1.1"); pytest-bdd declarado como candidato sem prática e "não instalou nem executou" — sem achado; as fontes `opentofu-licenca` e `pytest-*` não foram reabertas por mim.
 - T7, CHANGELOG (obrigatório 6): confirmado. As "15 células da espinha seguem a definir" (`CHANGELOG.md:64`) batem com `public/espinha.md`: contei por célula 15 (linhas 8 a 17: 1+2+2+2+2+1+1+1+2+1) e a frase da linha 3 do arquivo ("15 das 48 células estão a definir"); o "11" do plano (T6 e T7) é `grep -c` de linhas, não de células. Também conferi 4 guias, 8 receitas, 14 fichas, 1 caso e 2 starters. Na mesma seção, `CHANGELOG.md:40` ("Os prompts alterados na conferência em lote aguardam novo teste em sessão nova") contradiz a decisão do dono ("nada é retestado quando só o prompt muda") — baixo — trocar por "sem reteste (decisão do dono)".
 - Plano, T1 (obrigatório 8): os quatro médios abertos estão listados nas Evidências da T1 como "Médios não tratados" e "Anotados": (6) iCloud, com a decisão do dono pendente, (10) `BASE:` de YAML, (11) HTML bruto e (16) `SKILL.md:136`; mas nenhuma tarefa (T10, T11) nem o checkpoint os tem como item. Confirmado também que o (6) segue aberto: `public/` voltou a ter 12 pastas vazias `<nome> 2` (ignoradas pelo git) depois do build — baixo — nomear os quatro na T10 como "decidir ou aceitar" para o checkpoint.
@@ -340,7 +340,7 @@ Contagem: 1 alto, 3 médios e 17 baixos.
 - (8) `SKILL.md:136`: resolvido. O comentário agora lista `passou | falhou | falhou-como-esperado (falhou exige motivo)`; o delta da spec (`:377`) não foi tocado por esse commit e não o conferi.
 - (9) `gerar.py` varre no início: resolvido. `scripts/gerar.py` apaga as pastas vazias antes do build (depois de `problema_da_saida` garantir saída vazia ou site gerado) e soma ao total; o teste `test_gerar_remove_as_pastas_vazias_numeradas_tambem_no_inicio` cria `praticas 2` e `dominios/x 2`, espia a pasta no início de `construir` e confere que a que tem arquivo e o site anterior ficam; rodado, passa. `public/` não tem mais pastas `<nome> <n>`.
 - (10) Registros: resolvido para os dez do escopo. Os guias, as quatro receitas, `ferramenta-opentofu`, `ferramenta-pytest` e `pessoas-e-normas` trazem o revisor "conferência em lote (ADR 0005), sessão independente" e os achados por slug (guia 3 com 4, guia 4 com 3). Comparação estrutural do YAML antigo com o novo em todos os 16 arquivos de `verificacoes/` do commit: nenhuma chave nem valor sumiu; só mudaram `revisor`, `data` da revisão e os índices de `afirmacoes` por inserção (brownfield 24→26, harness 29→30, todos os textos antigos presentes; `execucoes` idêntico). Continuam "provisória" cinco registros fora desta lista: `OBS-01`, `OBS-02`, `observabilidade`, `receita-ligar-aplicacao-ao-gateway` e `starter-gateway-poc` — baixo, a T11/checkpoint decide (o do starter depende da prova do `docker compose`).
-- (11) "SGD": parcial. O comando pedido devolve só três linhas, todas em `docs/research/`: `2026-10-07-revisao-b5-mockups.md:32` (relatório que cita a ADR 0006) e `benchmark-portais-praticas-ia.md:31` e `:141` ("SGD" ali é a Secretaria de Governo Digital, um órgão que o benchmark cita, e não o caso). Nenhuma está em guia, receita, ficha, página, caso, motor ou teste (os dois dados de teste ganharam nome neutro em e358df1) — baixo, aceitável se `docs/research/` ficar fora da regra.
+- (11) O termo do projeto de origem: parcial. O comando pedido devolve só três linhas, todas em `docs/research/`: `2026-10-07-revisao-b5-mockups.md:32` (relatório que cita a ADR 0006) e `benchmark-portais-praticas-ia.md:31` e `:141` (a sigla ali é a Secretaria de Governo Digital, um órgão que o benchmark cita, e não o caso). Nenhuma está em guia, receita, ficha, página, caso, motor ou teste (os dois dados de teste ganharam nome neutro em e358df1) — baixo, aceitável se `docs/research/` ficar fora da regra.
 - (12) `validar.py`: resolvido. "validação ok: nenhum erro." sobre o `public/` regenerado. A árvore tem `README.md` e `docs/research/2026-10-07-revisao-b5-frontend.md` modificados por outra tarefa, que não toquei.
 
 ## Checkpoint: 2026-10-07

@@ -370,7 +370,7 @@ domínio e a espinha.
 | Contratos de API · Frontend e UX · Observabilidade | 2 cada | lifecycle (gate de contrato), skill `estados-de-interface`, achados de log da avaliação |
 | Dados e migrations · Privacidade e LGPD | 2 cada | skill `migrations-reversiveis`, achados de PII da avaliação |
 | Qualidade e BDD · Infra e IaC · CI/CD · Segurança | 3 cada | steering e verificadores do scaffold |
-| IA no produto | 12 (P2 ≥ 6, P3 ≥ 6) | anéis 1–2 da governança, os 45 casos da avaliação, padrões do SGD em produção, guia do CISO da Anthropic |
+| IA no produto | 12 (P2 ≥ 6, P3 ≥ 6) | anéis 1–2 da governança, os 45 casos da avaliação, padrões do sistema de origem em produção, guia do CISO da Anthropic |
 
 O total mínimo é de 48 práticas, e a meta é 55.
 
@@ -385,7 +385,7 @@ O total mínimo é de 48 práticas, e a meta é 55.
 4. Como escolher e configurar o harness.
 
 **Casos:**
-1. ~~SGD Catálogo de Nuvem: LLM em produção.~~ Fora da semente, ver
+1. ~~Sistema de origem: LLM em produção.~~ Fora da semente, ver
    [ADR 0006](../adr/0006-caso-de-origem-fora-da-semente.md).
 2. Avaliação do gateway de IA: 8 cenários, 45 casos. É o único caso da v1.
 
@@ -394,7 +394,7 @@ ponto de partida é o [benchmark](../research/benchmark-portais-praticas-ia.md) 
 `serpro-cloud-ia-governance/docs/research/`.
 
 **Higiene:**
-- Os números do SGD são recontados num commit fixo do repositório de origem e publicados com a
+- Os números do sistema de origem são recontados num commit fixo do repositório de origem e publicados com a
   data. Hoje eles divergem entre os decks: testes 1000+ contra ~1705, ADRs 35+ contra 40,
   planos 56 contra 90+.
 - Saem do portal: "171% ROI (McKinsey · Salesforce · Anthropic)", sophyworks.ai, citação de post
@@ -639,7 +639,7 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
 - [ ] O site abre sem rede: nenhum recurso externo carregado.
 - [ ] O teste de contraste passa para todos os tokens usados em texto pequeno.
 - [ ] As páginas O problema, Conceitos (15 peças) e Como fazer existem conforme o §4.3.
-- [ ] Os números do SGD publicados têm data e commit de origem; as fontes fracas do §10 não
+- [ ] Os números do sistema de origem publicados têm data e commit de origem; as fontes fracas do §10 não
       aparecem.
 - [ ] O pipeline publica no GitLab Pages a partir da `main`, e o job agendado gera o relatório
       de avisos.
@@ -675,7 +675,7 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
 | Portal e scaffold divergirem até a v1 | `componentes.yml` fixa as versões, e o job agendado avisa quando há versão nova |
 | Fontes que bloqueiam robôs (403) | O link quebrado só avisa; a verificação manual é registrada em `verificacoes/` |
 | Contraste do âmbar e do `tinta-3` em texto pequeno | Variantes escuras definidas no plano e conferidas por teste (§9.3) |
-| Repositório de origem do SGD não está no workspace atual | Localizar no início da fase B do plano, antes de recontar os números |
+| Repositório do projeto de origem não está no workspace atual | Localizar no início da fase B do plano, antes de recontar os números |
 
 ## 23. Fatiamento para o plano
 

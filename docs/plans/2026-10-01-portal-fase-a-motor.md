@@ -1178,7 +1178,7 @@ def test_carrega_cada_tipo_do_seu_lugar_em_ordem_de_caminho(tmp_path):
     escrever(tmp_path, "praticas/seguranca/_dominio.md", "---\ntitulo: Segurança\n---\n")
     escrever(tmp_path, "conceitos/harness.md", "---\ntitulo: Harness\n---\n")
     escrever(tmp_path, "guias/do-zero.md", "---\ntitulo: Do zero\n---\n")
-    escrever(tmp_path, "casos/sgd.md", "---\ntitulo: SGD\n---\n")
+    escrever(tmp_path, "casos/origem.md", "---\ntitulo: Origem\n---\n")
     escrever(tmp_path, "paginas/o-problema.md", "---\ntitulo: O problema\n---\n")
     escrever(tmp_path, "referencias/dora.yaml", "id: dora\nverificado_em: 2026-10-01\n")
     escrever(tmp_path, "verificacoes/SEG-01.yaml", "conteudo: SEG-01\n")
@@ -1197,7 +1197,7 @@ def test_carrega_cada_tipo_do_seu_lugar_em_ordem_de_caminho(tmp_path):
     assert [c.chave for c in repo.dominios] == ["seguranca"]
     assert [c.chave for c in repo.conceitos] == ["harness"]
     assert [c.chave for c in repo.guias] == ["do-zero"]
-    assert [c.chave for c in repo.casos] == ["sgd"]
+    assert [c.chave for c in repo.casos] == ["origem"]
     assert [c.chave for c in repo.paginas] == ["o-problema"]
     assert repo.referencias[0].meta == {"id": "dora", "verificado_em": "2026-10-01"}
     assert repo.referencias[0].corpo == ""
@@ -1709,8 +1709,8 @@ def meta_guia(**alteracoes: Any) -> dict[str, Any]:
 def meta_caso(**alteracoes: Any) -> dict[str, Any]:
     return _com(
         {
-            "titulo": "SGD Catálogo de Nuvem",
-            "origem": {"repo": "sgd-catalogo", "commit": COMMIT},
+            "titulo": "Catálogo de Nuvem",
+            "origem": {"repo": "projeto-origem", "commit": COMMIT},
             "periodo": "2026-03 a 2026-09",
             "numeros": [
                 {
@@ -1790,7 +1790,7 @@ def verificacao(meta: dict[str, Any] | None = None) -> Conteudo:
 
 
 def caso(
-    slug: str = "sgd",
+    slug: str = "origem",
     meta: dict[str, Any] | None = None,
     corpo: str = "Números recontados no commit de origem [ref:ref-forte].\n",
 ) -> Conteudo:
@@ -3345,7 +3345,7 @@ def test_adotar_inocente_com_referencia_forte(tmp_path, tipo):
 
 def test_adotar_inocente_com_caso_interno(tmp_path):
     fraca = fabrica.referencia(fabrica.meta_referencia(tipo="analista"))
-    conteudos = [adotar(casos=["sgd"]), fraca, fabrica.caso("sgd")]
+    conteudos = [adotar(casos=["origem"]), fraca, fabrica.caso("origem")]
     assert rodar(regra_adotar, conteudos, tmp_path) == []
 
 
@@ -5663,7 +5663,7 @@ def test_caminhos_pelo_id_e_md_gemeo():
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "")
     como_fazer = Conteudo("pagina", "paginas/como-fazer.md", fabrica.meta_pagina(), "")
     assert caminho_de(fabrica.pratica()) == "praticas/P1-01.html"
-    assert caminho_de(fabrica.caso()) == "casos/sgd.html"
+    assert caminho_de(fabrica.caso()) == "casos/origem.html"
     assert caminho_de(fabrica.referencia()) == "referencias.html#ref-forte"
     assert caminho_de(pagina) == "o-problema.html"
     assert caminho_de(como_fazer) == "index.html"
@@ -6391,7 +6391,7 @@ def test_conceitos_mostra_os_dois_ninhos_e_lista_as_pecas():
 def test_guias_lista_guias_e_casos():
     html = html_guias(fabrica.site(fabrica.caso()))
     assert "Ainda não há guias." in html
-    assert '<a href="casos/sgd.html">SGD Catálogo de Nuvem</a>' in html
+    assert '<a href="casos/origem.html">Catálogo de Nuvem</a>' in html
 ```
 
 - [ ] **Passo 2: Rodar e ver falhar**
@@ -6924,7 +6924,7 @@ def test_caso_com_tabela_de_numeros_e_pagina_na_raiz():
     s = fabrica.site(fabrica.caso(), fabrica.referencia())
     html = html_conteudo(s, fabrica.caso())
     assert "<td>testes automatizados</td><td>1705</td><td>2026-09-30</td>" in html
-    assert f"<dt>Origem</dt><dd>sgd-catalogo @ {fabrica.COMMIT}</dd>" in html
+    assert f"<dt>Origem</dt><dd>projeto-origem @ {fabrica.COMMIT}</dd>" in html
     pagina = Conteudo("pagina", "paginas/o-problema.md", fabrica.meta_pagina(), "Texto.\n")
     html = html_conteudo(fabrica.site(pagina), pagina)
     assert 'href="tema/tema.css"' in html
@@ -7370,7 +7370,7 @@ def test_todas_as_paginas_em_ordem_estavel():
     resto = caminhos[len(PAGINAS_FIXAS) :]
     assert resto[0] == "o-problema.html"
     assert resto[1:13] == [f"dominios/{f.slug}.html" for f in fabrica.espinha_real().faixas]
-    assert resto[13:] == ["praticas/P1-01.html", "conceitos/harness.html", "casos/sgd.html"]
+    assert resto[13:] == ["praticas/P1-01.html", "conceitos/harness.html", "casos/origem.html"]
     assert len(caminhos) == len(set(caminhos))
 
 
@@ -7380,7 +7380,7 @@ def test_secao_titulo_e_descricao_de_cada_pagina():
     assert paginas["espinha.html"].descricao.startswith("As 12 faixas de domínio")
     assert paginas["praticas/P1-01.html"].secao == "Práticas"
     assert paginas["dominios/seguranca.html"].secao == "Domínios"
-    assert paginas["casos/sgd.html"].secao == "Casos"
+    assert paginas["casos/origem.html"].secao == "Casos"
     assert all(p.titulo and p.descricao for p in paginas.values())
 
 
@@ -9757,7 +9757,7 @@ def repo_exemplo(repo_minimo: Path) -> Path:
     citacao = "Afirmação conferida na fonte [ref:ref-forte].\n"
     _com_registro(raiz, "conceitos/harness.md", fabrica.meta_conceito(), citacao, "harness")
     _com_registro(raiz, "guias/do-zero.md", fabrica.meta_guia(), citacao, "do-zero")
-    _com_registro(raiz, "casos/sgd.md", fabrica.meta_caso(), citacao, "sgd")
+    _com_registro(raiz, "casos/origem.md", fabrica.meta_caso(), citacao, "origem")
     _com_registro(raiz, "paginas/o-problema.md", fabrica.meta_pagina(), citacao, "o-problema")
     escrever(
         raiz,
@@ -11482,7 +11482,7 @@ ser anterior a ela (`R-VERIFICACAO`).
 - [ ] **Passo 1: Rascunho (passo 1 da skill)**
 
 Criar `praticas/construir-com-ia/P1-01.md`. Força `orienta` (não há mecanismo); status
-`experimentar`, porque o caso interno que sustentaria `adotar` (SGD) é do plano B.
+`experimentar`, porque o caso interno que sustentaria `adotar` (o sistema de origem) é do plano B.
 
 ```markdown
 ---
@@ -12427,7 +12427,7 @@ Leve também as pendências que esta fase não fecha, para decisão:
 5. Criar o agendamento semanal do job `avisos` (Build → Pipeline schedules, branch `main`).
 6. Decidir quando criar a tag `v0.1.0` (dispara o pacote offline): após o merge da fase A ou
    só ao fim do plano B.
-7. Localizar o repositório de origem do SGD, pré-requisito do plano B (§21 da spec).
+7. Localizar o repositório do projeto de origem, pré-requisito do plano B (§21 da spec).
 
 - [ ] **Passo 2: Pausar e perguntar**
 
