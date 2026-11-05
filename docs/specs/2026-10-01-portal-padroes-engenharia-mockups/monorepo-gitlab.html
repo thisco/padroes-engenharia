@@ -18,7 +18,7 @@
   .leg { font-size:.72rem; color:var(--text-secondary); margin-top:6px; }
 </style>
 
-<h2>Monorepo no GitLab Serpro, no molde do awesome-copilot</h2>
+<h2>Monorepo no GitLab da organização, no molde do awesome-copilot</h2>
 <p class="subtitle">Do awesome vem a regra principal: o arquivo com frontmatter é a fonte; README, site, índices e pacotes são gerados e o CI reprova se estiverem velhos. O que acrescentamos está em verde.</p>
 
 <div class="wrap">
@@ -45,7 +45,7 @@
 ├── <span class="n">referencias/</span>         <span class="c"># registro de links: id, url, robustez, verificado_em</span>
 ├── <span class="n">casos/</span>               <span class="c"># sistema de origem, avaliação do gateway</span>
 ├── esquemas/            <span class="c"># JSON Schema de cada tipo</span>
-├── portal/              <span class="c"># gerador + tema NUJOR, offline</span>
+├── portal/              <span class="c"># gerador + tema o kit de origem, offline</span>
 ├── scripts/             <span class="c"># validar, gerar, checar links</span>
 ├── CODEOWNERS · niveis-de-risco.yml
 ├── .gitlab-ci.yml       <span class="c"># validar → gerar → pages → espelhar</span>
@@ -78,8 +78,8 @@
     <span>espelhar motores/</span>
   </div>
 
-  <div class="alerta"><b>Motores públicos.</b> <code>motores/</code> vira a fonte e é publicado no GitHub por espelhamento de mão única (subtree split). Um check reprova conteúdo do Serpro dentro de <code>motores/</code>. Falta decidir a titularidade: hoje os dois são MIT na sua conta pessoal.</div>
-  <div class="alerta"><b>GitLab muda duas coisas.</b> (1) O scaffold gera <code>.github/workflows/</code>; projetos no GitLab Serpro precisam de um <code>.gitlab-ci.yml</code> equivalente. (2) CODEOWNERS e regras de aprovação por caminho dependem do plano da instância.</div>
+  <div class="alerta"><b>Motores públicos.</b> <code>motores/</code> vira a fonte e é publicado no GitHub por espelhamento de mão única (subtree split). Um check reprova conteúdo da organização dentro de <code>motores/</code>. Falta decidir a titularidade: hoje os dois são MIT na sua conta pessoal.</div>
+  <div class="alerta"><b>GitLab muda duas coisas.</b> (1) O scaffold gera <code>.github/workflows/</code>; projetos no GitLab da organização precisam de um <code>.gitlab-ci.yml</code> equivalente. (2) CODEOWNERS e regras de aprovação por caminho dependem do plano da instância.</div>
   <p class="leg">Verde: o que não existe no awesome-copilot. Âmbar: saída gerada.</p>
 </div>
 </div>

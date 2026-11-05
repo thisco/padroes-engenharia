@@ -116,7 +116,7 @@ critério, e a parada para aprovação.
   `flyway validate` no Exemplo da DAD-01 (lacuna 2 do aceite).
 - **Itens da Release 2:** M4, M5, M6, M9 e C12.
 - **Execução no Kiro, no Antigravity e no Copilot.**
-- **Pendências do GitLab Serpro.**
+- **Pendências do GitLab da organização.**
 
 ## Design proposto
 

@@ -61,7 +61,7 @@ revisao_adversarial:
       avisa que o código muda com a versão; o caso afirma 429 sem essa ressalva.'
     tratamento: 'Pendente: acrescentar "na versão 1.100.0" ao bullet da P2-06, ou citar a variação.'
   - afirmacao: 'higiene: ROI, LinkedIn e nomes de organização'
-    problema: '[baixo] nenhuma ocorrência de "171% ROI", LinkedIn, NUARQ, NUJOR ou Serpro no caso, nos registros
+    problema: '[baixo] nenhuma ocorrência de "171% ROI", LinkedIn, os nomes da organização no caso, nos registros
       e nas referências gateway-poc-*; o campo `origem` aponta para o repositório e o commit, e o texto fala em
       "uma prova de conceito de gateway de IA". Varredura feita no texto da tag nos mesmos termos: nenhuma ocorrência.
       Dados de teste sintéticos.'

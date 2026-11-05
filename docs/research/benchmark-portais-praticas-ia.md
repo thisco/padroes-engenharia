@@ -159,7 +159,7 @@ Teste de `llms.txt` em 8 sites governamentais: nenhum tem (404/403). Só o repo 
   X (~28/06/2026), sem metodologia; não é publicação institucional. Cobertura:
   https://www.businessinsider.com/job-archetypes-ai-claude-codes-boris-cherny-2026-6 [V].
   Leitura crítica e o 6º modo (Verificador) em
-  `serpro-cloud-ia-governance/docs/ref/anthropic/arquetipos-ia-material-base.md`.
+  `governanca-de-ia-na-nuvem/docs/ref/anthropic/arquetipos-ia-material-base.md`.
 - **Anthropic Economic Index — Cadences** — https://www.anthropic.com/research/economic-index-june-2026-report
   (26/06/2026) [V]; **Learning curves** — https://www.anthropic.com/research/economic-index-march-2026-report
   (24/03/2026) [V]: usuários com 6 meses ou mais têm taxa de sucesso 10% maior.
@@ -185,7 +185,7 @@ Teste de `llms.txt` em 8 sites governamentais: nenhum tem (404/403). Só o repo 
 6. **Padrão central, execução descentralizada.** AGENTS.md universal + AGENTS.md fino por projeto
    (GSA); política → padrão técnico → adendo (DTA).
 7. **Diferencial possível:** nenhum site de governo testado publica `llms.txt`; nenhum benchmark
-   declara a **força** de cada prática (bloqueia/pede aprovação/avisa/só orienta), que vem do kit NUJOR.
+   declara a **força** de cada prática (bloqueia/pede aprovação/avisa/só orienta), que vem do kit de origem.
 
 ## Não verificado
 
@@ -194,12 +194,12 @@ Teste de `llms.txt` em 8 sites governamentais: nenhum tem (404/403). Só o repo 
 - ai.gov.uk e cursor.directory bloquearam leitura; OWASP genai.owasp.org devolveu 403.
 - Nomes exatos dos escopos das Scoping Matrices da AWS; data do guia do CISO da Anthropic.
 - Status do PL 2338/2023 após jun/2026; textos de RFB 647/2026, MGI 3.485/2026 e CNJ 615/2025.
-- Dataprev, BACEN, Serpro: nenhum guia público de boas práticas de IA para devs localizado.
+- Dataprev, BACEN e outras estatais: nenhum guia público de boas práticas de IA para devs localizado.
 
 
 ## 7. Padrões de falha do vibe coding (fontes primárias, para "O problema")
 
-O deck de 10/06/2026 (`apresentacoes/temas/engenharia-ia-agentes/2026-06-10-agentes-autonomos-nuarq/`,
+O deck de 10/06/2026 (`apresentacoes/temas/engenharia-ia-agentes/2026-06-10-agentes-autonomos/`,
 slide 3) atribuía seis padrões a "OpenAI Harness Engineering · Latent Space 2026". Conferido na fonte
 primária em 01/10/2026:
 

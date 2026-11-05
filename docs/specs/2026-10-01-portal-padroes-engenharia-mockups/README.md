@@ -11,7 +11,7 @@ curadoria (§11 da spec) antes de virar página.
 | `benchmark-mercado.html` | O que copiar do mercado e os dois diferenciais (força declarada, `llms.txt`) |
 | `espinha-sdd-v2.html` | A espinha: 12 faixas × 4 momentos, com contratos, observabilidade e LGPD |
 | `monorepo-gitlab.html` | Estrutura do monorepo no molde do awesome-copilot |
-| `visual-portal.html` | Página inicial (Como fazer) e página de prática no tema da NUJOR |
+| `visual-portal.html` | Página inicial (Como fazer) e página de prática no tema do kit de origem |
 | `o-problema.html` | Página O problema: anatomia, cadeia, disciplinas, como combinar |
 | `o-problema-falhas.html` | Os 7 padrões de falha com fonte primária |
 | `conceitos.html` | Página Conceitos: o ninho com 9 peças e a página por conceito |

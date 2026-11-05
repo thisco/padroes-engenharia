@@ -58,7 +58,7 @@ Tomadas com o dono do projeto em 2026-10-02, ou propostas aqui para o checkpoint
 | # | Decisão | Escolha | Alternativas descartadas |
 |---|---|---|---|
 | D9 | Quanto de how-to entra na v0 | **Completo:** seção `## Exemplo` na prática, os tipos Receita, Starter e Ferramenta, e a curadoria de exemplo por execução | Só Exemplo e Receita; só a seção Exemplo |
-| D10 | Template de CI do GitLab com as travas | **Entra na v0**, como receita e exemplo executado. O builder do Serpro passa a conseguir ligar a força "bloqueia" | Declarar a limitação e manter fora de escopo (v1.0, §19) |
+| D10 | Template de CI do GitLab com as travas | **Entra na v0**, como receita e exemplo executado. O builder da organização passa a conseguir ligar a força "bloqueia" | Declarar a limitação e manter fora de escopo (v1.0, §19) |
 | D11 | Navegação | **Estilo Diátaxis:** Início · Comece aqui · Como fazer · Padrões · Ferramentas · Entender · Para agentes | Manter os 3 grupos da v1.0 |
 | D12 | Página inicial | *P* `/` passa a ser **Início**, que explica o portal (o que é, para quem, como ler, comece aqui, por que confiar, estado). "Como fazer" vira o índice das receitas | Home como how-to em 4 passos (v1.0, §4.3, e brainstorm). Revertida porque o dono pediu explicitamente uma home que explique o portal |
 | D13 | Pilar T (pessoas e normas) | **Volta**, como *P* página transversal `pessoas-e-normas` em "Entender", que lista os modos de atuação e as normas e cruza as normas com as práticas pelo campo `mapeia` | 13ª faixa na espinha: quebraria o contrato de 48 células do `roteamento.json` e o R2 |
@@ -66,7 +66,7 @@ Tomadas com o dono do projeto em 2026-10-02, ou propostas aqui para o checkpoint
 | D15 | Glossário | **Volta**, como `glossario.yml`, gerando a página `glossario.html` e entradas no `llms.txt`. Cada termo aponta para o conceito, quando existe | Conceitos substitui o glossário |
 | D16 | Pesquisa de perfil da Anthropic | **Volta**, como referência curada, usada em O problema (seção "O que as pesquisas medem") e no bloco "Por que isto existe" da Início | Ficar só no benchmark |
 | D17 | Componentes do motor que a revisão da fase A empurrou para o plano B (Cadeia, Planta, ninho fiel) | *P* **Voltam para a fase A** (plano A.5), porque pertencem ao R11 e ao R12 | Adiar para o plano B, como estava |
-| D18 | Itens menores perdidos | *P* Voltam: chip de força na tabela de falhas; subtítulo de cada faixa (`espinha.yml`); campo `resumo` na prática. Descartados com registro: o eixo "tipo" da prática (coberto pela seção Exemplo e pelos tipos novos) e "Conceitos e problemas vira o primeiro guia" (absorvido por O problema). O elo "Garantia de qualidade" da NUJOR fica fora; a cadeia segue o mockup aprovado, com 3 elos | — |
+| D18 | Itens menores perdidos | *P* Voltam: chip de força na tabela de falhas; subtítulo de cada faixa (`espinha.yml`); campo `resumo` na prática. Descartados com registro: o eixo "tipo" da prática (coberto pela seção Exemplo e pelos tipos novos) e "Conceitos e problemas vira o primeiro guia" (absorvido por O problema). O elo "Garantia de qualidade" do kit de origem fica fora; a cadeia segue o mockup aprovado, com 3 elos | — |
 | D19 | Prompts de exemplo (emenda de 2026-10-02, pedido do dono após a aprovação) | Prompt de exemplo **testado** em toda prática que exige Exemplo (`### Para o agente` → bloco `prompt`) e em toda receita (`## Com o agente`). O prompt é executado em sessão nova de agente e registrado em `execucoes`. O gerador extrai os prompts para uma **Biblioteca de prompts** (`prompts.html` + `prompts.json`), por domínio e momento | Tipo `prompts/` próprio (duplicaria a fonte); prompts sem teste |
 
 ## 3. Mudanças por seção da spec v1.0
@@ -164,7 +164,7 @@ Erro comum · Práticas · Referências".
 link para o conceito.
 
 **Estado vazio (todas as páginas).** O vazio é uma lacuna nomeada, como "O que ainda não
-garante" da NUJOR, e não um rótulo repetido.
+garante" do kit de origem, e não um rótulo repetido.
 - A célula vazia da espinha não leva texto: a hachura basta. Cada linha da espinha mostra
   "N de 4 momentos cobertos".
 - A página de domínio sem prática mostra:
@@ -520,7 +520,7 @@ execucoes:
 | Risco | Mitigação |
 |---|---|
 | Executar o job do GitLab sem uma instância disponível | `gitlab-ci-local` na máquina do curador; se não for possível, a receita fica em `experimentar` e o exemplo não é publicado até haver execução (regra 7) |
-| O custo da curadoria cresce com exemplos executados | Os exemplos reaproveitam material já testado: o scaffold, a PoC do gateway (`serpro-cloud-ia-governance/poc/`) e os 45 casos da avaliação |
+| O custo da curadoria cresce com exemplos executados | Os exemplos reaproveitam material já testado: o scaffold, a PoC do gateway (`governanca-de-ia-na-nuvem/poc/`) e os 45 casos da avaliação |
 | O conteúdo de O problema e da Início depende de pesquisa na web (D16, 7 padrões) | As fontes primárias já estão listadas no benchmark §5 e §7; cada uma passa pelo §11 |
 | SemVer major na v0 | O impacto hoje são 3 práticas, contra ~55 se a mudança ficasse para depois |
 | O escopo da A.5 cresce demais | O plano A.5 separa motor (A.5-1) e molde (A.5-2), com checkpoint entre eles |

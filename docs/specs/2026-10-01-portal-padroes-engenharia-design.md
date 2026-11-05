@@ -2,12 +2,12 @@
 
 **Data:** 2026-10-01 · **Status:** aprovada
 **Tier:** 2 (repositório novo, contratos de dados próprios)
-**Contexto:** `serpro-cloud-ia-governance/docs/governanca/arquitetura-governanca-ia.md` ·
+**Contexto:** `governanca-de-ia-na-nuvem/docs/governanca/arquitetura-governanca-ia.md` ·
 [Benchmark de portais e playbooks](../research/benchmark-portais-praticas-ia.md) ·
-`serpro-cloud-ia-governance/docs/ref/reunioes/2026-09-08-alinhamento-gerente-arquitetura.md` ·
+`governanca-de-ia-na-nuvem/docs/ref/reunioes/2026-09-08-alinhamento-gerente-arquitetura.md` ·
 [mockups do brainstorming](2026-10-01-portal-padroes-engenharia-mockups/) ·
 [sdd-scaffold](https://github.com/thisco/sdd-scaffold) · [sdd-lifecycle](https://github.com/thisco/sdd-lifecycle) ·
-kit NUJOR em `apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd/`
+kit de origem em `apresentacoes/temas/engenharia-ia-agentes/2026-09-29-harness-sdd/`
 
 ---
 
@@ -51,10 +51,10 @@ de um processo SDD de ponta a ponta, no desenho do `sdd-scaffold`.
 | D1 | Escopo | Portal de padrões do departamento, IA como guia, demais domínios correlatos num SDD de ponta a ponta | Portal só de IA; IA como mais uma seção |
 | D2 | Domínios | 12 faixas (§4.1), incluindo contratos de API, observabilidade e LGPD | 9 faixas sem esses três |
 | D3 | Fonte de verdade | Na v0 o portal documenta e publica a constituição e o índice de skills; o scaffold passa a buscar no portal só na v1 | Portal só documenta; portal como fonte já na v0 |
-| D4 | Repositórios | Monorepo `padroes-engenharia` (nome provisório) no GitLab Serpro, no molde do [awesome-copilot](https://github.com/github/awesome-copilot) | Hub + motores; um repo por camada |
+| D4 | Repositórios | Monorepo `padroes-engenharia` (nome provisório) no GitLab da organização, no molde do [awesome-copilot](https://github.com/github/awesome-copilot) | Hub + motores; um repo por camada |
 | D5 | Recorte da v0 | A espinha inteira em versão semente, porta dos agentes completa, curadoria com evidência | Só P1; v0 com adaptadores e pacotes |
 | D6 | Gerador | Gerador próprio em Python | Zensical (sucessor do Material for MkDocs, que está em [fim de vida](https://github.com/squidfunk/mkdocs-material/issues/8523)); Astro + Starlight |
-| D7 | Visual | Tema "prancheta" do kit NUJOR, unificado num só CSS | Tema de framework |
+| D7 | Visual | Tema "prancheta" do kit de origem, unificado num só CSS | Tema de framework |
 | D8 | Curadoria | Todo conteúdo é gerado, validado e referenciado, e a fonte é conferida na web antes de publicar (§11) | Revisão editorial sem registro |
 
 ## 4. Arquitetura da informação
@@ -118,7 +118,7 @@ na espinha. Traz a espinha em miniatura, o bloco "Para agentes" e o link "Por qu
 
 ## 5. Repositório
 
-Monorepo no GitLab Serpro. Na tabela, ✅ indica o que nasce na v0 e ⏭ o que vem depois. O que
+Monorepo no GitLab da organização. Na tabela, ✅ indica o que nasce na v0 e ⏭ o que vem depois. O que
 vem depois não ganha pasta vazia: entra no README como roteiro.
 
 ```
@@ -175,7 +175,7 @@ ferramentas: [claude-code, codex, kiro, antigravity, copilot]
 referencias: [sdd-lifecycle, spec-kit, dora-ai-capabilities]
 mapeia: []                    # opcional, ex.: owasp-llm-2026:LLM01, nist-ai-600-1:GV-1.1
 relacionadas: [P1-04, ARQ-01]
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-01
 revisar_ate: 2027-04-01
 ```
@@ -315,7 +315,7 @@ O portal segue SemVer, e cada build grava a versão e o commit no `catalogo.json
 ### 9.1 Design system
 
 O ponto de partida é o tema claro "prancheta" de
-`2026-09-29-nujor-harness-sdd/conceitos-e-problemas.html` e das páginas irmãs. Hoje cada uma
+`2026-09-29-harness-sdd/conceitos-e-problemas.html` e das páginas irmãs. Hoje cada uma
 dessas páginas repete o CSS inline. No portal, tudo vira um único `portal/tema/`.
 
 - **Tokens:**
@@ -391,7 +391,7 @@ O total mínimo é de 48 práticas, e a meta é 55.
 
 **Referências:** só entram as que são citadas por algum conteúdo, e cada uma passa pelo §11. O
 ponto de partida é o [benchmark](../research/benchmark-portais-praticas-ia.md) e as sínteses em
-`serpro-cloud-ia-governance/docs/research/`.
+`governanca-de-ia-na-nuvem/docs/research/`.
 
 **Higiene:**
 - Os números do sistema de origem são recontados num commit fixo do repositório de origem e publicados com a
@@ -522,7 +522,7 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
 
 - **Por validador:** um teste com o caso que ele precisa pegar e outro com o caso inocente,
   ambos sobre fixtures que imitam arquivos reais. É a lição do "teste verde que certificava um
-  controle inerte" do kit NUJOR.
+  controle inerte" do kit de origem.
 - **Integração:** um repositório de exemplo em `tests/fixtures/`. O teste confere que:
   - todo conteúdo aparece no `llms.txt`;
   - o `catalogo.json` valida contra o próprio schema;
@@ -558,7 +558,7 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
    - O markdown é renderizado sem HTML bruto.
 2. **A autenticação ou autorização foi alterada? Não.** O portal não implementa autenticação.
    O acesso é controlado pela visibilidade interna do projeto e do GitLab Pages. Fica uma
-   **pergunta em aberto**: se a instância do Serpro oferece controle de acesso no Pages.
+   **pergunta em aberto**: se a instância da organização oferece controle de acesso no Pages.
 3. **Há dado sensível? Não deve haver.** O conteúdo é interno, sem dado pessoal, segredo,
    hostname ou IP interno. Os casos são sanitizados na curadoria, e o gitleaks bloqueia.
 4. **Um endpoint novo foi exposto? Sim, só estático.** São o site e os índices de máquina,
@@ -577,7 +577,7 @@ O gerador é feito com TDD, conforme a `sdd-lifecycle`.
 ## 17. Requisitos
 
 **Repositório**
-- **R1.** O monorepo existe no GitLab Serpro com a estrutura ✅ do §5, sem pastas vazias para
+- **R1.** O monorepo existe no GitLab da organização com a estrutura ✅ do §5, sem pastas vazias para
   itens ⏭.
 - **R2.** `esquemas/espinha.yml` define as 12 faixas, os prefixos, os grupos e os 4 momentos
   do §4.1, e é a única fonte desses valores.

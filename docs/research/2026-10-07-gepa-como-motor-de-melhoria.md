@@ -94,7 +94,7 @@ vira parte da função objetivo, e o candidato que estoura orçamento recebe not
 
 | Risco | Mitigação |
 |---|---|
-| Sobreajuste aos cenários do Serpro; descrições longas | penalidade de tamanho no feedback; limites do validador; valset com cenários de outro catálogo quando existir |
+| Sobreajuste aos cenários da organização; descrições longas | penalidade de tamanho no feedback; limites do validador; valset com cenários de outro catálogo quando existir |
 | Texto ótimo para um modelo e ruim para outro | valset misto por harness ou variante por adaptador |
 | Otimizador editando governança sem gente no laço | candidato só por MR com aprovação; princípio 8 |
 | Custo por rodada | orçamento `light`, uma vez por release, no agendado |

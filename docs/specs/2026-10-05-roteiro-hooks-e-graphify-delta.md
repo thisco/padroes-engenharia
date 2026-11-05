@@ -25,7 +25,7 @@ ligado ao harness por hooks. Os exemplos da §4 foram executados nessa sessão.
 | ID | Decisão |
 |---|---|
 | D1 | Hook entra no portal como **prática** da faixa `construir-com-ia` (próximo ID livre, hoje `P1-02`), e não como o tipo `hooks/`. O tipo próprio continua fora de escopo (§19). |
-| D2 | O Graphify entra em `ferramentas/graphify.yml` com `status: experimentar` ("em teste"), dono `nuarq`, `versao_minima: "0.9.76"`. |
+| D2 | O Graphify entra em `ferramentas/graphify.yml` com `status: experimentar` ("em teste"), dono `engenharia`, `versao_minima: "0.9.76"`. |
 | D3 | O esquema de ferramenta ganha a categoria `contexto`: ferramentas que montam, recortam ou comprimem o que entra e sai do contexto do agente (grafo, índice, memória, estilo de resposta). Mudança Tier 2, com ADR. Cobre o Graphify (R2) e a caveman (R3). |
 | D6 | A skill `caveman` entra em `ferramentas/caveman.yml` com `status: experimentar`, `versao_minima: "3.1.0"`. Só a skill principal é recomendada; instalador, hooks, CLI, proxy e skills derivadas ficam fora. |
 | D4 | A integração do Graphify com o harness neste repositório é **local e não versionada**: a configuração que ele escreveria no `CLAUDE.md` vai para `CLAUDE.local.md`, os hooks vão para `.claude/settings.local.json` e os três caminhos ficam em `.git/info/exclude`. Motivo: o `CLAUDE.md` é stub da constituição (princípios 2 e 8). |

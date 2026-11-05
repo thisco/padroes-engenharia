@@ -72,9 +72,9 @@ ninhos, os guias, os casos e as demais práticas até os mínimos do §10. **For
 
 ### Pendências registradas
 
-- Handle real do grupo dono no GitLab: o `CODEOWNERS` (parte 2) usa `@nuarq`; confirmar ao criar
-  o projeto no GitLab Serpro.
-- Controle de acesso no GitLab Pages da instância do Serpro (pergunta em aberto do §15).
+- Handle real do grupo dono no GitLab: o `CODEOWNERS` (parte 2) usa `@engenharia`; confirmar ao criar
+  o projeto no GitLab da organização.
+- Controle de acesso no GitLab Pages da instância da organização (pergunta em aberto do §15).
 
 ## Estrutura de arquivos
 
@@ -92,7 +92,7 @@ padroes-engenharia/
 ├── pyproject.toml                 [T1] pytest (pythonpath, testpaths) e ruff (100 colunas, py311)
 ├── requirements.txt               [T1] dependências de execução em versão exata
 ├── requirements-dev.txt           [T1] + pytest e ruff
-├── CODEOWNERS                     [P2] seções por faixa, grupo @nuarq (pendência acima)
+├── CODEOWNERS                     [P2] seções por faixa, grupo @engenharia (pendência acima)
 ├── niveis-de-risco.yml            [P2] baixo / médio / alto do §12.3
 ├── .gitlab-ci.yml                 [P2] validar → testar → seguranca → gerar → publicar
 ├── .gitlab/merge_request_templates/Curadoria.md   [P2] checklist do §11.1
@@ -422,7 +422,7 @@ def test_config_do_portal():
     config = yaml.safe_load((RAIZ / "portal" / "config.yml").read_text(encoding="utf-8"))
     assert config == {
         "nome": "Padrões de Engenharia",
-        "organizacao": "NUARQ · Serpro",
+        "organizacao": "",
         "versao": "0.1.0",
         "url_base": "http://localhost:8000",
     }
@@ -471,7 +471,7 @@ Criar `portal/config.yml`:
 ```yaml
 # Configuração do portal. A URL base é sobrescrita no CI com --url-base "$CI_PAGES_URL".
 nome: "Padrões de Engenharia"
-organizacao: "NUARQ · Serpro"
+organizacao: ""
 versao: "0.1.0"
 url_base: "http://localhost:8000"
 ```
@@ -1610,7 +1610,7 @@ def meta_pratica(**alteracoes: Any) -> dict[str, Any]:
             "ferramentas": ["claude-code", "codex", "kiro", "antigravity", "copilot"],
             "referencias": ["ref-forte"],
             "relacionadas": [],
-            "dono": "nuarq",
+            "dono": "engenharia",
             "revisado_em": "2026-10-01",
             "revisar_ate": "2027-04-01",
         },
@@ -4292,7 +4292,7 @@ def test_repo_minimo_e_valido(repo_minimo):
     ("mutacoes", "codigo"),
     [
         ([(PRATICA, "---\nid:", "id:")], "R-FRONTMATTER"),
-        ([(PRATICA, "dono: nuarq", "dono: Nu Arq")], "R-ESQUEMA"),
+        ([(PRATICA, "dono: engenharia", "dono: Eng enharia")], "R-ESQUEMA"),
         ([(PRATICA, "## Como aplicar", "## Como usar")], "R-SECOES"),
         ([(PRATICA, "momento: antes-de-escrever", "momento: durante")], "R-ESPINHA"),
         ([(PRATICA, "id: P1-01", "id: P1-1")], "R-ID-FORMATO"),
@@ -4426,7 +4426,7 @@ def repo_minimo(tmp_path: Path) -> Path:
         _yaml(
             {
                 "nome": "Padrões de Engenharia",
-                "organizacao": "NUARQ · Serpro",
+                "organizacao": "",
                 "versao": "0.1.0",
                 "url_base": "http://localhost:8000",
             }
@@ -4681,7 +4681,7 @@ pela skill `curadoria-de-pratica`. As Tarefas 40 a 43 fecham a fase: verificaç�
 
 | Requisito | Onde |
 |---|---|
-| R1 estrutura ✅ do §5, sem pastas vazias | Tarefas 18–21, 29, 33–39; `paginas/`, `conceitos/`, `guias/`, `casos/` e `docs/adr/` nascem com o primeiro arquivo (plano B ou primeira ADR); o projeto no GitLab Serpro é pendência do checkpoint (Tarefa 43) |
+| R1 estrutura ✅ do §5, sem pastas vazias | Tarefas 18–21, 29, 33–39; `paginas/`, `conceitos/`, `guias/`, `casos/` e `docs/adr/` nascem com o primeiro arquivo (plano B ou primeira ADR); o projeto no GitLab da organização é pendência do checkpoint (Tarefa 43) |
 | R5 citação vira link numerado | Tarefas 19 (`corpo_html`), 21 e 31 |
 | R6 §6.5 regra 3, URL pelo ID | Tarefa 19 (`caminho_de`) e 31 |
 | R7 saídas do §7.2 e §7.3, determinístico e atômico | Tarefas 22–29 e 31 |
@@ -5223,7 +5223,7 @@ Esperado: FALHA com `FileNotFoundError` (ainda não há `portal/tema/tema.css`)
 - [ ] **Passo 3: Copiar as fontes e as licenças**
 
 ```bash
-FONTES=/Users/thiago/Documents/Workspace/repos/apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd/vendor/fonts
+FONTES=/Users/thiago/Documents/Workspace/repos/apresentacoes/temas/engenharia-ia-agentes/2026-09-29-harness-sdd/vendor/fonts
 mkdir -p portal/vendor/fonts
 cp "$FONTES"/*.ttf "$FONTES"/fonts.css portal/vendor/fonts/
 curl -sSfL -o portal/vendor/fonts/OFL-Inter.txt https://raw.githubusercontent.com/rsms/inter/v4.1/LICENSE.txt
@@ -5252,7 +5252,7 @@ Criar `portal/vendor/fonts/LICENCAS.md`:
 # Fontes do tema e licenças
 
 As fontes são servidas localmente (spec §9.1 e §9.3: nenhum recurso externo). Os arquivos vêm
-do kit NUJOR (`apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd/vendor/fonts/`),
+do kit de origem (`apresentacoes/temas/engenharia-ia-agentes/2026-09-29-harness-sdd/vendor/fonts/`),
 que os baixou do Google Fonts, e não foram alterados.
 
 | Arquivo | Família | Peso | SHA-256 |
@@ -5649,7 +5649,7 @@ def test_config_e_identidade_do_site():
     s = fabrica.site()
     assert (s.nome, s.organizacao, s.commit_curto) == (
         "Padrões de Engenharia",
-        "NUARQ · Serpro",
+        "",
         "0123456",
     )
     assert s.url("llms.txt") == "https://portal.exemplo/llms.txt"
@@ -7879,7 +7879,7 @@ def test_llms_txt_tem_h1_blockquote_com_versao_e_commit():
     texto = llms_txt(s, paginas)
     linhas = texto.splitlines()
     assert linhas[0] == "# Padrões de Engenharia"
-    assert linhas[2].startswith("> Portal de padrões de engenharia de NUARQ · Serpro")
+    assert linhas[2].startswith("> Portal de padrões de engenharia da organização")
     assert f"commit {fabrica.COMMIT}" in linhas[2]
     assert "https://portal.exemplo/roteamento.json" in texto
 
@@ -9260,9 +9260,9 @@ def test_url_base_do_config_ou_da_linha_de_comando(repo_minimo, tmp_path):
     saida = tmp_path / "site"
     cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD])
     assert "http://localhost:8000/roteamento.json" in (saida / "llms.txt").read_text("utf-8")
-    url = ["--url-base", "https://nuarq.pages.exemplo/padroes"]
+    url = ["--url-base", "https://portal.pages.exemplo/padroes"]
     cli.main(["--raiz", str(repo_minimo), "--saida", str(saida), *BUILD, *url])
-    assert "https://nuarq.pages.exemplo/padroes/roteamento.json" in (saida / "llms.txt").read_text(
+    assert "https://portal.pages.exemplo/padroes/roteamento.json" in (saida / "llms.txt").read_text(
         "utf-8"
     )
 
@@ -10903,7 +10903,7 @@ git commit -m "feat(skills): skill curadoria-de-pratica com o ciclo de evidênci
 espinha, uma para o conteúdo transversal e `[Motor e governança][2]`, que exige duas
 aprovações nos caminhos do nível alto. Além dos seis caminhos do §12.3, o nível alto inclui
 `AGENTS.md`, `CODEOWNERS`, `niveis-de-risco.yml` e `componentes.yml`, porque mudam a própria
-governança (princípio 8 da constituição). Todas as seções usam `@nuarq` até a confirmação do
+governança (princípio 8 da constituição). Todas as seções usam `@engenharia` até a confirmação do
 handle real (pendência registrada no topo do plano). O template de MR é o checklist do §11.1.
 
 **Files:**
@@ -11002,17 +11002,17 @@ Criar `CODEOWNERS`:
 # Donos do código e do conteúdo (spec §12.3), na sintaxe do GitLab:
 # https://docs.gitlab.com/user/project/codeowners/reference/
 #
-# PENDÊNCIA: @nuarq é o handle provisório do grupo dono. Confirme o handle real ao criar o
-# projeto no GitLab Serpro e troque em todas as linhas.
+# PENDÊNCIA: @engenharia é o handle provisório do grupo dono. Confirme o handle real ao criar o
+# projeto no GitLab da organização e troque em todas as linhas.
 #
 # Cada seção é avaliada à parte. [Nome][2] exige duas aprovações: é o nível alto de
 # niveis-de-risco.yml. Se o plano da instância não aplicar aprovação por seção, a regra
 # fica documentada e é conferida na revisão.
 
-[Repositório] @nuarq
+[Repositório] @engenharia
 *
 
-[Motor e governança][2] @nuarq
+[Motor e governança][2] @engenharia
 /esquemas/
 /scripts/
 /portal/
@@ -11024,43 +11024,43 @@ Criar `CODEOWNERS`:
 /niveis-de-risco.yml
 /componentes.yml
 
-[Construir com IA] @nuarq
+[Construir com IA] @engenharia
 /praticas/construir-com-ia/
 
-[Arquitetura e padrões de projeto] @nuarq
+[Arquitetura e padrões de projeto] @engenharia
 /praticas/arquitetura/
 
-[Contratos de API] @nuarq
+[Contratos de API] @engenharia
 /praticas/contratos-api/
 
-[Frontend e UX] @nuarq
+[Frontend e UX] @engenharia
 /praticas/frontend-ux/
 
-[Dados e migrations] @nuarq
+[Dados e migrations] @engenharia
 /praticas/dados-migrations/
 
-[Privacidade e LGPD] @nuarq
+[Privacidade e LGPD] @engenharia
 /praticas/privacidade-lgpd/
 
-[Qualidade e BDD] @nuarq
+[Qualidade e BDD] @engenharia
 /praticas/qualidade-bdd/
 
-[Infra e IaC] @nuarq
+[Infra e IaC] @engenharia
 /praticas/infra-iac/
 
-[CI/CD] @nuarq
+[CI/CD] @engenharia
 /praticas/ci-cd/
 
-[Observabilidade e operação] @nuarq
+[Observabilidade e operação] @engenharia
 /praticas/observabilidade/
 
-[Segurança] @nuarq
+[Segurança] @engenharia
 /praticas/seguranca/
 
-[Aplicações que consomem modelos e agentes próprios] @nuarq
+[Aplicações que consomem modelos e agentes próprios] @engenharia
 /praticas/ia-no-produto/
 
-[Conteúdo transversal] @nuarq
+[Conteúdo transversal] @engenharia
 /paginas/
 /conceitos/
 /guias/
@@ -11447,7 +11447,7 @@ Esperado: PASSA com `All checks passed!` e `already formatted`
 - [ ] **Passo 5: O que só se confere no GitLab**
 
 O teste confere a estrutura; a sintaxe fina do GitLab só se confere lá. Ao criar o projeto no
-GitLab Serpro (fora desta fase): colar o arquivo em **Build → Pipeline editor → Validate**;
+GitLab da organização (fora desta fase): colar o arquivo em **Build → Pipeline editor → Validate**;
 criar o agendamento semanal em **Build → Pipeline schedules** (branch `main`); e conferir se a
 instância aplica `[Seção][2]` do `CODEOWNERS` (plano Premium ou superior). Registre o resultado
 na seção **Evidências** como pendência do checkpoint.
@@ -11498,7 +11498,7 @@ aplica: [skill:sdd-lifecycle]
 ferramentas: [claude-code, codex, kiro, antigravity, copilot]
 referencias: [sdd-lifecycle, spec-kit, dora-ai-capabilities]
 relacionadas: []
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-01
 revisar_ate: 2027-04-01
 ---
@@ -11731,7 +11731,7 @@ aplica: [skill:migrations-reversiveis]
 ferramentas: [claude-code, codex, kiro, antigravity, copilot]
 referencias: [migrations-reversiveis, flyway-validate, fowler-evodb, sdd-scaffold-verificar-pr]
 relacionadas: []
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-01
 revisar_ate: 2027-04-01
 ---
@@ -11965,7 +11965,7 @@ aplica: []
 ferramentas: [claude-code, codex, kiro, antigravity, copilot]
 referencias: [litellm-virtual-keys, azure-apim-ai-gateway, anthropic-ciso-agentic-ai]
 relacionadas: []
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-01
 revisar_ate: 2027-04-01
 ---
@@ -12416,10 +12416,10 @@ Apresente ao dono do projeto, em uma página: o que foi entregue (CHANGELOG 0.1.
 
 Leve também as pendências que esta fase não fecha, para decisão:
 
-1. Criar o projeto no GitLab Serpro (R1 só se cumpre lá), fazer o push da branch e abrir a MR
+1. Criar o projeto no GitLab da organização (R1 só se cumpre lá), fazer o push da branch e abrir a MR
    com o template `Curadoria`; validar o `.gitlab-ci.yml` no Pipeline editor e ver o pipeline
    verde.
-2. Confirmar o handle real do grupo dono e trocar `@nuarq` no `CODEOWNERS`.
+2. Confirmar o handle real do grupo dono e trocar `@engenharia` no `CODEOWNERS`.
 3. Confirmar se a instância aplica `[Seção][2]` do `CODEOWNERS` (aprovação por seção); se não,
    a regra das duas aprovações fica documentada em `niveis-de-risco.yml` e é conferida na
    revisão (§12.3).
@@ -12597,7 +12597,7 @@ regras preveem, e as 4 que passaram com 0 estão nos achados abaixo.
 | **R14 registro em todo conteúdo** | **parcial** | **Página e domínio sem `[ref:]` publicavam sem registro (mutação "171% (McKinsey)" passava)** | **crítico** |
 | R15 skill de curadoria | entregue | — | — |
 | R16 bloqueios e avisos no CI | entregue (só config) | — | — |
-| R17 governança | entregue | `@nuarq` provisório; `5d5fcf6` e `0f434e4` com `Co-Authored-By` (§12.3) | menor |
+| R17 governança | entregue | `@engenharia` provisório; `5d5fcf6` e `0f434e4` com `Co-Authored-By` (§12.3) | menor |
 | R18 suíte §13 | entregue com desvio | Sem `tests/fixtures/` (o repositório de exemplo é montado em `conftest.py`), e não há ADR para isso | menor |
 | R19 erros §14 | parcial | Não junta R-ESQUEMA com os erros do build de conferência; `componentes.yml` sem `versao` sai com 2 | menor |
 | R20 procedência | entregue | — | — |
