@@ -1,0 +1,10 @@
+id: otel-genai-agent-spans
+titulo: Semantic Conventions for GenAI agent and framework spans
+organizacao: OpenTelemetry (CNCF)
+url: https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md
+tipo: padrao-aberto
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "status Development no topo; 'Create agent span' (operação create_agent), 'Invoke agent internal span' (agente no mesmo processo, span INTERNAL, sem gen_ai.agent.id nem gen_ai.agent.version) e 'Invoke agent client span' (operação invoke_agent, atributos gen_ai.agent.id, gen_ai.agent.name, gen_ai.agent.version, gen_ai.conversation.id, gen_ai.usage.input_tokens e gen_ai.usage.output_tokens)"
+dominios: [ia-no-produto, observabilidade]
+notas: "A página antiga em opentelemetry.io/docs/specs/semconv/gen-ai/ diz que as convenções de GenAI se mudaram para este repositório. Lido no branch main em 2026-11-03 e de novo em 2026-11-04 (markdown bruto, inclusive 'Invoke agent internal span'); as convenções estão em Development e podem mudar."

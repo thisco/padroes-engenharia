@@ -3,7 +3,7 @@ titulo: "Pipeline settings: Limit the number of changes fetched during clone"
 organizacao: GitLab
 url: https://docs.gitlab.com/ci/pipelines/settings/
 tipo: vendor
-verificado_em: 2026-10-08
+verificado_em: '2026-11-04'
 verificacao: V
 localizacao: "seção 'Limit the number of changes fetched during clone': 'To disable shallow clone and make GitLab CI/CD fetch all branches and tags each time, keep the value empty or set to 0'"
 dominios: [ci-cd]

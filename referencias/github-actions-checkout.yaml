@@ -1,0 +1,10 @@
+id: github-actions-checkout
+titulo: actions/checkout (README)
+organizacao: GitHub
+url: https://github.com/actions/checkout
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "README, entrada fetch-depth (padrão 1, só o commit que disparou; 0 traz todo o histórico de todas as branches e tags); exemplos com actions/checkout@v7"
+dominios: [ci-cd]
+notas: null

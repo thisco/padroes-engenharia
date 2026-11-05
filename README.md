@@ -6,8 +6,8 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 
 ## O que há aqui
 
-- 50 práticas na espinha de 12 domínios × 4 etapas; 15 das 48 células a definir (`ROTEAMENTO.md`).
-- 315 referências, cada uma conferida na fonte, e 6 skills publicadas.
+- 54 práticas na espinha de 12 domínios × 4 etapas; 15 das 48 células a definir (`ROTEAMENTO.md`).
+- 330 referências, cada uma conferida na fonte, e 6 skills publicadas.
 - O contrato de quem contribui, humano ou agente, está em `AGENTS.md`.
 
 | Grupo | Domínio | Práticas |
@@ -23,7 +23,7 @@ Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se
 | Entrega e operação | CI/CD (`ci-cd`) | 3 |
 | Entrega e operação | Observabilidade e operação (`observabilidade`) | 3 |
 | Entrega e operação | Segurança (`seguranca`) | 3 |
-| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 12 |
+| IA no produto | Aplicações que consomem modelos e agentes próprios (`ia-no-produto`) | 16 |
 
 ## Como contribuir
 

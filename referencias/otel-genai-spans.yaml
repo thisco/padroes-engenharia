@@ -1,0 +1,10 @@
+id: otel-genai-spans
+titulo: Semantic Conventions for GenAI spans
+organizacao: OpenTelemetry (CNCF)
+url: https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-spans.md
+tipo: padrao-aberto
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'Execute tool span' (gen_ai.operation.name execute_tool; nome do span execute_tool {gen_ai.tool.name})"
+dominios: [ia-no-produto, observabilidade]
+notas: "Lido no branch main em 2026-11-03; status Development."

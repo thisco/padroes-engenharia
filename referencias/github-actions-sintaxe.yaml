@@ -1,0 +1,10 @@
+id: github-actions-sintaxe
+titulo: Workflow syntax for GitHub Actions
+organizacao: GitHub
+url: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seção 'jobs.<job_id>.steps[*].continue-on-error' ('Prevents a job from failing when a step fails')"
+dominios: [ci-cd]
+notas: null

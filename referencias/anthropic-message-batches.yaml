@@ -1,0 +1,10 @@
+id: anthropic-message-batches
+titulo: Batch processing (Message Batches API)
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/build-with-claude/batch-processing
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "abertura (pedidos que não precisam de resposta imediata), 'Batch limitations' (100.000 pedidos ou 256 MB; a maioria em menos de 1 hora; expira se não terminar em 24 horas), 'Pricing' (50% do preço padrão) e 'Polling for Message Batch completion' (processing_status de in_progress a ended; seção 'Tracking your batch')"
+dominios: [ia-no-produto]
+notas: null

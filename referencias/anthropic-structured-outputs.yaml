@@ -1,0 +1,10 @@
+id: anthropic-structured-outputs
+titulo: Structured outputs
+organizacao: Anthropic
+url: https://platform.claude.com/docs/en/build-with-claude/structured-outputs
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "'Why use structured outputs' (garantias do constrained decoding; sem structured outputs, JSON malformado e campo obrigatório faltando), 'Invalid outputs' ('guarantee schema compliance in most cases'; exceções refusal, max_tokens e caixa de enum) e 'How it works' (output_config.format)"
+dominios: [ia-no-produto]
+notas: null

@@ -1,0 +1,10 @@
+id: langfuse-prompt-version-control
+titulo: Prompt Version Control
+organizacao: Langfuse
+url: https://langfuse.com/docs/prompt-management/features/prompt-version-control
+tipo: vendor
+verificado_em: '2026-11-04'
+verificacao: V
+localizacao: "seções de versões (cada versão ganha um ID), rótulos (latest aponta a versão mais recente; production ou um rótulo de ambiente faz o deploy; sem rótulo, serve a de production), rollback (mover o rótulo production para a versão anterior) atualização de rótulos pelo SDK (update_prompt com new_labels) e rótulos protegidos (Enterprise; Pro com o add-on Teams; self-hosted com Enterprise Edition; não no Hobby nem no Core; só admin e owner mudam)"
+dominios: [ia-no-produto]
+notas: "Ferramenta de código aberto com oferta comercial; o portal usa o modelo de versão e rótulo, não adota a ferramenta."

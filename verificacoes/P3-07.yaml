@@ -1,0 +1,75 @@
+# Fontes abertas na web em 2026-11-04. As quatro referências novas (openai-governing-agentic,
+# otel-genai-agent-spans, otel-genai-spans, anthropic-agent-evals) foram criadas em 2026-11-03 pela
+# sessão anterior desta frente e relidas em 2026-11-04; litellm-virtual-keys já existia e foi relida
+# no mesmo dia. A revisão adversarial foi a revisão independente em lote de 2026-11-04 (ADR 0005);
+# achados e tratamento no fim. A rodada de correção 1 mudou só o Exemplo e o prompt, sem afirmação nova.
+conteudo: P3-07
+verificado_em: '2026-11-04'
+verificador: agente-curadoria
+afirmacoes:
+- texto: desligar o agente é uma barreira tosca mas crítica contra dano acidental ou intencional; o usuário
+    pode parar uma categoria de ação (revogando uma credencial) ou o agente inteiro; o agente não pode impedir
+    nem adulterar o desligamento; o desligamento alcança os subagentes; preparar antes o procedimento de saída
+    para o agente parado no meio de uma sequência
+  ref: openai-governing-agentic
+  localizacao: "seção 4.7 'Interruptibility and Maintaining Control', parágrafos 1 a 3 ('while crude, is a critical backstop'; 'halting a specific category of actions (revoking access to, e.g., financial credentials)'; 'pre-construct a fallback procedure'; 'should not be able to halt or tamper with the user's attempt to shut them down'; 'extend recursively to any other sub-agents')"
+  resultado: confirmada
+  nota: "o texto da fonte é de recomendação ('could be required', 'could be'); a prática diz 'sugere' e 'recomenda'"
+- texto: quanto mais se vê das ações e das entradas de ferramenta, mais fácil notar o erro e intervir, durante
+    ou depois; o registro das ações é mais leve que pedir aprovação; a justificativa retroativa pedida ao agente
+    tende a ser confabulada
+  ref: openai-governing-agentic
+  localizacao: "seção 4.4 'Legibility of Agent Activity' (parágrafo 1; 'inputs it receives from tool-use API calls'; 'ledger of actions ... lighter-touch method than requiring human approval'; 'likely to produce confabulated reasoning')"
+  resultado: confirmada
+- texto: guardar a sessão do agente para monitorar cria risco de privacidade; o disparo automático do
+    desligamento quando um indicador de risco cruza um limiar, como o circuit breaker da bolsa
+  ref: openai-governing-agentic
+  localizacao: "seção 4.5 'Automatic Monitoring', parágrafo 2 ('If sensitive agent session data needs to be retained ... privacy risks'); seção 4.7, parágrafo 4 ('automatically trigger such shutdowns if risk indicators cross a certain threshold ... stock market circuit breakers')"
+  resultado: confirmada
+  nota: "na fonte, o disparo automático aparece no contexto do operador do sistema ou da infraestrutura; a prática o cita como ideia, e a decisão de quais limiares desligam fica com o time"
+- texto: no LiteLLM, POST /key/block desativa a chave e POST /key/unblock a reativa; o gasto em USD da chave
+    sai em /key/info
+  ref: litellm-virtual-keys
+  localizacao: "seções 'Enable/Disable Virtual Keys' (/key/block, resposta 'blocked': true; /key/unblock) e 'Spend Tracking' (gasto em USD, /key/info devolve spend)"
+  resultado: confirmada
+- texto: span invoke_agent com nome invoke_agent {gen_ai.agent.name}; INTERNAL para agente no mesmo processo,
+    com gen_ai.agent.name, gen_ai.conversation.id, gen_ai.usage.input_tokens, gen_ai.usage.output_tokens e
+    error.type em erro; o span de cliente acrescenta gen_ai.agent.id e gen_ai.agent.version; status Development
+  ref: otel-genai-agent-spans
+  localizacao: "topo ('Status: Development'); 'Invoke agent internal span' ('executed within the instrumented process'; 'Span kind SHOULD be INTERNAL'; tabela de atributos) e 'Invoke agent client span' (tabela com gen_ai.agent.id e gen_ai.agent.version); markdown bruto do branch main lido em 2026-11-04"
+  resultado: confirmada
+- texto: cada ferramenta é um span execute_tool {gen_ai.tool.name}, com gen_ai.tool.name; status Development
+  ref: otel-genai-spans
+  localizacao: "topo ('Status: Development') e seção 'Execute tool span' (gen_ai.operation.name execute_tool; nome execute_tool {gen_ai.tool.name}; gen_ai.tool.name Required)"
+  resultado: confirmada
+- texto: latência, tokens, custo por tarefa e taxa de erro acompanhados num banco fixo de tarefas; o
+    monitoramento em produção pega a mudança de distribuição e a falha real não prevista; pass^k é a
+    probabilidade de as k tentativas darem certo
+  ref: anthropic-agent-evals
+  localizacao: "trecho sobre métricas ('latency, token usage, cost per task, and error rates can be tracked on a static bank of tasks'), trecho sobre monitoramento ('Production monitoring kicks in post-launch to detect distribution drift and unanticipated real-world failures') e definição de pass^k"
+  resultado: confirmada
+execucoes:
+- tipo: arquivo
+  arquivo: exemplos/P3-07/laco.py
+  comando: pytest -q test_laco.py (teste do curador, fora do repositório, com InMemorySpanExporter)
+  ambiente: venv no scratchpad com opentelemetry-sdk 1.45.2 e pytest; Python 3.15; macOS
+  resultado: passou
+  evidencia: '"4 passed": sucesso gera invoke_agent triagem com execute_tool buscar como filho, tokens 2000/200 e custo 0,003 USD; interruptor desligado para antes do primeiro passo, chama a saída e grava error.type interruptor; teto de custo e teto de passos interrompem; ferramenta que lança TimeoutError grava error.type TimeoutError e tarefa.resultado falhou e chama a saída. O teste novo falhou com o laço antigo (1 failed, 3 passed) antes da correção.'
+  data: '2026-11-04'
+- tipo: prompt
+  prompt: P3-07-prompt-1
+  harness: execução manual pelo curador em 2026-11-04, duas vezes (a segunda com o prompt revisto na rodada de correção 1); execução em sessão nova de agente pendente, dono
+  ambiente: repositório Git novo no scratchpad com agente.py (o laço do Antes) e catalogo-modelos.yml com preço por token; {nome do agente} = triagem; {máximo de passos} = 20; {teto em USD} = 0,50; venv com opentelemetry-sdk 1.45.2 e pytest; macOS
+  resultado: passou
+  evidencia: 'passo 1 mostrou o laço (agente.py:4 proximo_passo e :7 chamada da ferramenta), sem interruptor, teto nem traço; passo 2: interruptor.py com InterruptorEmMemoria (o projeto não tinha serviço de configuração), só lido pelo laço; passos 3 e 4: laço com tetos, saída na interrupção e na falha, spans invoke_agent/execute_tool; passo 5: quatro testes com exportador em memória, inclusive a ferramenta que lança exceção; passo 6: pytest "4 passed" e commit "feat: controles de operação do agente (P3-07)". Os testes usam um interruptor falso próprio, não o InterruptorEmMemoria.'
+  data: '2026-11-04'
+revisao_adversarial:
+  revisor: revisão independente em lote, 2026-11-04
+  data: '2026-11-04'
+  achados:
+  - afirmacao: "o laço chama a saída preparada em toda interrupção e grava error.type quando termina em erro (Como aplicar, passos 4 e 5)"
+    problema: "em exemplos/P3-07/laco.py, ferramenta que lança exceção deixava o span invoke_agent em ERROR sem error.type nem tarefa.resultado, e ao_interromper não era chamado"
+    tratamento: "o laço captura Exception, grava error.type com o nome da classe e tarefa.resultado falhou e chama a saída antes de relançar; teste novo cobre o caminho (RED com o laço antigo, GREEN depois); Como aplicar, Exemplo e prompt dizem que a saída vale também para a falha"
+  - afirmacao: "execução do prompt registrada como passou"
+    problema: "a execução foi manual pelo curador, não em sessão nova de agente"
+    tratamento: "o campo harness diz que a execução foi manual e que a sessão nova de agente está pendente com o dono"
