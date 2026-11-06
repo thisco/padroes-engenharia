@@ -430,22 +430,28 @@ Uma sessão independente, com modelo de raciocínio potente e sem o histórico d
 implementação, lê a spec e a branch e preenche a tabela abaixo. Problema crítico volta à
 tarefa; problema arquitetural reabre a spec.
 
-## Revisão adversarial: AAAA-MM-DD — achados
+## Revisão adversarial: 2026-11-06 — achados
+
+Revisão da branch inteira por sessão independente, com modelo de raciocínio potente, contra a
+spec, na HEAD fb2fc46. Três requisitos saíram parciais e foram corrigidos em 866258a; a
+conferência independente da curadoria (ADR 0005, modelo forte por haver mudança de componente)
+rodou em 77356c6 e deu os sete achados por resolvidos; o tratamento das onze pendências de texto
+dela está em a998461. A coluna veredito é o estado na HEAD a998461.
 
 | R | veredito | evidência |
 |---|---|---|
-| R1 | | |
-| R2 | | |
-| R3 | | |
-| R4 | | |
-| R5 | | |
-| R6 | | |
-| R7 | | |
-| R8 | | |
-| R9 | | |
-| R10 | | |
-| R11 | | |
-| R12 | | |
+| R1 | atendido | `esquemas/espinha.yml`, terceiro de seis passos; `test_trilha_espinha.py`; `public/trilha.html` com `data-passo="antes-de-escrever/revisar-spec"`; `catalogo.json` lista `revisar-spec`; a Início não mostra passo nenhum, por desenho (ruling no ledger) |
+| R2 | atendido | `componentes.yml` com 0.1.0 e 113a3af; `test_trilha_componentes.py` |
+| R3 | atendido | era parcial (inglês só da saída em cinco ferramentas); corrigido em 866258a, com os três padrões citados na `egm-review`; Copilot e Kiro com fonte (`egm-copilot`, `egm-harnesses`) |
+| R4 | atendido | caminhos idênticos à tabela nas seis ferramentas; `test_egm.py::test_ferramenta_egm_declara_so_os_caminhos_da_spec`; seis páginas em `public/ferramentas/` |
+| R5 | atendido | `trilhas/elefante-e-goldfish.yml`; `test_egm.py::test_trilha_elefante_e_goldfish_segue_a_spec`; `data-passos` da trilha sem os passos vazios |
+| R6 | atendido | `guiada.yml` e `de-origem.yml` com `revisar-spec`; Enxuta sem; `test_egm.py::test_guiada_e_de_origem_preenchem_revisar_spec_e_enxuta_nao` |
+| R7 | atendido | P1-12 com as quatro seções, sem Exemplo; entra no total "18 práticas de Especificar" e em `espinha.html`; `verificacoes/P1-12.yaml` com revisão independente |
+| R8 | atendido | P1-10 com `egm-drift-report`; termo do glossário com `conceito: subagente`; quatro atritos em `paginas/trilha.md` |
+| R9 | atendido, push pendente | cópia idêntica byte a byte a `v3.1.0:SKILL.md` (a789fc3); SHA-256 igual ao da `PROCEDENCIA.md`; commit nos cinco lugares; `test_procedencia.py` |
+| R10 | atendido, com desvios registrados | dezenove referências novas (dezoito `egm-*` e `superpowers-builder-check-prompt`), três a mais que a lista da R10 por rulings; ensaio em `S` |
+| R11 | atendido | era parcial (título da P1-12 e contagem); corrigido em 866258a e a998461; seção "Alterado" pela convenção do arquivo |
+| R12 | parcial | ADR 0015 existe em forma Nygard e é citada pela P1-12, mas está `Status: proposta`: a aprovação é do dono e não foi gravada (princípio 8) |
 
 ## Evidências
 
@@ -481,3 +487,7 @@ All checks passed!
 
 Pendente: `scripts/checar_links.py` não foi rodado. A origem da `sdd-lifecycle` 3.1.0 ainda não foi
 publicada (push com o dono), então as URLs novas dão 404 até lá.
+
+Depois das correções da revisão final (866258a, 77356c6, a998461), em 2026-11-06: `validar.py` com
+0 (só o aviso esperado da P1-12), `gerar.py` com 0, suíte inteira com 3199 passed em 346 s, ruff
+limpo.
