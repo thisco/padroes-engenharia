@@ -34,6 +34,11 @@ afirmacoes:
     localizacao: árvore da tag v3.0.0 (commit 5f6e9ad879f7abd11267547fb3f527e876b60140)
     resultado: confirmada
     nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown.
+  - texto: 'reconferência de 2026-11-06 na tag v3.1.0: continua no arquivo a afirmação já registrada sobre sdd-lifecycle-repo neste conteúdo'
+    ref: sdd-lifecycle-repo
+    localizacao: árvore da tag v3.1.0 (commit a789fc3e9e2e82460e8d201bf3fa46568796d66a), git ls-tree -r no clone local
+    resultado: confirmada
+    nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown; a 3.1.0 só acrescentou o plano em docs/plans. A URL só resolve depois do push da tag, pendente com o dono.
   - texto: "Fase 1: explorar o código antes, refinar uma pergunta por vez, marcar dúvida aberta com [ESCLARECER] e redigir a spec como delta com R<n> e critério"
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Fase 1 — Especificação (Tier 2)'"
