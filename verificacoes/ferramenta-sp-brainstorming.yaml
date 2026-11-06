@@ -67,15 +67,15 @@ afirmacoes:
     localizacao: "v7.0.0 (2026-10-09), parágrafo de abertura e seção Brainstorming"
     resultado: confirmada
 revisao_adversarial:
-  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: '2026-10-21'
+  revisor: revisor-independente
+  data: '2026-11-06'
   achados:
-    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
-      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
-      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"
-    - afirmacao: "cuidado de entrevistar: nada é construído antes da aprovação"
-      problema: "a fonte tem duas exceções: a pessoa dispensa as perguntas, ou pede um spike"
-      tratamento: "texto e afirmação passam a citar as exceções"
-    - afirmacao: "cuidado de escrever-spec: grava em docs/superpowers/specs/ se o projeto não disser outro lugar"
-      problema: "fora de repositório de software a skill pergunta, e a preferência da pessoa vale sobre os dois"
-      tratamento: "texto e afirmação reescritos"
+  - afirmacao: 'caminho revisar-spec, cuidado: ''o subagente recebe só o caminho do desenho, sem a conversa,
+      e devolve só perguntas, ordenadas por importância'''
+    problema: '[baixo] o SKILL.md (a URL da referência superpowers-brainstorming) diz só que o subagente
+      é novo e recebe o builder-check-prompt.md; ''só perguntas'' e ''ordenadas por importância'' (''Report
+      only the questions'', ''Rank them by importance'') e o preenchimento do caminho do documento estão
+      no builder-check-prompt.md, arquivo vizinho no commit bb92a77 que não é referência do portal. A
+      fonte confirma, mas a referência da ferramenta não.'
+    tratamento: 'pendente: criar referência para skills/brainstorming/builder-check-prompt.md no commit
+      bb92a77 e listá-la em referencias, ou reduzir o cuidado ao que o SKILL.md diz.'

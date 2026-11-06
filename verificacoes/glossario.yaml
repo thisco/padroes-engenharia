@@ -194,27 +194,6 @@ afirmacoes:
   resultado: confirmada
   nota: "A expressão 'Leitor sem contexto' é do portal; a fonte usa Goldfish."
 revisao_adversarial:
-  revisor: sessao-independente
-  data: '2026-10-04'
-  achados:
-  - afirmacao: Memória inclui o AGENTS.md [ref:anthropic-effective-harnesses]
-    problema: o artigo não cita AGENTS.md; era extrapolação
-    tratamento: definição ficou com o histórico git e os arquivos de progresso; o AGENTS.md como memória
-      está no conceito, com a fonte da OpenAI
-  - afirmacao: 'Constituição: princípios inegociáveis do projeto'
-    problema: o README fala de princípios que valem para todos os projetos da organização
-    tratamento: definição reescrita
-  - afirmacao: Harness [ref:anthropic-tool-use]
-    problema: a página não usa a palavra harness e trata de client tools
-    tratamento: definição restringe a ferramentas de cliente e é do portal; o uso do termo está nas fontes
-      dos conceitos
-  - afirmacao: 'Sessão: começa sem memória e é resumida [ref:anthropic-context-engineering]'
-    problema: a memória da anterior vem do artigo de harnesses e a compactação é técnica
-    tratamento: duas referências, cada uma na sua parte; 'é resumida' saiu
-  - afirmacao: Modelo, Hook, Subagente, Gateway, Chave virtual, Nível de agência
-    problema: paráfrases mais amplas que a fonte (server tools, PreToolUse, fork, 'ponto único', aplicação,
-      supervisão)
-    tratamento: cada definição foi restringida ao que a fonte diz
-  - afirmacao: fontes próprias do autor para Tier, Plano, Spec e Constituição
-    problema: valem para os termos do processo, não como validação externa
-    tratamento: 'aceito: são termos do processo do portal'
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados: []

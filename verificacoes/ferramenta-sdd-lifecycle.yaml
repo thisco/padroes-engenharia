@@ -97,27 +97,9 @@ afirmacoes:
     resultado: confirmada
     nota: "git diff v3.0.0 v3.1.0 -- SKILL.md acrescenta só essas três linhas; as fases e a matriz não mudaram."
 revisao_adversarial:
-  revisor: "sessao-independente (2026-10-04), conferente independente das transcrições (2026-10-05) e conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: 2026-10-21
-  achados:
-    - afirmacao: "cuidado de escrever-spec: a aprovação é gravada por quem aprova, não pelo agente"
-      problema: "a skill admite o agente gravar a pedido explícito de quem aprova"
-      tratamento: "texto e afirmação com a ressalva"
-    - afirmacao: "execução do prompt na rodada 2 (id sdd-lifecycle-prompt-1)"
-      problema: "o id sugeria um prompt publicado, mas a ferramenta não publica prompt; o schema exige o sufixo -prompt-<N>"
-      tratamento: "id trocado para sdd-lifecycle-pedido-tier2-prompt-1, que nomeia o pedido de teste e não sugere prompt publicado; a transcrição bruta mantém o nome do arquivo"
-    - afirmacao: "a execução foi em sessão nova, sem o contexto do repositório"
-      problema: "a sessão foi um subagente com o contexto do repositório do portal (CLAUDE.md, CLAUDE.local.md e lembrete de hook do graphify), o que a conferência independente apontou como vazamento de contexto"
-      tratamento: "o ambiente da execução registra o vazamento; a conferência avaliou a influência como mínima, e o resultado passou se sustenta (SKILL.md lido, spec com R<n> e parada na Fase 3)"
-    - afirmacao: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
-      problema: "frase sem [ref:] sobre a árvore do repositório"
-      tratamento: "referência sdd-lifecycle-repo criada e citada"
-    - afirmacao: "copie o SKILL.md do commit fixado para a pasta de skills do harness"
-      problema: "não executável sem inventar: o SHA e a pasta do harness não apareciam no texto"
-      tratamento: "o SHA e a versão entram no como_instalar, que remete à página de cada harness"
-    - afirmacao: "a skill já vem no projeto gerado"
-      problema: "a versão não é fixada pelo scaffold, e sem rede a skill não é instalada"
-      tratamento: "dito em limites da ferramenta sdd-scaffold e no passo 4 do prompt do starter"
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados: []
 execucoes:
   - tipo: prompt
     prompt: sdd-lifecycle-pedido-tier2-prompt-1

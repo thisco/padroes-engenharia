@@ -46,12 +46,43 @@ afirmacoes:
   resultado: confirmada
   nota: "A 3.0.0 (5f6e9ad) foi lida no raw em 2026-11-05. Relido em 2026-11-06 na cópia 3.1.0 em skills/sdd-lifecycle/SKILL.md (commit a789fc3, SHA-256 conferido contra o PROCEDENCIA.md), que é o commit fixado da referência: as Fases 2 e 3 não mudaram, e a 3.1.0 só acrescenta a tabela Aceleradores opcionais."
 revisao_adversarial:
-  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador desta entrega
-  data: '2026-11-05'
+  revisor: revisor-independente
+  data: '2026-11-06'
   achados:
-  - afirmacao: "Como aplicar, caminho 3: o dono no checkpoint é o leitor que menos encontra a suposição implícita"
-    problema: "é juízo do portal, não afirmação das fontes"
-    tratamento: "fica sem [ref:], como argumento da prática; a ADR 0015 registra a mesma ordem dos caminhos como decisão"
-  - afirmacao: "Como aparece quando falta: o evento repetido descartado, e não processado de novo"
-    problema: "exemplo inventado; poderia ser lido como caso real"
-    tratamento: "o texto o apresenta como exemplo ('por exemplo'), sem citar fonte nem caso"
+  - afirmacao: 'Como verificar: ''o relatório da revisão fica ao lado da spec'' e ''se há relatório de
+      revisão na mesma pasta'''
+    problema: '[médio] executabilidade: a egm-review grava os relatórios na pasta de trabalho ou na pasta
+      de artefatos do harness (Execution Constraints, item 1; Subflow Uninterrupted Full Flow, item 1),
+      não na pasta da spec. Como aplicar não manda copiar nem mover o relatório, e quem segue o caminho
+      1 não chega à evidência que Como verificar pede sem inventar esse passo.'
+    tratamento: 'pendente: acrescentar ao caminho 1 o passo de copiar o consolidated_review_report.md
+      (ou os relatórios de estágio) para a pasta da spec, ou apontar a linha ''EGM artifact directory:''
+      para ela nos harnesses que a aceitam, e dizer isso em Como verificar.'
+  - afirmacao: 'Como aplicar, caminho 2: ''Com o desenho escrito, a skill despacha um subagente novo que
+      devolve só as perguntas que um construtor ainda precisaria responder'''
+    problema: '[médio] executabilidade: a checagem do construtor é um passo interno do brainstorming do
+      superpowers, que só escreve desenho para trabalho do tamanho de projeto (seção ''The Written Design'',
+      ''For a project''). Para uma spec escrita fora dessa skill (por exemplo na Fase 1 da sdd-lifecycle),
+      o texto não diz como rodar só a checagem, e o leitor precisa inventar (por exemplo, despachar à
+      mão um subagente com o builder-check-prompt.md).'
+    tratamento: 'pendente: dizer que o caminho 2 vale quando a spec nasce no brainstorming do superpowers,
+      ou descrever como rodar só a checagem sobre uma spec existente, com referência para o builder-check-prompt.md.'
+  - afirmacao: 'Como aplicar, caminho 2: ''devolve só as perguntas que um construtor ainda precisaria
+      responder'' [ref:superpowers-brainstorming]'
+    problema: '[baixo] o SKILL.md (a URL da referência) diz que o subagente é novo e recebe o builder-check-prompt.md,
+      e fala em separar ''what the builder asks''; o ''só as perguntas'' (''Report only the questions
+      you''d still need answered'') está no builder-check-prompt.md, arquivo vizinho no commit bb92a77
+      que não é referência do portal. A fonte confirma, mas a referência citada só sustenta em parte.'
+    tratamento: 'pendente: criar referência para skills/brainstorming/builder-check-prompt.md no commit
+      bb92a77 e citá-la nessa oração.'
+  - afirmacao: 'Como aplicar, caminho 2: ''registre que a leitura ficou por fazer'''
+    problema: '[baixo] executabilidade: o texto não diz onde nem como registrar; Como verificar só prevê
+      a linha ''Lido por:'' ou o relatório ao lado da spec.'
+    tratamento: 'pendente: dizer onde registrar, por exemplo ''Lido por: ninguém (sem ferramenta de subagente)''
+      no cabeçalho da spec.'
+  - afirmacao: 'O que fazer: ''A decisão do portal está na ADR 0015'''
+    problema: '[médio] a ADR 0015 está com ''Status: proposta'' e com ''Aprovado por:'' e ''Aprovado em:''
+      vazios desde o commit 866258a (docs/adr/0015-revisar-spec-por-quem-nao-a-escreveu.md:3-9); enquanto
+      o dono não a aprova, ela é proposta, não decisão do portal.'
+    tratamento: 'pendente: o dono aprova a ADR 0015, ou o texto passa a dizer ''A proposta do portal está
+      na ADR 0015'' até a aprovação.'

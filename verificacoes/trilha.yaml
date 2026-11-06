@@ -120,6 +120,14 @@ afirmacoes:
   resultado: confirmada
   nota: 'Mesma afirmação já registrada em ferramentas/egm-drift-report.yml.'
 revisao_adversarial:
-  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: '2026-10-21'
-  achados: []
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados:
+  - afirmacao: 'Onde a spec é gravada: ''A pasta de artefatos pode ser trocada com a linha EGM artifact
+      directory: .dev/docs no prompt ou no AGENTS.md, mas os design docs não se movem com ela [ref:egm-harnesses]'''
+    problema: '[baixo] a seção ''Artifact Directory'' restringe a troca a Claude Code, Claude Cowork,
+      Codex e ChatGPT (''In Claude Code, Claude Cowork, Codex, and ChatGPT, you can name another folder''),
+      aceita CLAUDE.md ou AGENTS.md e avisa que o Claude Code só lê o AGENTS.md do projeto quando não
+      há CLAUDE.md. O texto generaliza para todo harness e só cita o AGENTS.md.'
+    tratamento: 'pendente: dizer em quais harnesses a troca vale e que a linha vai no arquivo de instruções
+      que o harness carrega (CLAUDE.md ou AGENTS.md).'

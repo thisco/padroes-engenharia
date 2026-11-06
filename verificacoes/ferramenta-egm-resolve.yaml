@@ -124,19 +124,13 @@ afirmacoes:
     fixado 113a3af
   resultado: confirmada
 revisao_adversarial:
-  revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador
-    desta entrega
-  data: '2026-11-05'
+  revisor: revisor-independente
+  data: '2026-11-06'
   achados:
-  - afirmacao: 'como_instalar: a situação do Copilot como adaptador experimental, não verificado'
-    problema: na primeira versão, a única fonte (docs/copilot.md) não tinha referência no portal, e o
-      texto falava só da ausência do Copilot na página de harnesses
-    tratamento: por decisão do controlador, nova referência egm-copilot, lida no raw do commit fixado;
-      o texto cita o adaptador experimental e os limites com [ref:egm-copilot], e o Kiro, ausente da tabela,
-      com [ref:egm-harnesses]
-  - afirmacao: 'limites: a tag v0.1.0 ficou 54 commits para trás e nomeia a skill com sublinhado, citado
-      no SKILL.md do commit fixado'
-    problema: '[importante, revisão das Tarefas 4 e 5] o SKILL.md no commit fixado não fala da tag, e
-      a contagem de 54 commits vinha só da API do GitHub'
-    tratamento: nova referência egm-readme-tag-v0-1-0 (README no commit da tag); a frase cita a tag nela
-      e o nome com hífen no egm-readme, sem a contagem de commits
+  - afirmacao: 'limites: ''Ela não tem CHANGELOG.md: o versionamento está em docs/releases.md e as mudanças,
+      nas notas de cada release [ref:egm-releases]'''
+    problema: '[baixo] o docs/releases.md diz que a versão canônica é a do plugin.json e manda explicar
+      mudanças incompatíveis nas release notes, mas não diz que não há CHANGELOG.md. A ausência é verdadeira
+      na árvore do commit 113a3af (a raiz não tem CHANGELOG.md), mas a referência citada não a sustenta.'
+    tratamento: 'pendente: tirar a ausência do CHANGELOG.md de baixo de [ref:egm-releases] e deixá-la
+      como constatação do portal sobre a árvore do commit fixado, ou citar uma fonte que mostre a árvore.'
