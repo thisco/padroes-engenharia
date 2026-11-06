@@ -1,9 +1,9 @@
 {
-  "built_at_commit": "5be9e10b057a12ef1a4a0646284bf943b29fedde",
+  "built_at_commit": "163a0a0bfcca67f45bbbac0440dce75e0fb4f8b3",
   "directed": true,
   "graph": {
     "catalogo": "Padrões de Engenharia",
-    "versao": "1.2.0",
+    "versao": "1.3.0",
     "versao_formato": 1
   },
   "hyperedges": [],
@@ -3191,6 +3191,15 @@
       "relation": "usa",
       "source": "P1-10",
       "source_file": "praticas/construir-com-ia/P1-10.md",
+      "target": "ferramenta:egm-drift-report",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P1-10",
+      "source_file": "praticas/construir-com-ia/P1-10.md",
       "target": "ferramenta:sdd-lifecycle",
       "weight": 1.0
     },
@@ -3201,6 +3210,24 @@
       "source": "P1-10",
       "source_file": "praticas/construir-com-ia/P1-10.md",
       "target": "ferramenta:sdd-scaffold",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-10",
+      "source_file": "praticas/construir-com-ia/P1-10.md",
+      "target": "ref:egm-drift-report-skill",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-10",
+      "source_file": "praticas/construir-com-ia/P1-10.md",
+      "target": "ref:egm-getting-started",
       "weight": 1.0
     },
     {
@@ -3371,6 +3398,132 @@
       "relation": "aplica",
       "source": "P1-11",
       "source_file": "praticas/construir-com-ia/P1-11.md",
+      "target": "skill:sdd-lifecycle",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "P1-05",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "relaciona",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "P1-08",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "celula:construir-com-ia|antes-de-escrever",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ferramenta:egm-resolve",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ferramenta:egm-review",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ferramenta:sdd-lifecycle",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ferramenta:sp-brainstorming",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:egm-readme",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:egm-resolve-skill",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:egm-review-skill",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:sdd-lifecycle",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:superpowers-brainstorming",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "cita",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "target": "ref:superpowers-builder-check-prompt",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "aplica",
+      "source": "P1-12",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
       "target": "skill:sdd-lifecycle",
       "weight": 1.0
     },
@@ -7122,6 +7275,69 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "relation": "caminho",
+      "source": "ferramenta:egm-bootstrap",
+      "source_file": "ferramentas/egm-bootstrap.yml",
+      "target": "passo:depois-da-entrega/instrucoes",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-brainstorm",
+      "source_file": "ferramentas/egm-brainstorm.yml",
+      "target": "passo:antes-de-escrever/entrevistar",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-draft",
+      "source_file": "ferramentas/egm-draft.yml",
+      "target": "passo:antes-de-escrever/escrever-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-drift-report",
+      "source_file": "ferramentas/egm-drift-report.yml",
+      "target": "passo:antes-do-merge/revisar",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-drift-report",
+      "source_file": "ferramentas/egm-drift-report.yml",
+      "target": "passo:depois-da-entrega/continuar",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-resolve",
+      "source_file": "ferramentas/egm-resolve.yml",
+      "target": "passo:antes-de-escrever/revisar-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:egm-review",
+      "source_file": "ferramentas/egm-review.yml",
+      "target": "passo:antes-de-escrever/revisar-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
       "source": "ferramenta:mp-code-review",
       "source_file": "ferramentas/mp-code-review.yml",
       "target": "passo:antes-do-merge/revisar",
@@ -7214,6 +7430,15 @@
       "relation": "caminho",
       "source": "ferramenta:sdd-lifecycle",
       "source_file": "ferramentas/sdd-lifecycle.yml",
+      "target": "passo:antes-de-escrever/revisar-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:sdd-lifecycle",
+      "source_file": "ferramentas/sdd-lifecycle.yml",
       "target": "passo:antes-do-merge/evidencia",
       "weight": 1.0
     },
@@ -7296,6 +7521,15 @@
       "source": "ferramenta:sp-brainstorming",
       "source_file": "ferramentas/sp-brainstorming.yml",
       "target": "passo:antes-de-escrever/escrever-spec",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "caminho",
+      "source": "ferramenta:sp-brainstorming",
+      "source_file": "ferramentas/sp-brainstorming.yml",
+      "target": "passo:antes-de-escrever/revisar-spec",
       "weight": 1.0
     },
     {
@@ -7447,6 +7681,15 @@
       "confidence_score": 1.0,
       "relation": "pertence",
       "source": "passo:antes-de-escrever/investigar",
+      "source_file": "esquemas/espinha.yml",
+      "target": "momento:antes-de-escrever",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "pertence",
+      "source": "passo:antes-de-escrever/revisar-spec",
       "source_file": "esquemas/espinha.yml",
       "target": "momento:antes-de-escrever",
       "weight": 1.0
@@ -7836,6 +8079,51 @@
       "source": "trilha:de-origem",
       "source_file": "trilhas/de-origem.yml",
       "target": "ferramenta:sp-writing-skills",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "trilha:elefante-e-goldfish",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
+      "target": "ferramenta:egm-brainstorm",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "trilha:elefante-e-goldfish",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
+      "target": "ferramenta:egm-draft",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "trilha:elefante-e-goldfish",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
+      "target": "ferramenta:egm-drift-report",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "trilha:elefante-e-goldfish",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
+      "target": "ferramenta:egm-review",
+      "weight": 1.0
+    },
+    {
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "relation": "usa",
+      "source": "trilha:elefante-e-goldfish",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
+      "target": "ferramenta:sdd-lifecycle",
       "weight": 1.0
     },
     {
@@ -8456,6 +8744,23 @@
       "source_location": null,
       "status": "adotar",
       "url": "http://localhost:8000/praticas/P1-11.md"
+    },
+    {
+      "_origin": "catalogo",
+      "community": "construir-com-ia",
+      "community_name": "construir-com-ia",
+      "dominio": "construir-com-ia",
+      "file_type": "pratica",
+      "forca": "orienta",
+      "id": "P1-12",
+      "label": "P1-12 Revise a spec com quem não a escreveu antes de aprovar",
+      "momento": "antes-de-escrever",
+      "norm_label": "p1-12 revise a spec com quem nao a escreveu antes de aprovar",
+      "rationale": "A spec só vai à aprovação depois de lida por quem não a escreveu; o leitor mais forte é um agente sem o histórico da conversa.",
+      "source_file": "praticas/construir-com-ia/P1-12.md",
+      "source_location": null,
+      "status": "experimentar",
+      "url": "http://localhost:8000/praticas/P1-12.md"
     },
     {
       "_origin": "catalogo",
@@ -9898,6 +10203,78 @@
       "community": "ferramentas",
       "community_name": "ferramentas",
       "file_type": "ferramenta",
+      "id": "ferramenta:egm-bootstrap",
+      "label": "egm-bootstrap",
+      "norm_label": "egm-bootstrap",
+      "rationale": "o código que já existe não tem documentação que dê contexto ao agente: a skill gera, de baixo para cima, um README.md por pasta com código (interface, invariantes e efeitos colaterais) e resume as pastas-mãe até a raiz, o contexto que o Elefante lê nas próximas sessões.",
+      "source_file": "ferramentas/egm-bootstrap.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
+      "id": "ferramenta:egm-brainstorm",
+      "label": "egm-brainstorm",
+      "norm_label": "egm-brainstorm",
+      "rationale": "a ideia ainda está crua e precisa de decisões antes do código: o agente pergunta em vários turnos, sem alternativas prontas, até o problema e os limites ficarem claros, e só depois que você confirma a hipótese seis revisores sem o histórico da conversa a atacam por lentes como YAGNI, custo, migração e operação.",
+      "source_file": "ferramentas/egm-brainstorm.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
+      "id": "ferramenta:egm-draft",
+      "label": "egm-draft",
+      "norm_label": "egm-draft",
+      "rationale": "a direção já foi acordada (um concepts_brief.md ou notas) e falta o documento: a skill escreve seção por seção (problema e objetivos, plano técnico, alternativas e implementação detalhada) e para em cada uma até você aprovar; quando uma decisão de arquitetura tem mais de uma resposta defensável, ela mostra até três opções, sem recomendar nenhuma, e você escolhe.",
+      "source_file": "ferramentas/egm-draft.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
+      "id": "ferramenta:egm-drift-report",
+      "label": "egm-drift-report",
+      "norm_label": "egm-drift-report",
+      "rationale": "os design docs aprovados já têm código por trás e você quer saber, como ritual semanal, de preferência na rotação de manutenção se o time tem uma, se os dois ainda dizem a mesma coisa: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente). a branch mexe em código que um design doc descreve e você quer conferir, antes do merge, se o documento ainda descreve o que o código passa a fazer.",
+      "source_file": "ferramentas/egm-drift-report.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
+      "id": "ferramenta:egm-resolve",
+      "label": "egm-resolve",
+      "norm_label": "egm-resolve",
+      "rationale": "a egm-review devolveu achados e você quer tratá-los com o agente que escreveu o documento: ele dá a cada achado uma categoria (CONTEST, com evidência que o revisor podia ler; ESCALATE, quando a evidência está fora do que o revisor leu; PROPOSE FIX; ou DECLINE, para detalhe menor), grava goldfish_review_report.md e espera a sua escolha antes de editar.",
+      "source_file": "ferramentas/egm-resolve.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
+      "id": "ferramenta:egm-review",
+      "label": "egm-review",
+      "norm_label": "egm-review",
+      "rationale": "o design doc está escrito e ninguém além do autor o leu: revisores sem o histórico da conversa recebem o documento, os arquivos que ele cita e a lista de leitura opcional que você fornecer (o teste de compreensão lê só o documento) e passam por cinco estágios (Zoom Out inicial, teste de compreensão com paráfrase, crítica do desenho, Zoom Out intermediário e prontidão de implementação).",
+      "source_file": "ferramentas/egm-review.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "ferramentas",
+      "community_name": "ferramentas",
+      "file_type": "ferramenta",
       "id": "ferramenta:flyway",
       "label": "flyway",
       "norm_label": "flyway",
@@ -10081,7 +10458,7 @@
       "id": "ferramenta:sdd-lifecycle",
       "label": "sdd-lifecycle",
       "norm_label": "sdd-lifecycle",
-      "rationale": "a mudança é Tier 2: a Fase 1 explora o código antes, refina o pedido uma pergunta por vez, deixa a dúvida aberta marcada com [ESCLARECER] e redige a spec como delta, com requisitos R<n> e critério de aceite em cada um. a spec pode conter mudança destrutiva (contrato de API, schema, interface pública): o gate da Fase 2 bloqueia o fluxo, exige ADR e aprovação humana antes do checkpoint, e responde as três perguntas de impacto arquitetural. você quer o plano da Fase 4: leve no Tier 1 (contexto, arquivos e o teste que prova o fix) ou completo no Tier 2 (arquivos com assinaturas, testes por tarefa, checkboxes, checkpoints humanos e o CHANGELOG como tarefa), sempre com a seção Impacto Arquitetural. a Fase 5 pede branch limpa a partir da main atualizada, feat/ ou fix/ com a data no nome, por worktree quando a plataforma suporta. a Fase 6: vermelho visto falhar pelo motivo certo, verde mínimo e refatorar com a suíte verde, por tarefa do plano, com o teste citando o R<n> no Tier 2 e o checkbox marcado ao fim de cada tarefa. a Fase 7 no Tier 2: uma sessão independente, com modelo de raciocínio potente, revisa contra a spec, não contra o diff, e registra no plano uma linha por R<n> com veredito e evidência. a Fase 7 pede a suíte completa e o linter rodados e a saída colada no plano, na seção Evidências. a Fase 8: CHANGELOG no formato Keep a Changelog e spec arquivada antes do merge, commits convencionais, PR quando o repositório é compartilhado e limpeza da branch depois. a destilação da Fase 8, o passo que a maioria pula: o que virou permanente vai para o steering ou uma ADR, o aprendizado operacional para a memória do projeto, e a spec fica arquivada como histórico do delta. a feature atravessa sessões: a retomada relê constituição e memória, acha a última tarefa marcada no plano, confere os commits no git log e o Status da spec, e retoma da primeira tarefa desmarcada.",
+      "rationale": "a mudança é Tier 2: a Fase 1 explora o código antes, refina o pedido uma pergunta por vez, deixa a dúvida aberta marcada com [ESCLARECER] e redige a spec como delta, com requisitos R<n> e critério de aceite em cada um. a spec Tier 2 já está escrita e falta o gate arquitetural (Fase 2) e o checkpoint humano (Fase 3): o gate varre a spec atrás de mudança destrutiva e responde as três perguntas de impacto arquitetural, e o dono lê a spec e a aprova ou pede ajuste antes do plano. a spec pode conter mudança destrutiva (contrato de API, schema, interface pública): o gate da Fase 2 bloqueia o fluxo, exige ADR e aprovação humana antes do checkpoint, e responde as três perguntas de impacto arquitetural. você quer o plano da Fase 4: leve no Tier 1 (contexto, arquivos e o teste que prova o fix) ou completo no Tier 2 (arquivos com assinaturas, testes por tarefa, checkboxes, checkpoints humanos e o CHANGELOG como tarefa), sempre com a seção Impacto Arquitetural. a Fase 5 pede branch limpa a partir da main atualizada, feat/ ou fix/ com a data no nome, por worktree quando a plataforma suporta. a Fase 6: vermelho visto falhar pelo motivo certo, verde mínimo e refatorar com a suíte verde, por tarefa do plano, com o teste citando o R<n> no Tier 2 e o checkbox marcado ao fim de cada tarefa. a Fase 7 no Tier 2: uma sessão independente, com modelo de raciocínio potente, revisa contra a spec, não contra o diff, e registra no plano uma linha por R<n> com veredito e evidência. a Fase 7 pede a suíte completa e o linter rodados e a saída colada no plano, na seção Evidências. a Fase 8: CHANGELOG no formato Keep a Changelog e spec arquivada antes do merge, commits convencionais, PR quando o repositório é compartilhado e limpeza da branch depois. a destilação da Fase 8, o passo que a maioria pula: o que virou permanente vai para o steering ou uma ADR, o aprendizado operacional para a memória do projeto, e a spec fica arquivada como histórico do delta. a feature atravessa sessões: a retomada relê constituição e memória, acha a última tarefa marcada no plano, confere os commits no git log e o Status da spec, e retoma da primeira tarefa desmarcada.",
       "source_file": "ferramentas/sdd-lifecycle.yml",
       "source_location": null
     },
@@ -10105,7 +10482,7 @@
       "id": "ferramenta:sp-brainstorming",
       "label": "brainstorming",
       "norm_label": "brainstorming",
-      "rationale": "a pessoa ainda não terminou de pensar o que quer: uma pergunta por mensagem, e o entendimento devolvido em trechos curtos para ela corrigir. o trabalho é do tamanho de projeto e precisa de um desenho escrito que outro construtor consiga planejar sem voltar à pessoa.",
+      "rationale": "a pessoa ainda não terminou de pensar o que quer: uma pergunta por mensagem, e o entendimento devolvido em trechos curtos para ela corrigir. o trabalho é do tamanho de projeto e precisa de um desenho escrito que outro construtor consiga planejar sem voltar à pessoa. o desenho de projeto está escrito e ainda não foi entregue: um subagente novo, que não falou com a pessoa, lê o desenho como o construtor que vai planejá-lo, e o que ele perguntar volta ao documento antes da entrega.",
       "source_file": "ferramentas/sp-brainstorming.yml",
       "source_location": null
     },
@@ -10346,6 +10723,18 @@
       "label": "Investigar",
       "norm_label": "investigar",
       "rationale": "responder antes de decidir",
+      "source_file": "esquemas/espinha.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "espinha",
+      "community_name": "espinha",
+      "file_type": "passo",
+      "id": "passo:antes-de-escrever/revisar-spec",
+      "label": "Revisar a spec",
+      "norm_label": "revisar a spec",
+      "rationale": "quem não a escreveu lê antes da aprovação",
       "source_file": "esquemas/espinha.yml",
       "source_location": null
     },
@@ -11307,6 +11696,66 @@
       "norm_label": "dora capability: working in small batches",
       "rationale": "DORA (Google Cloud)",
       "source_file": "referencias/dora-small-batches.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:egm-drift-report-skill",
+      "label": "EGM: skill egm-drift-report",
+      "norm_label": "egm: skill egm-drift-report",
+      "rationale": "google/elephant-goldfish-model",
+      "source_file": "referencias/egm-drift-report-skill.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:egm-getting-started",
+      "label": "EGM: guia de configuração e fluxo (getting_started)",
+      "norm_label": "egm: guia de configuracao e fluxo (getting_started)",
+      "rationale": "google/elephant-goldfish-model",
+      "source_file": "referencias/egm-getting-started.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:egm-readme",
+      "label": "README do elephant-goldfish-model",
+      "norm_label": "readme do elephant-goldfish-model",
+      "rationale": "google/elephant-goldfish-model",
+      "source_file": "referencias/egm-readme.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:egm-resolve-skill",
+      "label": "EGM: skill egm-resolve",
+      "norm_label": "egm: skill egm-resolve",
+      "rationale": "google/elephant-goldfish-model",
+      "source_file": "referencias/egm-resolve-skill.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:egm-review-skill",
+      "label": "EGM: skill egm-review",
+      "norm_label": "egm: skill egm-review",
+      "rationale": "google/elephant-goldfish-model",
+      "source_file": "referencias/egm-review-skill.yaml",
       "source_location": null
     },
     {
@@ -13738,6 +14187,30 @@
       "community": "referencias",
       "community_name": "referencias",
       "file_type": "referencia",
+      "id": "ref:superpowers-brainstorming",
+      "label": "superpowers: skill brainstorming",
+      "norm_label": "superpowers: skill brainstorming",
+      "rationale": "obra/superpowers",
+      "source_file": "referencias/superpowers-brainstorming.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
+      "id": "ref:superpowers-builder-check-prompt",
+      "label": "superpowers: prompt da checagem do construtor (brainstorming)",
+      "norm_label": "superpowers: prompt da checagem do construtor (brainstorming)",
+      "rationale": "obra/superpowers",
+      "source_file": "referencias/superpowers-builder-check-prompt.yaml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "referencias",
+      "community_name": "referencias",
+      "file_type": "referencia",
       "id": "ref:thoughtworks-radar-openspec",
       "label": "OpenSpec (Technology Radar)",
       "norm_label": "openspec (technology radar)",
@@ -13947,6 +14420,18 @@
       "norm_label": "de origem",
       "rationale": "a mudança é grande, com subagentes, revisão por tarefa e tela para conferir. É a combinação em que o modelo nasceu: o gate destrutivo era o doubt-driven-development.",
       "source_file": "trilhas/de-origem.yml",
+      "source_location": null
+    },
+    {
+      "_origin": "catalogo",
+      "community": "trilhas",
+      "community_name": "trilhas",
+      "file_type": "trilha",
+      "id": "trilha:elefante-e-goldfish",
+      "label": "Elefante e Goldfish",
+      "norm_label": "elefante e goldfish",
+      "rationale": "o desenho precisa de decisões tomadas antes do código e o harness do time cria subagentes: o EGM escreve o design doc e o submete a revisores sem o histórico da conversa, e a sdd-lifecycle conduz o plano, o TDD, a revisão do código e a retro.",
+      "source_file": "trilhas/elefante-e-goldfish.yml",
       "source_location": null
     },
     {

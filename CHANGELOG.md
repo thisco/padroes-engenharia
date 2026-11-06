@@ -7,8 +7,10 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+## [1.3.0] - 2026-11-06
+
 > Versão minor (ADR 0007): conteúdo novo e passo novo na espinha, sem mudança de schema nem ID
-> retirado. O número de `portal/config.yml` sobe na publicação, como na 1.2.0.
+> retirado.
 
 ### Adicionado
 
@@ -26,8 +28,7 @@ retirado, minor para conteúdo novo, patch para texto e links.
 ### Alterado
 
 - `sdd-lifecycle` sobe para 3.1.0 (componente, cópia em `skills/` pelo pacote e ferramenta), com os
-  aceleradores do EGM e as referências da nova versão. As URLs da origem só resolvem depois do push
-  da origem.
+  aceleradores do EGM e as referências da nova versão.
 - Caminhos novos em `sdd-lifecycle` e `sp-brainstorming` para o passo `revisar-spec`.
 - Trilhas Guiada e De origem passam a incluir o passo `revisar-spec`.
 - P1-10 passa a citar o `egm-drift-report` como relatório de deriva.

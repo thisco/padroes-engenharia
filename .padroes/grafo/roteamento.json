@@ -262,6 +262,46 @@
           "mecanismo": null,
           "status": "experimentar",
           "titulo": "Aplique o guia oficial do fornecedor ao adotar ou trocar de modelo"
+        },
+        {
+          "aplica": [
+            "skill:sdd-lifecycle"
+          ],
+          "forca": "orienta",
+          "id": "P1-12",
+          "links": {
+            "aplica": [
+              {
+                "item": "skill:sdd-lifecycle",
+                "url": "http://localhost:8000/.well-known/skills/sdd-lifecycle/SKILL.md"
+              }
+            ],
+            "ferramentas": [
+              {
+                "id": "egm-review",
+                "url": "http://localhost:8000/ferramentas/egm-review.md"
+              },
+              {
+                "id": "egm-resolve",
+                "url": "http://localhost:8000/ferramentas/egm-resolve.md"
+              },
+              {
+                "id": "sdd-lifecycle",
+                "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "sp-brainstorming",
+                "url": "http://localhost:8000/ferramentas/sp-brainstorming.md"
+              }
+            ],
+            "receitas": [],
+            "starter": null
+          },
+          "md": "praticas/P1-12.md",
+          "md_url": "http://localhost:8000/praticas/P1-12.md",
+          "mecanismo": null,
+          "status": "experimentar",
+          "titulo": "Revise a spec com quem não a escreveu antes de aprovar"
         }
       ]
     },
@@ -392,6 +432,10 @@
               {
                 "id": "sdd-lifecycle",
                 "url": "http://localhost:8000/ferramentas/sdd-lifecycle.md"
+              },
+              {
+                "id": "egm-drift-report",
+                "url": "http://localhost:8000/ferramentas/egm-drift-report.md"
               },
               {
                 "id": "claude-code",
@@ -2376,5 +2420,5 @@
   ],
   "nome": "Padrões de Engenharia",
   "url_base": "http://localhost:8000",
-  "versao": "1.2.0"
+  "versao": "1.3.0"
 }

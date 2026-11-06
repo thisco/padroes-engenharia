@@ -1,6 +1,6 @@
 # Padrões de Engenharia
 
-> Portal de padrões de engenharia, com IA como guia. Versão 1.2.0.
+> Portal de padrões de engenharia, com IA como guia. Versão 1.3.0.
 
 Gerado por `python scripts/gerar.py`; não edite à mão. O validador reprova se este arquivo divergir do gerado.
 

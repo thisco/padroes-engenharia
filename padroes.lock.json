@@ -3,9 +3,9 @@
     ".padroes/constituicao.md": "4e1800d60504d2be1e8bc4cdfe6ea19ecb20aaf7d507cf7d18effe864c51b8a3",
     ".padroes/constituicao/padrao-v1.0.md": "4e1800d60504d2be1e8bc4cdfe6ea19ecb20aaf7d507cf7d18effe864c51b8a3",
     ".padroes/consultar.py": "bc237ac8259d2306d828d4cbb78990c681867f287dfe1c6b8bda0c868c99ca42",
-    ".padroes/grafo/graph.json": "25897b4afabd08635b8c886c9ca5b889da0b7cfab8e0417e374a8c80be153390",
-    ".padroes/grafo/roteamento.json": "458d0e81532ae7e7fc5a73d23356db73eda3084018b26619fefae9775418253a",
-    ".padroes/manifesto.json": "b79ad1e3cb31231b9b50c4af3ee3eee23978510eb726fa5652be14dbe0fc7922",
+    ".padroes/grafo/graph.json": "fec2ff9a18d75533924c7f930ef64e907c0eb3c1c21809f76f7593e3678e1696",
+    ".padroes/grafo/roteamento.json": "68e6e664c409aebbd0701142449179840702eaf4a5b20d898374598180b1b49c",
+    ".padroes/manifesto.json": "8b9a6ba01276ebcfd624eb839c8838b4d654b65d20a469c354ea7f8d548ef210",
     ".padroes/mecanismos/sdd-scaffold/verificar_constituicao.py": "8a3eeedf0edd72d2d12d83087e2c8a67859683bd6786cd094f85f43bba03ebad",
     ".padroes/mecanismos/sdd-scaffold/verificar_pr.py": "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e",
     ".padroes/padroes.py": "82b0e289c729d4b530b24357c7f61efe98f5ac3740a83f3742bbeb348fdfe218",
@@ -20,7 +20,7 @@
     ".padroes/padroes_cli/origem.py": "009f0f3c6a8ba3d7c23f5584d2c53bebaebcc0e0843850c9b7bc0ccb5e50cc70",
     ".padroes/padroes_cli/principal.py": "9b96b6d4b60a71f15a335b7b2b7c33bc9904e03609c8160978639a5bec4b6f1a",
     ".padroes/padroes_cli/util.py": "dd1f502f8b6c7c8e2135f0f58fe56c99bbf58131b8bd7302d9b641ce8af9c584",
-    ".padroes/regras.json": "6b1f1c93fbf9141cb85d102d4edff0802b4540bea2cd2b15d51e8f03d46bf3fe",
+    ".padroes/regras.json": "238c62afe9c9ab2ee85ef11929ffe49a0acc2ef620122536e3d8af3ca8d187e5",
     ".padroes/skills/arquitetura-viva/PROCEDENCIA.md": "77c77350a33a82f334d8a6657287ba680027f8e34f5af52762438c898e692941",
     ".padroes/skills/arquitetura-viva/SKILL.md": "481c764067a994d4828a4f89168acb3631b982d88cb3055e8b4094d85d087f67",
     ".padroes/skills/curadoria-de-pratica/SKILL.md": "8b8911e32742e25a9b7dbea97a6591827e4a74e66cf89d44654a0826d06b0d37",
@@ -30,8 +30,8 @@
     ".padroes/skills/migrations-reversiveis/SKILL.md": "2b4cd0c02966a6656544233adb8c7b07da38afba38006a737b5f11d95f9463ac",
     ".padroes/skills/roteiro-projeto-existente-primeiro-dia/SKILL.md": "3729386eefdc9ba2bf401bbc169893122357f3db8953a825c12c7086c02be2ca",
     ".padroes/skills/roteiro-projeto-novo-primeiro-dia/SKILL.md": "81959223afef157ef42259cfae3506633fcc9c2f4b4c484c8678eeafe4d43a6f",
-    ".padroes/skills/sdd-lifecycle/PROCEDENCIA.md": "1612a489dc987bec5356e81a5514e09381015d0e18a7860b43f9685d5713ed0b",
-    ".padroes/skills/sdd-lifecycle/SKILL.md": "393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358",
+    ".padroes/skills/sdd-lifecycle/PROCEDENCIA.md": "989a16f22aef7dac190da597e515f96ffd4d8d2710b664362753554654cdecc2",
+    ".padroes/skills/sdd-lifecycle/SKILL.md": "d61ea461e42484263c6161cc79463dcddbc47e91c01490bf4ab60ceded4f82c0",
     ".padroes/skills/threat-model/PROCEDENCIA.md": "cb7d2848b676b1a92f94edc77861f17c4a26e5ec828a1958984aa1519505d9cc",
     ".padroes/skills/threat-model/SKILL.md": "e8791d4c852f13ae19a3f4ca162b5542acfc952223e6e74adfd03058c71c2762",
     ".padroes/verificadores/api_02.py": "9a1a73d447dda1365181eaf7cdabc731264dcfcdc7e083d1479acf44cef235c8",
@@ -52,9 +52,9 @@
   "bloco": null,
   "blocos": {},
   "catalogo": {
-    "commit": "5be9e10b057a12ef1a4a0646284bf943b29fedde",
+    "commit": "163a0a0bfcca67f45bbbac0440dce75e0fb4f8b3",
     "nome": "Padrões de Engenharia",
-    "versao": "1.2.0"
+    "versao": "1.3.0"
   },
   "ci": "nenhum",
   "criados": [],
@@ -63,7 +63,7 @@
     "kiro"
   ],
   "ids_desconhecidos": "aviso",
-  "instalado_em": "2026-11-05",
+  "instalado_em": "2026-11-06",
   "links_do_projeto": [],
   "minima": null,
   "montagens": {
@@ -78,7 +78,7 @@
   },
   "montagens_do_projeto": [],
   "origem": "public/pacote",
-  "pacote_sha256": "b79ad1e3cb31231b9b50c4af3ee3eee23978510eb726fa5652be14dbe0fc7922",
+  "pacote_sha256": "8b9a6ba01276ebcfd624eb839c8838b4d654b65d20a469c354ea7f8d548ef210",
   "perfil": [
     "construir-com-ia",
     "arquitetura",
@@ -90,6 +90,6 @@
     "observabilidade",
     "seguranca"
   ],
-  "regras_sha256": "6b1f1c93fbf9141cb85d102d4edff0802b4540bea2cd2b15d51e8f03d46bf3fe",
+  "regras_sha256": "238c62afe9c9ab2ee85ef11929ffe49a0acc2ef620122536e3d8af3ca8d187e5",
   "versao_formato": 1
 }
