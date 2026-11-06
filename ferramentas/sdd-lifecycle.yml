@@ -4,7 +4,7 @@ categoria: skill
 colecao: sdd-lifecycle
 status: adotar
 casos: [origem-do-modelo]
-versao_minima: "3.0.0"
+versao_minima: "3.1.0"
 dono: engenharia
 praticas: [P1-01]
 receitas: []
@@ -18,7 +18,7 @@ caminhos:
     passo: revisar-spec
     papel: caminho
     bom_quando: "a spec Tier 2 já está escrita e falta o gate arquitetural (Fase 2) e o checkpoint humano (Fase 3): o gate varre a spec atrás de mudança destrutiva e responde as três perguntas de impacto arquitetural, e o dono lê a spec e a aprova ou pede ajuste antes do plano."
-    cuidado: "o leitor é o dono da spec, não um agente sem o contexto da conversa: na versão 3.0.0 a única revisão independente é a da Fase 7, depois do código, e antes da aprovação a spec só passa pelo gate e por quem a aprova."
+    cuidado: "o leitor é o dono da spec, não um agente sem o contexto da conversa: no fluxo da skill a única revisão independente é a da Fase 7, depois do código, e antes da aprovação a spec só passa pelo gate e por quem a aprova; o leitor sem contexto da spec só entra se você usar o acelerador opcional egm-review, que a tabela da skill lista."
   - momento: antes-de-escrever
     passo: decidir
     papel: caminho
@@ -67,7 +67,7 @@ caminhos:
 como_instalar: |
   No projeto gerado pelo starter `sdd-scaffold`, a skill já vem em `skills/sdd-lifecycle/`
   [ref:sdd-scaffold-readme]. Fora dele, copie o `SKILL.md` do commit
-  5f6e9ad879f7abd11267547fb3f527e876b60140 (versão 3.0.0, a de componentes.yml) para a pasta de
+  a789fc3e9e2e82460e8d201bf3fa46568796d66a (versão 3.1.0, a de componentes.yml) para a pasta de
   skills do harness: o caminho de cada um está na página da ferramenta dele (Claude Code, Codex,
   Kiro, Antigravity ou Copilot).
 limites: |
@@ -77,5 +77,8 @@ limites: |
   seguem as fases dela: spec na Fase 1, gate na 2, plano na 4, isolamento na 5, TDD na 6, revisão e
   evidência na 7, encerramento e destilação na 8, e a retomada multi-sessão para continuar
   [ref:sdd-lifecycle]. Os gates dessa sequência nasceram no projeto de origem, sobre a execução com
-  outras coleções, e é isso que sustenta o `adotar` [ref:origem-do-modelo-relato].
+  outras coleções, e é isso que sustenta o `adotar` [ref:origem-do-modelo-relato]. Desde a 3.1.0 a tabela "Aceleradores opcionais" do
+  `SKILL.md` ganhou três linhas que citam skills do Elephant-Goldfish Model como exemplos opcionais,
+  sem dependência: `egm-brainstorm` na Fase 1, `egm-review` e `egm-resolve` nas Fases 2 e 3, e
+  `egm-drift-report` na Fase 8 [ref:sdd-lifecycle].
 referencias: [sdd-lifecycle, sdd-lifecycle-repo, sdd-scaffold-readme, origem-do-modelo-relato]

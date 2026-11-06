@@ -3,7 +3,7 @@
 import pytest
 import yaml
 
-from portal.gerador.carregar import carregar
+from portal.gerador.carregar import carregar, carregar_componentes
 from tests import fabrica
 
 EGM_COMMIT = "113a3afc44e8f4f54722d7150d5701f65cc8ef7f"
@@ -100,3 +100,13 @@ def test_guiada_e_de_origem_preenchem_revisar_spec_e_enxuta_nao():
     assert skill_em("guiada") == {"sdd-lifecycle"}
     assert skill_em("de-origem") == {"sp-brainstorming"}
     assert skill_em("enxuta") == set()
+
+
+def test_sdd_lifecycle_consumido_em_3_1_0_com_os_aceleradores_do_egm():
+    """R9 da spec do Elefante e Goldfish."""
+    assert carregar_componentes(fabrica.RAIZ)["sdd-lifecycle"].versao == "3.1.0"
+    skill = (fabrica.RAIZ / "skills/sdd-lifecycle/SKILL.md").read_text(encoding="utf-8")
+    assert "`egm-review`" in skill and "`egm-drift-report`" in skill
+    ferramenta = fabrica.RAIZ / "ferramentas/sdd-lifecycle.yml"
+    meta = yaml.safe_load(ferramenta.read_text(encoding="utf-8"))
+    assert meta["versao_minima"] == "3.1.0"

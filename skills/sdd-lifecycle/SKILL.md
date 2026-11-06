@@ -292,7 +292,9 @@ específicas:
 | Fase | Capacidade | Exemplo de skill |
 |---|---|---|
 | 1 | Exploração estruturada de ideias | `brainstorming`, `idea-refine` |
+| 1 | Lentes de brainstorm com revisores sem contexto | `egm-brainstorm` |
 | 1–2 | Desenho de contratos e interfaces | `api-and-interface-design` |
+| 2–3 | Revisão da spec por leitor sem contexto antes do checkpoint | `egm-review`, `egm-resolve` |
 | 4 | Quebra de trabalho em tarefas verificáveis | `writing-plans`, `planning-and-task-breakdown` |
 | 5 | Isolamento por worktree | `using-git-worktrees` |
 | 6 | Delegação a subagentes | `subagent-driven-development` |
@@ -300,3 +302,4 @@ específicas:
 | 7 | Verificação antes de conclusão | `verification-before-completion` |
 | 7 | Revisão sênior | `requesting-code-review`, `code-review-and-quality` |
 | 8 | Encerramento de branch | `finishing-a-development-branch` |
+| 8 | Drift entre design doc e código | `egm-drift-report` |
