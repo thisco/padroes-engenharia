@@ -73,7 +73,7 @@ SemVer minor pela ADR 0007.
 - Produz: o passo `antes-de-escrever/revisar-spec`, que as Tarefas 4, 5 e 7 referenciam em
   `caminhos` e `sequencia`.
 
-- [ ] **Passo 1: escrever o teste que falha**
+- [x] **Passo 1: escrever o teste que falha**
 
 ```python
 def test_antes_de_escrever_tem_revisar_spec_entre_escrever_spec_e_decidir():
@@ -87,17 +87,17 @@ def test_antes_de_escrever_tem_revisar_spec_entre_escrever_spec_e_decidir():
     )
 ```
 
-- [ ] **Passo 2: rodar e ver falhar** — `$PY -m pytest tests/unidade/test_trilha_espinha.py -q`;
+- [x] **Passo 2: rodar e ver falhar** — `$PY -m pytest tests/unidade/test_trilha_espinha.py -q`;
   esperado: FAIL na lista de slugs.
-- [ ] **Passo 3: acrescentar a linha do passo** em `esquemas/espinha.yml`, entre
+- [x] **Passo 3: acrescentar a linha do passo** em `esquemas/espinha.yml`, entre
   `escrever-spec` e `decidir`, com o slug, o título e a descrição exatos da R1.
-- [ ] **Passo 4: rodar e ver passar**; depois `$PY scripts/validar.py`, `$PY scripts/gerar.py`
+- [x] **Passo 4: rodar e ver passar**; depois `$PY scripts/validar.py`, `$PY scripts/gerar.py`
   e `grep -c revisar-spec public/catalogo.json public/trilha.md public/index.html` com os três
   acima de zero.
-- [ ] **Passo 5: rodar a suíte inteira** — `$PY -m pytest -q`; esperado: tudo verde (nenhum
+- [x] **Passo 5: rodar a suíte inteira** — `$PY -m pytest -q`; esperado: tudo verde (nenhum
   teste conta passos de forma fixa; se algum reprovar por contagem, o teste é corrigido para
   contar a partir da espinha, não o dado).
-- [ ] **Passo 6: commit** — `feat(espinha): passo revisar-spec em Antes de escrever (R1)`.
+- [x] **Passo 6: commit** — `feat(espinha): passo revisar-spec em Antes de escrever (R1)`.
 
 ### Tarefa 2: Coleção `elephant-goldfish-model` em `componentes.yml` (R2)
 
@@ -108,7 +108,7 @@ def test_antes_de_escrever_tem_revisar_spec_entre_escrever_spec_e_decidir():
 **Interfaces:**
 - Produz: a chave `elephant-goldfish-model`, usada em `colecao:` pelas Tarefas 4 e 7.
 
-- [ ] **Passo 1: teste que falha**
+- [x] **Passo 1: teste que falha**
 
 ```python
 def test_componentes_fixa_o_elephant_goldfish_model():
@@ -121,11 +121,11 @@ def test_componentes_fixa_o_elephant_goldfish_model():
     )
 ```
 
-- [ ] **Passo 2: rodar e ver falhar** (KeyError).
-- [ ] **Passo 3: acrescentar o componente** com um comentário de duas linhas: a versão é a do
+- [x] **Passo 2: rodar e ver falhar** (KeyError).
+- [x] **Passo 3: acrescentar o componente** com um comentário de duas linhas: a versão é a do
   `plugin.json` nesse commit; a tag `v0.1.0` ficou para trás no nome das skills (EG-D2).
-- [ ] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` sai com 0.
-- [ ] **Passo 5: commit** — `feat(componentes): fixar o elephant-goldfish-model 0.1.0 (R2)`.
+- [x] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` sai com 0.
+- [x] **Passo 5: commit** — `feat(componentes): fixar o elephant-goldfish-model 0.1.0 (R2)`.
 
 ### Tarefa 3: Referências do EGM e verificação na fonte (R10)
 
@@ -144,7 +144,7 @@ def test_componentes_fixa_o_elephant_goldfish_model():
   `skills/egm-<nome>/SKILL.md`, `resources/document_standards/<nome>.md`, `docs/releases.md`; o
   ensaio é `https://medium.com/@drensin/elephants-goldfish-and-the-new-golden-age-of-software-engineering-c33641a48874`.
 
-- [ ] **Passo 1: teste que falha**
+- [x] **Passo 1: teste que falha**
 
 ```python
 EGM_COMMIT = "113a3afc44e8f4f54722d7150d5701f65cc8ef7f"
@@ -160,15 +160,15 @@ def test_referencias_egm_apontam_para_o_commit_fixado():
             assert EGM_COMMIT in meta["url"] and meta["versao"] == "0.1.0"
 ```
 
-- [ ] **Passo 2: rodar e ver falhar** (0 arquivos).
-- [ ] **Passo 3: escrever as quinze referências** no formato de `referencias/superpowers-brainstorming.yaml`
+- [x] **Passo 2: rodar e ver falhar** (0 arquivos).
+- [x] **Passo 3: escrever as quinze referências** no formato de `referencias/superpowers-brainstorming.yaml`
   (`organizacao: google/elephant-goldfish-model`, `dominios: [construir-com-ia]`,
   `verificado_em: 2026-11-05`, `localizacao` com as seções lidas, `notas` com a data da leitura
   e a observação de que a tag v0.1.0 nomeia as skills com sublinhado). Cada URL é aberta na web
   antes de escrever a `localizacao`.
-- [ ] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` 0; `$PY scripts/checar_links.py`
+- [x] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` 0; `$PY scripts/checar_links.py`
   sem URL quebrada entre as novas.
-- [ ] **Passo 5: commit** — `docs(referencias): fontes do elephant-goldfish-model no commit fixado (R10)`.
+- [x] **Passo 5: commit** — `docs(referencias): fontes do elephant-goldfish-model no commit fixado (R10)`.
 
 ### Tarefa 4: Seis ferramentas `egm-*` com caminhos e verificações (R3, R4)
 
@@ -184,7 +184,7 @@ def test_referencias_egm_apontam_para_o_commit_fixado():
   fixos: `categoria: skill`, `colecao: elephant-goldfish-model`, `status: avaliar`,
   `versao_minima: "0.1.0"`, `dono: engenharia`, `receitas: []`, `casos` ausente.
 
-- [ ] **Passo 1: teste que falha**
+- [x] **Passo 1: teste que falha**
 
 ```python
 CAMINHOS_EGM = {
@@ -209,8 +209,8 @@ def test_ferramenta_egm_declara_so_os_caminhos_da_spec(fid, esperado):
     assert "P1-12" in meta["praticas"] or fid == "egm-drift-report" and "P1-10" in meta["praticas"]
 ```
 
-- [ ] **Passo 2: rodar e ver falhar** (arquivo inexistente).
-- [ ] **Passo 3: escrever as seis ferramentas** no formato de `ferramentas/sp-brainstorming.yml`.
+- [x] **Passo 2: rodar e ver falhar** (arquivo inexistente).
+- [x] **Passo 3: escrever as seis ferramentas** no formato de `ferramentas/sp-brainstorming.yml`.
   `como_instalar` traz os três comandos da origem (Antigravity CLI, Claude Code, Codex) com
   `[ref:egm-harnesses]`, o aviso de instalar o plugin inteiro, a cópia manual por clone no commit
   para quem precisa de reprodutibilidade, e a situação de Copilot (adaptador experimental, não
@@ -221,12 +221,12 @@ def test_ferramenta_egm_declara_so_os_caminhos_da_spec(fid, esperado):
   ser o contexto do Elefante). O validador exige que `praticas:` da ferramenta e
   `ferramentas_aprovadas:` da prática existam (`regras.py`, `_ausentes`), e a `P1-12` cita as
   ferramentas: as Tarefas 4 e 5 só ficam verdes juntas e vão num único commit, no fim da Tarefa 5.
-- [ ] **Passo 4: escrever `verificacoes/ferramenta-egm-<nome>.yaml`** para cada uma, no formato
+- [x] **Passo 4: escrever `verificacoes/ferramenta-egm-<nome>.yaml`** para cada uma, no formato
   de `verificacoes/ferramenta-sp-brainstorming.yaml`, uma afirmação por `[ref:]` do corpo, todas
   conferidas na fonte.
-- [ ] **Passo 5: rodar o teste e ver passar**. O validador ainda reclama da `P1-12` ausente:
+- [x] **Passo 5: rodar o teste e ver passar**. O validador ainda reclama da `P1-12` ausente:
   é esperado, e fecha na Tarefa 5.
-- [ ] **Passo 6: sem commit aqui**; o commit é o da Tarefa 5.
+- [x] **Passo 6: sem commit aqui**; o commit é o da Tarefa 5.
 
 ### Tarefa 5: Prática `P1-12` e ADR 0015 (R7, R12)
 
@@ -240,7 +240,7 @@ def test_ferramenta_egm_declara_so_os_caminhos_da_spec(fid, esperado):
 - Produz: o ID `P1-12` (citado em `praticas:` das ferramentas e em `relacionadas` de nada mais) e
   a ADR 0015, citada no corpo da prática.
 
-- [ ] **Passo 1: teste que falha**
+- [x] **Passo 1: teste que falha**
 
 ```python
 from portal.gerador.carregar import carregar
@@ -259,21 +259,21 @@ def test_p1_12_e_pratica_de_especificar_em_experimentar():
   O mapa lista todas as práticas do momento (R9 da spec da trilha), então a presença no mapa é
   conferida no Passo 6 por `grep -c P1-12 public/trilha.html` acima de zero, sem teste novo.
 
-- [ ] **Passo 2: rodar e ver falhar**.
-- [ ] **Passo 3: escrever a prática** com o frontmatter da `P1-10` como modelo (`id`, `titulo`
+- [x] **Passo 2: rodar e ver falhar**.
+- [x] **Passo 3: escrever a prática** com o frontmatter da `P1-10` como modelo (`id`, `titulo`
   "Revise a spec com quem não a escreveu antes de aprovar", `marco`, `dominio`, `subdominio: null`,
   `momento`, `forca: orienta`, `mecanismo: null`, `status: experimentar`, `aplica:
   [skill:sdd-lifecycle]`, `relacionadas: [P1-05, P1-08]`, `dono: engenharia`, `revisado_em:
   2026-11-05`, `revisar_ate: 2027-05-05`, `resumo`, `ferramentas_aprovadas`, `referencias`), e as
   quatro seções da R7, sem `## Exemplo`. O corpo cita a ADR 0015 e usa `[ref:]` do EGM, da
   `sdd-lifecycle` e do `superpowers-brainstorming`.
-- [ ] **Passo 4: escrever a ADR 0015** em formato Nygard (Contexto, Decisão, Consequências), com
+- [x] **Passo 4: escrever a ADR 0015** em formato Nygard (Contexto, Decisão, Consequências), com
   o conteúdo da R12 e o título da spec.
-- [ ] **Passo 5: escrever `verificacoes/P1-12.yaml`**.
-- [ ] **Passo 6: rodar e ver passar**; validador, gerador e suíte verdes (agora com as seis
+- [x] **Passo 5: escrever `verificacoes/P1-12.yaml`**.
+- [x] **Passo 6: rodar e ver passar**; validador, gerador e suíte verdes (agora com as seis
   ferramentas da Tarefa 4); `ls public/ferramentas | grep -c egm-` igual a 6 e
   `grep -c P1-12 public/trilha.html` acima de zero.
-- [ ] **Passo 7: commit único das Tarefas 4 e 5** — `feat(conteudo): seis skills do
+- [x] **Passo 7: commit único das Tarefas 4 e 5** — `feat(conteudo): seis skills do
   elephant-goldfish-model, prática P1-12 e ADR 0015 (R3, R4, R7, R12)`.
 
 ### Tarefa 6: `P1-10`, glossário e atritos da página da trilha (R8)
@@ -283,7 +283,7 @@ def test_p1_12_e_pratica_de_especificar_em_experimentar():
 - Modificar: `verificacoes/P1-10.yaml`, `verificacoes/glossario.yaml` e `verificacoes/trilha.yaml`
 - Teste: `tests/unidade/test_egm.py`
 
-- [ ] **Passo 1: teste que falha**
+- [x] **Passo 1: teste que falha**
 
 ```python
 def test_p1_10_glossario_e_pagina_da_trilha_absorvem_o_egm():
@@ -298,14 +298,14 @@ def test_p1_10_glossario_e_pagina_da_trilha_absorvem_o_egm():
     assert "elephant-goldfish-model" in pagina and "design_draft.md" in pagina
 ```
 
-- [ ] **Passo 2: rodar e ver falhar**.
-- [ ] **Passo 3: editar os três conteúdos** conforme R8 e EG-D10: parágrafo em "Como aplicar" da
+- [x] **Passo 2: rodar e ver falhar**.
+- [x] **Passo 3: editar os três conteúdos** conforme R8 e EG-D10: parágrafo em "Como aplicar" da
   `P1-10`; termo "Leitor sem contexto (Goldfish)" com `conceito: subagente` e referência
   `egm-readme`; na página da trilha, um parágrafo do EGM em cada um dos quatro `###` da seção
   "Atritos", e `revisado_em: '2026-11-05'`.
-- [ ] **Passo 4: atualizar as verificações** dos três conteúdos com as afirmações novas.
-- [ ] **Passo 5: rodar e ver passar**; validador, gerador e suíte verdes.
-- [ ] **Passo 6: commit** — `docs(conteudo): drift report na P1-10, Goldfish no glossário e atritos do EGM na trilha (R8)`.
+- [x] **Passo 4: atualizar as verificações** dos três conteúdos com as afirmações novas.
+- [x] **Passo 5: rodar e ver passar**; validador, gerador e suíte verdes.
+- [x] **Passo 6: commit** — `docs(conteudo): drift report na P1-10, Goldfish no glossário e atritos do EGM na trilha (R8)`.
 
 ### Tarefa 7: Trilha "Elefante e Goldfish" e o passo novo nas trilhas existentes (R5, R6)
 
@@ -319,7 +319,7 @@ def test_p1_10_glossario_e_pagina_da_trilha_absorvem_o_egm():
 **Interfaces:**
 - Consome: Tarefas 1 e 4.
 
-- [ ] **Passo 1: testes que falham**
+- [x] **Passo 1: testes que falham**
 
 ```python
 def test_trilha_elefante_e_goldfish_segue_a_spec():
@@ -350,14 +350,14 @@ def test_guiada_e_de_origem_preenchem_revisar_spec_e_enxuta_nao():
   pula um passo do momento gera `trilha.html` com o `<li>` desse passo presente e sem skill, e
   sem exceção de template (foco de revisão 1).
 
-- [ ] **Passo 2: rodar e ver falhar**.
-- [ ] **Passo 3: criar a trilha e editar as duas existentes** conforme R5 e R6; acrescentar o
+- [x] **Passo 2: rodar e ver falhar**.
+- [x] **Passo 3: criar a trilha e editar as duas existentes** conforme R5 e R6; acrescentar o
   caminho `antes-de-escrever/revisar-spec` (`papel: caminho`) em `sdd-lifecycle.yml` e em
   `sp-brainstorming.yml` com os `bom_quando` e `cuidado` da R6, e as afirmações novas nas
   verificações das duas.
-- [ ] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` 0 (`R-TRILHA`); gerador 0;
+- [x] **Passo 4: rodar e ver passar**; `$PY scripts/validar.py` 0 (`R-TRILHA`); gerador 0;
   `grep -c 'elefante-e-goldfish' public/trilha.html` acima de zero.
-- [ ] **Passo 5: commit** — `feat(trilhas): trilha Elefante e Goldfish e o passo revisar-spec nas trilhas (R5, R6)`.
+- [x] **Passo 5: commit** — `feat(trilhas): trilha Elefante e Goldfish e o passo revisar-spec nas trilhas (R5, R6)`.
 
 ### Checkpoint humano 1
 
@@ -383,7 +383,7 @@ faz. Antes dela, o dono confere a página da trilha gerada (`public/trilha.html`
   (URL e `verificado_em` no commit novo)
 - Teste: `tests/unidade/test_procedencia.py` (já existe) e `tests/unidade/test_egm.py`
 
-- [ ] **Passo 1: na origem**, branch `feat/2026-11-05-aceleradores-egm` a partir da `main`;
+- [x] **Passo 1: na origem**, branch `feat/2026-11-05-aceleradores-egm` a partir da `main`;
   plano leve; as três linhas na tabela, nesta ordem e com este texto:
   `| 1 | Lentes de brainstorm com revisores sem contexto | \`egm-brainstorm\` |`,
   `| 2–3 | Revisão da spec por leitor sem contexto antes do checkpoint | \`egm-review\`, \`egm-resolve\` |`,
@@ -391,8 +391,8 @@ faz. Antes dela, o dono confere a página da trilha gerada (`public/trilha.html`
   `docs(skill): aceleradores do Elephant-Goldfish Model na tabela (3.1.0)`; merge na `main`
   por fast-forward; tag anotada `v3.1.0`.
 - [ ] **Passo 2: o dono faz `git push origin main --tags`** na origem. Sem isso, a URL da
-  referência não resolve e `checar_links.py` reprova.
-- [ ] **Passo 3: teste que falha aqui**
+  referência não resolve e `checar_links.py` reprova. (pendente com o dono)
+- [x] **Passo 3: teste que falha aqui**
 
 ```python
 def test_sdd_lifecycle_consumido_em_3_1_0_com_os_aceleradores_do_egm():
@@ -404,12 +404,12 @@ def test_sdd_lifecycle_consumido_em_3_1_0_com_os_aceleradores_do_egm():
     assert meta["versao_minima"] == "3.1.0"
 ```
 
-- [ ] **Passo 4: rodar e ver falhar**.
-- [ ] **Passo 5: atualizar `componentes.yml`, a cópia, a `PROCEDENCIA.md`** (SHA-256 por
+- [x] **Passo 4: rodar e ver falhar**.
+- [x] **Passo 5: atualizar `componentes.yml`, a cópia, a `PROCEDENCIA.md`** (SHA-256 por
   `shasum -a 256 skills/sdd-lifecycle/SKILL.md`), a ferramenta, a referência e a verificação.
-- [ ] **Passo 6: rodar e ver passar**, incluindo `$PY -m pytest tests/unidade/test_procedencia.py -q`;
+- [x] **Passo 6: rodar e ver passar**, incluindo `$PY -m pytest tests/unidade/test_procedencia.py -q`;
   `git diff 0f5b6d5 -- skills/sdd-lifecycle/SKILL.md` mostra só as três linhas da tabela.
-- [ ] **Passo 7: commit** — `chore(componentes): sdd-lifecycle 3.1.0 com os aceleradores do EGM (R9)`.
+- [x] **Passo 7: commit** — `chore(componentes): sdd-lifecycle 3.1.0 com os aceleradores do EGM (R9)`.
 
 ### Tarefa 9: CHANGELOG, grafo e evidências (R11)
 
@@ -418,11 +418,11 @@ def test_sdd_lifecycle_consumido_em_3_1_0_com_os_aceleradores_do_egm():
   "versão minor")
 - Rodar: `graphify update .` no checkout principal depois do merge (a pasta `graphify-out/` não é versionada).
 
-- [ ] **Passo 1: escrever a entrada do CHANGELOG** com os itens da R11.
-- [ ] **Passo 2: rodar tudo e colar a saída** na seção "Evidências" deste plano:
+- [x] **Passo 1: escrever a entrada do CHANGELOG** com os itens da R11.
+- [x] **Passo 2: rodar tudo e colar a saída** na seção "Evidências" deste plano:
   `$PY scripts/validar.py`, `$PY scripts/gerar.py`, `$PY -m pytest -q`, `$PY -m ruff check .`,
   `$PY scripts/checar_links.py` (só as URLs novas, se o script aceitar filtro; senão inteiro).
-- [ ] **Passo 3: commit** — `docs(changelog): o Elefante e o Goldfish na trilha (R11)`.
+- [x] **Passo 3: commit** — `docs(changelog): o Elefante e o Goldfish na trilha (R11)`.
 
 ### Checkpoint humano 2: revisão adversarial (Fase 7)
 
@@ -449,4 +449,35 @@ tarefa; problema arquitetural reabre a spec.
 
 ## Evidências
 
-(saídas coladas na Tarefa 9)
+Rodadas em 2026-11-06, na HEAD 2ad0db1 mais o CHANGELOG.
+
+`$PY scripts/validar.py`
+
+```
+aviso: praticas/construir-com-ia/P1-12.md: Exemplo recomendado ausente (status experimentar ou avaliar)
+validação ok: nenhum erro.
+```
+
+`$PY scripts/gerar.py`
+
+```
+6 pasta(s) vazia(s) do tipo '<nome> <n>' removida(s) de /Users/thiago/Documents/Workspace/repos/padroes-engenharia-elefante-goldfish/public.
+portal gerado em /Users/thiago/Documents/Workspace/repos/padroes-engenharia-elefante-goldfish/public (versão 1.2.0, commit 2ad0db1, 2026-11-06).
+```
+
+`$PY -m pytest -q` (suíte inteira)
+
+```
+...
+...............................                                          [100%]
+3199 passed in 346.37s (0:05:46)
+```
+
+`$PY -m ruff check .`
+
+```
+All checks passed!
+```
+
+Pendente: `scripts/checar_links.py` não foi rodado. A origem da `sdd-lifecycle` 3.1.0 ainda não foi
+publicada (push com o dono), então as URLs novas dão 404 até lá.
