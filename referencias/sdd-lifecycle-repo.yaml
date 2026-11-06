@@ -1,11 +1,11 @@
 id: sdd-lifecycle-repo
 titulo: "Repositório sdd-lifecycle (árvore do commit fixado)"
 organizacao: sdd-lifecycle (github.com/thisco)
-url: https://github.com/thisco/sdd-lifecycle/tree/5f6e9ad879f7abd11267547fb3f527e876b60140
+url: https://github.com/thisco/sdd-lifecycle/tree/a789fc3e9e2e82460e8d201bf3fa46568796d66a
 tipo: interno
-versao: "3.0.0"
-verificado_em: 2026-10-05
+versao: "3.1.0"
+verificado_em: 2026-11-06
 verificacao: V
 localizacao: "árvore do repositório no commit fixado (AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md, docs/)"
 dominios: [construir-com-ia]
-notas: "Reconferida em 2026-10-05 na tag v3.0.0 (clone local): a árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/ (exemplos, plans e specs), só Markdown."
+notas: "Repinada em 2026-11-06 na tag v3.1.0 (commit a789fc3e9e2e82460e8d201bf3fa46568796d66a, clone local, git ls-tree -r): a árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/ (exemplos, plans e specs), só Markdown. A URL só resolve depois do push da tag, pendente com o dono. Reconferida em 2026-10-05 na tag v3.0.0 (clone local): a árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/ (exemplos, plans e specs), só Markdown."

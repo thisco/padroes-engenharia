@@ -95,3 +95,16 @@ def test_laco_sem_praticas_nao_diz_que_tudo_so_orienta():
     html = html_trilha(site, site.pagina("trilha"))
     assert "Sem portão." in html
     assert "tudo aqui só orienta" not in html
+
+
+def test_passo_pulado_pela_trilha_aparece_sem_skill():
+    """R5 e R6 da spec do Elefante e Goldfish: o passo vazio renderiza sem exceção."""
+    site = site_completo()
+    html = html_trilha(site, site.pagina("trilha"))
+    assert 'data-passo="enquanto-escreve/isolar"><span' in html
+    assert re.search(
+        r'<li data-passo="enquanto-escreve/isolar"><span[^>]*></span><span><span class="ciclo-nm">'
+        r'Isolar</span><span class="ciclo-sk"></span></span></li>',
+        html,
+    )
+    assert 'data-passo="enquanto-escreve/planejar" data-skill-de-origem="writing-plans"' in html

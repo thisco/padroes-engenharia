@@ -36,7 +36,7 @@ def test_componentes_fixados_com_versao_e_commit():
     dados = yaml.safe_load((RAIZ / "componentes.yml").read_text(encoding="utf-8"))
     componentes = dados["componentes"]
     assert componentes["sdd-scaffold"]["versao"] == "1.7.1"
-    assert componentes["sdd-lifecycle"]["versao"] == "3.0.0"
+    assert componentes["sdd-lifecycle"]["versao"] == "3.1.0"
     # Coleções externas (R4 da trilha) vivem sob outros donos;
     # os demais componentes ficam sob thisco.
     EXTERNOS = {
@@ -45,6 +45,7 @@ def test_componentes_fixados_com_versao_e_commit():
         "agent-skills": "addyosmani/agent-skills",
         "claude-plugins-official": "anthropics/claude-plugins-official",
         "playwright-mcp": "microsoft/playwright-mcp",
+        "elephant-goldfish-model": "google/elephant-goldfish-model",
     }
     for nome, item in componentes.items():
         if nome in EXTERNOS:

@@ -1,6 +1,6 @@
 # Roteamento das práticas
 
-> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.2.0: 60 práticas; 15 das 48 células a definir.
+> Gerado por `python scripts/gerar.py`; não edite à mão. Padrões de Engenharia v1.2.0: 61 práticas; 15 das 48 células a definir.
 
 Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da célula. No repositório, a prática `<ID>` está em `praticas/<faixa>/<ID>.md`; no portal publicado, em `praticas/<ID>.md`, e o mesmo roteamento sai em `roteamento.json`.
 
@@ -8,7 +8,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 
 | Domínio | Especificar | Codar | Revisar | Aprender |
 |---|---|---|---|---|
-| Construir com IA (`construir-com-ia`) | P1-01 (só orienta), P1-03 (só orienta), P1-04 (só orienta), P1-05 (avisa), P1-06 (avisa), P1-07 (só orienta) | P1-08 (só orienta) | P1-09 (avisa), P1-10 (só orienta) | P1-11 (só orienta) |
+| Construir com IA (`construir-com-ia`) | P1-01 (só orienta), P1-03 (só orienta), P1-04 (só orienta), P1-05 (avisa), P1-06 (avisa), P1-07 (só orienta), P1-12 (só orienta) | P1-08 (só orienta) | P1-09 (avisa), P1-10 (só orienta) | P1-11 (só orienta) |
 | Arquitetura e padrões de projeto (`arquitetura`) | ARQ-01 (só orienta), ARQ-04 (só orienta) | ARQ-03 (só orienta) | ARQ-02 (avisa) | a definir |
 | Contratos de API (`contratos-api`) | API-01 (só orienta) | a definir | API-02 (avisa) | a definir |
 | Frontend e UX (`frontend-ux`) | UX-02 (só orienta) | UX-01 (só orienta) | a definir | a definir |
@@ -57,6 +57,7 @@ Ache a linha do domínio da mudança e a coluna da etapa e leia as práticas da 
 | P1-09 | Revise contra a spec, com veredito por requisito | avisa | adotar | `skill:sdd-lifecycle` |
 | P1-10 | Reconcilie o drift entre spec e código antes do merge | só orienta | avaliar | `skill:sdd-lifecycle` |
 | P1-11 | Arquive a spec e destile o permanente em steering e ADR | só orienta | adotar | `skill:sdd-lifecycle` |
+| P1-12 | Revise a spec com quem não a escreveu antes de aprovar | só orienta | experimentar | `skill:sdd-lifecycle` |
 | P2-01 | Toda chamada a modelo passa pelo gateway com chave virtual | avisa | experimentar | nada |
 | P2-02 | Classifique o escopo e o risco da aplicação antes de escrever | só orienta | experimentar | nada |
 | P2-03 | Registre no catálogo o modelo, a retenção e o operador dos dados | só orienta | experimentar | nada |

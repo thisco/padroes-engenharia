@@ -1,5 +1,5 @@
 conteudo: ferramenta-sdd-lifecycle
-verificado_em: 2026-10-21
+verificado_em: 2026-11-06
 verificador: agente-curadoria
 afirmacoes:
   - texto: "no projeto gerado pelo starter, a skill já vem em skills/sdd-lifecycle/"
@@ -34,6 +34,11 @@ afirmacoes:
     localizacao: árvore da tag v3.0.0 (commit 5f6e9ad879f7abd11267547fb3f527e876b60140)
     resultado: confirmada
     nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown.
+  - texto: 'reconferência de 2026-11-06 na tag v3.1.0: continua no arquivo a afirmação já registrada sobre sdd-lifecycle-repo neste conteúdo'
+    ref: sdd-lifecycle-repo
+    localizacao: árvore da tag v3.1.0 (commit a789fc3e9e2e82460e8d201bf3fa46568796d66a), git ls-tree -r no clone local
+    resultado: confirmada
+    nota: A árvore tem AGENTS.md, CHANGELOG.md, LICENSE, README.md, SKILL.md e docs/, só Markdown; a 3.1.0 só acrescentou o plano em docs/plans. A URL só resolve depois do push da tag, pendente com o dono.
   - texto: "Fase 1: explorar o código antes, refinar uma pergunta por vez, marcar dúvida aberta com [ESCLARECER] e redigir a spec como delta com R<n> e critério"
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Fase 1 — Especificação (Tier 2)'"
@@ -70,36 +75,31 @@ afirmacoes:
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Retomada multi-sessão', passos 1 a 5"
     resultado: confirmada
+  - texto: "revisar-spec: a Fase 2 varre a spec atrás de mudança destrutiva e responde as três perguntas de impacto arquitetural, e a Fase 3 pausa para o dono aprovar ou pedir ajuste antes do plano"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 2 — Gate arquitetural (Tier 2) — GATEKEEPER' e 'Fase 3 — Checkpoint humano da spec (Tier 2)'"
+    resultado: confirmada
+  - texto: "no fluxo da skill a única revisão independente é a da Fase 7, depois do código; antes da aprovação a spec só passa pelo gate e por quem a aprova, e o leitor sem contexto da spec só entra pelo acelerador opcional egm-review"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 7 ('Tier 2 — revisão adversarial: uma sessão ou agente independente') e Fases 2 e 3, sem leitor sem contexto da spec; conferido na cópia local (PROCEDENCIA.md: commit a789fc3e9e2e82460e8d201bf3fa46568796d66a)"
+    resultado: confirmada
   - texto: "a sequência de passos da trilha corresponde às fases 1, 2, 4, 5, 6, 7, 7, 8, 8 e à retomada"
     ref: sdd-lifecycle
-    localizacao: "SKILL.md, títulos das fases 1 a 8 e 'Retomada multi-sessão', conferidos na cópia local (PROCEDENCIA.md: commit 5f6e9ad, SHA-256 conferido pelo teste)"
+    localizacao: "SKILL.md, títulos das fases 1 a 8 e 'Retomada multi-sessão', conferidos na cópia local (PROCEDENCIA.md: commit a789fc3e9e2e82460e8d201bf3fa46568796d66a, SHA-256 conferido pelo teste)"
     resultado: confirmada
   - texto: "os gates sobre a execução com outras coleções nasceram no projeto de origem e viraram depois o sdd-scaffold e a sdd-lifecycle"
     ref: origem-do-modelo-relato
     localizacao: "relato, último parágrafo"
     resultado: confirmada
+  - texto: "a tabela Aceleradores opcionais do SKILL.md lista egm-brainstorm na Fase 1, egm-review e egm-resolve nas Fases 2 e 3 e egm-drift-report na Fase 8, como exemplos opcionais"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Aceleradores opcionais', linhas das Fases 1, 2–3 e 8 (tag v3.1.0, commit a789fc3e9e2e82460e8d201bf3fa46568796d66a, cópia local; SHA-256 conferido pelo teste de procedência); o texto da seção diz que nada ali é dependência"
+    resultado: confirmada
+    nota: "git diff v3.0.0 v3.1.0 -- SKILL.md acrescenta só essas três linhas; as fases e a matriz não mudaram."
 revisao_adversarial:
-  revisor: "sessao-independente (2026-10-04), conferente independente das transcrições (2026-10-05) e conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: 2026-10-21
-  achados:
-    - afirmacao: "cuidado de escrever-spec: a aprovação é gravada por quem aprova, não pelo agente"
-      problema: "a skill admite o agente gravar a pedido explícito de quem aprova"
-      tratamento: "texto e afirmação com a ressalva"
-    - afirmacao: "execução do prompt na rodada 2 (id sdd-lifecycle-prompt-1)"
-      problema: "o id sugeria um prompt publicado, mas a ferramenta não publica prompt; o schema exige o sufixo -prompt-<N>"
-      tratamento: "id trocado para sdd-lifecycle-pedido-tier2-prompt-1, que nomeia o pedido de teste e não sugere prompt publicado; a transcrição bruta mantém o nome do arquivo"
-    - afirmacao: "a execução foi em sessão nova, sem o contexto do repositório"
-      problema: "a sessão foi um subagente com o contexto do repositório do portal (CLAUDE.md, CLAUDE.local.md e lembrete de hook do graphify), o que a conferência independente apontou como vazamento de contexto"
-      tratamento: "o ambiente da execução registra o vazamento; a conferência avaliou a influência como mínima, e o resultado passou se sustenta (SKILL.md lido, spec com R<n> e parada na Fase 3)"
-    - afirmacao: "o repositório da skill traz o SKILL.md e documentação, sem código nem verificador próprio"
-      problema: "frase sem [ref:] sobre a árvore do repositório"
-      tratamento: "referência sdd-lifecycle-repo criada e citada"
-    - afirmacao: "copie o SKILL.md do commit fixado para a pasta de skills do harness"
-      problema: "não executável sem inventar: o SHA e a pasta do harness não apareciam no texto"
-      tratamento: "o SHA e a versão entram no como_instalar, que remete à página de cada harness"
-    - afirmacao: "a skill já vem no projeto gerado"
-      problema: "a versão não é fixada pelo scaffold, e sem rede a skill não é instalada"
-      tratamento: "dito em limites da ferramenta sdd-scaffold e no passo 4 do prompt do starter"
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados: []
 execucoes:
   - tipo: prompt
     prompt: sdd-lifecycle-pedido-tier2-prompt-1

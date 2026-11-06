@@ -1,5 +1,5 @@
 conteudo: P1-10
-verificado_em: '2026-10-21'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a spec arquivada é histórico, e não fonte de verdade viva
@@ -29,6 +29,15 @@ afirmacoes:
 - texto: "o rótulo do marco, 'sem drift spec e código', resume o que a prática exige; a trilha lista até seis marcos por etapa e hoje não inclui esta prática na etapa Revisar"
   ref: portal-trilha
   localizacao: "corpo da prática, seção 'O que fazer'; página da trilha, etapa Revisar, 'Para sair desta etapa' (seis marcos e o link 'e mais')"
+  resultado: confirmada
+- texto: 'a skill egm-drift-report lê cada design doc de uma pasta, procura o código que o documento cita e lista só as divergências, num arquivo AAAA-MM-DD_DRIFT_REPORT.md; a varredura é da pasta inteira contra o código atual, e não do diff da branch'
+  ref: egm-drift-report-skill
+  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), passos 1 a 4 e Guidance'
+  resultado: confirmada
+  nota: "Que ela não corrige nada e não escreve adendo à spec é leitura do corpo (só escreve o relatório); a frase 'o diff da branch' é inferência do portal: a skill não menciona diff."
+- texto: 'a origem diz que quem escolhe entre atualizar o documento ou o código é a pessoa, e recomenda rodar a skill como ritual semanal, de preferência na rotação de manutenção, se o time tem uma'
+  ref: egm-getting-started
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub, relido em 2026-11-06), seção 'Drift Detection' ('We recommend running this once per week. If you have a regular maintenance rotation, incorporating this as a weekly ritual is useful.')"
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -67,12 +76,12 @@ execucoes:
   evidencia: 'script antes: aviso de spec citada fora do diff; o agente acrescentou ''## Adendo 2026-10-06'' ao R1 (corte em 200 caracteres), sem mexer em requisitos nem Status; commit 71c804f só com a spec, sem trailer, antes de rodar o script de novo; depois: ''Requisitos afetados: 1 spec(s) citada(s), nenhum achado.'', saída 0; pytest 3 passed. Transcrição em curadoria-a5/transcricoes/P1-10-prompt-2.bruta.jsonl.'
   data: '2026-10-06'
 revisao_adversarial:
-  revisor: conferente independente, modelo econômico, ADR 0005
-  data: '2026-10-06'
+  revisor: revisor-independente
+  data: '2026-11-06'
   achados:
-  - afirmacao: 'Como aplicar passo 3 e prompt passo 4: rodar o script e sair ''sem aviso'' antes do commit do passo 5 (P1-10.md:65 e 123)'
-    problema: '[médio] trazido do plano (1), reproduzido: o script compara ''git diff base...HEAD'', só vê o commitado. Com o adendo ainda não commitado o aviso continua; com o plano não commitado sai ''Requisitos afetados: 0 spec(s) citada(s), nenhum achado'', um verde falso. A ordem escrita não leva à saída pedida sem inventar o commit.'
-    tratamento: 'Tratado em 2026-10-06: o passo 3 manda commitar o plano e a spec com o adendo antes de rodar o script, que compara o commitado, e avisa que, sem o commit do plano, a saída ''0 spec(s) citada(s)'' é um verde que não confere nada. Reexecutado num projeto novo: plano não commitado dá ''0 spec(s)''; commitado sem adendo, AVISO; adendo não commitado, AVISO; tudo commitado, nenhum achado. O passo 4 do prompt (sem aviso antes do commit) não muda, porque foi testado; Como verificar avisa que a saída sem aviso vem após o commit. Pendência: reordenar os passos do prompt e retestá-lo.'
-  - afirmacao: 'prompt manda commitar (docs(specs): ...) (P1-10.md)'
-    problema: '[baixo] trazido do plano (2): o commit do teste saiu com trailer Co-Authored-By do harness; projetos que proíbem trailer precisam pedir a mensagem sem ele.'
-    tratamento: 'Tratado em 2026-10-06 no texto: Como aplicar ganhou o passo 4, que manda pedir a mensagem sem trailer de coautoria quando o projeto o proíbe. O bloco de prompt não mudou; incluir isso no prompt fica como pendência.'
+  - afirmacao: 'Como aplicar: ''recomenda rodá-la uma vez por semana, ou numa rotação de manutenção [ref:egm-getting-started]'''
+    problema: '[baixo] o docs/getting_started.md (seção ''Drift Detection'') recomenda rodar uma vez por
+      semana e, para quem tem rotação de manutenção, incorporar a skill como ritual semanal dessa rotação
+      (''incorporating this as a weekly ritual is useful''). A rotação não é alternativa à cadência semanal,
+      como o ''ou'' sugere.'
+    tratamento: 'corrigido: o Como aplicar diz ''recomenda rodá-la como ritual semanal, de preferência na rotação de manutenção, se o time tem uma''; afirmação refeita contra a seção Drift Detection do raw em 2026-11-06.'

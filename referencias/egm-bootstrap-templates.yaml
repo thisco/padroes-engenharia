@@ -1,0 +1,11 @@
+id: egm-bootstrap-templates
+titulo: "EGM: modelos de README da egm-bootstrap"
+organizacao: google/elephant-goldfish-model
+url: https://github.com/google/elephant-goldfish-model/blob/113a3afc44e8f4f54722d7150d5701f65cc8ef7f/skills/egm-bootstrap/references/templates.md
+tipo: comunidade
+versao: "0.1.0"
+verificado_em: 2026-11-06
+verificacao: V
+localizacao: "seções 'Component Package (Peanuts) README Template', 'Repository Root (Blueprint / Hay) README Template' e 'Intermediate Blueprint README Template'"
+dominios: [construir-com-ia]
+notas: "Os três modelos fixam títulos e seções em inglês (Overview, Interface, Invariants, Side Effects, Verification) e deixam a prosa em marcadores entre colchetes. Lido no raw do commit fixado em 2026-11-06; o arquivo não traz instrução dirigida ao leitor."

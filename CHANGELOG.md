@@ -7,6 +7,32 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+> Versão minor (ADR 0007): conteúdo novo e passo novo na espinha, sem mudança de schema nem ID
+> retirado. O número de `portal/config.yml` sobe na publicação, como na 1.2.0.
+
+### Adicionado
+
+- Passo `revisar-spec` na espinha, em "Antes de escrever": a spec é lida por quem não a escreveu
+  antes da aprovação, como na ADR 0015 (aceita). Trilhas sem o passo ficam com ele vazio.
+- Prática P1-12, "Revise a spec com quem não a escreveu antes de aprovar", em `experimentar`, com a
+  ADR 0015 (aceita).
+- Coleção `elephant-goldfish-model` 0.1.0 (plugin do Elefante e do Goldfish) fixada em
+  `componentes.yml`, com dezoito referências `egm-*`, dezesseis no commit fixado, uma no commit da
+  tag v0.1.0 e o ensaio de origem como fonte secundária, e seis ferramentas `egm-*` em `avaliar`,
+  cada uma com caminhos por harness e registro em `verificacoes/`.
+- Trilha "Elefante e Goldfish", com o fluxo do modelo e os atritos conhecidos.
+- Termo "Leitor sem contexto (Goldfish)" no glossário.
+
+### Alterado
+
+- `sdd-lifecycle` sobe para 3.1.0 (componente, cópia em `skills/` pelo pacote e ferramenta), com os
+  aceleradores do EGM e as referências da nova versão. As URLs da origem só resolvem depois do push
+  da origem.
+- Caminhos novos em `sdd-lifecycle` e `sp-brainstorming` para o passo `revisar-spec`.
+- Trilhas Guiada e De origem passam a incluir o passo `revisar-spec`.
+- P1-10 passa a citar o `egm-drift-report` como relatório de deriva.
+- Página da trilha ganha os atritos do EGM.
+
 ## [1.2.0] - 2026-11-05
 
 ### Adicionado

@@ -1,0 +1,11 @@
+id: egm-copilot
+titulo: "EGM: integração com o GitHub Copilot CLI"
+organizacao: google/elephant-goldfish-model
+url: https://github.com/google/elephant-goldfish-model/blob/113a3afc44e8f4f54722d7150d5701f65cc8ef7f/docs/copilot.md
+tipo: comunidade
+versao: "0.1.0"
+verificado_em: 2026-11-05
+verificacao: V
+localizacao: "abertura ('Experimental adapter for issue #147. Workflow execution and reviewer isolation remain unverified'), seções 'Interface and installation' (checkout completo no commit, --plugin-dir; instalação persistente não verificada), 'Native delegation' e 'Validation and remaining limits' (descoberta offline no CLI 1.0.82 não prova execução nem isolamento)"
+dominios: [construir-com-ia]
+notas: "Lida no raw do commit fixado em 2026-11-05. O guia não vale para o Copilot no VS Code nem para o agente na nuvem. A página não trazia instrução dirigida ao leitor humano que exigisse ação, e as instruções a agentes que ela contém foram tratadas apenas como conteúdo."

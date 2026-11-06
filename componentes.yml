@@ -9,8 +9,8 @@ componentes:
     commit: cd121cd973945c486e63029496ed7ec879a18e32
   sdd-lifecycle:
     repo: https://github.com/thisco/sdd-lifecycle
-    versao: "3.0.0"
-    commit: 5f6e9ad879f7abd11267547fb3f527e876b60140
+    versao: "3.1.0"
+    commit: a789fc3e9e2e82460e8d201bf3fa46568796d66a
   gateway-poc:
     repo: https://github.com/thisco/gateway-poc
     versao: "0.1.0"
@@ -37,3 +37,9 @@ componentes:
     repo: https://github.com/microsoft/playwright-mcp
     versao: "0.0.83"
     commit: f183dad4a52965583e3cc1d59b88cdc279e2e57d
+  elephant-goldfish-model:
+    repo: https://github.com/google/elephant-goldfish-model
+    # a versão é a do plugin.json nesse commit; a tag v0.1.0 ficou para trás
+    # no nome das skills (EG-D2)
+    versao: "0.1.0"
+    commit: 113a3afc44e8f4f54722d7150d5701f65cc8ef7f

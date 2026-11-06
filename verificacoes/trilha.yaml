@@ -1,5 +1,5 @@
 conteudo: trilha
-verificado_em: '2026-10-20'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: O mattpocock/skills está na versão 1.3.1 no commit fixado.
@@ -72,7 +72,61 @@ afirmacoes:
   ref: mattpocock-scope
   localizacao: seções The bar (parte 1, Observed failure) e By bucket (New skills)
   resultado: confirmada
+- texto: 'O google/elephant-goldfish-model (EGM) é a terceira coleção usada nos exemplos.'
+  ref: egm-readme
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), abertura e 'How it works'"
+  resultado: confirmada
+- texto: 'O EGM grava o rascunho em design_draft.md, na pasta de trabalho ou na de artefatos do harness, e não despeja o texto no chat.'
+  ref: egm-draft-skill
+  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), Execution Constraints, item 2 (Artifact-First Delivery)'
+  resultado: confirmada
+- texto: 'Só ao gravar o documento final a egm-draft pergunta onde salvar, propõe docs/designs/ como padrão e grava <pasta>/<nome>.md; o plano de implementação entra no mesmo arquivo do desenho.'
+  ref: egm-draft-skill
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), Step 5 (itens 6 e 7: atualiza design_draft.md com a seção 'Detailed Implementation') e Step 6, itens 2 e 4"
+  resultado: confirmada
+  nota: 'Que o time guarda a versão aprovada em docs/designs/<nome>.md é a prática proposta pelo portal sobre o padrão da skill.'
+- texto: "No Claude Code, no Claude Cowork, no Codex e no ChatGPT, a pasta de artefatos pode ser trocada com a linha 'EGM artifact directory: .dev/docs' no prompt ou no arquivo de instruções que o harness carrega (CLAUDE.md ou AGENTS.md, do projeto ou do usuário; o Claude Code só lê o AGENTS.md do projeto quando não há CLAUDE.md), e os design docs não se movem com ela."
+  ref: egm-harnesses
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub, relido em 2026-11-06), seção 'Artifact Directory', primeiro parágrafo ('In Claude Code, Claude Cowork, Codex, and ChatGPT, you can name another folder') e último parágrafo ('Design docs and other project files do not move', 'Claude Code reads a project AGENTS.md only when the project has no CLAUDE.md')"
+  resultado: confirmada
+- texto: 'A egm-draft manda escrever resumos e comunicações em inglês simples e direto, sem adjetivo promocional, sem elogio ao usuário e sem pedido de desculpa quando é corrigida.'
+  ref: egm-draft-skill
+  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), Execution Constraints, itens 3 (Plain-English Standard), 10 (Banned Adjectives) e 11 (Banned Apologies)'
+  resultado: confirmada
+- texto: "O relatório da egm-drift-report tem formato fixo, com 'No drift detected' quando não há divergência."
+  ref: egm-drift-report-skill
+  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), passo 4 (Strict Format)'
+  resultado: confirmada
+- texto: 'A instrução de execução do EGM proíbe escrever ou alterar arquivos de produção durante o design, admite código só em rascunho ou fora da árvore do projeto, e exige uma única pergunta por resposta.'
+  ref: egm-execution-instructions
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), itens 'Design-Only Scope' e 'ONE QUESTION AT A TIME'"
+  resultado: confirmada
+- texto: 'Se o usuário pede a implementação com o fluxo ativo, a skill explica que ele só produz documentos de design e pergunta se continua o desenho ou sai dele para implementar.'
+  ref: egm-execution-instructions
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), 'HOW TO RESPOND' dentro de Design-Only Scope"
+  resultado: confirmada
+- texto: 'A sdd-lifecycle refina uma pergunta por vez na Fase 1 e segue para o plano e a implementação TDD nas Fases 4 e 6.'
+  ref: sdd-lifecycle
+  localizacao: 'SKILL.md, Fase 1 (refine com o usuário uma pergunta por vez), Fase 4 (Plano) e Fase 6 (Implementação TDD)'
+  resultado: confirmada
+  nota: 'Cópia 3.1.0 em skills/sdd-lifecycle/SKILL.md (commit a789fc3, SHA-256 conferido contra o PROCEDENCIA.md em 2026-11-06), a mesma do commit fixado da referência; da 3.0.0 para a 3.1.0 só mudou a tabela Aceleradores opcionais, e as Fases 1, 4 e 6 seguem iguais.'
+- texto: 'A docs/releases.md do EGM diz que o contrato de nomes de skill, parâmetros, caminhos de saída e formatos de relatório só é estável na 1.0.'
+  ref: egm-releases
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub), seção 'Versioned releases'"
+  resultado: confirmada
+- texto: 'A tag v0.1.0 guarda a skill de drift em skills/egm_drift_report/, com sublinhado, e a main usa skills/egm-drift-report/.'
+  ref: egm-readme-tag-v0-1-0
+  localizacao: 'aberto na web no commit b3a3595 da tag v0.1.0 (raw do GitHub, relido em 2026-11-06), README, tabela da seção Choose a skill, linha 108 (links para skills/egm_drift_report/); o caminho da main vem do URL da egm-drift-report-skill, no commit fixado 113a3af'
+  resultado: confirmada
+  nota: 'Mesma afirmação já registrada em ferramentas/egm-drift-report.yml.'
 revisao_adversarial:
-  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: '2026-10-21'
-  achados: []
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados:
+  - afirmacao: 'Onde a spec é gravada: ''A pasta de artefatos pode ser trocada com a linha EGM artifact
+      directory: .dev/docs no prompt ou no AGENTS.md, mas os design docs não se movem com ela [ref:egm-harnesses]'''
+    problema: '[baixo] a seção ''Artifact Directory'' restringe a troca a Claude Code, Claude Cowork,
+      Codex e ChatGPT (''In Claude Code, Claude Cowork, Codex, and ChatGPT, you can name another folder''),
+      aceita CLAUDE.md ou AGENTS.md e avisa que o Claude Code só lê o AGENTS.md do projeto quando não
+      há CLAUDE.md. O texto generaliza para todo harness e só cita o AGENTS.md.'
+    tratamento: 'corrigido: a página diz que a troca vale no Claude Code, no Claude Cowork, no Codex e no ChatGPT, e que a linha vai no prompt ou no arquivo de instruções que o harness carrega (CLAUDE.md ou AGENTS.md, do projeto ou do usuário), com o aviso de que o Claude Code só lê o AGENTS.md do projeto sem CLAUDE.md; afirmação refeita contra o raw em 2026-11-06.'

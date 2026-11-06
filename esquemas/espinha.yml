@@ -91,6 +91,7 @@ momentos:
     passos:
       - {slug: entrevistar, titulo: Entrevistar, desc: "tirar da cabeça da pessoa o que ela quer"}
       - {slug: escrever-spec, titulo: Escrever a spec, desc: "o documento que vai ser aprovado"}
+      - {slug: revisar-spec, titulo: Revisar a spec, desc: "quem não a escreveu lê antes da aprovação"}
       - {slug: decidir, titulo: Decidir e registrar, desc: "glossário e ADR"}
       - {slug: investigar, titulo: Investigar, desc: "responder antes de decidir"}
       - {slug: seguranca, titulo: Segurança, desc: "superfície nova"}

@@ -1,0 +1,58 @@
+id: egm-drift-report
+titulo: egm-drift-report
+categoria: skill
+colecao: elephant-goldfish-model
+status: avaliar
+versao_minima: "0.1.0"
+dono: engenharia
+praticas: [P1-10]
+receitas: []
+caminhos:
+  - momento: depois-da-entrega
+    passo: continuar
+    papel: caminho
+    bom_quando: "os design docs aprovados já têm código por trás e você quer saber, como ritual semanal, de preferência na rotação de manutenção se o time tem uma, se os dois ainda dizem a mesma coisa: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente)."
+    cuidado: "a skill aponta e a pessoa decide se corrige o código ou o documento; o relatório vai para AAAA-MM-DD_DRIFT_REPORT.md, e documento sem link para o código custa mais: a skill pede que você acrescente os links."
+  - momento: antes-do-merge
+    passo: revisar
+    papel: complemento
+    bom_quando: "a branch mexe em código que um design doc descreve e você quer conferir, antes do merge, se o documento ainda descreve o que o código passa a fazer."
+    cuidado: "a skill varre a pasta de documentos inteira contra o código atual, não o diff; ela não escreve o adendo à spec que a P1-10 pede, que continua por conta de quem abre o PR."
+como_instalar: |
+  Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
+  skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
+  CLI: `agy plugin install https://github.com/google/elephant-goldfish-model`. Claude Code:
+  `claude plugin marketplace add google/elephant-goldfish-model` e depois
+  `claude plugin install egm@egm`. Codex: `codex plugin marketplace add
+  google/elephant-goldfish-model` e depois `codex plugin add egm@egm` [ref:egm-harnesses]. Abra
+  uma sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com o
+  prefixo, `/egm:egm-drift-report`, e no Codex ela é escolhida na lista de skills [ref:egm-readme].
+  Esses comandos não fixam commit. Quem precisa de reprodutibilidade clona o repositório no commit
+  fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
+  para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
+  `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
+  antes de atualizar [ref:egm-harnesses]. Para o Copilot CLI há só um adaptador experimental: a
+  própria origem diz que a execução do fluxo e o isolamento dos revisores não foram verificados, e
+  o guia não vale para o Copilot no VS Code nem para o agente na nuvem [ref:egm-copilot]. O Kiro
+  não aparece na tabela de instalação nem na situação de suporte da página de harnesses, e a origem
+  só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
+  ponta a ponta pela instalação do plugin [ref:egm-harnesses].
+limites: |
+  A revisão do EGM exige um harness que crie subagentes e para sem ele [ref:egm-harnesses]; esta
+  skill não usa subagente: lê os documentos um a um, no contexto principal, e trata como
+  divergência também a lógica que nenhum documento ou README cita [ref:egm-drift-report-skill].
+  A origem recomenda rodá-la uma vez por semana e deixa a escolha entre corrigir o documento ou o
+  código com a pessoa [ref:egm-getting-started]. A skill está escrita em inglês, e o relatório
+  sai em inglês, no formato fixo da skill, que tem até a frase pronta "No drift detected" para
+  documento sem divergência [ref:egm-drift-report-skill].
+  Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
+  `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
+  declara `disable-model-invocation: true` [ref:egm-drift-report-skill]. A origem é
+  pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
+  [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
+  da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
+  `skills/egm_drift_report/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
+  `skills/egm-drift-report/` [ref:egm-readme].
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-drift-report-skill, egm-getting-started, egm-releases]

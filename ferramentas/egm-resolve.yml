@@ -1,0 +1,53 @@
+id: egm-resolve
+titulo: egm-resolve
+categoria: skill
+colecao: elephant-goldfish-model
+status: avaliar
+versao_minima: "0.1.0"
+dono: engenharia
+praticas: [P1-12]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: revisar-spec
+    papel: complemento
+    bom_quando: "a egm-review devolveu achados e você quer tratá-los com o agente que escreveu o documento: ele dá a cada achado uma categoria (CONTEST, com evidência que o revisor podia ler; ESCALATE, quando a evidência está fora do que o revisor leu; PROPOSE FIX; ou DECLINE, para detalhe menor), grava goldfish_review_report.md e espera a sua escolha antes de editar."
+    cuidado: "roda de propósito no contexto do autor, então o CONTEST precisa citar arquivo e símbolo ou decisão escrita no documento, e lacuna de compreensão não se contesta; com 'auto accept' entram só os PROPOSE FIX, e os ESCALATE vêm primeiro no chat, porque dependem do que só você sabe."
+como_instalar: |
+  Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
+  skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
+  CLI: `agy plugin install https://github.com/google/elephant-goldfish-model`. Claude Code:
+  `claude plugin marketplace add google/elephant-goldfish-model` e depois
+  `claude plugin install egm@egm`. Codex: `codex plugin marketplace add
+  google/elephant-goldfish-model` e depois `codex plugin add egm@egm` [ref:egm-harnesses]. Abra
+  uma sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com o
+  prefixo, `/egm:egm-resolve`, e no Codex ela é escolhida na lista de skills [ref:egm-readme].
+  Esses comandos não fixam commit. Quem precisa de reprodutibilidade clona o repositório no commit
+  fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
+  para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
+  `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
+  antes de atualizar [ref:egm-harnesses]. Para o Copilot CLI há só um adaptador experimental: a
+  própria origem diz que a execução do fluxo e o isolamento dos revisores não foram verificados, e
+  o guia não vale para o Copilot no VS Code nem para o agente na nuvem [ref:egm-copilot]. O Kiro
+  não aparece na tabela de instalação nem na situação de suporte da página de harnesses, e a origem
+  só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
+  ponta a ponta pela instalação do plugin [ref:egm-harnesses].
+limites: |
+  A skill não é revisão: roda na sessão que escreveu o documento, para lembrar o raciocínio
+  anterior, e só trata os achados que os revisores sem contexto já produziram
+  [ref:egm-resolve-skill]; sem a egm-review antes, não há o que resolver, e a egm-review para sem
+  ferramenta de subagente [ref:egm-harnesses]. Ela não muda a severidade de um achado: para
+  discordar, usa CONTEST e diz por quê [ref:egm-resolve-skill]. A skill está escrita em inglês, e
+  o relatório sai em inglês, no formato fixo da skill (`Goldfish Annotated Review Report`), com
+  as categorias CONTEST, ESCALATE, PROPOSE FIX e DECLINE em inglês [ref:egm-resolve-skill].
+  Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
+  `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
+  declara `disable-model-invocation: true` [ref:egm-resolve-skill]. A origem é
+  pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
+  [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
+  da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
+  `skills/egm_resolve/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
+  `skills/egm-resolve/` [ref:egm-readme].
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-resolve-skill, egm-releases]

@@ -1,0 +1,55 @@
+id: egm-bootstrap
+titulo: egm-bootstrap
+categoria: skill
+colecao: elephant-goldfish-model
+status: avaliar
+versao_minima: "0.1.0"
+dono: engenharia
+praticas: [P1-12]
+receitas: []
+caminhos:
+  - momento: depois-da-entrega
+    passo: instrucoes
+    papel: complemento
+    bom_quando: "o código que já existe não tem documentação que dê contexto ao agente: a skill gera, de baixo para cima, um README.md por pasta com código (interface, invariantes e efeitos colaterais) e resume as pastas-mãe até a raiz, o contexto que o Elefante lê nas próximas sessões."
+    cuidado: "pede aprovação antes de seguir quando acha mais de 15 subpastas e não faz commit; revise a saída antes de commitar. README que já existe é corrigido, com as notas preservadas; para não tocar nele, use target_filename (por exemplo EGM.md). A skill de contexto `<projeto>-elephant`, opcional no guia da origem, é escrita pelo time."
+como_instalar: |
+  Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
+  skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
+  CLI: `agy plugin install https://github.com/google/elephant-goldfish-model`. Claude Code:
+  `claude plugin marketplace add google/elephant-goldfish-model` e depois
+  `claude plugin install egm@egm`. Codex: `codex plugin marketplace add
+  google/elephant-goldfish-model` e depois `codex plugin add egm@egm` [ref:egm-harnesses]. Abra
+  uma sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com o
+  prefixo, `/egm:egm-bootstrap`, e no Codex ela é escolhida na lista de skills [ref:egm-readme].
+  Esses comandos não fixam commit. Quem precisa de reprodutibilidade clona o repositório no commit
+  fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
+  para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
+  `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
+  antes de atualizar [ref:egm-harnesses]. Para o Copilot CLI há só um adaptador experimental: a
+  própria origem diz que a execução do fluxo e o isolamento dos revisores não foram verificados, e
+  o guia não vale para o Copilot no VS Code nem para o agente na nuvem [ref:egm-copilot]. O Kiro
+  não aparece na tabela de instalação nem na situação de suporte da página de harnesses, e a origem
+  só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
+  ponta a ponta pela instalação do plugin [ref:egm-harnesses].
+limites: |
+  A revisão do EGM exige um harness que crie subagentes e para sem ele
+  [ref:egm-harnesses]. Esta skill só escreve documentação, nunca código, e não faz commit
+  [ref:egm-bootstrap-skill]. Sem ferramenta de subagente ela roda as varreduras no mesmo contexto,
+  em vez de parar; o batedor das varreduras (`goldfish-explorer`) é só de leitura e não escreve
+  nem altera arquivos [ref:egm-bootstrap-skill]. A origem pede que uma pessoa revise a saída, e a skill de contexto `<projeto>-elephant` é opcional
+  e escrita pelo time [ref:egm-getting-started]. A skill está escrita em inglês e lê os modelos de
+  README de `references/templates.md` antes de escrever [ref:egm-bootstrap-skill]; os modelos
+  fixam títulos e estrutura em inglês (Overview, Interface, Invariants, Side Effects,
+  Verification), com a prosa em marcadores a preencher [ref:egm-bootstrap-templates].
+  Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
+  `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
+  declara `disable-model-invocation: true` [ref:egm-bootstrap-skill]. A origem é
+  pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
+  [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
+  da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
+  `skills/egm_bootstrap/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
+  `skills/egm-bootstrap/` [ref:egm-readme].
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-bootstrap-skill, egm-bootstrap-templates, egm-getting-started, egm-releases]

@@ -1,0 +1,165 @@
+conteudo: ferramenta-egm-bootstrap
+verificado_em: '2026-11-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
+    de documento
+  ref: egm-readme
+  localizacao: 'seção ''Install'', primeiro parágrafo: ''Install the complete plugin so its skills can
+    read the reviewer prompts and document standards'''
+  resultado: confirmada
+- texto: 'os comandos de instalação por harness: agy plugin install <url> (Antigravity CLI); claude plugin
+    marketplace add google/elephant-goldfish-model e claude plugin install egm@egm (Claude Code); codex
+    plugin marketplace add google/elephant-goldfish-model e codex plugin add egm@egm (Codex)'
+  ref: egm-harnesses
+  localizacao: seção 'Install', tabela de instalação, linhas Antigravity CLI, Claude Code e Codex
+  resultado: confirmada
+  nota: Os mesmos comandos estão no README, seção 'Install'.
+- texto: 'abrir sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com
+    o prefixo /egm: (/egm:egm-bootstrap), e no Codex é escolhida na lista de skills'
+  ref: egm-readme
+  localizacao: 'seção ''Install'', ''Start a new session after installation''; seção ''Try your first
+    design'', segundo parágrafo (prefixo /egm: e skill picker do Codex)'
+  resultado: confirmada
+- texto: 'a cópia manual documentada é a do Antigravity App e do Antigravity para IDEs: clonar e copiar
+    plugin.json, README.md, LICENSE, skills, agents, resources, docs e assets para ~/.gemini/config/plugins/egm/,
+    apagando a pasta antiga antes de atualizar'
+  ref: egm-harnesses
+  localizacao: subseção 'Antigravity App and Antigravity for IDEs', bloco de comandos e parágrafo anterior
+    ('remove ~/.gemini/config/plugins/egm first when updating')
+  resultado: confirmada
+- texto: para o Copilot CLI há só um adaptador experimental, com execução do fluxo e isolamento dos revisores
+    não verificados pela origem, e o guia não vale para o Copilot no VS Code nem para o agente na nuvem
+  ref: egm-copilot
+  localizacao: 'abertura: ''Experimental adapter for issue #147. Workflow execution and reviewer isolation
+    remain unverified. This guide does not establish support for Copilot in VS Code or the cloud agent.'''
+  resultado: confirmada
+  nota: 'A seção ''Validation and remaining limits'' repete o limite: a descoberta offline no CLI 1.0.82
+    não prova execução da skill, bloqueio de escrita nem isolamento de contexto.'
+- texto: o Kiro não aparece na tabela de instalação nem na situação de suporte; um harness só conta como
+    suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela instalação
+    do plugin
+  ref: egm-harnesses
+  localizacao: seções 'Install' (tabela) e 'Support Status & Contributing Other Harnesses', subseção 'Contributing
+    Support for New Harnesses' ('A harness counts as supported after...')
+  resultado: confirmada
+  nota: 'Conferido também na árvore do commit fixado (API do GitHub, 2026-11-05): nenhum caminho de arquivo
+    cita Kiro, e README, getting_started e harnesses não o mencionam.'
+- texto: a skill gera, de baixo para cima, um README.md por pasta com código (interface, invariantes e
+    efeitos colaterais) e resume as pastas-mãe até a raiz
+  ref: egm-bootstrap-skill
+  localizacao: '''Overview'' (Peanuts e Hay); Step 2, item 3 (poda das pastas sem código); Step 4 (percurso
+    em pós-ordem e propagação aos pais)'
+  resultado: confirmada
+- texto: pede aprovação antes de seguir quando acha mais de 15 subpastas e não faz commit
+  ref: egm-bootstrap-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', itens 2 (VCS Isolation) e 6 (Mandatory Safety Gate);
+    Step 2, item 2'
+  resultado: confirmada
+- texto: README que já existe é corrigido com as notas preservadas, e target_filename (por exemplo EGM.md)
+    evita tocar nele
+  ref: egm-bootstrap-skill
+  localizacao: '''Inputs'', item target_filename; Step 4, item 2, ''Correction & Modification Policy'''
+  resultado: confirmada
+- texto: a skill só escreve documentação, nunca código
+  ref: egm-bootstrap-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', item 1 (No Code Generation)'
+  resultado: confirmada
+- texto: sem ferramenta de subagente a skill roda as varreduras no mesmo contexto, em vez de parar
+  ref: egm-bootstrap-skill
+  localizacao: 'seção ''Delegation'', último parágrafo: ''If your harness has no subagent tool, run the
+    scout steps inline'''
+  resultado: confirmada
+- texto: o batedor das varreduras (goldfish-explorer) é só de leitura e não escreve nem altera arquivos
+  ref: egm-bootstrap-skill
+  localizacao: 'Step 4, item 1 (Scout Registration): ''Use a read-only goldfish-explorer scout'' e, no system_prompt,
+    ''Do not write or modify any files'''
+  resultado: confirmada
+  nota: Substitui, em 2026-11-06, a frase 'a varredura só lê o código, não revisa desenho', que não tinha fonte.
+- texto: a skill está escrita em inglês
+  ref: egm-bootstrap-skill
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
+- texto: 'a skill lê os modelos de README de references/templates.md antes de escrever'
+  ref: egm-bootstrap-skill
+  localizacao: 'seção ''Templates'' (''Before writing any contract file, read the README templates'')'
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06. O SKILL.md não tem instrução de idioma para a saída; a frase ''os README gerados saem em inglês'' saiu do texto.'
+- texto: 'os modelos fixam títulos e estrutura em inglês (Overview, Interface, Invariants, Side Effects, Verification), com a prosa em marcadores a preencher'
+  ref: egm-bootstrap-templates
+  localizacao: 'seções ''Component Package (Peanuts) README Template'', ''Repository Root (Blueprint / Hay) README Template'' e ''Intermediate Blueprint README Template'''
+  resultado: confirmada
+  nota: 'Lido no raw do commit fixado em 2026-11-06; a prosa fica em marcadores entre colchetes, como ''[Prose overview of the component''s architectural role and goals]''.'
+- texto: a origem pede que uma pessoa revise a saída, e a skill de contexto <projeto>-elephant é opcional
+    e escrita pelo time
+  ref: egm-getting-started
+  localizacao: seção 'Bootstrapping Existing Codebases', subseções 'Bootstrapping' ('Humans should still
+    review this output') e 'Project Context Skill (Optional)'
+  resultado: confirmada
+- texto: 'cuidado do caminho: a skill de contexto <projeto>-elephant, opcional no guia da origem, é escrita
+    pelo time'
+  ref: egm-getting-started
+  localizacao: seção 'Bootstrapping Existing Codebases', subseção 'Project Context Skill (Optional)' ('You can
+    create a custom <project>-elephant skill')
+  resultado: confirmada
+  nota: Substitui, em 2026-11-06, a frase sobre AGENTS.md e a skill de contexto 'escrita à mão', que a fonte não
+    sustentava (o guia não fala de AGENTS.md).
+- texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
+    em tempo de execução
+  ref: egm-harnesses
+  localizacao: 'seção ''Install'', parágrafo depois da tabela: ''Install the whole plugin. Skill-only
+    installers that copy skills/ alone break EGM'''
+  resultado: confirmada
+- texto: 'o frontmatter da skill declara disable-model-invocation: true'
+  ref: egm-bootstrap-skill
+  localizacao: frontmatter, linha 4
+  resultado: confirmada
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
+- texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
+    de saída e formato de relatório só ficam estáveis na 1.0
+  ref: egm-releases
+  localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
+    contract for skill names, parameters, output paths, and report formats')
+  resultado: confirmada
+- texto: 'as versões são publicadas pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release'
+  ref: egm-releases
+  localizacao: 'seção ''Versioned releases'' (''Explain breaking changes in release notes'') e ''Prepare a candidate'', passos 3 a 6 (tag anotada, rascunho da release, notas com as mudanças no passo 5 e publicação manual)'
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06. A ausência de CHANGELOG.md saiu do texto, porque a referência não a afirma.'
+- texto: a tag v0.1.0 guarda a skill em skills/egm_bootstrap/, com sublinhado
+  ref: egm-readme-tag-v0-1-0
+  localizacao: README no commit b3a3595 da tag, tabela da seção 'Choose a skill' (linhas 102 a 108) e
+    ícones de 'Try your first design' (linhas 54, 62 e 70)
+  resultado: confirmada
+  nota: Nas linhas da tabela, os links apontam para skills/egm_<nome>/SKILL.md; os comandos do README
+    da tag já aparecem com hífen (/egm-review).
+- texto: a main lida usa skills/egm-bootstrap/, com hífen
+  ref: egm-readme
+  localizacao: tabela da seção 'Choose a skill', link da skill para skills/egm-bootstrap/SKILL.md, no
+    commit fixado 113a3af
+  resultado: confirmada
+- texto: a revisão do EGM exige um harness que crie subagentes e para sem ele
+  ref: egm-harnesses
+  localizacao: seção 'Delegation', parágrafo 'A Goldfish review needs a fresh context. If a harness has
+    no subagent tool, the review skills stop instead of running in the same context'
+  resultado: confirmada
+revisao_adversarial:
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados:
+  - afirmacao: 'limites: ''os modelos de README que ela lê antes de escrever (references/templates.md)
+      estão em inglês, e os README gerados saem em inglês, nesses modelos [ref:egm-bootstrap-skill]'''
+    problema: '[baixo] o SKILL.md não tem instrução de idioma (nenhuma ocorrência de ''English'' ou ''language'');
+      os modelos ficam em references/templates.md, arquivo que não é referência do portal, e fixam títulos
+      e estrutura em inglês (Overview, Interface), com a prosa em marcadores a preencher. ''Os README
+      gerados saem em inglês'' é inferência: a fonte sustenta títulos e estrutura em inglês, não a prosa.'
+    tratamento: 'corrigido: o limites diz que a skill lê os modelos de references/templates.md antes de escrever [ref:egm-bootstrap-skill] e que os modelos fixam títulos e estrutura em inglês, com a prosa em marcadores [ref:egm-bootstrap-templates]; criada a referência egm-bootstrap-templates no commit 113a3af, e a inferência sobre o idioma dos README gerados saiu.'
+  - afirmacao: 'limites: ''Ela não tem CHANGELOG.md: o versionamento está em docs/releases.md e as mudanças,
+      nas notas de cada release [ref:egm-releases]'''
+    problema: '[baixo] o docs/releases.md diz que a versão canônica é a do plugin.json e manda explicar
+      mudanças incompatíveis nas release notes, mas não diz que não há CHANGELOG.md. A ausência é verdadeira
+      na árvore do commit 113a3af (a raiz não tem CHANGELOG.md), mas a referência citada não a sustenta.'
+    tratamento: 'corrigido: a frase sobre a ausência de CHANGELOG.md saiu do limites; o texto diz só o que a fonte diz (as versões saem pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release), com a afirmação refeita contra o raw do commit fixado em 2026-11-06.'

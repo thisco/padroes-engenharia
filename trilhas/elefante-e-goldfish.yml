@@ -1,0 +1,18 @@
+id: elefante-e-goldfish
+titulo: Elefante e Goldfish
+origem: google/elephant-goldfish-model sobre a sdd-lifecycle
+status: avaliar
+sequencia:
+  - {ferramenta: egm-brainstorm, momento: antes-de-escrever, passo: entrevistar}
+  - {ferramenta: egm-draft, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: egm-review, momento: antes-de-escrever, passo: revisar-spec}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: planejar}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: isolar}
+  - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: tdd}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: revisar}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: evidencia}
+  - {ferramenta: sdd-lifecycle, momento: antes-do-merge, passo: pr-e-merge}
+  - {ferramenta: sdd-lifecycle, momento: depois-da-entrega, passo: retro}
+  - {ferramenta: egm-drift-report, momento: depois-da-entrega, passo: continuar}
+bom_quando: "o desenho precisa de decisões tomadas antes do código e o harness do time cria subagentes: o EGM escreve o design doc e o submete a revisores sem o histórico da conversa, e a sdd-lifecycle conduz o plano, o TDD, a revisão do código e a retro."
+cuidado: "o passo decidir fica vazio de propósito, porque o EGM não registra ADR nem glossário; o design doc do EGM e a spec com R<n> da sdd-lifecycle são dois formatos, e o time escolhe um antes de começar. Os relatórios de revisão saem em inglês. O passo revisar usa a sdd-lifecycle, e não o EGM. No continuar, o egm-drift-report varre a pasta inteira de designs, e não só o design da mudança em curso. Está em avaliar: sem caso interno."

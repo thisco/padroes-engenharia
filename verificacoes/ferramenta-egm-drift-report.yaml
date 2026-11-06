@@ -1,0 +1,146 @@
+conteudo: ferramenta-egm-drift-report
+verificado_em: '2026-11-06'
+verificador: agente-curadoria
+afirmacoes:
+- texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
+    de documento
+  ref: egm-readme
+  localizacao: 'seção ''Install'', primeiro parágrafo: ''Install the complete plugin so its skills can
+    read the reviewer prompts and document standards'''
+  resultado: confirmada
+- texto: 'os comandos de instalação por harness: agy plugin install <url> (Antigravity CLI); claude plugin
+    marketplace add google/elephant-goldfish-model e claude plugin install egm@egm (Claude Code); codex
+    plugin marketplace add google/elephant-goldfish-model e codex plugin add egm@egm (Codex)'
+  ref: egm-harnesses
+  localizacao: seção 'Install', tabela de instalação, linhas Antigravity CLI, Claude Code e Codex
+  resultado: confirmada
+  nota: Os mesmos comandos estão no README, seção 'Install'.
+- texto: 'abrir sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com
+    o prefixo /egm: (/egm:egm-drift-report), e no Codex é escolhida na lista de skills'
+  ref: egm-readme
+  localizacao: 'seção ''Install'', ''Start a new session after installation''; seção ''Try your first
+    design'', segundo parágrafo (prefixo /egm: e skill picker do Codex)'
+  resultado: confirmada
+- texto: 'a cópia manual documentada é a do Antigravity App e do Antigravity para IDEs: clonar e copiar
+    plugin.json, README.md, LICENSE, skills, agents, resources, docs e assets para ~/.gemini/config/plugins/egm/,
+    apagando a pasta antiga antes de atualizar'
+  ref: egm-harnesses
+  localizacao: subseção 'Antigravity App and Antigravity for IDEs', bloco de comandos e parágrafo anterior
+    ('remove ~/.gemini/config/plugins/egm first when updating')
+  resultado: confirmada
+- texto: para o Copilot CLI há só um adaptador experimental, com execução do fluxo e isolamento dos revisores
+    não verificados pela origem, e o guia não vale para o Copilot no VS Code nem para o agente na nuvem
+  ref: egm-copilot
+  localizacao: 'abertura: ''Experimental adapter for issue #147. Workflow execution and reviewer isolation
+    remain unverified. This guide does not establish support for Copilot in VS Code or the cloud agent.'''
+  resultado: confirmada
+  nota: 'A seção ''Validation and remaining limits'' repete o limite: a descoberta offline no CLI 1.0.82
+    não prova execução da skill, bloqueio de escrita nem isolamento de contexto.'
+- texto: o Kiro não aparece na tabela de instalação nem na situação de suporte; um harness só conta como
+    suportado depois que egm-brainstorm, egm-draft e egm-review rodam de ponta a ponta pela instalação
+    do plugin
+  ref: egm-harnesses
+  localizacao: seções 'Install' (tabela) e 'Support Status & Contributing Other Harnesses', subseção 'Contributing
+    Support for New Harnesses' ('A harness counts as supported after...')
+  resultado: confirmada
+  nota: 'Conferido também na árvore do commit fixado (API do GitHub, 2026-11-05): nenhum caminho de arquivo
+    cita Kiro, e README, getting_started e harnesses não o mencionam.'
+- texto: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências
+    (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente)
+  ref: egm-drift-report-skill
+  localizacao: 'passos 1 a 3 (''Detect Drift'', ''Filter: Report ONLY the differences'')'
+  resultado: confirmada
+- texto: o relatório vai para {YYYY-MM-DD}_DRIFT_REPORT.md, e a skill pede à pessoa que acrescente ao
+    documento os links que faltam
+  ref: egm-drift-report-skill
+  localizacao: passo 3, 'Locate Source'; passo 4, 'Report'
+  resultado: confirmada
+- texto: a skill compara a pasta de documentos com o estado atual do código, não com um diff
+  ref: egm-drift-report-skill
+  localizacao: 'passo 2 (List Documents) e passo 3, ''Verify: Read the current state of those source files'''
+  resultado: confirmada
+- texto: a skill não usa subagente, lê os documentos um a um e trata como divergência também a lógica
+    que nenhum documento ou README cita
+  ref: egm-drift-report-skill
+  localizacao: 'passo 5 (Guidance: ''Process the files sequentially''; ''If there is some part of the
+    logic that is not referenced in a design or README, this is a reportable drift'')'
+  resultado: confirmada
+  nota: Que ela não usa subagente vem da ausência de seção 'Delegation' e de passo que crie subagente.
+- texto: a skill está escrita em inglês
+  ref: egm-drift-report-skill
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
+- texto: o relatório sai em inglês, no formato fixo da skill, com a frase pronta "No drift detected" para documento
+    sem divergência
+  ref: egm-drift-report-skill
+  localizacao: passo 3, item 'Filter' (output "No drift detected.") e passo 4, 'Strict Format'
+  resultado: confirmada
+- texto: a origem recomenda rodar a skill uma vez por semana e deixa com a pessoa a escolha entre corrigir
+    o documento ou o código
+  ref: egm-getting-started
+  localizacao: 'seção ''Drift Detection'': ''Either update the doc, or the code. Human picks which.''
+    e ''We recommend running this once per week'''
+  resultado: confirmada
+- texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
+    em tempo de execução
+  ref: egm-harnesses
+  localizacao: 'seção ''Install'', parágrafo depois da tabela: ''Install the whole plugin. Skill-only
+    installers that copy skills/ alone break EGM'''
+  resultado: confirmada
+- texto: 'o frontmatter da skill declara disable-model-invocation: true'
+  ref: egm-drift-report-skill
+  localizacao: frontmatter, linha 4
+  resultado: confirmada
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
+- texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
+    de saída e formato de relatório só ficam estáveis na 1.0
+  ref: egm-releases
+  localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
+    contract for skill names, parameters, output paths, and report formats')
+  resultado: confirmada
+- texto: 'as versões são publicadas pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release'
+  ref: egm-releases
+  localizacao: 'seção ''Versioned releases'' (''Explain breaking changes in release notes'') e ''Prepare a candidate'', passos 3 a 6 (tag anotada, rascunho da release, notas com as mudanças no passo 5 e publicação manual)'
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06. A ausência de CHANGELOG.md saiu do texto, porque a referência não a afirma.'
+- texto: a tag v0.1.0 guarda a skill em skills/egm_drift_report/, com sublinhado
+  ref: egm-readme-tag-v0-1-0
+  localizacao: README no commit b3a3595 da tag, tabela da seção 'Choose a skill' (linhas 102 a 108) e
+    ícones de 'Try your first design' (linhas 54, 62 e 70)
+  resultado: confirmada
+  nota: Nas linhas da tabela, os links apontam para skills/egm_<nome>/SKILL.md; os comandos do README
+    da tag já aparecem com hífen (/egm-review).
+- texto: a main lida usa skills/egm-drift-report/, com hífen
+  ref: egm-readme
+  localizacao: tabela da seção 'Choose a skill', link da skill para skills/egm-drift-report/SKILL.md,
+    no commit fixado 113a3af
+  resultado: confirmada
+- texto: a revisão do EGM exige um harness que crie subagentes e para sem ele
+  ref: egm-harnesses
+  localizacao: seção 'Delegation', parágrafo 'A Goldfish review needs a fresh context. If a harness has
+    no subagent tool, the review skills stop instead of running in the same context'
+  resultado: confirmada
+- texto: 'caminho continuar, bom_quando: a origem recomenda a skill como ritual semanal, de preferência na rotação de manutenção quando o time tem uma'
+  ref: egm-getting-started
+  localizacao: 'seção ''Drift Detection'': ''We recommend running this once per week. If you have a regular maintenance rotation, incorporating this as a weekly ritual is useful.'''
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06. O ''de preferência'' traduz o ''is useful'' da fonte.'
+revisao_adversarial:
+  revisor: revisor-independente
+  data: '2026-11-06'
+  achados:
+  - afirmacao: 'caminho continuar, bom_quando: ''a cada semana ou numa rotação de manutenção'''
+    problema: '[baixo] o docs/getting_started.md (seção ''Drift Detection'') recomenda rodar uma vez por
+      semana e, para quem tem rotação de manutenção, incorporar a skill como ritual semanal dessa rotação
+      (''incorporating this as a weekly ritual is useful''). A rotação não é alternativa à cadência semanal,
+      como o ''ou'' sugere.'
+    tratamento: 'corrigido: o bom_quando diz ''como ritual semanal, de preferência na rotação de manutenção se o time tem uma''; afirmação registrada contra a seção Drift Detection do raw em 2026-11-06.'
+  - afirmacao: 'limites: ''Ela não tem CHANGELOG.md: o versionamento está em docs/releases.md e as mudanças,
+      nas notas de cada release [ref:egm-releases]'''
+    problema: '[baixo] o docs/releases.md diz que a versão canônica é a do plugin.json e manda explicar
+      mudanças incompatíveis nas release notes, mas não diz que não há CHANGELOG.md. A ausência é verdadeira
+      na árvore do commit 113a3af (a raiz não tem CHANGELOG.md), mas a referência citada não a sustenta.'
+    tratamento: 'corrigido: a frase sobre a ausência de CHANGELOG.md saiu do limites; o texto diz só o que a fonte diz (as versões saem pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release), com a afirmação refeita contra o raw do commit fixado em 2026-11-06.'

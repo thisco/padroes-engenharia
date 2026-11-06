@@ -1,0 +1,53 @@
+id: egm-brainstorm
+titulo: egm-brainstorm
+categoria: skill
+colecao: elephant-goldfish-model
+status: avaliar
+versao_minima: "0.1.0"
+dono: engenharia
+praticas: [P1-12]
+receitas: []
+caminhos:
+  - momento: antes-de-escrever
+    passo: entrevistar
+    papel: caminho
+    bom_quando: "a ideia ainda está crua e precisa de decisões antes do código: o agente pergunta em vários turnos, sem alternativas prontas, até o problema e os limites ficarem claros, e só depois que você confirma a hipótese seis revisores sem o histórico da conversa a atacam por lentes como YAGNI, custo, migração e operação."
+    cuidado: "o resultado é o concepts_brief.md, na pasta de trabalho ou na pasta de artefatos do harness, e não a spec; as alternativas descartadas precisam ficar na seção Alternatives Weighed, porque a egm-draft não tem outra fonte para elas. Sem ferramenta de subagente, a skill para."
+como_instalar: |
+  Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
+  skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
+  CLI: `agy plugin install https://github.com/google/elephant-goldfish-model`. Claude Code:
+  `claude plugin marketplace add google/elephant-goldfish-model` e depois
+  `claude plugin install egm@egm`. Codex: `codex plugin marketplace add
+  google/elephant-goldfish-model` e depois `codex plugin add egm@egm` [ref:egm-harnesses]. Abra
+  uma sessão nova depois de instalar; no Antigravity CLI e no Claude Code a skill se chama com o
+  prefixo, `/egm:egm-brainstorm`, e no Codex ela é escolhida na lista de skills [ref:egm-readme].
+  Esses comandos não fixam commit. Quem precisa de reprodutibilidade clona o repositório no commit
+  fixado (113a3af); a origem só documenta a cópia manual para o Antigravity App e o Antigravity
+  para IDEs, com o pacote inteiro (`plugin.json`, `README.md`, `LICENSE`, `skills`, `agents`,
+  `resources`, `docs` e `assets`) em `~/.gemini/config/plugins/egm/`, apagando a pasta antiga
+  antes de atualizar [ref:egm-harnesses]. Para o Copilot CLI há só um adaptador experimental: a
+  própria origem diz que a execução do fluxo e o isolamento dos revisores não foram verificados, e
+  o guia não vale para o Copilot no VS Code nem para o agente na nuvem [ref:egm-copilot]. O Kiro
+  não aparece na tabela de instalação nem na situação de suporte da página de harnesses, e a origem
+  só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
+  ponta a ponta pela instalação do plugin [ref:egm-harnesses].
+limites: |
+  A skill exige um harness que crie subagentes com contexto novo: sem ferramenta de
+  subagente ela para e avisa que revisar no mesmo contexto não é revisão Goldfish
+  [ref:egm-brainstorm-skill]. Ela não chama os revisores antes de você confirmar a hipótese, e o
+  brief vai para arquivo, não para o chat [ref:egm-brainstorm-skill]. Skill, lentes e brief são em
+  inglês simples, com proibição de adjetivos de elogio e de pedidos de desculpa
+  [ref:egm-brainstorm-skill]. O Antigravity IDE avulso (standalone) não expõe a ferramenta de subagente
+  e não serve para esta skill [ref:egm-harnesses].
+  Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
+  `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
+  declara `disable-model-invocation: true` [ref:egm-brainstorm-skill]. A origem é
+  pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
+  [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
+  da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
+  `skills/egm_brainstorm/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
+  `skills/egm-brainstorm/` [ref:egm-readme].
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-brainstorm-skill, egm-releases]

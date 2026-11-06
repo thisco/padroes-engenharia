@@ -158,6 +158,12 @@ def test_componentes_do_repositorio_real():
             "2026.10.15",
             "8f814f49002ff824e8a9ba43cf96112dc7f5948d",
         ),
+        "elephant-goldfish-model": Componente(
+            "elephant-goldfish-model",
+            "https://github.com/google/elephant-goldfish-model",
+            "0.1.0",
+            "113a3afc44e8f4f54722d7150d5701f65cc8ef7f",
+        ),
         "gateway-poc": Componente(
             "gateway-poc",
             "https://github.com/thisco/gateway-poc",
@@ -179,8 +185,8 @@ def test_componentes_do_repositorio_real():
         "sdd-lifecycle": Componente(
             "sdd-lifecycle",
             "https://github.com/thisco/sdd-lifecycle",
-            "3.0.0",
-            "5f6e9ad879f7abd11267547fb3f527e876b60140",
+            "3.1.0",
+            "a789fc3e9e2e82460e8d201bf3fa46568796d66a",
         ),
         "sdd-scaffold": Componente(
             "sdd-scaffold",

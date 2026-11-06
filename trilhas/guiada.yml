@@ -5,6 +5,7 @@ status: adotar
 casos: [origem-do-modelo]
 sequencia:
   - {ferramenta: sdd-lifecycle, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: sdd-lifecycle, momento: antes-de-escrever, passo: revisar-spec}
   - {ferramenta: sdd-lifecycle, momento: antes-de-escrever, passo: decidir}
   - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: planejar}
   - {ferramenta: sdd-lifecycle, momento: enquanto-escreve, passo: isolar}

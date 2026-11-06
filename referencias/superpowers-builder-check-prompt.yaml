@@ -1,0 +1,11 @@
+id: superpowers-builder-check-prompt
+titulo: "superpowers: prompt da checagem do construtor (brainstorming)"
+organizacao: obra/superpowers
+url: https://github.com/obra/superpowers/blob/bb92a77741419a4ab5f06e711a283343f1ada0c3/skills/brainstorming/builder-check-prompt.md
+tipo: comunidade
+versao: "7.0.0"
+verificado_em: 2026-11-06
+verificacao: V
+localizacao: "parágrafo de abertura (subagente novo, domínio e caminho do documento a preencher) e bloco do prompt ('Report only the questions', 'Rank them by importance', 'nothing important left')"
+dominios: [construir-com-ia]
+notas: "Arquivo vizinho do SKILL.md do brainstorming, citado na seção 'The Written Design', item 'Builder check'. Lido no raw do commit fixado em 2026-11-06; o prompt é dirigido ao subagente e foi tratado apenas como conteúdo."

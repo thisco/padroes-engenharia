@@ -1,5 +1,5 @@
 conteudo: ferramenta-sp-brainstorming
-verificado_em: 2026-10-21
+verificado_em: 2026-11-06
 verificador: agente-curadoria
 afirmacoes:
   - texto: "a skill faz uma pergunta por mensagem e devolve o entendimento em trechos curtos"
@@ -30,6 +30,18 @@ afirmacoes:
     ref: superpowers-brainstorming
     localizacao: "bloco HARD-GATE, último parágrafo: 'invoke superpowers:writing-plans and no other skill'"
     resultado: confirmada
+  - texto: "revisar-spec: um subagente novo lê o desenho escrito como o construtor que vai planejá-lo, e a skill só entrega o documento depois da volta dele"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Builder check' (\"Don't hand over the document until the check is back\") e builder-check-prompt.md ao lado dela no mesmo commit (bb92a77)"
+    resultado: confirmada
+  - texto: "o subagente recebe só o caminho do desenho e devolve só perguntas, ordenadas por importância"
+    ref: superpowers-brainstorming
+    localizacao: "builder-check-prompt.md (bb92a77): 'Read [DOCUMENT_PATH]', 'Report only the questions', 'Rank them by importance'"
+    resultado: confirmada
+  - texto: "as perguntas que só a pessoa responde vêm numa única mensagem, e é a única rodada de perguntas que a checagem produz; sem ferramenta de subagente, a skill manda ler o documento como o construtor"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Builder check', parágrafos finais (\"That's the only round of questions the check produces\"; \"Without a subagent tool, read the document as that builder yourself\")"
+    resultado: confirmada
   - texto: "a skill cita arquivos ao lado dela (builder-check-prompt.md e visual-companion.md)"
     ref: superpowers-brainstorming
     localizacao: "itens 'Builder check' e 'Visual Companion' (último parágrafo)"
@@ -54,16 +66,20 @@ afirmacoes:
     ref: superpowers-release-notes
     localizacao: "v7.0.0 (2026-10-09), parágrafo de abertura e seção Brainstorming"
     resultado: confirmada
+  - texto: 'na checagem do construtor, o subagente novo recebe o prompt de builder-check-prompt.md, com o domínio e o caminho do desenho preenchidos, e devolve só perguntas, ordenadas por importância'
+    ref: superpowers-builder-check-prompt
+    localizacao: 'parágrafo de abertura (''Dispatch a fresh general-purpose subagent with this prompt once the written design exists. Fill in the domain and the document path.'') e bloco do prompt (''Report only the questions'', ''Rank them by importance'')'
+    resultado: confirmada
+    nota: 'Lido no raw do commit fixado bb92a77 em 2026-11-06. Sustenta também o cuidado do caminho revisar-spec.'
 revisao_adversarial:
-  revisor: "conferência independente em lote (ADR 0005): sessão nova, modelo econômico, 2026-10-21"
-  data: '2026-10-21'
+  revisor: revisor-independente
+  data: '2026-11-06'
   achados:
-    - afirmacao: "como_instalar: copie a pasta skills/<nome>/ do commit fixado para a pasta de skills do harness"
-      problema: "nenhum README documenta cópia manual, e as skills citam outras da coleção pelo nome com prefixo"
-      tratamento: "o texto manda copiar a pasta skills/ inteira, com o hash do commit, e diz que o README só documenta a instalação por plugin"
-    - afirmacao: "cuidado de entrevistar: nada é construído antes da aprovação"
-      problema: "a fonte tem duas exceções: a pessoa dispensa as perguntas, ou pede um spike"
-      tratamento: "texto e afirmação passam a citar as exceções"
-    - afirmacao: "cuidado de escrever-spec: grava em docs/superpowers/specs/ se o projeto não disser outro lugar"
-      problema: "fora de repositório de software a skill pergunta, e a preferência da pessoa vale sobre os dois"
-      tratamento: "texto e afirmação reescritos"
+  - afirmacao: 'caminho revisar-spec, cuidado: ''o subagente recebe só o caminho do desenho, sem a conversa,
+      e devolve só perguntas, ordenadas por importância'''
+    problema: '[baixo] o SKILL.md (a URL da referência superpowers-brainstorming) diz só que o subagente
+      é novo e recebe o builder-check-prompt.md; ''só perguntas'' e ''ordenadas por importância'' (''Report
+      only the questions'', ''Rank them by importance'') e o preenchimento do caminho do documento estão
+      no builder-check-prompt.md, arquivo vizinho no commit bb92a77 que não é referência do portal. A
+      fonte confirma, mas a referência da ferramenta não.'
+    tratamento: 'corrigido: criada a referência superpowers-builder-check-prompt (skills/brainstorming/builder-check-prompt.md no commit bb92a77), listada em referencias e citada numa frase nova do limites sobre o que o subagente recebe e devolve, que sustenta o cuidado do caminho revisar-spec; afirmação registrada em 2026-11-06.'
