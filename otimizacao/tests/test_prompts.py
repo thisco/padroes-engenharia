@@ -17,7 +17,7 @@ status: experimentar
 aplica: []
 referencias: [ref-forte]
 relacionadas: []
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-01
 revisar_ate: 2027-04-01
 ---

@@ -7,7 +7,7 @@
 ## Contexto
 
 O dono pediu, em 2026-10-06, que o portal publicado, o motor, os testes e o deck deixem de citar
-NUJOR, NUARQ e Serpro. Ficam como estão, por serem histórico, todos os arquivos de `docs/`
+os nomes da organização. Ficam como estão, por serem histórico, todos os arquivos de `docs/`
 (specs, planos, ADRs, pesquisas, mockups).
 
 Decisão: `organizacao` em `portal/config.yml` passa a string vazia, e não é removido, porque
@@ -22,10 +22,10 @@ Decisão: `organizacao` em `portal/config.yml` passa a string vazia, e não é r
    `tests/unidade/test_renderizar.py`, `tests/unidade/test_saidas_llms.py`,
    `tests/integracao/test_cli_gerar.py`, `tests/integracao/test_validacao.py`,
    `tests/unidade/test_apresentacoes.py`.
-2. **Conteúdo:** `dono: nuarq` vira `dono: engenharia` em práticas, ferramentas, starters etc.;
+2. **Conteúdo:** `dono: engenharia` vira `dono: engenharia` em práticas, ferramentas, starters etc.;
    textos com os nomes reescritos sem eles; `verificacoes/gateway.yaml`. Sem tocar em
    `execucoes`.
-3. **CODEOWNERS:** `@nuarq` vira `@engenharia` (provisório).
+3. **CODEOWNERS:** `@engenharia` vira `@engenharia` (provisório).
 4. **Deck:** `apresentacoes/harness-sdd/` (capa, título, público, roteiro, README, comparativo,
    verificação).
 5. **Vendor:** `portal/vendor/fonts/LICENCAS.md` e `portal/vendor/reveal/LICENCAS.md`.
@@ -35,7 +35,7 @@ Decisão: `organizacao` em `portal/config.yml` passa a string vazia, e não é r
 - Novo teste em `tests/unidade/test_saidas_llms.py`: com `organizacao` vazia, o `llms.txt` e o
   README não têm "de ," nem " · " solto.
 - Novo teste em `tests/unidade/test_renderizar.py`: a marca do cabeçalho não termina em " · ".
-- Verificação final: `grep -rni "nujor\|nuarq\|serpro"` fora de `docs/`, `public/` e
+- Verificação final: `grep -rni "<nomes da organização>"` fora de `docs/`, `public/` e
   `graphify-out/` não acha nada além de arquivos de outro agente.
 
 ## Impacto Arquitetural
@@ -50,5 +50,5 @@ Testes novos (`test_marca_do_cabecalho_sem_organizacao_nao_deixa_separador_solto
 `test_resumo_sem_organizacao_nao_deixa_de_virgula_e_com_organizacao_cita`): vermelhos antes
 (" · " e "de ," soltos), verdes depois. Suíte: 635 passed e 2 falhas, ambas `R-PROMPT` de
 P3-01 e P3-02, em andamento por outro agente. `ruff check` e `format --check` em `portal` e
-`tests`: limpos. `gerar.py --saida public`: ok. O grep final só acha `dono: nuarq` em P3-01 e
+`tests`: limpos. `gerar.py --saida public`: ok. O grep final só acha `dono: engenharia` em P3-01 e
 P3-02, de outro agente.

@@ -314,3 +314,13 @@ def test_limpeza_nao_segue_symlink_para_fora_da_saida(tmp_path):
     (saida / "link").symlink_to(fora, target_is_directory=True)
     assert cli.remover_pastas_vazias_numeradas(saida) == 0
     assert (fora / "vitima 2").is_dir()
+
+
+def test_saida_public_e_aceita_mesmo_quando_a_pasta_ainda_nao_existe(tmp_path):
+    """Num checkout limpo (CI) `public/` não existe: `--saida public` tem de servir mesmo assim."""
+    raiz = tmp_path / "repo"
+    raiz.mkdir()
+    assert not (raiz / "public").exists()
+    assert cli.problema_da_saida(raiz, raiz / "public", previa=False) is None
+    assert cli.problema_da_saida(raiz, raiz / "public" / "sub", previa=False) is None
+    assert cli.problema_da_saida(raiz, raiz / "outra", previa=False) is not None

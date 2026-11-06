@@ -11,7 +11,7 @@
 
 ## Motivação
 
-O deck "Harness, SDD e o repositório como fonte de verdade" (NUJOR, 2026-09-29) e as quatro
+O deck "Harness, SDD e o repositório como fonte de verdade" (kit de origem, 2026-09-29) e as quatro
 páginas que o acompanham explicam, em formato de apresentação, o que o portal explica em
 prosa: os modelos de SDD, a anatomia dos harnesses, o scaffold e as garantias dele. O dono quer
 publicá-los no portal, no grupo Entender, mantendo o desenho e atualizando o conteúdo. Hoje
@@ -70,7 +70,7 @@ Apresentações e o roteiro (não os slides).
 ## Não-objetivos
 
 - Converter os slides em páginas do portal. O deck fica como está, em reveal.js.
-- Publicar outras apresentações do acervo. Só o deck do NUJOR entra agora; o mecanismo serve
+- Publicar outras apresentações do acervo. Só o deck de origem entra agora; o mecanismo serve
   às próximas.
 - Mudar o tema do portal. O `tema.css` do deck é dele.
 

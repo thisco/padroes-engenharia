@@ -513,7 +513,7 @@ def ler_contrato(dados: bytes, caminho: str) -> dict:
         else:
             doc = ler_yaml(texto)
     except RecursionError as erro:
-        raise ContratoInvalido("aninhamento fundo demais") from erro
+        raise Indeterminado(f"{sanear(caminho, 200)}: aninhamento fundo demais") from erro
     except ContratoInvalido as erro:
         raise Indeterminado(f"{sanear(caminho, 200)}: {erro}") from erro
     except Indeterminado as erro:

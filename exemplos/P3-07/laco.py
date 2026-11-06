@@ -1,4 +1,5 @@
 """Laço do agente com interruptor, tetos de passos e custo, e traço por execução (P3-07)."""
+
 from opentelemetry import trace
 
 tracer = trace.get_tracer("agente-triagem")
@@ -12,9 +13,15 @@ class Interrompido(Exception):
 
 def executar(tarefa_id, tipo, entrada, modelo, ferramentas, interruptor, preco, ao_interromper):
     with tracer.start_as_current_span(f"invoke_agent {AGENTE}") as span:
-        span.set_attributes({"gen_ai.operation.name": "invoke_agent", "gen_ai.agent.name": AGENTE,
-                             "gen_ai.conversation.id": tarefa_id, "agente.config_versao": VERSAO,
-                             "tarefa.tipo": tipo})
+        span.set_attributes(
+            {
+                "gen_ai.operation.name": "invoke_agent",
+                "gen_ai.agent.name": AGENTE,
+                "gen_ai.conversation.id": tarefa_id,
+                "agente.config_versao": VERSAO,
+                "tarefa.tipo": tipo,
+            }
+        )
         historico, custo, entrada_tok, saida_tok = [entrada], 0.0, 0, 0
         try:
             for _ in range(MAX_PASSOS):
@@ -30,8 +37,12 @@ def executar(tarefa_id, tipo, entrada, modelo, ferramentas, interruptor, preco, 
                     span.set_attribute("tarefa.resultado", "sucesso")
                     return passo.resultado
                 with tracer.start_as_current_span(f"execute_tool {passo.ferramenta}") as ferramenta:
-                    ferramenta.set_attributes({"gen_ai.operation.name": "execute_tool",
-                                               "gen_ai.tool.name": passo.ferramenta})
+                    ferramenta.set_attributes(
+                        {
+                            "gen_ai.operation.name": "execute_tool",
+                            "gen_ai.tool.name": passo.ferramenta,
+                        }
+                    )
                     historico.append(ferramentas[passo.ferramenta](**passo.argumentos))
             raise Interrompido("teto-de-passos")
         except Interrompido as motivo:
@@ -43,6 +54,10 @@ def executar(tarefa_id, tipo, entrada, modelo, ferramentas, interruptor, preco, 
             ao_interromper(tarefa_id, historico)
             raise
         finally:
-            span.set_attributes({"gen_ai.usage.input_tokens": entrada_tok,
-                                 "gen_ai.usage.output_tokens": saida_tok,
-                                 "tarefa.custo_usd": custo})
+            span.set_attributes(
+                {
+                    "gen_ai.usage.input_tokens": entrada_tok,
+                    "gen_ai.usage.output_tokens": saida_tok,
+                    "tarefa.custo_usd": custo,
+                }
+            )

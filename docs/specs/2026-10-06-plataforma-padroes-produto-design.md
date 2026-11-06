@@ -14,9 +14,9 @@
 ## 1. Problema e oportunidade
 
 A spec irmã entrega um motor que compila práticas em hooks, lints e grafo, e um CLI que instala
-isso em projetos do Serpro. Tudo nela funciona offline, com o catálogo viajando dentro do pacote.
+isso em projetos da organização. Tudo nela funciona offline, com o catálogo viajando dentro do pacote.
 Isso é correto para enforcement, mas deixa três coisas na mesa quando se olha o conjunto como
-produto para fora do Serpro:
+produto para fora da organização:
 
 1. **Conteúdo preso à release do cliente.** Corrigir uma prática exige nova release do pacote e
    `padroes atualizar` em cada projeto. O corpo das práticas, o roteamento e os exemplos
@@ -40,7 +40,7 @@ organização, serviço MCP remoto com opção self-hosted, publicação nos mar
 harnesses, telemetria com consentimento e um modelo comercial decidido com evidência.
 
 Público: times de plataforma e arquitetura de organizações que usam agentes de código e querem
-padrões próprios instalados no harness; o Serpro é o primeiro tenant e o catálogo de referência.
+padrões próprios instalados no harness; a organização é o primeiro tenant e o catálogo de referência.
 
 ## 3. Decisões
 
@@ -59,7 +59,7 @@ padrões próprios instalados no harness; o Serpro é o primeiro tenant e o cat�
 ## 4. Arquitetura
 
 ```
-padroes-motor (Apache-2.0)            padroes-catalogo-serpro (licença §9)       padroes-catalogo-<outra-org>
+padroes-motor (Apache-2.0)            padroes-catalogo-origem (licença §9)       padroes-catalogo-<outra-org>
   gerador · compilador · adaptadores    praticas/ referencias/ verificacoes/        idem, no mesmo esquema
   CLI padroes · runtime de hook         skills/ constituicao/ espinha.yml
   esquemas/ (contrato dos catálogos)    componentes.yml: requires_motor: ">=1.0,<2"
@@ -72,7 +72,7 @@ padroes-motor (Apache-2.0)            padroes-catalogo-serpro (licença §9)    
                                                                             autenticação por chave de tenant
                                                                             self-hosted por compose
 projeto do cliente
-  padroes instalar --catalogo serpro@1.3.0 [--catalogo minha-org@0.4.0] [--mcp remoto https://...]
+  padroes instalar --catalogo origem@1.3.0 [--catalogo minha-org@0.4.0] [--mcp remoto https://...]
   hooks e núcleo locais (sempre) · MCP local (padrão) ou remoto (opcional) · lockfile com os dois catálogos
 ```
 
@@ -86,7 +86,7 @@ projeto do cliente
 | Lockfile | `padroes.lock.json` com lista de catálogos, versões, origens, sha256 | CLI, `doctor`, CI do cliente |
 
 Um projeto pode instalar **mais de um catálogo**. Conflito de ID entre catálogos reprova na
-instalação; por isso o prefixo de ID ganha namespace opcional (`serpro:DAD-01`) quando há dois
+instalação; por isso o prefixo de ID ganha namespace opcional (`origem:DAD-01`) quando há dois
 catálogos, e fica sem namespace quando há um só, para não quebrar o que a spec irmã entrega.
 
 ## 5. Serviço MCP remoto
@@ -197,8 +197,8 @@ não foi verificado em fonte primária; o marketplace próprio é o caminho gara
 
 | Item | Hoje | Decisão proposta | Quando |
 |---|---|---|---|
-| Motor | código no monorepo do Serpro | Apache-2.0 no repositório `padroes-motor` | P1 |
-| Catálogo Serpro | conteúdo com curadoria e referências | CC-BY-4.0 para o conteúdo publicado, ou interno se a instituição preferir; decisão da instituição, não desta spec | P1 |
+| Motor | código no monorepo da organização | Apache-2.0 no repositório `padroes-motor` | P1 |
+| Catálogo de origem | conteúdo com curadoria e referências | CC-BY-4.0 para o conteúdo publicado, ou interno se a instituição preferir; decisão da instituição, não desta spec | P1 |
 | `sdd-scaffold`, `sdd-lifecycle` | MIT, conta pessoal `thisco` | transferir para a organização do produto ou absorver no motor, conforme a aposentadoria do scaffold decidida na F6 da spec irmã | P1 |
 | Nome e marca | `padroes` é provisório | verificar disponibilidade de nome, domínio e PyPI antes de publicar | P1 |
 
@@ -254,7 +254,7 @@ A avaliação com e sem ganha um laço de **otimização reflexiva por release**
   P2 e registrados em ADR.
 - **Diagrama e manifesto:** o diagrama do §4 passa a arquivo versionado em `padroes-servico/docs/`
   e é atualizado a cada fase.
-- **Repositórios:** três novos, com o monorepo atual migrando para `padroes-catalogo-serpro` e o
+- **Repositórios:** três novos, com o monorepo atual migrando para `padroes-catalogo-origem` e o
   código do gerador para `padroes-motor`, preservando histórico.
 
 ## 14. Requisitos
@@ -270,7 +270,7 @@ A avaliação com e sem ganha um laço de **otimização reflexiva por release**
 - **PR7.** Os canais do §7 estão publicados, inclusive o plugin do Claude Code com marketplace
   próprio.
 - **PR8.** Telemetria desligada por padrão, lista fechada de eventos, política publicada.
-- **PR9.** Eval com e sem para toda skill e toda prática `bloqueia` do catálogo Serpro, como
+- **PR9.** Eval com e sem para toda skill e toda prática `bloqueia` do catálogo de origem, como
   aviso.
 - **PR10.** Nenhuma regressão nos critérios de aceite da spec irmã.
 
@@ -278,7 +278,7 @@ A avaliação com e sem ganha um laço de **otimização reflexiva por release**
 
 1. Uma organização fictícia de teste cria um catálogo com três práticas a partir do esquema,
    gera o pacote com o motor publicado no PyPI e o instala num projeto ao lado do catálogo
-   Serpro, sem conflito.
+   a organização, sem conflito.
 2. `padroes instalar --mcp remoto` num projeto real; em sessão nos quatro harnesses, o agente
    chama `buscar_praticas` e recebe ponteiros dentro do `token_budget`; com a rede desligada, o
    hook de DAD-01 continua negando a edição.
@@ -289,7 +289,7 @@ A avaliação com e sem ganha um laço de **otimização reflexiva por release**
    outro (teste negativo em CI).
 6. Com telemetria desligada, uma captura de rede da sessão mostra só as chamadas ao MCP
    configurado; com telemetria ligada, só os eventos do §8.
-7. O painel mostra as células mais consultadas do tenant Serpro em dados de pelo menos duas
+7. O painel mostra as células mais consultadas do tenant de origem em dados de pelo menos duas
    semanas de uso real.
 
 ## 16. Fases
@@ -299,7 +299,7 @@ spec irmã.
 
 | Fase | Entrega | Critério de saída |
 |---|---|---|
-| **P1 · Separação e licença** | três repositórios com histórico preservado, contratos do §4 com JSON Schema, `requires_motor`, Apache-2.0 no motor, decisão de licença do catálogo registrada, nome e PyPI reservados, destino de `sdd-scaffold` e `sdd-lifecycle` | PR1, PR2; CI verde nos três repositórios; o CLI instala o catálogo Serpro a partir do novo repositório |
+| **P1 · Separação e licença** | três repositórios com histórico preservado, contratos do §4 com JSON Schema, `requires_motor`, Apache-2.0 no motor, decisão de licença do catálogo registrada, nome e PyPI reservados, destino de `sdd-scaffold` e `sdd-lifecycle` | PR1, PR2; CI verde nos três repositórios; o CLI instala o catálogo de origem a partir do novo repositório |
 | **P2 · Serviço MCP remoto e self-hosted** | adaptador sobre graphify HTTP com as três ferramentas, autenticação por tenant, versão fixada por chamada, `compose.yml`, página de instalação, `--mcp remoto` no CLI para os quatro harnesses, transporte remoto do Codex confirmado | PR3, PR4, PR5; critérios 2, 3 e 5 |
 | **P3 · Publicação nos marketplaces** | `padroes-plugins` com o **plugin do Claude Code** (marketplace próprio, `.mcp.json` remoto, skills, `SessionStart`), marketplace do Codex, Power do Kiro, plugin do Antigravity, `.well-known/skills`, PyPI | PR7; critérios 1 e 4; pedido de listagem nos diretórios oficiais enviado onde houver processo |
 | **P4 · Telemetria e painel** | opt-in no CLI, eventos agregados, política de privacidade, painel do tenant, decisão sobre servidor próprio (§5.3) com medição de latência | PR8; critérios 6 e 7 |
@@ -318,12 +318,12 @@ spec irmã.
 
 | Risco ou pendência | Mitigação ou dono |
 |---|---|
-| Titularidade e licença do conteúdo do Serpro | decisão institucional na P1; a arquitetura funciona com catálogo interno |
+| Titularidade e licença do conteúdo da organização | decisão institucional na P1; a arquitetura funciona com catálogo interno |
 | graphify em HTTP multi-tenant não escalar | adaptador fino e gatilhos de troca definidos (§5.3) |
 | Transporte MCP remoto no Codex não confirmado em fonte primária | confirmar na P2; fallback é o MCP local |
 | Marketplaces oficiais sem processo público de submissão | marketplace próprio em cada harness é o caminho garantido; listagem oficial é meta, não critério |
 | Dois catálogos com IDs iguais | namespace opcional de ID (§4) e reprovação na instalação |
-| Telemetria opt-in gera poucos dados para a P5 | o tenant Serpro liga a telemetria no próprio uso; self-hosted do Serpro fornece o painel interno |
+| Telemetria opt-in gera poucos dados para a P5 | o tenant de origem liga a telemetria no próprio uso; self-hosted da organização fornece o painel interno |
 | Custo de manter três repositórios e contratos públicos | SemVer, JSON Schema e testes de contrato em CI dos três |
 
 ## 19. Benchmark de produtos

@@ -552,7 +552,7 @@ cd "$TESTE/ci" && gitlab-ci-local --file "$TESTE/sonda.gitlab-ci.yml" sonda-git;
 Três hashes e `saida=0`: caminho A. Falhou: repita com `--force-shell-executor`; passou, use a
 opção em todos os comandos e registre; não passou, caminho B.
 
-**B, pipeline real:** projeto de teste privado num GitLab indicado pelo dono (o do Serpro, se a
+**B, pipeline real:** projeto de teste privado num GitLab indicado pelo dono (o da organização, se a
 pendência 1 da M17 já estiver resolvida), runner Docker; `git push` das branches com
 `-o merge_request.create -o merge_request.target=main`; salve o log bruto de cada job.
 
@@ -851,7 +851,7 @@ receitas: [ligar-ci-gitlab-travas]
 exemplos: [exemplos/DAD-01/gitlab-ci.yml]
 referencias: [migrations-reversiveis, flyway-validate, flyway-versionadas, fowler-evodb, sdd-scaffold-verificar-pr, alembic-tutorial, alembic-batch]
 relacionadas: [P1-01]
-dono: nuarq
+dono: engenharia
 revisado_em: 2026-10-05
 revisar_ate: 2027-04-05
 ---
@@ -1100,7 +1100,7 @@ git commit -m "feat(conteudo): DAD-01 no modelo v1.1, com o job do GitLab execut
 ### Tarefa M6: P2-01 reescrita no modelo v1.1, com o gateway de teste executado
 
 Responde ao achado I10 da revisão de conteúdo ("peça uma chave virtual" sem dizer a quem, como e
-com que variável). O exemplo reduz a PoC (`serpro-cloud-ia-governance/poc/seed-demo.sh` e
+com que variável). O exemplo reduz a PoC (`governanca-de-ia-na-nuvem/poc/seed-demo.sh` e
 `poc/gateway/config.yaml`) ao mínimo: LiteLLM, o banco das chaves e dois modelos simulados
 (`mock_response`); nenhum provedor real é chamado.
 
@@ -1211,7 +1211,7 @@ engenharia. O modelo do catálogo do gateway que ela vai usar é {modelo do cat�
   app.py` imprime a resposta simulada.
 
 - [x] **Passo 5: Ferramenta, fontes e registro.** `ferramentas/litellm.yml`: `categoria:
-  gateway`, `status: experimentar` (o gateway do Serpro ainda é PoC), `versao_minima` = tag
+  gateway`, `status: experimentar` (o gateway da organização ainda é PoC), `versao_minima` = tag
   executada, `como_instalar` (o compose e o config do exemplo [ref:litellm-proxy-docker]; chaves
   pedem o banco em `DATABASE_URL` [ref:litellm-virtual-keys]), `limites` (o gateway de teste só
   tem modelos simulados; a chave restringe modelo e orçamento, não inspeciona conteúdo — dado
@@ -1371,7 +1371,7 @@ M11.
 ### Tarefa M11: Página "O problema"
 
 As 7 seções do §4.3, na ordem dos mockups `o-problema.html` e `o-problema-falhas.html`; o
-"Como aparece" de Drift e Regressão vem de `conceitos-e-problemas.html` (NUJOR). Higiene: a nota
+"Como aparece" de Drift e Regressão vem de `conceitos-e-problemas.html` (kit de origem). Higiene: a nota
 de correção de fonte diz que o número de desvio do deck de 10/06 não está nas fontes, **sem
 repetir o número**.
 
@@ -1405,7 +1405,7 @@ faixas de `espinha.yml`. Produces o número da pesquisa de perfil que a M12 cita
   2. `como_funciona`: harness roda a sessão, sessão contém o modelo, só atravessa o que foi
      gravado [ref:openai-harness-engineering].
   3. `elos[]`: Código rápido → gera → Drift → e → Regressão → "e chega em cada disciplina",
-     cada um com definição e "Como aparece" (NUJOR), citando onde é fato
+     cada um com definição e "Como aparece" (kit de origem), citando onde é fato
      [ref:openai-harness-engineering] [ref:anthropic-effective-harnesses].
   4. `falhas[]`: os 7 padrões do benchmark §7 (nº, título, apelido, o que a fonte observou com
      `ref` e data, resposta do mockup). Só o 1 tem prática publicada (`pratica: P1-01`, chip
@@ -1448,7 +1448,7 @@ conteúdo (§7) e frontend (§4.2).
 
 - [x] **Passo 1: Rascunho.** Os blocos precisam cobrir as 7 seções do §4.3:
   1. `titulo` "Construir software com IA sem perder a arquitetura"; `lead` de 2 a 3 linhas (o
-     que é e quem aprova: práticas para times com agentes de código, aprovadas pelo NUARQ; cada
+     que é e quem aprova: práticas para times com agentes de código, aprovadas pela engenharia; cada
      uma diz o que fazer, com que força e de onde vem a evidência); `por_que`: o número da
      pesquisa de perfil (D16) com a mesma referência da M11 [ref:anthropic-claude-code-expertise].
   2. As duas portas são geradas (momentos com `acao` e contagem; bloco escuro e chips).
@@ -1613,10 +1613,10 @@ Nada aqui faz merge, cria tag ou publica. O plano da fase B só é escrito depoi
   (M15); R24 a R27 com o estado; as **propostas que pedem decisão** (status das 12 ferramentas e
   do starter; o caminho A, B ou C usado no job do GitLab; referências que ficaram [S]: as duas
   matrizes da AWS e a data do post da OpenAI). E as 7 pendências do GitLab herdadas da fase A:
-  1. Criar o projeto no GitLab Serpro, fazer o push e abrir a MR com o template `Curadoria`;
+  1. Criar o projeto no GitLab da organização, fazer o push e abrir a MR com o template `Curadoria`;
      validar o `.gitlab-ci.yml` no Pipeline editor; rodar a receita do CI num projeto de teste
      da instância (caminho B), se a A.5 usou A ou C.
-  2. Handle real do grupo dono no lugar de `@nuarq` no `CODEOWNERS` (e no `dono` do conteúdo, se
+  2. Handle real do grupo dono no lugar de `@engenharia` no `CODEOWNERS` (e no `dono` do conteúdo, se
      o identificador mudar).
   3. Se a instância aplica a aprovação por seção do `CODEOWNERS`; se não, a regra das duas
      aprovações fica em `niveis-de-risco.yml` e é conferida na revisão.
@@ -1817,8 +1817,8 @@ depois da frente sdd-scaffold 1.7.0 + sdd-lifecycle 2.1.0, que vem antes por dec
    Gatilho para reavaliar a spec viva: adoção em brownfield com dificuldade de onboarding, ou
    conflito entre hotfix e delta arquivado. Registro em ADR 0003.
 6. **Pendências do GitLab:** nenhuma bloqueia o 1.7.0 nem a fase B; tratadas antes da
-   publicação. (1) o dono cria o projeto no GitLab Serpro e a MR é preparada; (2) handle real no
-   `CODEOWNERS` no lugar de `@nuarq`, a informar pelo dono; (3) seções do `CODEOWNERS` com
+   publicação. (1) o dono cria o projeto no GitLab da organização e a MR é preparada; (2) handle real no
+   `CODEOWNERS` no lugar de `@engenharia`, a informar pelo dono; (3) seções do `CODEOWNERS` com
    aprovação obrigatória, casando com as duas aprovações de risco alto; (4) Pages com acesso
    restrito ao grupo interno; (5) schedule semanal do job `avisos` na segunda de manhã, na
    `main`; (6) tag `v0.2.0` depois do merge na `main` e dos mínimos da fase B; (7) local do

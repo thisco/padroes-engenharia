@@ -1,0 +1,99 @@
+# Publica o portal no GitHub Pages espelhando os portões de qualidade do pipeline do GitLab
+# (spec §12: validar → testar → gerar → publicar). O site só vai ao ar se validar.py, ruff e
+# pytest passarem, exatamente como a regra 2 de "Regras deste repositório" do AGENTS.md exige
+# antes de publicar.
+#
+# A URL base é derivada em tempo de build por actions/configure-pages (saída base_url), então o
+# gerador recebe o endereço real do Pages. Funciona em página de projeto (servida sob /<repo>/)
+# e em domínio próprio, porque a navegação HTML do portal usa caminhos relativos e só as URLs
+# absolutas de llms.txt, catalogo.json e roteamento.json dependem desse valor.
+#
+# Este arquivo NÃO substitui o .gitlab-ci.yml: os dois coexistem. O GitLab continua sendo o CI
+# principal; aqui só se constrói e publica a cópia pública no GitHub Pages.
+#
+# Pré-requisito único no GitHub: Settings → Pages → Source = "GitHub Actions" (o passo
+# "Configurar Pages" abaixo tenta habilitar sozinho via enablement: true na primeira execução).
+
+name: Publicar no GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Permissões mínimas para publicar no Pages via OIDC.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; não cancela uma que já esteja no ar.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  construir:
+    name: Construir o portal
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"  # mesma série do image python:3.12-slim do GitLab
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Instalar dependências fixadas
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-dev.txt
+
+      - name: Configurar Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Validar (bloqueios do §12.1)
+        run: python scripts/validar.py
+
+      - name: Lint
+        run: |
+          ruff check --extend-exclude .cache .
+          ruff format --check --extend-exclude .cache .
+
+      - name: Testes
+        run: python -m pytest -q
+
+      - name: Gerar o site
+        run: python scripts/gerar.py --saida public --url-base "${{ steps.pages.outputs.base_url }}"
+
+      - name: Conferir artefatos (espelha o job `pages` do GitLab)
+        run: |
+          test -f public/index.html
+          test -f public/llms.txt
+          test -f public/pacote/manifesto.json
+
+      - name: Empacotar artefato do Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  publicar:
+    name: Publicar no GitHub Pages
+    needs: construir
+    # Só a branch padrão publica; PRs e outras branches param na construção (gate de pré-merge).
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deploy
+        uses: actions/deploy-pages@v4

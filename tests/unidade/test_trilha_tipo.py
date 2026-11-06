@@ -53,9 +53,7 @@ def test_passo_que_a_skill_nao_declara(tmp_path):
 
 def test_duas_skills_no_mesmo_passo(tmp_path):
     outra = skill(id="ao-planning")
-    t = fabrica.trilha(
-        fabrica.meta_trilha(sequencia=[ITEM, {**ITEM, "ferramenta": "ao-planning"}])
-    )
+    t = fabrica.trilha(fabrica.meta_trilha(sequencia=[ITEM, {**ITEM, "ferramenta": "ao-planning"}]))
     assert rodar(t, skill(), outra, raiz=tmp_path) == [
         Erro(ARQ, "sequencia.1", "R-TRILHA", "passo repetido: enquanto-escreve/planejar")
     ]

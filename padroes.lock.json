@@ -3,9 +3,9 @@
     ".padroes/constituicao.md": "4e1800d60504d2be1e8bc4cdfe6ea19ecb20aaf7d507cf7d18effe864c51b8a3",
     ".padroes/constituicao/padrao-v1.0.md": "4e1800d60504d2be1e8bc4cdfe6ea19ecb20aaf7d507cf7d18effe864c51b8a3",
     ".padroes/consultar.py": "bc237ac8259d2306d828d4cbb78990c681867f287dfe1c6b8bda0c868c99ca42",
-    ".padroes/grafo/graph.json": "e273c9e2e01b1034ae6c88b90156047ffb053d795e66209d0cf8dd5d10a27ae4",
+    ".padroes/grafo/graph.json": "25897b4afabd08635b8c886c9ca5b889da0b7cfab8e0417e374a8c80be153390",
     ".padroes/grafo/roteamento.json": "458d0e81532ae7e7fc5a73d23356db73eda3084018b26619fefae9775418253a",
-    ".padroes/manifesto.json": "e20db05f5ca2a15824064f428cdf9b2229a19532f71ddab7159c60cb676478bb",
+    ".padroes/manifesto.json": "b79ad1e3cb31231b9b50c4af3ee3eee23978510eb726fa5652be14dbe0fc7922",
     ".padroes/mecanismos/sdd-scaffold/verificar_constituicao.py": "8a3eeedf0edd72d2d12d83087e2c8a67859683bd6786cd094f85f43bba03ebad",
     ".padroes/mecanismos/sdd-scaffold/verificar_pr.py": "616cc4c2357a1c0bda831e310722e24001820e1b7aa8cbc6e6200b60a57eb30e",
     ".padroes/padroes.py": "82b0e289c729d4b530b24357c7f61efe98f5ac3740a83f3742bbeb348fdfe218",
@@ -20,7 +20,7 @@
     ".padroes/padroes_cli/origem.py": "009f0f3c6a8ba3d7c23f5584d2c53bebaebcc0e0843850c9b7bc0ccb5e50cc70",
     ".padroes/padroes_cli/principal.py": "9b96b6d4b60a71f15a335b7b2b7c33bc9904e03609c8160978639a5bec4b6f1a",
     ".padroes/padroes_cli/util.py": "dd1f502f8b6c7c8e2135f0f58fe56c99bbf58131b8bd7302d9b641ce8af9c584",
-    ".padroes/regras.json": "ca7736e2868c57b62930d9c2f432d1f3b6f5d28b6182a0dd0d52accfa70b14e6",
+    ".padroes/regras.json": "6b1f1c93fbf9141cb85d102d4edff0802b4540bea2cd2b15d51e8f03d46bf3fe",
     ".padroes/skills/arquitetura-viva/PROCEDENCIA.md": "77c77350a33a82f334d8a6657287ba680027f8e34f5af52762438c898e692941",
     ".padroes/skills/arquitetura-viva/SKILL.md": "481c764067a994d4828a4f89168acb3631b982d88cb3055e8b4094d85d087f67",
     ".padroes/skills/curadoria-de-pratica/SKILL.md": "8b8911e32742e25a9b7dbea97a6591827e4a74e66cf89d44654a0826d06b0d37",
@@ -34,7 +34,7 @@
     ".padroes/skills/sdd-lifecycle/SKILL.md": "393401d0bbc5b821c9c9e23c76f4b29c576d3f5795dce51bcb6d13ef31f55358",
     ".padroes/skills/threat-model/PROCEDENCIA.md": "cb7d2848b676b1a92f94edc77861f17c4a26e5ec828a1958984aa1519505d9cc",
     ".padroes/skills/threat-model/SKILL.md": "e8791d4c852f13ae19a3f4ca162b5542acfc952223e6e74adfd03058c71c2762",
-    ".padroes/verificadores/api_02.py": "283914efa9007ce70a888dea40941bbfb3cbe20b95a7576c92e46d1beada3e32",
+    ".padroes/verificadores/api_02.py": "9a1a73d447dda1365181eaf7cdabc731264dcfcdc7e083d1479acf44cef235c8",
     ".padroes/verificadores/arq_02.py": "64686ea373119e64112fe3ebe49df48c15880704d7b3f3d8ab6efeadb8eef1c3",
     ".padroes/verificadores/cicd_02.py": "05dea9f201c3c18dee2c2648dc0c366c403990784283b47766dabe0f50a98dee",
     ".padroes/verificadores/iac_01.py": "76692c72db793eb1732996f25f9068ffa4c4eb0bc9131877192c63b388507678",
@@ -52,7 +52,7 @@
   "bloco": null,
   "blocos": {},
   "catalogo": {
-    "commit": "009582ec3e3d75940b61247bb9634c390393824e",
+    "commit": "5be9e10b057a12ef1a4a0646284bf943b29fedde",
     "nome": "Padrões de Engenharia",
     "versao": "1.2.0"
   },
@@ -78,7 +78,7 @@
   },
   "montagens_do_projeto": [],
   "origem": "public/pacote",
-  "pacote_sha256": "e20db05f5ca2a15824064f428cdf9b2229a19532f71ddab7159c60cb676478bb",
+  "pacote_sha256": "b79ad1e3cb31231b9b50c4af3ee3eee23978510eb726fa5652be14dbe0fc7922",
   "perfil": [
     "construir-com-ia",
     "arquitetura",
@@ -90,6 +90,6 @@
     "observabilidade",
     "seguranca"
   ],
-  "regras_sha256": "ca7736e2868c57b62930d9c2f432d1f3b6f5d28b6182a0dd0d52accfa70b14e6",
+  "regras_sha256": "6b1f1c93fbf9141cb85d102d4edff0802b4540bea2cd2b15d51e8f03d46bf3fe",
   "versao_formato": 1
 }

@@ -44,7 +44,7 @@ Faltam quatro coisas:
 ## 2. Objetivo e público
 
 Entregar o **motor** que transforma o catálogo do portal em pacote instalável e o **CLI
-`padroes`** que o instala em qualquer repositório do departamento. O catálogo do Serpro é a
+`padroes`** que o instala em qualquer repositório do departamento. O catálogo da organização é a
 primeira instância; a separação entre motor e catálogo já nasce no modelo de dados, para a spec
 irmã não precisar refatorar.
 
@@ -63,7 +63,7 @@ desenvolvedor roda `padroes instalar` uma vez; quem clona o repositório recebe 
 | D6 | Harnesses da primeira release | Claude Code, Codex CLI, Kiro e Antigravity completos; Gemini CLI parcial (instruções e MCP) | Dois primeiro, dois depois |
 | D7 | Arquitetura | Projeção gerada pelo monorepo (fonte única → projeção por harness), copiando o padrão do rulesync em Python | rulesync como backend; MCP-first |
 | D8 | Papel do MCP | Canal de **recuperação** de primeira classe (roteamento, corpo, vizinhança), local na v1 e remoto na spec irmã; nunca canal de enforcement | MCP só na v2; MCP como única fonte |
-| D9 | Produto | Esta spec entrega motor e catálogo do Serpro; comercial, multi-tenant e publicação em marketplaces ficam na spec irmã | Tudo numa spec |
+| D9 | Produto | Esta spec entrega motor e catálogo da organização; comercial, multi-tenant e publicação em marketplaces ficam na spec irmã | Tudo numa spec |
 
 ## 4. Arquitetura
 

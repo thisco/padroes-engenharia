@@ -8,7 +8,7 @@
 
 ## Contexto
 
-O deck do NUJOR (`~/Documents/Workspace/repos/apresentacoes/temas/engenharia-ia-agentes/2026-09-29-nujor-harness-sdd`)
+O deck de origem (`~/Documents/Workspace/repos/apresentacoes/temas/engenharia-ia-agentes/2026-09-29-harness-sdd`)
 entra no portal como `apresentacoes/harness-sdd/`, com um item Apresentações no grupo Entender.
 O motor ganha o tipo, a cópia estática, a regra e as saídas; o conteúdo é atualizado para o
 scaffold 1.7.1 e a skill 3.0.0 e reconciliado com o portal. Pela ADR 0005, o motor passa por

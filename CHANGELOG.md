@@ -271,7 +271,7 @@ pediram. A versão a publicar é decidida no checkpoint da B.5.
 
 - O portal, o motor, os testes e o deck deixam de citar a organização: `organizacao` em
   `portal/config.yml` fica vazio (cabeçalho, `llms.txt` e README omitem o trecho sem deixar
-  separador solto), `dono: nuarq` vira `dono: engenharia` e o `CODEOWNERS` usa `@engenharia`.
+  separador solto), `dono: engenharia` vira `dono: engenharia` e o `CODEOWNERS` usa `@engenharia`.
 - P1-03: força `orienta` e `mecanismo` nulo, porque o limite de tamanho mora no job `governanca`
   da receita do CI, e não no `verificar_constituicao.py`; Exemplo refeito com a saída real
   (44419 para 5482 bytes).

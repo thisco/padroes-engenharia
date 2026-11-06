@@ -20,11 +20,11 @@ do GitLab (localizar o repositório) ser resolvida.
 - as 6 candidatas de `praticas/ia-no-produto/_dominio.md` e a candidata B de
   `~/curadoria-a5/pesquisa-guias-modelos.md` §5;
 - os anéis 1 e 2 da governança, em
-  `~/Documents/Workspace/repos/serpro-cloud-ia-governance/docs/research/{anthropic,openai}.md`
+  `~/Documents/Workspace/repos/governanca-de-ia-na-nuvem/docs/research/{anthropic,openai}.md`
   §3, mais `google-meta-xai.md`, `gartner-trism.md`, `frameworks-formais.md` e
   `benchmark-gateways.md`;
-- a PoC em `serpro-cloud-ia-governance/poc/` (LiteLLM, PostgreSQL e Ollama) e a avaliação em
-  `serpro-cloud-ia-governance/avaliacao/`, com `resultados/matriz-consolidada.md`;
+- a PoC em `governanca-de-ia-na-nuvem/poc/` (LiteLLM, PostgreSQL e Ollama) e a avaliação em
+  `governanca-de-ia-na-nuvem/avaliacao/`, com `resultados/matriz-consolidada.md`;
 - as referências já curadas: `anthropic-ciso-agentic-ai`, `anthropic-building-effective-agents`,
   `anthropic-tool-use`, `aws-agentic-scoping-matrix`, `owasp-llm-top10`, `mcp-spec`,
   `litellm-*`, `lgpd`, `azure-apim-ai-gateway`.
@@ -94,7 +94,7 @@ commitar, pede a mensagem sem trailer.
 ## Checkpoint prévio: decisões do dono antes da T7 e da T8
 
 1. **Origem do starter `gateway-poc`.** O schema de starter exige `repo` e `versao`, e
-   `componentes.yml` fixa `repo` e `commit`. O repositório `serpro-cloud-ia-governance` não tem
+   `componentes.yml` fixa `repo` e `commit`. O repositório `governanca-de-ia-na-nuvem` não tem
    remoto. Opções:
    - (a) publicar a PoC num repositório próprio (por exemplo, `thisco/gateway-poc`) e fixar a tag;
    - (b) copiar o compose e a config para `exemplos/` do portal e adiar o starter para quando o
@@ -102,7 +102,7 @@ commitar, pede a mensagem sem trailer.
 2. **Fontes do caso.** O schema de referência exige URL `https` e a curadoria abre a fonte na
    web. A matriz consolidada e o relatório da avaliação não têm URL. Opções:
    - (a) publicar o relatório junto da PoC (mesmo repositório da opção 1a);
-   - (b) referência `tipo: interno` com a URL futura do GitLab Serpro, marcada [S] até existir;
+   - (b) referência `tipo: interno` com a URL futura do GitLab da organização, marcada [S] até existir;
    - (c) adiar o caso para a B.5.
 
 **Decisões do dono (2026-10-06):** 1a e 2a. A PoC e o relatório da avaliação vão para um
@@ -136,7 +136,7 @@ Evidências e os da revisão de segurança automática entraram nos registros.
 **Resultado: 0 críticos, 9 médios, 44 baixos (53 registros, parte deles confirmações com
 tratamento "Nenhum").** Nenhum conteúdo ensina algo errado ou é inexecutável, então a ADR 0005 não
 pede revisão com modelo forte. Os médios são ajustes de texto ou de Exemplo para a T10; o da P2-04
-(log com conteúdo) pede reexecução se o Exemplo mudar. Nenhum texto cita NUARQ, NUJOR ou Serpro, todos
+(log com conteúdo) pede reexecução se o Exemplo mudar. Nenhum texto cita os nomes da organização, todos
 têm `dono: engenharia`, e nenhum corpo nomeia harness (o "Claude Fable 5" da P2-03 é dado de
 catálogo). `timeout` não aparece em nenhum texto. Status e força coerentes com a evidência: os
 três `adotar` (P2-06, P3-02, P3-04) têm Exemplo executado, e o único `avisa` (P3-02) tem mecanismo
