@@ -1,5 +1,5 @@
 conteudo: ferramenta-egm-review
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
@@ -82,12 +82,41 @@ afirmacoes:
   ref: egm-review-skill
   localizacao: '''Subflow: Critic Review'', item 1; ''Subflow: Implementation Readiness Test'', item 1'
   resultado: confirmada
+- texto: a skill está escrita em inglês
+  ref: egm-review-skill
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
 - texto: relatórios e mensagens em inglês simples, com proibição de adjetivos de elogio e de pedidos de
     desculpa
   ref: egm-review-skill
   localizacao: '''Execution Constraints (CRITICAL)'', itens 2 (Plain-English Standard), 9 (Banned Adjectives)
     e 10 (Banned Apologies)'
   resultado: confirmada
+- texto: 'os revisores aplicam rubricas de resources/document_standards/: o padrão Zoom Out nos estágios
+    5 e 8, o de especificação de feature no 7 e o de prontidão de implementação no 9'
+  ref: egm-review-skill
+  localizacao: '''Subflow: Zoom Out Review'', item 1 (zoom-out-standard.md, estágios 5 e 8); ''Subflow: Critic
+    Review'', item 1 (feature-spec-standard); ''Subflow: Implementation Readiness Test'', item 1 (implementation-readiness-standard)'
+  resultado: confirmada
+  nota: Relido no raw do commit fixado em 2026-11-06 (linhas 317 a 323, 371 a 374 e 398 a 403).
+- texto: o padrão Zoom Out, rubrica dos estágios 5 e 8, está escrito em inglês
+  ref: egm-zoom-out-standard
+  localizacao: arquivo inteiro, do título 'Zoom Out Standard' e 'Core Principle' às seções 0 a 4
+  resultado: confirmada
+  nota: Lido no raw do commit fixado em 2026-11-06.
+- texto: o padrão de especificação de feature, rubrica da crítica do estágio 7, está escrito em inglês
+  ref: egm-feature-spec-standard
+  localizacao: arquivo inteiro, do título 'Feature Specification Standard' e 'Core Principle' a 'Requirements
+    (Non-Exhaustive Examples)'
+  resultado: confirmada
+  nota: Lido no raw do commit fixado em 2026-11-06.
+- texto: o padrão de prontidão de implementação, rubrica do estágio 9, está escrito em inglês
+  ref: egm-implementation-readiness-standard
+  localizacao: arquivo inteiro, do título 'Implementation Readiness Standard' e 'Core Principle' a 'Requirements
+    (Non-Exhaustive Examples)'
+  resultado: confirmada
+  nota: Lido no raw do commit fixado em 2026-11-06.
 - texto: há relato de que o Codex CLI e o Antigravity CLI passam o AGENTS.md do projeto ao revisor, e
     a origem não verificou a exclusão de arquivos de instrução nesses dois harnesses
   ref: egm-harnesses
@@ -114,8 +143,9 @@ afirmacoes:
   ref: egm-review-skill
   localizacao: frontmatter, linha 4
   resultado: confirmada
-  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
-    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
 - texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
     de saída e formato de relatório só ficam estáveis na 1.0
   ref: egm-releases

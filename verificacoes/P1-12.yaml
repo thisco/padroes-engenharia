@@ -1,5 +1,5 @@
 conteudo: P1-12
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o Goldfish do EGM é um revisor que recebe só o documento e os arquivos que ele cita, sem a conversa anterior, para expor suposições não ditas e pontos cegos
@@ -42,9 +42,9 @@ afirmacoes:
   resultado: confirmada
 - texto: a Fase 2 da sdd-lifecycle varre a spec por mudança destrutiva antes de existir plano, e a Fase 3 para a execução e pergunta se a pessoa aprova a spec, com a aprovação gravada no cabeçalho por quem aprova
   ref: sdd-lifecycle
-  localizacao: "SKILL.md no commit 5f6e9ad (v3.0.0), 'Fase 2 — Gate arquitetural' (item 1, 'ambas sobre a spec (antes de existir plano ou código)') e 'Fase 3 — Checkpoint humano da spec'"
+  localizacao: "SKILL.md no commit a789fc3 (v3.1.0), 'Fase 2 — Gate arquitetural' (item 1, 'ambas sobre a spec (antes de existir plano ou código)') e 'Fase 3 — Checkpoint humano da spec'"
   resultado: confirmada
-  nota: "Lido no raw do commit fixado em 2026-11-05."
+  nota: "A 3.0.0 (5f6e9ad) foi lida no raw em 2026-11-05. Relido em 2026-11-06 na cópia 3.1.0 em skills/sdd-lifecycle/SKILL.md (commit a789fc3, SHA-256 conferido contra o PROCEDENCIA.md), que é o commit fixado da referência: as Fases 2 e 3 não mudaram, e a 3.1.0 só acrescenta a tabela Aceleradores opcionais."
 revisao_adversarial:
   revisor: autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o controlador desta entrega
   data: '2026-11-05'

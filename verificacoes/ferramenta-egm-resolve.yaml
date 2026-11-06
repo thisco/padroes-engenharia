@@ -1,5 +1,5 @@
 conteudo: ferramenta-egm-resolve
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
@@ -69,9 +69,16 @@ afirmacoes:
   ref: egm-resolve-skill
   localizacao: Step 2, regra 'Do not change a severity'
   resultado: confirmada
-- texto: o relatório sai em inglês, no formato fixo da skill
+- texto: a skill está escrita em inglês
   ref: egm-resolve-skill
-  localizacao: Step 3, modelo do relatório ('# Goldfish Annotated Review Report')
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
+- texto: o relatório sai em inglês, no formato fixo da skill (Goldfish Annotated Review Report), com as categorias
+    CONTEST, ESCALATE, PROPOSE FIX e DECLINE em inglês
+  ref: egm-resolve-skill
+  localizacao: Step 2 (as quatro categorias) e Step 3, modelo do relatório ('# Goldfish Annotated Review Report',
+    campo 'AI Suggestion')
   resultado: confirmada
 - texto: a egm-review, que produz os achados, para sem ferramenta de subagente
   ref: egm-harnesses
@@ -87,8 +94,9 @@ afirmacoes:
   ref: egm-resolve-skill
   localizacao: frontmatter, linha 4
   resultado: confirmada
-  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
-    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
 - texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
     de saída e formato de relatório só ficam estáveis na 1.0
   ref: egm-releases

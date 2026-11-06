@@ -41,12 +41,16 @@ limites: |
   substitui os testes nem o julgamento humano [ref:egm-readme], e devolve muito achado de
   propósito: você escolhe o que acatar [ref:egm-getting-started]. Os estágios 7 e 9 chamam a
   egm-review-loop, o despachante interno dos revisores, que o portal não lista como ferramenta
-  própria [ref:egm-review-skill]. Relatórios e mensagens saem em inglês simples, com proibição de
-  adjetivos de elogio e de pedidos de desculpa [ref:egm-review-skill].
+  própria [ref:egm-review-skill]. A skill está escrita em inglês, e relatórios e mensagens saem em
+  inglês simples, com proibição de adjetivos de elogio e de pedidos de desculpa
+  [ref:egm-review-skill]. As rubricas que os revisores aplicam, em
+  `resources/document_standards/`, também são em inglês: o padrão Zoom Out nos estágios 5 e 8, o
+  de especificação de feature no 7 e o de prontidão de implementação no 9 [ref:egm-review-skill]
+  [ref:egm-zoom-out-standard] [ref:egm-feature-spec-standard]
+  [ref:egm-implementation-readiness-standard].
   Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
-  declara `disable-model-invocation: true` [ref:egm-review-skill]: a skill é chamada pelo comando, e não
-  escolhida pelo agente por conta própria, nos harnesses que respeitam o campo. A origem é
+  declara `disable-model-invocation: true` [ref:egm-review-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
   e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
   o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
@@ -54,4 +58,4 @@ limites: |
   da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
   `skills/egm_review/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa
   `skills/egm-review/` [ref:egm-readme].
-referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-review-skill, egm-getting-started, egm-releases]
+referencias: [egm-readme, egm-readme-tag-v0-1-0, egm-harnesses, egm-copilot, egm-review-skill, egm-zoom-out-standard, egm-feature-spec-standard, egm-implementation-readiness-standard, egm-getting-started, egm-releases]

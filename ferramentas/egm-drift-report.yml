@@ -42,12 +42,12 @@ limites: |
   skill não usa subagente: lê os documentos um a um, no contexto principal, e trata como
   divergência também a lógica que nenhum documento ou README cita [ref:egm-drift-report-skill].
   A origem recomenda rodá-la uma vez por semana e deixa a escolha entre corrigir o documento ou o
-  código com a pessoa [ref:egm-getting-started]. O relatório sai em inglês, no formato fixo da
-  skill [ref:egm-drift-report-skill].
+  código com a pessoa [ref:egm-getting-started]. A skill está escrita em inglês, e o relatório
+  sai em inglês, no formato fixo da skill, que tem até a frase pronta "No drift detected" para
+  documento sem divergência [ref:egm-drift-report-skill].
   Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
-  declara `disable-model-invocation: true` [ref:egm-drift-report-skill]: a skill é chamada pelo comando, e não
-  escolhida pelo agente por conta própria, nos harnesses que respeitam o campo. A origem é
+  declara `disable-model-invocation: true` [ref:egm-drift-report-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
   e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
   o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release

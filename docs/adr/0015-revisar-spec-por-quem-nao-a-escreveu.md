@@ -1,10 +1,12 @@
 # ADR 0015: Revisar a spec por quem não a escreveu
 
-**Data:** 2026-11-05 · **Status:** aceita · **Spec:**
+**Data:** 2026-11-05 · **Status:** proposta · **Spec:**
 `docs/specs/2026-11-04-elefante-goldfish-delta.md` (EG-D3, R1, R7 e R12), "o Elefante e o
 Goldfish na trilha (revisão da spec por leitor sem contexto)" · **Origem:** leitura do
-`google/elephant-goldfish-model` no commit `113a3af` e decisões do dono em 2026-11-04, aprovadas
-com a spec no checkpoint da Fase 3 em 2026-11-05
+`google/elephant-goldfish-model` no commit `113a3af` e decisões do dono em 2026-11-04
+
+**Aprovado por:**
+**Aprovado em:**
 
 ## Contexto
 

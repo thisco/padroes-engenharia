@@ -7,4 +7,4 @@ verificado_em: 2026-11-05
 verificacao: S
 localizacao: "não lida: HTTP 403 à leitura automática em 2026-11-05"
 dominios: [construir-com-ia]
-notas: "Conteúdo do ensaio não lido (403, sem espelhos). Atestado indiretamente: o docs/index.md do EGM no commit fixado (113a3afc44e8f4f54722d7150d5701f65cc8ef7f) cita o ensaio com esta URL e recomenda lê-lo antes ('start there'), e o docs/getting_started.md diz que o EGM é inspirado nele. O index.md não o declara como origem do modelo. Sem versao: o ensaio não tem commit nem versão."
+notas: "Conteúdo do ensaio não lido (403, sem espelhos). Atestado indiretamente: o docs/index.md do EGM no commit fixado (113a3afc44e8f4f54722d7150d5701f65cc8ef7f) cita o ensaio com esta URL e recomenda lê-lo antes ('start there'), e o docs/getting_started.md, seção 'Background' (linhas 6 e 7), diz que o EGM é uma implementação de SDD baseada nele ('based on Dave Rensin's foundational article'). O index.md não o declara como origem do modelo. Sem versao: o ensaio não tem commit nem versão."

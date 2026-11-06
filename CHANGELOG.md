@@ -14,10 +14,12 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 - Passo `revisar-spec` na espinha, em "Antes de escrever": a spec é lida por quem não a escreveu
   antes da aprovação (ADR 0015). Trilhas sem o passo ficam com ele vazio.
-- Prática P1-12, "Revisar a spec com um leitor sem contexto", em `experimentar`, com a ADR 0015.
+- Prática P1-12, "Revise a spec com quem não a escreveu antes de aprovar", em `experimentar`, com a
+  ADR 0015.
 - Coleção `elephant-goldfish-model` 0.1.0 (plugin do Elefante e do Goldfish) fixada em
-  `componentes.yml`, com dezessete referências `egm-*` conferidas no commit fixado e seis
-  ferramentas `egm-*` em `avaliar`, cada uma com caminhos por harness e registro em `verificacoes/`.
+  `componentes.yml`, com dezessete referências `egm-*`, quinze no commit fixado, uma no commit da
+  tag v0.1.0 e o ensaio de origem como fonte secundária, e seis ferramentas `egm-*` em `avaliar`,
+  cada uma com caminhos por harness e registro em `verificacoes/`.
 - Trilha "Elefante e Goldfish", com o fluxo do modelo e os atritos conhecidos.
 - Termo "Leitor sem contexto (Goldfish)" no glossário.
 

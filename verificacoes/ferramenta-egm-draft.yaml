@@ -1,5 +1,5 @@
 conteudo: ferramenta-egm-draft
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
@@ -72,11 +72,25 @@ afirmacoes:
   ref: egm-draft-skill
   localizacao: Step 6, item 1 (Reconcile against the Predecessor Context)
   resultado: confirmada
-- texto: documento e mensagens em inglês simples, com proibição de adjetivos de elogio e de pedidos de
-    desculpa
+- texto: a skill está escrita em inglês
+  ref: egm-draft-skill
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
+- texto: documento e mensagens em inglês simples, no modelo de design doc da skill (references/design_doc.md),
+    com proibição de adjetivos de elogio e de pedidos de desculpa
   ref: egm-draft-skill
   localizacao: '''Execution Constraints (CRITICAL)'', itens 3 (Plain-English Standard), 10 (Banned Adjectives)
-    e 11 (Banned Apologies)'
+    e 11 (Banned Apologies); Step 2, item 2 (''plain English Markdown following the design document template
+    (references/design_doc.md)'')'
+  resultado: confirmada
+  nota: O modelo references/design_doc.md, ao lado do SKILL.md no mesmo commit, foi lido no raw em 2026-11-06
+    e está em inglês (Overview, The Problem, Goals, Non-Goals, Technical Plan).
+- texto: a skill não confere o rascunho contra a rubrica Zoom Out; essa conferência é do estágio 5 da egm-review,
+    em contexto novo
+  ref: egm-draft-skill
+  localizacao: 'Step 6, item 1 (''Do not grade the draft against the Zoom Out standard here... /egm-review
+    Stage 5 runs that check from a fresh context'')'
   resultado: confirmada
 - texto: durante o fluxo de design o agente não escreve, não altera nem compila arquivo de produção, faz
     uma pergunta por resposta e não muda de passo sem o de acordo explícito
@@ -101,8 +115,9 @@ afirmacoes:
   ref: egm-draft-skill
   localizacao: frontmatter, linha 4
   resultado: confirmada
-  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
-    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
 - texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
     de saída e formato de relatório só ficam estáveis na 1.0
   ref: egm-releases

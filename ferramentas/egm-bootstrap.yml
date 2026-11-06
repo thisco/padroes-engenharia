@@ -12,7 +12,7 @@ caminhos:
     passo: instrucoes
     papel: complemento
     bom_quando: "o código que já existe não tem documentação que dê contexto ao agente: a skill gera, de baixo para cima, um README.md por pasta com código (interface, invariantes e efeitos colaterais) e resume as pastas-mãe até a raiz, o contexto que o Elefante lê nas próximas sessões."
-    cuidado: "pede aprovação antes de seguir quando acha mais de 15 subpastas e não faz commit; revise a saída antes de commitar. README que já existe é corrigido, com as notas preservadas; para não tocar nele, use target_filename (por exemplo EGM.md). Ela não escreve AGENTS.md nem a skill de contexto do projeto, que o guia da origem manda escrever à mão."
+    cuidado: "pede aprovação antes de seguir quando acha mais de 15 subpastas e não faz commit; revise a saída antes de commitar. README que já existe é corrigido, com as notas preservadas; para não tocar nele, use target_filename (por exemplo EGM.md). A skill de contexto `<projeto>-elephant`, opcional no guia da origem, é escrita pelo time."
 como_instalar: |
   Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
   skills leiam os prompts dos revisores e os padrões de documento [ref:egm-readme]. Antigravity
@@ -36,14 +36,14 @@ limites: |
   A revisão do EGM exige um harness que crie subagentes e para sem ele
   [ref:egm-harnesses]. Esta skill só escreve documentação, nunca código, e não faz commit
   [ref:egm-bootstrap-skill]. Sem ferramenta de subagente ela roda as varreduras no mesmo contexto,
-  em vez de parar [ref:egm-bootstrap-skill]; a varredura só lê o código, não revisa desenho. A
-  origem pede que uma pessoa revise a saída, e a skill de contexto `<projeto>-elephant` é opcional
-  e escrita pelo time [ref:egm-getting-started]. Os README gerados saem em inglês, nos modelos fixos
-  da skill [ref:egm-bootstrap-skill].
+  em vez de parar; o batedor das varreduras (`goldfish-explorer`) é só de leitura e não escreve
+  nem altera arquivos [ref:egm-bootstrap-skill]. A origem pede que uma pessoa revise a saída, e a skill de contexto `<projeto>-elephant` é opcional
+  e escrita pelo time [ref:egm-getting-started]. A skill e os modelos de README que ela lê antes de
+  escrever (`references/templates.md`) estão em inglês, e os README gerados saem em inglês,
+  nesses modelos [ref:egm-bootstrap-skill].
   Instalar só a pasta `skills/` quebra o EGM, porque as skills leem `agents/` e
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
-  declara `disable-model-invocation: true` [ref:egm-bootstrap-skill]: a skill é chamada pelo comando, e não
-  escolhida pelo agente por conta própria, nos harnesses que respeitam o campo. A origem é
+  declara `disable-model-invocation: true` [ref:egm-bootstrap-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
   e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
   o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release

@@ -1,5 +1,5 @@
 conteudo: ferramenta-egm-bootstrap
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: o README pede o plugin completo para que as skills leiam os prompts dos revisores e os padrões
@@ -70,16 +70,39 @@ afirmacoes:
   localizacao: 'seção ''Delegation'', último parágrafo: ''If your harness has no subagent tool, run the
     scout steps inline'''
   resultado: confirmada
-- texto: os README gerados saem em inglês, nos modelos fixos da skill
+- texto: o batedor das varreduras (goldfish-explorer) é só de leitura e não escreve nem altera arquivos
   ref: egm-bootstrap-skill
-  localizacao: seção 'Templates' e Step 4 (classificação e modelo por pasta)
+  localizacao: 'Step 4, item 1 (Scout Registration): ''Use a read-only goldfish-explorer scout'' e, no system_prompt,
+    ''Do not write or modify any files'''
   resultado: confirmada
+  nota: Substitui, em 2026-11-06, a frase 'a varredura só lê o código, não revisa desenho', que não tinha fonte.
+- texto: a skill está escrita em inglês
+  ref: egm-bootstrap-skill
+  localizacao: SKILL.md inteiro no commit fixado (frontmatter, títulos e instruções), relido no raw em
+    2026-11-06
+  resultado: confirmada
+- texto: a skill lê os modelos de README (references/templates.md) antes de escrever, os modelos estão em inglês,
+    e os README gerados saem em inglês, nesses modelos
+  ref: egm-bootstrap-skill
+  localizacao: seção 'Templates' ('Before writing any contract file, read the README templates') e Step 4
+    (classificação e modelo por pasta)
+  resultado: confirmada
+  nota: O references/templates.md, ao lado do SKILL.md no mesmo commit, foi lido no raw em 2026-11-06 e está em
+    inglês (Component Package (Peanuts), Repository Root (Blueprint / Hay) e Intermediate Blueprint).
 - texto: a origem pede que uma pessoa revise a saída, e a skill de contexto <projeto>-elephant é opcional
     e escrita pelo time
   ref: egm-getting-started
   localizacao: seção 'Bootstrapping Existing Codebases', subseções 'Bootstrapping' ('Humans should still
     review this output') e 'Project Context Skill (Optional)'
   resultado: confirmada
+- texto: 'cuidado do caminho: a skill de contexto <projeto>-elephant, opcional no guia da origem, é escrita
+    pelo time'
+  ref: egm-getting-started
+  localizacao: seção 'Bootstrapping Existing Codebases', subseção 'Project Context Skill (Optional)' ('You can
+    create a custom <project>-elephant skill')
+  resultado: confirmada
+  nota: Substitui, em 2026-11-06, a frase sobre AGENTS.md e a skill de contexto 'escrita à mão', que a fonte não
+    sustentava (o guia não fala de AGENTS.md).
 - texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
     em tempo de execução
   ref: egm-harnesses
@@ -90,8 +113,9 @@ afirmacoes:
   ref: egm-bootstrap-skill
   localizacao: frontmatter, linha 4
   resultado: confirmada
-  nota: Que a skill passa a ser chamada pelo comando é a semântica do campo nos harnesses que o respeitam,
-    não texto da fonte; a página de harnesses registra que o validador estrito do omp rejeita o campo.
+  nota: O limites diz só que o frontmatter declara o campo. A explicação anterior (a skill chamada pelo
+    comando nos harnesses que respeitam o campo) não era texto da fonte e saiu em 2026-11-06; a página
+    de harnesses registra que o validador estrito do omp rejeita o campo.
 - texto: a origem é pré-1.0, a versão canônica é a do plugin.json, e nomes de skill, parâmetros, caminhos
     de saída e formato de relatório só ficam estáveis na 1.0
   ref: egm-releases

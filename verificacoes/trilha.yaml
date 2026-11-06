@@ -1,5 +1,5 @@
 conteudo: trilha
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: O mattpocock/skills está na versão 1.3.1 no commit fixado.
@@ -109,14 +109,14 @@ afirmacoes:
   ref: sdd-lifecycle
   localizacao: 'SKILL.md, Fase 1 (refine com o usuário uma pergunta por vez), Fase 4 (Plano) e Fase 6 (Implementação TDD)'
   resultado: confirmada
-  nota: 'Cópia 3.0.0 em skills/sdd-lifecycle/SKILL.md, a mesma do commit fixado da referência.'
+  nota: 'Cópia 3.1.0 em skills/sdd-lifecycle/SKILL.md (commit a789fc3, SHA-256 conferido contra o PROCEDENCIA.md em 2026-11-06), a mesma do commit fixado da referência; da 3.0.0 para a 3.1.0 só mudou a tabela Aceleradores opcionais, e as Fases 1, 4 e 6 seguem iguais.'
 - texto: 'A docs/releases.md do EGM diz que o contrato de nomes de skill, parâmetros, caminhos de saída e formatos de relatório só é estável na 1.0.'
   ref: egm-releases
   localizacao: "aberto na web no commit 113a3af (raw do GitHub), seção 'Versioned releases'"
   resultado: confirmada
 - texto: 'A tag v0.1.0 guarda a skill de drift em skills/egm_drift_report/, com sublinhado, e a main usa skills/egm-drift-report/.'
   ref: egm-readme-tag-v0-1-0
-  localizacao: 'aberto na web no commit 113a3af (raw do GitHub), README na tag v0.1.0 (links para skills/egm_drift_report/); o caminho da main vem do URL da egm-drift-report-skill'
+  localizacao: 'aberto na web no commit b3a3595 da tag v0.1.0 (raw do GitHub, relido em 2026-11-06), README, tabela da seção Choose a skill, linha 108 (links para skills/egm_drift_report/); o caminho da main vem do URL da egm-drift-report-skill, no commit fixado 113a3af'
   resultado: confirmada
   nota: 'Mesma afirmação já registrada em ferramentas/egm-drift-report.yml.'
 revisao_adversarial:
