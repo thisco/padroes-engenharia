@@ -86,7 +86,13 @@ def test_trilha_elefante_e_goldfish_segue_a_spec():
     assert seq[("depois-da-entrega", "continuar")] == "egm-drift-report"
     assert ("antes-de-escrever", "decidir") not in seq
     assert {p for (m, p), f in seq.items() if f == "sdd-lifecycle"} == {
-        "planejar", "isolar", "tdd", "revisar", "evidencia", "pr-e-merge", "retro",
+        "planejar",
+        "isolar",
+        "tdd",
+        "revisar",
+        "evidencia",
+        "pr-e-merge",
+        "retro",
     }
 
 

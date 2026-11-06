@@ -57,7 +57,12 @@ def test_antes_de_escrever_tem_revisar_spec_entre_escrever_spec_e_decidir():
     """R1 da spec do Elefante e Goldfish: sexto passo, na terceira posição."""
     momento = fabrica.espinha_real().momento("antes-de-escrever")
     assert [p.slug for p in momento.passos] == [
-        "entrevistar", "escrever-spec", "revisar-spec", "decidir", "investigar", "seguranca",
+        "entrevistar",
+        "escrever-spec",
+        "revisar-spec",
+        "decidir",
+        "investigar",
+        "seguranca",
     ]
     assert momento.passo("revisar-spec") == Passo(
         "revisar-spec", "Revisar a spec", "quem não a escreveu lê antes da aprovação"
