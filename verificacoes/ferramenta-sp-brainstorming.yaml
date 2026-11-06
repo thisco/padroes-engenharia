@@ -1,5 +1,5 @@
 conteudo: ferramenta-sp-brainstorming
-verificado_em: 2026-10-21
+verificado_em: 2026-11-06
 verificador: agente-curadoria
 afirmacoes:
   - texto: "a skill faz uma pergunta por mensagem e devolve o entendimento em trechos curtos"
@@ -66,6 +66,11 @@ afirmacoes:
     ref: superpowers-release-notes
     localizacao: "v7.0.0 (2026-10-09), parágrafo de abertura e seção Brainstorming"
     resultado: confirmada
+  - texto: 'na checagem do construtor, o subagente novo recebe o prompt de builder-check-prompt.md, com o domínio e o caminho do desenho preenchidos, e devolve só perguntas, ordenadas por importância'
+    ref: superpowers-builder-check-prompt
+    localizacao: 'parágrafo de abertura (''Dispatch a fresh general-purpose subagent with this prompt once the written design exists. Fill in the domain and the document path.'') e bloco do prompt (''Report only the questions'', ''Rank them by importance'')'
+    resultado: confirmada
+    nota: 'Lido no raw do commit fixado bb92a77 em 2026-11-06. Sustenta também o cuidado do caminho revisar-spec.'
 revisao_adversarial:
   revisor: revisor-independente
   data: '2026-11-06'
@@ -77,5 +82,4 @@ revisao_adversarial:
       only the questions'', ''Rank them by importance'') e o preenchimento do caminho do documento estão
       no builder-check-prompt.md, arquivo vizinho no commit bb92a77 que não é referência do portal. A
       fonte confirma, mas a referência da ferramenta não.'
-    tratamento: 'pendente: criar referência para skills/brainstorming/builder-check-prompt.md no commit
-      bb92a77 e listá-la em referencias, ou reduzir o cuidado ao que o SKILL.md diz.'
+    tratamento: 'corrigido: criada a referência superpowers-builder-check-prompt (skills/brainstorming/builder-check-prompt.md no commit bb92a77), listada em referencias e citada numa frase nova do limites sobre o que o subagente recebe e devolve, que sustenta o cuidado do caminho revisar-spec; afirmação registrada em 2026-11-06.'

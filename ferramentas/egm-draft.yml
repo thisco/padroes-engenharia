@@ -33,8 +33,8 @@ como_instalar: |
   só conta um harness como suportado depois que egm-brainstorm, egm-draft e egm-review rodam de
   ponta a ponta pela instalação do plugin [ref:egm-harnesses].
 limites: |
-  A skill não usa subagente; a leitura por quem não escreveu o documento é da egm-review,
-  que para sem ferramenta de subagente [ref:egm-harnesses]. Enquanto o fluxo de design está ativo,
+  A skill não usa subagente [ref:egm-draft-skill]; a leitura por quem não escreveu o documento é
+  da egm-review, que para sem ferramenta de subagente [ref:egm-harnesses]. Enquanto o fluxo de design está ativo,
   o agente não escreve, não altera nem compila arquivo de produção, faz uma pergunta por resposta e
   não muda de passo sem o seu de acordo [ref:egm-execution-instructions]. Na finalização, a skill
   relê o brief e lista o que o rascunho contradiz nele antes de salvar
@@ -47,8 +47,8 @@ limites: |
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
   declara `disable-model-invocation: true` [ref:egm-draft-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
-  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
-  o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
   [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
   da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
   `skills/egm_draft/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa

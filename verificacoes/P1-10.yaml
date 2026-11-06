@@ -1,5 +1,5 @@
 conteudo: P1-10
-verificado_em: '2026-11-05'
+verificado_em: '2026-11-06'
 verificador: agente-curadoria
 afirmacoes:
 - texto: a spec arquivada é histórico, e não fonte de verdade viva
@@ -35,9 +35,9 @@ afirmacoes:
   localizacao: 'aberto na web no commit 113a3af (raw do GitHub), passos 1 a 4 e Guidance'
   resultado: confirmada
   nota: "Que ela não corrige nada e não escreve adendo à spec é leitura do corpo (só escreve o relatório); a frase 'o diff da branch' é inferência do portal: a skill não menciona diff."
-- texto: 'a origem diz que quem escolhe entre atualizar o documento ou o código é a pessoa, e recomenda rodar a skill uma vez por semana, ou numa rotação de manutenção'
+- texto: 'a origem diz que quem escolhe entre atualizar o documento ou o código é a pessoa, e recomenda rodar a skill como ritual semanal, de preferência na rotação de manutenção, se o time tem uma'
   ref: egm-getting-started
-  localizacao: "aberto na web no commit 113a3af (raw do GitHub), seção 'Drift Detection'"
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub, relido em 2026-11-06), seção 'Drift Detection' ('We recommend running this once per week. If you have a regular maintenance rotation, incorporating this as a weekly ritual is useful.')"
   resultado: confirmada
 execucoes:
 - tipo: arquivo
@@ -84,5 +84,4 @@ revisao_adversarial:
       semana e, para quem tem rotação de manutenção, incorporar a skill como ritual semanal dessa rotação
       (''incorporating this as a weekly ritual is useful''). A rotação não é alternativa à cadência semanal,
       como o ''ou'' sugere.'
-    tratamento: 'pendente: escrever ''recomenda rodá-la uma vez por semana, como ritual semanal da rotação
-      de manutenção quando o time tem uma''.'
+    tratamento: 'corrigido: o Como aplicar diz ''recomenda rodá-la como ritual semanal, de preferência na rotação de manutenção, se o time tem uma''; afirmação refeita contra a seção Drift Detection do raw em 2026-11-06.'

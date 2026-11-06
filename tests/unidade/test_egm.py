@@ -13,7 +13,7 @@ EGM_TAG_COMMIT = "b3a35956759bf7f024af2ff061b2e0b44b438e4c"
 def test_referencias_egm_apontam_para_o_commit_fixado():
     """R10 da spec do Elefante e Goldfish."""
     arquivos = sorted((fabrica.RAIZ / "referencias").glob("egm-*.yaml"))
-    assert len(arquivos) == 17
+    assert len(arquivos) == 18
     for arquivo in arquivos:
         meta = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
         ensaio = arquivo.stem == "egm-rensin-essay"

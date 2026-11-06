@@ -37,6 +37,9 @@ limites: |
   [ref:portal-referencias]. Reescrita na 7.0.0 [ref:superpowers-release-notes]. A skill decide o
   tamanho do trabalho em três níveis e só escreve o desenho para o nível de projeto; o desenho vai
   para docs/superpowers/specs/, a preferência da pessoa vale sobre esse lugar, e depois da aprovação
-  ela só aceita a writing-plans como próximo passo [ref:superpowers-brainstorming]. Os tiers e a
+  ela só aceita a writing-plans como próximo passo [ref:superpowers-brainstorming]. Na checagem do
+  construtor, o subagente novo recebe o prompt de `builder-check-prompt.md`, com o domínio e o
+  caminho do desenho preenchidos, e devolve só perguntas, ordenadas por importância
+  [ref:superpowers-builder-check-prompt]. Os tiers e a
   spec com R<n> da constituição entram por conta do projeto.
-referencias: [superpowers-brainstorming, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias, superpowers-release-notes]
+referencias: [superpowers-brainstorming, superpowers-builder-check-prompt, superpowers-readme, origem-do-modelo-instalacoes, portal-referencias, superpowers-release-notes]

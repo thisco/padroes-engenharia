@@ -11,7 +11,7 @@ caminhos:
   - momento: depois-da-entrega
     passo: continuar
     papel: caminho
-    bom_quando: "os design docs aprovados já têm código por trás e você quer saber, a cada semana ou numa rotação de manutenção, se os dois ainda dizem a mesma coisa: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente)."
+    bom_quando: "os design docs aprovados já têm código por trás e você quer saber, como ritual semanal, de preferência na rotação de manutenção se o time tem uma, se os dois ainda dizem a mesma coisa: a skill lê cada documento da pasta de designs, acha o código que ele cita e lista só as divergências (funcionalidade ausente, modelo incompleto, valor fixo onde se planejou lógica, arquitetura diferente)."
     cuidado: "a skill aponta e a pessoa decide se corrige o código ou o documento; o relatório vai para AAAA-MM-DD_DRIFT_REPORT.md, e documento sem link para o código custa mais: a skill pede que você acrescente os links."
   - momento: antes-do-merge
     passo: revisar
@@ -49,8 +49,8 @@ limites: |
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
   declara `disable-model-invocation: true` [ref:egm-drift-report-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
-  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
-  o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
   [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
   da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
   `skills/egm_drift_report/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa

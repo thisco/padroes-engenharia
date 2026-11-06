@@ -11,7 +11,7 @@ caminhos:
   - momento: antes-de-escrever
     passo: revisar-spec
     papel: caminho
-    bom_quando: "o design doc está escrito e ninguém além do autor o leu: revisores sem o histórico da conversa recebem só o documento e os arquivos que ele cita e passam por cinco estágios (Zoom Out inicial, teste de compreensão com paráfrase, crítica do desenho, Zoom Out intermediário e prontidão de implementação)."
+    bom_quando: "o design doc está escrito e ninguém além do autor o leu: revisores sem o histórico da conversa recebem o documento, os arquivos que ele cita e a lista de leitura opcional que você fornecer (o teste de compreensão lê só o documento) e passam por cinco estágios (Zoom Out inicial, teste de compreensão com paráfrase, crítica do desenho, Zoom Out intermediário e prontidão de implementação)."
     cuidado: "os relatórios vão para arquivos (zoom_out_report.md, comprehension_report.md, critic_report.md, intermediate_zoom_out_report.md e implementation_readiness_report.md), não para o chat; no modo interativo, cada estágio termina num portão de uma pergunta, e cada um aceita no máximo uma nova auditoria. Link para fora da pasta de trabalho e URL só entram no contexto dos revisores com a sua aprovação."
 como_instalar: |
   Instale o plugin inteiro, e não só esta skill: o README pede o plugin completo para que as
@@ -52,8 +52,8 @@ limites: |
   `resources/document_standards/` em tempo de execução [ref:egm-harnesses]. O frontmatter
   declara `disable-model-invocation: true` [ref:egm-review-skill]. A origem é
   pré-1.0: a versão canônica é a do `plugin.json`, e nomes de skill, parâmetros, caminhos de saída
-  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. Ela não tem `CHANGELOG.md`:
-  o versionamento está em `docs/releases.md` e as mudanças, nas notas de cada release
+  e formato de relatório só ficam estáveis na 1.0 [ref:egm-releases]. As versões são publicadas
+  pelo processo de `docs/releases.md`, e as mudanças vão nas notas de cada release
   [ref:egm-releases], então a revalidação confere a versão à mão. O portal fixa o commit 113a3af
   da `main`, com `0.1.0` no `plugin.json`, e não a tag: a `v0.1.0` ainda guarda esta skill em
   `skills/egm_review/`, com sublinhado [ref:egm-readme-tag-v0-1-0], e a `main` lida usa

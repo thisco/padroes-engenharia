@@ -31,11 +31,11 @@ afirmacoes:
   ref: egm-resolve-skill
   localizacao: "'Prerequisites & Context Strategy'; Step 2 (categorias); Step 4 (primeiro parágrafo e 'You MUST immediately yield active execution by calling zero tools')"
   resultado: confirmada
-- texto: com o desenho escrito, o brainstorming despacha um subagente novo que devolve só as perguntas que um construtor ainda precisaria responder; as que só a pessoa responde voltam a ela numa única rodada, antes da entrega
+- texto: quando a spec nasce no brainstorming, com o desenho escrito a skill despacha um subagente novo com o builder-check-prompt.md; as perguntas que só a pessoa responde voltam a ela numa única rodada, antes da entrega
   ref: superpowers-brainstorming
   localizacao: "seção 'The Written Design', item 'Builder check' (três pilhas, 'Bring the theirs pile in one message', 'That's the only round of questions the check produces') e builder-check-prompt.md ao lado da skill"
   resultado: confirmada
-  nota: "Lido no raw do commit fixado bb92a77 em 2026-11-05 (SKILL.md e builder-check-prompt.md)."
+  nota: "Lido no raw do commit fixado bb92a77 em 2026-11-05 e relido em 2026-11-06 (SKILL.md). O desenho escrito só existe no tamanho projeto (seção 'Size the Work'), por isso o texto limita o caminho à spec nascida nessa skill. O que o subagente devolve passou a citar superpowers-builder-check-prompt."
 - texto: sem ferramenta de subagente, o brainstorming lê o documento ele mesmo, no papel do construtor
   ref: superpowers-brainstorming
   localizacao: "seção 'The Written Design', item 'Builder check', última frase: 'Without a subagent tool, read the document as that builder yourself'"
@@ -45,6 +45,21 @@ afirmacoes:
   localizacao: "SKILL.md no commit a789fc3 (v3.1.0), 'Fase 2 — Gate arquitetural' (item 1, 'ambas sobre a spec (antes de existir plano ou código)') e 'Fase 3 — Checkpoint humano da spec'"
   resultado: confirmada
   nota: "A 3.0.0 (5f6e9ad) foi lida no raw em 2026-11-05. Relido em 2026-11-06 na cópia 3.1.0 em skills/sdd-lifecycle/SKILL.md (commit a789fc3, SHA-256 conferido contra o PROCEDENCIA.md), que é o commit fixado da referência: as Fases 2 e 3 não mudaram, e a 3.1.0 só acrescenta a tabela Aceleradores opcionais."
+- texto: 'os relatórios da egm-review saem na pasta de trabalho ou na pasta de artefatos do harness, e não na pasta da spec'
+  ref: egm-review-skill
+  localizacao: '''Execution Constraints (CRITICAL)'', item 1 (Artifact-First Delivery: ''write them to the working directory (or your harness''s artifact directory, if it has one)''); ''Subflow: Uninterrupted Full Flow'', item 1'
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06. A frase vale para o caminho 1 e para Como verificar; o passo de copiar os relatórios para junto da spec é orientação do portal, não da skill.'
+- texto: 'o subagente da checagem do construtor devolve só as perguntas que um construtor ainda precisaria responder, ordenadas por importância'
+  ref: superpowers-builder-check-prompt
+  localizacao: 'bloco do prompt: ''Report only the questions you''d still need answered before you could plan this well'' e ''Rank them by importance'''
+  resultado: confirmada
+  nota: 'Lido no raw do commit fixado bb92a77 em 2026-11-06.'
+- texto: 'para rodar a checagem, despacha-se um subagente novo com o prompt do builder-check-prompt.md, preenchido com o domínio e o caminho do documento'
+  ref: superpowers-builder-check-prompt
+  localizacao: 'parágrafo de abertura: ''Dispatch a fresh general-purpose subagent with this prompt once the written design exists. Fill in the domain and the document path.'''
+  resultado: confirmada
+  nota: 'O arquivo foi escrito para o brainstorming; usá-lo sobre uma spec escrita fora da skill é adaptação do portal, e o prompt só pede o domínio e o caminho do documento.'
 revisao_adversarial:
   revisor: revisor-independente
   data: '2026-11-06'
@@ -55,9 +70,7 @@ revisao_adversarial:
       de artefatos do harness (Execution Constraints, item 1; Subflow Uninterrupted Full Flow, item 1),
       não na pasta da spec. Como aplicar não manda copiar nem mover o relatório, e quem segue o caminho
       1 não chega à evidência que Como verificar pede sem inventar esse passo.'
-    tratamento: 'pendente: acrescentar ao caminho 1 o passo de copiar o consolidated_review_report.md
-      (ou os relatórios de estágio) para a pasta da spec, ou apontar a linha ''EGM artifact directory:''
-      para ela nos harnesses que a aceitam, e dizer isso em Como verificar.'
+    tratamento: 'corrigido: o caminho 1 diz que os relatórios saem na pasta de trabalho ou na de artefatos do harness e manda copiá-los para junto da spec; Como verificar repete onde eles saem e que quem revisou os copia para a pasta da spec antes da aprovação. Afirmação nova registrada contra o raw do commit fixado em 2026-11-06.'
   - afirmacao: 'Como aplicar, caminho 2: ''Com o desenho escrito, a skill despacha um subagente novo que
       devolve só as perguntas que um construtor ainda precisaria responder'''
     problema: '[médio] executabilidade: a checagem do construtor é um passo interno do brainstorming do
@@ -65,24 +78,20 @@ revisao_adversarial:
       ''For a project''). Para uma spec escrita fora dessa skill (por exemplo na Fase 1 da sdd-lifecycle),
       o texto não diz como rodar só a checagem, e o leitor precisa inventar (por exemplo, despachar à
       mão um subagente com o builder-check-prompt.md).'
-    tratamento: 'pendente: dizer que o caminho 2 vale quando a spec nasce no brainstorming do superpowers,
-      ou descrever como rodar só a checagem sobre uma spec existente, com referência para o builder-check-prompt.md.'
+    tratamento: 'corrigido: o caminho 2 vale para a spec que nasce no brainstorming e ensina a rodar só a checagem sobre uma spec escrita fora dele, despachando à mão um subagente novo com o builder-check-prompt.md preenchido com o domínio e o caminho. Afirmações refeitas em 2026-11-06.'
   - afirmacao: 'Como aplicar, caminho 2: ''devolve só as perguntas que um construtor ainda precisaria
       responder'' [ref:superpowers-brainstorming]'
     problema: '[baixo] o SKILL.md (a URL da referência) diz que o subagente é novo e recebe o builder-check-prompt.md,
       e fala em separar ''what the builder asks''; o ''só as perguntas'' (''Report only the questions
       you''d still need answered'') está no builder-check-prompt.md, arquivo vizinho no commit bb92a77
       que não é referência do portal. A fonte confirma, mas a referência citada só sustenta em parte.'
-    tratamento: 'pendente: criar referência para skills/brainstorming/builder-check-prompt.md no commit
-      bb92a77 e citá-la nessa oração.'
+    tratamento: 'corrigido: criada a referência superpowers-builder-check-prompt (skills/brainstorming/builder-check-prompt.md no commit bb92a77), citada na oração sobre o que o subagente devolve, agora com ''ordenadas por importância''; listada em referencias da P1-12.'
   - afirmacao: 'Como aplicar, caminho 2: ''registre que a leitura ficou por fazer'''
     problema: '[baixo] executabilidade: o texto não diz onde nem como registrar; Como verificar só prevê
       a linha ''Lido por:'' ou o relatório ao lado da spec.'
-    tratamento: 'pendente: dizer onde registrar, por exemplo ''Lido por: ninguém (sem ferramenta de subagente)''
-      no cabeçalho da spec.'
+    tratamento: 'corrigido: o caminho 2 diz para registrar no cabeçalho da spec, ao lado de quem aprovou, por exemplo ''Lido por: ninguém (sem ferramenta de subagente)''; Como verificar diz que essa linha registra a leitura por fazer e não conta como evidência.'
   - afirmacao: 'O que fazer: ''A decisão do portal está na ADR 0015'''
     problema: '[médio] a ADR 0015 está com ''Status: proposta'' e com ''Aprovado por:'' e ''Aprovado em:''
       vazios desde o commit 866258a (docs/adr/0015-revisar-spec-por-quem-nao-a-escreveu.md:3-9); enquanto
       o dono não a aprova, ela é proposta, não decisão do portal.'
-    tratamento: 'pendente: o dono aprova a ADR 0015, ou o texto passa a dizer ''A proposta do portal está
-      na ADR 0015'' até a aprovação.'
+    tratamento: 'corrigido, por decisão do controlador: a P1-12 diz que a decisão está registrada na ADR 0015, sem afirmar status, e o CHANGELOG cita a ''ADR 0015 (proposta)''. A ADR não foi alterada e a aprovação continua com o dono.'

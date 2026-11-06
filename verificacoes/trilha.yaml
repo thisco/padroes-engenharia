@@ -85,9 +85,9 @@ afirmacoes:
   localizacao: "aberto na web no commit 113a3af (raw do GitHub), Step 5 (itens 6 e 7: atualiza design_draft.md com a seção 'Detailed Implementation') e Step 6, itens 2 e 4"
   resultado: confirmada
   nota: 'Que o time guarda a versão aprovada em docs/designs/<nome>.md é a prática proposta pelo portal sobre o padrão da skill.'
-- texto: "A pasta de artefatos pode ser trocada com a linha 'EGM artifact directory: .dev/docs' no prompt ou no AGENTS.md, e os design docs não se movem com ela."
+- texto: "No Claude Code, no Claude Cowork, no Codex e no ChatGPT, a pasta de artefatos pode ser trocada com a linha 'EGM artifact directory: .dev/docs' no prompt ou no arquivo de instruções que o harness carrega (CLAUDE.md ou AGENTS.md, do projeto ou do usuário; o Claude Code só lê o AGENTS.md do projeto quando não há CLAUDE.md), e os design docs não se movem com ela."
   ref: egm-harnesses
-  localizacao: "aberto na web no commit 113a3af (raw do GitHub), seção 'Artifact Directory'"
+  localizacao: "aberto na web no commit 113a3af (raw do GitHub, relido em 2026-11-06), seção 'Artifact Directory', primeiro parágrafo ('In Claude Code, Claude Cowork, Codex, and ChatGPT, you can name another folder') e último parágrafo ('Design docs and other project files do not move', 'Claude Code reads a project AGENTS.md only when the project has no CLAUDE.md')"
   resultado: confirmada
 - texto: 'A egm-draft manda escrever resumos e comunicações em inglês simples e direto, sem adjetivo promocional, sem elogio ao usuário e sem pedido de desculpa quando é corrigida.'
   ref: egm-draft-skill
@@ -129,5 +129,4 @@ revisao_adversarial:
       Codex e ChatGPT (''In Claude Code, Claude Cowork, Codex, and ChatGPT, you can name another folder''),
       aceita CLAUDE.md ou AGENTS.md e avisa que o Claude Code só lê o AGENTS.md do projeto quando não
       há CLAUDE.md. O texto generaliza para todo harness e só cita o AGENTS.md.'
-    tratamento: 'pendente: dizer em quais harnesses a troca vale e que a linha vai no arquivo de instruções
-      que o harness carrega (CLAUDE.md ou AGENTS.md).'
+    tratamento: 'corrigido: a página diz que a troca vale no Claude Code, no Claude Cowork, no Codex e no ChatGPT, e que a linha vai no prompt ou no arquivo de instruções que o harness carrega (CLAUDE.md ou AGENTS.md, do projeto ou do usuário), com o aviso de que o Claude Code só lê o AGENTS.md do projeto sem CLAUDE.md; afirmação refeita contra o raw em 2026-11-06.'

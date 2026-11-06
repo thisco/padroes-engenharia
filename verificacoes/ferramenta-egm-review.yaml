@@ -152,14 +152,11 @@ afirmacoes:
   localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
     contract for skill names, parameters, output paths, and report formats')
   resultado: confirmada
-- texto: a origem não tem CHANGELOG.md; o versionamento está em docs/releases.md e as mudanças vão nas
-    notas de cada release
+- texto: 'as versões são publicadas pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release'
   ref: egm-releases
-  localizacao: seção 'Versioned releases' ('Explain breaking changes in release notes') e 'Prepare a candidate',
-    passo 5 (notas da release)
+  localizacao: 'seção ''Versioned releases'' (''Explain breaking changes in release notes'') e ''Prepare a candidate'', passos 3 a 6 (tag anotada, rascunho da release, notas com as mudanças no passo 5 e publicação manual)'
   resultado: confirmada
-  nota: 'A ausência de CHANGELOG.md foi conferida na árvore do commit fixado pela API do GitHub em 2026-11-05:
-    a raiz não tem o arquivo.'
+  nota: 'Relido no raw do commit fixado em 2026-11-06. A ausência de CHANGELOG.md saiu do texto, porque a referência não a afirma.'
 - texto: a tag v0.1.0 guarda a skill em skills/egm_review/, com sublinhado
   ref: egm-readme-tag-v0-1-0
   localizacao: README no commit b3a3595 da tag, tabela da seção 'Choose a skill' (linhas 102 a 108) e
@@ -172,6 +169,11 @@ afirmacoes:
   localizacao: tabela da seção 'Choose a skill', link da skill para skills/egm-review/SKILL.md, no commit
     fixado 113a3af
   resultado: confirmada
+- texto: 'caminho revisar-spec, bom_quando: os revisores sem o histórico da conversa recebem o documento, os arquivos que ele cita e a lista de leitura opcional que a pessoa fornecer, e o teste de compreensão lê só o documento'
+  ref: egm-review-skill
+  localizacao: '''Inputs'' (GoldfishContext, opcional: ''Reading list to establish the system baseline''); ''Step 1: Intake & Setup'', itens 2 e 3 (''Pass GoldfishContext to every stage except Stage 6, which reads the document alone'')'
+  resultado: confirmada
+  nota: 'Relido no raw do commit fixado em 2026-11-06.'
 revisao_adversarial:
   revisor: revisor-independente
   data: '2026-11-06'
@@ -181,12 +183,10 @@ revisao_adversarial:
     problema: '[baixo] o SKILL.md admite um GoldfishContext opcional, a lista de leitura que a pessoa
       fornece além dos links do documento (Inputs; Step 1, item 2), e o estágio 6 lê o documento sozinho
       (Step 1, item 3). ''Só o documento e os arquivos que ele cita'' omite a lista fornecida pela pessoa.'
-    tratamento: 'pendente: escrever ''recebem o documento, os arquivos que ele cita e a lista de leitura
-      que você fornecer''.'
+    tratamento: 'corrigido: o bom_quando diz que os revisores recebem o documento, os arquivos que ele cita e a lista de leitura opcional que você fornecer, e que o teste de compreensão lê só o documento; afirmação registrada contra o raw do commit fixado em 2026-11-06.'
   - afirmacao: 'limites: ''Ela não tem CHANGELOG.md: o versionamento está em docs/releases.md e as mudanças,
       nas notas de cada release [ref:egm-releases]'''
     problema: '[baixo] o docs/releases.md diz que a versão canônica é a do plugin.json e manda explicar
       mudanças incompatíveis nas release notes, mas não diz que não há CHANGELOG.md. A ausência é verdadeira
       na árvore do commit 113a3af (a raiz não tem CHANGELOG.md), mas a referência citada não a sustenta.'
-    tratamento: 'pendente: tirar a ausência do CHANGELOG.md de baixo de [ref:egm-releases] e deixá-la
-      como constatação do portal sobre a árvore do commit fixado, ou citar uma fonte que mostre a árvore.'
+    tratamento: 'corrigido: a frase sobre a ausência de CHANGELOG.md saiu do limites; o texto diz só o que a fonte diz (as versões saem pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release), com a afirmação refeita contra o raw do commit fixado em 2026-11-06.'

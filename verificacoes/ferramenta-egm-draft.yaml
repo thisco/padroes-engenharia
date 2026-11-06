@@ -97,14 +97,11 @@ afirmacoes:
   ref: egm-execution-instructions
   localizacao: itens 'Design-Only Scope', 'Explicit Consensus Gates' e 'ONE QUESTION AT A TIME'
   resultado: confirmada
-- texto: a egm-draft não usa subagente; a leitura por leitor sem contexto é da egm-review, que para sem
-    ferramenta de subagente
+- texto: a leitura por leitor sem contexto é da egm-review, que para sem ferramenta de subagente
   ref: egm-harnesses
   localizacao: seção 'Delegation', parágrafo 'A Goldfish review needs a fresh context. If a harness has
     no subagent tool, the review skills stop'
   resultado: confirmada
-  nota: 'Que a egm-draft não usa subagente vem da própria skill: ela não tem seção ''Delegation'' nem
-    passo que crie subagente.'
 - texto: instalar só a pasta skills/ quebra o EGM, porque as skills leem agents/ e resources/document_standards/
     em tempo de execução
   ref: egm-harnesses
@@ -124,14 +121,11 @@ afirmacoes:
   localizacao: seção 'Versioned releases', primeiro e segundo parágrafos ('Version 1.0 requires a stable
     contract for skill names, parameters, output paths, and report formats')
   resultado: confirmada
-- texto: a origem não tem CHANGELOG.md; o versionamento está em docs/releases.md e as mudanças vão nas
-    notas de cada release
+- texto: 'as versões são publicadas pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release'
   ref: egm-releases
-  localizacao: seção 'Versioned releases' ('Explain breaking changes in release notes') e 'Prepare a candidate',
-    passo 5 (notas da release)
+  localizacao: 'seção ''Versioned releases'' (''Explain breaking changes in release notes'') e ''Prepare a candidate'', passos 3 a 6 (tag anotada, rascunho da release, notas com as mudanças no passo 5 e publicação manual)'
   resultado: confirmada
-  nota: 'A ausência de CHANGELOG.md foi conferida na árvore do commit fixado pela API do GitHub em 2026-11-05:
-    a raiz não tem o arquivo.'
+  nota: 'Relido no raw do commit fixado em 2026-11-06. A ausência de CHANGELOG.md saiu do texto, porque a referência não a afirma.'
 - texto: a tag v0.1.0 guarda a skill em skills/egm_draft/, com sublinhado
   ref: egm-readme-tag-v0-1-0
   localizacao: README no commit b3a3595 da tag, tabela da seção 'Choose a skill' (linhas 102 a 108) e
@@ -144,6 +138,11 @@ afirmacoes:
   localizacao: tabela da seção 'Choose a skill', link da skill para skills/egm-draft/SKILL.md, no commit
     fixado 113a3af
   resultado: confirmada
+- texto: 'a egm-draft não usa subagente'
+  ref: egm-draft-skill
+  localizacao: 'SKILL.md inteiro no commit fixado: não tem seção ''Delegation'', e nenhum passo de ''Execution Workflow'' (''Section Approval Gate'' e Steps 1 a 6) cria subagente; a única menção a contexto novo é o Step 6, item 1, que deixa a conferência Zoom Out para o estágio 5 da egm-review'
+  resultado: confirmada
+  nota: 'Afirmação por ausência, conferida no raw do commit fixado em 2026-11-06.'
 revisao_adversarial:
   revisor: revisor-independente
   data: '2026-11-06'
@@ -154,11 +153,10 @@ revisao_adversarial:
       e cita só /egm-brainstorm e /egm-review como revisões Goldfish; que a egm-draft não usa subagente
       se vê no SKILL.md da egm-draft (sem seção Delegation nem ordem de criar subagente), que a frase
       não cita.'
-    tratamento: 'pendente: acrescentar [ref:egm-draft-skill] à primeira oração.'
+    tratamento: 'corrigido: a primeira oração passou a citar [ref:egm-draft-skill] (''A skill não usa subagente [ref:egm-draft-skill]''), e a parte sobre a egm-review ficou com [ref:egm-harnesses]; as duas afirmações foram separadas no registro e conferidas no raw em 2026-11-06.'
   - afirmacao: 'limites: ''Ela não tem CHANGELOG.md: o versionamento está em docs/releases.md e as mudanças,
       nas notas de cada release [ref:egm-releases]'''
     problema: '[baixo] o docs/releases.md diz que a versão canônica é a do plugin.json e manda explicar
       mudanças incompatíveis nas release notes, mas não diz que não há CHANGELOG.md. A ausência é verdadeira
       na árvore do commit 113a3af (a raiz não tem CHANGELOG.md), mas a referência citada não a sustenta.'
-    tratamento: 'pendente: tirar a ausência do CHANGELOG.md de baixo de [ref:egm-releases] e deixá-la
-      como constatação do portal sobre a árvore do commit fixado, ou citar uma fonte que mostre a árvore.'
+    tratamento: 'corrigido: a frase sobre a ausência de CHANGELOG.md saiu do limites; o texto diz só o que a fonte diz (as versões saem pelo processo de docs/releases.md, e as mudanças vão nas notas de cada release), com a afirmação refeita contra o raw do commit fixado em 2026-11-06.'
