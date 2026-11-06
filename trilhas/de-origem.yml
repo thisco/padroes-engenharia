@@ -6,6 +6,7 @@ casos: [origem-do-modelo]
 sequencia:
   - {ferramenta: sp-brainstorming, momento: antes-de-escrever, passo: entrevistar}
   - {ferramenta: sp-brainstorming, momento: antes-de-escrever, passo: escrever-spec}
+  - {ferramenta: sp-brainstorming, momento: antes-de-escrever, passo: revisar-spec}
   - {ferramenta: ao-doubt-driven-development, momento: antes-de-escrever, passo: decidir}
   - {ferramenta: sp-systematic-debugging, momento: antes-de-escrever, passo: investigar}
   - {ferramenta: ao-security-and-hardening, momento: antes-de-escrever, passo: seguranca}

@@ -72,3 +72,31 @@ def test_p1_10_glossario_e_pagina_da_trilha_absorvem_o_egm():
     assert goldfish["conceito"] == "subagente" and len(goldfish["definicao"]) <= 200
     pagina = (fabrica.RAIZ / "paginas/trilha.md").read_text(encoding="utf-8")
     assert "elephant-goldfish-model" in pagina and "design_draft.md" in pagina
+
+
+def test_trilha_elefante_e_goldfish_segue_a_spec():
+    """R5 da spec do Elefante e Goldfish."""
+    arquivo = fabrica.RAIZ / "trilhas/elefante-e-goldfish.yml"
+    t = yaml.safe_load(arquivo.read_text(encoding="utf-8"))
+    assert t["status"] == "avaliar" and "casos" not in t
+    seq = {(i["momento"], i["passo"]): i["ferramenta"] for i in t["sequencia"]}
+    assert seq[("antes-de-escrever", "entrevistar")] == "egm-brainstorm"
+    assert seq[("antes-de-escrever", "escrever-spec")] == "egm-draft"
+    assert seq[("antes-de-escrever", "revisar-spec")] == "egm-review"
+    assert seq[("depois-da-entrega", "continuar")] == "egm-drift-report"
+    assert ("antes-de-escrever", "decidir") not in seq
+    assert {p for (m, p), f in seq.items() if f == "sdd-lifecycle"} == {
+        "planejar", "isolar", "tdd", "revisar", "evidencia", "pr-e-merge", "retro",
+    }
+
+
+def test_guiada_e_de_origem_preenchem_revisar_spec_e_enxuta_nao():
+    """R6 da spec do Elefante e Goldfish."""
+
+    def skill_em(slug):
+        t = yaml.safe_load((fabrica.RAIZ / f"trilhas/{slug}.yml").read_text(encoding="utf-8"))
+        return {i["ferramenta"] for i in t["sequencia"] if i["passo"] == "revisar-spec"}
+
+    assert skill_em("guiada") == {"sdd-lifecycle"}
+    assert skill_em("de-origem") == {"sp-brainstorming"}
+    assert skill_em("enxuta") == set()

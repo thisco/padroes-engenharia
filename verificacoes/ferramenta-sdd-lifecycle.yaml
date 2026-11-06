@@ -70,6 +70,14 @@ afirmacoes:
     ref: sdd-lifecycle
     localizacao: "SKILL.md, 'Retomada multi-sessão', passos 1 a 5"
     resultado: confirmada
+  - texto: "revisar-spec: a Fase 2 varre a spec atrás de mudança destrutiva e responde as três perguntas de impacto arquitetural, e a Fase 3 pausa para o dono aprovar ou pedir ajuste antes do plano"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, 'Fase 2 — Gate arquitetural (Tier 2) — GATEKEEPER' e 'Fase 3 — Checkpoint humano da spec (Tier 2)'"
+    resultado: confirmada
+  - texto: "na 3.0.0 a única revisão independente é a da Fase 7, depois do código; antes da aprovação a spec só passa pelo gate e por quem a aprova"
+    ref: sdd-lifecycle
+    localizacao: "SKILL.md, Fase 7 ('Tier 2 — revisão adversarial: uma sessão ou agente independente') e Fases 2 e 3, sem leitor sem contexto da spec; conferido na cópia local (PROCEDENCIA.md: commit 5f6e9ad)"
+    resultado: confirmada
   - texto: "a sequência de passos da trilha corresponde às fases 1, 2, 4, 5, 6, 7, 7, 8, 8 e à retomada"
     ref: sdd-lifecycle
     localizacao: "SKILL.md, títulos das fases 1 a 8 e 'Retomada multi-sessão', conferidos na cópia local (PROCEDENCIA.md: commit 5f6e9ad, SHA-256 conferido pelo teste)"

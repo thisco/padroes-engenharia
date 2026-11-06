@@ -30,6 +30,18 @@ afirmacoes:
     ref: superpowers-brainstorming
     localizacao: "bloco HARD-GATE, último parágrafo: 'invoke superpowers:writing-plans and no other skill'"
     resultado: confirmada
+  - texto: "revisar-spec: um subagente novo lê o desenho escrito como o construtor que vai planejá-lo, e a skill só entrega o documento depois da volta dele"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Builder check' (\"Don't hand over the document until the check is back\") e builder-check-prompt.md ao lado dela no mesmo commit (bb92a77)"
+    resultado: confirmada
+  - texto: "o subagente recebe só o caminho do desenho e devolve só perguntas, ordenadas por importância"
+    ref: superpowers-brainstorming
+    localizacao: "builder-check-prompt.md (bb92a77): 'Read [DOCUMENT_PATH]', 'Report only the questions', 'Rank them by importance'"
+    resultado: confirmada
+  - texto: "as perguntas que só a pessoa responde vêm numa única mensagem, e é a única rodada de perguntas que a checagem produz; sem ferramenta de subagente, a skill manda ler o documento como o construtor"
+    ref: superpowers-brainstorming
+    localizacao: "seção 'The Written Design', item 'Builder check', parágrafos finais (\"That's the only round of questions the check produces\"; \"Without a subagent tool, read the document as that builder yourself\")"
+    resultado: confirmada
   - texto: "a skill cita arquivos ao lado dela (builder-check-prompt.md e visual-companion.md)"
     ref: superpowers-brainstorming
     localizacao: "itens 'Builder check' e 'Visual Companion' (último parágrafo)"

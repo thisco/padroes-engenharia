@@ -19,6 +19,11 @@ caminhos:
     papel: caminho
     bom_quando: "o trabalho é do tamanho de projeto e precisa de um desenho escrito que outro construtor consiga planejar sem voltar à pessoa."
     cuidado: "grava em docs/superpowers/specs/ num repositório de software e pergunta fora dele, com a preferência da pessoa valendo sobre os dois; um subagente confere o desenho antes da entrega e, aprovado o desenho, o único passo seguinte aceito é a writing-plans."
+  - momento: antes-de-escrever
+    passo: revisar-spec
+    papel: caminho
+    bom_quando: "o desenho de projeto está escrito e ainda não foi entregue: um subagente novo, que não falou com a pessoa, lê o desenho como o construtor que vai planejá-lo, e o que ele perguntar volta ao documento antes da entrega."
+    cuidado: "o subagente recebe só o caminho do desenho, sem a conversa, e devolve só perguntas, ordenadas por importância; as respostas que só a pessoa tem vêm numa única mensagem, e essa é a única rodada de perguntas da checagem. Sem ferramenta de subagente, a própria skill manda ler o documento no papel do construtor."
 como_instalar: |
   Instale o plugin superpowers no seu harness; a instalação é por harness, e quem usa mais de um
   instala em cada um [ref:superpowers-readme]. Sem plugin, copie a pasta skills/ inteira do commit
