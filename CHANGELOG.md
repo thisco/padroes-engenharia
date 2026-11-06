@@ -13,9 +13,9 @@ retirado, minor para conteúdo novo, patch para texto e links.
 ### Adicionado
 
 - Passo `revisar-spec` na espinha, em "Antes de escrever": a spec é lida por quem não a escreveu
-  antes da aprovação, como na ADR 0015 (proposta). Trilhas sem o passo ficam com ele vazio.
+  antes da aprovação, como na ADR 0015 (aceita). Trilhas sem o passo ficam com ele vazio.
 - Prática P1-12, "Revise a spec com quem não a escreveu antes de aprovar", em `experimentar`, com a
-  ADR 0015 (proposta).
+  ADR 0015 (aceita).
 - Coleção `elephant-goldfish-model` 0.1.0 (plugin do Elefante e do Goldfish) fixada em
   `componentes.yml`, com dezoito referências `egm-*`, dezesseis no commit fixado, uma no commit da
   tag v0.1.0 e o ensaio de origem como fonte secundária, e seis ferramentas `egm-*` em `avaliar`,
