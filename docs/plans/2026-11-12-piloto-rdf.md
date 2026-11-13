@@ -91,7 +91,7 @@ import local quando necessário para evitar ciclo com `grafo_catalogo`.
 - [x] Fixar parser independente de teste e provar isomorfismo, reconstrução exata dos IDs e
   tuplas com fontes, igualdade byte a byte com entrada invertida e identidade estável ao
   variar commit/URL/pasta; dados não têm contextos remotos/importações. (R2, R3, R4, R8)
-- [ ] Rodar testes completos e `python -m ruff check .`, colar resultados e criar commit
+- [x] Rodar testes completos e `python -m ruff check .`, colar resultados e criar commit
   `feat(semantica): exportar contrato RDF deterministico`. (R2, R3, R4, R7, R8)
 
 Exemplo de teste contratual mínimo, a ampliar com a fixture completa acima:
@@ -209,10 +209,28 @@ $ /tmp/piloto-rdf-venv/bin/ruff format --check portal/gerador/semantica.py porta
 3 files already formatted
 ```
 
-A suíte completa (`tests/cli`, `tests/integracao`, `tests/verificadores`) não terminou nesta
-máquina: avançou cerca de 6% a cada 5 minutos com outras suítes concorrendo, e foi interrompida
-(ver relatório da tarefa). Nenhuma falha foi observada nos trechos que rodaram. Esta tarefa só
-adiciona arquivos novos e uma linha em `requirements-dev.txt`.
+Suíte completa, rodada pela coordenação. Linha de base em `3ad4fd1` e depois em `76b9d32`
+(os 38 testes novos; nenhuma falha):
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider   # 3ad4fd1
+3200 passed in 306.07s (0:05:06)
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider   # 76b9d32
+3238 passed in 315.02s (0:05:15)
+```
+
+Revisão da tarefa e correção (`939943a`): `indice.json` passou a ser a lista ordenada por ID,
+classes e propriedades ganharam rótulo legível em pt-BR, campo obrigatório ausente virou
+`ValueError` diagnosticado e a base exige o prefixo literal `https://`.
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_semantica.py -q   # 939943a
+47 passed in 0.11s
+$ /tmp/piloto-rdf-venv/bin/ruff check .
+All checks passed!
+```
+
+A suíte completa sobre `939943a` roda de novo ao fim da Tarefa 2.
 
 ## Revisão adversarial: 2026-11-12 — achados
 
