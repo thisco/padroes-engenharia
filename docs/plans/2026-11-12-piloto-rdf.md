@@ -71,24 +71,24 @@ import local quando necessário para evitar ciclo com `grafo_catalogo`.
 
 ## Tarefa 1 — Contrato, identidades e exportador puro
 
-- [ ] Escrever `test_semantica.py` com fixture cobrindo os 12 pares concretos da tabela da
+- [x] Escrever `test_semantica.py` com fixture cobrindo os 12 pares concretos da tabela da
   spec, tipos genéricos de aplica e caracteres especiais em ID/literais; cada teste cita R<n>.
   Incluir casos negativos para duplicata, destino ausente e combinação incompatível. (R2, R3, R7, R8)
-- [ ] Executar `python -m pytest tests/unidade/test_semantica.py -q`; registrar falha inicial
+- [x] Executar `python -m pytest tests/unidade/test_semantica.py -q`; registrar falha inicial
   por módulo/função ainda ausente, e depois falhas de comportamento específicas. (R2, R3, R7)
-- [ ] Implementar contrato compartilhado e `validar_base_rdf`, `iri_entidade`, `montar_semantica`.
+- [x] Implementar contrato compartilhado e `validar_base_rdf`, `iri_entidade`, `montar_semantica`.
   Base exige HTTPS absoluto, hostname, `/` final e ausência de credenciais/query/fragmento.
   IRI usa `quote(id_, safe='-._~')`; hash da afirmação usa JSON UTF-8 compacto de
   `[source,target,relation]`, `ensure_ascii=False`, `separators=(',', ':')`. (R2, R3, R7)
-- [ ] Exportar vocabulário sem instâncias, dados Turtle e JSON-LD com contexto embutido;
+- [x] Exportar vocabulário sem instâncias, dados Turtle e JSON-LD com contexto embutido;
   classes recebem Entidade e classe específica, rótulos/descrições pt-BR, URL como IRI,
   campos opcionais ausentes não são inventados. Serializar a partir de uma estrutura comum
   ordenada, escapando literais sem avaliar marcação ou seguir URLs. (R3, R4, R8)
-- [ ] Exportar manifesto versão 1, índice por ID e recorte por hash do ID; recorte tem entidade,
+- [x] Exportar manifesto versão 1, índice por ID e recorte por hash do ID; recorte tem entidade,
   vizinhos mínimos, arestas incidentes e registros rdf:Statement sem expansão recursiva.
   Manifesto aponta `../grafo/graph.json` e `../consultar.py`, lista mídia/capacidades/limites,
   mudança de identidade ao trocar base e aproximação de quatro caracteres por token. (R5, R6)
-- [ ] Fixar parser independente de teste e provar isomorfismo, reconstrução exata dos IDs e
+- [x] Fixar parser independente de teste e provar isomorfismo, reconstrução exata dos IDs e
   tuplas com fontes, igualdade byte a byte com entrada invertida e identidade estável ao
   variar commit/URL/pasta; dados não têm contextos remotos/importações. (R2, R3, R4, R8)
 - [ ] Rodar testes completos e `python -m ruff check .`, colar resultados e criar commit
@@ -180,6 +180,39 @@ lidos. `docs/PROJECT_MEMORY.md` não existe nesta base. Testes de implementaçã
 executados por esta etapa de planejamento; não há declaração de suíte verde.
 A execução local usa `python3` ou o Python do ambiente virtual, pois o alias `python` não
 está instalado no shell; comandos acima usam `python` após ativação do ambiente.
+
+### Tarefa 1 (2026-11-13)
+
+Vermelho inicial, antes de existir `portal/gerador/semantica.py`:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_semantica.py -q
+E   ModuleNotFoundError: No module named 'portal.gerador.semantica'
+ERROR tests/unidade/test_semantica.py
+1 error in 0.20s
+```
+
+Primeira execução com o exportador: `2 failed, 36 passed`. As duas falhas eram expectativas
+erradas do próprio teste (trecho "duplicada" contra a mensagem "vínculo duplicado", e idioma
+`pt-br` contra `pt-BR`, que o rdflib preserva); corrigidas no teste, sem mudar o contrato.
+
+Verde:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_semantica.py -q
+38 passed in 0.11s
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider tests/unidade
+978 passed in 23.80s
+$ /tmp/piloto-rdf-venv/bin/ruff check .
+All checks passed!
+$ /tmp/piloto-rdf-venv/bin/ruff format --check portal/gerador/semantica.py portal/gerador/modelo_semantico.py tests/unidade/test_semantica.py
+3 files already formatted
+```
+
+A suíte completa (`tests/cli`, `tests/integracao`, `tests/verificadores`) não terminou nesta
+máquina: avançou cerca de 6% a cada 5 minutos com outras suítes concorrendo, e foi interrompida
+(ver relatório da tarefa). Nenhuma falha foi observada nos trechos que rodaram. Esta tarefa só
+adiciona arquivos novos e uma linha em `requirements-dev.txt`.
 
 ## Revisão adversarial: 2026-11-12 — achados
 
