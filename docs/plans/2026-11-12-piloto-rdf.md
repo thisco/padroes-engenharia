@@ -106,24 +106,26 @@ def test_r2_id_inteiro_sem_normalizacao():
 
 ## Tarefa 2 — CLI, pacote e consumo independente
 
-- [ ] Criar testes de ativação/desativação e base inválida na CLI. Sem opção, ausência de
+- [x] Criar testes de ativação/desativação e base inválida na CLI. Sem opção, ausência de
   semantica/ e anúncio; com opção, arquivos cobertos pelos hashes do manifesto do pacote.
   Rodar testes antes de alterar integração e registrar o vermelho. (R1, R5)
-- [ ] Propagar parâmetro opcional pelas interfaces acima e incluir artefatos no pacote;
+- [x] Propagar parâmetro opcional pelas interfaces acima e incluir artefatos no pacote;
   preservar ordenação, contratos e defaults existentes. Anunciar manifesto em llms.txt. (R1, R5)
-- [ ] Injetar erro de exportação em teste de build atômico com sentinela na saída anterior:
+- [x] Injetar erro de exportação em teste de build atômico com sentinela na saída anterior:
   verificar sentinela intacta e ausência de `.tmp` após erro; erro inclui ID/campo/fonte.
   Testar base inválida antes de qualquer escrita e erro de entrada real além da injeção. (R1, R7)
-- [ ] Criar consumidor de teste somente com biblioteca padrão, sem importar gerador;
+- [x] Criar consumidor de teste somente com biblioteca padrão, sem importar gerador;
   descobrir manifesto via llms.txt, índice e referência pelo recorte, em diretório local
   e servidor HTTP loopback. Registrar arquivos e bytes lidos e caracteres devolvidos;
   comprovar que catálogo completo não foi lido. (R5, R6)
-- [ ] Demonstrar com fixture conhecida prática→referência, conceito→prática→ferramenta e
+- [x] Demonstrar com fixture conhecida prática→referência, conceito→prática→ferramenta e
   prática→célula→domínio/momento; afirmar direção, IDs, fonte e ausência de relação.
   Comparar com consulta atual e executar seus testes de orçamento sem mudar a consulta. (R6)
-- [ ] Desabilitar conexões externas nos testes de build/parser/consulta, permitindo loopback
+- [x] Desabilitar conexões externas nos testes de build/parser/consulta, permitindo loopback
   apenas no teste HTTP; garantir strings hostis preservadas como dados. (R8)
-- [ ] Executar `python -m pytest tests/integracao/test_semantica.py tests/unidade/test_build_atomico.py -q`,
+- [x] Executar `python -m pytest tests/integracao/test_semantica.py tests/unidade/test_build_atomico.py -q`
+  (o arquivo ficou `tests/integracao/test_semantica_integracao.py`: o nome do plano colide com
+  `tests/unidade/test_semantica.py` na coleta, pois `tests/` não tem `__init__.py`),
   suíte completa e lint; registrar evidências e commit `feat(portal): integrar piloto RDF opcional`. (R1, R5, R6, R7, R8)
 
 Checkpoint de fase: apresentar resultados intermediários a Thiago. A execução está autorizada;
@@ -231,6 +233,63 @@ All checks passed!
 ```
 
 A suíte completa sobre `939943a` roda de novo ao fim da Tarefa 2.
+
+### Tarefa 2 (2026-11-13)
+
+Vermelho, antes de tocar a integração (testes novos em
+`tests/integracao/test_semantica_integracao.py` e em `tests/unidade/test_build_atomico.py`):
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/integracao/test_semantica_integracao.py tests/unidade/test_build_atomico.py -q -p no:cacheprovider
+E   TypeError: construir() got an unexpected keyword argument 'base_rdf'
+E   AttributeError: <module 'portal.gerador.pacote' ...> has no attribute 'montar_semantica'
+18 failed, 19 passed
+```
+
+Segundo vermelho, com a propagação feita mas `montar_site` ainda sem repassar `base_rdf` ao `Site`
+(o build devolvia `[]` onde se esperava `R-SEMANTICA`): `10 failed, 27 passed`.
+
+Verde, ruff e suíte completa:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/integracao/test_semantica_integracao.py tests/unidade/test_build_atomico.py -q -p no:cacheprovider
+37 passed in 5.73s
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_consultar.py tests/integracao/test_tokens_catalogo.py -q -p no:cacheprovider
+19 passed in 2.86s        # consultar.py intacto (git diff vazio)
+$ /tmp/piloto-rdf-venv/bin/ruff check .
+All checks passed!
+$ /tmp/piloto-rdf-venv/bin/ruff format --check <arquivos alterados>
+8 files already formatted
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider
+3273 passed in 312.62s (0:05:12)
+```
+
+Catálogo real, em pasta temporária (nada gravado em `public/` nem na raiz):
+
+```
+$ /tmp/piloto-rdf-venv/bin/python scripts/gerar.py --saida /tmp/t2-real/site --previa \
+    --base-rdf https://example.org/padroes/ --url-base https://exemplo.pages.exemplo/padroes
+PRÉVIA, não publicada: portal gerado em /private/tmp/t2-real/site (versão 1.3.0, commit 0123456, 2026-11-13).
+```
+
+496 entidades exportadas sem erro; `varrer_externos` sobre o site inteiro devolve `[]` (R-EXTERNO só
+inspeciona `.html` e `.css`, então `.ttl`, `.jsonld` e `.json` não são alvo).
+Os caminhos `../grafo/graph.json` e `../consultar.py` do manifesto semântico resolvem para
+`pacote/grafo/graph.json` e `pacote/consultar.py`; `consultar.py "migration já aplicada" --budget 300`
+roda e responde.
+
+Medição do percurso prática → referência no catálogo real (DAD-01 cita referências), por
+`Consumidor` (só biblioteca padrão) sobre a pasta gerada:
+
+| Leitura | Arquivos | Bytes lidos | Caracteres devolvidos |
+| --- | --- | --- | --- |
+| Semântica: llms.txt, manifesto, índice, entidade DAD-01 e recorte da referência | 5 | 214137 (llms 39473, manifesto 2450, índice 147052, entidades 21716 e 3446) | 990 |
+| Consulta atual: `consultar.py "migration já aplicada"` | 1 (`graph.json`) | 476586 | 1046 |
+
+Catálogo completo, não lido pelo consumidor: `catalogo.ttl` 617142 bytes, `catalogo.jsonld` 710017
+e `graph.json` 476586. Sem promessa de redução: o índice (147052 bytes) domina a leitura e os
+dois percursos respondem a perguntas diferentes (a consulta ranqueia por texto; o recorte segue
+vínculos declarados, com direção e fonte).
 
 ## Revisão adversarial: 2026-11-12 — achados
 

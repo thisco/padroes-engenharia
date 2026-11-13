@@ -560,6 +560,14 @@ def llms_txt(site: Site, paginas: list[Pagina]) -> str:
         linhas += ["## Constituição", ""]
         linhas += [f"- [{c}]({site.url(c)}): a constituição canônica" for c in constituicoes(site)]
         linhas.append("")
+    if site.base_rdf:
+        linhas += [
+            "## Modelo semântico",
+            "",
+            "- [Manifesto semântico](pacote/semantica/manifesto.json): entrada do modelo RDF; "
+            "do manifesto ao índice, à entidade e à fonte, sem baixar o catálogo inteiro",
+            "",
+        ]
     linhas += [
         "## Optional",
         "",

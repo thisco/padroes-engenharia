@@ -3,11 +3,16 @@
 na raiz do repositório.
 
 Uso: python scripts/gerar.py [--raiz CAMINHO] [--saida PASTA] [--url-base URL]
-                             [--commit SHA] [--data AAAA-MM-DD] [--previa]
+                             [--commit SHA] [--data AAAA-MM-DD] [--previa] [--base-rdf URL]
 
 `--previa` gera uma prévia para testar conteúdo novo: exige `--saida` fora de `public/`, ignora só
 a regra R-PROMPT (prompt sem execução registrada), carimba "PRÉVIA, não publicada" no rodapé de
 toda página e na primeira linha de `llms.txt`, e não regrava README.md nem ROTEAMENTO.md.
+
+`--base-rdf` ativa o piloto RDF: com uma URL https absoluta terminada em `/`, o pacote leva
+`semantica/` (vocabulário, dados em Turtle e JSON-LD, índice e recortes por entidade) e o
+`llms.txt` anuncia o manifesto. Sem a opção, nada muda. Base inválida é erro de uso (saída 2),
+detectada antes de qualquer escrita; catálogo que a exportação recusa é erro de validação (saída 1).
 
 Commit e data do build, nesta ordem: --commit e --data; CI_COMMIT_SHA; SOURCE_DATE_EPOCH ou
 CI_COMMIT_TIMESTAMP; `git log -1`. Dois builds do mesmo commit dão os mesmos bytes.
@@ -34,6 +39,7 @@ if str(RAIZ) not in sys.path:
 from portal.gerador.avisos import aviso_url_base  # noqa: E402
 from portal.gerador.build import ARQUIVOS_DA_RAIZ, construir  # noqa: E402
 from portal.gerador.renderizar import carregar_config  # noqa: E402
+from portal.gerador.semantica import validar_base_rdf  # noqa: E402
 
 
 def _git(raiz: Path, formato: str) -> str:
@@ -129,7 +135,16 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="prévia de conteúdo novo: ignora R-PROMPT e carimba; exige --saida fora de public/",
     )
+    parser.add_argument(
+        "--base-rdf",
+        help="ativa o piloto RDF: URL https absoluta terminada em '/' que identifica as entidades",
+    )
     args = parser.parse_args(argv)
+    if args.base_rdf is not None:
+        try:
+            validar_base_rdf(args.base_rdf)
+        except ValueError as exc:
+            parser.error(str(exc))
     if args.previa and args.saida is None:
         parser.error("--previa exige --saida (uma pasta fora de public/)")
     if args.saida is not None:
@@ -152,6 +167,7 @@ def main(argv: list[str] | None = None) -> int:
             data=data,
             url_base=args.url_base or config["url_base"],
             previa=args.previa,
+            base_rdf=args.base_rdf,
         )
         if not erros and not args.previa:
             copiar_para_raiz(saida, raiz)

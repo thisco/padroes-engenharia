@@ -12,9 +12,14 @@ from __future__ import annotations
 import shutil
 from pathlib import Path
 
-from portal.gerador.erros import R_EXTERNO, R_PROMPT, Erro
+from portal.gerador.erros import R_EXTERNO, R_PROMPT, R_SEMANTICA, Erro
 from portal.gerador.externos import EXTERNOS
-from portal.gerador.pacote import PASTA_PACOTE, emitir_pacote, verificar_pacote
+from portal.gerador.pacote import (
+    PASTA_PACOTE,
+    ErroDeExportacao,
+    emitir_pacote,
+    verificar_pacote,
+)
 from portal.gerador.regras import validar_tudo
 from portal.gerador.renderizar import montar_site
 from portal.gerador.saidas import emitir
@@ -50,17 +55,27 @@ def construir(
     data: str,
     url_base: str,
     previa: bool = False,
+    base_rdf: str | None = None,
 ) -> list[Erro]:
     """Valida `raiz` e gera o site em `saida`. Devolve os erros; com erro, nada é publicado.
 
     Com `previa`, só `R-PROMPT` deixa de reprovar (receita nova ainda sem execução registrada) e
-    o site sai carimbado "PRÉVIA, não publicada"; as demais regras continuam valendo."""
+    o site sai carimbado "PRÉVIA, não publicada"; as demais regras continuam valendo.
+
+    Com `base_rdf`, o pacote leva também `semantica/` (piloto RDF); sem ela, nada muda. Uma
+    exportação recusada vira `R-SEMANTICA`, como qualquer outro erro de conteúdo."""
     raiz, saida = Path(raiz), Path(saida)
     erros = validar_tudo(raiz, frozenset({R_PROMPT}) if previa else frozenset())
     if erros:
         return erros
     site = montar_site(
-        raiz, versao=versao, commit=commit, data=data, url_base=url_base, previa=previa
+        raiz,
+        versao=versao,
+        commit=commit,
+        data=data,
+        url_base=url_base,
+        previa=previa,
+        base_rdf=base_rdf,
     )
     temporaria = saida.with_name(saida.name + ".tmp")
     antiga = saida.with_name(saida.name + ".old")
@@ -68,7 +83,10 @@ def construir(
         shutil.rmtree(pasta, ignore_errors=True)
     try:
         emitir(site, temporaria)
-        emitir_pacote(site, temporaria / PASTA_PACOTE)
+        try:
+            emitir_pacote(site, temporaria / PASTA_PACOTE)
+        except ErroDeExportacao as exc:
+            return [Erro(f"{PASTA_PACOTE}/semantica", "exportação", R_SEMANTICA, str(exc))]
         problemas = varrer_externos(temporaria) + verificar_pacote(temporaria / PASTA_PACOTE)
         if problemas:
             return sorted(problemas)

@@ -2,7 +2,7 @@
 
 import pytest
 
-from portal.gerador import build
+from portal.gerador import build, pacote
 from portal.gerador.build import construir, varrer_externos
 from portal.gerador.erros import Erro
 
@@ -166,3 +166,50 @@ def test_pacote_reprovado_preserva_a_saida_anterior(repo_minimo, tmp_path, monke
     assert sorted(p.name for p in saida.iterdir()) == ["index.html"]
     assert not (tmp_path / "public.tmp").exists()
     assert not (tmp_path / "public.old").exists()
+
+
+# ---- piloto RDF (R1, R7): a exportação semântica entra na mesma transação atômica ----
+
+BASE_RDF = "https://example.org/padroes/"
+
+
+def test_r1_erro_de_exportacao_preserva_a_saida_anterior_e_diagnostica(
+    repo_minimo, tmp_path, monkeypatch
+):
+    saida = tmp_path / "public"
+    escrever(saida, "index.html", "anterior")
+
+    def recusar(grafo, *, base_rdf, versao, commit):
+        raise ValueError("vínculo com destino ausente: 'P1-01' -cita-> 'ref:x' (fonte: a.md)")
+
+    monkeypatch.setattr(pacote, "montar_semantica", recusar)
+    erros = construir(repo_minimo, saida, **PARAMETROS, base_rdf=BASE_RDF)
+    assert [(e.arquivo, e.regra) for e in erros] == [("pacote/semantica", "R-SEMANTICA")]
+    assert "'P1-01' -cita-> 'ref:x' (fonte: a.md)" in erros[0].valor
+    assert (saida / "index.html").read_text(encoding="utf-8") == "anterior"
+    assert sorted(p.name for p in saida.iterdir()) == ["index.html"]
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["public", "repo"]
+
+
+def test_r7_entrada_real_invalida_nao_publica_site_parcial(repo_minimo, tmp_path):
+    # Sem injeção: a URL do portal, não ASCII, vira `url` de prática e o exportador a recusa.
+    saida = tmp_path / "public"
+    escrever(saida, "index.html", "anterior")
+    erros = construir(
+        repo_minimo,
+        saida,
+        **{**PARAMETROS, "url_base": "https://exemplo.org/pç"},
+        base_rdf=BASE_RDF,
+    )
+    assert [e.regra for e in erros] == ["R-SEMANTICA"]
+    assert "url inválida em 'P1-01'" in erros[0].valor
+    assert "praticas/construir-com-ia/P1-01.md" in erros[0].valor
+    assert (saida / "index.html").read_text(encoding="utf-8") == "anterior"
+    assert sorted(p.name for p in tmp_path.iterdir()) == ["public", "repo"]
+
+
+def test_r7_o_mesmo_catalogo_sem_a_opcao_gera_normalmente(repo_minimo, tmp_path):
+    saida = tmp_path / "public"
+    parametros = {**PARAMETROS, "url_base": "https://exemplo.org/pç"}
+    assert construir(repo_minimo, saida, **parametros) == []
+    assert not (saida / "pacote" / "semantica").exists()
