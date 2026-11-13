@@ -35,6 +35,34 @@ DESCRICAO_CLASSES: dict[str, str] = {
     FALLBACK_CLASSE: "Item aplicado por uma prática sem classe específica.",
 }
 
+# Rótulos legíveis (pt-BR) de classes e propriedades relacionais; o nome local da IRI segue ASCII.
+ROTULO_CLASSES: dict[str, str] = {
+    CLASSE_COMUM: "Entidade",
+    "Pratica": "Prática",
+    "Dominio": "Domínio",
+    "Momento": "Momento",
+    "Celula": "Célula",
+    "Passo": "Passo",
+    "Ferramenta": "Ferramenta",
+    "Referencia": "Referência",
+    "DocumentoConceito": "Documento de conceito",
+    "Receita": "Receita",
+    "Trilha": "Trilha",
+    FALLBACK_CLASSE: "Recurso aplicável",
+}
+ROTULO_PROPRIEDADES: dict[str, str] = {
+    "temCelula": "tem célula",
+    "temDominio": "tem domínio",
+    "temMomento": "tem momento",
+    "temPasso": "tem passo",
+    "aplica": "aplica",
+    "usa": "usa",
+    "cita": "cita",
+    "relaciona": "relaciona",
+    "explica": "explica",
+    "ensina": "ensina",
+}
+
 # origem/destino são classes; `relacao` é o vínculo de entrada; `propriedade` é a do RDF.
 # Destino `Entidade` aceita qualquer classe.
 RELACOES: tuple[dict[str, str], ...] = (

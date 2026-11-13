@@ -122,6 +122,8 @@ def test_r2_ids_distintos_nao_colidem():
     "base",
     [
         "http://example.org/padroes/",
+        "HTTPS://example.org/padroes/",
+        "Https://example.org/padroes/",
         "https://example.org/padroes",
         "https://user:senha@example.org/",
         "https://example.org/p/?q=1",
@@ -374,8 +376,9 @@ def test_manifesto_versao_1_e_caminhos_relativos():
 
 
 def test_indice_ordenado_por_id_com_caminho_do_recorte():
+    # cobre: R4 (índice é lista ordenada por ID no nível superior, spec §3)
     saida = _gerar()
-    indice = json.loads(saida["semantica/indice.json"])["entidades"]
+    indice = json.loads(saida["semantica/indice.json"])
     ids = [e["id"] for e in indice]
     assert ids == sorted(ids) and len(ids) == len(_grafo()["nodes"])
     e = next(x for x in indice if x["id"] == ID_ESPECIAL)
@@ -409,3 +412,63 @@ def test_recorte_tem_entidade_vizinhos_e_arestas_incidentes_sem_recursao():
     for caminho, conteudo in saida.items():
         if "/entidades/" in caminho:
             Graph().parse(data=conteudo.decode(), format="json-ld")
+
+
+# ---- rótulos legíveis em pt-BR (spec §2: rótulos/comentários em pt-BR) ----
+
+
+def test_r3_rotulos_legiveis_de_classes_e_propriedades_no_vocabulario():
+    g = _carregar(_gerar(), "semantica/vocabulario.ttl", "turtle")
+    esperados = {
+        "Pratica": "Prática",
+        "Celula": "Célula",
+        "Dominio": "Domínio",
+        "Referencia": "Referência",
+        "DocumentoConceito": "Documento de conceito",
+        "RecursoAplicavel": "Recurso aplicável",
+        "temCelula": "tem célula",
+        "temDominio": "tem domínio",
+        "temMomento": "tem momento",
+        "temPasso": "tem passo",
+        "relacaoOrigem": "relação de origem",
+    }
+    for local, rotulo in esperados.items():
+        assert str(g.value(VOCAB[local], RDFS.label)) == rotulo
+    # Toda classe e propriedade relacional tem rótulo próprio no contrato, para a página visual.
+    for classe in set(modelo.CLASSES.values()) | {modelo.FALLBACK_CLASSE, modelo.CLASSE_COMUM}:
+        assert modelo.ROTULO_CLASSES[classe]
+    for r in modelo.RELACOES:
+        assert modelo.ROTULO_PROPRIEDADES[r["propriedade"]]
+
+
+# ---- R7: campos obrigatórios ausentes viram ValueError diagnosticado ----
+
+
+@pytest.mark.parametrize(
+    "mutacao, campo",
+    [
+        (lambda g: g["nodes"][1].pop("id"), "id"),
+        (lambda g: g["links"][0].pop("source"), "source"),
+        (lambda g: g["links"][0].pop("target"), "target"),
+        (lambda g: g["links"][0].pop("relation"), "relation"),
+    ],
+)
+def test_r7_campo_obrigatorio_ausente_e_valueerror_com_o_campo(mutacao, campo):
+    grafo = _grafo()
+    mutacao(grafo)
+    with pytest.raises(ValueError, match=campo):
+        _gerar(grafo)
+
+
+def test_r7_campo_ausente_cita_id_e_fonte_quando_existem():
+    grafo = _grafo()
+    grafo["links"][0].pop("relation")
+    with pytest.raises(ValueError, match=r"P1-01.*praticas/p1-01\.md"):
+        _gerar(grafo)
+
+
+def test_r7_vinculo_e_no_com_campos_de_tipo_errado_sao_recusados():
+    grafo = _grafo()
+    grafo["nodes"][1]["id"] = ""
+    with pytest.raises(ValueError, match="id"):
+        _gerar(grafo)

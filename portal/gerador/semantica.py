@@ -18,6 +18,8 @@ from portal.gerador.modelo_semantico import (
     PROPRIEDADE_RELACAO_ORIGEM,
     PROPRIEDADES_DADOS,
     RELACOES,
+    ROTULO_CLASSES,
+    ROTULO_PROPRIEDADES,
     classe_de,
     relacao_prevista,
 )
@@ -44,7 +46,7 @@ def validar_base_rdf(base: str) -> str:
     except ValueError as e:
         raise ValueError(f"base RDF inválida ({base!r}): {e}") from e
     if (
-        partes.scheme != "https"
+        not base.startswith("https://")
         or not host
         or not base.endswith("/")
         or usuario is not None
@@ -80,14 +82,21 @@ def _recorte(id_: str) -> str:
     return f"entidades/{_hash_id(id_)}.jsonld"
 
 
+def _campo_obrigatorio(registro: dict[str, Any], campo: str, onde: str) -> str:
+    valor = registro.get(campo)
+    if not isinstance(valor, str) or not valor:
+        raise ValueError(f"campo obrigatório {campo!r} ausente ou vazio em {onde}")
+    return valor
+
+
 # ---- estrutura comum: lista ordenada de nós e arestas; os serializadores só a percorrem ----
 
 
 def _montar_modelo(grafo: dict[str, Any], base: str) -> tuple[list[dict], list[dict]]:
     nos: dict[str, dict[str, Any]] = {}
     for bruto in grafo["nodes"]:
-        id_ = bruto["id"]
         fonte = bruto.get("source_file", "")
+        id_ = _campo_obrigatorio(bruto, "id", f"nó (arquivo de fonte: {fonte})")
         if id_ in nos:
             raise ValueError(f"ID duplicado {id_!r} (arquivo de fonte: {fonte})")
         tipo = bruto.get("file_type", "")
@@ -117,8 +126,12 @@ def _montar_modelo(grafo: dict[str, Any], base: str) -> tuple[list[dict], list[d
 
     arestas: dict[tuple[str, str, str], dict[str, Any]] = {}
     for lk in grafo["links"]:
-        origem, destino, relacao = lk["source"], lk["target"], lk["relation"]
         fonte = lk.get("source_file", "")
+        presentes = ", ".join(repr(lk[c]) for c in ("source", "relation", "target") if lk.get(c))
+        onde = f"vínculo ({presentes}; arquivo de fonte: {fonte})"
+        origem = _campo_obrigatorio(lk, "source", onde)
+        destino = _campo_obrigatorio(lk, "target", onde)
+        relacao = _campo_obrigatorio(lk, "relation", onde)
         local = f"{origem!r} -{relacao}-> {destino!r} (arquivo de fonte: {fonte})"
         for papel, id_ in (("origem", origem), ("destino", destino)):
             if id_ not in nos:
@@ -239,7 +252,7 @@ def _turtle_vocabulario(base: str) -> str:
     )
     classes = [CLASSE_COMUM, *sorted(set(CLASSES.values())), FALLBACK_CLASSE]
     for c in classes:
-        pares = [("a", "owl:Class"), ("rdfs:label", _lit(c, IDIOMA))]
+        pares = [("a", "owl:Class"), ("rdfs:label", _lit(ROTULO_CLASSES[c], IDIOMA))]
         pares.append(("rdfs:comment", _lit(DESCRICAO_CLASSES[c], IDIOMA)))
         if c != CLASSE_COMUM:
             pares.append(("rdfs:subClassOf", f"pe:{CLASSE_COMUM}"))
@@ -259,7 +272,7 @@ def _turtle_vocabulario(base: str) -> str:
                 f"pe:{nome}",
                 [
                     ("a", "owl:ObjectProperty"),
-                    ("rdfs:label", _lit(nome, IDIOMA)),
+                    ("rdfs:label", _lit(ROTULO_PROPRIEDADES[nome], IDIOMA)),
                     ("rdfs:comment", _lit(descricao, IDIOMA)),
                     ("rdfs:domain", f"pe:{dominio}"),
                     ("rdfs:range", f"pe:{alcance}"),
@@ -477,8 +490,6 @@ def montar_semantica(
             }
         )
         arquivos[f"{PASTA}/{_recorte(n['id'])}"] = _json(_recorte_jsonld(n, arestas, por_id, base))
-    arquivos[f"{PASTA}/indice.json"] = _json(
-        {"versao_contrato": VERSAO_CONTRATO, "entidades": indice}
-    )
+    arquivos[f"{PASTA}/indice.json"] = _json(indice)
     arquivos[f"{PASTA}/manifesto.json"] = _json(_manifesto(base, versao, commit))
     return arquivos
