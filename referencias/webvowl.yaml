@@ -1,0 +1,10 @@
+id: webvowl
+titulo: "WebVOWL: visualizing ontologies on the Web"
+organizacao: VisualDataWeb
+url: https://github.com/VisualDataWeb/WebVOWL
+tipo: comunidade
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "descrição do repositório ('Visualizing ontologies on the Web') e aviso do README sobre o serviço público"
+dominios: [construir-com-ia]
+notas: "O README avisa que o domínio antigo do projeto não pertence mais ao VisualDataWeb e indica o serviço público em https://service.tib.eu/webvowl/; o portal não cita o domínio antigo."

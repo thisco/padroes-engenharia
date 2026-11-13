@@ -133,21 +133,21 @@ retorno à aprovação só é necessário se o contrato se mostrar inviável ou 
 
 ## Tarefa 3 — Curadoria e referência visual
 
-- [ ] Ler `skills/curadoria-de-pratica/SKILL.md`, conferir na web as nove fontes primárias
+- [x] Ler `skills/curadoria-de-pratica/SKILL.md`, conferir na web as nove fontes primárias
   listadas na spec e preencher referências/registros com data, afirmações e trechos de suporte.
   Corpo editorial em português com citações `[ref:<id>]` em cada afirmação factual. (R11)
-- [ ] Criar testes que exigem página/navegação Entender, três diagramas, legenda/alternativa
+- [x] Criar testes que exigem página/navegação Entender, três diagramas, legenda/alternativa
   textual, links válidos nos modos ativo/inativo, escape de HTML e mapeamento compartilhado.
   Rodar os testes e registrar falha antes de criar componente. (R10, R11, R8)
-- [ ] Criar página curada, componente de contexto, template e CSS; renderizar relações da
+- [x] Criar página curada, componente de contexto, template e CSS; renderizar relações da
   tabela comum e selecionar exemplos reais por ordem de ID. Relação sem ocorrência mostra
   ausência; nunca inventa exemplo. Cada relação pode ser focada/expandida por teclado
   via HTML nativo, exibindo significado, origem e exemplo. (R10, R11)
-- [ ] Painel 1 diferencia classe/instância e todos os vínculos. Painel 2 apresenta tripla RDF,
+- [x] Painel 1 diferencia classe/instância e todos os vínculos. Painel 2 apresenta tripla RDF,
   JSON-LD/Turtle paralelos, OWL sem raciocinador e SKOS/SHACL explicitamente futuros.
   Painel 3 mostra descoberta e fontes, limite de consulta e estado RDF indisponível quando
   desativado; não renderizar links sem artefato. Texto distingue vínculo de verdade factual. (R10, R11)
-- [ ] Inspecionar navegador a 375 e 1280 px, Tab/Enter, foco, legendas, contraste e ausência
+- [x] Inspecionar navegador a 375 e 1280 px, Tab/Enter, foco, legendas, contraste e ausência
   de significado apenas por cor; registrar capturas e resultado no plano. Reexecutar
   testes completos/lint e commit `feat(portal): explicar modelo de conhecimento em diagramas`. (R8, R10, R11)
 
@@ -290,6 +290,77 @@ Catálogo completo, não lido pelo consumidor: `catalogo.ttl` 617142 bytes, `cat
 e `graph.json` 476586. Sem promessa de redução: o índice (147052 bytes) domina a leitura e os
 dois percursos respondem a perguntas diferentes (a consulta ranqueia por texto; o recorte segue
 vínculos declarados, com direção e fonte).
+
+### Tarefa 3 (2026-11-13)
+
+Vermelho 1, antes de existir o componente:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_modelo_conhecimento.py -q -p no:cacheprovider
+E   ImportError: cannot import name 'modelo_conhecimento' from 'portal.gerador'
+1 error in 0.08s
+```
+
+Vermelho 2, com `modelo_conhecimento.py` pronto e a página ainda no template genérico (sem
+navegação, template nem `.md` próprio): `15 failed, 6 passed`. Passavam só os testes do
+contexto puro (contrato, propriedade inventada, relação sem desenho, exemplo por ordem de ID).
+
+Verde, lint, validação e suíte:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_modelo_conhecimento.py -q -p no:cacheprovider
+21 passed
+$ /tmp/piloto-rdf-venv/bin/ruff check .
+All checks passed!
+$ /tmp/piloto-rdf-venv/bin/ruff format --check portal/gerador/modelo_conhecimento.py portal/gerador/renderizar.py portal/gerador/saidas.py tests/unidade/test_modelo_conhecimento.py
+4 files already formatted
+$ /tmp/piloto-rdf-venv/bin/python scripts/validar.py
+aviso: praticas/construir-com-ia/P1-12.md: Exemplo recomendado ausente (status experimentar ou avaliar)
+validação ok: nenhum erro.
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider
+3294 passed in 310.74s (0:05:10)
+```
+
+`README.md` mudou só na contagem de referências (431 → 440): regravado por
+`scripts/gerar.py --saida /tmp/piloto-rdf-visual/oficial` (sem `--previa`), não à mão; sem isso
+`validar.py` reprovava com `R-GERADO-DIVERGENTE`. `ROTEAMENTO.md` não mudou.
+
+Resolução de referências: nenhuma das nove URLs nem IDs estava catalogada em `referencias/`;
+as nove são novas.
+
+Fontes conferidas na web em 2026-11-13:
+
+| id | URL | trecho de suporte |
+| --- | --- | --- |
+| w3c-rdf11 | https://www.w3.org/TR/rdf11-concepts/ | §1.1 e §3/§3.1: tripla de sujeito, predicado e objeto; "An RDF graph is a set of RDF triples" (Rec. 2014-02-25) |
+| w3c-rdfs | https://www.w3.org/TR/rdf-schema/ | §1: "data-modelling vocabulary for RDF data"; §2: recursos em classes; §3.3: `R rdf:type C`; §3.6/§3.7: label e comment (Rec. 2014-02-25) |
+| w3c-owl2-primer | https://www.w3.org/TR/owl2-primer/ | Abstract: classes, propriedades, indivíduos; §3: "reasoners – that can automatically compute consequences" (Rec. 2012-12-11) |
+| w3c-jsonld11 | https://www.w3.org/TR/json-ld11/ | Abstract: formato baseado em JSON para Linked Data; §1.5: sempre JSON válido; §3.1: contexto mapeia termos para IRIs (Rec. 2020-07-16) |
+| w3c-turtle | https://www.w3.org/TR/turtle/ | Abstract: sintaxe textual RDF; grafo inteiro em forma de texto compacta (Rec. 2014-02-25) |
+| w3c-skos-primer | https://www.w3.org/TR/skos-primer/ | Abstract e §2.1–2.3: modelo de esquemas de conceitos, prefLabel/altLabel, broader/narrower/related (Note 2009-08-18) |
+| w3c-shacl | https://www.w3.org/TR/shacl/ | Abstract: linguagem para validar grafos RDF contra condições (shapes) (Rec. 2017-07-20) |
+| webvowl | https://github.com/VisualDataWeb/WebVOWL | descrição "Visualizing ontologies on the Web"; README aponta https://service.tib.eu/webvowl/ e avisa que o domínio antigo não é mais do projeto (não citado) |
+| owl2vowl | https://github.com/VisualDataWeb/OWL2VOWL | descrição "Converting ontologies for WebVOWL"; README: saída em `.json`, uso `-file` |
+
+Inspeção de navegador (Chrome headless via Playwright, `http.server` em 127.0.0.1, sites em
+`/tmp/piloto-rdf-visual/inativo` e `/tmp/piloto-rdf-visual/ativo`, este com
+`--base-rdf https://example.org/padroes/`; os dois com `--previa`):
+
+| modo | largura | HTTP | scrollWidth ≤ clientWidth | console | Tab → relação → Enter | foco | links locais (todos 200) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| inativo | 375 | 200 | 375 ≤ 375 | sem erro | `rel-1` abriu | contorno sólido 3px | 11 |
+| inativo | 1280 | 200 | 1280 ≤ 1280 | sem erro | `rel-1` abriu | contorno sólido 3px | 11 |
+| ativo | 375 | 200 | 375 ≤ 375 | sem erro | `rel-1` abriu | contorno sólido 3px | 17 |
+| ativo | 1280 | 200 | 1280 ≤ 1280 | sem erro | `rel-1` abriu | contorno sólido 3px | 17 |
+
+O tema não tem modo escuro; os pares de cor novos usam só tokens já conferidos em
+`contraste.yml`. Futuro e indisponível são marcados por texto, traço pontilhado e hachura.
+Correções feitas depois de olhar as capturas: caixa "Documento de conceito" estourava a largura
+(caixas de 170 → 184 px, passo de 280 → 300), rótulo `temMomento` encostava nas caixas, números de
+dois dígitos apertados no círculo, fontes `[n]` quebrando linha nos nós, número da etapa esticado
+em toda a largura no painel 3 e falta de indicação "abrir/fechar" nos `summary` em flex.
+Capturas finais em `/tmp/piloto-rdf-visual/capturas/` (página inteira `<modo>-<largura>.png`,
+foco por teclado `<modo>-<largura>-teclado.png` e por painel `secao-<modo>-<largura>-*.png`).
 
 ## Revisão adversarial: 2026-11-12 — achados
 

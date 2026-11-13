@@ -1,0 +1,11 @@
+id: w3c-skos-primer
+titulo: "SKOS Simple Knowledge Organization System Primer"
+organizacao: W3C
+url: https://www.w3.org/TR/skos-primer/
+tipo: padrao-aberto
+versao: "W3C Working Group Note, 2009-08-18"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "Abstract, §2.1 'Concepts', §2.2 'Labels' e §2.3 'Semantic Relationships'"
+dominios: [construir-com-ia]
+notas: "Nota de grupo de trabalho (Working Group Note), não recomendação."

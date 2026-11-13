@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% import "componentes.html" as c %}
+{#- Modelo de conhecimento (spec do piloto RDF, §5): três painéis, sem JavaScript nem recurso
+    externo. As relações vêm do contrato compartilhado (`modelo.relacoes`); todo texto vindo do
+    catálogo passa pelo autoescape. Cor nunca é o único sinal: futuro e indisponível têm texto,
+    traço pontilhado e hachura. -#}
+{% block conteudo %}
+{% set m = modelo %}
+{% macro fonte(id) -%}
+{% if id in numero_ref %}<a class="mc-ref" href="#ref-{{ id }}" aria-label="fonte {{ numero_ref[id] }}">[{{ numero_ref[id] }}]</a>{% endif %}
+{%- endmacro %}
+{% macro no_link(no) -%}
+{% if no.href %}<a href="{{ raiz }}{{ no.href }}">{{ no.id }}</a>{% else %}{{ no.id }}{% endif %}
+{%- endmacro %}
+{% macro arquivo(chave, rotulo) -%}
+{% if chave in modelo.links %}<a class="mc-arq" href="{{ raiz }}{{ modelo.links[chave] }}">{{ rotulo }}</a>{% else %}<span class="mc-arq mc-indisponivel">{{ rotulo }}: indisponível</span>{% endif %}
+{%- endmacro %}
+<div class="topo">
+  <h1>{{ titulo }}</h1>
+{% if lead %}
+  <p>{{ lead }}</p>
+{% endif %}
+</div>
+<nav class="mc-sumario" aria-label="Painéis desta página">
+  <ol>
+{% for p in m.paineis %}
+    <li><a href="#painel-{{ loop.index }}"><span class="mc-n">{{ loop.index }}</span>{{ p }}</a></li>
+{% endfor %}
+  </ol>
+  <p class="mc-estado{% if not m.rdf_ativo %} mc-indisponivel{% endif %}">{% if m.rdf_ativo %}RDF ativo neste build: base <code>{{ m.base_rdf }}</code>.{% else %}{{ m.indisponivel }}: gerado sem <code>--base-rdf</code>.{% endif %}</p>
+</nav>
+
+<figure class="mc-figura" id="painel-1" aria-labelledby="painel-1-t">
+  <div class="mc-cab"><span class="mc-n">1</span><h2 id="painel-1-t">{{ m.paineis[0] }}</h2></div>
+{% if explica[0] %}
+  <div class="mc-explica texto">{{ explica[0] }}</div>
+{% endif %}
+  <div class="mc-tipo" role="group" aria-label="Classe e instância">
+{% if m.instancia %}
+    <div class="mc-instancia">
+      <span class="mc-k">{{ m.instancia.id }}: instância</span>
+      <a class="id" href="{{ raiz }}{{ m.instancia.href }}">{{ m.instancia.id }}</a>
+      <span class="mc-d">{{ m.instancia.label }}. Um registro concreto deste catálogo, escolhido no build.</span>
+    </div>
+{% else %}
+    <div class="mc-instancia mc-indisponivel">
+      <span class="mc-k">instância</span>
+      <span class="mc-d">Este catálogo não tem prática para mostrar como instância.</span>
+    </div>
+{% endif %}
+    <div class="mc-tipo-seta"><code>rdf:type</code><span>é instância de</span></div>
+    <div class="mc-classe">
+      <span class="mc-k">Pratica: classe</span>
+      <b>Pratica</b>
+      <span class="mc-d">O tipo de registro, no vocabulário como <code>pe:Pratica</code>. Toda prática do catálogo é instância dela.</span>
+    </div>
+  </div>
+  <div class="mc-palco">
+    <svg class="mc-mapa" role="img" aria-labelledby="mc-mapa-t mc-mapa-d" viewBox="0 0 {{ m.viewbox[0] }} {{ m.viewbox[1] }}" width="{{ m.viewbox[0] }}" height="{{ m.viewbox[1] }}">
+      <title id="mc-mapa-t">Classes e relações do grafo do catálogo</title>
+      <desc id="mc-mapa-d">Cada caixa é uma classe; cada seta numerada é uma propriedade do contrato, na direção registrada. A lista numerada logo abaixo descreve as mesmas {{ m.relacoes | length }} relações em texto.</desc>
+      <defs>
+        <marker id="mc-seta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="mc-ponta" d="M0 0 L10 5 L0 10 z"/></marker>
+      </defs>
+{% for b in m.caixas %}
+      <g class="mc-caixa{% if b.foco %} mc-foco{% endif %}">
+        <rect x="{{ b.x }}" y="{{ b.y }}" width="{{ b.w }}" height="{{ b.h }}" rx="3"/>
+        <text class="mc-cx-r" x="{{ b.x + b.w / 2 }}" y="{{ b.y + 24 }}">{{ b.rotulo }}</text>
+        <text class="mc-cx-c" x="{{ b.x + b.w / 2 }}" y="{{ b.y + 42 }}">pe:{{ b.classe }}</text>
+      </g>
+{% endfor %}
+{% for r in m.relacoes %}
+{% set w = 34 + (r.propriedade | length) * 7 %}
+      <g class="mc-aresta" data-propriedade="{{ r.propriedade }}">
+        <path d="{{ r.desenho.caminho }}" marker-end="url(#mc-seta)"/>
+        <g class="mc-etq" transform="translate({{ r.desenho.rx }} {{ r.desenho.ry }})">
+          <rect x="{{ -w / 2 }}" y="-10" width="{{ w }}" height="20" rx="10"/>
+          <circle cx="{{ -w / 2 + 11 }}" cy="0" r="8"/>
+          <text class="mc-etq-n" x="{{ -w / 2 + 11 }}" y="3.5">{{ r.n }}</text>
+          <text class="mc-etq-p" x="{{ -w / 2 + 24 }}" y="4">{{ r.propriedade }}</text>
+        </g>
+      </g>
+{% endfor %}
+    </svg>
+  </div>
+  <ol class="mc-rels mc-alternativa" aria-label="As relações do contrato, uma a uma">
+{% for r in m.relacoes %}
+    <li class="mc-rel" id="rel-{{ r.n }}" data-propriedade="{{ r.propriedade }}">
+      <details>
+        <summary><span class="mc-n">{{ r.n }}</span><span class="mc-c">{{ r.rotulo_origem }}</span><span class="mc-p">{{ r.propriedade }}</span><span class="mc-c">{{ r.rotulo_destino }}</span></summary>
+        <dl class="mc-ficha">
+          <dt>Significado</dt>
+          <dd>{{ r.descricao }}</dd>
+          <dt>Vínculo de origem</dt>
+          <dd><code>{{ r.relacao }}</code> no grafo do catálogo, de {{ r.rotulo_origem }} para {{ r.rotulo_destino }}; no RDF, <code>pe:{{ r.propriedade }}</code> ({{ r.rotulo }}).</dd>
+          <dt>Exemplo</dt>
+{% if r.exemplo %}
+          <dd><span class="mc-ex">{{ no_link(r.exemplo.origem) }} <span class="mc-p">{{ r.propriedade }}</span> {{ no_link(r.exemplo.destino) }}</span> <span class="mc-d">{{ r.exemplo.destino.label if r.exemplo.destino.label != r.exemplo.destino.id else "" }}</span> Declarado em <code>{{ r.exemplo.fonte }}</code>. O primeiro por ordem de ID, de {{ r.total }} {{ "ocorrência" if r.total == 1 else "ocorrências" }} neste catálogo.</dd>
+{% else %}
+          <dd class="mc-ausente">Nenhuma ocorrência neste catálogo: a relação está no contrato, mas nenhum conteúdo a declara agora.</dd>
+{% endif %}
+        </dl>
+      </details>
+    </li>
+{% endfor %}
+  </ol>
+  <figcaption>Diagrama 1. Caixa é classe, com o nome em português e o nome no vocabulário (<code>pe:</code>). Seta é propriedade, na direção registrada, com um número que leva à mesma relação na lista; o laço sobre Prática é <code>relaciona</code>, de uma prática para outra. Abra uma relação na lista para ver significado, origem e um exemplo real. Em telas estreitas, só a lista aparece.</figcaption>
+</figure>
+
+<figure class="mc-figura" id="painel-2" aria-labelledby="painel-2-t">
+  <div class="mc-cab"><span class="mc-n">2</span><h2 id="painel-2-t">{{ m.paineis[1] }}</h2></div>
+{% if explica[1] %}
+  <div class="mc-explica texto">{{ explica[1] }}</div>
+{% endif %}
+{% if m.tripla %}
+  <div class="mc-tripla" role="group" aria-label="Uma tripla RDF do catálogo">
+    <div class="mc-t"><span class="mc-k">sujeito</span>{{ no_link(m.tripla.sujeito) }}<small>Prática</small></div>
+    <div class="mc-t mc-t-p"><span class="mc-k">predicado</span><code>cita</code><small>propriedade</small></div>
+    <div class="mc-t"><span class="mc-k">objeto</span>{{ no_link(m.tripla.objeto) }}<small>Referência</small></div>
+    <p class="mc-fonte">Tripla RDF {{ fonte("w3c-rdf11") }}: sujeito, predicado e objeto. Declarada em <code>{{ m.tripla.fonte }}</code>.</p>
+  </div>
+{% else %}
+  <p class="mc-ausente">Este catálogo não tem prática que cite referência; não há tripla real para mostrar.</p>
+{% endif %}
+  <div class="mc-rep">
+    <div class="mc-linha">
+      <div class="mc-no"><b>Markdown e YAML</b><small>fonte editorial</small></div>
+      <span class="mc-seta"><span>monta</span></span>
+      <div class="mc-no mc-forte"><b>Grafo validado</b><small>entidades e relações</small></div>
+      <span class="mc-seta"><span>publica</span></span>
+      <div class="mc-paralelas">
+        <p class="mc-k">duas representações do mesmo grafo, não etapas</p>
+        <div class="mc-no"><span class="mc-nome"><b>JSON-LD</b> {{ fonte("w3c-jsonld11") }}</span><small>dados ligados em JSON</small>{{ arquivo("catalogo_jsonld", "catalogo.jsonld") }}</div>
+        <div class="mc-no"><span class="mc-nome"><b>Turtle</b> {{ fonte("w3c-turtle") }}</span><small>representação textual RDF</small>{{ arquivo("catalogo_ttl", "catalogo.ttl") }}</div>
+      </div>
+    </div>
+    <div class="mc-linha mc-linha-b">
+      <span class="mc-vazio" aria-hidden="true"></span>
+      <span class="mc-vazio" aria-hidden="true"></span>
+      <div class="mc-no mc-sobe"><span class="mc-nome"><b>OWL e RDFS</b> {{ fonte("w3c-owl2-primer") }} {{ fonte("w3c-rdfs") }}</span><small>descreve o significado das classes e propriedades do grafo, sem raciocinador</small>{{ arquivo("vocabulario", "vocabulario.ttl") }}</div>
+      <span class="mc-seta"><span>avaliação fora do build</span></span>
+      <div class="mc-avalia">
+        <div class="mc-no"><span class="mc-nome"><b>OWL2VOWL</b> {{ fonte("owl2vowl") }}</span><small>conversão de avaliação</small></div>
+        <div class="mc-no"><span class="mc-nome"><b>WebVOWL</b> {{ fonte("webvowl") }}</span><small>revisão visual do vocabulário</small></div>
+      </div>
+    </div>
+    <div class="mc-linha-futuro" role="group" aria-label="Fora do piloto">
+      <div class="mc-futuro"><span class="mc-tag">futuro · fora do piloto</span><span class="mc-nome"><b>SKOS</b> {{ fonte("w3c-skos-primer") }}</span><small>organização de conceitos; ligaria ao vocabulário OWL e RDFS</small></div>
+      <div class="mc-futuro"><span class="mc-tag">futuro · fora do piloto</span><span class="mc-nome"><b>SHACL</b> {{ fonte("w3c-shacl") }}</span><small>validação de grafos; validaria o grafo do catálogo</small></div>
+    </div>
+  </div>
+{% if m.tripla %}
+  <div class="mc-escritas" role="group" aria-label="A mesma tripla em Turtle e em JSON-LD">
+    <div><p class="mc-k">a tripla em Turtle</p><pre><code>{{ m.tripla.turtle }}</code></pre></div>
+    <div><p class="mc-k">a mesma tripla em JSON-LD</p><pre><code>{{ m.tripla.jsonld }}</code></pre></div>
+{% if not m.rdf_ativo %}
+    <p class="mc-nota">Sem <code>--base-rdf</code> as IRIs ficam relativas: o build não escolhe a base, e trocá-la muda todas as identidades.</p>
+{% endif %}
+  </div>
+{% endif %}
+  <details class="mc-alternativa">
+    <summary>Diagrama 2 em texto</summary>
+    <ul>
+{% for linha in m.descricoes[1] %}
+      <li>{{ linha }}</li>
+{% endfor %}
+    </ul>
+  </details>
+  <figcaption>Diagrama 2. Seta cheia é etapa do build; o grupo com JSON-LD e Turtle mostra duas escritas paralelas do mesmo grafo. OWL e RDFS descrevem, de baixo, o significado do grafo. Caixa hachurada com traço pontilhado e a etiqueta "fora do piloto" é possibilidade futura, não capacidade atual.</figcaption>
+</figure>
+
+<figure class="mc-figura" id="painel-3" aria-labelledby="painel-3-t">
+  <div class="mc-cab"><span class="mc-n">3</span><h2 id="painel-3-t">{{ m.paineis[2] }}</h2></div>
+{% if explica[2] %}
+  <div class="mc-explica texto">{{ explica[2] }}</div>
+{% endif %}
+{% if not m.rdf_ativo %}
+  <p class="mc-aviso mc-indisponivel"><b>{{ m.indisponivel }}.</b> Este portal foi gerado sem <code>--base-rdf</code>: manifesto, índice, entidades e catálogo RDF não existem aqui, e as etapas que dependem deles aparecem hachuradas, sem link. A consulta local e o grafo JSON continuam disponíveis.</p>
+{% endif %}
+  <ol class="mc-rota">
+    <li class="mc-est mc-est-0"><span class="mc-n">0</span><b>Quem usa fornece o portal ou o pacote</b><small>Não há descoberta automática: o agente recebe a URL ou a pasta.</small></li>
+    <li class="mc-est"><span class="mc-n">1</span><b>llms.txt</b><small>ponto de entrada</small>{{ arquivo("llms", "llms.txt") }}</li>
+    <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">2</span><b>Manifesto</b><small>capacidades e limites</small>{{ arquivo("manifesto", "manifesto.json") }}</li>
+    <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">3</span><b>Índice</b><small>encontre o ID</small>{{ arquivo("indice", "indice.json") }}</li>
+    <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">4</span><b>JSON-LD da entidade</b><small>contexto de um salto; volte ao índice para seguir outro vínculo</small>{% if m.instancia %}{{ arquivo("entidade", m.instancia.id ~ ".jsonld") }}{% endif %}</li>
+    <li class="mc-est"><span class="mc-n">5</span><b>Documento e referência</b><small>confira a fonte</small>{% if m.tripla %}{{ no_link(m.tripla.sujeito) }} {{ no_link(m.tripla.objeto) }}{% endif %}</li>
+  </ol>
+  <div class="mc-ramos">
+    <div class="mc-ramo"><span class="mc-k">ramo do manifesto</span><b>Consulta local</b><small>pergunta e orçamento (<code>--budget</code>, 1500 tokens por padrão); devolve IDs e ponteiros, de volta ao índice ou às páginas</small>{{ arquivo("consulta", "consultar.py") }} {{ arquivo("grafo", "graph.json") }}</div>
+    <div class="mc-ramo{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-k">ramo do manifesto</span><b>Catálogo completo</b><small>integração RDF opcional, para quem já processa RDF</small>{{ arquivo("catalogo_ttl", "catalogo.ttl") }} {{ arquivo("catalogo_jsonld", "catalogo.jsonld") }}</div>
+  </div>
+  <details class="mc-alternativa">
+    <summary>Diagrama 3 em texto</summary>
+    <ul>
+{% for linha in m.descricoes[2] %}
+      <li>{{ linha }}</li>
+{% endfor %}
+    </ul>
+  </details>
+  <figcaption>Diagrama 3. O caminho numerado vai do ponto de entrada à fonte; os ramos saem do manifesto. Etapa hachurada com "indisponível" não existe neste build e não tem link. O agente pode operar só com JSON e arquivos; processamento RDF e visualização não são pré-requisitos.</figcaption>
+</figure>
+
+<aside class="mc-faixa" aria-label="Vínculo não é verificação">
+  <div class="mc-lado"><span class="mc-k">o grafo responde</span><h3>Encontrou um vínculo</h3><p>{{ m.faixa.vinculo }}</p></div>
+  <div class="mc-lado mc-lado-2"><span class="mc-k">só a fonte responde</span><h3>Validou uma afirmação</h3><p>{{ m.faixa.afirmacao }}</p></div>
+  <p class="mc-dado">{{ m.faixa.dado }}</p>
+</aside>
+
+{% for titulo_, html_ in resto %}
+<section class="texto" aria-label="{{ titulo_ }}">
+  <h2>{{ titulo_ }}</h2>
+  {{ html_ }}
+</section>
+{% endfor %}
+{% if referencias %}
+<section aria-label="Referências">
+  <h2>Referências</h2>
+  {{ c.lista_referencias(referencias, raiz) }}
+</section>
+{% endif %}
+{% endblock %}

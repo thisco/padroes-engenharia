@@ -1,0 +1,116 @@
+conteudo: modelo-de-conhecimento
+verificado_em: '2026-11-13'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "Em RDF, cada vínculo é uma tripla de sujeito, predicado e objeto, e um conjunto de triplas forma
+    um grafo."
+  ref: w3c-rdf11
+  localizacao: "§1.1 'Graph-based Data Model' (cada tripla tem sujeito, predicado e objeto; um conjunto
+    de triplas é um grafo RDF) e §3 'RDF Graphs' ('An RDF graph is a set of RDF triples')"
+  resultado: confirmada
+- texto: "Diagrama 2, tripla visual: Tripla RDF: sujeito, predicado e objeto."
+  ref: w3c-rdf11
+  localizacao: "§3.1 'Triples' ('An RDF triple consists of three components'): sujeito, predicado e objeto"
+  resultado: confirmada
+- texto: "Em RDF Schema, recursos se agrupam em classes, e a tripla R rdf:type C diz que R é instância da
+    classe C."
+  ref: w3c-rdfs
+  localizacao: "§2 'Classes' ('Resources may be divided into groups called classes') e §3.3 'rdf:type'
+    (R rdf:type C afirma que R é instância de C)"
+  resultado: confirmada
+- texto: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos legíveis (rdfs:label)
+    e descrições (rdfs:comment) para cada recurso."
+  ref: w3c-rdfs
+  localizacao: "§1 'Introduction' ('RDF Schema provides a data-modelling vocabulary for RDF data'), §3.6
+    'rdfs:label' (human readable label) e §3.7 'rdfs:comment' (human readable description)"
+  resultado: confirmada
+- texto: "Diagrama 2: OWL e RDFS descrevem o significado das classes e propriedades do grafo."
+  ref: w3c-rdfs
+  localizacao: "§1 'Introduction' (vocabulário de modelagem de dados) e §2 'Classes'"
+  resultado: confirmada
+  nota: "O texto do nó diz o papel do vocabulário no portal; a fonte sustenta que RDFS é vocabulário de
+    modelagem com classes e propriedades."
+- texto: "Uma ontologia OWL 2 declara classes, propriedades e indivíduos."
+  ref: w3c-owl2-primer
+  localizacao: "Abstract ('OWL 2 ontologies provide classes, properties, individuals, and data values')
+    e §3 'Modeling Knowledge: Basic Notions'"
+  resultado: confirmada
+- texto: "Ferramentas chamadas raciocinadores podem calcular consequências automaticamente a partir dela."
+  ref: w3c-owl2-primer
+  localizacao: "§3 'Modeling Knowledge: Basic Notions' ('There are OWL tools – reasoners – that can
+    automatically compute consequences') e §2 'What is OWL 2?'"
+  resultado: confirmada
+- texto: "JSON-LD é um formato baseado em JSON para serializar dados ligados; um documento JSON-LD é sempre
+    um documento JSON válido, e o contexto mapeia termos para IRIs."
+  ref: w3c-jsonld11
+  localizacao: "Abstract ('a JSON-based format to serialize Linked Data'), §1.5 'Design Goals and Rationale'
+    ('A JSON-LD document is always a valid JSON document') e §3.1 'The Context' ('a context is used to map
+    terms to IRIs')"
+  resultado: confirmada
+- texto: "Diagrama 2: JSON-LD, dados ligados em JSON."
+  ref: w3c-jsonld11
+  localizacao: "Abstract"
+  resultado: confirmada
+- texto: "Turtle escreve um grafo RDF inteiro em forma de texto compacta."
+  ref: w3c-turtle
+  localizacao: "Abstract ('allows an RDF graph to be completely written in a compact and natural text form')"
+  resultado: confirmada
+- texto: "Diagrama 2: Turtle, representação textual RDF."
+  ref: w3c-turtle
+  localizacao: "Abstract ('defines a textual syntax for RDF called Turtle')"
+  resultado: confirmada
+- texto: "O WebVOWL é uma ferramenta para visualizar ontologias na web."
+  ref: webvowl
+  localizacao: "descrição do repositório ('Visualizing ontologies on the Web')"
+  resultado: confirmada
+  nota: "O README indica o serviço público atual em service.tib.eu e avisa que o domínio antigo não pertence
+    mais ao projeto; o portal não o cita."
+- texto: "Diagrama 2: WebVOWL, revisão visual do vocabulário."
+  ref: webvowl
+  localizacao: "descrição do repositório ('Visualizing ontologies on the Web')"
+  resultado: confirmada
+- texto: "O OWL2VOWL converte uma ontologia num arquivo JSON para ele."
+  ref: owl2vowl
+  localizacao: "descrição do repositório ('Converting ontologies for WebVOWL') e README ('The converted
+    ontology will be written in a .json file'; uso com -file)"
+  resultado: confirmada
+- texto: "Diagrama 2: OWL2VOWL, conversão de avaliação."
+  ref: owl2vowl
+  localizacao: "descrição do repositório ('Converting ontologies for WebVOWL')"
+  resultado: confirmada
+- texto: "SKOS oferece um modelo para a estrutura de esquemas de conceitos, com rótulos preferidos e
+    alternativos e relações mais amplas, mais específicas e associativas."
+  ref: w3c-skos-primer
+  localizacao: "Abstract ('provides a model for expressing the basic structure and content of concept
+    schemes'), §2.1 'Concepts', §2.2 'Labels' (prefLabel e altLabel) e §2.3 'Semantic Relationships'
+    (broader, narrower e related)"
+  resultado: confirmada
+- texto: "Diagrama 2: SKOS, organização de conceitos."
+  ref: w3c-skos-primer
+  localizacao: "Abstract e §2.1 'Concepts'"
+  resultado: confirmada
+- texto: "SHACL é uma linguagem para validar grafos RDF contra um conjunto de condições, as shapes."
+  ref: w3c-shacl
+  localizacao: "Abstract ('a language for validating RDF graphs against a set of conditions'; 'These
+    conditions are provided as shapes')"
+  resultado: confirmada
+- texto: "Diagrama 2: SHACL, validação de grafos."
+  ref: w3c-shacl
+  localizacao: "Abstract"
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o coordenador do
+    piloto RDF (Tarefa 5 do plano)"
+  data: '2026-11-13'
+  achados:
+  - afirmacao: "WebVOWL e OWL2VOWL"
+    problema: "o domínio antigo do projeto não pertence mais ao VisualDataWeb (aviso do README)"
+    tratamento: "as referências apontam os repositórios oficiais no GitHub; o domínio antigo não é citado
+      nem linkado"
+  - afirmacao: "WebVOWL e OWL2VOWL"
+    problema: "a avaliação real do vocabulário (Tarefa 4) ainda não existe"
+    tratamento: "o texto diz só que o vocabulário pode ser avaliado fora do build, sem resultado nem captura"
+  - afirmacao: "frases sobre o que o portal faz (grafo, manifesto, consulta, ausência de raciocinador)"
+    problema: "não são sustentadas pelas fontes W3C"
+    tratamento: "nenhuma delas cita fonte externa; correspondem ao código (grafo_catalogo.py, semantica.py,
+      consultar.py) e aos testes do piloto"

@@ -1,0 +1,11 @@
+id: w3c-rdf11
+titulo: "RDF 1.1 Concepts and Abstract Syntax"
+organizacao: W3C
+url: https://www.w3.org/TR/rdf11-concepts/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2014-02-25"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "§1.1 'Graph-based Data Model' e §3 'RDF Graphs' (§3.1 'Triples')"
+dominios: [construir-com-ia]
+notas: null

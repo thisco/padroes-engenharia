@@ -1,0 +1,11 @@
+id: w3c-jsonld11
+titulo: "JSON-LD 1.1: A JSON-based Serialization for Linked Data"
+organizacao: W3C
+url: https://www.w3.org/TR/json-ld11/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2020-07-16"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "Abstract, §1.5 'Design Goals and Rationale' e §3.1 'The Context'"
+dominios: [construir-com-ia]
+notas: null

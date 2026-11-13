@@ -1,0 +1,11 @@
+id: w3c-turtle
+titulo: "RDF 1.1 Turtle: Terse RDF Triple Language"
+organizacao: W3C
+url: https://www.w3.org/TR/turtle/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2014-02-25"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "Abstract"
+dominios: [construir-com-ia]
+notas: null

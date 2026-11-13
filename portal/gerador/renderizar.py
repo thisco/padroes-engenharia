@@ -104,6 +104,7 @@ NAV = (
         (
             ("O problema", "o-problema.html"),
             ("Conceitos", "conceitos.html"),
+            ("Modelo de conhecimento", "modelo-de-conhecimento.html"),
             ("Pessoas e normas", "pessoas-e-normas.html"),
             ("Glossário", "glossario.html"),
             ("Casos", "casos.html"),
@@ -999,4 +1000,45 @@ def html_para_agentes(site: Site) -> str:
         bloco=bloco_agents(site),
         celulas=[c for c in site.catalogo.celulas if c.estado == "ok"],
         a_definir=celulas_a_definir(site),
+    )
+
+
+# Modelo de conhecimento (spec do piloto RDF, §5, R10 e R11) ----------------------------------
+
+
+def secoes_citadas(pagina: Conteudo, ids: list[str]) -> list[tuple[str, Markup]]:
+    """Cada seção `## ` do corpo em HTML, com as citações na numeração da página inteira."""
+
+    def trocar(achado: re.Match[str]) -> str:
+        if achado[1] not in ids:
+            return achado[0]
+        return f"[[{ids.index(achado[1]) + 1}]](#ref-{achado[1]})"
+
+    return [
+        (titulo, Markup(para_html(MARCADOR.sub(trocar, trecho))))
+        for titulo, trecho in secoes(pagina.corpo)
+    ]
+
+
+def html_modelo_conhecimento(site: Site, pagina: Conteudo) -> str:
+    # Imports aqui dentro: `grafo_catalogo` e `paginas` importam este módulo no topo.
+    from portal.gerador.grafo_catalogo import montar_grafo
+    from portal.gerador.modelo_conhecimento import PAINEIS, contexto_modelo
+    from portal.gerador.paginas import citar, ids_da_pagina
+
+    ids = ids_da_pagina(site, pagina)
+    secoes_ = secoes_citadas(pagina, ids)
+    explica = [next((h for t, h in secoes_ if t == titulo), Markup("")) for titulo in PAINEIS]
+    return renderizar(
+        site,
+        "modelo-conhecimento.html",
+        caminho_de(pagina),
+        titulo=pagina.meta["titulo"],
+        descricao=str(pagina.meta.get("descricao") or ""),
+        lead=citar(pagina.meta.get("lead", ""), ids, "lead"),
+        modelo=contexto_modelo(montar_grafo(site), base_rdf=site.base_rdf),
+        explica=explica,
+        resto=[(t, h) for t, h in secoes_ if t not in PAINEIS],
+        numero_ref={r: n for n, r in enumerate(ids, start=1)},
+        referencias=site.catalogo.referencias_de(pagina),
     )

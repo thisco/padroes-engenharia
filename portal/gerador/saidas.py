@@ -74,6 +74,7 @@ from portal.gerador.renderizar import (
     html_dominios,
     html_espinha,
     html_listagem,
+    html_modelo_conhecimento,
     html_para_agentes,
     html_pratica,
     html_referencias,
@@ -254,6 +255,8 @@ def pagina_de_conteudo(site: Site, c: Conteudo) -> Pagina:
     html, md = html_conteudo, md_conteudo
     if c.tipo == "pagina" and c.chave in PAGINAS_ESTRUTURADAS:
         html, md = PAGINAS_ESTRUTURADAS[c.chave]
+    elif c.tipo == "pagina" and c.chave == "modelo-de-conhecimento":
+        html, md = html_modelo_conhecimento, md_modelo_conhecimento
     return Pagina(
         caminho_de(c),
         str(c.meta["titulo"]),
@@ -359,6 +362,33 @@ def md_conteudo(site: Site, c: Conteudo) -> str:
         diagrama,
         ficha,
         numeros,
+        c.corpo,
+        md_lista_referencias(site, c),
+    )
+
+
+def md_modelo_conhecimento(site: Site, c: Conteudo) -> str:
+    """O `.md` gêmeo da página do modelo: os três diagramas descritos em texto, a faixa final,
+    o corpo curado e as referências (spec do piloto RDF, §5 e R10)."""
+    # Imports aqui dentro: `grafo_catalogo` importa `renderizar`, como este módulo.
+    from portal.gerador.grafo_catalogo import montar_grafo
+    from portal.gerador.modelo_conhecimento import contexto_modelo
+
+    m = contexto_modelo(montar_grafo(site), base_rdf=site.base_rdf)
+    diagramas = [
+        f"## Diagrama {n}: {titulo}\n\n" + "\n".join(f"- {linha}" for linha in linhas)
+        for n, (titulo, linhas) in enumerate(zip(m["paineis"], m["descricoes"], strict=True), 1)
+    ]
+    faixa = m["faixa"]
+    return _juntar(
+        f"# {c.meta['titulo']}",
+        str(c.meta.get("descricao") or ""),
+        str(c.meta.get("lead") or ""),
+        *diagramas,
+        "## Encontrou um vínculo, não validou uma afirmação\n\n"
+        f"- Encontrou um vínculo: {faixa['vinculo']}\n"
+        f"- Validou uma afirmação: {faixa['afirmacao']}\n"
+        f"- {faixa['dado']}",
         c.corpo,
         md_lista_referencias(site, c),
     )

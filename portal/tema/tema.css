@@ -723,3 +723,153 @@ a.tr-skill:hover { text-decoration: underline; }
 .texto > .disco .prompt figcaption { color: var(--sobre-escuro); }
 .texto > .disco .prompt pre { color: var(--papel); }
 .a-mao { margin-top: 28px; }
+
+/* Modelo de conhecimento (piloto RDF, spec §5): três painéis em SVG e HTML do próprio tema.
+   Caixa é classe; seta numerada é propriedade. Futuro e indisponível levam texto, traço
+   pontilhado e hachura, nunca só cor; azul continua só em link e ID. */
+.mc-sumario { display: flex; flex-wrap: wrap; gap: 10px 24px; align-items: center; justify-content: space-between; margin-top: 16px; font-size: 14px; }
+.mc-sumario ol { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; }
+.mc-sumario a { display: inline-flex; gap: 8px; align-items: center; color: var(--tinta); font-weight: 600; text-decoration: none; }
+.mc-sumario a:hover { text-decoration: underline; }
+.mc-n {
+  display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 4px; flex: none;
+  font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--tinta);
+  border: 1.5px solid var(--tinta); border-radius: 2px; background: var(--branco);
+}
+.mc-estado { margin: 0; padding: 4px 10px; font-size: 13px; color: var(--tinta-2); background: var(--branco); border: 1px solid var(--regra); }
+.mc-estado.mc-indisponivel { border: 2px dotted var(--traco); }
+.mc-figura { margin: 36px 0 0; padding-top: 14px; border-top: 2px solid var(--tinta); }
+.mc-cab { display: flex; gap: 12px; align-items: center; }
+.mc-cab h2 { margin: 0; font-size: 24px; }
+.mc-cab .mc-n { min-width: 30px; height: 30px; font-size: 15px; color: var(--papel); background: var(--tinta); }
+.mc-explica { margin-top: 10px; }
+.mc-explica p { margin: 0 0 10px; }
+.mc-figura > figcaption { margin-top: 14px; padding-left: 10px; max-width: 90ch; font-size: 13px; color: var(--tinta-2); border-left: 3px solid var(--regra); }
+.mc-k { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; color: var(--tinta-2); }
+.mc-d { font-size: 13px; color: var(--tinta-2); }
+.mc-nome { display: flex; flex-wrap: wrap; gap: 0 6px; align-items: baseline; }
+.mc-ref { font-family: var(--mono); font-size: 12px; text-decoration: none; }
+.mc-ausente { font-style: italic; color: var(--tinta-2); }
+
+/* painel 1: classe e instância, o desenho e a lista de relações */
+.mc-tipo { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; margin: 18px 0; max-width: 880px; }
+.mc-classe, .mc-instancia { display: flex; flex-direction: column; gap: 4px; padding: 10px 14px; background: var(--branco); border-radius: 3px; }
+.mc-classe { border: 3px solid var(--tinta); }
+.mc-classe b { font-family: var(--mono); font-size: 18px; }
+.mc-instancia { border: 1.5px solid var(--tinta-2); }
+.mc-instancia .id { align-self: flex-start; margin: 2px 0; font-size: 15px; }
+.mc-tipo-seta { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 2px; font-size: 12px; color: var(--tinta-2); }
+.mc-tipo-seta::after { content: "→"; font-size: 22px; line-height: 1; color: var(--tinta); }
+.mc-palco { margin: 8px 0 16px; padding: 14px; background: var(--harness); border: 1px solid var(--regra); border-radius: 3px; }
+.mc-mapa { display: block; width: 100%; height: auto; max-width: 1124px; margin: 0 auto; font-family: "Inter", system-ui, sans-serif; }
+.mc-caixa rect { fill: var(--branco); stroke: var(--tinta-2); stroke-width: 1.5; }
+.mc-caixa.mc-foco rect { stroke: var(--tinta); stroke-width: 3; }
+.mc-cx-r { font-size: 14px; font-weight: 700; fill: var(--tinta); text-anchor: middle; }
+.mc-cx-c { font-family: var(--mono); font-size: 11px; fill: var(--tinta-2); text-anchor: middle; }
+.mc-aresta path { fill: none; stroke: var(--tinta-2); stroke-width: 1.5; }
+.mc-ponta { fill: var(--tinta-2); }
+.mc-etq rect { fill: var(--papel); stroke: var(--tinta-2); stroke-width: 1; }
+.mc-etq circle { fill: var(--tinta); }
+.mc-etq-n { font-family: var(--mono); font-size: 9px; font-weight: 700; fill: var(--papel); text-anchor: middle; }
+.mc-etq-p { font-family: var(--mono); font-size: 12px; fill: var(--tinta); }
+.mc-rels { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.mc-rel details { background: var(--branco); border: 1px solid var(--regra); border-radius: 3px; }
+.mc-rel details[open] { border-color: var(--tinta-2); box-shadow: inset 3px 0 0 var(--tinta); }
+.mc-rel summary { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; padding: 8px 10px; font-size: 14px; cursor: pointer; }
+.mc-rel summary .mc-c { font-weight: 600; }
+.mc-rel summary::after { content: "+ abrir"; margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--tinta-2); }
+.mc-rel details[open] > summary::after { content: "− fechar"; }
+.mc-p { padding: 1px 8px; font-family: var(--mono); font-size: 12px; color: var(--tinta); background: var(--papel); border: 1px solid var(--tinta-2); border-radius: 10px; }
+.mc-p::after { content: " →"; }
+.mc-ficha { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 12px; margin: 0; padding: 4px 14px 12px 42px; font-size: 13px; }
+.mc-ficha dt { font-weight: 600; color: var(--tinta-2); }
+.mc-ficha dd { margin: 0; overflow-wrap: anywhere; }
+.mc-ex { font-family: var(--mono); font-size: 12px; }
+
+/* painel 2: a tripla, as representações, o vocabulário e o que fica fora do piloto */
+.mc-tripla { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 18px 0; max-width: 780px; }
+.mc-t { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; font-family: var(--mono); font-size: 15px; font-weight: 600; background: var(--branco); border: 2px solid var(--tinta); overflow-wrap: anywhere; }
+.mc-t + .mc-t { border-left-width: 0; }
+.mc-t-p { background: var(--papel-2); }
+.mc-t-p code { padding: 0; font-size: 15px; background: none; }
+.mc-t-p code::after { content: " →"; }
+.mc-t small { font-family: "Inter", system-ui, sans-serif; font-size: 12px; font-weight: 400; color: var(--tinta-2); }
+.mc-fonte { grid-column: 1 / -1; margin: 6px 0 0; font-size: 13px; color: var(--tinta-2); }
+.mc-rep { display: grid; gap: 16px; margin: 18px 0; padding: 16px; background: var(--harness); border: 1px solid var(--regra); border-radius: 3px; }
+.mc-linha { display: grid; grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr) 96px minmax(0, 1.5fr); align-items: center; }
+.mc-no { display: flex; flex-direction: column; gap: 2px; padding: 8px 12px; background: var(--branco); border: 1.5px solid var(--tinta-2); border-radius: 3px; }
+.mc-no b { font-size: 15px; }
+.mc-no small { font-size: 12px; color: var(--tinta-2); }
+.mc-forte { border: 3px solid var(--tinta); }
+.mc-seta { display: flex; flex-direction: column; align-items: center; padding: 0 4px; font-family: var(--mono); font-size: 11px; text-align: center; color: var(--tinta-2); }
+.mc-seta::after { content: "→"; font-size: 20px; line-height: 1; color: var(--tinta); }
+.mc-paralelas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 8px; background: var(--papel); border: 1.5px solid var(--tinta); border-radius: 3px; }
+.mc-paralelas .mc-k { grid-column: 1 / -1; margin: 0; }
+.mc-sobe::before { content: "↑ descreve o grafo"; font-family: var(--mono); font-size: 11px; color: var(--tinta-2); }
+.mc-avalia { display: grid; gap: 6px; padding: 6px; border: 1.5px dashed var(--tinta-2); border-radius: 3px; }
+.mc-arq { display: inline-block; align-self: flex-start; margin-top: 6px; padding: 1px 8px; font-family: var(--mono); font-size: 12px; text-decoration: none; border: 1px solid var(--tinta-2); border-radius: 2px; overflow-wrap: anywhere; }
+.mc-arq.mc-indisponivel { color: var(--tinta-2); border: 1.5px dotted var(--traco); }
+.mc-linha-futuro { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.mc-futuro { display: flex; flex-direction: column; gap: 2px; padding: 0 12px 10px; color: var(--tinta-2); background: var(--branco); border: 2px dotted var(--traco); border-radius: 3px; }
+.mc-futuro b { font-size: 15px; color: var(--tinta-2); }
+.mc-futuro small { font-size: 12px; }
+.mc-tag {
+  margin: 0 -12px 6px; padding: 3px 12px; font-family: var(--mono); font-size: 11px; font-weight: 600; color: var(--tinta);
+  background: repeating-linear-gradient(135deg, var(--papel-2) 0 6px, var(--branco) 6px 9px); border-bottom: 1px dotted var(--traco);
+}
+.mc-escritas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 4px 0 14px; }
+.mc-escritas pre { margin: 4px 0 0; padding: 10px 12px; color: var(--sobre-escuro-2); background: var(--tinta); border-radius: 3px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.mc-escritas pre code { padding: 0; color: inherit; background: none; }
+.mc-nota { grid-column: 1 / -1; margin: 0; font-size: 12px; color: var(--tinta-2); }
+.mc-alternativa { margin-top: 14px; }
+.mc-alternativa > summary { font-size: 13px; font-weight: 600; color: var(--tinta-2); cursor: pointer; }
+.mc-alternativa ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; max-width: 90ch; }
+
+/* painel 3: o caminho do agente, os ramos e o estado indisponível */
+.mc-aviso { margin: 14px 0; padding: 10px 14px; max-width: 90ch; font-size: 14px; background: var(--branco); border: 2px dotted var(--traco); }
+.mc-rota { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; margin: 16px 0 0; padding: 0; list-style: none; }
+.mc-est { position: relative; display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: var(--branco); border: 1.5px solid var(--tinta-2); border-radius: 3px; }
+.mc-est b { font-size: 15px; }
+.mc-est small { font-size: 12px; color: var(--tinta-2); }
+.mc-est + .mc-est::before { content: "↓"; position: absolute; left: 50%; top: -22px; transform: translateX(-50%); font-size: 17px; line-height: 1; color: var(--tinta); }
+.mc-est-0 { background: var(--papel-2); }
+.mc-est .mc-n { align-self: flex-start; }
+.mc-est a:not(.mc-arq) { font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
+.mc-est.mc-indisponivel, .mc-ramo.mc-indisponivel, .mc-instancia.mc-indisponivel {
+  border: 2px dotted var(--traco); background: repeating-linear-gradient(135deg, var(--branco) 0 7px, var(--papel-2) 7px 10px);
+}
+.mc-est.mc-indisponivel b, .mc-ramo.mc-indisponivel b { color: var(--tinta-2); }
+.mc-ramos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 18px; }
+.mc-ramo { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: var(--branco); border: 1.5px solid var(--tinta-2); border-left-width: 5px; border-radius: 3px; }
+.mc-ramo small { font-size: 12px; color: var(--tinta-2); }
+
+/* faixa final: vínculo encontrado não é afirmação validada */
+.mc-faixa { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); margin-top: 40px; color: var(--papel); background: var(--tinta); border-radius: 3px; overflow: hidden; }
+.mc-lado { padding: 16px 20px; }
+.mc-lado .mc-k { color: var(--sobre-escuro); }
+.mc-lado h3 { margin: 2px 0 6px; font-size: 20px; color: var(--papel); }
+.mc-lado p { margin: 0; font-size: 14px; color: var(--sobre-escuro-2); }
+.mc-lado-2 { border-left: 2px dashed var(--sobre-escuro); }
+.mc-dado { grid-column: 1 / -1; margin: 0; padding: 10px 20px; font-size: 14px; font-weight: 600; color: var(--tinta); background: var(--papel-2); border-top: 3px solid var(--tinta); }
+@media (min-width: 901px) {
+  .mc-rels { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .mc-rota { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 26px; }
+  .mc-est + .mc-est::before { content: "→"; left: -21px; top: 50%; transform: translateY(-50%); }
+  .mc-ramos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .mc-linha { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .mc-seta { flex-direction: row; justify-content: center; gap: 8px; padding: 2px 0; }
+  .mc-seta::after { content: "↓"; }
+  .mc-vazio { display: none; }
+  .mc-escritas { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .mc-palco { display: none; }
+  .mc-tipo, .mc-tripla, .mc-paralelas, .mc-linha-futuro, .mc-faixa { grid-template-columns: minmax(0, 1fr); }
+  .mc-tipo-seta { flex-direction: row; gap: 8px; }
+  .mc-tipo-seta::after { content: "↓"; }
+  .mc-t + .mc-t { border-left-width: 2px; border-top-width: 0; }
+  .mc-ficha { grid-template-columns: minmax(0, 1fr); padding-left: 14px; }
+  .mc-lado-2 { border-left: 0; border-top: 2px dashed var(--sobre-escuro); }
+}

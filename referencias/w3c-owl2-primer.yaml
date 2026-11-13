@@ -1,0 +1,11 @@
+id: w3c-owl2-primer
+titulo: "OWL 2 Web Ontology Language Primer (Second Edition)"
+organizacao: W3C
+url: https://www.w3.org/TR/owl2-primer/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2012-12-11"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "Abstract, §2 'What is OWL 2?' e §3 'Modeling Knowledge: Basic Notions'"
+dominios: [construir-com-ia]
+notas: null
