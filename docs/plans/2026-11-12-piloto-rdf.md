@@ -153,13 +153,13 @@ retorno à aprovação só é necessário se o contrato se mostrar inviável ou 
 
 ## Tarefa 4 — Avaliação WebVOWL separada
 
-- [ ] Obter versão/commit exatos de OWL2VOWL e WebVOWL e registrar sua procedência aqui.
+- [x] Obter versão/commit exatos de OWL2VOWL e WebVOWL e registrar sua procedência aqui.
   Produzir vocabulário com a CLI usando base ilustrativa; converter esse arquivo pelo
   conversor real, registrando comando completo, versões Java/conversor, entrada e saída. (R9)
-- [ ] Abrir JSON convertido no WebVOWL local ou serviço disponível, inspecionar visualmente
+- [x] Abrir JSON convertido no WebVOWL local ou serviço disponível, inspecionar visualmente
   classes e propriedades; guardar captura, hash da entrada/saída e resultado neste plano.
   Se conversão incompatível, parar esta entrega e voltar à spec; Turtle válido não encerra R9. (R9)
-- [ ] Confirmar build/CI sem conversor ou serviço externo e registrar que visualização
+- [x] Confirmar build/CI sem conversor ou serviço externo e registrar que visualização
   não valida verdade factual, inferência ou completude dos dados. (R8, R9)
 
 ## Tarefa 5 — Verificação, revisão e entrega
@@ -361,6 +361,78 @@ dois dígitos apertados no círculo, fontes `[n]` quebrando linha nos nós, núm
 em toda a largura no painel 3 e falta de indicação "abrir/fechar" nos `summary` em flex.
 Capturas finais em `/tmp/piloto-rdf-visual/capturas/` (página inteira `<modo>-<largura>.png`,
 foco por teclado `<modo>-<largura>-teclado.png` e por painel `secao-<modo>-<largura>-*.png`).
+
+### Tarefa 4 (2026-11-13)
+
+Avaliação feita fora do repositório; nenhum arquivo versionado mudou. Artefatos em
+`/tmp/piloto-rdf-webvowl/`.
+
+Procedência:
+
+| item | valor |
+| --- | --- |
+| OWL2VOWL | 0.3.7, tag `0.3.7` = commit `2833ead00122ca252a0fd0e18c5e5b696d711d2c`; o tarball desse commit, comparado por `diff -rq` com a cópia compilada, difere só em `target/` |
+| WebVOWL | 1.1.7, tag `v1.1.7` = commit `28e7dd9540622e8cb723dc000824b5eef5ae775f` |
+| JAR | `OWL2VOWL-0.3.7-shaded.jar`, sha256 `dc505307ccc1bcf984b76c59662da671750781ac0f74cce32b382180a83086ff` (Maven 3.9.11) |
+| Java | Temurin 17.0.18+8 com `--add-opens java.base/java.lang=ALL-UNNAMED` |
+| Navegador | Chrome 157 headless via Playwright 1.58.2 |
+| Portal | HEAD `709b8a3`, versão 1.3.0 |
+
+Entrada, gerada pela CLI com base ilustrativa:
+
+```
+python scripts/gerar.py --saida /tmp/piloto-rdf-webvowl/site --base-rdf https://example.org/padroes/
+```
+
+`pacote/semantica/vocabulario.ttl`: 210 linhas, sha256
+`161b4c0e111e36af8f88eca713c8c62497923b09e3972fe54a8710be300528e7`. Contém 12 classes (11
+subclasses de `Entidade`), 10 propriedades de objeto relacionais, 7 de dados, `url`, `recorte` e
+`relacaoOrigem`, com rótulos e comentários `@pt-BR`.
+
+Conversão (rc=0; único aviso é o do log4j2 sem configuração):
+
+```
+JAVA_HOME=/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home \
+$JAVA_HOME/bin/java --add-opens java.base/java.lang=ALL-UNNAMED \
+  -jar OWL2VOWL-0.3.7-shaded.jar \
+  -file /tmp/piloto-rdf-webvowl/vocabulario.ttl \
+  -output /tmp/piloto-rdf-webvowl/conv/vocabulario.json
+```
+
+Sem `--add-opens`, com Java 17 ou 25, o conversor falha em `OWLManager.createOWLOntologyManager`
+(`InaccessibleObjectException` do Guice embutido). A falha acontece antes de ler o vocabulário,
+então não é incompatibilidade do Turtle. Os logs estão em `conv/tentativa-*.log`.
+
+Saída: `vocabulario.json` com 18630 bytes, sha256
+`042420331086e6e89d2a9a9e8ae32613050ff00d6c0594ccea0d1104df712306`. Ela traz as 12 classes, as 10
+propriedades relacionais e as 7 de dados, com domínio e alcance idênticos aos do Turtle e
+rótulos pt-br.
+
+Inspeção visual: WebVOWL 1.1.7 local (`http.server` em 127.0.0.1) a 1280×900. Renderizou 26 nós
+sem erro no console nem requisição falha. Classes e propriedades estão visíveis, e `Entidade`
+fica ao centro com as subclasses. Capturas:
+
+- `webvowl-01-grafo.png`: carga inicial;
+- `webvowl-02-pt-br-selecionado.png`: depois de escolher o idioma pt-br;
+- `webvowl-03-pratica-selecionada.png`: com o nó Prática selecionado.
+
+Limitações e distorções:
+
+- Propriedades de dados sem `rdfs:range` viram nós sintéticos `Literal`.
+- `url` e `recorte` apontam para `owl:Thing`.
+- `relacaoOrigem` aparece isolada, porque `rdf:Statement` não é desenhado.
+- O cabeçalho mostra "No title available", pois a ontologia não declara título.
+- Os rótulos pt-BR só aparecem depois de escolher pt-br no seletor.
+- Há nós sobrepostos e "Documento de conceito" aparece truncado no layout de forças.
+
+A inspeção confere a estrutura do vocabulário. Não prova a verdade factual dos dados, nem
+inferência, nem completude.
+
+Build e CI independentes: a busca por `owl2vowl|webvowl|java|jdk` em `.github/`, `.gitlab-ci.yml`,
+`requirements*.txt`, `Makefile`, `portal/gerador/` e `scripts/` não acha nenhuma dependência do
+conversor, de Java ou de serviço externo. As únicas ocorrências são a extensão `.java` em listas
+de verificadores e as menções em documentos. Do serviço público https://service.tib.eu/webvowl/
+só foi registrada a disponibilidade (HTTP 200); nada foi enviado a ele.
 
 ## Revisão adversarial: 2026-11-12 — achados
 
