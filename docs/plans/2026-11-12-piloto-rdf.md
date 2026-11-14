@@ -33,7 +33,7 @@ Executar exportador/integração antes de conteúdo/visual: ambos tocam `renderi
 | Frente | Criar | Alterar |
 | --- | --- | --- |
 | Contrato e exportação | `portal/gerador/modelo_semantico.py`, `portal/gerador/semantica.py`, `tests/unidade/test_semantica.py` | `requirements-dev.txt` |
-| Integração | `tests/integracao/test_semantica.py` | `portal/gerador/build.py`, `portal/gerador/renderizar.py`, `portal/gerador/pacote.py`, `portal/gerador/saidas.py`, `scripts/gerar.py`, `tests/unidade/test_build_atomico.py` |
+| Integração | `tests/integracao/test_semantica_integracao.py` | `portal/gerador/build.py`, `portal/gerador/renderizar.py`, `portal/gerador/pacote.py`, `portal/gerador/saidas.py`, `scripts/gerar.py`, `tests/unidade/test_build_atomico.py` |
 | Conteúdo e visual | `paginas/modelo-de-conhecimento.md`, `verificacoes/modelo-de-conhecimento.yaml`, `portal/gerador/modelo_conhecimento.py`, `portal/templates/modelo-conhecimento.html`, `tests/unidade/test_modelo_conhecimento.py` | `portal/gerador/renderizar.py`, `portal/gerador/saidas.py`, `portal/tema/tema.css` |
 | Fontes curadas | `referencias/w3c-rdf11.yaml`, `referencias/w3c-rdfs.yaml`, `referencias/w3c-owl2-primer.yaml`, `referencias/w3c-jsonld11.yaml`, `referencias/w3c-turtle.yaml`, `referencias/w3c-skos-primer.yaml`, `referencias/w3c-shacl.yaml`, `referencias/webvowl.yaml`, `referencias/owl2vowl.yaml` | somente reutilizar referência existente se URL/id já catalogados; registrar essa resolução neste plano |
 | Evidências e release | `docs/PROJECT_MEMORY.md` apenas ao encerrar sessão complexa | este plano, `CHANGELOG.md`, `portal/config.yml`, spec ao arquivar |
@@ -123,8 +123,8 @@ def test_r2_id_inteiro_sem_normalizacao():
   Comparar com consulta atual e executar seus testes de orçamento sem mudar a consulta. (R6)
 - [x] Desabilitar conexões externas nos testes de build/parser/consulta, permitindo loopback
   apenas no teste HTTP; garantir strings hostis preservadas como dados. (R8)
-- [x] Executar `python -m pytest tests/integracao/test_semantica.py tests/unidade/test_build_atomico.py -q`
-  (o arquivo ficou `tests/integracao/test_semantica_integracao.py`: o nome do plano colide com
+- [x] Executar `python -m pytest tests/integracao/test_semantica_integracao.py tests/unidade/test_build_atomico.py -q`
+  (o nome `tests/integracao/test_semantica.py`, previsto no rascunho, colidiria com
   `tests/unidade/test_semantica.py` na coleta, pois `tests/` não tem `__init__.py`),
   suíte completa e lint; registrar evidências e commit `feat(portal): integrar piloto RDF opcional`. (R1, R5, R6, R7, R8)
 
@@ -433,6 +433,85 @@ Build e CI independentes: a busca por `owl2vowl|webvowl|java|jdk` em `.github/`,
 conversor, de Java ou de serviço externo. As únicas ocorrências são a extensão `.java` em listas
 de verificadores e as menções em documentos. Do serviço público https://service.tib.eu/webvowl/
 só foi registrada a disponibilidade (HTTP 200); nada foi enviado a ele.
+
+### Correções da revisão final (2026-11-14)
+
+A revisão final independente (base `279b064..a32e9c6`) pediu uma onda única de correções. Itens
+corrigidos, em `6a9ea80`, `62e81f9` e `125d0e1`:
+
+| item | correção |
+| --- | --- |
+| I1 | `arquivoFonte` ficou sem `rdfs:domain` (`PROPRIEDADES_SEM_DOMINIO` em `modelo_semantico.py`), com `rdfs:comment` dizendo que vale para a entidade e para a afirmação; `relacaoOrigem` segue com domínio `rdf:Statement` |
+| I2 | sem `--base-rdf`, a tripla de exemplo do painel 2 usa `BASE_ILUSTRATIVA` (`https://example.org/padroes/`), rotulada na página como base ilustrativa; com `--base-rdf`, a base real |
+| I3 | `revisao_adversarial` de `verificacoes/modelo-de-conhecimento.yaml` registra a revisão independente de 2026-11-14: 18 afirmações confirmadas, a afirmação 4 imprecisa e os achados I1 e I2 |
+| C4 | afirmação 4 reescrita na página e no registro ("que podem ser usados para dar nome e descrição legíveis a um recurso"), conferida de novo contra RDFS §3.6 e §3.7 em 2026-11-14 |
+| M1 | texto alternativo do painel 2 descreve só o que está desenhado (setas monta, publica e avaliação fora do build; caixas futuras sem seta); a legenda não diz mais "de baixo" |
+| M2 | abaixo de 900 px o rótulo da caixa OWL e RDFS vira "descreve o grafo validado", sem seta |
+| M3 | grupo JSON-LD/Turtle recebe `mc-indisponivel` (hachura, borda pontilhada e o texto "indisponíveis neste build") no modo inativo |
+| M4 | link do painel 3 rotulado "recorte JSON-LD de <ID>" |
+| R-Mn2 | nota na legenda do painel 1 (e no `.md` gêmeo): `aplica` também liga a Recurso aplicável (`pe:RecursoAplicavel`), com a contagem tirada do grafo (20 neste catálogo) |
+| R-Mn3 | legenda diz "um número que corresponde à mesma relação na lista" |
+| M7 | o teste do `.md` gêmeo afirma que a marcação hostil fica em item de lista, sem linha iniciada por `<`, e que os títulos não mudam |
+| P1 | o plano cita `tests/integracao/test_semantica_integracao.py` |
+
+Desvio registrado (R-Mn2): a spec §5 desenha `aplica` → "Recurso aplicável" no painel 1, mas
+`CAIXAS` não tem caixa para `RecursoAplicavel`; a seta `aplica` chega a `Entidade`, como no
+contrato. Por decisão da coordenação, sem caixa nova: a legenda do painel 1 explica que `aplica`
+também liga a Recurso aplicável (skills e steering), com o termo `pe:RecursoAplicavel`.
+
+Vermelho → verde de I1 (`test_r4_afirmacao_nao_vira_entidade_pelo_dominio_das_propriedades`):
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_semantica.py -k afirmacao_nao_vira -q
+E   AssertionError: (rdflib.term.URIRef('https://example.org/padroes/vocab#arquivoFonte'), [rdflib.term.URIRef('https://example.org/padroes/vocab#Entidade')])
+1 failed, 47 deselected in 0.09s
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_semantica.py -q
+48 passed in 0.12s
+```
+
+Vermelho → verde de I2 (`test_r10_painel_2_exemplos_sao_rdf_valido_e_isomorfos`, ativo e
+inativo; no vermelho, o caso inativo usou a base esperada literal, porque a constante ainda não
+existia):
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_modelo_conhecimento.py -q -k exemplos
+E         Extra items in the left set:
+E         (rdflib.term.URIRef('file:///Users/thiago/.codex/worktrees/3d77/padroes-engenharia/id/P1-01'), ...
+1 failed, 1 passed, 20 deselected in 0.17s
+$ /tmp/piloto-rdf-venv/bin/python -m pytest tests/unidade/test_modelo_conhecimento.py -q
+22 passed in 8.02s
+```
+
+O IRI relativo do modo inativo virava `file://` da pasta de trabalho ao ser lido: o exemplo não
+era RDF autônomo. Com os testes dos itens de página, o arquivo ficou com 25 testes.
+
+Inspeção de navegador (Chrome headless via Playwright, `http.server` em 127.0.0.1, sites
+`--previa` em `/tmp/piloto-rdf-visual/correcoes/{inativo,ativo}`, este com
+`--base-rdf https://example.org/padroes/`; servidores encerrados pelo PID):
+
+| modo | largura | HTTP | sem rolagem horizontal | grupo JSON-LD/Turtle | rótulo OWL e RDFS | link do recorte | console | links locais (todos 200) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| inativo | 375 | 200 | 375 ≤ 375 | hachurado, pontilhado | "descreve o grafo validado" | "recorte JSON-LD de API-01: indisponível" | sem erro | 11 |
+| inativo | 1280 | 200 | 1280 ≤ 1280 | hachurado, pontilhado | "↑ descreve o grafo" | "recorte JSON-LD de API-01: indisponível" | sem erro | 11 |
+| ativo | 375 | 200 | 375 ≤ 375 | sólido | "descreve o grafo validado" | "recorte JSON-LD de API-01" | sem erro | 17 |
+| ativo | 1280 | 200 | 1280 ≤ 1280 | sólido | "↑ descreve o grafo" | "recorte JSON-LD de API-01" | sem erro | 17 |
+
+Capturas em `/tmp/piloto-rdf-visual/capturas-correcoes/` (página inteira `<modo>-<largura>.png`
+e recortes `secao-<modo>-<largura>-{legenda-1,painel-2,painel-3}.png`).
+
+Verificação final:
+
+```
+$ /tmp/piloto-rdf-venv/bin/python -m pytest -q -p no:cacheprovider
+3299 passed in 318.19s (0:05:18)
+$ /tmp/piloto-rdf-venv/bin/python -m ruff check .
+All checks passed!
+$ /tmp/piloto-rdf-venv/bin/python -m ruff format --check .
+534 files already formatted
+$ /tmp/piloto-rdf-venv/bin/python scripts/validar.py
+aviso: praticas/construir-com-ia/P1-12.md: Exemplo recomendado ausente (status experimentar ou avaliar)
+validação ok: nenhum erro.
+```
 
 ## Revisão adversarial: 2026-11-12 — achados
 
