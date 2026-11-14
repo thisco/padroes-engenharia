@@ -14,6 +14,7 @@ from typing import Any
 
 from portal.gerador.modelo_semantico import (
     CLASSE_COMUM,
+    FALLBACK_CLASSE,
     RELACOES,
     ROTULO_CLASSES,
     ROTULO_PROPRIEDADES,
@@ -84,6 +85,9 @@ PAINEIS = (
     "Como o agente descobre e usa",
 )
 INDISPONIVEL = "RDF indisponível neste build"
+# Sem `--base-rdf`, a tripla de exemplo do painel 2 usa esta base, rotulada como ilustrativa na
+# página: IRI relativa no contexto JSON-LD é mapeamento inválido, e o exemplo deve ser RDF válido.
+BASE_ILUSTRATIVA = "https://example.org/padroes/"
 
 
 def _conferir_desenho() -> None:
@@ -221,11 +225,19 @@ def contexto_modelo(grafo: dict, *, base_rdf: str | None) -> dict:
         )
 
     praticas = sorted(i for i, no in nos.items() if no.get("file_type") == "pratica")
+    # `aplica` chega a Entidade no desenho; quantas ocorrências têm destino Recurso aplicável,
+    # a classe sem caixa própria (skills, steering), para a nota da legenda do painel 1.
+    aplica = next(r for r in RELACOES if r["propriedade"] == "aplica")
+    aplica_recurso = sum(
+        1
+        for link in _ocorrencias(grafo, aplica)
+        if classe_de(nos[link["target"]].get("file_type", "")) == FALLBACK_CLASSE
+    )
     cita = next(r for r in relacoes if r["propriedade"] == "cita")
     tripla = None
     if cita["exemplo"]:
         ex = cita["exemplo"]
-        tripla = _tripla(ex["origem"], ex["destino"], ex["fonte"], base_rdf or "")
+        tripla = _tripla(ex["origem"], ex["destino"], ex["fonte"], base_rdf or BASE_ILUSTRATIVA)
     # A instância é o sujeito da tripla, para os painéis falarem do mesmo registro.
     if tripla:
         instancia = tripla["sujeito"]
@@ -254,10 +266,12 @@ def contexto_modelo(grafo: dict, *, base_rdf: str | None) -> dict:
         "caixas": [_caixa(c) for c in CAIXAS],
         "viewbox": VIEWBOX,
         "relacoes": relacoes,
+        "aplica_recurso": aplica_recurso,
         "instancia": instancia,
         "tripla": tripla,
         "rdf_ativo": bool(base_rdf),
         "base_rdf": base_rdf,
+        "base_ilustrativa": BASE_ILUSTRATIVA,
         "links": links,
         "faixa": FAIXA,
         "paineis": PAINEIS,
@@ -299,20 +313,35 @@ def descrever_painel_1(m: dict[str, Any]) -> list[str]:
         if inst
         else "Pratica é a classe; este catálogo não tem prática para mostrar como instância."
     )
-    return [tipo, *(linha_relacao(r) for r in m["relacoes"])]
+    return [tipo, *(linha_relacao(r) for r in m["relacoes"]), nota_aplica(m["aplica_recurso"])]
+
+
+def nota_aplica(total: int) -> str:
+    """Nota da legenda do painel 1: `aplica` também chega a Recurso aplicável, sem caixa própria."""
+    return (
+        "A seta aplica chega a Entidade porque o destino pode ser de qualquer classe; ela também "
+        "liga práticas a itens sem classe específica, como skills e documentos de steering, que o "
+        "vocabulário chama de Recurso aplicável (pe:RecursoAplicavel), subclasse de Entidade e sem "
+        f"caixa própria no diagrama ({total} "
+        f"{'ocorrência' if total == 1 else 'ocorrências'} neste catálogo)."
+    )
 
 
 def descrever_painel_2(m: dict[str, Any]) -> list[str]:
     linhas = [
-        "Markdown e YAML são a fonte editorial; o build monta deles o grafo validado, "
-        "com entidades e relações.",
-        "OWL e RDFS descrevem o significado das classes e propriedades do grafo; "
-        "o piloto não executa raciocinador.",
-        "Do grafo saem duas representações paralelas dos mesmos dados, não etapas: "
-        "JSON-LD (dados ligados em JSON) e Turtle (representação textual RDF).",
-        "Fora do build, o vocabulário pode ser convertido pelo OWL2VOWL e revisto no WebVOWL.",
+        "Markdown e YAML são a fonte editorial; uma seta marcada monta leva deles ao grafo "
+        "validado, com entidades e relações.",
+        "Do grafo, uma seta marcada publica leva a um grupo com duas representações paralelas "
+        "dos mesmos dados, não etapas: JSON-LD (dados ligados em JSON) e Turtle (representação "
+        "textual RDF).",
+        "Numa caixa à parte, que não é etapa do build, OWL e RDFS descrevem o significado das "
+        "classes e propriedades do grafo; o piloto não executa raciocinador.",
+        "Da caixa OWL e RDFS, uma seta marcada avaliação fora do build leva ao OWL2VOWL, que "
+        "converte o vocabulário, e ao WebVOWL, que o mostra para revisão visual.",
         "SKOS (organização de conceitos) e SHACL (validação de grafos) ficam fora do piloto: "
-        "são possibilidades futuras, ligadas por traço pontilhado ao vocabulário e ao grafo.",
+        "aparecem em caixas separadas, hachuradas, com borda pontilhada e a etiqueta futuro, "
+        "fora do piloto, sem seta. O texto delas diz que SKOS ligaria ao vocabulário OWL e RDFS "
+        "e que SHACL validaria o grafo do catálogo.",
     ]
     t = m["tripla"]
     if t:
@@ -322,7 +351,10 @@ def descrever_painel_2(m: dict[str, Any]) -> list[str]:
             f"objeto {t['objeto']['id']}, declarada em {t['fonte']}.",
         )
     if not m["rdf_ativo"]:
-        linhas.append(f"{INDISPONIVEL}: os arquivos JSON-LD e Turtle não foram gerados.")
+        linhas.append(
+            f"{INDISPONIVEL}: os arquivos JSON-LD e Turtle não foram gerados, e o grupo das "
+            "duas representações aparece hachurado, com borda pontilhada."
+        )
     return linhas
 
 

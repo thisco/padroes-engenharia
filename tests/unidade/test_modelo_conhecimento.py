@@ -10,6 +10,8 @@ from pathlib import Path
 from urllib.parse import unquote
 
 import pytest
+from rdflib import Graph, URIRef
+from rdflib.compare import isomorphic
 
 from portal.gerador import modelo_conhecimento
 from portal.gerador.carregar import Conteudo
@@ -243,13 +245,40 @@ def test_r10_painel_2_tripla_paralelas_owl_e_futuros():
     assert all("fora do piloto" in f.texto for f in futuros)
 
 
-def test_r10_painel_2_turtle_e_json_ld_usam_a_base_quando_ativa():
-    ativo = analisar(html_de(site(base_rdf=BASE))).primeiro("figure", id="painel-2")
-    assert f"<{BASE}id/P1-01>" in ativo.texto
-    assert f"{BASE}id/ref%3Aref-forte" in ativo.texto
-    inativo = analisar(html_de(site())).primeiro("figure", id="painel-2")
-    assert "<id/P1-01>" in inativo.texto
-    assert "example.org" not in inativo.texto
+BASE_REAL = "https://dados.exemplo.org/catalogo/"
+
+
+def _exemplos(html: str) -> tuple[Graph, Graph, str]:
+    """Os dois blocos de exemplo do painel 2 carregados com rdflib, e o texto do painel."""
+    painel = analisar(html).primeiro("figure", id="painel-2")
+    blocos = painel.primeiro(classe="mc-escritas").todos("pre")
+    turtle, jsonld = (pre.primeiro("code").texto for pre in blocos)
+    return (
+        Graph().parse(data=turtle, format="turtle"),
+        Graph().parse(data=jsonld, format="json-ld"),
+        painel.texto,
+    )
+
+
+@pytest.mark.filterwarnings("ignore:ConjunctiveGraph is deprecated:DeprecationWarning")
+@pytest.mark.parametrize(
+    "base_rdf, base_esperada",
+    [(BASE_REAL, BASE_REAL), (None, modelo_conhecimento.BASE_ILUSTRATIVA)],
+    ids=["ativo", "inativo"],
+)
+def test_r10_painel_2_exemplos_sao_rdf_valido_e_isomorfos(base_rdf, base_esperada):
+    ttl, jsonld, texto = _exemplos(html_de(site(base_rdf=base_rdf)))
+    tripla = (
+        URIRef(f"{base_esperada}id/P1-01"),
+        URIRef(f"{base_esperada}vocab#cita"),
+        URIRef(f"{base_esperada}id/ref%3Aref-forte"),
+    )
+    assert set(ttl) == {tripla}
+    assert isomorphic(ttl, jsonld)
+    if base_rdf:
+        assert "base ilustrativa" not in texto and "example.org" not in texto
+    else:
+        assert "base ilustrativa" in texto
 
 
 # Painel 3: estados e links -------------------------------------------------------------------
@@ -344,4 +373,48 @@ def test_r8_marcacao_hostil_do_catalogo_e_escapada():
     assert "<img src=x" not in html
     assert "&lt;script&gt;alert" in html
     md = md_de(site(pratica=pratica, referencia=referencia))
-    assert "Título" in md
+    normal = md_de(site())
+    # No `.md` gêmeo a marcação do catálogo é texto literal dentro de um item de lista: não abre
+    # bloco HTML no início de linha nem muda os títulos do documento.
+    linhas = [linha for linha in md.splitlines() if hostil in linha]
+    assert linhas and all(linha.startswith("- ") for linha in linhas)
+    assert not any(linha.lstrip().startswith("<") for linha in md.splitlines())
+
+    def titulos(texto):
+        return [linha for linha in texto.splitlines() if linha.startswith("#")]
+
+    assert titulos(md) == titulos(normal)
+
+
+def test_painel_1_legenda_nota_recurso_aplicavel_e_numero_corresponde():
+    g = grafo(
+        [no("P-01", "pratica"), no("skill:a", "skill"), no("steering:b", "steering")],
+        [aresta("P-01", "skill:a", "aplica"), aresta("P-01", "steering:b", "aplica")],
+    )
+    assert contexto_modelo(g, base_rdf=None)["aplica_recurso"] == 2
+    legenda = analisar(html_de(site())).primeiro("figure", id="painel-1").primeiro("figcaption")
+    assert "pe:RecursoAplicavel" in legenda.texto and "Recurso aplicável" in legenda.texto
+    assert "corresponde à mesma relação" in legenda.texto
+    assert "leva à mesma relação" not in legenda.texto
+    assert "pe:RecursoAplicavel" in md_de(site())
+
+
+def test_painel_2_paralelas_indisponiveis_sem_rdf_e_texto_sem_conector_inventado():
+    inativo = analisar(html_de(site())).primeiro("figure", id="painel-2")
+    paralelas = inativo.primeiro(classe="mc-paralelas")
+    assert "mc-indisponivel" in paralelas.classes
+    assert "indisponíveis neste build" in paralelas.texto
+    ativo = analisar(html_de(site(base_rdf=BASE))).primeiro("figure", id="painel-2")
+    assert "mc-indisponivel" not in ativo.primeiro(classe="mc-paralelas").classes
+    alternativa = inativo.primeiro("details", classe="mc-alternativa").texto
+    assert "ligadas por traço pontilhado" not in alternativa
+    assert "sem seta" in alternativa
+    assert "de baixo" not in inativo.primeiro("figcaption").texto
+
+
+def test_painel_3_link_do_recorte_nomeia_o_recorte_e_nao_um_arquivo_inexistente():
+    painel = analisar(html_de(site(base_rdf=BASE))).primeiro("figure", id="painel-3")
+    entidade = hashlib.sha256(b"P1-01").hexdigest()
+    link = painel.primeiro("a", href=f"pacote/semantica/entidades/{entidade}.jsonld")
+    assert link.texto == "recorte JSON-LD de P1-01"
+    assert "P1-01.jsonld" not in painel.texto

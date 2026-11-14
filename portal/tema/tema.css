@@ -835,10 +835,11 @@ a.tr-skill:hover { text-decoration: underline; }
 .mc-est-0 { background: var(--papel-2); }
 .mc-est .mc-n { align-self: flex-start; }
 .mc-est a:not(.mc-arq) { font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
-.mc-est.mc-indisponivel, .mc-ramo.mc-indisponivel, .mc-instancia.mc-indisponivel {
+.mc-est.mc-indisponivel, .mc-ramo.mc-indisponivel, .mc-instancia.mc-indisponivel, .mc-paralelas.mc-indisponivel {
   border: 2px dotted var(--traco); background: repeating-linear-gradient(135deg, var(--branco) 0 7px, var(--papel-2) 7px 10px);
 }
-.mc-est.mc-indisponivel b, .mc-ramo.mc-indisponivel b { color: var(--tinta-2); }
+.mc-est.mc-indisponivel b, .mc-ramo.mc-indisponivel b, .mc-paralelas.mc-indisponivel b { color: var(--tinta-2); }
+.mc-paralelas.mc-indisponivel .mc-no { border-style: dotted; }
 .mc-ramos { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 18px; }
 .mc-ramo { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: var(--branco); border: 1.5px solid var(--tinta-2); border-left-width: 5px; border-radius: 3px; }
 .mc-ramo small { font-size: 12px; color: var(--tinta-2); }
@@ -862,6 +863,8 @@ a.tr-skill:hover { text-decoration: underline; }
   .mc-seta { flex-direction: row; justify-content: center; gap: 8px; padding: 2px 0; }
   .mc-seta::after { content: "↓"; }
   .mc-vazio { display: none; }
+  /* empilhado, a caixa OWL e RDFS fica abaixo de Turtle: o rótulo perde a seta para cima */
+  .mc-sobe::before { content: "descreve o grafo validado"; }
   .mc-escritas { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {

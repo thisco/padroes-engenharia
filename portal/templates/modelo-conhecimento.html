@@ -104,7 +104,7 @@
     </li>
 {% endfor %}
   </ol>
-  <figcaption>Diagrama 1. Caixa é classe, com o nome em português e o nome no vocabulário (<code>pe:</code>). Seta é propriedade, na direção registrada, com um número que leva à mesma relação na lista; o laço sobre Prática é <code>relaciona</code>, de uma prática para outra. Abra uma relação na lista para ver significado, origem e um exemplo real. Em telas estreitas, só a lista aparece.</figcaption>
+  <figcaption>Diagrama 1. Caixa é classe, com o nome em português e o nome no vocabulário (<code>pe:</code>). Seta é propriedade, na direção registrada, com um número que corresponde à mesma relação na lista; o laço sobre Prática é <code>relaciona</code>, de uma prática para outra. {{ m.descricoes[0][-1] }} Abra uma relação na lista para ver significado, origem e um exemplo real. Em telas estreitas, só a lista aparece.</figcaption>
 </figure>
 
 <figure class="mc-figura" id="painel-2" aria-labelledby="painel-2-t">
@@ -128,8 +128,8 @@
       <span class="mc-seta"><span>monta</span></span>
       <div class="mc-no mc-forte"><b>Grafo validado</b><small>entidades e relações</small></div>
       <span class="mc-seta"><span>publica</span></span>
-      <div class="mc-paralelas">
-        <p class="mc-k">duas representações do mesmo grafo, não etapas</p>
+      <div class="mc-paralelas{% if not m.rdf_ativo %} mc-indisponivel{% endif %}">
+        <p class="mc-k">duas representações do mesmo grafo, não etapas{% if not m.rdf_ativo %}; indisponíveis neste build{% endif %}</p>
         <div class="mc-no"><span class="mc-nome"><b>JSON-LD</b> {{ fonte("w3c-jsonld11") }}</span><small>dados ligados em JSON</small>{{ arquivo("catalogo_jsonld", "catalogo.jsonld") }}</div>
         <div class="mc-no"><span class="mc-nome"><b>Turtle</b> {{ fonte("w3c-turtle") }}</span><small>representação textual RDF</small>{{ arquivo("catalogo_ttl", "catalogo.ttl") }}</div>
       </div>
@@ -154,7 +154,7 @@
     <div><p class="mc-k">a tripla em Turtle</p><pre><code>{{ m.tripla.turtle }}</code></pre></div>
     <div><p class="mc-k">a mesma tripla em JSON-LD</p><pre><code>{{ m.tripla.jsonld }}</code></pre></div>
 {% if not m.rdf_ativo %}
-    <p class="mc-nota">Sem <code>--base-rdf</code> as IRIs ficam relativas: o build não escolhe a base, e trocá-la muda todas as identidades.</p>
+    <p class="mc-nota">Este build foi gerado sem <code>--base-rdf</code>, então os exemplos usam a base ilustrativa <code>{{ m.base_ilustrativa }}</code>, que não identifica nada publicado. A base real é escolhida por quem publica, e trocá-la muda todas as identidades.</p>
 {% endif %}
   </div>
 {% endif %}
@@ -166,7 +166,7 @@
 {% endfor %}
     </ul>
   </details>
-  <figcaption>Diagrama 2. Seta cheia é etapa do build; o grupo com JSON-LD e Turtle mostra duas escritas paralelas do mesmo grafo. OWL e RDFS descrevem, de baixo, o significado do grafo. Caixa hachurada com traço pontilhado e a etiqueta "fora do piloto" é possibilidade futura, não capacidade atual.</figcaption>
+  <figcaption>Diagrama 2. Seta cheia é etapa do build; o grupo com JSON-LD e Turtle mostra duas escritas paralelas do mesmo grafo. A caixa OWL e RDFS descreve o significado das classes e propriedades do grafo e não é etapa do build. Caixa hachurada com traço pontilhado e a etiqueta "fora do piloto" é possibilidade futura, não capacidade atual.</figcaption>
 </figure>
 
 <figure class="mc-figura" id="painel-3" aria-labelledby="painel-3-t">
@@ -182,7 +182,7 @@
     <li class="mc-est"><span class="mc-n">1</span><b>llms.txt</b><small>ponto de entrada</small>{{ arquivo("llms", "llms.txt") }}</li>
     <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">2</span><b>Manifesto</b><small>capacidades e limites</small>{{ arquivo("manifesto", "manifesto.json") }}</li>
     <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">3</span><b>Índice</b><small>encontre o ID</small>{{ arquivo("indice", "indice.json") }}</li>
-    <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">4</span><b>JSON-LD da entidade</b><small>contexto de um salto; volte ao índice para seguir outro vínculo</small>{% if m.instancia %}{{ arquivo("entidade", m.instancia.id ~ ".jsonld") }}{% endif %}</li>
+    <li class="mc-est{% if not m.rdf_ativo %} mc-indisponivel{% endif %}"><span class="mc-n">4</span><b>JSON-LD da entidade</b><small>contexto de um salto; volte ao índice para seguir outro vínculo</small>{% if m.instancia %}{{ arquivo("entidade", "recorte JSON-LD de " ~ m.instancia.id) }}{% endif %}</li>
     <li class="mc-est"><span class="mc-n">5</span><b>Documento e referência</b><small>confira a fonte</small>{% if m.tripla %}{{ no_link(m.tripla.sujeito) }} {{ no_link(m.tripla.objeto) }}{% endif %}</li>
   </ol>
   <div class="mc-ramos">
