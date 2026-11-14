@@ -1,5 +1,5 @@
 conteudo: modelo-de-conhecimento
-verificado_em: '2026-11-13'
+verificado_em: '2026-11-14'
 verificador: agente-curadoria
 afirmacoes:
 - texto: "Em RDF, cada vínculo é uma tripla de sujeito, predicado e objeto, e um conjunto de triplas forma
@@ -18,12 +18,16 @@ afirmacoes:
   localizacao: "§2 'Classes' ('Resources may be divided into groups called classes') e §3.3 'rdf:type'
     (R rdf:type C afirma que R é instância de C)"
   resultado: confirmada
-- texto: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos legíveis (rdfs:label)
-    e descrições (rdfs:comment) para cada recurso."
+- texto: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos (rdfs:label) e
+    descrições (rdfs:comment) que podem ser usados para dar nome e descrição legíveis a um recurso."
   ref: w3c-rdfs
   localizacao: "§1 'Introduction' ('RDF Schema provides a data-modelling vocabulary for RDF data'), §3.6
-    'rdfs:label' (human readable label) e §3.7 'rdfs:comment' (human readable description)"
+    'rdfs:label' ('may be used to provide a human-readable version of a resource's name') e §3.7
+    'rdfs:comment' ('may be used to provide a human-readable description of a resource')"
   resultado: confirmada
+  nota: "Texto reescrito em 2026-11-14 depois da revisão independente: a versão anterior dizia 'para cada
+    recurso', e a fonte diz só que as propriedades podem ser usadas. A nova redação foi conferida de novo
+    contra §3.6 e §3.7 em 2026-11-14."
 - texto: "Diagrama 2: OWL e RDFS descrevem o significado das classes e propriedades do grafo."
   ref: w3c-rdfs
   localizacao: "§1 'Introduction' (vocabulário de modelagem de dados) e §2 'Classes'"
@@ -99,18 +103,28 @@ afirmacoes:
   localizacao: "Abstract"
   resultado: confirmada
 revisao_adversarial:
-  revisor: "autorrevisão da sessão de curadoria; a revisão em sessão independente fica com o coordenador do
-    piloto RDF (Tarefa 5 do plano)"
-  data: '2026-11-13'
+  revisor: "revisão independente em sessão nova, sem o histórico do rascunho"
+  data: '2026-11-14'
   achados:
-  - afirmacao: "WebVOWL e OWL2VOWL"
-    problema: "o domínio antigo do projeto não pertence mais ao VisualDataWeb (aviso do README)"
-    tratamento: "as referências apontam os repositórios oficiais no GitHub; o domínio antigo não é citado
-      nem linkado"
-  - afirmacao: "WebVOWL e OWL2VOWL"
-    problema: "a avaliação real do vocabulário (Tarefa 4) ainda não existe"
-    tratamento: "o texto diz só que o vocabulário pode ser avaliado fora do build, sem resultado nem captura"
-  - afirmacao: "frases sobre o que o portal faz (grafo, manifesto, consulta, ausência de raciocinador)"
-    problema: "não são sustentadas pelas fontes W3C"
-    tratamento: "nenhuma delas cita fonte externa; correspondem ao código (grafo_catalogo.py, semantica.py,
-      consultar.py) e aos testes do piloto"
+  - afirmacao: "as 19 afirmações do registro, conferidas contra as fontes"
+    problema: "nenhum para 18 delas: a fonte sustenta o texto como está escrito"
+    tratamento: "mantidas sem mudança"
+  - afirmacao: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos legíveis
+      (rdfs:label) e descrições (rdfs:comment) para cada recurso."
+    problema: "imprecisa: 'para cada recurso' exagera; RDFS §3.6 e §3.7 dizem que rdfs:label e
+      rdfs:comment 'may be used to provide' nome e descrição legíveis, sem exigir um para cada recurso"
+    tratamento: "texto trocado na página e no registro por 'que podem ser usados para dar nome e
+      descrição legíveis a um recurso' e conferido de novo contra §3.6 e §3.7"
+  - afirmacao: "Diagrama 2, exemplo da tripla em Turtle e em JSON-LD no build sem --base-rdf"
+    problema: "os exemplos usavam IRIs relativas (prefixo pe: mapeado para 'vocab#' e @id 'id/...'); em
+      JSON-LD 1.1, IRI relativa em mapeamento de termo é 'invalid IRI mapping', e o exemplo publicado no
+      modo padrão não era dado RDF válido"
+    tratamento: "sem --base-rdf, os exemplos usam a base https://example.org/padroes/, rotulada na página
+      como base ilustrativa; com --base-rdf, a base real. Teste novo carrega os dois exemplos com rdflib
+      nos dois modos e confere que são válidos e isomorfos"
+  - afirmacao: "vocabulário publicado: propriedade arquivoFonte"
+    problema: "arquivoFonte tinha rdfs:domain pe:Entidade e é usada em cada afirmação (rdf:Statement); sob
+      entailment RDFS, toda afirmação passaria a ser pe:Entidade"
+    tratamento: "a propriedade ficou sem rdfs:domain, com rdfs:comment dizendo que vale para a entidade e
+      para a afirmação; teste novo confere, com rdflib, que nenhuma propriedade usada em afirmação tem
+      domínio que implique Entidade"

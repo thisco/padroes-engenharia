@@ -16,7 +16,7 @@ referencias:
 - w3c-skos-primer
 - w3c-turtle
 - webvowl
-revisado_em: '2026-11-13'
+revisado_em: '2026-11-14'
 ---
 
 ## O que o portal sabe
@@ -32,8 +32,9 @@ lista traz um exemplo tirado do catálogo publicado.
 
 ## Como o conhecimento é representado
 
-RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos legíveis (`rdfs:label`) e
-descrições (`rdfs:comment`) para cada recurso [ref:w3c-rdfs]. Uma ontologia OWL 2 declara classes,
+RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos (`rdfs:label`) e
+descrições (`rdfs:comment`) que podem ser usados para dar nome e descrição legíveis a um recurso
+[ref:w3c-rdfs]. Uma ontologia OWL 2 declara classes,
 propriedades e indivíduos [ref:w3c-owl2-primer]. Ferramentas chamadas raciocinadores podem calcular
 consequências automaticamente a partir dela [ref:w3c-owl2-primer]; o piloto do portal não executa
 nenhum, e o grafo diz só o que o catálogo declarou.
