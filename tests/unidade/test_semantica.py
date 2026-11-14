@@ -326,6 +326,29 @@ def test_r4_vocabulario_sem_instancias_e_com_contrato_completo():
         assert proibido not in texto
 
 
+def test_r4_afirmacao_nao_vira_entidade_pelo_dominio_das_propriedades():
+    # Sob entailment RDFS, `p rdfs:domain C` faz de todo sujeito de `p` uma instância de C.
+    # Nenhuma propriedade usada em sujeito rdf:Statement pode ter domínio que implique Entidade.
+    saida = _gerar()
+    vocab = _carregar(saida, "semantica/vocabulario.ttl", "turtle")
+    dados = _dados_ttl(saida)
+    afirmacoes = set(dados.subjects(RDF.type, RDF.Statement))
+    assert afirmacoes
+    usadas = {p for st in afirmacoes for p in dados.predicates(st) if str(p).startswith(str(VOCAB))}
+    assert {VOCAB.relacaoOrigem, VOCAB.arquivoFonte} <= usadas
+
+    def implica_entidade(classe):
+        return VOCAB.Entidade in set(vocab.transitive_objects(classe, RDFS.subClassOf))
+
+    for prop in usadas:
+        dominios = list(vocab.objects(prop, RDFS.domain))
+        assert not any(implica_entidade(d) for d in dominios), (prop, dominios)
+    # `arquivoFonte` vale para entidade e afirmação: fica sem domínio, e o comentário diz isso.
+    assert list(vocab.objects(VOCAB.arquivoFonte, RDFS.domain)) == []
+    comentario = str(vocab.value(VOCAB.arquivoFonte, RDFS.comment))
+    assert "entidade" in comentario and "afirmação" in comentario
+
+
 def test_contrato_relacoes_tem_doze_pares_com_campos_e_descricao():
     assert len(modelo.RELACOES) == 12
     for r in modelo.RELACOES:

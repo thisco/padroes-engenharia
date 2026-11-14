@@ -156,13 +156,22 @@ RELACOES: tuple[dict[str, str], ...] = (
 PROPRIEDADES_DADOS: dict[str, tuple[str, str, str, bool]] = {
     "id": ("identificador", "identificador", "ID original, sem normalização.", False),
     "file_type": ("tipoOrigem", "tipo de origem", "Tipo original do nó no grafo.", False),
-    "source_file": ("arquivoFonte", "arquivo de fonte", "Arquivo que declara o registro.", False),
+    "source_file": (
+        "arquivoFonte",
+        "arquivo de fonte",
+        "Arquivo que declara o registro: vale para a entidade e para a afirmação (rdf:Statement) "
+        "do vínculo, por isso não tem domínio declarado.",
+        False,
+    ),
     "forca": ("forca", "força", "Força normativa da prática.", False),
     "status": ("status", "status", "Estado editorial da prática.", False),
     "dominio": ("dominio", "domínio", "Slug do domínio da prática.", False),
     "momento": ("momento", "momento", "Slug do momento da prática.", False),
     "url": ("url", "URL", "Endereço da página do registro.", True),
 }
+# Propriedades de dados usadas também nas afirmações (rdf:Statement): ficam sem `rdfs:domain`,
+# porque domínio Entidade faria de cada afirmação uma Entidade sob entailment RDFS.
+PROPRIEDADES_SEM_DOMINIO = frozenset({"arquivoFonte"})
 # Propriedades das afirmações (rdf:Statement) e do recorte por entidade.
 PROPRIEDADE_RELACAO_ORIGEM = "relacaoOrigem"
 PROPRIEDADE_RECORTE = "recorte"

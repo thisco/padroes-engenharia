@@ -17,6 +17,7 @@ from portal.gerador.modelo_semantico import (
     PROPRIEDADE_RECORTE,
     PROPRIEDADE_RELACAO_ORIGEM,
     PROPRIEDADES_DADOS,
+    PROPRIEDADES_SEM_DOMINIO,
     RELACOES,
     ROTULO_CLASSES,
     ROTULO_PROPRIEDADES,
@@ -280,17 +281,14 @@ def _turtle_vocabulario(base: str) -> str:
             )
         )
     for nome, rotulo, descricao, eh_iri in PROPRIEDADES_DADOS.values():
-        saida.append(
-            _bloco(
-                f"pe:{nome}",
-                [
-                    ("a", "owl:ObjectProperty" if eh_iri else "owl:DatatypeProperty"),
-                    ("rdfs:label", _lit(rotulo, IDIOMA)),
-                    ("rdfs:comment", _lit(descricao, IDIOMA)),
-                    ("rdfs:domain", f"pe:{CLASSE_COMUM}"),
-                ],
-            )
-        )
+        pares = [
+            ("a", "owl:ObjectProperty" if eh_iri else "owl:DatatypeProperty"),
+            ("rdfs:label", _lit(rotulo, IDIOMA)),
+            ("rdfs:comment", _lit(descricao, IDIOMA)),
+        ]
+        if nome not in PROPRIEDADES_SEM_DOMINIO:
+            pares.append(("rdfs:domain", f"pe:{CLASSE_COMUM}"))
+        saida.append(_bloco(f"pe:{nome}", pares))
     saida.append(
         _bloco(
             f"pe:{PROPRIEDADE_RELACAO_ORIGEM}",
