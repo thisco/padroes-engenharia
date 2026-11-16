@@ -1,0 +1,172 @@
+conteudo: modelo-de-conhecimento
+verificado_em: '2026-11-14'
+verificador: agente-curadoria
+afirmacoes:
+- texto: "Em RDF, cada vínculo é uma tripla de sujeito, predicado e objeto, e um conjunto de triplas forma
+    um grafo."
+  ref: w3c-rdf11
+  localizacao: "§1.1 'Graph-based Data Model' (cada tripla tem sujeito, predicado e objeto; um conjunto
+    de triplas é um grafo RDF) e §3 'RDF Graphs' ('An RDF graph is a set of RDF triples')"
+  resultado: confirmada
+- texto: "Diagrama 2, tripla visual: Tripla RDF: sujeito, predicado e objeto."
+  ref: w3c-rdf11
+  localizacao: "§3.1 'Triples' ('An RDF triple consists of three components'): sujeito, predicado e objeto"
+  resultado: confirmada
+- texto: "Em RDF Schema, recursos se agrupam em classes, e a tripla R rdf:type C diz que R é instância da
+    classe C."
+  ref: w3c-rdfs
+  localizacao: "§2 'Classes' ('Resources may be divided into groups called classes') e §3.3 'rdf:type'
+    (R rdf:type C afirma que R é instância de C)"
+  resultado: confirmada
+  nota: "Em 2026-11-16 mudou só a frase seguinte, sobre o portal e sem citação: 'o ID de uma prática é
+    uma instância dela' virou 'a prática API-01, identificada pelo IRI …/id/API-01, é uma instância dela;
+    o ID API-01 fica guardado como texto (pe:identificador)'. O texto citado e a localização não mudaram."
+- texto: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos (rdfs:label) e
+    descrições (rdfs:comment) que podem ser usados para dar nome e descrição legíveis a um recurso."
+  ref: w3c-rdfs
+  localizacao: "§1 'Introduction' ('RDF Schema provides a data-modelling vocabulary for RDF data'), §3.6
+    'rdfs:label' ('may be used to provide a human-readable version of a resource's name') e §3.7
+    'rdfs:comment' ('may be used to provide a human-readable description of a resource')"
+  resultado: confirmada
+  nota: "Texto reescrito em 2026-11-14 depois da revisão independente: a versão anterior dizia 'para cada
+    recurso', e a fonte diz só que as propriedades podem ser usadas. A nova redação foi conferida de novo
+    contra §3.6 e §3.7 em 2026-11-14."
+- texto: "Diagrama 2: OWL e RDFS descrevem o significado das classes e propriedades do grafo."
+  ref: w3c-rdfs
+  localizacao: "§1 'Introduction' (vocabulário de modelagem de dados) e §2 'Classes'"
+  resultado: confirmada
+  nota: "O texto do nó diz o papel do vocabulário no portal; a fonte sustenta que RDFS é vocabulário de
+    modelagem com classes e propriedades."
+- texto: "Uma ontologia OWL 2 declara classes, propriedades e indivíduos."
+  ref: w3c-owl2-primer
+  localizacao: "Abstract ('OWL 2 ontologies provide classes, properties, individuals, and data values')
+    e §3 'Modeling Knowledge: Basic Notions'"
+  resultado: confirmada
+- texto: "Ferramentas chamadas raciocinadores podem calcular consequências automaticamente a partir dela."
+  ref: w3c-owl2-primer
+  localizacao: "§3 'Modeling Knowledge: Basic Notions' ('There are OWL tools – reasoners – that can
+    automatically compute consequences') e §2 'What is OWL 2?'"
+  resultado: confirmada
+- texto: "JSON-LD é um formato baseado em JSON para serializar dados ligados; um documento JSON-LD é sempre
+    um documento JSON válido, e o contexto mapeia termos para IRIs."
+  ref: w3c-jsonld11
+  localizacao: "Abstract ('a JSON-based format to serialize Linked Data'), §1.5 'Design Goals and Rationale'
+    ('A JSON-LD document is always a valid JSON document') e §3.1 'The Context' ('a context is used to map
+    terms to IRIs')"
+  resultado: confirmada
+- texto: "Diagrama 2: JSON-LD, dados ligados em JSON."
+  ref: w3c-jsonld11
+  localizacao: "Abstract"
+  resultado: confirmada
+- texto: "Turtle escreve um grafo RDF inteiro em forma de texto compacta."
+  ref: w3c-turtle
+  localizacao: "Abstract ('allows an RDF graph to be completely written in a compact and natural text form')"
+  resultado: confirmada
+- texto: "Diagrama 2: Turtle, representação textual RDF."
+  ref: w3c-turtle
+  localizacao: "Abstract ('defines a textual syntax for RDF called Turtle')"
+  resultado: confirmada
+- texto: "O WebVOWL é uma ferramenta para visualizar ontologias na web."
+  ref: webvowl
+  localizacao: "descrição do repositório ('Visualizing ontologies on the Web')"
+  resultado: confirmada
+  nota: "O README indica o serviço público atual em service.tib.eu e avisa que o domínio antigo não pertence
+    mais ao projeto; o portal não o cita."
+- texto: "Diagrama 2: WebVOWL, revisão visual do vocabulário."
+  ref: webvowl
+  localizacao: "descrição do repositório ('Visualizing ontologies on the Web')"
+  resultado: confirmada
+- texto: "O OWL2VOWL converte uma ontologia num arquivo JSON para ele."
+  ref: owl2vowl
+  localizacao: "descrição do repositório ('Converting ontologies for WebVOWL') e README ('The converted
+    ontology will be written in a .json file'; uso com -file)"
+  resultado: confirmada
+- texto: "Diagrama 2: OWL2VOWL, conversão de avaliação."
+  ref: owl2vowl
+  localizacao: "descrição do repositório ('Converting ontologies for WebVOWL')"
+  resultado: confirmada
+- texto: "SKOS oferece um modelo para a estrutura de esquemas de conceitos, com rótulos preferidos e
+    alternativos e relações mais amplas, mais específicas e associativas."
+  ref: w3c-skos-primer
+  localizacao: "Abstract ('provides a model for expressing the basic structure and content of concept
+    schemes'), §2.1 'Concepts', §2.2 'Labels' (prefLabel e altLabel) e §2.3 'Semantic Relationships'
+    (broader, narrower e related)"
+  resultado: confirmada
+- texto: "Diagrama 2: SKOS, organização de conceitos."
+  ref: w3c-skos-primer
+  localizacao: "Abstract e §2.1 'Concepts'"
+  resultado: confirmada
+- texto: "SHACL é uma linguagem para validar grafos RDF contra um conjunto de condições, as shapes."
+  ref: w3c-shacl
+  localizacao: "Abstract ('a language for validating RDF graphs against a set of conditions'; 'These
+    conditions are provided as shapes')"
+  resultado: confirmada
+- texto: "Diagrama 2: SHACL, validação de grafos."
+  ref: w3c-shacl
+  localizacao: "Abstract"
+  resultado: confirmada
+revisao_adversarial:
+  revisor: "revisão independente em sessão nova, sem o histórico do rascunho (2026-11-14); revisão
+    especialista do modelo de conhecimento (2026-11-16), cujas correções de texto passam pela re-revisão
+    da coordenação"
+  data: '2026-11-16'
+  achados:
+  - afirmacao: "as 19 afirmações do registro, conferidas contra as fontes"
+    problema: "nenhum para 18 delas: a fonte sustenta o texto como está escrito"
+    tratamento: "mantidas sem mudança"
+  - afirmacao: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos legíveis
+      (rdfs:label) e descrições (rdfs:comment) para cada recurso."
+    problema: "imprecisa: 'para cada recurso' exagera; RDFS §3.6 e §3.7 dizem que rdfs:label e
+      rdfs:comment 'may be used to provide' nome e descrição legíveis, sem exigir um para cada recurso"
+    tratamento: "texto trocado na página e no registro por 'que podem ser usados para dar nome e
+      descrição legíveis a um recurso' e conferido de novo contra §3.6 e §3.7"
+  - afirmacao: "Diagrama 2, exemplo da tripla em Turtle e em JSON-LD no build sem --base-rdf"
+    problema: "os exemplos usavam IRIs relativas (prefixo pe: mapeado para 'vocab#' e @id 'id/...'); em
+      JSON-LD 1.1, IRI relativa em mapeamento de termo é 'invalid IRI mapping', e o exemplo publicado no
+      modo padrão não era dado RDF válido"
+    tratamento: "sem --base-rdf, os exemplos usam a base https://example.org/padroes/, rotulada na página
+      como base ilustrativa; com --base-rdf, a base real. Teste novo carrega os dois exemplos com rdflib
+      nos dois modos e confere que são válidos e isomorfos"
+  - afirmacao: "vocabulário publicado: propriedade arquivoFonte"
+    problema: "arquivoFonte tinha rdfs:domain pe:Entidade e é usada em cada afirmação (rdf:Statement); sob
+      entailment RDFS, toda afirmação passaria a ser pe:Entidade"
+    tratamento: "a propriedade ficou sem rdfs:domain, com rdfs:comment dizendo que vale para a entidade e
+      para a afirmação; teste novo confere, com rdflib, que nenhuma propriedade usada em afirmação tem
+      domínio que implique Entidade"
+  - afirmacao: "Aqui, Pratica é a classe; o ID de uma prática é uma instância dela."
+    problema: "revisão especialista do modelo (2026-11-16): impreciso em rigor; a instância é o recurso
+      identificado pelo IRI .../id/API-01, e o ID API-01 é um literal (pe:identificador)"
+    tratamento: "texto trocado na página, no painel 1 e na descrição textual do diagrama 1 para 'a prática
+      API-01, identificada pelo IRI …/id/API-01, é uma instância dela; o ID API-01 fica guardado como texto
+      (pe:identificador)'. Afirmação sobre o portal, sem citação; a frase citada de RDFS não mudou. A
+      revisão desta alteração é a re-revisão da coordenação"
+  - afirmacao: "cada ligação que o conteúdo declara vira um vínculo com direção e arquivo de fonte"
+    problema: "revisão especialista do modelo (2026-11-16): exagera a cobertura; exemplos, mecanismos,
+      datas de revisão e URL e verificação de referências não viram vínculo nem propriedade"
+    tratamento: "texto trocado por 'as ligações que o grafo do catálogo registra viram vínculos', com a
+      frase de que esses campos não entram no piloto. Afirmação sobre o portal, sem citação; a revisão desta
+      alteração é a re-revisão da coordenação"
+  - afirmacao: "Faixa final e manifesto: 'EXTRACTED quer dizer declarado na fonte'"
+    problema: "revisão especialista do modelo (2026-11-16): o termo EXTRACTED não existe em nenhum arquivo
+      publicado, e o leitor não o encontra"
+    tratamento: "reescrito sem o termo: 'todo vínculo foi declarado por um arquivo editorial do catálogo;
+      nenhum foi inferido nem verificado'. Afirmação sobre o portal, sem citação; a revisão desta alteração é
+      a re-revisão da coordenação"
+  - afirmacao: "Diagrama 1: a caixa Entidade ao lado das outras classes"
+    problema: "revisão especialista do modelo (2026-11-16): o leitor conclui que Entidade é mais um tipo,
+      quando é a superclasse de todas"
+    tratamento: "a legenda, a descrição do SVG e a descrição textual dizem que Entidade é a superclasse
+      comum e que toda classe é subclasse de Entidade (rdfs:subClassOf), como o vocabulário publica; o SVG
+      não foi redesenhado. A revisão desta alteração é a re-revisão da coordenação"
+  - afirmacao: "Painel 2: a camada de proveniência (rdf:Statement) não aparecia"
+    problema: "revisão especialista do modelo (2026-11-16): omissão; cada vínculo também é publicado como
+      afirmação com fonte"
+    tratamento: "uma frase na página, uma nota no painel 2 e uma linha na descrição textual dizem que cada
+      vínculo também é publicado como afirmação (rdf:Statement), com a relação de origem e o arquivo de
+      fonte, para proveniência. Afirmação sobre o portal, sem citação; a revisão desta alteração é a
+      re-revisão da coordenação"
+  - afirmacao: "Exemplo da relação 5 (Ferramenta temPasso Passo) com o passo rotulado Domínio"
+    problema: "revisão especialista do modelo (2026-11-16): o rótulo se confunde com a classe Domínio"
+    tratamento: "o exemplo continua o primeiro por ordem de ID; quando o rótulo de um registro é o nome de
+      outra classe, a página diz que é o rótulo do registro, da classe dele, e não a outra classe. A revisão
+      desta alteração é a re-revisão da coordenação"

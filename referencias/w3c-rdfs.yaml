@@ -1,0 +1,11 @@
+id: w3c-rdfs
+titulo: "RDF Schema 1.1"
+organizacao: W3C
+url: https://www.w3.org/TR/rdf-schema/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2014-02-25"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "§1 'Introduction', §2 'Classes', §3.3 'rdf:type', §3.6 'rdfs:label' e §3.7 'rdfs:comment'"
+dominios: [construir-com-ia]
+notas: null

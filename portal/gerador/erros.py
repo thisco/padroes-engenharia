@@ -51,6 +51,7 @@ R_CASO_REF = "R-CASO-REF"
 R_CASO_ORIGEM = "R-CASO-ORIGEM"
 R_TRILHA = "R-TRILHA"
 R_ROTEIRO = "R-ROTEIRO"
+R_SEMANTICA = "R-SEMANTICA"
 
 DESCRICOES: dict[str, str] = {
     R_FRONTMATTER: "frontmatter ausente ou YAML inválido",
@@ -96,6 +97,10 @@ DESCRICOES: dict[str, str] = {
     R_PACOTE: (
         "pacote de distribuição sem manifesto ou com arquivo fora dele, ausente "
         "ou com sha256 divergente"
+    ),
+    R_SEMANTICA: (
+        "exportação RDF (--base-rdf) recusada: vínculo sem destino, ID duplicado, url inválida "
+        "ou combinação de tipo e relação não prevista"
     ),
     R_PASSO: "passo repetido no mesmo momento de esquemas/espinha.yml",
     R_EXEMPLO: "Exemplo ausente ou incompleto, ou bloco de código sem linguagem ou longo demais",

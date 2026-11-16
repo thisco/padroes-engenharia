@@ -1,0 +1,11 @@
+id: w3c-shacl
+titulo: "Shapes Constraint Language (SHACL)"
+organizacao: W3C
+url: https://www.w3.org/TR/shacl/
+tipo: padrao-aberto
+versao: "W3C Recommendation, 2017-07-20"
+verificado_em: 2026-11-13
+verificacao: V
+localizacao: "Abstract"
+dominios: [construir-com-ia]
+notas: null

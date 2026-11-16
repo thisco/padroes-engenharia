@@ -22,6 +22,7 @@ from portal.gerador.regras_harness import compilar_regras
 from portal.gerador.renderizar import Site, constituicoes, url_portal
 from portal.gerador.roteiros import skill_md
 from portal.gerador.saidas import dados_roteamento, para_json, sufixo_da_organizacao
+from portal.gerador.semantica import montar_semantica
 
 PASTA_PACOTE = "pacote"
 PASTA_VERIFICADORES = "verificadores"
@@ -50,16 +51,21 @@ def plugin_json(site: Site) -> dict[str, Any]:
     return dados
 
 
+class ErroDeExportacao(Exception):
+    """A exportação semântica recusou o catálogo; a mensagem traz ID, campo ou relação e fonte."""
+
+
 def _linhas(linhas: list[str]) -> bytes:
     return ("\n".join(linhas) + "\n").encode("utf-8")
 
 
 def montar_pacote(site: Site) -> dict[str, bytes]:
+    grafo = montar_grafo(site)
     arquivos: dict[str, bytes] = {
         "plugin.json": para_json(plugin_json(site)).encode("utf-8"),
         "regras.json": para_json(compilar_regras(site)).encode("utf-8"),
         "grafo/roteamento.json": para_json(dados_roteamento(site)).encode("utf-8"),
-        "grafo/graph.json": para_json(montar_grafo(site)).encode("utf-8"),
+        "grafo/graph.json": para_json(grafo).encode("utf-8"),
         "nucleo/cabecalho.md": _linhas(cabecalho(site.versao, url_portal(site))),
         "consultar.py": (Path(__file__).resolve().parent / "consultar.py").read_bytes(),
     }
@@ -97,6 +103,15 @@ def montar_pacote(site: Site) -> dict[str, bytes]:
         arquivos[f"constituicao/{Path(constituicao).name}"] = (
             site.raiz / constituicao
         ).read_bytes()
+    if site.base_rdf:
+        try:
+            arquivos.update(
+                montar_semantica(
+                    grafo, base_rdf=site.base_rdf, versao=site.versao, commit=site.commit
+                )
+            )
+        except ValueError as exc:
+            raise ErroDeExportacao(str(exc)) from exc
     return arquivos
 
 
