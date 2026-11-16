@@ -587,6 +587,85 @@ $ python scripts/gerar.py                   exit 0 (versão 1.4.0)
 $ python scripts/gerar.py --saida /tmp/t5/ativo --base-rdf https://example.org/padroes/   exit 0
 ```
 
+### Correções de texto da revisão do modelo (2026-11-16)
+
+Lista fechada de `.superpowers/sdd/2026-11-12-piloto-rdf/model-review-text-fixes.md`, tirada das
+seções B e D da revisão especialista do modelo de conhecimento. Só texto: nenhuma classe,
+propriedade, tripla, reificação, índice ou nome de arquivo mudou.
+
+- T1 (B.4): o roteiro do manifesto manda citar o ID original e, quando existir, a `url` da página
+  da entidade no portal; uma capacidade nova explica que `arquivoFonte` é o caminho no repositório
+  de origem, para procedência, e não endereço para o usuário (`semantica.py`).
+- T2 (B.5/D.3): sai `EXTRACTED` do manifesto e da faixa final; o texto passa a ser "todo vínculo
+  foi declarado por um arquivo editorial do catálogo; nenhum foi inferido nem verificado"
+  (`semantica.py`, `modelo_conhecimento.py`). O termo segue existindo no `graph.json` de entrada
+  (campo `confidence`), que não é dado RDF e ficou fora da lista.
+- T3 (D.1): página, painel 1 e descrição textual dizem que a prática, identificada pelo IRI
+  `…/id/<ID>`, é a instância, e que o ID fica como texto em `pe:identificador`.
+- T4 (D.2): legenda, `<desc>` do SVG e descrição textual dizem que `Entidade` é a superclasse
+  comum e que toda classe é subclasse dela; o comentário de `pe:Entidade` no vocabulário diz o
+  mesmo. O SVG não foi redesenhado.
+- T5 (D.4): "as ligações que o grafo do catálogo registra viram vínculos", e exemplos,
+  mecanismos, datas de revisão e URL e verificação das referências não entram no piloto.
+- T6 (D.5): uma frase na página, uma nota no painel 2 e uma linha da descrição textual explicam a
+  afirmação `rdf:Statement` de proveniência.
+- T7 (D.6): o comentário de `pe:Ferramenta` deixa de dizer "como uma skill" e diz que é o registro
+  em `ferramentas/` (inclusive categoria skill), e que skills e steering só citados em `aplica` são
+  Recurso aplicável. O exemplo da relação 5 continua o primeiro por ordem de ID; quando o rótulo
+  de um registro é o nome de outra classe, a página acrescenta "“Domínio” é o rótulo de
+  passo:enquanto-escreve/dominio, da classe Passo, e não a classe Domínio".
+- Curadoria: `verificacoes/modelo-de-conhecimento.yaml` ganhou nota na afirmação de RDFS (o texto
+  citado não mudou) e seis achados com tratamento; o revisor registrado nomeia a revisão de
+  2026-11-14 e a revisão especialista de 2026-11-16, com a re-revisão das alterações a cargo da
+  coordenação. `revisado_em` da página ficou em 2026-11-14 (nenhuma afirmação citada mudou, e
+  subir a data exigiria declarar nova conferência das fontes). `CHANGELOG.md`: um item em
+  "Alterado" da 1.4.0.
+
+Vermelho → verde (TDD): nove testes novos, todos vermelhos antes da mudança
+(`9 failed, 73 passed` em `tests/unidade/test_semantica.py` e
+`tests/unidade/test_modelo_conhecimento.py`) e verdes depois (`82 passed`):
+`test_roteiro_manda_citar_id_e_url_e_explica_arquivo_fonte_como_procedencia`,
+`test_manifesto_e_vocabulario_sem_termo_que_nao_existe_nos_dados`,
+`test_comentario_de_ferramenta_nao_contradiz_recurso_aplicavel`,
+`test_pagina_md_e_html_sem_termo_que_nao_existe_nos_dados`,
+`test_pagina_curada_distingue_iri_de_literal_e_nao_exagera_a_cobertura`,
+`test_painel_1_instancia_e_identificada_pelo_iri_e_id_e_literal`,
+`test_painel_1_diz_que_entidade_e_a_superclasse_comum`,
+`test_painel_2_explica_a_afirmacao_de_proveniencia` e
+`test_exemplo_com_rotulo_igual_a_nome_de_classe_e_esclarecido`.
+
+```
+$ python -m pytest -q -p no:cacheprovider
+3308 passed in 318.11s (0:05:18)            exit 0
+$ python -m ruff check .
+All checks passed!                          exit 0
+$ python -m ruff format --check .
+534 files already formatted                 exit 0
+$ python scripts/validar.py
+validação ok: nenhum erro.                  exit 0 (só o aviso antigo de P1-12)
+$ python scripts/gerar.py --saida <tmp>/sem --previa                                       exit 0
+$ python scripts/gerar.py --saida <tmp>/com --previa --base-rdf https://example.org/padroes/   exit 0
+```
+
+Inspeção visual (Playwright headless, Chromium, prévias com e sem `--base-rdf`): a 1280 e 375 px,
+com os `<details>` fechados, `scrollWidth` igual à largura da janela nos dois modos; as regiões
+alteradas (instância do painel 1, legenda, nota do painel 2) quebram linha sem transbordar. Com
+"Diagrama 3 em texto" aberto a 375 px no modo ativo, a linha 4 transborda (745 px) pelo caminho
+sha256 do recorte; a linha é anterior a esta correção (igual em `1e3e51d`) e fica registrada.
+
+Próxima spec (itens 2 a 5 das cinco mudanças de maior valor da revisão; não feitos aqui):
+
+1. Fechar a cadeia de citação: exportar `url`, `verificacao` (V/S) e `verificado_em` das
+   referências e mover `organizacao` de `rdfs:comment` para `dcterms:publisher`.
+2. Trocar a reificação `rdf:Statement` por proveniência por entidade (`prov:wasDerivedFrom`) ou
+   grafos nomeados por arquivo quando houver divergência.
+3. Índice e recortes feitos para LLM: índice de práticas com força, status, célula e `url`;
+   nomes de arquivo legíveis em vez de sha256; vizinhos com tipo e força; `@context` fora do
+   recorte.
+4. Namespace do vocabulário fixo, fora de `--base-rdf`, com `owl:versionInfo`/`versionIRI`,
+   política de deprecação, `rdfs:subPropertyOf`/`subClassOf` para Dublin Core, schema.org e
+   PROV, e sem `rdfs:domain rdf:Statement`, para o vocabulário ficar em OWL 2 DL.
+
 ## Revisão adversarial: 2026-11-14 — achados
 
 Revisão independente em sessão nova, sem o histórico da implementação, sobre `279b064..a32e9c6`
