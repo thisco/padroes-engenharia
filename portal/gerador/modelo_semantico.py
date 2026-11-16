@@ -21,13 +21,19 @@ FALLBACK_CLASSE = "RecursoAplicavel"
 CLASSE_COMUM = "Entidade"
 
 DESCRICAO_CLASSES: dict[str, str] = {
-    CLASSE_COMUM: "Qualquer registro do grafo do catálogo.",
+    CLASSE_COMUM: (
+        "Qualquer registro do grafo do catálogo: superclasse comum, da qual toda outra classe "
+        "do vocabulário é subclasse."
+    ),
     "Pratica": "Prática de engenharia do catálogo.",
     "Dominio": "Domínio (faixa) da espinha do catálogo.",
     "Momento": "Momento do ciclo de desenvolvimento.",
     "Celula": "Cruzamento de um domínio com um momento.",
     "Passo": "Passo de um momento da espinha.",
-    "Ferramenta": "Ferramenta aprovada, como uma skill.",
+    "Ferramenta": (
+        "Ferramenta com registro em ferramentas/, inclusive as da categoria skill. Skills e "
+        "steering citados só em aplica, sem esse registro, são Recurso aplicável."
+    ),
     "Referencia": "Fonte externa catalogada.",
     "DocumentoConceito": "Documento de conceito do portal, não um conceito formal.",
     "Receita": "Receita passo a passo que ensina práticas.",

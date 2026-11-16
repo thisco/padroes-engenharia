@@ -495,3 +495,35 @@ def test_r7_vinculo_e_no_com_campos_de_tipo_errado_sao_recusados():
     grafo["nodes"][1]["id"] = ""
     with pytest.raises(ValueError, match="id"):
         _gerar(grafo)
+
+
+# ---- textos do manifesto e do vocabulário fiéis ao que é exportado (revisão do modelo) ----
+
+
+def test_roteiro_manda_citar_id_e_url_e_explica_arquivo_fonte_como_procedencia():
+    m = json.loads(_gerar()["semantica/manifesto.json"])
+    citar = m["roteiro"][-1]
+    assert citar.startswith("citar fonte:")
+    assert "ID original" in citar and "url" in citar
+    assert "use arquivoFonte" not in citar
+    texto = json.dumps(m, ensure_ascii=False)
+    assert "arquivoFonte" in texto and "procedência" in texto
+    assert "repositório de origem" in texto
+
+
+def test_manifesto_e_vocabulario_sem_termo_que_nao_existe_nos_dados():
+    saida = _gerar()
+    for caminho in ("manifesto.json", "vocabulario.ttl", "catalogo.ttl", "catalogo.jsonld"):
+        assert "EXTRACTED" not in saida[f"semantica/{caminho}"].decode(), caminho
+    limites = " ".join(json.loads(saida["semantica/manifesto.json"])["limites"])
+    assert "declarado por um arquivo editorial do catálogo" in limites
+    assert "nenhum foi inferido nem verificado" in limites
+
+
+def test_comentario_de_ferramenta_nao_contradiz_recurso_aplicavel():
+    g = _carregar(_gerar(), "semantica/vocabulario.ttl", "turtle")
+    ferramenta = str(g.value(VOCAB.Ferramenta, RDFS.comment))
+    assert "como uma skill" not in ferramenta
+    assert "ferramentas/" in ferramenta and "Recurso aplicável" in ferramenta
+    entidade = str(g.value(VOCAB.Entidade, RDFS.comment))
+    assert "superclasse" in entidade
