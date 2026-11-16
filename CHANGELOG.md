@@ -7,6 +7,41 @@ retirado, minor para conteúdo novo, patch para texto e links.
 
 ## [Não publicado]
 
+## [1.4.0] - 2026-11-16
+
+> Versão minor (ADR 0007): conteúdo novo e exportação opcional, sem mudança de schema nem ID
+> retirado. Sem `--base-rdf`, o build publicado é idêntico ao da 1.3.0 nos contratos existentes.
+
+### Adicionado
+
+- Exportação semântica opcional do catálogo (ADR 0016, piloto RDF): a opção `--base-rdf <URL https
+  terminada em />` de `scripts/gerar.py` passa a publicar, ao lado do site, vocabulário OWL/RDFS,
+  dados em Turtle e em JSON-LD (equivalentes entre si), manifesto, índice por ID e um recorte
+  JSON-LD por entidade. As entidades vêm do grafo determinístico do catálogo, e a identidade de
+  cada uma depende só da base informada, não de `--url-base`, da pasta de saída nem do commit.
+- Anúncio da exportação no `llms.txt` quando a opção está ativa, para descoberta progressiva por
+  agentes: manifesto, índice, entidade e fonte.
+- Página "Modelo de conhecimento" em Entender, com três diagramas (modelo e vínculos, tripla RDF
+  e caminho do build, consulta por agente), legendas, alternativas textuais e estados distintos
+  com a exportação ativa e inativa; os exemplos de Turtle e JSON-LD são RDF válido nos dois modos
+  (sem a opção, usam a base ilustrativa `https://example.org/padroes/`).
+- Nove referências primárias (W3C e afins) para RDF, RDFS, OWL, Turtle, JSON-LD, SKOS e SHACL, com
+  registro de verificação em `verificacoes/modelo-de-conhecimento.yaml` e revisão adversarial
+  independente.
+- ADR 0016, "Exportação semântica do catálogo".
+- `docs/PROJECT_MEMORY.md`, criado na primeira destilação, com os aprendizados operacionais do
+  piloto.
+
+### Alterado
+
+- O pacote do catálogo inclui os artefatos semânticos quando a opção está ativa; a escrita segue
+  atômica, e uma falha de exportação preserva a saída anterior.
+- A avaliação de visualização com WebVOWL (OWL2VOWL 0.3.7) ficou fora do build e da CI: nenhum
+  conversor, Java ou serviço externo é exigido, e a visualização não valida a verdade dos dados,
+  a inferência nem a completude.
+- `arquivoFonte` não tem `rdfs:domain`, porque vale para a entidade e para a afirmação
+  (`rdf:Statement`); assim as afirmações não viram `pe:Entidade` sob entailment RDFS.
+
 ## [1.3.0] - 2026-11-06
 
 > Versão minor (ADR 0007): conteúdo novo e passo novo na espinha, sem mudança de schema nem ID

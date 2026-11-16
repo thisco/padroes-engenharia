@@ -1,6 +1,6 @@
 # Delta: piloto RDF, consumo por agentes e modelo visual
 
-**Data:** 2026-11-12 · **Status:** aprovada · **Tier:** 2
+**Data:** 2026-11-12 · **Status:** arquivada (R1–R11 atendidos; histórico do delta) · **Tier:** 2
 **Aprovado por:** Thiago · **Aprovado em:** 2026-11-12
 **PRD:** [Piloto de conhecimento interoperável](../prd/2026-11-12-piloto-rdf.md)
 **ADR:** [0016](../adr/0016-exportacao-semantica-do-catalogo.md)
