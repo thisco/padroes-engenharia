@@ -1,8 +1,8 @@
 {
   "catalogo": {
-    "commit": "163a0a0bfcca67f45bbbac0440dce75e0fb4f8b3",
+    "commit": "7a172089d7eb33ccefc213ebe39a941c47b368c8",
     "nome": "Padrões de Engenharia",
-    "versao": "1.3.0"
+    "versao": "1.4.0"
   },
   "regras": [
     {
