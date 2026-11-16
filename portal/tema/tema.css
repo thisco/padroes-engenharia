@@ -823,7 +823,7 @@ a.tr-skill:hover { text-decoration: underline; }
 .mc-nota { grid-column: 1 / -1; margin: 0; font-size: 12px; color: var(--tinta-2); }
 .mc-alternativa { margin-top: 14px; }
 .mc-alternativa > summary { font-size: 13px; font-weight: 600; color: var(--tinta-2); cursor: pointer; }
-.mc-alternativa ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; max-width: 90ch; }
+.mc-alternativa ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; max-width: 90ch; overflow-wrap: anywhere; }
 
 /* painel 3: o caminho do agente, os ramos e o estado indisponível */
 .mc-aviso { margin: 14px 0; padding: 10px 14px; max-width: 90ch; font-size: 14px; background: var(--branco); border: 2px dotted var(--traco); }

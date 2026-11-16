@@ -653,6 +653,13 @@ alteradas (instância do painel 1, legenda, nota do painel 2) quebram linha sem 
 "Diagrama 3 em texto" aberto a 375 px no modo ativo, a linha 4 transborda (745 px) pelo caminho
 sha256 do recorte; a linha é anterior a esta correção (igual em `1e3e51d`) e fica registrada.
 
+Transbordo corrigido a pedido da coordenação (R10): `.mc-alternativa ul` ganhou
+`overflow-wrap: anywhere` em `portal/tema/tema.css`, sem mudar texto; teste
+`test_r10_alternativa_textual_quebra_caminho_longo_em_tela_estreita`. Com os 18 `<details>` abertos,
+a 375 e 1280 px, nos modos ativo e inativo: `scrollWidth` = `clientWidth` (375/375, 1280/1280), sem
+erro de console. `tests/unidade/test_modelo_conhecimento.py`: 32 passed; `ruff check` e
+`ruff format --check`: ok.
+
 Próxima spec (itens 2 a 5 das cinco mudanças de maior valor da revisão; não feitos aqui):
 
 1. Fechar a cadeia de citação: exportar `url`, `verificacao` (V/S) e `verificado_em` das

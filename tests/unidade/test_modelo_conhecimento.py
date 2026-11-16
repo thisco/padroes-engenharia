@@ -479,3 +479,13 @@ def test_exemplo_com_rotulo_igual_a_nome_de_classe_e_esclarecido():
     assert "rótulo de passo:m/dominio, da classe Passo, e não a classe Domínio" in linha
     sem_ambiguidade = next(r for r in ctx["relacoes"] if r["propriedade"] == "cita")
     assert sem_ambiguidade["exemplo"] is None
+
+
+def test_r10_alternativa_textual_quebra_caminho_longo_em_tela_estreita():
+    # O caminho sha256 do recorte, na linha 4 do diagrama 3, não pode abrir rolagem a 375 px.
+    tema = (Path(__file__).resolve().parents[2] / "portal" / "tema" / "tema.css").read_text()
+    regra = re.search(r"\.mc-alternativa ul \{([^}]*)\}", tema)
+    assert regra and "overflow-wrap: anywhere" in regra.group(1)
+    painel = analisar(html_de(site(base_rdf=BASE))).primeiro("figure", id="painel-3")
+    alternativa = painel.primeiro("details", classe="mc-alternativa")
+    assert hashlib.sha256(b"P1-01").hexdigest() in alternativa.primeiro("ul").texto
