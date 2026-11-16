@@ -418,3 +418,64 @@ def test_painel_3_link_do_recorte_nomeia_o_recorte_e_nao_um_arquivo_inexistente(
     link = painel.primeiro("a", href=f"pacote/semantica/entidades/{entidade}.jsonld")
     assert link.texto == "recorte JSON-LD de P1-01"
     assert "P1-01.jsonld" not in painel.texto
+
+
+# Textos fiéis ao que é exportado (revisão do modelo, 2026-11-16) ------------------------------
+
+PAGINA_REAL = Path(__file__).resolve().parents[2] / "paginas" / "modelo-de-conhecimento.md"
+
+
+def test_pagina_md_e_html_sem_termo_que_nao_existe_nos_dados():
+    for s in (site(), site(base_rdf=BASE)):
+        assert "EXTRACTED" not in html_de(s)
+        assert "EXTRACTED" not in md_de(s)
+    faixa = analisar(html_de(site())).primeiro(classe="mc-faixa").texto
+    assert "declarado por um arquivo editorial do catálogo" in faixa
+    assert "nenhum foi inferido nem verificado" in faixa
+
+
+def test_pagina_curada_distingue_iri_de_literal_e_nao_exagera_a_cobertura():
+    texto = " ".join(PAGINA_REAL.read_text(encoding="utf-8").split())
+    assert "o ID de uma prática é uma instância dela" not in texto
+    assert "identificada pelo IRI" in texto and "pe:identificador" in texto
+    assert "cada ligação que o conteúdo declara vira um vínculo" not in texto
+    assert "as ligações que o grafo do catálogo registra viram vínculos" in texto
+    assert "não entram no piloto" in texto
+    assert "rdf:Statement" in texto
+
+
+def test_painel_1_instancia_e_identificada_pelo_iri_e_id_e_literal():
+    ctx = contexto_modelo(grafo([no("P-01", "pratica")], []), base_rdf=None)
+    tipo = ctx["descricoes"][0][0]
+    assert "IRI" in tipo and "pe:identificador" in tipo
+    raiz = analisar(html_de(site()))
+    assert "pe:identificador" in raiz.primeiro(classe="mc-tipo").texto
+
+
+def test_painel_1_diz_que_entidade_e_a_superclasse_comum():
+    figura = analisar(html_de(site())).primeiro("figure", id="painel-1")
+    for trecho in (figura.primeiro("figcaption").texto, md_de(site())):
+        assert "toda classe é subclasse de Entidade" in trecho
+        assert "superclasse comum" in trecho
+    desc = figura.primeiro("desc").texto
+    assert "subclasse de Entidade" in desc
+
+
+def test_painel_2_explica_a_afirmacao_de_proveniencia():
+    painel = analisar(html_de(site())).primeiro("figure", id="painel-2")
+    alternativa = painel.primeiro("details", classe="mc-alternativa").texto
+    for trecho in (painel.texto, alternativa, md_de(site())):
+        assert "rdf:Statement" in trecho and "proveniência" in trecho
+
+
+def test_exemplo_com_rotulo_igual_a_nome_de_classe_e_esclarecido():
+    g = grafo(
+        [no("ferramenta:a", "ferramenta"), no("passo:m/dominio", "passo", "Domínio")],
+        [aresta("ferramenta:a", "passo:m/dominio", "caminho")],
+    )
+    ctx = contexto_modelo(g, base_rdf=None)
+    rel = next(r for r in ctx["relacoes"] if r["propriedade"] == "temPasso")
+    linha = modelo_conhecimento.linha_relacao(rel)
+    assert "rótulo de passo:m/dominio, da classe Passo, e não a classe Domínio" in linha
+    sem_ambiguidade = next(r for r in ctx["relacoes"] if r["propriedade"] == "cita")
+    assert sem_ambiguidade["exemplo"] is None

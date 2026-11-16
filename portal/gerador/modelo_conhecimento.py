@@ -65,7 +65,8 @@ DESENHO: dict[tuple[str, str, str], tuple[int, int]] = {
 FAIXA = {
     "vinculo": (
         "O grafo diz que o conteúdo declarou esta ligação, no arquivo de fonte indicado. "
-        "EXTRACTED quer dizer declarado na fonte."
+        "Todo vínculo foi declarado por um arquivo editorial do catálogo; nenhum foi inferido "
+        "nem verificado."
     ),
     "afirmacao": (
         "Exige abrir a página e a referência e conferir o trecho que sustenta o texto. "
@@ -115,6 +116,21 @@ def _href(no: dict[str, Any]) -> str | None:
 
 def _no(no: dict[str, Any]) -> dict[str, Any]:
     return {"id": str(no["id"]), "label": str(no.get("label") or no["id"]), "href": _href(no)}
+
+
+# Base abreviada do IRI de uma instância no texto da página: o IRI real depende de `--base-rdf`.
+BASE_ABREVIADA = "…/"
+
+
+def _aviso_rotulo(no: dict[str, Any], classe: str) -> str | None:
+    """Rótulo de registro igual ao nome de outra classe (o passo "Domínio") pede esclarecimento."""
+    rotulo = no["label"]
+    if rotulo == ROTULO_CLASSES[classe] or rotulo not in ROTULO_CLASSES.values():
+        return None
+    return (
+        f"“{rotulo}” é o rótulo de {no['id']}, da classe {ROTULO_CLASSES[classe]}, "
+        f"e não a classe {rotulo}."
+    )
 
 
 def _caixa(classe: str) -> dict[str, Any]:
@@ -205,10 +221,17 @@ def contexto_modelo(grafo: dict, *, base_rdf: str | None) -> dict:
         exemplo = None
         if achadas:
             primeira = achadas[0]
+            origem, destino = _no(nos[primeira["source"]]), _no(nos[primeira["target"]])
+            classe_destino = classe_de(nos[primeira["target"]].get("file_type", ""))
+            avisos = (
+                _aviso_rotulo(origem, r["origem"]),
+                _aviso_rotulo(destino, classe_destino),
+            )
             exemplo = {
-                "origem": _no(nos[primeira["source"]]),
-                "destino": _no(nos[primeira["target"]]),
+                "origem": origem,
+                "destino": destino,
                 "fonte": str(primeira.get("source_file", "")),
+                "aviso": " ".join(a for a in avisos if a) or None,
             }
         chave = (r["origem"], r["propriedade"], r["destino"])
         relacoes.append(
@@ -268,12 +291,15 @@ def contexto_modelo(grafo: dict, *, base_rdf: str | None) -> dict:
         "relacoes": relacoes,
         "aplica_recurso": aplica_recurso,
         "instancia": instancia,
+        "instancia_iri": iri_entidade(BASE_ABREVIADA, instancia["id"]) if instancia else None,
         "tripla": tripla,
         "rdf_ativo": bool(base_rdf),
         "base_rdf": base_rdf,
         "base_ilustrativa": BASE_ILUSTRATIVA,
         "links": links,
         "faixa": FAIXA,
+        "nota_entidade": NOTA_ENTIDADE,
+        "nota_afirmacao": NOTA_AFIRMACAO,
         "paineis": PAINEIS,
         "indisponivel": INDISPONIVEL,
     }
@@ -300,20 +326,35 @@ def linha_relacao(r: dict[str, Any]) -> str:
     if r["exemplo"] is None:
         return texto + " Exemplo: nenhuma ocorrência neste catálogo."
     ex = r["exemplo"]
+    aviso = f" {ex['aviso']}" if ex.get("aviso") else ""
     return (
         texto + f" Exemplo (primeiro por ordem de ID, de {r['total']}): {_par(ex['origem'])} → "
-        f"{_par(ex['destino'])}, declarado em {ex['fonte']}."
+        f"{_par(ex['destino'])}, declarado em {ex['fonte']}.{aviso}"
     )
 
 
 def descrever_painel_1(m: dict[str, Any]) -> list[str]:
     inst = m["instancia"]
     tipo = (
-        f"Pratica é a classe; {inst['id']} é uma instância dela, escolhida do catálogo neste build."
+        f"Pratica é a classe; a prática {inst['id']}, identificada pelo IRI "
+        f"{m['instancia_iri']}, é uma instância dela, escolhida do catálogo neste build; o ID "
+        f"{inst['id']} fica guardado como texto (pe:identificador)."
         if inst
         else "Pratica é a classe; este catálogo não tem prática para mostrar como instância."
     )
-    return [tipo, *(linha_relacao(r) for r in m["relacoes"]), nota_aplica(m["aplica_recurso"])]
+    return [
+        tipo,
+        NOTA_ENTIDADE,
+        *(linha_relacao(r) for r in m["relacoes"]),
+        nota_aplica(m["aplica_recurso"]),
+    ]
+
+
+# Diagrama 1: Entidade aparece como caixa, mas é a superclasse de todas (o SVG não desenha isso).
+NOTA_ENTIDADE = (
+    "Entidade é a superclasse comum, não mais um tipo ao lado dos outros: toda classe é subclasse "
+    "de Entidade (rdfs:subClassOf), e a caixa dela no diagrama representa qualquer registro."
+)
 
 
 def nota_aplica(total: int) -> str:
@@ -343,6 +384,7 @@ def descrever_painel_2(m: dict[str, Any]) -> list[str]:
         "fora do piloto, sem seta. O texto delas diz que SKOS ligaria ao vocabulário OWL e RDFS "
         "e que SHACL validaria o grafo do catálogo.",
     ]
+    linhas.append(NOTA_AFIRMACAO)
     t = m["tripla"]
     if t:
         linhas.insert(
@@ -356,6 +398,14 @@ def descrever_painel_2(m: dict[str, Any]) -> list[str]:
             "duas representações aparece hachurado, com borda pontilhada."
         )
     return linhas
+
+
+# Painel 2: a camada de proveniência que o exportador publica ao lado de cada tripla.
+NOTA_AFIRMACAO = (
+    "Cada vínculo também é publicado como afirmação (rdf:Statement), com a relação de origem e o "
+    "arquivo de fonte, para proveniência: ela diz de onde veio o vínculo, não que ele foi "
+    "verificado."
+)
 
 
 def descrever_painel_3(m: dict[str, Any]) -> list[str]:

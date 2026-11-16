@@ -18,6 +18,9 @@ afirmacoes:
   localizacao: "§2 'Classes' ('Resources may be divided into groups called classes') e §3.3 'rdf:type'
     (R rdf:type C afirma que R é instância de C)"
   resultado: confirmada
+  nota: "Em 2026-11-16 mudou só a frase seguinte, sobre o portal e sem citação: 'o ID de uma prática é
+    uma instância dela' virou 'a prática API-01, identificada pelo IRI …/id/API-01, é uma instância dela;
+    o ID API-01 fica guardado como texto (pe:identificador)'. O texto citado e a localização não mudaram."
 - texto: "RDF Schema oferece um vocabulário de modelagem para dados RDF, com rótulos (rdfs:label) e
     descrições (rdfs:comment) que podem ser usados para dar nome e descrição legíveis a um recurso."
   ref: w3c-rdfs
@@ -103,8 +106,10 @@ afirmacoes:
   localizacao: "Abstract"
   resultado: confirmada
 revisao_adversarial:
-  revisor: "revisão independente em sessão nova, sem o histórico do rascunho"
-  data: '2026-11-14'
+  revisor: "revisão independente em sessão nova, sem o histórico do rascunho (2026-11-14); revisão
+    especialista do modelo de conhecimento (2026-11-16), cujas correções de texto passam pela re-revisão
+    da coordenação"
+  data: '2026-11-16'
   achados:
   - afirmacao: "as 19 afirmações do registro, conferidas contra as fontes"
     problema: "nenhum para 18 delas: a fonte sustenta o texto como está escrito"
@@ -128,3 +133,40 @@ revisao_adversarial:
     tratamento: "a propriedade ficou sem rdfs:domain, com rdfs:comment dizendo que vale para a entidade e
       para a afirmação; teste novo confere, com rdflib, que nenhuma propriedade usada em afirmação tem
       domínio que implique Entidade"
+  - afirmacao: "Aqui, Pratica é a classe; o ID de uma prática é uma instância dela."
+    problema: "revisão especialista do modelo (2026-11-16): impreciso em rigor; a instância é o recurso
+      identificado pelo IRI .../id/API-01, e o ID API-01 é um literal (pe:identificador)"
+    tratamento: "texto trocado na página, no painel 1 e na descrição textual do diagrama 1 para 'a prática
+      API-01, identificada pelo IRI …/id/API-01, é uma instância dela; o ID API-01 fica guardado como texto
+      (pe:identificador)'. Afirmação sobre o portal, sem citação; a frase citada de RDFS não mudou. A
+      revisão desta alteração é a re-revisão da coordenação"
+  - afirmacao: "cada ligação que o conteúdo declara vira um vínculo com direção e arquivo de fonte"
+    problema: "revisão especialista do modelo (2026-11-16): exagera a cobertura; exemplos, mecanismos,
+      datas de revisão e URL e verificação de referências não viram vínculo nem propriedade"
+    tratamento: "texto trocado por 'as ligações que o grafo do catálogo registra viram vínculos', com a
+      frase de que esses campos não entram no piloto. Afirmação sobre o portal, sem citação; a revisão desta
+      alteração é a re-revisão da coordenação"
+  - afirmacao: "Faixa final e manifesto: 'EXTRACTED quer dizer declarado na fonte'"
+    problema: "revisão especialista do modelo (2026-11-16): o termo EXTRACTED não existe em nenhum arquivo
+      publicado, e o leitor não o encontra"
+    tratamento: "reescrito sem o termo: 'todo vínculo foi declarado por um arquivo editorial do catálogo;
+      nenhum foi inferido nem verificado'. Afirmação sobre o portal, sem citação; a revisão desta alteração é
+      a re-revisão da coordenação"
+  - afirmacao: "Diagrama 1: a caixa Entidade ao lado das outras classes"
+    problema: "revisão especialista do modelo (2026-11-16): o leitor conclui que Entidade é mais um tipo,
+      quando é a superclasse de todas"
+    tratamento: "a legenda, a descrição do SVG e a descrição textual dizem que Entidade é a superclasse
+      comum e que toda classe é subclasse de Entidade (rdfs:subClassOf), como o vocabulário publica; o SVG
+      não foi redesenhado. A revisão desta alteração é a re-revisão da coordenação"
+  - afirmacao: "Painel 2: a camada de proveniência (rdf:Statement) não aparecia"
+    problema: "revisão especialista do modelo (2026-11-16): omissão; cada vínculo também é publicado como
+      afirmação com fonte"
+    tratamento: "uma frase na página, uma nota no painel 2 e uma linha na descrição textual dizem que cada
+      vínculo também é publicado como afirmação (rdf:Statement), com a relação de origem e o arquivo de
+      fonte, para proveniência. Afirmação sobre o portal, sem citação; a revisão desta alteração é a
+      re-revisão da coordenação"
+  - afirmacao: "Exemplo da relação 5 (Ferramenta temPasso Passo) com o passo rotulado Domínio"
+    problema: "revisão especialista do modelo (2026-11-16): o rótulo se confunde com a classe Domínio"
+    tratamento: "o exemplo continua o primeiro por ordem de ID; quando o rótulo de um registro é o nome de
+      outra classe, a página diz que é o rótulo do registro, da classe dele, e não a outra classe. A revisão
+      desta alteração é a re-revisão da coordenação"

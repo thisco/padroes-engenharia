@@ -40,7 +40,7 @@
     <div class="mc-instancia">
       <span class="mc-k">{{ m.instancia.id }}: instância</span>
       <a class="id" href="{{ raiz }}{{ m.instancia.href }}">{{ m.instancia.id }}</a>
-      <span class="mc-d">{{ m.instancia.label }}. Um registro concreto deste catálogo, escolhido no build.</span>
+      <span class="mc-d">{{ m.instancia.label }}. Um registro concreto deste catálogo, escolhido no build, identificado pelo IRI <code>{{ m.instancia_iri }}</code>; o ID <code>{{ m.instancia.id }}</code> fica guardado como texto em <code>pe:identificador</code>.</span>
     </div>
 {% else %}
     <div class="mc-instancia mc-indisponivel">
@@ -58,7 +58,7 @@
   <div class="mc-palco">
     <svg class="mc-mapa" role="img" aria-labelledby="mc-mapa-t mc-mapa-d" viewBox="0 0 {{ m.viewbox[0] }} {{ m.viewbox[1] }}" width="{{ m.viewbox[0] }}" height="{{ m.viewbox[1] }}">
       <title id="mc-mapa-t">Classes e relações do grafo do catálogo</title>
-      <desc id="mc-mapa-d">Cada caixa é uma classe; cada seta numerada é uma propriedade do contrato, na direção registrada. A lista numerada logo abaixo descreve as mesmas {{ m.relacoes | length }} relações em texto.</desc>
+      <desc id="mc-mapa-d">Cada caixa é uma classe; Entidade é a superclasse comum, e toda outra classe é subclasse de Entidade. Cada seta numerada é uma propriedade do contrato, na direção registrada. A lista numerada logo abaixo descreve as mesmas {{ m.relacoes | length }} relações em texto.</desc>
       <defs>
         <marker id="mc-seta" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="mc-ponta" d="M0 0 L10 5 L0 10 z"/></marker>
       </defs>
@@ -95,7 +95,7 @@
           <dd><code>{{ r.relacao }}</code> no grafo do catálogo, de {{ r.rotulo_origem }} para {{ r.rotulo_destino }}; no RDF, <code>pe:{{ r.propriedade }}</code> ({{ r.rotulo }}).</dd>
           <dt>Exemplo</dt>
 {% if r.exemplo %}
-          <dd><span class="mc-ex">{{ no_link(r.exemplo.origem) }} <span class="mc-p">{{ r.propriedade }}</span> {{ no_link(r.exemplo.destino) }}</span> <span class="mc-d">{{ r.exemplo.destino.label if r.exemplo.destino.label != r.exemplo.destino.id else "" }}</span> Declarado em <code>{{ r.exemplo.fonte }}</code>. O primeiro por ordem de ID, de {{ r.total }} {{ "ocorrência" if r.total == 1 else "ocorrências" }} neste catálogo.</dd>
+          <dd><span class="mc-ex">{{ no_link(r.exemplo.origem) }} <span class="mc-p">{{ r.propriedade }}</span> {{ no_link(r.exemplo.destino) }}</span> <span class="mc-d">{{ r.exemplo.destino.label if r.exemplo.destino.label != r.exemplo.destino.id else "" }}</span> Declarado em <code>{{ r.exemplo.fonte }}</code>. O primeiro por ordem de ID, de {{ r.total }} {{ "ocorrência" if r.total == 1 else "ocorrências" }} neste catálogo.{% if r.exemplo.aviso %} {{ r.exemplo.aviso }}{% endif %}</dd>
 {% else %}
           <dd class="mc-ausente">Nenhuma ocorrência neste catálogo: a relação está no contrato, mas nenhum conteúdo a declara agora.</dd>
 {% endif %}
@@ -104,7 +104,7 @@
     </li>
 {% endfor %}
   </ol>
-  <figcaption>Diagrama 1. Caixa é classe, com o nome em português e o nome no vocabulário (<code>pe:</code>). Seta é propriedade, na direção registrada, com um número que corresponde à mesma relação na lista; o laço sobre Prática é <code>relaciona</code>, de uma prática para outra. {{ m.descricoes[0][-1] }} Abra uma relação na lista para ver significado, origem e um exemplo real. Em telas estreitas, só a lista aparece.</figcaption>
+  <figcaption>Diagrama 1. Caixa é classe, com o nome em português e o nome no vocabulário (<code>pe:</code>). Seta é propriedade, na direção registrada, com um número que corresponde à mesma relação na lista; o laço sobre Prática é <code>relaciona</code>, de uma prática para outra. {{ m.nota_entidade }} {{ m.descricoes[0][-1] }} Abra uma relação na lista para ver significado, origem e um exemplo real. Em telas estreitas, só a lista aparece.</figcaption>
 </figure>
 
 <figure class="mc-figura" id="painel-2" aria-labelledby="painel-2-t">
@@ -144,6 +144,7 @@
         <div class="mc-no"><span class="mc-nome"><b>WebVOWL</b> {{ fonte("webvowl") }}</span><small>revisão visual do vocabulário</small></div>
       </div>
     </div>
+    <p class="mc-nota">{{ m.nota_afirmacao }}</p>
     <div class="mc-linha-futuro" role="group" aria-label="Fora do piloto">
       <div class="mc-futuro"><span class="mc-tag">futuro · fora do piloto</span><span class="mc-nome"><b>SKOS</b> {{ fonte("w3c-skos-primer") }}</span><small>organização de conceitos; ligaria ao vocabulário OWL e RDFS</small></div>
       <div class="mc-futuro"><span class="mc-tag">futuro · fora do piloto</span><span class="mc-nome"><b>SHACL</b> {{ fonte("w3c-shacl") }}</span><small>validação de grafos; validaria o grafo do catálogo</small></div>

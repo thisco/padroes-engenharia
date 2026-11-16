@@ -41,6 +41,12 @@ retirado, minor para conteúdo novo, patch para texto e links.
   a inferência nem a completude.
 - `arquivoFonte` não tem `rdfs:domain`, porque vale para a entidade e para a afirmação
   (`rdf:Statement`); assim as afirmações não viram `pe:Entidade` sob entailment RDFS.
+- Texto do manifesto, do vocabulário e da página "Modelo de conhecimento" fiel ao que é exportado
+  (revisão especialista do modelo): o roteiro manda citar o ID e a `url` da página, e
+  `arquivoFonte` aparece como procedência no repositório de origem; sai o termo `EXTRACTED`, que
+  não existe nos dados; a página distingue o IRI da instância do ID literal (`pe:identificador`),
+  diz que toda classe é subclasse de `Entidade`, explica a afirmação de proveniência e não exagera
+  a cobertura.
 
 ## [1.3.0] - 2026-11-06
 
