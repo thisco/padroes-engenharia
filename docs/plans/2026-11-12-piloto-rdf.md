@@ -164,16 +164,18 @@ retorno à aprovação só é necessário se o contrato se mostrar inviável ou 
 
 ## Tarefa 5 — Verificação, revisão e entrega
 
-- [ ] Rodar `python -m pytest -q`, `python -m ruff check .`, `python scripts/validar.py`,
+- [x] Rodar `python -m pytest -q`, `python -m ruff check .`, `python scripts/validar.py`,
   `python scripts/gerar.py` e build ativo com `--base-rdf https://example.org/padroes/`.
   Colar saídas/status reais nesta seção; os quatro comandos obrigatórios devem retornar 0. (R1, R4, R8, R11)
-- [ ] Solicitar revisão adversarial independente partindo de R1–R11; preencher tabela abaixo
+- [x] Solicitar revisão adversarial independente partindo de R1–R11; preencher tabela abaixo
   com arquivo:linha ou saída de teste, tratar achados e repetir apenas verificações afetadas. (R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11)
-- [ ] Atualizar `CHANGELOG.md` em Keep a Changelog e minor em `portal/config.yml`, conferir
+- [x] Atualizar `CHANGELOG.md` em Keep a Changelog e minor em `portal/config.yml`, conferir
   versão mais recente antes da integração; arquivar spec somente ao concluir requisitos.
   Destilar aprendizados operacionais em `docs/PROJECT_MEMORY.md`. (R1, R11)
-- [ ] Preparar MR com evidências, limites e duas aprovações de risco alto antes de merge;
+- [x] Preparar MR com evidências, limites e duas aprovações de risco alto antes de merge;
   não confundir aprovação da spec com revisão de implementação. (R1, R11)
+  Texto preparado em `.superpowers/sdd/2026-11-12-piloto-rdf/mr.md`; nenhum MR foi aberto e as duas
+  aprovações de risco alto seguem pendentes com o dono (Thiago).
 
 ## Evidências
 
@@ -513,20 +515,97 @@ aviso: praticas/construir-com-ia/P1-12.md: Exemplo recomendado ausente (status e
 validação ok: nenhum erro.
 ```
 
-## Revisão adversarial: 2026-11-12 — achados
+### Tarefa 5 (2026-11-16)
 
-Revisão ainda não realizada; preencher vereditos após inspecionar implementação contra spec.
+Verificação na raiz do worktree, com `/tmp/piloto-rdf-venv/bin/python`, sobre `e709ecd`
+(antes do bump) e de novo com a versão 1.4.0 aplicada.
+
+```
+$ python -m pytest -q          # sobre e709ecd
+3299 passed in 357.77s (0:05:57)            exit 0
+$ python -m ruff check .
+All checks passed!                          exit 0
+$ python -m ruff format --check .
+534 files already formatted                 exit 0
+$ python scripts/validar.py
+aviso: praticas/construir-com-ia/P1-12.md: Exemplo recomendado ausente (status experimentar ou avaliar)
+validação ok: nenhum erro.                  exit 0
+$ python scripts/gerar.py       # padrão grava em public/ (ignorado pelo git) e regrava README.md/ROTEAMENTO.md
+portal gerado em .../padroes-engenharia/public (versão 1.4.0, commit e709ecd, 2026-11-14).   exit 0
+$ python scripts/gerar.py --saida /tmp/t5/ativo --base-rdf https://example.org/padroes/
+portal gerado em /private/tmp/t5/ativo (versão 1.4.0, commit e709ecd, 2026-11-14).           exit 0
+```
+
+O build ativo produziu 499 arquivos `.ttl`/`.jsonld` (vocabulário, dados, recortes). Depois do
+`gerar.py` padrão, `git status` mostrou só `README.md` e `ROTEAMENTO.md` regravados (versão
+1.3.0 → 1.4.0 na primeira linha de cada um); `public/` está no `.gitignore`. A rodada final
+completa, com a 1.4.0, está em "Rodada final" abaixo.
+
+Decisões da entrega:
+
+- Versão: `versao` de `portal/config.yml` 1.3.0 → 1.4.0 (minor, ADR 0007: conteúdo novo e
+  exportação opcional, sem mudança de schema nem ID retirado). Dois testes que fixavam a versão
+  foram atualizados (`tests/test_bootstrap.py::test_config_do_portal` e
+  `tests/unidade/test_governanca.py::test_versao_1_4_0_no_config_e_no_changelog`, que agora exige
+  a seção `## [1.4.0] - 2026-11-16`).
+- `CHANGELOG.md`: seção `## [1.4.0] - 2026-11-16` (Adicionado e Alterado), como a da 1.3.0.
+- Arquivamento da spec: a `sdd-lifecycle` (fase 8, passo 1) manda mudar o `Status` da spec Tier 2
+  para `arquivada`, e a trilha SDD v3 já seguiu isso. O `Status` de
+  `docs/specs/2026-11-12-piloto-rdf-delta.md` passou de "aprovada" para "arquivada (R1–R11
+  atendidos; histórico do delta)". As linhas de aprovação da spec ficaram como estavam; nenhuma
+  aprovação foi registrada por agente.
+- `docs/PROJECT_MEMORY.md` criado (primeira destilação, AGENTS.md:62).
+- Dogfooding (`.padroes/`, `padroes.lock.json`) não foi reinstalado: a reinstalação da 1.3.0
+  (`279b064`) foi um passo de release do dono, fora desta tarefa. Fica como pendência do release.
+- Pendência do dono: antes de integrar, conferir se a `main` avançou além de `279b064` e se a
+  versão 1.4.0 ainda é a próxima.
+
+Limites conhecidos (menores deixados de propósito por decisão da coordenação, sem correção
+nesta entrega):
+
+- T1: fallback sem `file_type`, custo O(N·E), `_recorte` duplicado, `url` não ASCII, testes de NFC,
+  de `or` e de `filterwarnings`/lambdas, tamanho de `semantica.py`, `match="id"`.
+- T2: `except ValueError` amplo, `ErroDeExportacao` em `pacote.py`, teste de medição de R6,
+  arquivo de integração longo, link relativo no `llms.txt`.
+- T4: título da ontologia, `Thing`, idioma no WebVOWL.
+- M5, M6, M8 e M9 da revisão final.
+- A legenda do painel 1 ficou mais longa com a nota de `RecursoAplicavel`, e o registro de
+  curadoria guarda "18 afirmações confirmadas" como achado de problema "nenhum", porque o schema
+  não tem campo próprio.
+- A avaliação WebVOWL fica fora do build e da CI; a visualização não valida a verdade dos dados,
+  a inferência nem a completude.
+
+Rodada final, com a 1.4.0, o `CHANGELOG.md`, a spec arquivada e `docs/PROJECT_MEMORY.md`:
+
+```
+$ python -m pytest -q -p no:cacheprovider
+3299 passed in 359.19s (0:05:59)            exit 0
+$ python -m ruff check .                    exit 0
+$ python -m ruff format --check .           exit 0
+$ python scripts/validar.py                 exit 0 (validação ok; só o aviso antigo de P1-12)
+$ python scripts/gerar.py                   exit 0 (versão 1.4.0)
+$ python scripts/gerar.py --saida /tmp/t5/ativo --base-rdf https://example.org/padroes/   exit 0
+```
+
+## Revisão adversarial: 2026-11-14 — achados
+
+Revisão independente em sessão nova, sem o histórico da implementação, sobre `279b064..a32e9c6`
+(2026-11-14). Veredito: pronto para merge com correções; R1–R9 atendem, R4, R10 e R11 com
+ressalva. Achados e decisões em `.superpowers/sdd/2026-11-12-piloto-rdf/final-review-findings.md`.
+Correções em `6a9ea80`, `62e81f9`, `125d0e1` e `e709ecd`, reconferidas em re-revisão escopada
+em 2026-11-16: os 12 itens tratados, sem quebra nova. As ressalvas de R4, R10 e R11 deixaram de
+existir; a coluna "evidência" aponta o que as sustenta.
 
 | R | veredito | evidência |
 | --- | --- | --- |
-| R1 | não avaliado | implementação pendente |
-| R2 | não avaliado | implementação pendente |
-| R3 | não avaliado | implementação pendente |
-| R4 | não avaliado | implementação pendente |
-| R5 | não avaliado | implementação pendente |
-| R6 | não avaliado | implementação pendente |
-| R7 | não avaliado | implementação pendente |
-| R8 | não avaliado | implementação pendente |
-| R9 | não avaliado | avaliação real pendente |
-| R10 | não avaliado | inspeção responsiva pendente |
-| R11 | não avaliado | curadoria/implementação pendentes |
+| R1 | atende | revisão de 2026-11-14; ativação só com `--base-rdf`, build padrão sem artefatos semânticos (Tarefas 1 e 2); suíte completa verde |
+| R2 | atende | revisão de 2026-11-14; identidade só de ID e base, testes de invariância a URL, ordem e commit (Tarefa 1) |
+| R3 | atende | revisão de 2026-11-14; fidelidade ao grafo do catálogo, 910 afirmações com fonte (Tarefa 1) |
+| R4 | atende (ressalva I1 resolvida em `6a9ea80`) | `arquivoFonte` sem `rdfs:domain` (`modelo_semantico.py:159-174`, `semantica.py:283-291`); teste `tests/unidade/test_semantica.py:329`; isomorfismo Turtle x JSON-LD e determinismo da Tarefa 1 |
+| R5 | atende | revisão de 2026-11-14; manifesto, índice e recortes e anúncio no `llms.txt` (Tarefa 2) |
+| R6 | atende | revisão de 2026-11-14; consumidor de teste só com biblioteca padrão e consultas prática→referência e conceito→prática→ferramenta (Tarefa 2) |
+| R7 | atende | revisão de 2026-11-14; diagnóstico de base inválida e falha de exportação com build atômico (Tarefa 2) |
+| R8 | atende | revisão de 2026-11-14; sem rede nos testes, sem conversor ou serviço externo no build e na CI (Tarefas 1 e 4) |
+| R9 | atende | revisão de 2026-11-14; avaliação real no WebVOWL registrada na Tarefa 4, fora do build |
+| R10 | atende (ressalvas I2, M1–M4 resolvidas em `62e81f9`) | testes `tests/unidade/test_modelo_conhecimento.py:269`, `:389`, `:402`, `:415`; inspeção a 375 e 1280 px, ativo e inativo, sem rolagem horizontal e sem erro de console (Correções da revisão final) |
+| R11 | atende (ressalvas I3, C4 resolvidas em `125d0e1`) | `verificacoes/modelo-de-conhecimento.yaml` com a revisão independente de 2026-11-14; afirmação 4 de RDFS reescrita e conferida em RDFS §3.6 e §3.7; `validar.py` ok |
